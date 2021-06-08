@@ -593,7 +593,7 @@ Transformation and mapping
 :Configuration: ``Vonk.Plugins.Transform.TransformConfiguration``
 :License token: http://fire.ly/vonk/plugins/mapping
 :Order: 4560
-:Description: Implements FHIR `$transform <http://hl7.org/fhir/R4/structuremap-operation-transform.html>`_ : ``POST <base>/administration/StructureMap/[id]/$transform``. See :ref:`mappingengine_index`.
+:Description: Implements FHIR `$transform <http://hl7.org/fhir/R4/structuremap-operation-transform.html>`_ : ``POST <base>/administration/StructureMap/[id]/$transform``. See :ref:`fhir_mapper_docs:mappingengine_index`.
 
 :Name: FHIR Mapper (Convert)
 :Configuration: ``Vonk.Plugin.MappingToStructureMap.MappingToStructureMapConfiguration``

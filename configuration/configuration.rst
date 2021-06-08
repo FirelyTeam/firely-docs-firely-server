@@ -4,7 +4,7 @@ Configuring Firely Server
 =========================
 
 In this section we assume you have downloaded and installed the Firely Server binaries, and have obtained a license file.
-If not, please see the :ref:`previous section <getting_started>` and follow the steps there first.
+If not, please see the :ref:`vonk_getting_started` and follow the steps there first.
 
 The steps you followed to get started will provide you with a basic Firely Server,
 that runs on a standard port and keeps the data in a SQLite database.

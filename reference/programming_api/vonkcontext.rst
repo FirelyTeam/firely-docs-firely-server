@@ -7,7 +7,7 @@ IVonkContext
 
 :purpose: IVonkContext is the Vonk-specific counterpart to HttpContext from ASP.NET Core. It contains an IVonkRequest and IVonkResponse object that allow you to get information from the request and set results in the response, both in Firely Server terms.  
 
-Have ``IVonkContext`` injected in the method where you need it. Use a `configuration class <vonk_plugins_configclass>`_ to call this method from the pipeline and have the actual context injected. A more complete template is found at :ref:`vonk_plugins_template`.
+Have ``IVonkContext`` injected in the method where you need it. Use a :ref:`configuration class <vonk_plugins_configclass>` to call this method from the pipeline and have the actual context injected. A more complete template is found at :ref:`vonk_plugins_template`.
 
 .. code-block:: csharp
 

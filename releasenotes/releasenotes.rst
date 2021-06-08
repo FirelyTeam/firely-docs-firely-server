@@ -38,7 +38,7 @@ Feature
 ^^^^^^^
 
 #. Terminology operation ``$lookup`` is now also connected to remote terminology services, if enabled. See :ref:`feature_terminology`.
-#. We provided a script to 'purge' data from a SQL Server database. See `data/20210512_Purge.sql`. You can filter on the resourcetype only. Use with care and after a backup. If you need more elaborate support for hard deletes, please :ref:`vonk_contact`.
+#. We provided a script to 'purge' data from a SQL Server database. See `data/20210512_Purge.sql`. You can filter on the resourcetype only. Use with care and after a backup. If you need more elaborate support for hard deletes, please :ref:`vonk-contact`.
 
 Fix
 ^^^

@@ -1,14 +1,8 @@
 
-Facade setup options
---------------------
+Facade setup configuration
+--------------------------
 
-There are two ways to set up a Firely Server Facade. By creating a library with services and providing that as a plugin to Firely Server, or by creating your own ASP.NET Core Web Application and utilizing Firely Server NuGet packages.
-The first approach is the most widely used one, and also used in our exercise.
-
-.. important::
-
-  We strongly recommend using the first approach because of its benefits described below, and because we may deprecate the second
-  approach in the future.
+To set up a Firely Server Facade, you will need to create a library with your own implementation of the interfaces for reading and/or writing FHIR resources and provide that as a plugin to Firely Server.
 
 Provide a plugin to Firely Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

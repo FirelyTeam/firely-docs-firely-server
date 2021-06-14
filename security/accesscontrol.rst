@@ -199,6 +199,8 @@ In this example the claim is still called 'patient', although it contains an Ide
 
 If multiple resources match the Compartment, that is no problem for Firely Server. You can simply configure the Filters according to the business rules in your organization.
 
+In case a FilerType needs to be defined for a resource type for which no correspoding compartment exists, like 'Organization' or 'Location', Firely Server allows for "resource" claims within the access token. If the access token contains such a claim, it will interpret the claim value as a relative reference to a "resource of interest" and scope the request to a dynamic compartment around that particular resource instance. Firely Server will automatically use a FilterArgument with "_id" in this case.
+
 Tokens
 ------
 

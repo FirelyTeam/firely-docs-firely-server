@@ -156,7 +156,7 @@ An example is the `Patient CompartmentDefinition`_, where a Patient resource is 
 FHIR defines CompartmentDefinitions for Patient, Encounter, RelatedPerson, Practitioner and Device. Although Firely Server is functionally not limited to these five, the specification does not allow you to define your own. Firely Server will use a CompartmentDefinition if:
 
 * the CompartmentDefinition is known to Firely Server, see :ref:`conformance` for options to provide them.
-* the OAuth2 Token contains a claim with the same name as the CompartmentDefinition.code (but it may be lowercase).
+* the OAuth2 Token contains a claim with the same name as the CompartmentDefinition.code (but it must be lowercase).
 
 So some the launch contexts mentioned in SMART on FHIR map to CompartmentDefinitions. For example, the launch context 'launch/patient' and 'launch/encounter' map to the compartment 'Patient' and 'Encounter'. Please note that launch contexts can be extened for any resource type, but not all resource types have a matching CompartmentDefinition, e.g. 'location'.
 

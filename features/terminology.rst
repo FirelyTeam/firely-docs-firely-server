@@ -71,10 +71,10 @@ CodeSystem $subsumes
    * The system input parameters is only taken into when called on the type level.
    * Both ``GET`` and ``POST`` interactions are available. 
 
-CodeSystem $closure
+ConceptMap $closure
 --------------------
 
-:definition: http://www.hl7.org/implement/standards/fhir/codesystem-operation-closure.html
+:definition: http://www.hl7.org/implement/standards/fhir/conceptmap-operation-closure.html
 :notes:
    * Available on the system level ``<firely-server-endpoint>/administration/$closure``.
    * This operation is passed on to a Remote Terminology Service supporting it. It supports any parameters that the Remote service supports. 

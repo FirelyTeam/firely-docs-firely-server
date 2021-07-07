@@ -443,7 +443,7 @@ See :ref:`feature_multiversion`.
 .. _patient_everything_operation:
 
 Patient Everything Operation
------------------
+----------------------------
 ::
 
   "PatientEverythingOperation": {

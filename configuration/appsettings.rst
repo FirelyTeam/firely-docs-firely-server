@@ -440,7 +440,7 @@ By default, Firely Server serves both versions from the root of your web service
 
 See :ref:`feature_multiversion`.
 
-.. _fhir_capabilities:
+.. _patient_everything_operation:
 
 Patient Everything Operation
 -----------------
@@ -450,9 +450,11 @@ Patient Everything Operation
     "AdditionalResources": [ "Organization", "Location", "Substance", "Medication", "Device" ] // included referenced resources, additional to the Patient compartment resources
   },
 
-The patient everything operation returns all resources linked to a patient that are listed in the Compartment Patient. This section allows you to define additional resources that will be included in the resulting searchset bundle. 
+The Patient $everything operation returns all resources linked to a patient that are listed in the Compartment Patient. This section allows you to define additional resources that will be included in the resulting searchset bundle.
 
-Note: Device was added as an additional resource as it includes a reference to a patient but is not listed in the patient's compartment yet. As soon as the specification is updated, it will be removed from the appsetttings.
+See :ref:`feature_patienteverything`.
+
+.. _fhir_capabilities:
 
 FHIR Capabilities
 -----------------

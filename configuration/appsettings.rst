@@ -440,6 +440,20 @@ By default, Firely Server serves both versions from the root of your web service
 
 See :ref:`feature_multiversion`.
 
+.. _patient_everything_operation:
+
+Patient Everything Operation
+----------------------------
+::
+
+  "PatientEverythingOperation": {
+    "AdditionalResources": [ "Organization", "Location", "Substance", "Medication", "Device" ] // included referenced resources, additional to the Patient compartment resources
+  },
+
+The Patient $everything operation returns all resources linked to a patient that are listed in the Compartment Patient. This section allows you to define additional resources that will be included in the resulting searchset bundle.
+
+See :ref:`feature_patienteverything`.
+
 .. _fhir_capabilities:
 
 FHIR Capabilities

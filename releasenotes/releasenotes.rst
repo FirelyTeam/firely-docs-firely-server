@@ -20,7 +20,7 @@ See :ref:`upgrade` for information on how to upgrade to a new version of Firely 
 .. _announcement_vonk_8_july_2021:
 
 Public Endpoint Announcement 8 July 2021
----------------------------------------
+----------------------------------------
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 

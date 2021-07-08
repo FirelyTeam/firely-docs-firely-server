@@ -17,6 +17,13 @@ Upgrading Firely Server
 
 See :ref:`upgrade` for information on how to upgrade to a new version of Firely Server.
 
+.. _announcement_vonk_08_07_2021:
+
+Public Endpoint Announcement 08.07.2021
+---------------------------------------
+
+The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
+
 .. _vonk_releasenotes_420:
 
 Release 4.2.0

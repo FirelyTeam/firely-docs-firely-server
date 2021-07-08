@@ -372,7 +372,7 @@ Features
 
 #. Patch: We implemented FHIR Patch. You can now update a resource having only partial data for it. See :ref:`restful_crud`.
 #. Search on accents and combined characters: we improved searching with and on accents and combined characters. Note the database change above.
-#. API 1.7: We upgraded Vonk to use the FHIR .NET API 1.7, having its own `releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v1.7.0-beta-may2020-r5>`_.
+#. API 1.7: We upgraded Vonk to use the FHIR .NET API 1.7, having its own `releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v1.7.0-beta-may2020-r5>`__.
 #. Security: The Docker image is now based on the Alpine image for .NET Core. This has far less security issues than the Ubuntu image that we used before. The base image is aspnet:3.1-alpine:3.11 (newest version 3.12 has an open bug related to SQLite).
 #. Security: We revisited the list of security vulnerabilities, see :ref:`vonk_securitynotes`.
 #. Administration: ConceptMaps are now :ref:`imported <conformance_import>` at startup.
@@ -841,7 +841,7 @@ Feature
 
 #. Support for FHIR R4 next to FHIR STU3. Vonk will choose the correct handling based on the fhirVersion parameter in the mimetype. 
    The mimetype is read from the Accept header and (for POST/PUT) the Content-Type header. See :ref:`feature_multiversion` for background info.
-#. Upgrade to HL7.Fhir.Net API 1.3, see its `releasenotes <https://docs.fire.ly/projects/Firely-NET-SDK/releasenotes.html#stu3-r4-released-20190710>`_.
+#. Upgrade to HL7.Fhir.Net API 1.3, see its `releasenotes <https://docs.fire.ly/projects/Firely-NET-SDK/releasenotes.html#stu3-r4-released-20190710>`__.
 #. Administration API imports both STU3 and R4 conformance resources, see :ref:`conformance`
 
    #. Note: :ref:`Terminology operations <feature_terminology>` are still only available for STU3.

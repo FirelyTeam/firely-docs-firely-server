@@ -24,6 +24,25 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_421:
+
+Release 4.2.1 hotfix
+--------------------
+
+Database
+^^^^^^^^
+
+.. attention::
+   For SQL Server we enabled the CHECK constraint for the foreign keys. The related upgradescript (`data/20210720085032_EnableCheckConstraintForForeignKey.sql`) can take some time if you have many resources loaded in your database. Therefore some guidelines:
+
+   * We tested it on a database with about 15k Patient records, and 14 mln resources in total. Migrating that took about 20 seconds on a fairly powerful laptop.
+   * Absolutely make sure you create a backup of your database first.
+   * If you already expect the migration might failed or time out, you can run it manually upfront. Shut down Firely Server, so no other users are using the database, and then run the script from SQL Server Management Studio (or a similar tool).
+
+Fix
+^^^
+#. Enabled CHECK constraint for the foreign keys in SQL Server.
+
 .. _vonk_releasenotes_420:
 
 Release 4.2.0
@@ -35,7 +54,7 @@ Database
 .. attention::
    For SQL Server we changed the datatype of the primary keys. The related upgradescript (`data/20210519072216_ChangePrimaryKeyTypeFromIntToBigint.sql`) can take a lot of time if you have many resources loaded in your database. Therefore some guidelines:
 
-   * We tested it on a database with about 15k Patient records, and 14 mln resources in total. Migrating that took about 45 minutes on a fairly powerful laptop.
+   * We tested it on a database with about 15k Patient records, and 14 mln resources in total. Migrating that took about 50 minutes on a fairly powerful laptop.
    * Absolutely make sure you create a backup of your database first.
    * If you haven't done so already, first upgrade to version 4.1.x.
    * If you already expect the migration might time out, you can run it manually upfront. Shut down Firely Server, so no other users are using the database, and then run the script from SQL Server Management Studio (or a similar tool).

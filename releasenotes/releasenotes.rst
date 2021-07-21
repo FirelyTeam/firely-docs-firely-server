@@ -31,9 +31,11 @@ Release 4.2.1 hotfix
 
 Database
 ^^^^^^^^
+.. note::
+   This hotfix release is mainly for fixing a bug reported in version 4.2.0 of Firely Server SQL Server database, which affects the query performance.
 
 .. attention::
-   For SQL Server we enabled the CHECK constraint for the foreign keys. The related upgradescript (`data/20210720085032_EnableCheckConstraintForForeignKey.sql`) can take some time if you have many resources loaded in your database. Therefore some guidelines:
+   For SQL Server the foreign keys are made to be trusted. The related upgradescript (`data/20210720085032_EnableCheckConstraintForForeignKey.sql`) can take some time if you have many resources loaded in your database. Therefore some guidelines:
 
    * We tested it on a database with about 15k Patient records, and 14 mln resources in total. Migrating that took about 20 seconds on a fairly powerful laptop.
    * Absolutely make sure you create a backup of your database first.
@@ -41,7 +43,7 @@ Database
 
 Fix
 ^^^
-#. Enabled CHECK constraint for the foreign keys in SQL Server.
+#. Fixed a bug about Not Trusted Foreign Key Constraints. This bug has an impact on the query performance since SQL Server optimizer won't trust these constants and to perform extra checks.
 
 .. _vonk_releasenotes_420:
 
@@ -59,6 +61,9 @@ Database
    * If you haven't done so already, first upgrade to version 4.1.x.
    * If you already expect the migration might time out, you can run it manually upfront. Shut down Firely Server, so no other users are using the database, and then run the script from SQL Server Management Studio (or a similar tool).
    * Running the second script (`20210520102224_ChangePrimaryKeyTypeFromIntToBigintBDE.sql`) is optional - that should also succeed when applied by the automigration.
+
+.. note::
+   As reported by a client, for this version of Firely Server, some foreign keys are untrusted in the SQL Server database. This has an impact on query performance and referential integrity. If you find yourself in the same situation, please use the script provided in version 4.2.1 to fix the issue.
 
 Feature
 ^^^^^^^

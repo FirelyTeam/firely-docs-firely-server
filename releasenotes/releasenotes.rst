@@ -43,7 +43,7 @@ Database
 
 Fix
 ^^^
-#. Fixed a bug about Not Trusted Foreign Key Constraints. This bug has an impact on the query performance since SQL Server optimizer won't trust these constants and to perform extra checks.
+#. Fixed a bug where some of the Foreign Keys in SQL Server had become untrusted. This bug has an impact on the query performance since the the SQL Server query optimizer will not consider FKs when they are not trusted. This has been fixed, all Foreign Keys have been validated and are trusted again.
 
 .. _vonk_releasenotes_420:
 

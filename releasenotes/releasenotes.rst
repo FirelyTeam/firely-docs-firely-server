@@ -37,9 +37,9 @@ Database
 .. attention::
     The upgrade procedure will execute a SQL script try to validate the foreign key constraints. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually, The script can be found in ``data/20210720085032_EnableCheckConstraintForForeignKey.sql``. Here are some guidelines:
 
-   * We tested it on a database with about 15k Patient records, and 14 mln resources in total. Migrating that took about 20 seconds on a fairly powerful laptop.
-   * Absolutely make sure you create a backup of your database first.
-   * If you already expect the migration might failed or time out, you can run it manually upfront. Shut down Firely Server, so no other users are using the database, and then run the script from SQL Server Management Studio (or a similar tool).
+   * We tested it on a database with about 15k Patient records, and 14 million resources in total. The upgrade script took about 20 seconds to complete on a fairly powerful laptop.
+   * As always, make sure you have a backup of your database that has tried and tested before you begin the upgrade.
+   * If you expect the upgrade to time out, you can choose to run the SQL script manually beforehand. Please make sure that Firely Server is shutdown before you execute the script.
 
 Fix
 ^^^

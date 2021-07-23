@@ -66,9 +66,6 @@ Database
    * If you already expect the migration might time out, you can run it manually upfront. Shut down Firely Server, so no other users are using the database, and then run the script from SQL Server Management Studio (or a similar tool).
    * Running the second script (`20210520102224_ChangePrimaryKeyTypeFromIntToBigintBDE.sql`) is optional - that should also succeed when applied by the automigration.
 
-.. note::
-   As reported by a client, for this version of Firely Server, some foreign keys are untrusted in the SQL Server database. This has an impact on query performance and referential integrity. If you find yourself in the same situation, please use the script provided in version 4.2.1 to fix the issue.
-
 Feature
 ^^^^^^^
 

@@ -35,7 +35,7 @@ Database
    We found an issue in version 4.2.0, which affects the query performance for Firely Server running on a SQL Server database. If your are running FS v4.2.0 on SQL Server you should upgrade to v4.2.1 or if that is not possible, :ref:`vonk-contact`.
 
 .. attention::
-   For SQL Server the foreign keys are made to be trusted. The related upgradescript (`data/20210720085032_EnableCheckConstraintForForeignKey.sql`) can take some time if you have many resources loaded in your database. Therefore some guidelines:
+    The upgrade procedure will execute a SQL script try to validate the foreign key constraints. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually, The script can be found in ``data/20210720085032_EnableCheckConstraintForForeignKey.sql``. Here are some guidelines:
 
    * We tested it on a database with about 15k Patient records, and 14 mln resources in total. Migrating that took about 20 seconds on a fairly powerful laptop.
    * Absolutely make sure you create a backup of your database first.

@@ -32,7 +32,7 @@ Release 4.2.1 hotfix
 Database
 ^^^^^^^^
 .. note::
-   This hotfix release is mainly for fixing a bug reported in version 4.2.0 of Firely Server SQL Server database, which affects the query performance.
+   We found an issue in version 4.2.0, which affects the query performance for Firely Server running on a SQL Server database. If your are running FS v4.2.0 on SQL Server you should upgrade to v4.2.1 or if that is not possible, :ref:`vonk-contact`.
 
 .. attention::
    For SQL Server the foreign keys are made to be trusted. The related upgradescript (`data/20210720085032_EnableCheckConstraintForForeignKey.sql`) can take some time if you have many resources loaded in your database. Therefore some guidelines:

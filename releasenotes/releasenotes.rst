@@ -54,6 +54,10 @@ Database
 ^^^^^^^^
 
 .. attention::
+   For SQL Server users: this version of Firely Server running on SQL Server has a bug where some of the Foreign Keys became untrusted. This has an impact on the query performance. Please upgrade to version 4.2.1 or if that is not possible, :ref:`vonk-contact`.
+   Please note that users running Firely Server running either MongoDb, CosmoDb, or SQLite are not affected by this issue.
+
+.. attention::
    For SQL Server we changed the datatype of the primary keys. The related upgradescript (`data/20210519072216_ChangePrimaryKeyTypeFromIntToBigint.sql`) can take a lot of time if you have many resources loaded in your database. Therefore some guidelines:
 
    * We tested it on a database with about 15k Patient records, and 14 mln resources in total. Migrating that took about 50 minutes on a fairly powerful laptop.

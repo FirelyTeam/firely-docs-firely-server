@@ -24,6 +24,27 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_421:
+
+Release 4.2.1 hotfix
+--------------------
+
+Database
+^^^^^^^^
+.. note::
+   We found an issue in version 4.2.0, which affects the query performance for Firely Server running on a SQL Server database. If your are running FS v4.2.0 on SQL Server you should upgrade to v4.2.1 or if that is not possible, :ref:`vonk-contact`.
+
+.. attention::
+    The upgrade procedure will execute a SQL script try to validate the foreign key constraints. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually, The script can be found in ``data/20210720085032_EnableCheckConstraintForForeignKey.sql``. Here are some guidelines:
+
+   * We tested it on a database with about 15k Patient records, and 14 million resources in total. The upgrade script took about 20 seconds to complete on a fairly powerful laptop.
+   * As always, make sure you have a backup of your database that has been tried and tested before you begin the upgrade.
+   * If you expect the upgrade to time out, you can choose to run the SQL script manually beforehand. Please make sure that Firely Server is shutdown before you execute the script.
+
+Fix
+^^^
+#. Fixed a bug where some of the Foreign Keys in SQL Server had become untrusted. This bug has an impact on the query performance since the the SQL Server query optimizer will not consider FKs when they are not trusted. This has been fixed, all Foreign Keys have been validated and are trusted again.
+
 .. _vonk_releasenotes_420:
 
 Release 4.2.0
@@ -33,9 +54,13 @@ Database
 ^^^^^^^^
 
 .. attention::
+   For SQL Server users: this version of Firely Server running on SQL Server has a bug where some of the Foreign Keys became untrusted. This has an impact on the query performance. Please upgrade to version 4.2.1 or if that is not possible, :ref:`vonk-contact`.
+   Please note that users running Firely Server running either MongoDb, CosmoDb, or SQLite are not affected by this issue.
+
+.. attention::
    For SQL Server we changed the datatype of the primary keys. The related upgradescript (`data/20210519072216_ChangePrimaryKeyTypeFromIntToBigint.sql`) can take a lot of time if you have many resources loaded in your database. Therefore some guidelines:
 
-   * We tested it on a database with about 15k Patient records, and 14 mln resources in total. Migrating that took about 45 minutes on a fairly powerful laptop.
+   * We tested it on a database with about 15k Patient records, and 14 mln resources in total. Migrating that took about 50 minutes on a fairly powerful laptop.
    * Absolutely make sure you create a backup of your database first.
    * If you haven't done so already, first upgrade to version 4.1.x.
    * If you already expect the migration might time out, you can run it manually upfront. Shut down Firely Server, so no other users are using the database, and then run the script from SQL Server Management Studio (or a similar tool).

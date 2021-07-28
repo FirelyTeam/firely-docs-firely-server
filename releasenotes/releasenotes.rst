@@ -24,6 +24,25 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_430:
+
+Release 4.3.0
+-------------
+
+Feature
+^^^^^^^
+
+#. Firely Server now allows you to execute a ValueSet expansion of large ValueSets (> 500 included concepts). Previosuly, Firely Server would log an error outlining that the expansion was not possible. The appsettings now contain a setting in the Terminology section allowing to select the MaxExpansionSize.
+
+Fix
+^^^
+
+#. Fixed a NullPointerException which occured when indexing UCUM quantities that contained more than one annotation (e.g. "{reads}/{base}").
+#. Firely Server will now check the information model of the request for conditional delete and delete requests. It was possible to accidentally delete a resource regardless across information models.  
+#. $subsumes returned HTTP 501 - Not implemented for a POST request (instance-level) even if the operation was enabled in the appsettings.
+#. The _type filter on $everthing and Bulk data export din't allow for resources that are not within the Patient compartment. The operations would return an empty result set.
+#. Added a clarification to the documentation that $everthing and Bulk data export do not export Device resources by default. Even though the resource contains a reference to Patient, the corresponding compartment definition for Patient does not include Device as a linked resource. It's possible to export Device resources by adding the resource type to "AdditionalResources" settings of the operations.
+
 .. _vonk_releasenotes_421:
 
 Release 4.2.1 hotfix

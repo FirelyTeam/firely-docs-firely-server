@@ -38,7 +38,7 @@ Fix
 ^^^
 
 #. Fixed a NullPointerException which occured when indexing UCUM quantities that contained more than one annotation (e.g. "{reads}/{base}").
-#. Firely Server will now check the information model of the request for conditional delete and delete requests. It was possible to accidentally delete a resource regardless across information models.  
+#. Fixed a bug where it was possible to accidentally delete a resource with a different information model then the request. Firely Server will now check the information model of the request against the information model of the resource for conditional delete and delete requests.
 #. $subsumes returned HTTP 501 - Not implemented for a POST request (instance-level) even if the operation was enabled in the appsettings.
 #. The _type filter on $everthing and Bulk data export din't allow for resources that are not within the Patient compartment. The operations would return an empty result set.
 #. Added a clarification to the documentation that $everthing and Bulk data export do not export Device resources by default. Even though the resource contains a reference to Patient, the corresponding compartment definition for Patient does not include Device as a linked resource. It's possible to export Device resources by adding the resource type to "AdditionalResources" settings of the operations.

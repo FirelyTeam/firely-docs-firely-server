@@ -32,7 +32,7 @@ Release 4.3.0
 Feature
 ^^^^^^^
 
-#. Firely Server now allows you to execute a ValueSet expansion of large ValueSets (> 500 included concepts). Previously, Firely Server would log an error outlining that the expansion was not possible. The appsettings now contain a setting in the Terminology section allowing to select the MaxExpansionSize.
+#. Firely Server now allows you to execute a ValueSet expansion of large ValueSets (> 500 included concepts). Previously, Firely Server would log an error outlining that the expansion was not possible. The appsettings now contain a setting in the Terminology section allowing to select the MaxExpansionSize. See :ref:`feature_terminologyoptions` for more details.
 
 Fix
 ^^^

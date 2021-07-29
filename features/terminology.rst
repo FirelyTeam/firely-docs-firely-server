@@ -187,6 +187,7 @@ A sample Terminology section in the appsettings can look like this:
 .. code-block:: JavaScript
 
    "Terminology": {
+      "MaxExpansionSize": 650,
       "LocalTerminologyService": {
          "Order": 10,
          "PreferredSystems": [ "http://hl7.org/fhir" ],
@@ -214,7 +215,9 @@ A sample Terminology section in the appsettings can look like this:
       ]
    },
 
-This means if you execute a terminology operation request, Firely Server will check whether the request is correct, redirect it to the preferred terminology service and finally return the result. 
+This means if you execute a terminology operation request, Firely Server will check whether the request is correct, redirect it to the preferred terminology service and finally return the result.
+
+Additionally to the remote and local terminology services, you can configure the maximum number of concepts (MaxExpansionSize) that are allowed to be included in a local ValueSet expansion. Local ValueSets largen than the configured setting will not be expanded, hence they cannot be used for $validate-code, $validate or $expand.
 
 License
 -------

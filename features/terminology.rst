@@ -143,6 +143,7 @@ Lastly, operation on the administration endpoint can be limited to specific IP a
       }
    },
 
+.. _feature_terminologyoptions:
 
 Options
 ^^^^^^^

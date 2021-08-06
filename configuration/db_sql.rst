@@ -27,18 +27,20 @@ In both cases:
         "SqlDbOptions": {
             "ConnectionString": "connectionstring to your Firely Server SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
             "SchemaName": "vonk",
-            "AutoUpdateDatabase": true
+            "AutoUpdateDatabase": true,
+            "MigrationTimeout": 1800 // in seconds
             //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
         },
 
-*   Find the section called ``PipelineOptions``. Make sure it contains the SQL repository in the root path for Firely Server Data::
+*   Find the section called ``PipelineOptions``. Make sure it contains the SQL repository in the root path for Firely Server Data. For Firely Server versions older than 4.3.0 use ``Vonk.Repository.Sql.SqlVonkConfiguration``. For Firely Server v4.3.0 and above use ``Vonk.Repository.Sql.Raw.KSearchConfiguration``::
 
         "PipelineOptions" : 
         {
             "Branches" : [
                 "/" : { 
                     "Include" : [
-                        "Vonk.Repository.Sql.SqlVonkConfiguration"
+                        //"Vonk.Repository.Sql.SqlVonkConfiguration", // use this for FS versions < v4.3.0
+                        "Vonk.Repository.Sql.Raw.KSearchConfiguration", // use this for FS versions >= v4.3.0
                         //...
                     ]
                 }
@@ -56,7 +58,8 @@ In both cases:
             "SqlDbOptions": {
                 "ConnectionString": "Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=VonkAdmin;Data Source=Server\Instance;MultipleActiveResultSets=true",
                 "SchemaName": "vonk",
-                "AutoUpdateDatabase": true
+                "AutoUpdateDatabase": true,
+                "MigrationTimeout": 1800 // in seconds
             }
         },
         //...
@@ -65,7 +68,8 @@ In both cases:
             "Branches" : [
                 "/administration" : { 
                     "Include" : [
-                        "Vonk.Repository.Sql.SqlAdministrationConfiguration"
+                        //"Vonk.Repository.Sqlite.SqliteTaskConfiguration", // use this for FS versions < v4.3.0
+                        "Vonk.Repository.Sql.Raw.KAdminSearchConfiguration", // use this for FS versions >= v4.3.0
                         //...
                     ]
                 }
@@ -88,7 +92,8 @@ This option is mainly for experimentation as it effectively requires sysadmin pr
         "SqlDbOptions": {
             "ConnectionString": "Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=VonkData;Data Source=Server\Instance;MultipleActiveResultSets=true",
             "SchemaName": "vonk",
-            "AutoUpdateDatabase": true
+            "AutoUpdateDatabase": true,
+            "MigrationTimeout": 1800 // in seconds
         },
 
 *   Set the ``SqlDbOptions`` under ``Administration`` for the Administration database likewise:
@@ -99,13 +104,16 @@ This option is mainly for experimentation as it effectively requires sysadmin pr
             "SqlDbOptions": {
                 "ConnectionString": "Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=VonkAdmin;Data Source=Server\Instance;MultipleActiveResultSets=true",
                 "SchemaName": "vonk",
-                "AutoUpdateDatabase": true
+                "AutoUpdateDatabase": true,
+                "MigrationTimeout": 1800 // in seconds
             }
         }
 
 *   You don't need to set AutoUpdateConnectionString since the ConnectionString will already have enough permissions.
 
 *   Start Firely Server. It will display in its log that it applied pending migrations. After that the database is created and set up with the correct schema.
+
+*   If an upgrade to a new version of Firely requires a migration then a SQL time out might occur, halting the upgrade and resulting in a rollback of the migration. The duration of the SQL time out for migrations can be controlled with ``MigrationTimeout``. The default value is 1800 seconds (30 min).
 
 .. attention::
 

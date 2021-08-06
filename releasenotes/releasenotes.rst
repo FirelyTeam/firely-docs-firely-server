@@ -29,6 +29,14 @@ The default FHIR version of the `public Firely Server endpoint <https://server.f
 Release 4.3.0
 -------------
 
+Database
+^^^^^^^^
+
+#. SQL Server
+
+   #. To improve the performance of searching we have rewritten a large part of our SQL Server implementation.
+   #. We have identified two indexes that needed a fix to increase query performance for certain searches. The upgrade procedure will try to fix these indexes automatically. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually, The script can be found in ``sqlserver/FS_SchemaUpgrade_Data_v19_v20.sql``.
+
 Feature
 ^^^^^^^
 

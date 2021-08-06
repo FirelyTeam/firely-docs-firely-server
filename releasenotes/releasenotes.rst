@@ -34,7 +34,7 @@ Database
 
 #. SQL Server
 
-   #. To improve the performance of searching we have rewritten a large part of our SQL Server implementation.
+   #. To improve the performance of searching we have rewritten a large part of our SQL Server implementation. To be able to use the new implementation go to section PipelineOptions in ``appsettings.default.json`` (or ``appsettings.instance.json`` if you have overriden the default pipeline options) and add ``"Vonk.Repository.Sql.Raw.KSearchConfiguration"``. See :ref:`configure_sql` for more details.
    #. We have identified two indexes that needed a fix to increase query performance for certain searches. The upgrade procedure will try to fix these indexes automatically. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually, The script can be found in ``sqlserver/FS_SchemaUpgrade_Data_v19_v20.sql``.
 
 Feature
@@ -62,7 +62,9 @@ Database
    We found an issue in version 4.2.0, which affects the query performance for Firely Server running on a SQL Server database. If your are running FS v4.2.0 on SQL Server you should upgrade to v4.2.1 or if that is not possible, :ref:`vonk-contact`.
 
 .. attention::
-    The upgrade procedure will execute a SQL script try to validate the foreign key constraints. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually, The script can be found in ``data/20210720085032_EnableCheckConstraintForForeignKey.sql``. Here are some guidelines:
+    The upgrade procedure will execute a SQL script try to validate the foreign key constraints. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually, The script can be found in ``data/20210720085032_EnableCheckConstraintForForeignKey.sql``.
+    
+    Here are some guidelines:
 
    * We tested it on a database with about 15k Patient records, and 14 million resources in total. The upgrade script took about 20 seconds to complete on a fairly powerful laptop.
    * As always, make sure you have a backup of your database that has been tried and tested before you begin the upgrade.
@@ -85,25 +87,25 @@ Database
    Please note that users running Firely Server running either MongoDb, CosmoDb, or SQLite are not affected by this issue.
 
 .. attention::
-   For SQL Server we changed the datatype of the primary keys. The related upgradescript (`data/20210519072216_ChangePrimaryKeyTypeFromIntToBigint.sql`) can take a lot of time if you have many resources loaded in your database. Therefore some guidelines:
+   For SQL Server we changed the datatype of the primary keys. The related upgradescript (``data/20210519072216_ChangePrimaryKeyTypeFromIntToBigint.sql``) can take a lot of time if you have many resources loaded in your database. Therefore some guidelines:
 
    * We tested it on a database with about 15k Patient records, and 14 mln resources in total. Migrating that took about 50 minutes on a fairly powerful laptop.
    * Absolutely make sure you create a backup of your database first.
    * If you haven't done so already, first upgrade to version 4.1.x.
    * If you already expect the migration might time out, you can run it manually upfront. Shut down Firely Server, so no other users are using the database, and then run the script from SQL Server Management Studio (or a similar tool).
-   * Running the second script (`20210520102224_ChangePrimaryKeyTypeFromIntToBigintBDE.sql`) is optional - that should also succeed when applied by the automigration.
+   * Running the second script (``20210520102224_ChangePrimaryKeyTypeFromIntToBigintBDE.sql``) is optional - that should also succeed when applied by the automigration.
 
 Feature
 ^^^^^^^
 
 #. Terminology operation ``$lookup`` is now also connected to remote terminology services, if enabled. See :ref:`feature_terminology`.
-#. We provided a script to 'purge' data from a SQL Server database. See `data/20210512_Purge.sql`. You can filter on the resourcetype only. Use with care and after a backup. If you need more elaborate support for hard deletes, please :ref:`vonk-contact`.
+#. We provided a script to 'purge' data from a SQL Server database. See ``data/20210512_Purge.sql``. You can filter on the resourcetype only. Use with care and after a backup. If you need more elaborate support for hard deletes, please :ref:`vonk-contact`.
 
 Fix
 ^^^
 #. Firely Server could run out of primary keys on the index tables in SQL Server. Fixed by upgrading to bigint, see warning above.
 #. Nicer handling of SQL Server migration scripts that time out on startup. It will now kindly ask you to run the related script manually if needed (usually depends on the size of your database).
-#. The Patient-everything (`$everything`) operation was not mentioned in the CapabilityStatement.
+#. The Patient-everything (``$everything``) operation was not mentioned in the CapabilityStatement.
 #. License expired one day too early.
 #. Dependencies have been upgraded to the latest versions compatible with .NET Core 3.1.
 #. PATCH did not allow adding to a repeating element.

@@ -16,12 +16,14 @@ This configuration is part of :ref:`configure_appsettings`.
     "SqlDbOptions": {
       "ConnectionString": "connectionstring to your Firely Server Admin SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
       "SchemaName": "vonkadmin",
-      "AutoUpdateDatabase": true
+      "AutoUpdateDatabase": true,
+      "MigrationTimeout": 1800 // in seconds
       //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
     },
     "SQLiteDbOptions": {
       "ConnectionString": "Data Source=./data/vonkadmin.db",
-      "AutoUpdateDatabase": true
+      "AutoUpdateDatabase": true,
+      "MigrationTimeout": 1800 // in seconds
     },
     "Security": {
       "AllowedNetworks": [ "::1" ], // i.e.: ["127.0.0.1", "::1" (ipv6 localhost), "10.1.50.0/24", "10.5.3.0/24", "31.161.91.98"]

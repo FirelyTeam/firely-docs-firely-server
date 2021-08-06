@@ -88,7 +88,8 @@ JSON formally has no notion of comments. But the configuration system of ASP.Net
         "SqlDbOptions": {
             "ConnectionString": "connectionstring to your Firely Server Admin SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
             "SchemaName": "vonkadmin",
-            "AutoUpdateDatabase": true
+            "AutoUpdateDatabase": true,
+            "MigrationTimeout": 1800 // in seconds
             //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
         },
 
@@ -116,7 +117,8 @@ Administration
         "SqlDbOptions": {
             "ConnectionString": "connectionstring to your Firely Server Admin SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
             "SchemaName": "vonkadmin",
-            "AutoUpdateDatabase": true
+            "AutoUpdateDatabase": true,
+            "MigrationTimeout": 1800 // in seconds
             //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
         },
        "SQLiteDbOptions": {
@@ -199,7 +201,8 @@ SQL
     "SqlDbOptions": {
         "ConnectionString": "connectionstring to your Firely Server SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
         "SchemaName": "vonk",
-        "AutoUpdateDatabase": true
+        "AutoUpdateDatabase": true,
+        "MigrationTimeout": 1800 // in seconds
         //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
     },
 

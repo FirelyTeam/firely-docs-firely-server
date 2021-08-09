@@ -158,7 +158,7 @@ FHIR defines CompartmentDefinitions for Patient, Encounter, RelatedPerson, Pract
 * the CompartmentDefinition is known to Firely Server, see :ref:`conformance` for options to provide them.
 * the OAuth2 Token contains a claim with the same name as the CompartmentDefinition.code (but it must be lowercase).
 
-So some the launch contexts mentioned in SMART on FHIR map to CompartmentDefinitions. For example, the launch context 'launch/patient' and 'launch/encounter' map to the compartment 'Patient' and 'Encounter'. Please note that launch contexts can be extened for any resource type, but not all resource types have a matching CompartmentDefinition, e.g. 'location'.
+So some of the launch contexts mentioned in SMART on FHIR map to CompartmentDefinitions. For example, the launch context 'launch/patient' and 'launch/encounter' map to the compartment 'Patient' and 'Encounter'. Please note that launch contexts can be extended for any resource type, but not all resource types have a matching CompartmentDefinition, e.g. 'Location'.
 
 A CompartmentDefinition defines the relationships, but it becomes useful once you combine it with a way of specifying the actual focus resource. In SMART on FHIR, the launch context can do that, e.g. patient=123. As per the SMART `Scopes and Launch Context`_, the value '123' is the value of the Patient.id. Together with the Patient CompartmentDefinition this defines a -- what we call -- Compartment in Firely Server:
 

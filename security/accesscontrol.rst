@@ -108,8 +108,16 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
           "FilterArgument": "identifier=#encounter#" //... for the Encounter that has an identifier matching the value of that 'encounter' launch scope
         },
         {
-          "FilterType": "Location", //Filter on a Location compartment if a 'location' launch scope is in the auth token
-          "FilterArgument": "identifier=#location#" //... for the Location that has an identifier matching the value of that 'location' launch scope
+          "FilterType": "RelatedPerson", //Filter on a RelatedPerson compartment if a 'relatedperson' launch scope is in the auth token
+          "FilterArgument": "identifier=#relatedperson#" //... for the RelatedPerson that has an identifier matching the value of that 'relatedperson' launch scope
+        },
+        {
+          "FilterType": "Practitioner", //Filter on a Practitioner compartment if a 'practitioner' launch scope is in the auth token
+          "FilterArgument": "identifier=#practitioner#" //... for the Practitioner that has an identifier matching the value of that 'practitioner' launch scope
+        },
+        {
+          "FilterType": "Device", //Filter on a Device compartment if a 'device' launch scope is in the auth token
+          "FilterArgument": "identifier=#device#" //... for the Device that has an identifier matching the value of that 'device' launch scope
         }
       ],
       "Authority": "url-to-your-identity-provider",
@@ -148,9 +156,9 @@ An example is the `Patient CompartmentDefinition`_, where a Patient resource is 
 FHIR defines CompartmentDefinitions for Patient, Encounter, RelatedPerson, Practitioner and Device. Although Firely Server is functionally not limited to these five, the specification does not allow you to define your own. Firely Server will use a CompartmentDefinition if:
 
 * the CompartmentDefinition is known to Firely Server, see :ref:`conformance` for options to provide them.
-* the OAuth2 Token contains a claim with the same name as the CompartmentDefinition.code (but it may be lowercase).
+* the OAuth2 Token contains a claim with the same name as the CompartmentDefinition.code (but it must be lowercase).
 
-So the launch contexts mentioned in SMART on FHIR -- 'patient' and 'encounter' -- map to the CompartmentDefinitions for Patient and Encounter. For the launch context 'location', the specification has no matching CompartmentDefinition. 
+So some of the launch contexts mentioned in SMART on FHIR map to CompartmentDefinitions. For example, the launch context 'launch/patient' and 'launch/encounter' map to the compartment 'Patient' and 'Encounter'. Please note that launch contexts can be extended for any resource type, but not all resource types have a matching CompartmentDefinition, e.g. 'Location'.
 
 A CompartmentDefinition defines the relationships, but it becomes useful once you combine it with a way of specifying the actual focus resource. In SMART on FHIR, the launch context can do that, e.g. patient=123. As per the SMART `Scopes and Launch Context`_, the value '123' is the value of the Patient.id. Together with the Patient CompartmentDefinition this defines a -- what we call -- Compartment in Firely Server:
 

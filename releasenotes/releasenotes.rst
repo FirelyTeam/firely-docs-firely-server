@@ -38,7 +38,7 @@ Database
 
 #. SQL Server
 
-   #. Improved query behind ``_include`` to leverage an index. No changes to the database schema involved.
+   #. Improved query behind ``_include`` to leverage an index. No changes to the database schema involved. This only affects the new implementation (available since 4.3.0).
 
 Fix
 ^^^

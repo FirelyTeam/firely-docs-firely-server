@@ -35,7 +35,7 @@ Database
 #. SQL Server
 
    #. To improve the performance of searching we have rewritten a large part of our SQL Server implementation. To be able to use the new implementation go to section PipelineOptions in ``appsettings.default.json`` (or ``appsettings.instance.json`` if you have overriden the default pipeline options) and add ``"Vonk.Repository.Sql.Raw.KSearchConfiguration"``. See :ref:`configure_sql` for more details.
-   #. We have identified two indexes that needed a fix to increase query performance for certain searches. The upgrade procedure will try to fix these indexes automatically. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually, The script can be found in ``sqlserver/FS_SchemaUpgrade_Data_v19_v20.sql``.
+   #. We have identified two indexes that needed a fix to increase query performance for certain searches. The upgrade procedure will try to fix these indexes automatically. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually, The script can be found in ``sqlserver/FS_SchemaUpgrade_Data_v19_v20.sql``. If you use SQL Server as your Administration database, Firely Server will try to update it automatically as well. If you prefer a manual update, you can run the following script: ``sqlserver/FS_SchemaUpgrade_Admin_v18_v19.sql``.
 
 Feature
 ^^^^^^^

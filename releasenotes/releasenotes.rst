@@ -24,6 +24,29 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_440:
+
+Release 4.4.0
+-------------
+
+Database
+^^^^^^^^
+
+#. MongoDB
+
+   #. To improve the performance of deletes, the definition of the index ``ix_container_id`` is redefined. Firely Server 4.4.0 will automatically change the definition.
+
+#. SQL Server
+
+   #. Improved query behind ``_include`` to leverage an index. No changes to the database schema involved.
+
+Fix
+^^^
+
+#. Improved automatic upgrading of terminology settings from pre-4.1.0 instances.
+#. Added ``CapabilityStatement.status`` for R4
+#. The default ``SmartAuthorizationOptions`` in ``appsettings.default.json`` only have the Filter for 'Patient' enabled. The rest is now commented out is it is generally not used.
+
 .. _vonk_releasenotes_430:
 
 Release 4.3.0

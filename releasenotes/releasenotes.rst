@@ -45,7 +45,7 @@ Fix
 
 #. Improved automatic upgrading of terminology settings from pre-4.1.0 instances.
 #. Added ``CapabilityStatement.status`` for R4
-#. The default ``SmartAuthorizationOptions`` in ``appsettings.default.json`` only have the Filter for 'Patient' enabled. The rest is now commented out is it is generally not used.
+#. The default ``SmartAuthorizationOptions`` in ``appsettings.default.json`` only have the Filter for 'Patient' enabled. The rest is now commented out as those are generally not used.
 
 .. _vonk_releasenotes_430:
 

@@ -9,12 +9,16 @@ This is the full list of direct depencies that Firely Server has on other librar
 This list uses the NuGet package names (or prefixes of them) so you can easily lookup further details of those packages on `NuGet.org <https://www.nuget.org>`_ if needed.
 
 #. Microsoft.AspNetCore.* - Apache 2.0
+#. Microsoft.ApplicationInsights.* - MIT
+#. Microsoft.Bcl.AsyncInterfaces - MIT
 #. Microsoft.EntityFrameworkCore - Apache 2.0
 #. Microsoft.Extensions.* - MIT
 #. Microsoft.AspNet.WebApi.Client - `MS-.NET-Library License <https://go.microsoft.com/fwlink/?LinkId=329770>`_
 #. System.Interactive.Async - MIT
 #. Microsoft.Data.SqlClient - MIT
 #. Microsoft.CSharp - MIT
+#. System.Interactive.Async - MIT
+#. System.Text.Json - MIT
 #. System.* - `MS-.NET-Library License <https://go.microsoft.com/fwlink/?LinkId=329770>`_
 #. NewtonSoft.Json - MIT
 #. IdentityServer4.AccessTokenValidation - Apache 2.0
@@ -25,6 +29,8 @@ This list uses the NuGet package names (or prefixes of them) so you can easily l
 #. Hl7.Fhir.* - Firely OSS license (see below)
 #. Fhir.Metrics - as Hl7.Fhir
 #. Simplifier.Licensing - as Hl7.Fhir
+#. Dapper - Apache 2.0
+#. SqlKata.* - MIT
 
 MongoDB / CosmosDB: 
 
@@ -37,6 +43,8 @@ For unittesting:
 #. FluentAssertions - Apache 2.0
 #. Microsoft.NET.Test.Sdk - `MS-.NET-Library License <https://go.microsoft.com/fwlink/?LinkId=329770>`_
 #. System.Reactive - MIT
+#. coverlet.collector - MIT
+#. WireMock.Net - Apache 2.0
 
 Firely OSS License
 ------------------

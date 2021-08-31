@@ -43,30 +43,33 @@ Some additional namespaces you might want to log are:
 
 - ``Vonk.Configuration`` to log configuration information on startup
 - ``Vonk.Core.Licensing`` to show license information in your logs
-- ``Vonk.Repository.EntityFrameworkCore``, ``Vonk.Repository.DocumentDb`` or ``Vonk.Repository.Memory`` to log repository events
+- ``Vonk.Repository.Sql.Raw`` to log SQL repository events for Firely Server v4.3.0 and above
+- ``Vonk.Repository.Sql`` to log SQL repository events for Firely Server v4.2.0 and below
+- ``Vonk.Repository.DocumentDb`` to log MongoDB repository events
+- ``Vonk.Repository.Memory`` to log memory database repository events
 - ``Vonk.Core.Repository.EntryIndexerContext``, set it to ``"Error"`` if you have excessive warnings about indexing (mostly when importing `Synthea <https://synthea.mitre.org/downloads>` data)
 - ``Microsoft`` to log events from the Microsoft libraries
 - ``Microsoft.AspNetCore.Diagnostics`` to report request handling times
 - ``System`` to log events from the System libraries
 
 Please note that the namespaces are evaluated in order from top to bottom, so more generic 'catch all' namespaces should be at the bottom of the list. 
-So this will log events on ``Vonk.Repository.Sql`` on ``Information`` level::
+So this will log events on ``Vonk.Repository.Sql.Raw`` on ``Information`` level::
 
 	"MinimumLevel": {
 		"Default": "Error",
 		"Override": {
-			"Vonk.Repository.Sql": "Information",
+			"Vonk.Repository.Sql.Raw": "Information",
 			"Vonk": "Warning"
 		}
 	},
 
-But in this (purposefully incorrect) example the ``Warning`` level on the ``Vonk`` namespace will override the ``Information`` level on the ``Vonk.Repository.Sql`` namespace::
+But in this (purposefully incorrect) example the ``Warning`` level on the ``Vonk`` namespace will override the ``Information`` level on the ``Vonk.Repository.Sql.Raw`` namespace::
 
 	"MinimumLevel": {
 		"Default": "Error",
 		"Override": {
 			"Vonk": "Warning",
-			"Vonk.Repository.Sql": "Information"
+			"Vonk.Repository.Sql.Raw": "Information"
 		}
 	},
 
@@ -227,7 +230,7 @@ Whether you use MongoDB or SQL Server, you can have Firely Server log in detail 
 	"MinimumLevel": {
 		"Default": "Error",
 		"Override": {
-			"Vonk.Repository.EntityFrameworkCore": "Verbose",
+			"Vonk.Repository.Sql.Raw": "Verbose",
 			"Vonk.Repository.DocumentDb": "Verbose",
 			"Vonk": "Warning"
 		}

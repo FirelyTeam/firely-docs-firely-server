@@ -45,7 +45,7 @@ Some additional namespaces you might want to log are:
 - ``Vonk.Core.Licensing`` to show license information in your logs
 - ``Vonk.Repository.Sql.Raw`` to log SQL repository events for Firely Server v4.3.0 and above
 - ``Vonk.Repository.Sql`` to log SQL repository events for Firely Server v4.2.0 and below
-- ``Vonk.Repository.DocumentDb`` to log MongoDB repository events
+- ``Vonk.Repository.Document.Db`` to log MongoDB repository events 
 - ``Vonk.Repository.Memory`` to log memory database repository events
 - ``Vonk.Core.Repository.EntryIndexerContext``, set it to ``"Error"`` if you have excessive warnings about indexing (mostly when importing `Synthea <https://synthea.mitre.org/downloads>` data)
 - ``Microsoft`` to log events from the Microsoft libraries
@@ -231,7 +231,7 @@ Whether you use MongoDB or SQL Server, you can have Firely Server log in detail 
 		"Default": "Error",
 		"Override": {
 			"Vonk.Repository.Sql.Raw": "Verbose",
-			"Vonk.Repository.DocumentDb": "Verbose",
+			"Vonk.Repository.Document.Db": "Verbose",
 			"Vonk": "Warning"
 		}
 	},

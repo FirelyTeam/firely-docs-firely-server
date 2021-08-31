@@ -14,8 +14,6 @@ This list uses the NuGet package names (or prefixes of them) so you can easily l
 #. Microsoft.EntityFrameworkCore.* - Apache 2.0
 #. Microsoft.Extensions.* - MIT
 #. Microsoft.AspNet.WebApi.Client - `MS-.NET-Library License <https://go.microsoft.com/fwlink/?LinkId=329770>`_
-#. Microsoft.NET.Test.Sdk - MIT
-#. Microsoft.NETCore.Platforms - MIT
 #. System.Interactive.Async - MIT
 #. Microsoft.Data.SqlClient - MIT
 #. Microsoft.CSharp - MIT
@@ -45,6 +43,7 @@ For unittesting:
 #. XUnit - Apache 2.0
 #. Moq - BSD 3
 #. FluentAssertions - Apache 2.0
+#. Microsoft.NETCore.Platforms - MIT
 #. Microsoft.NET.Test.Sdk - `MS-.NET-Library License <https://go.microsoft.com/fwlink/?LinkId=329770>`_
 #. System.Reactive - MIT
 #. coverlet.collector - MIT

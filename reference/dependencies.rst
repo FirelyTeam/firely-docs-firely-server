@@ -11,16 +11,20 @@ This list uses the NuGet package names (or prefixes of them) so you can easily l
 #. Microsoft.AspNetCore.* - Apache 2.0
 #. Microsoft.ApplicationInsights.* - MIT
 #. Microsoft.Bcl.AsyncInterfaces - MIT
-#. Microsoft.EntityFrameworkCore - Apache 2.0
+#. Microsoft.EntityFrameworkCore.* - Apache 2.0
 #. Microsoft.Extensions.* - MIT
 #. Microsoft.AspNet.WebApi.Client - `MS-.NET-Library License <https://go.microsoft.com/fwlink/?LinkId=329770>`_
+#. Microsoft.NET.Test.Sdk - MIT
+#. Microsoft.NETCore.Platforms - MIT
 #. System.Interactive.Async - MIT
 #. Microsoft.Data.SqlClient - MIT
 #. Microsoft.CSharp - MIT
 #. System.Interactive.Async - MIT
 #. System.Text.Json - MIT
 #. System.* - `MS-.NET-Library License <https://go.microsoft.com/fwlink/?LinkId=329770>`_
+#. NETStandard.Library - MIT
 #. NewtonSoft.Json - MIT
+#. IdentityModel.* - Apache 2.0
 #. IdentityServer4.AccessTokenValidation - Apache 2.0
 #. IPNetwork2 - BSD 2-Clause "Simplified" License
 #. Quartz - Apache 2.0
@@ -34,7 +38,7 @@ This list uses the NuGet package names (or prefixes of them) so you can easily l
 
 MongoDB / CosmosDB: 
 
-#. MongoDB.Driver - Apache 2.0
+#. MongoDB.* - Apache 2.0
 
 For unittesting:
 

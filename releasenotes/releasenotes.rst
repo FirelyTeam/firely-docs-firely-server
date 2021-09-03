@@ -47,6 +47,13 @@ Fix
 #. Added ``CapabilityStatement.status`` for R4
 #. The default ``SmartAuthorizationOptions`` in ``appsettings.default.json`` only have the Filter for 'Patient' enabled. The rest is now commented out as those are generally not used.
 
+Plugin and Facade
+^^^^^^^^^^^^^^^^^
+
+#. The interfaces PrioritizedResourceResolver(R3|R4|R5) and their implementations are no longer available. The interface is now FHIR version agnostic. Please use the IPrioritizedResourceResolver interface in Vonk.Core.Common.
+#. The interface IConformanceCacheInvalidation has been moved from Vonk.Core.Import to Vonk.Core.Conformance
+#. The classes SpecificationZipResolver(R3|R4|R5) are no longer available. Please use the IPrioritizedResourceResolvers instead.
+
 .. _vonk_releasenotes_430:
 
 Release 4.3.0

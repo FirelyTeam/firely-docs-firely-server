@@ -79,6 +79,8 @@ Quantity search on UCUM quantities automatically converts units to a canonical f
 
 `Compartment Search <http://www.hl7.org/implement/standards/fhir/search.html#2.21.1.2>`_ is supported.
 
+.. warning:: Queries that request resource types not included in the current compartment's CompartmentDefinition will yield default search results. Example: Searching for Practitioner resources within a Patient's compartment will return all Practitioner resources, including the ones not linked to the patient.
+
 Firely Server also supports ``_include:iterate`` and ``_revinclude:iterate``, as well as its STU3 counterparts ``_include:recurse`` and ``_revinclude:recurse``. See `the specification <http://hl7.org/fhir/R4/search.html#revinclude>`_ for the definition of those. You can configure the maximum level of recursion::
 
    "FhirCapabilities": {

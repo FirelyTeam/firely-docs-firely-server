@@ -213,6 +213,8 @@ A valid access token for Firely Server at minimum will have:
 * the ``scope`` field with the scopes granted by this access token
 * optionally, the compartment claim, if you'd like to limit this token to a certain compartment. Such a claim may be requested by using a context scope or launching a part of an EHR launch. See `Requesting context with scopes <http://www.hl7.org/fhir/smart-app-launch/scopes-and-launch-context/#requesting-context-with-scopes>`_ for more details. For example, in case of Patient data access where the ``launch/patient`` scope is used, include the ``patient`` claim with the patient's id or identifier (:ref:`feature_accesscontrol_compartment`) and make sure to request the ``patient/<permissions>`` scope permissions. Compartment claims combined with ``user/<permissions>`` claims are not taken into acccount.
 
+.. warning:: Firely Server will not enforce any access control for resources outside of the specified compartment. Some compartment definitions do not include crucial resource types like 'Patient' or their corresponding resource type, i.e. all resources of this type regardless of any claims in the access token will be returned if requested. Please use this feature with caution! Additional custom access control is highly recommended.
+
 .. _feature_accesscontrol_decisions:
 
 Access Control Decisions

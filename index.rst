@@ -34,6 +34,7 @@ or support contract.
    Configuration <configuration/configuration>
    Deployment <deployment/deployment>
    Security <security/security>
+   Performance <performance/performance>
    Features <features/features>
    Administration API <administration_api>
    Plugins <plugins/plugins>

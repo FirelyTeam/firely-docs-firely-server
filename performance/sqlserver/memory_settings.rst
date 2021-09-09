@@ -1,13 +1,13 @@
 Memory Settings
 ===============
 
-The total ammoun of memory needed by SQL Server depends on your use case and (expected) workload. SQL Server will claim memory from the OS when needed but will not give it back to the OS once claimed. When not specifying a limit you will run the risk of starving the host server and OS of enough free memory to operate efficently. It is therefore strongly advised to limit the maximum ammount SQL Server will use.
+The total amount of memory needed by SQL Server depends on your use case and (expected) workload. SQL Server will claim memory from the OS when needed but will not give it back to the OS once claimed. If no limit is specified you will run the risk of starving the host server and OS of enough free memory to operate efficiently. It is therefore strongly advised to limit the maximum amount SQL Server is allowed to use.
 
 To set a fixed amount of memory using SSMS [#]_:
 
 #. In Object Explorer, right-click a server and select Properties.
 #. Click the Memory node.
-#. Under Server Memory Options, enter the amount that you want for Minimum server memory and Maximum server memory.
+#. Under Server Memory Options, enter the amount that you want for 'Minimum server memory (in MB)' and 'Maximum server memory (in MB)'.
 
 .. image:: ../../images/perf_sql_configure-memory-in-ssms.png
     :alt: Configure memory in SSMS

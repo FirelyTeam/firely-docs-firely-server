@@ -5,8 +5,13 @@ When optimizing SQL Server it is highly recommended to set the tempDB, the data 
 
 TempDB
 ------
-Place the tempDB database on a separate disk. The number of secondary data files depends on the number of (logical) processors on the machine [#]_. As a general rule, if the number of logical processors is less than or equal to eight, use the same number of data files as logical processors. If the number of logical processors is greater than eight, use eight data files. Then if contention continues, increase the number of data files by multiples of four until the contention decreases to acceptable levels, or make changes to the workload/code. For TempDB it usually is sufficient to create 8 equally sized data files. 
+Place the tempDB database on a separate disk and adjust the number of secondary data files according to how many (logical) processors the host features [#]_. If the number of logical processors is less than or equal to eight, use the same number of data files as logical processors. If the number of logical processors is greater than eight, use eight data files. For TempDB it usually is sufficient to create 8 equally sized data files. As a general rule of thumb:
 
+- Number of logical processors < 8 
+    --> Set the number of data files equal to the number of logical processors
+
+- Number of logical processors >= 8
+    --> Set the number of data files to 8 
 
 Data & Log files
 ----------------

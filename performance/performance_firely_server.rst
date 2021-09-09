@@ -1,4 +1,4 @@
-Performance of Firely Server Approach
+Performance of Firely Server
 =====================================
 
 About Performance

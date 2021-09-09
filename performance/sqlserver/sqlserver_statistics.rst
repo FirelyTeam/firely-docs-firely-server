@@ -3,7 +3,7 @@ SQL Server Statistics
 
 The maintenance of statistics falls outside the scope of Firely Server.
 
-Normally SQL Server will update and maintain the statistics automatically. But when the database becomes large this process might happen too infrequently. There is no magic bullet for updating statistics, so you arte advised to experiment and test what works best for yoiur setup.
+Normally SQL Server will update and maintain the statistics automatically. But when the database becomes large this process might happen too infrequently. There is no magic bullet for updating statistics, so you are advised to experiment and test what works best for your setup.
 
 Consider updating statistics for the following conditions [#]_:
 

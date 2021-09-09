@@ -7,5 +7,5 @@ This section contains a general approach to Firely Server performance and SQL Se
    :maxdepth: 1
    :titlesonly:
 
-   performance_approach
+   performance_firely_server
    sqlserver/sqlserver_guidelines

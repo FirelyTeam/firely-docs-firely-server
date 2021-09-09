@@ -11,7 +11,7 @@ Consider updating statistics for the following conditions [#]_:
 * Insert operations occur on ascending or descending key columns.
 * After maintenance operations.
 
-To manually update statistics there are two options [#]_[#]_:
+To manually update statistics there are two options [#]_ [#]_:
 
 * A stored procedure ``sp_updatestats``: this runs ``UPDATE STATISTICS`` against all user-defined and internal tables in the current database.
 * A SQL statement against a single table (here we use the Entry table) ``UPDATE STATISTICS [vonk].[entry]``;

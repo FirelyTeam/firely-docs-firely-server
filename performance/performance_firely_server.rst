@@ -1,7 +1,5 @@
-.. _vonk_performance:
-
 Performance of Firely Server
-========================================
+=====================================
 
 About Performance
 -----------------
@@ -20,7 +18,7 @@ Repository
 
 #. Memory: Memory is only meant for quick tests, and for use in unittests. Do not use it in any serious scenario, much less for performance critical scenarios.
 #. SQLite: SQLite is mainly used for the Administration database of Firely Server, but you can also use it for the main database. Deployment is very easy because of the zero footprint of the driver, but be aware of its limits. Firely Server must have very fast access to the database file, so effectively it has to be on a local disk. Multithreading does work, but does not scale as well as other databases.
-#. SQL Server: Performance tuning of SQL Server is a topic on its own. Firely Server manages the tables it needs, and the indexes on top of it are optimized for the way Firely Server queries them.
+#. SQL Server: Performance tuning of SQL Server is a topic on its own. Firely Server manages the tables it needs, and the indexes on top of it are optimized for the way Firely Server queries them. See :ref:`performance_sqlserver_guidelines` for more details about SQL Server database maintenance and tuning.
 #. MongoDB: Performance tuning of MongoDB is, as well, a topic on its own. Firely Server manages the collections it needs, and the indexes on top of it are optimized for the way Firely Server queries them. MongoDB is used in our own performance tests, see below.
 
 Prevalidation

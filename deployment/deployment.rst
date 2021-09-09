@@ -26,5 +26,5 @@ In order to test the :ref:`feature_accesscontrol` you will need to :ref:`feature
    reverseProxy/reverseProxy
    identityprovider
    accesscontrol_postman
-   performance
+   Performance <../performance/performance>
 

@@ -12,6 +12,7 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    restful_api
    bulkdataexport
    patienteverything
+   lastn
    customoperations
    customresources
    terminology

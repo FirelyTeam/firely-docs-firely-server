@@ -41,7 +41,7 @@ Feature
 ^^^
 
 #. Improved error messages if an internal exception occured due to failing filesystem access.
-#. The `$lastN operation <https://www.hl7.org/fhir/observation-operation-lastn.html>`_ is now available when using SQL Server as the backend for Firely Server. See #TODO for more information.
+#. The `$lastN operation <https://www.hl7.org/fhir/observation-operation-lastn.html>`_ is now available when using SQL Server as the backend for Firely Server. See :ref:`lastn` for more information.
 
 Plugin and Facade
 ^^^^^^^^^^^^^^^^^

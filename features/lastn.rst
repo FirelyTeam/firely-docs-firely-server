@@ -25,6 +25,12 @@ Optional parameters:
 * **max**: maximum number of Observations to return from each group;
 * other search parameters defined for the Observation resource.
 
+.. attention::
+  Current limitations are:
+  
+  * $lastn has been implemented only for SQL Server databases.
+  * the patient or subject reference must be a direct reference (using the ``id`` of the Patient), see the examples. A chained argument like ``patient.identifier=123`` is not yet supported.
+
 Appsettings
 -----------
 To start using the $lastn operation you will first have to add the plugin to the PipelineOptions in the appsettings.
@@ -46,12 +52,12 @@ To start using the $lastn operation you will first have to add the plugin to the
       }, ...etc...
 
 .. note::
-    We did not implement $lastn for all database types. Make sure the data database is configured for SQL Server.
+    We did not yet implement $lastn for all database types. Make sure the data database is configured for SQL Server.
 
 Examples
 --------
 
-The examples below use a predefined set of resources. You can add those resources to your instance of the server to reproduce the examples. To do it, please execute the following transaction bundle: :download:`pdf <../_static/files/lastN-example-bundle.json>`. The transaction bundle contains a patient with id = **8c5a23b8-5154-a665-8704-35f0e7a386e9** and a list of Observations for that patient.
+The examples below use a predefined set of resources. You can add those resources to your instance of the server to reproduce the examples. To do it, please execute the following transaction bundle: :download:`download <../_static/files/lastN-example-bundle.json>`. The transaction bundle contains a patient with id = **examplePatient** and a list of Observations for that patient.
 
 
 Fetch the last 3 results for all vitals for a patient
@@ -60,7 +66,7 @@ Fetch the last 3 results for all vitals for a patient
 Request:
 ::
 
-  GET <base-url>/Observation/$lastn?max=3&patient=8c5a23b8-5154-a665-8704-35f0e7a386e9&category=vital-signs
+  GET <base-url>/Observation/$lastn?max=3&patient=examplePatient&category=vital-signs
   Accept: application/fhir+json
 
 Response:
@@ -112,7 +118,7 @@ Response:
             "text": "Oxygen saturation in Arterial blood"
           },
           "subject": {
-            "reference": "<base-url>/Patient/8c5a23b8-5154-a665-8704-35f0e7a386e9"
+            "reference": "<base-url>/Patient/examplePatient"
           },
           "effectiveDateTime": "2020-03-03T01:58:48+04:00",
           // ...
@@ -145,7 +151,7 @@ Response:
     "link": [
       {
         "relation": "self",
-        "url": "<base-url>/Observation/$lastn?max=3&patient=8c5a23b8-5154-a665-8704-35f0e7a386e9&category=vital-signs&_count=23&_skip=0"
+        "url": "<base-url>/Observation/$lastn?max=3&patient=examplePatient&category=vital-signs&_count=23&_skip=0"
       }
     ],
     "id": "6d6571c3-e6e0-461e-803f-c044c442191c"
@@ -159,7 +165,7 @@ Request
 
 ::
 
-   GET <base-url>/Observation/$lastn?patient=8c5a23b8-5154-a665-8704-35f0e7a386e9&category=laboratory
+   GET <base-url>/Observation/$lastn?patient=examplePatient&category=laboratory
    Accept: application/fhir+json
 
 Response
@@ -216,7 +222,7 @@ Response
     "link": [
       {
         "relation": "self",
-        "url": "<base-url>/Observation/$lastn?patient=8c5a23b8-5154-a665-8704-35f0e7a386e9&category=laboratory&_count=36&_skip=0"
+        "url": "<base-url>/Observation/$lastn?patient=examplePatient&category=laboratory&_count=36&_skip=0"
       }
     ],
     "id": "b6521ba6-6235-4221-95cd-e0f25edd77dc"
@@ -231,7 +237,7 @@ Request
 
 ::
 
-    GET <base-url>/Observation/$lastn?patient=8c5a23b8-5154-a665-8704-35f0e7a386e9&category=vital-signs&date=lt2015-01-01
+    GET <base-url>/Observation/$lastn?patient=examplePatient&category=vital-signs&date=lt2015-01-01
     Accept: application/fhir+json
 
 Response
@@ -259,7 +265,7 @@ Response
     "link": [
       {
         "relation": "self",
-        "url": "<base-url>/Observation/$lastn?patient=8c5a23b8-5154-a665-8704-35f0e7a386e9&category=vital-signs&date=lt2015-01-01&_count=7&_skip=0"
+        "url": "<base-url>/Observation/$lastn?patient=examplePatient&category=vital-signs&date=lt2015-01-01&_count=7&_skip=0"
       }
     ],
     "id": "b4178262-9bd3-4d9e-b4de-1578cb5d92de"
@@ -272,7 +278,7 @@ Request
 
 ::
 
-    GET <base-url>/Observation/$lastn?max=3&patient=8c5a23b8-5154-a665-8704-35f0e7a386e9&category=vital-signs&code=29463-7,8302-2
+    GET <base-url>/Observation/$lastn?max=3&patient=examplePatient&category=vital-signs&code=29463-7,8302-2
     Accept: application/fhir+json
 
 Response
@@ -299,7 +305,7 @@ Response
     "link": [
       {
         "relation": "self",
-        "url": "<base-url>/Observation/$lastn?max=3&patient=8c5a23b8-5154-a665-8704-35f0e7a386e9&category=vital-signs&code=29463-7,8302-2&_count=6&_skip=0"
+        "url": "<base-url>/Observation/$lastn?max=3&patient=examplePatient&category=vital-signs&code=29463-7,8302-2&_count=6&_skip=0"
       }
     ],
     "id": "49ee0b4b-00bd-40b7-8cb5-96a0e0892380"

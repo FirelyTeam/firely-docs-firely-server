@@ -40,4 +40,5 @@ or support contract.
    Plugins <plugins/plugins>
    Facade <facade/facade>
    Reference <reference/reference>
+   Tools <tools/tools>
    contact

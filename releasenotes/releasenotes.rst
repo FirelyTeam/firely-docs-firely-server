@@ -26,8 +26,8 @@ The default FHIR version of the `public Firely Server endpoint <https://server.f
 
 .. _vonk_releasenotes_450:
 
-Release 4.5.0
--------------
+Release 4.5.0-beta
+------------------
 
 Fix
 ^^^
@@ -47,7 +47,6 @@ Plugin and Facade
 ^^^^^^^^^^^^^^^^^
 
 #. Added async support for the ISnapshotGenerator interface and its implementations.
-#. It is now possible to configure pre- and posthandlers for a custom operations using VonkInteraction.all_custom regardless of the interaction level of the operation handler and the interaction level on which the operation is configured in the appsettings.
 
 .. _vonk_releasenotes_440:
 

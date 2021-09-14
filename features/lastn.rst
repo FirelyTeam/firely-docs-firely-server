@@ -60,8 +60,8 @@ Fetch the last 3 results for all vitals for a patient
 Request:
 ::
 
-    GET <base-url>/Observation/$lastn?max=3&patient=8c5a23b8-5154-a665-8704-35f0e7a386e9&category=vital-signs
-   Accept: application/fhir+json
+  GET <base-url>/Observation/$lastn?max=3&patient=8c5a23b8-5154-a665-8704-35f0e7a386e9&category=vital-signs
+  Accept: application/fhir+json
 
 Response:
 

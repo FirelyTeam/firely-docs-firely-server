@@ -397,6 +397,14 @@ FHIR RESTful interactions
    * ``SizeLimits``, see :ref:`validation_options`
    * ``Repository``, see :ref:`configure_repository`
 
+.. _vonk_plugins_lastn:
+
+:Name: LastN
+:Configuration: ``Vonk.Plugin.LastN.LastNConfiguration``
+:License token: http://fire.ly/vonk/plugins/lastn
+:Order: 5007
+:Description: Implements `FHIR $lastn <https://www.hl7.org/fhir/observation-operation-lastn.html>`_ on Observation resources.
+
 .. _vonk_plugins_terminology:
 
 Terminology
@@ -699,3 +707,5 @@ Bulk Data
 :license token: ``http://fire.ly/vonk/plugins/patient-everything``
 :Order: 5006
 :Description: Request a Patient record. See :ref:`feature_patienteverything`.
+
+

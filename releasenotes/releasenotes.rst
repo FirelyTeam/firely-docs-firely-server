@@ -24,6 +24,30 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_450-beta:
+
+Release 4.5.0-beta
+------------------
+
+Fix
+^^^
+
+#. Security: Added a warning to the documentation that using compartments other than 'Patient' to restrict access based on patient-level SMART on FHIR scopes may result in undesired behaviour. See :ref:`feature_accesscontrol_compartment` for more information.
+#. The RequestCountService caused an exception on startup if the RequestInfoFile could not be accessed, e.g. due to limited filesystem permissions. The RequestCountService has been removed completely. Any remaining .vonk-request-info.json files can be deleted manually.
+#. The logsettings for SQL server included an outdated configuration.
+#. The logsettings for MongoDB included an outdated configuration.
+
+Feature
+^^^
+
+#. Improved error messages if an internal exception occured due to failing filesystem access.
+#. The `$lastN operation <https://www.hl7.org/fhir/observation-operation-lastn.html>`_ is now available when using SQL Server as the backend for Firely Server. See :ref:`lastn` for more information.
+
+Plugin and Facade
+^^^^^^^^^^^^^^^^^
+
+#. Added async support for the ISnapshotGenerator interface and its implementations.
+
 .. _vonk_releasenotes_440:
 
 Release 4.4.0

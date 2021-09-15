@@ -6,7 +6,9 @@ Firely Server Import (FSI)
 **Firely Server Import (FSI)** is a CLI application designed to optimize massive resource ingestion into a Firely Server instance. In contrast to resource ingestion by sending HTTP requests to a running Firely Server instance, this tool writes data directly to the underlying FS database which increases the throughput significantly.
 
 .. note::
-    Currently, this tool only supports import into SQL Server database, however, we are working on support for MongoDB.
+
+    * Currently, this tool only supports import into SQL Server database, however, we are working on support for MongoDB.
+    * The tool is in beta stage and can be tested only after consulting us.
 
 .. Installation
 .. ------------
@@ -17,18 +19,18 @@ General usage
 
 .. attention::
 
-  * All Firely Server instances targeting the same database must be stopped while the import is performed.
-  * Only one instance of FSI per database can be run at a time.
+  * Firely Server instances targeting the same database will be impacted severely by the workload that FSI puts on the database. We advise to stop the Firely Server instances while the import is performed.
+  * Only one instance of FSI per database should be run at a time. FSI can utilize all the cores on the machine it is run on, and insert data over several connections to the database in parallel. Multiple instances would probably cause congestion in the database.
 
 Prerequisites
 ^^^^^^^^^^^^^
-The tool requires that the target SQL Server database already exists and contains all required tables and indexes. If you don't have a database with the schema yet, you first need to run the Firely Server as described in article :ref:`configure_sql`.
+The tool requires that the target SQL Server database already exists and contains all required tables and indexes. If you don't have a database with the schema yet, you first need to run the Firely Server at least once as described in article :ref:`configure_sql`.
 
 
 Input files formats
 ^^^^^^^^^^^^^^^^^^^
 
-FSI supports the following input file format:
+FSI supports the following input file formats:
 
 * FHIR *collection* bundles stored in ``*.json`` files, and
 * ``*.ndjson`` files where each line contains a separate FHIR resource in JSON format.
@@ -52,7 +54,7 @@ If you want to specify input parameters in the file, you can use the snippet bel
     "source": "./fsi-source", //valid directory
     "limit": -1,
     "fhirVersion": "R4",
-    "license": "C:\\data\\deploy\\vonk\\license\\performance-test-license.json",
+    "license": "C:/some/path/to/your/license/license.json", // See the Licensing section below
     "updateExistingResources": "true",
   
     "sqlserver": {
@@ -83,19 +85,20 @@ Supported arguments
 +===========================================+==================================+==========+============================================================================================================================================+
 | -f, --fhir-version <R3|R4>                | fhirVersion                      |          | FHIR version of the input                                                                                                                  |
 +-------------------------------------------+----------------------------------+----------+--------------------------------------------------------------------------------------------------------------------------------------------+
-| -s, --source <source>                     | source                           | yes      | Input directory for work                                                                                                                   |
+| -s, --source <source>                     | source                           | yes      | Input directory for work (this directory is visited recursively including all the subdirectories)                                          |
 +-------------------------------------------+----------------------------------+----------+--------------------------------------------------------------------------------------------------------------------------------------------+
 | -l, --limit <limit>                       | limit                            |          | Limit the number of resources to import. Use this for testing your setup.                                                                  |
 +-------------------------------------------+----------------------------------+----------+--------------------------------------------------------------------------------------------------------------------------------------------+
 | --license <license>                       | license                          | yes      | Firely Server license file                                                                                                                 |
 +-------------------------------------------+----------------------------------+----------+--------------------------------------------------------------------------------------------------------------------------------------------+
-| --update-existing-resources <true|false>  | updateExistingResources          |          | When true, a resource is updated in the database if it already exists. Otherwise a resource is updated and history is created.             |
+| --update-existing-resources <true|false>  | updateExistingResources          |          | When true, a resource is updated in the database if it already exists and a history record is created. Otherwise, an existing resource gets skipped.|
 +-------------------------------------------+----------------------------------+----------+--------------------------------------------------------------------------------------------------------------------------------------------+
 | -c, --connectionstring <connectionstring> | sqlServer/connectionString       | yes      | Connection string to Firely Server SQL Server database                                                                                     |
 +-------------------------------------------+----------------------------------+----------+--------------------------------------------------------------------------------------------------------------------------------------------+
 | --sqlPar <sqlPar>                         | sqlServer/saveParallel           |          | The # of batches to save in parallel. Depends on your bandwidth to SQL Server and its processing power.                                    |
 +-------------------------------------------+----------------------------------+----------+--------------------------------------------------------------------------------------------------------------------------------------------+
 | --sqlBatch <sqlBatch>                     | sqlServer/saveBatchSize          |          | The # of resources to save in each batch. SQL Server must be able to process it within the CommandTimeout.                                 |
+|                                           |                                  |          | It is recommended to set this value to at least 500 for optimal performance.                                                               |
 +-------------------------------------------+----------------------------------+----------+--------------------------------------------------------------------------------------------------------------------------------------------+
 | --sqlTimeout <sqlTimeout>                 | sqlServer/commandTimeOut         |          | The time SQL Server is allowed to process a batch of resources.                                                                            |
 +-------------------------------------------+----------------------------------+----------+--------------------------------------------------------------------------------------------------------------------------------------------+
@@ -127,7 +130,7 @@ Supported arguments
 Examples
 --------
 
-Runs the import for files located in directory **/path/to/your/input/files** using license file **/path/to/your/license/fsi-license.json** targeting the database defined by the connection string. In case if a resource being imported already exists in the target database, skip it.
+Runs the import for files located in directory **/path/to/your/input/files** and its subdirectories using license file **/path/to/your/license/fsi-license.json** targeting the database defined by the connection string. In case if a resource being imported already exists in the target database, it gets skipped.
 
 .. code-block:: bash
 
@@ -163,7 +166,7 @@ You can get insights into the tool performance by means of performance counters.
 To monitor the counters for FSI, you can execute the following command:
 :: 
 
-  dotnet-counters monitor --counters 'System.Runtime','FSI Processing'  --process-id <preocess_id>
+  dotnet-counters monitor --counters 'System.Runtime','FSI Processing'  --process-id <process_id>
 
 where *<process_id>* is the PID of the running FSI tool.
 

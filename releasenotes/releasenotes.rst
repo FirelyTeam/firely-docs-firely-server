@@ -34,8 +34,8 @@ Fix
 
 #. Security: Added a warning to the documentation that using compartments other than 'Patient' to restrict access based on patient-level SMART on FHIR scopes may result in undesired behaviour. See :ref:`feature_accesscontrol_compartment` for more information.
 #. The RequestCountService caused an exception on startup if the RequestInfoFile could not be accessed, e.g. due to limited filesystem permissions. The RequestCountService has been removed completely. Any remaining .vonk-request-info.json files can be deleted manually.
-#. The loggsettings for SQL server included an outdated configuration.
-#. The loggsettings for MongoDB included an outdated configuration.
+#. The logsettings for SQL server included an outdated configuration.
+#. The logsettings for MongoDB included an outdated configuration.
 
 Feature
 ^^^

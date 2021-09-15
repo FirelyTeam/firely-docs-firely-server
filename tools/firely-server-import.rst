@@ -15,6 +15,11 @@ Firely Server Import (FSI)
 General usage
 -------------
 
+.. attention::
+
+  * All Firely Server instances targeting the same database must be stopped while the import is performed.
+  * Only one instance of FSI per database can be run at a time.
+
 Prerequisites
 ^^^^^^^^^^^^^
 The tool requires that the target SQL Server database already exists and contains all required tables and indexes. If you don't have a database with the schema yet, you first need to run the Firely Server as described in article :ref:`configure_sql`.
@@ -28,10 +33,11 @@ FSI supports the following input file format:
 * FHIR *collection* bundles stored in ``*.json`` files, and
 * ``*.ndjson`` files where each line contains a separate FHIR resource in JSON format.
 
-.. attention::
 
-  * All Firely Server instances targeting the same database must be stopped while the import is performed.
-  * Only one instance of FSI per database can be run at a time.
+After the import
+^^^^^^^^^^^^^^^^
+
+After ingesting massive amount of data, it is important to make sure the SQL Server indexes are in good shape. You can read more on this topic here: :ref:`sql_index_maintenance`.
 
 Arguments
 ---------

@@ -12,13 +12,26 @@ Firely Server Import (FSI)
 .. ------------
 .. TBD: describe the usage of dotnet install command
 
+General usage
+-------------
+
+Prerequisites
+^^^^^^^^^^^^^
+The tool requires that the target SQL Server database already exists and contains all required tables and indexes. If you don't have a database with the schema yet, you first need to run the Firely Server as described in article :ref:`configure_sql`.
+
+
 Input files formats
--------------------
+^^^^^^^^^^^^^^^^^^^
 
 FSI supports the following input file format:
 
 * FHIR *collection* bundles stored in ``*.json`` files, and
 * ``*.ndjson`` files where each line contains a separate FHIR resource in JSON format.
+
+.. attention::
+
+  * All Firely Server instances targeting the same database must be stopped while the import is performed.
+  * Only one instance of FSI per database can be run at a time.
 
 Arguments
 ---------
@@ -105,27 +118,49 @@ Supported arguments
 | -?, -h, --help                            |                                  |          | Show help and usage information                                                                                                            |
 +-------------------------------------------+----------------------------------+----------+--------------------------------------------------------------------------------------------------------------------------------------------+
 
-General usage
--------------
+Examples
+--------
 
 Runs the import for files located in directory **/path/to/your/input/files** using license file **/path/to/your/license/fsi-license.json** targeting the database defined by the connection string. In case if a resource being imported already exists in the target database, skip it.
 
 .. code-block:: bash
 
-  fsi.exe \
+  dotnet fsi.exe \
   -s ./path/to/your/input/files \
   --license /path/to/your/license/fsi-license.json \
-  -c "Initial Catalog=VonkData;Data Source=server.hostname,1433;User ID=username;Password=PaSSSword!" \
+  -c 'Initial Catalog=VonkData;Data Source=server.hostname,1433;User ID=username;Password=PaSSSword!' \
   --update-existing-resources false 
 
 Same as above but if a resource being imported already exists in the target database, it gets updated. The old resource gets preserved as a historical record.
 
 .. code-block:: bash
 
-  fsi.exe \
-  -s /path/to/your/input/files \
+  dotnet fsi.exe \
+  -s ./path/to/your/input/files \
   --license /path/to/your/license/fsi-license.json \
-  -c "Initial Catalog=VonkData;Data Source=server.hostname,1433;User ID=username;Password=PaSSSword!"
+  -c 'Initial Catalog=VonkData;Data Source=server.hostname,1433;User ID=username;Password=PaSSSword!'
+
+Monitoring
+----------
+
+Logs
+^^^^
+
+When importing the data, it is handy to have the logging enabled, as it would capture any issues if they occur. By default, the log messages are written both to the console window and to the log files in the ``%temp%`` directory.
+
+You can configure the log settings the same way as you do for Firely Server: :ref:`configure_log`. 
+
+Performance counters
+^^^^^^^^^^^^^^^^^^^^
+You can get insights into the tool performance by means of performance counters. There are many ways to monitor the performance counters. One of the options is using `dotnet-counters <https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-counters>`_.
+
+To monitor the counters for FSI, you can execute the following command:
+:: 
+
+  dotnet-counters monitor --counters 'System.Runtime','FSI Processing'  --process-id <preocess_id>
+
+where *<process_id>* is the PID of the running FSI tool.
+
 
 Known issues
 ------------
@@ -138,4 +173,4 @@ Licensing
 
 The application is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
 
-Your license already permits the usage of the FSI if it contains ``http://fire.ly/vonk/plugins/bulk-data-import``.
+Your license already permits the usage of FSI if it contains ``http://fire.ly/vonk/plugins/bulk-data-import``.

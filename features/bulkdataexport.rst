@@ -45,7 +45,7 @@ To start using the Bulk Data Export Service (BDE) you will first have to add the
 .. note::
     We did not implement BDE for all database types. Make sure the admin database is configured for either SQL Server or SQLite and the data database is configured for SQL Server.
     
-Bulk Data Export Service works as an asynchronous operation. To store the all operation-related information, it is necessary to enable "Task Repository" on the admin database. Please configure either "Vonk.Repository.Sqlite.SqliteTaskConfiguration" or "Vonk.Repository.Sql.SqlTaskConfiguration" on the administration pipeline.
+Bulk Data Export Service works as an asynchronous operation. To store the all operation-related information, it is necessary to enable a "Task Repository" on the admin database. Please configure either "Vonk.Repository.Sqlite.SqliteTaskConfiguration" or "Vonk.Repository.Sql.SqlTaskConfiguration" on the administration pipeline.
 
 .. code-block:: JavaScript
 

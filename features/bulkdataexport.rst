@@ -8,7 +8,7 @@ The Bulk Data Export Service enables the $export operation from the Fhir specifi
 
 Appsettings
 -----------
-To start using the Bulk Data Export Service (BDE) you will first have to add the plugin to the PipelineOptions in the appsettings.
+To start using the Bulk Data Export Service (BDE) you will first have to add the plugin (Vonk.Plugin.BulkDataExport) to the PipelineOptions in the appsettings.
 
 .. code-block:: JavaScript
 
@@ -44,6 +44,36 @@ To start using the Bulk Data Export Service (BDE) you will first have to add the
 
 .. note::
     We did not implement BDE for all database types. Make sure the admin database is configured for either SQL Server or SQLite and the data database is configured for SQL Server.
+    
+Bulk Data Export Service works as an asynchronous operation. To store the all operation-related information, it is necessary to enable a "Task Repository" on the admin database. Please configure either "Vonk.Repository.Sqlite.SqliteTaskConfiguration" or "Vonk.Repository.Sql.SqlTaskConfiguration" on the administration pipeline.
+
+.. code-block:: JavaScript
+
+ "PipelineOptions": {
+    "PluginDirectory": "./plugins",
+    "Branches": [
+      {
+        "Path": "/administration",
+        "Include": [
+          "Vonk.Core",
+          "Vonk.Fhir.R3",
+          "Vonk.Fhir.R4",
+          //"Vonk.Fhir.R5",
+          //"Vonk.Repository.Sql.SqlTaskConfiguration",
+          //"Vonk.Repository.Sql.SqlAdministrationConfiguration",
+          "Vonk.Repository.Sql.Raw.KAdminSearchConfiguration",
+          "Vonk.Repository.Sqlite.SqliteTaskConfiguration",
+          "Vonk.Repository.Sqlite.SqliteAdministrationConfiguration",
+          "Vonk.Repository.MongoDb.MongoDbAdminConfiguration",
+          "Vonk.Repository.Memory.MemoryAdministrationConfiguration",
+          "Vonk.Subscriptions.Administration",
+          "Vonk.Plugins.Terminology",
+          "Vonk.Administration",
+          "Vonk.Plugin.BinaryWrapper"
+        ],
+        "Exclude": [
+          "Vonk.Core.Operations"
+        ], ...etc...
     
 BDE introduces two new parts to the appsettings, namely TaskFileManagement and BulkDataExport.
 

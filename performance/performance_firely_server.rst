@@ -31,9 +31,9 @@ Search Parameters
 
 When a resource is sent to Firely Server for storage, Firely Server indexes the resource for all the search parameters that are applicable to the resource. The more search parameters are known to Firely Server, the more resources will be used for indexing - both time (for the indexing processing) and storage (for storing the values of each search parameter). This also increases the size of the index tables and indexes, and therefore querying times. Thus, if you know you will only use a portion of the predefined search parameters you can choose to delete the others from the Administration API - see :ref:`conformance` and :ref:`supportedmodel`.
 
-Additionally, these search parameters can be disabled in order to improve performance: 
+Additionally, these search parameters can have an impact on the search performance:
 
-#. ``_total``: Searchbundles contain the element ``total`` which indicates the total number of resources that match the query's search parameters. Disabling this element saves the query that would generate the result. Set ``_total = none`` in your HTTP request's parameters to disable it.
+#. ``_total``: Searchbundles contain the element ``total`` which indicates the total number of resources that match the query's search parameters. Setting this parameter to ``_total = none`` results in faster searches as it saves the query that would generate the result of the aforementioned element.
 
 
 Pipeline

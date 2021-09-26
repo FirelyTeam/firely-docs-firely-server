@@ -24,6 +24,32 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_450:
+
+Release 4.5.0
+-------------
+
+Security
+^^^^^^^^
+
+#. A VonkConfigurationException, which was thrown if a SQL database migration could not be performed, included the SQL connection string in plain text in the log. Please check you log files if they include any sensitive information such as the database password, which might have been part of the connection string.
+
+Fix
+^^^
+
+#. It is now possible to configure pre- and posthandlers for a custom operations using VonkInteraction.all_custom regardless of the interaction level of the operation handler and the interaction level on which the operation is configured in the appsettings.
+
+Documentation
+^^^^^^^^^^^^^
+
+#. Added an explanation to the documentation why the use of ``_total=none`` influences the performance of a search query.
+
+Plugins
+^^^^^^^
+
+#. The FHIR Mapper is no longer distributed together with Firely Server. Please contact fhir@healex.systems for any questions regarding the FHIR Mapper.
+#. The packages Vonk.Fhir.R(3|4) depended on an unpublished NuGET package Vonk.Administration.Api.
+
 .. _vonk_releasenotes_450-beta:
 
 Release 4.5.0-beta
@@ -74,7 +100,7 @@ Fix
 Plugin and Facade
 ^^^^^^^^^^^^^^^^^
 
-#. The interfaces PrioritizedResourceResolver(R3|R4|R5) and their implementations are no longer available. The interface is now FHIR version agnostic. Please use the IPrioritizedResourceResolver interface in Vonk.Core.Common.
+#. The interfaces PrioritizedResourceResolver(R3|R4|R5) and their implementations are no longer available. It is advised to construct your own StructureDefinitionSummaryProvider incl. a MultiResolver combining your own resource resolver and the IConformanceCache provided by Firely Server.
 #. The interface IConformanceCacheInvalidation has been moved from Vonk.Core.Import to Vonk.Core.Conformance
 #. The classes SpecificationZipResolver(R3|R4|R5) are no longer available. Please use the IPrioritizedResourceResolvers instead.
 

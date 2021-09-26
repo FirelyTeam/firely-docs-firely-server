@@ -38,6 +38,14 @@ Fix
 ^^^
 
 #. It is now possible to configure pre- and posthandlers for a custom operations using VonkInteraction.all_custom regardless of the interaction level of the operation handler and the interaction level on which the operation is configured in the appsettings.
+#. $lastN could not handle chained arguments on the subject/patient reference
+#. $lastN reported an invalid error message if the reference to a subject/patient was provided as an urn:uuid reference
+
+Feature
+^^^^^^^
+
+#. $lastN can be combined with _elements and _include parameters
+#. $lastN can group the results by the ``component-code`` or ``combo-code`` search parameter
 
 Documentation
 ^^^^^^^^^^^^^

@@ -1,3 +1,5 @@
+.. _sql_index_maintenance:
+
 Index Maintenance
 =================
 

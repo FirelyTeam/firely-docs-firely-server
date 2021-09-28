@@ -190,25 +190,43 @@ Create a database and users by script, and have Firely Server create the schema
 
 Overview of permissions
 -----------------------
-This paragraph lists the permissions needed to perform specific actions on the SQL database.
+This table lists the permissions needed to perform specific actions on the SQL database. Recommended roles are listed in the third column. Note that you can create your own database roles with the required permissions in order to execute finely granulated control over permissions.
 
-*   To run the AutoUpdateDatabase feature, including creation of the databases:
+.. list-table:: Permissions and Roles
+   :header-rows: 1
 
-    *   **sysadmin**
+   * - Action
+     - Required SQL Permission
+     - Recommended SQL Role
+     - Notes
+   * - Create Database 
+     - 'Create any database'
+     - sysadmin
+     -
+   * - AutoUpdateDatabase feature including application of pending migrations 
+     - 'Alter Trace' + 'Alter any database'
+     - db_ddladmin
+     - Applies to the normal Firely Server database and its administration database
+   * - AutoUpdateDatabase feature excluding application of pending migrations 
+     - 'Alter Trace'
+     - db_ddladmin
+     -
+   * - Read resources
+     - 
+     - db_datareader
+     -
+   * - Write resources
+     - 
+     - db_datawriter
+     -
+   * - Execute ResetDb feature
+     - 
+     - db_ddladmin
+     - Only applies to the normal Firely Server database
 
-*   To run the AutoUpdateDatabase feature on an already created (but empty) database:
+If the AutoUpdate feature is enabled, we recommend creating two users in order to achieve maximum security while keeping the configuration simple: 
 
-    *   **db_ddladmin** |br|
-        (both for the normal Firely Server Data database and the Administration database)
+* User 1 with the 'db_datareader' and 'db_datawriter' and 'db_ddladmin' roles (This user should be used in the AutoUpdateConnectionString)
 
-*   To read/write resources:
-
-    *   **db_datareader**
-    *   **db_datawriter**
-
-*   To execute the ResetDb feature:
-
-    *   **db_ddladmin** |br|
-        only on the normal Firely Server database for the user in the SqlDbOptions connectionstring. |br|
-        (no extra permissions are required for the user on the Administration database).
+* User 2 with the 'db_datareader' and 'db_datawriter' roles as well as 'Alter Trace' permissions for day to day usage (This user should be used in the ConnectionString)
 

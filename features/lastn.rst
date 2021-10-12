@@ -33,7 +33,7 @@ Optional parameters:
 
 Appsettings
 -----------
-To start using the $lastn operation you will first have to add the plugin to the PipelineOptions in the appsettings.
+To start using the $lastn operation you will first have to add the plugin ``Vonk.Plugin.LastN`` to the PipelineOptions in the appsettings. The plugin has a dependency on ``Vonk.Repository.Sql.Raw.KSearchConfiguration``, which, therefore, should also be included in the pipeline.
 
 .. code-block:: JavaScript
 
@@ -44,6 +44,7 @@ To start using the $lastn operation you will first have to add the plugin to the
         "Path": "/",
         "Include": [
           ...
+          "Vonk.Repository.Sql.Raw.KSearchConfiguration",
           "Vonk.Plugin.LastN",
         ],
         "Exclude": [

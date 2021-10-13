@@ -29,6 +29,13 @@ The default FHIR version of the `public Firely Server endpoint <https://server.f
 Release 4.5.0
 -------------
 
+Database
+^^^^^^^^
+
+#. MongoDB
+
+   #. To improve the performance of compartment searches, Firely Server now precalculates the compartment links to which a resource belongs on insert in the database. An external migration script 'FS_SchemaUpgrade_Data_v17_v18.js' is provided in the distribution. It needs to be applied manually using MongoDB Shell.
+
 Security
 ^^^^^^^^
 
@@ -40,6 +47,8 @@ Fix
 #. It is now possible to configure pre- and posthandlers for a custom operations using VonkInteraction.all_custom regardless of the interaction level of the operation handler and the interaction level on which the operation is configured in the appsettings.
 #. $lastN could not handle chained arguments on the subject/patient reference
 #. $lastN reported an invalid error message if the reference to a subject/patient was provided as an urn:uuid reference
+#. $lastN searchresult bundles were missing self-links when no results were found
+#. Disabling Vonk.Fhir.R4 in the pipeline resulted in an internal exception thrown by the ConformanceCache
 
 Feature
 ^^^^^^^
@@ -57,6 +66,7 @@ Plugins
 
 #. The FHIR Mapper is no longer distributed together with Firely Server. Please contact fhir@healex.systems for any questions regarding the FHIR Mapper.
 #. The packages Vonk.Fhir.R(3|4) depended on an unpublished NuGET package Vonk.Administration.Api.
+#. All classes in the namespace 'Vonk.Facade.Releational' are now published on `GitHub <https://github.com/FirelyTeam/Vonk.Facade.Relational>`_.
 
 .. _vonk_releasenotes_450-beta:
 

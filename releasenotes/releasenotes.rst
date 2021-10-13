@@ -24,6 +24,50 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_450:
+
+Release 4.5.0
+-------------
+
+Database
+^^^^^^^^
+
+#. MongoDB
+
+   #. To improve the performance of compartment searches, Firely Server now precalculates the compartment links to which a resource belongs on insert in the database. An external migration script 'FS_SchemaUpgrade_Data_v17_v18.js' is provided in the distribution. It needs to be applied manually using MongoDB Shell.
+
+Security
+^^^^^^^^
+
+#. A VonkConfigurationException, which was thrown if a SQL database migration could not be performed, included the SQL connection string in plain text in the log. Please check you log files if they include any sensitive information such as the database password, which might have been part of the connection string.
+
+Fix
+^^^
+
+#. It is now possible to configure pre- and posthandlers for a custom operations using VonkInteraction.all_custom regardless of the interaction level of the operation handler and the interaction level on which the operation is configured in the appsettings.
+#. $lastN could not handle chained arguments on the subject/patient reference
+#. $lastN reported an invalid error message if the reference to a subject/patient was provided as an urn:uuid reference
+#. $lastN searchresult bundles were missing self-links when no results were found
+#. Disabling Vonk.Fhir.R4 in the pipeline resulted in an internal exception thrown by the ConformanceCache
+
+Feature
+^^^^^^^
+
+#. $lastN can be combined with _elements and _include parameters
+#. $lastN can group the results by the ``component-code`` or ``combo-code`` search parameter
+
+Documentation
+^^^^^^^^^^^^^
+
+#. Added an explanation to the documentation why the use of ``_total=none`` influences the performance of a search query.
+
+Plugins
+^^^^^^^
+
+#. The FHIR Mapper is no longer distributed together with Firely Server. Please contact fhir@healex.systems for any questions regarding the FHIR Mapper.
+#. The packages Vonk.Fhir.R(3|4) depended on an unpublished NuGET package Vonk.Administration.Api.
+#. All classes in the namespace 'Vonk.Facade.Releational' are now published on `GitHub <https://github.com/FirelyTeam/Vonk.Facade.Relational>`_.
+
 .. _vonk_releasenotes_450-beta:
 
 Release 4.5.0-beta
@@ -74,7 +118,7 @@ Fix
 Plugin and Facade
 ^^^^^^^^^^^^^^^^^
 
-#. The interfaces PrioritizedResourceResolver(R3|R4|R5) and their implementations are no longer available. The interface is now FHIR version agnostic. Please use the IPrioritizedResourceResolver interface in Vonk.Core.Common.
+#. The interfaces PrioritizedResourceResolver(R3|R4|R5) and their implementations are no longer available. It is advised to construct your own StructureDefinitionSummaryProvider incl. a MultiResolver combining your own resource resolver and the IConformanceCache provided by Firely Server.
 #. The interface IConformanceCacheInvalidation has been moved from Vonk.Core.Import to Vonk.Core.Conformance
 #. The classes SpecificationZipResolver(R3|R4|R5) are no longer available. Please use the IPrioritizedResourceResolvers instead.
 

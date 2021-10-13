@@ -34,7 +34,7 @@ Database
 
 .. attention::
 
-The release version of the MongoDB migration contains an error causing compartment searches to return no search results for all migrated resources. Only newly added resources after the migration will be returned sucessfully. We will provide a hotfix soon! Please refrain from updating until the hotfix.
+The release version of the MongoDB migration contains an error causing compartment searches to return no search results for all migrated resources. Only newly added resources after the migration will be returned sucessfully. We will provide a hotfix soon. Please refrain from updating until the hotfix.
 
 #. MongoDB
 

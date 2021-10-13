@@ -32,6 +32,10 @@ Release 4.5.0
 Database
 ^^^^^^^^
 
+.. attention::
+
+The release version of the MongoDB migration contains an error causing compartment searches to return no search results for all migrated resources. Only newly added resources after the migration will be returned sucessfully. We will provide a hotfix soon. Please refrain from updating until the hotfix.
+
 #. MongoDB
 
    #. To improve the performance of compartment searches, Firely Server now precalculates the compartment links to which a resource belongs on insert in the database. An external migration script 'FS_SchemaUpgrade_Data_v17_v18.js' is provided in the distribution. It needs to be applied manually using MongoDB Shell.

@@ -24,6 +24,28 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_451:
+
+Release 4.5.1
+-------------
+
+Database
+^^^^^^^^
+
+#. MongoDB
+
+   #. The migration script 'FS_SchemaUpgrade_Data_v17_v18.js' has been fixed. All data present in the database before the migration is now again accessible after the migration.
+   
+#. SQL Server
+
+   #. Improved the query performance when using _include by using "WITH FORCESEEK".
+   #. Improved performance by avoiding scanning indexes when searching on the UriHash column
+   
+Fix
+^^^
+
+#. Firely Server will now by default include a user-agent header when retrieving the SMART Discovery document
+
 .. _vonk_releasenotes_450:
 
 Release 4.5.0

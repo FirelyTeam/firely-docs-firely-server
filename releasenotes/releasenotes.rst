@@ -45,7 +45,6 @@ Fix
 ^^^
 
 #. Firely Server will now by default include a user-agent header when retrieving the SMART Discovery document
-#. Entries in transaction / batch bundles were not validated even if the ValidationLevel was set to "Core" or "Full"
 
 .. _vonk_releasenotes_450:
 

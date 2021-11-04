@@ -102,7 +102,7 @@ Data
 
 Performance testing is best done with data as realistic to your situation as possible. So if you happen to have historic data that you can transform to FHIR resources, that is the best data to test with.
 
-But if you don't have data of your own, you can use synthesized data. We use data from the Synthea project for our own tests. And we provide :ref:`VonkLoader<vonkloader_index>` to upload the collection bundles from Synthea to Firely Server (or any FHIR Server for that matter). 
+But if you don't have data of your own, you can use synthesized data. We use data from the Synthea project for our own tests. And we provide :ref:`tool_fsi` to upload the collection bundles from Synthea to Firely Server (or any FHIR Server for that matter). 
 
 If you build a Facade, the historical data is probably already in a test environment of the system you build the Facade on. That is a perfect start.
 

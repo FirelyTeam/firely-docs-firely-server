@@ -1,9 +1,9 @@
 .. _tool_fsi:
 
-Firely Server Import (FSI)
+Firely Server Ingest (FSI)
 ==========================
 
-**Firely Server Import (FSI)** is a CLI application designed to optimize massive resource ingestion into a Firely Server instance. In contrast to resource ingestion by sending HTTP requests to a running Firely Server instance, this tool writes data directly to the underlying FS database which increases the throughput significantly.
+**Firely Server Ingest (FSI)** is a CLI application designed to optimize massive resource ingestion into a Firely Server instance. In contrast to resource ingestion by sending HTTP requests to a running Firely Server instance, this tool writes data directly to the underlying FS database which increases the throughput significantly.
 
 .. note::
 

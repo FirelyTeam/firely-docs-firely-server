@@ -183,3 +183,16 @@ Licensing
 The application is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
 
 Your license already permits the usage of FSI if it contains ``http://fire.ly/vonk/plugins/bulk-data-import``.
+
+Release notes
+=====
+
+.. _fsi_releasenotes_1.0.0:
+
+Release 1.0.0
+-------------
+
+* First public release
+* Performance: optimized memory consumption (especially, when reading large `*.ndjson` files)
+* Feature: quantitative values can be automatically canonicalized to UCUM values (see --useUcum CLI option)
+* Multiple smaller fixes to improve reliability and performance of the tool

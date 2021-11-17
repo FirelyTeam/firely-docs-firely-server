@@ -56,7 +56,7 @@ If you want to specify input parameters in the file, you can use the snippet bel
     "fhirVersion": "R4",
     "license": "C:/some/path/to/your/license/license.json", // See the Licensing section below
     "updateExistingResources": "true",
-  
+    "useUcum": false,
     "sqlserver": {
       "connectionString": "<connectionstring to the Firely Server SQL Server database>",
       "saveParallel": 2,
@@ -73,7 +73,8 @@ If you want to specify input parameters in the file, you can use the snippet bel
       "typeParallel": 4,
       "typeBufferSize": 50,
       "indexParallel": -1, //this is usually the most time consuming process - give it as much CPU time as possible.
-      "indexBufferSize": 50
+      "indexBufferSize": 50,
+      "maxActiveResources": 3000
     }
   }
 
@@ -92,6 +93,8 @@ Supported arguments
 | ``--license <license>``                           | license                          | yes      | Firely Server license file                                                                                                                          |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--update-existing-resources <true|false>``      | updateExistingResources          |          | When true, a resource is updated in the database if it already exists and a history record is created. Otherwise, an existing resource gets skipped.|
++---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``--useUcum <true|false>``                        | useUcum                          |          | When true, any quantitative data will be canonicalized to UCUM. Otherwise, only the original value and unit will be kept.                           |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``-c``, ``--connectionstring <connectionstring>`` | sqlServer/connectionString       | yes      | Connection string to Firely Server SQL Server database                                                                                              |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -121,6 +124,8 @@ Supported arguments
 | ``--indexPar <indexPar>``                         | workflow/indexParallel           |          | Number of threads to index the search parameters. This is typically the most resource intensive step and should have the most threads.              |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--indexBuffer <indexBuffer>``                   | workflow/indexBufferSize         |          | Number of resources to buffer for indexing the search parameters.                                                                                   |
++---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``--maxActiveRes <maxActiveRes>``                 | workflow/maxActiveResources      |          | Maximum number of actively processed resources. Reduce the value to reduce memory consumption.                                                      |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--version``                                     |                                  |          | Show version information                                                                                                                            |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+

@@ -24,10 +24,79 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+
+.. _vonk_releasenotes_460:
+
+Release 4.6.0, Nov 18th, 2021
+-----------------------------
+
+Database
+^^^^^^^^
+
+#. SQL Server (all changes below applicable only when plugin ``Vonk.Repository.Sql.Raw`` is enabled)
+
+   1. A new computed column IsDeleted on table [vonk].[entry] is leveraged for more performant SQL queries
+   
+   .. note::
+
+      The performance of the old ``Vonk.Repository.Sql`` may be adversely impacted by this change. We encourage you to use the new ``Vonk.Repository.Sql.Raw`` implementation.
+
+   2. Improved performance of SQL queries by converting 5 columns from [vonk].[entry] to varchar upon retrieval: InformationModel, Type, ResourceId, Version, Reference
+
+   .. note::
+      
+      These columns should - by definition of the FHIR datatypes - not contain characters outside the varchar range, but please pay attention to this change if your id's or custom resourcetype has those characters nonetheless. We may alter the datatype of the columns in a future release.
+   
+   3. Improved performance of some SQL queries by avoiding unnecessary SQL query parameter type conversion
+
+   4. Improved performance of some SQL queries by avoiding excessive retrieval of the (large) ResourceJson column
+   
+#. MongoDB
+
+   #. Improved performance of searches within a compartment
+
+Features
+^^^^^^^^
+
+#. Added support for SMART on FHIR v2
+
+.. note::
+
+   Since most users currently use SMART on FHIR v1, the plugin for v2 is by default *disabled* in the PipelineOptions. You can switch v1 out and v2 in when you want to test the use of v2.
+
+Logging improvements
+^^^^^^^^^^^^^^^^^^^^
+
+#. The password and the username are stripped out from a connection string when it gets logged (SQL Server / Sqlite, Verbose log level)
+#. SQL param values are not logged by default. This can be enabled by using a new config setting. See :ref:`configure_log_database_query_params` (SQL Server / Sqlite, Verbose log level)
+#. UserName and UserId are included in log and audit entries (when using SoF or another authentication plugin)
+#. SQL query duration now gets logged (changed for ``Vonk.Repository.Sql.Raw.KSearchConfiguration`` plugin; was always available for other repository plugins, Verbose log level)
+#. Fixed category names for some log entries to include the fully qualified type of their source. For example, category ``MetadataConfiguration`` was changed to ``Vonk.Core.Metadata.MetadataConfiguration``, and category ``BulkDataExportConfiguration`` was changed to ``Vonk.Plugin.BulkDataExport.BulkDataExportConfiguration``, etc.
+
+Fix
+^^^
+
+#. Fixed a bug when validation was not performed on PATCH requests even when the validation level was set to Full
+#. Fixed a bug when escaping of the pipe ('|') character was not working as expected for token search parameters
+#. Improved error handling when FS tries to load a non-.NET DLL from the plugins directory
+#. Fixed a bug (introduced in 4.5.1) when a compartment matches more than 1 Patient
+#. Fix: $validate checks whether a system parameter is provided
+#. Fix: ``Vonk.Repository.Sql.Raw``: searching on quantities with values having a high precision failed
+
+Other
+^^^^^
+
+#. Firely SDK upgraded from v3.0.0 to v3.6.0. See the SDK release notes `here <https://github.com/FirelyTeam/firely-net-sdk/releases>`_
+
+.. note::
+
+   This will make Firely Server import a new version of specification.zip into the Administration endpoint for each FHIR version. If you share the Administration database among instances, allow 1 instance to finish this process before starting the other instances.
+
 .. _vonk_releasenotes_451:
 
 Release 4.5.1
 -------------
+
 
 Database
 ^^^^^^^^

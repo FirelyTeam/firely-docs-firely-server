@@ -81,7 +81,7 @@ Fix
 #. Improved error handling when FS tries to load a non-.NET DLL from the plugins directory
 #. Fixed a bug (introduced in 4.5.1) when a compartment matches more than 1 Patient
 #. Fix: $validate checks whether a system parameter is provided
-#. Fix: KSearch: searching on quantities with values having a high precision failed
+#. Fix: ``Vonk.Repository.Sql.Raw``: searching on quantities with values having a high precision failed
 
 Other
 ^^^^^

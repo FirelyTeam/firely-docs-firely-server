@@ -24,10 +24,55 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+
+.. _vonk_releasenotes_460:
+
+Release 4.6.0
+-------------
+
+Database
+^^^^^^^^
+
+#. SQL Server
+
+   #. A new computed column IsDeleted on table [vonk].[entry] is leveraged for more performant SQL queries (only applicable when ``Vonk.Repository.Sql.Raw.KSearchConfiguration`` plugin is enabled)
+   #. Improved performance of some SQL queries by avoiding unnecessary SQL query parameter type conversion (only applicable when ``Vonk.Repository.Sql.Raw.KSearchConfiguration`` plugin is enabled)
+   
+#. MongoDB
+
+   #. Improved performance of searches within a compartment
+
+Features
+^^^^^^^^
+
+#. Added support for SMART on FHIR v2
+
+Logging improvements
+^^^^^^^^^^^^^^^^^^^^
+
+#. The password is stripped out from a connection string when it gets logged (SQL Server / Sqlite, Verbose log level)
+#. SQL param values are not logged by default. This can be enabled by using a new config setting. See :ref:`configure_log_database_query_params` (SQL Server / Sqlite, Verbose log level)
+#. UserName and UserId are included in log entries (when using SoF or another authentication plugin)
+#. SQL query duration now gets logged (changed for ``Vonk.Repository.Sql.Raw.KSearchConfiguration`` plugin; was always available for other repository plugins, Verbose log level)
+#. Fixed category names for some log entries to include the fully qualified type of their source. For example, category ``MetadataConfiguration`` was changed to ``Vonk.Core.Metadata.MetadataConfiguration``, and category ``BulkDataExportConfiguration`` was changed to ``Vonk.Plugin.BulkDataExport.BulkDataExportConfiguration``, etc.
+
+Fix
+^^^
+
+#. Fixed a bug when validation was not performed on PATCH requests even when the validation level was set to Full
+#. Fixed a bug when escaping of the pipe ('|') character was not working as expected for token search parameters
+#. Improved error handling when FS tries to load a non-.NET DLL from the plugins directory
+
+Other
+^^^^^
+
+#. Firely SDK upgraded from v3.0.0 to v3.6.0. See the SDK release notes `here <https://github.com/FirelyTeam/firely-net-sdk/releases>`_
+
 .. _vonk_releasenotes_451:
 
 Release 4.5.1
 -------------
+
 
 Database
 ^^^^^^^^

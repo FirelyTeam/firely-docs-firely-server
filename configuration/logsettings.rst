@@ -238,3 +238,28 @@ Whether you use MongoDB or SQL Server, you can have Firely Server log in detail 
 
 If you do so you probably don't want all this detail in your console sink, so you can limit the level for that, see `Console`_ above.
 
+.. _configure_log_database_query_params:
+
+SQL query parameter logging
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+It might be useful to log SQL queries that Firely Server executes against your database. You can get even more insights into what is happening when SQL query parameter values also get logged.
+However, this cannot be enabled by default due to data privacy concerns.
+
+You can enable SQL query parameter values logging by setting the ``LogSqlQueryParameterValues`` to ``true`` for the corresponding database in your ``appsettings.instance.json``. Example::
+
+	{
+		"Administration": {
+			"SqlDbOptions": {
+				"ConnectionString": "<connection string>",
+				"LogSqlQueryParameterValues": true // Add this line to your config file to log SQL query param values for your SQL Server Administration database
+			}
+		},
+		// OR:
+		{
+			"SQLiteDbOptions": {
+				"ConnectionString": "<connection string>",
+				"LogSqlQueryParameterValues": true // Add this line to your config file to log SQL query param values for your Sqlite Data database
+			}
+		}
+	}

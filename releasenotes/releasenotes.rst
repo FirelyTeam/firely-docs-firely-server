@@ -69,7 +69,7 @@ Logging improvements
 
 #. The password and the username are stripped out from a connection string when it gets logged (SQL Server / Sqlite, Verbose log level)
 #. SQL param values are not logged by default. This can be enabled by using a new config setting. See :ref:`configure_log_database_query_params` (SQL Server / Sqlite, Verbose log level)
-#. UserName and UserId are included in log and audit entries (when using SoF or another authentication plugin)
+#. Username and UserId are included in log and audit entries (when using SoF or another authentication plugin)
 #. SQL query duration now gets logged (changed for ``Vonk.Repository.Sql.Raw.KSearchConfiguration`` plugin; was always available for other repository plugins, Verbose log level)
 #. Fixed category names for some log entries to include the fully qualified type of their source. For example, category ``MetadataConfiguration`` was changed to ``Vonk.Core.Metadata.MetadataConfiguration``, and category ``BulkDataExportConfiguration`` was changed to ``Vonk.Plugin.BulkDataExport.BulkDataExportConfiguration``, etc.
 

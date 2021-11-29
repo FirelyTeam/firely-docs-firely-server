@@ -20,7 +20,7 @@ Configure where to put the audit log file and the format of its lines in the app
 
    "Audit": {
       "PathFormat": "./audit/AuditLog-{Date}.log"
-      "OutputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Application}] [Audit] [Machine: {MachineName}] [ReqId: {RequestId}] [IP-Address: {Ip}] [Connection: {ConnectionId}] [UserId: {UserId}] [UserName: {UserName}] [Path: {Path}] [Action: {Action}] [Resource: {Resource} Key:{ResourceKey}] [StatusCode: {StatusCode}] {NewLine}"
+      "OutputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Application}] [Audit] [Machine: {MachineName}] [ReqId: {RequestId}] [IP-Address: {Ip}] [Connection: {ConnectionId}] [UserId: {UserId}] [Username: {Username}] [Path: {Path}] [Action: {Action}] [Resource: {Resource} Key:{ResourceKey}] [StatusCode: {StatusCode}] {NewLine}"
    },
 
 The OutputTemplate listed here contains all the properties that can be logged:
@@ -29,7 +29,7 @@ The OutputTemplate listed here contains all the properties that can be logged:
 * Ip: IP Address of the client
 * ConnectionId: use this to correlate requests from the same client
 * UserId: user id from the JWT token (if present)
-* UserName: user name from the JWT token (if present)
+* Username: user name from the JWT token (if present)
 * Path: request url
 * Action: interaction that was requested (like instance_read or type_search)
 * Resource: resourcetype involved

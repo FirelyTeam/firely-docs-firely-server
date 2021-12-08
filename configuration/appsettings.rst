@@ -159,7 +159,7 @@ Repository
 ----------
 ::
 
-    "Repository": "SQLite", //Memory / SQL / MongoDb / CosmosDb
+    "Repository": "SQLite", //Memory / SQL / MongoDb
 
 
 #. ``Repository``: Choose which type of repository you want. Valid values are:
@@ -168,7 +168,6 @@ Repository
   #. SQL, for Microsoft SQL Server
   #. SQLite
   #. MongoDb
-  #. CosmosDb
 
 
 Memory
@@ -220,17 +219,6 @@ SQLite
 
 
 Refer to :ref:`configure_sqlite` for configuring access to your SQLite Server databases.
-
-CosmosDb
-^^^^^^^^
-::
-
-    "CosmosDbOptions": {
-        "ConnectionString": "mongodb://<password>@<server>:10255/vonk?ssl=true&replicaSet=globaldb",
-        "EntryCollection": "vonkentries"
-    },
-
-Refer to :ref:`configure_cosmosdb` for configuring access to your CosmosDb databases.
 
 .. _hosting_options:
 

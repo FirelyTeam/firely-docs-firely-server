@@ -34,7 +34,7 @@ This list uses the NuGet package names (or prefixes of them) so you can easily l
 #. Dapper - Apache 2.0
 #. SqlKata.* - MIT
 
-MongoDB / CosmosDB: 
+MongoDB: 
 
 #. MongoDB.* - Apache 2.0
 

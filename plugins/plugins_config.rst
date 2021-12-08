@@ -18,7 +18,6 @@ Configuration of the pipeline in Firely Server is done with ``PipelineOptions`` 
           "Vonk.Repository.Sql.SqlVonkConfiguration",
           "Vonk.Repository.Sqlite.SqliteVonkConfiguration",
           "Vonk.Repository.MongoDb.MongoDbVonkConfiguration",
-          "Vonk.Repository.CosmosDb.CosmosDbVonkConfiguration",
           "Vonk.Repository.Memory.MemoryVonkConfiguration",
           "Vonk.Subscriptions",
           "Vonk.Smart",

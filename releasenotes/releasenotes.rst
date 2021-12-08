@@ -311,7 +311,7 @@ Release 4.1.3 hotfix
 Fix
 ^^^
 #. Fixed a bug where a number of concurrent $transform requests on a freshly started Firely Server could lead to Internal Server Error responses.
-#. Upgraded the Mapping plugin to :ref:`fhir_mapper_docs:mapping_releasenotes_071`.
+#. Upgraded the Mapping plugin.
 
 .. _vonk_releasenotes_412:
 
@@ -447,7 +447,7 @@ Fixes
 Plugin and Facade
 ^^^^^^^^^^^^^^^^^
 
-#. The mapping plugin is upgraded to the Mapping Engine 0.6.0, see its :ref:`releasenotes <fhir_mapper_docs:mapping_releasenotes_060>`.
+#. The mapping plugin is upgraded to the Mapping Engine 0.6.0.
 #. As announced in :ref:`vonk_releasenotes_300` we removed support for creating a Facade as a standalone ASP.Net Core project. You can now only build a Facade as a plugin to Firely Server. See :ref:`vonk_facade` on how to do that.
 #. The order of some plugins has changed. This way it is possible to add a plugin between PreValidation and UrlMapping:
 
@@ -583,7 +583,7 @@ Features
 
 #. We upgraded the FHIR .NET API to 1.9, see the `1.9 releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases>`_. This will trigger an automatic :ref:`import of the Conformance Resources <conformance_specification_zip>` at startup.
 #. We upgraded the `Fhir.Metrics library <https://github.com/FirelyTeam/fhir.metrics>`_ to 1.2. This allows for a more uniform search on Quantities (mainly under the hood)
-#. We upgraded the FHIR Mapping plugin to support the FHIR Mapper version 0.5. See its :ref:`FHIR Mapper releasenotes <fhir_mapper_docs:mapping_releasenotes_050>`.
+#. We upgraded the FHIR Mapping plugin to support the FHIR Mapper version 0.5.
 #. The :ref:`built-in terminology services <feature_terminology>` now support the ``includeDesignations`` parameter. 
 #. The :ref:`vonk_reference_api_ivonkcontext` now lets you access the original HttpContext.
 #. The CapabilityStatement now lists the profiles that are known to Vonk (in its Administration database) under ``CapabilityStatement.rest.resource.supportedProfile`` (>= R4 only) and the base profile for a resource under ``CapabilityStatement.rest.resource.profile``.
@@ -646,7 +646,7 @@ Features
 Plugins
 ^^^^^^^
 
-#. The FHIR Mapper plugin is upgraded to :ref:`version 0.3.6 <fhir_mapper_docs:mapping_releasenotes_036>`.
+#. The FHIR Mapper plugin is upgraded to version 0.3.6.
 #. The FHIR Mapper plugin now fully works on the *Administration* endpoint.
 
 
@@ -683,7 +683,7 @@ Fix
 Plugins
 ^^^^^^^
 
-#. The :ref:`BinaryWrapper plugin <vonk_plugins_binarywrapper>` is upgraded to 0.3.1, where the included BinaryEncodeService is made more reusable for other plugins (most notably the :ref:`FHIR Mapper <vonk_plugins_mapping>`).
+#. The :ref:`BinaryWrapper plugin <vonk_plugins_binarywrapper>` is upgraded to 0.3.1, where the included BinaryEncodeService is made more reusable for other plugins (most notably the FHIR mapper).
 
 .. _vonk_releasenotes_350:
 
@@ -728,7 +728,7 @@ Fix
 Plugins & Facade
 ^^^^^^^^^^^^^^^^
 
-#. :ref:`FHIR Mapper <vonk_plugins_mapping>` 
+#. FHIR Mapper 
 
    * Has been upgraded to version 0.3.4.
 
@@ -741,7 +741,7 @@ Feature
 ^^^^^^^
 
 #. Upgraded to FHIR .NET API 1.6.0, that features a couple of changes for working with CDA logical models. See the `release notes of the API <https://github.com/FirelyTeam/firely-net-sdk/releases>`_.
-#. Included the FHIR Mapper in the distribution. It is only enabled however when you include the mapping plugin in your license. See :ref:`mappingengine_index` for more information about the FHIR Mapper.
+#. Included the FHIR Mapper in the distribution. It is only enabled however when you include the mapping plugin in your license.
 
 Fix
 ^^^

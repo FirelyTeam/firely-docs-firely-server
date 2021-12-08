@@ -249,7 +249,7 @@ Feature
 #. Plugins may return non-FHIR content. See :ref:`vonk_plugins_directhttp`.
 #. This feature may also be used for :ref:`accesscontrol_custom_authentication`.
 #. A :ref:`vonk_plugins_template` is added to the documentation.
-#. A documentation page on performance is added: :ref:`vonk_performance`.
+#. A documentation page on performance is added.
 #. Upgrade of the Hl7.Fhir.API library to 1.1. See the `Older SDK release notes`_.
 
 Fix

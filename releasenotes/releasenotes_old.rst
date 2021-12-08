@@ -387,7 +387,7 @@ Database
 #. We added support for SQLite! See :ref:`configure_sqlite` for details.
 #. We also made SQLite the default setting for both the main Vonk database and the :ref:`administration_api`.
 #. With the introduction of SQLite we advise running the Administration API on SQLite. In the future we will probably deprecate running the Administration API on any of the other databases.
-#. Support for CosmosDB is expanded, though there are a :ref:`few limitations <configure_cosmosdb_limitations>`.
+#. Support for CosmosDB is expanded, though there are a few limitations.
 
 Facade
 ^^^^^^
@@ -484,7 +484,7 @@ Features and fixes
 ^^^^^^^^^^^^^^^^^^
 
 #. Feature: Run Vonk from you Simplifier project! See :ref:`simplifier_docs:simplifier_firely_server` for details.
-#. Feature: Vonk supports Microsoft Azure CosmosDB, see :ref:`configure_cosmosdb`.
+#. Feature: Vonk supports Microsoft Azure CosmosDB.
    This required a few small changes to the MongoDB implementation (the share the drivers), so please reindex your MongoDB database: :ref:`reindex/all <feature_customsp_reindex>`.
 #. Feature: Configuration to restrict support for ResourceTypes, SearchParameters and CompartmentDefinitions, see :ref:`supportedmodel`.
 #. Feature: Errata.zip: collection of corrected search parameters (e.g. that had a faulty expression in the FHIR Core specification), see :ref:`feature_errata`

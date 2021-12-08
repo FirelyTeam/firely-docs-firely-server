@@ -119,17 +119,6 @@ Besides that you can also control how many threads run in parallel to speed up t
 
 Use any integer value >= 1.
 
-.. _reindex_cosmosdb_warning:
-
-.. warning::
-
-	CosmosDB in its default configuration (and on the CosmosDB emulator) is fairly limited in its throughput. 
-	If you encounter errors stating 'Request rate is large', you will have to:
-
-	*	lower the MaxDegreeOfParallelism, 
-	*	restart Firely Server 
-	*	and start a the reindex operation again.
-
 .. _feature_customsp_limitations:
 
 Limitations

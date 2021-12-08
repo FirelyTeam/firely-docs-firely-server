@@ -25,7 +25,6 @@ To start using the Bulk Data Export Service (BDE) you will first have to add the
           "Vonk.Repository.Sql.SqlVonkConfiguration",
           "Vonk.Repository.Sqlite.SqliteVonkConfiguration",
           "Vonk.Repository.MongoDb.MongoDbVonkConfiguration",
-          "Vonk.Repository.CosmosDb.CosmosDbVonkConfiguration",
           "Vonk.Repository.Memory.MemoryVonkConfiguration",
           "Vonk.Subscriptions",
           "Vonk.Smart",

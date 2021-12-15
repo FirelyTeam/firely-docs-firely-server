@@ -24,6 +24,16 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_461:
+
+Release 4.6.1, Dec 15th, 2021
+-----------------------------
+
+Fix
+^^^
+
+#. Improved handling of TypeLoadException and ReflectionTypeLoadException when scaning external assemblies for SerializationSupportAttribute attributes. 
+
 
 .. _vonk_releasenotes_460:
 

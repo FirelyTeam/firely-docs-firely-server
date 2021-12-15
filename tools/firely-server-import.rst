@@ -10,9 +10,17 @@ Firely Server Ingest (FSI)
     * Currently, this tool only supports import into SQL Server database, however, we are working on support for MongoDB.
     * The tool is in beta stage and can be tested only after consulting us.
 
-.. Installation
-.. ------------
-.. TBD: describe the usage of dotnet install command
+Installation
+------------
+To install the tool, you first need to have .NET Core SDK installed on your computer. You can download it `here <https://dotnet.microsoft.com/en-us/download>`_. Once it is installed, execute the following command:
+
+::
+
+  dotnet tool install --global Firely.Server.Ingest
+
+The command above will install FSI from this `NuGet package <https://www.nuget.org/packages/Firely.Server.Ingest/>`_.
+
+
 
 General usage
 -------------

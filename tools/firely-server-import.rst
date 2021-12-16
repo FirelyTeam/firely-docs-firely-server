@@ -20,6 +20,13 @@ To install the tool, you first need to have .NET Core SDK installed on your comp
 
 The command above will install FSI from this `NuGet package <https://www.nuget.org/packages/Firely.Server.Ingest/>`_.
 
+.. note::
+
+  Make sure that the dotnet tools directory is added to your path, this makes it possible bo run the ``fsi`` command from any directory.
+
+    - Please find more information on where globally installed tools are located in `this article <https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools#install-a-global-tool>`_. 
+    - For Linux and Mac, make sure you add your ``.profile`` or ``.bash_profile`` to your path.
+
 
 
 General usage
@@ -52,7 +59,7 @@ After ingesting massive amount of data, it is important to make sure the SQL Ser
 Arguments
 ---------
 
-The execution of FSI can be configured using input parameters. These parameters can be supplied either as CLI arguments or specified in the file ``appsettings.instance.json`` which must be created in the same directory as the ``fsi.exe``.
+The execution of FSI can be configured using input parameters. These parameters can be supplied either as CLI arguments or specified in the file ``appsettings.instance.json`` which must be created in the same directory as the ``fsi`` executable.
 
 If you want to specify input parameters in the file, you can use the snippet below as a base for your ``appsettings.instance.json``. In this case, you need to update the values that you want to set yourself and delete all other records.
 
@@ -147,7 +154,7 @@ Runs the import for files located in directory **/path/to/your/input/files** and
 
 .. code-block:: bash
 
-  dotnet fsi.exe \
+  fsi \
   -s ./path/to/your/input/files \
   --license /path/to/your/license/fsi-license.json \
   -c 'Initial Catalog=VonkData;Data Source=server.hostname,1433;User ID=username;Password=PaSSSword!' \
@@ -157,7 +164,7 @@ Same as above but if a resource being imported already exists in the target data
 
 .. code-block:: bash
 
-  dotnet fsi.exe \
+  fsi \
   -s ./path/to/your/input/files \
   --license /path/to/your/license/fsi-license.json \
   -c 'Initial Catalog=VonkData;Data Source=server.hostname,1433;User ID=username;Password=PaSSSword!'

@@ -107,6 +107,15 @@ Other
 Release 4.5.1
 -------------
 
+.. attention::
+    The upgrade procedure for Firely Server running on MongoDb will execute an upgrade script that adds a new field to store precalculated compartment links. If your collection contains a lot of resources, this may take a very long time. Therefore, the MongoDb upgrade script has to be executed manually. The script can be found in `mongodb\FS_SchemaUpgrade_Data_v17_v18.js`
+    
+    Here are some guidelines:
+
+   * We tested it on a MongoDb collection with about 400k documents in total. The upgrade script took around 3.5 minutes to complete on a fairly powerful laptop.
+   * As always, make sure you have a backup of your database that has been tried and tested before you begin the upgrade.
+   * Please make sure that Firely Server is shutdown before you execute the script.
+   * If you encounter problems running the script, or need any assistance, please :ref:`vonk-contact`.
 
 Database
 ^^^^^^^^
@@ -134,7 +143,7 @@ Database
 ^^^^^^^^
 
 .. attention::
-	The release version of the MongoDB migration contains an error causing compartment searches to return no search results for all migrated resources. Only newly added resources after the migration will be returned successfully. We will provide a hotfix soon. Please refrain from updating until the hotfix.
+	The release version of the MongoDB migration contains an error causing compartment searches to return no search results for all migrated resources. Only newly added resources after the migration will be returned successfully. In :ref:`vonk_releasenotes_451` we have fixed this issue, so please use that version instead.
 
 #. MongoDB
 

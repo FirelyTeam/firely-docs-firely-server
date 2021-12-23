@@ -34,10 +34,6 @@ Fix
 
 #. ``IConformanceCacheR3`` and ``IConformanceCacheR4`` are registered again in the ServiceProvider for plugins that still make use of them. Note that these interfaces are obsolete by now, so make sure you don't use them for any new plugins. 
 
-.. note::
-
-   Accidentally the version number in the code of this hotfix was not changed, so the CapabilityStatement and the homepage will still show 4.6.1.
-
 .. _vonk_releasenotes_461:
 
 Release 4.6.1, Dec 15th, 2021

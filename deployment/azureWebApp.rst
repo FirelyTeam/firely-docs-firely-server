@@ -31,7 +31,7 @@ Deployment
    This will install the Firely Server as a Web App in Azure.
    In our example the url is ``https://firelyserver.scm.azurewebsites.net/ZipDeployUI``
    This method of deployment does not work in Internet Explorer. It does work in Firefox, Chrome and Edge.
-   Please make sure that after you have uploaded the .zip file, all content is extracted directly into webroot directory.
+   Please make sure that after you have uploaded the .zip file, all content is extracted into the top-level webroot directory.
    
    .. image:: ../images/Azure_05_WebRoot.png
       :align: center

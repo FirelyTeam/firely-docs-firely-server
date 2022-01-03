@@ -26,11 +26,16 @@ Deployment
    .. image:: ../images/Azure_02_ChooseName.png
       :align: center
 
-#. Add the trial license file (firelyserver-trial-license.json) to the vonk_distribution.zip by dragging the license file into the zipfile.
+#. Add the trial license file (firelyserver-trial-license.json) to the firely-server-latest.zip by dragging the license file into the zipfile.
 #. Open a webbrowser, navigate to ``https://<webapp>.scm.azurewebsites.net/ZipDeployUI`` and drag vonk_distribution.zip into the browser window. 
    This will install the Firely Server as a Web App in Azure.
-   In our example the url is ``https://<webapp>.scm.azurewebsites.net/ZipDeployUI``
+   In our example the url is ``https://firelyserver.scm.azurewebsites.net/ZipDeployUI``
    This method of deployment does not work in Internet Explorer. It does work in Firefox, Chrome and Edge.
+   Please make sure that after you have uploaded the .zip file, all content is extracted into the top-level webroot directory.
+   
+   .. image:: ../images/Azure_05_WebRoot.png
+      :align: center
+   
 #. Open a browser and go to the site ``https://<webapp>.azurewebsites.net/`` . This will show the Firely Server home page.
 
 Change database

@@ -32,6 +32,10 @@ Deployment
    In our example the url is ``https://firelyserver.scm.azurewebsites.net/ZipDeployUI``
    This method of deployment does not work in Internet Explorer. It does work in Firefox, Chrome and Edge.
    Please make sure that after you have uploaded the .zip file, all content is extracted directly into webroot directory.
+   
+   .. image:: ../images/Azure_05_WebRoot.png
+      :align: center
+   
 #. Open a browser and go to the site ``https://<webapp>.azurewebsites.net/`` . This will show the Firely Server home page.
 
 Change database

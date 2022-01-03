@@ -190,6 +190,10 @@ To monitor the counters for FSI, you can execute the following command:
 
 where *<process_id>* is the PID of the running FSI tool.
 
+.. note::
+
+  If you think the ingestion process is going too slow for your amount of data and the hardware specifications, please :ref:`contact us<vonk-contact>` for advice.
+
 
 Known issues
 ------------

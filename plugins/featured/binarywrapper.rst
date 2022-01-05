@@ -68,12 +68,6 @@ Configuration
       ]
    }
 
-
-Relationships
--------------
-
-The TransformOperation plugin relies on the BinaryWrapper to encode the contents to be mapped, so the :ref:`vonk_reference_api_ivonkcontext` then contains a proper Binary resource in its payload to work with.
-
 Release notes
 -------------
 

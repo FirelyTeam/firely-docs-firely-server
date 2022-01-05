@@ -24,6 +24,17 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_470:
+
+Release 4.7.0, TBD
+------------------
+
+.. attention::    
+    With version 4.7.0, Firely Server migrated to dotnet 6.0. In order to run the binaries, `ASP.NET Core Runtime 6.x<https://dotnet.microsoft.com/en-us/download/dotnet/6.0>` needs to be installed.
+
+    Please also ensure that your plugins for Firely Server are targeting at least dotnet 6.0.
+
+
 .. _vonk_releasenotes_462:
 
 Release 4.6.2, Dec 23rd, 2021

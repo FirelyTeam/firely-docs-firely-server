@@ -10,6 +10,8 @@ Firely Server Ingest (FSI)
     * Currently, this tool only supports import into SQL Server database, however, we are working on support for MongoDB.
     * The tool is in beta stage and can be tested only after consulting us.
 
+.. _tool_fsi_installation:
+
 Installation
 ------------
 To install the tool, you first need to have .NET Core SDK v6.x installed on your computer. You can download it `here <https://dotnet.microsoft.com/en-us/download>`_. Once it is installed, execute the following command:
@@ -221,8 +223,8 @@ Release 1.1.0
 
 * Feature: added support for MongoDb!
 * Feature: added support for performance counters using dotnet-counters. See :ref:`tool_fsi_performance_counters` on how to setup and use dotnet-counters.
-* FSI has been upgraded to .NET 6.
-* The Firely .NET SDK that FSI uses has been upgraded to 3.7.0.
+* FSI has been upgraded to .NET 6. To install the tool, you first need to have .NET Core SDK v6.x installed on your computer. See :ref:`tool_fsi_installation` for more information.
+* The Firely .NET SDK that FSI uses has been upgraded to 3.7.0. The release notes for the SDK v3.7.0 can be found `here <https://github.com/FirelyTeam/firely-net-sdk/releases>`_.
 * Multiple smaller fixes to improve reliability and performance of the tool.
 
 .. _fsi_releasenotes_1.0.0:

@@ -42,7 +42,7 @@ Release 4.6.1, Dec 15th, 2021
 Fix
 ^^^
 
-#. Improved handling of TypeLoadException and ReflectionTypeLoadException when scaning external assemblies for SerializationSupportAttribute attributes. 
+#. Improved handling of TypeLoadException and ReflectionTypeLoadException when scanning external assemblies for SerializationSupportAttribute attributes. 
 
 
 .. _vonk_releasenotes_460:
@@ -65,7 +65,7 @@ Database
 
    .. note::
       
-      These columns should - by definition of the FHIR datatypes - not contain characters outside the varchar range, but please pay attention to this change if your id's or custom resourcetype has those characters nonetheless. We may alter the datatype of the columns in a future release.
+      These columns should - by definition of the FHIR datatypes - not contain characters outside the varchar range, but please pay attention to this change if your id's or custom resource type has those characters nonetheless. We may alter the datatype of the columns in a future release.
    
    3. Improved performance of some SQL queries by avoiding unnecessary SQL query parameter type conversion
 
@@ -167,10 +167,10 @@ Security
 Fix
 ^^^
 
-#. It is now possible to configure pre- and posthandlers for a custom operations using VonkInteraction.all_custom regardless of the interaction level of the operation handler and the interaction level on which the operation is configured in the appsettings.
+#. It is now possible to configure pre- and post-handlers for a custom operations using VonkInteraction.all_custom regardless of the interaction level of the operation handler and the interaction level on which the operation is configured in the appsettings.
 #. $lastN could not handle chained arguments on the subject/patient reference
 #. $lastN reported an invalid error message if the reference to a subject/patient was provided as an urn:uuid reference
-#. $lastN searchresult bundles were missing self-links when no results were found
+#. $lastN search result bundles were missing self-links when no results were found
 #. Disabling Vonk.Fhir.R4 in the pipeline resulted in an internal exception thrown by the ConformanceCache
 
 Feature
@@ -189,7 +189,7 @@ Plugins
 
 #. The FHIR Mapper is no longer distributed together with Firely Server. Please contact fhir@healex.systems for any questions regarding the FHIR Mapper.
 #. The packages Vonk.Fhir.R(3|4) depended on an unpublished NuGET package Vonk.Administration.Api.
-#. All classes in the namespace 'Vonk.Facade.Releational' are now published on `GitHub <https://github.com/FirelyTeam/Vonk.Facade.Relational>`_.
+#. All classes in the namespace 'Vonk.Facade.Relational' are now published on `GitHub <https://github.com/FirelyTeam/Vonk.Facade.Relational>`_.
 
 .. _vonk_releasenotes_450-beta:
 
@@ -199,7 +199,7 @@ Release 4.5.0-beta
 Fix
 ^^^
 
-#. Security: Added a warning to the documentation that using compartments other than 'Patient' to restrict access based on patient-level SMART on FHIR scopes may result in undesired behaviour. See :ref:`feature_accesscontrol_compartment` for more information.
+#. Security: Added a warning to the documentation that using compartments other than 'Patient' to restrict access based on patient-level SMART on FHIR scopes may result in undesired behavior. See :ref:`feature_accesscontrol_compartment` for more information.
 #. The RequestCountService caused an exception on startup if the RequestInfoFile could not be accessed, e.g. due to limited filesystem permissions. The RequestCountService has been removed completely. Any remaining .vonk-request-info.json files can be deleted manually.
 #. The logsettings for SQL server included an outdated configuration.
 #. The logsettings for MongoDB included an outdated configuration.
@@ -207,7 +207,7 @@ Fix
 Feature
 ^^^
 
-#. Improved error messages if an internal exception occured due to failing filesystem access.
+#. Improved error messages if an internal exception occurred due to failing filesystem access.
 #. The `$lastN operation <https://www.hl7.org/fhir/observation-operation-lastn.html>`_ is now available when using SQL Server as the backend for Firely Server. See :ref:`lastn` for more information.
 
 Plugin and Facade
@@ -255,7 +255,7 @@ Database
 
 #. SQL Server
 
-   #. To improve the performance of searching we have rewritten a large part of our SQL Server implementation. To be able to use the new implementation go to section PipelineOptions in ``appsettings.default.json`` (or ``appsettings.instance.json`` if you have overriden the default pipeline options) and add ``"Vonk.Repository.Sql.Raw.KSearchConfiguration"``. See :ref:`configure_sql` for more details.
+   #. To improve the performance of searching we have rewritten a large part of our SQL Server implementation. To be able to use the new implementation go to section PipelineOptions in ``appsettings.default.json`` (or ``appsettings.instance.json`` if you have overridden the default pipeline options) and add ``"Vonk.Repository.Sql.Raw.KSearchConfiguration"``. See :ref:`configure_sql` for more details.
    #. We have identified two indexes that needed a fix to increase query performance for certain searches. The upgrade procedure will try to fix these indexes automatically. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually, The script can be found in ``sqlserver/FS_SchemaUpgrade_Data_v19_v20.sql``. If you use SQL Server as your Administration database, Firely Server will try to update it automatically as well. If you prefer a manual update, you can run the following script: ``sqlserver/FS_SchemaUpgrade_Admin_v18_v19.sql``.
 
 Feature
@@ -266,7 +266,7 @@ Feature
 Fix
 ^^^
 
-#. Fixed a NullPointerException which occured when indexing UCUM quantities that contained more than one annotation (e.g. "{reads}/{base}").
+#. Fixed a NullPointerException which occurred when indexing UCUM quantities that contained more than one annotation (e.g. "{reads}/{base}").
 #. Fixed a bug where it was possible to accidentally delete a resource with a different information model then the request. Firely Server will now check the information model of the request against the information model of the resource for conditional delete and delete requests.
 #. $subsumes returned HTTP 501 - Not implemented for a POST request (instance-level) even if the operation was enabled in the appsettings.
 #. The _type filter on $everything and Bulk data export didn't allow for resources that are not within the Patient compartment. The operations would return an empty result set.
@@ -308,19 +308,19 @@ Database
    Please note that users running Firely Server running either MongoDb, CosmoDb, or SQLite are not affected by this issue.
 
 .. attention::
-   For SQL Server we changed the datatype of the primary keys. The related upgradescript (``data/20210519072216_ChangePrimaryKeyTypeFromIntToBigint.sql``) can take a lot of time if you have many resources loaded in your database. Therefore some guidelines:
+   For SQL Server we changed the datatype of the primary keys. The related upgrade script (``data/20210519072216_ChangePrimaryKeyTypeFromIntToBigint.sql``) can take a lot of time if you have many resources loaded in your database. Therefore some guidelines:
 
    * We tested it on a database with about 15k Patient records, and 14 mln resources in total. Migrating that took about 50 minutes on a fairly powerful laptop.
    * Absolutely make sure you create a backup of your database first.
    * If you haven't done so already, first upgrade to version 4.1.x.
    * If you already expect the migration might time out, you can run it manually upfront. Shut down Firely Server, so no other users are using the database, and then run the script from SQL Server Management Studio (or a similar tool).
-   * Running the second script (``20210520102224_ChangePrimaryKeyTypeFromIntToBigintBDE.sql``) is optional - that should also succeed when applied by the automigration.
+   * Running the second script (``20210520102224_ChangePrimaryKeyTypeFromIntToBigintBDE.sql``) is optional - that should also succeed when applied by the auto-migration.
 
 Feature
 ^^^^^^^
 
 #. Terminology operation ``$lookup`` is now also connected to remote terminology services, if enabled. See :ref:`feature_terminology`.
-#. We provided a script to 'purge' data from a SQL Server database. See ``data/20210512_Purge.sql``. You can filter on the resourcetype only. Use with care and after a backup. If you need more elaborate support for hard deletes, please :ref:`vonk-contact`.
+#. We provided a script to 'purge' data from a SQL Server database. See ``data/20210512_Purge.sql``. You can filter on the resource type only. Use with care and after a backup. If you need more elaborate support for hard deletes, please :ref:`vonk-contact`.
 
 Fix
 ^^^
@@ -362,7 +362,7 @@ Feature
 
 Fix
 ^^^
-#. Fixed an error in SQL script ``data/20210226200007_UpdateIndexesTokenAndDatetime_Up.sql`` that is used when manually updating the database to v4.1.0. We alse made the script more robust by checking if the current version the database is suitable for the manual upgrade.
+#. Fixed an error in SQL script ``data/20210226200007_UpdateIndexesTokenAndDatetime_Up.sql`` that is used when manually updating the database to v4.1.0. We also made the script more robust by checking if the current version the database is suitable for the manual upgrade.
 
 .. _vonk_releasenotes_410:
 
@@ -466,7 +466,7 @@ Fixes
 
 #. Application Insights has now been disabled by default. If you need Application Insights, you can enable it in your log settings file by including the entire section mentioned in :ref:`Application Insights log settings<configure_log_insights>`.
 #. When validating a resource, a non-existing code would lead to an OperationOutcome.issue with the code ``code-invalid``. That issue code has been changed to ``not-supported``.
-#. On a batch or transaction bundle errors were not reported clearly if the entry in error had no fullUrl element. We fixed this by referring to the index of the entry in the entry array, and the resourcetype of the resource in the entry (if any).
+#. On a batch or transaction bundle errors were not reported clearly if the entry in error had no fullUrl element. We fixed this by referring to the index of the entry in the entry array, and the resource type of the resource in the entry (if any).
 #. The ``import[.R4]`` folder allows for importing custom StructureDefinition resources. If any of them had no id, the error on that caused an exception. Fixed that.
 #. If a Facade returned a resource without an id from the Create method, an error was caused by a log statement. Fixed that.
 #. Indexing ``Subscription.channel[0].endpoint[0]`` failed for R4. Fixed that. This means you can't search for existing Subscriptions by ``Subscription.url`` on the /administration endpoint for FHIR R4.
@@ -526,12 +526,12 @@ Release 3.9.3 hotfix
 
 .. attention::
 
-   We changed the behaviour of resthook notifications on Subscriptions. See Fix nr 1 below.
+   We changed the behavior of resthook notifications on Subscriptions. See Fix nr 1 below.
 
 Database
 ^^^^^^^^
 
-#. SQL Server: The migration that adds the indexes described in :ref:`vonk_releasenotes_392` might run longer than the timeout period of 30 seconds. Therefore we added scripts to apply and revert this migration manually. If you encounter the timeout during upgrade: shut down vonk, run the script using SQL Server Management Studio or any similar tool, then start Vonk 3.9.3 again. In both scripts you only need to provide the databasename for the database that you want to upgrade. If you run your administration database on SQL Server you can but probably do not need to run this script on it. The administration database is typically small enough to complete the script within 30 seconds.
+#. SQL Server: The migration that adds the indexes described in :ref:`vonk_releasenotes_392` might run longer than the timeout period of 30 seconds. Therefore we added scripts to apply and revert this migration manually. If you encounter the timeout during upgrade: shut down vonk, run the script using SQL Server Management Studio or any similar tool, then start Vonk 3.9.3 again. In both scripts you only need to provide the database name for the database that you want to upgrade. If you run your administration database on SQL Server you can but probably do not need to run this script on it. The administration database is typically small enough to complete the script within 30 seconds.
 
    #. apply: <vonk-dir>/data/2021211113200_AddIndex_ForCountAndUpdateCurrent_Up.sql
    #. revert: <vonk-dir>/data/2021211113200_AddIndex_ForCountAndUpdateCurrent_Down.sql
@@ -539,7 +539,7 @@ Database
 Fix
 ^^^
 
-#. :ref:`feature_subscription`: A resthook notification was sent as a FHIR create operation, using POST. This was not compliant with the specification that states it must be an update, using PUT. We changed the default behaviour to align with the specification. In order to avoid breaking changes in an existing deployments, you may set the new setting ``SubscriptionEvaluatorOptions:SendRestHookAsCreate`` to ``true`` - that way Vonk will retain the (incorrect) behaviour from the previous versions.
+#. :ref:`feature_subscription`: A resthook notification was sent as a FHIR create operation, using POST. This was not compliant with the specification that states it must be an update, using PUT. We changed the default behavior to align with the specification. In order to avoid breaking changes in an existing deployments, you may set the new setting ``SubscriptionEvaluatorOptions:SendRestHookAsCreate`` to ``true`` - that way Vonk will retain the (incorrect) behavior from the previous versions.
 
 .. _vonk_releasenotes_392:
 
@@ -605,7 +605,7 @@ Database
 ^^^^^^^^
 
 * We added an important note to the :ref:`3.6.0 release notes <vonk_releasenotes_360>` for MongoDb users.
-* Because of the changes in searching for Quantities (feature 2 below), you will need to do a :ref:`reindex <feature_customsp_reindex>` in order to make use of this. You may limit the reindex to only the searchparameters of type 'quantity' that you actually use (e.g. ``Observation.value-quantity``).
+* Because of the changes in searching for Quantities (feature 2 below), you will need to do a :ref:`reindex <feature_customsp_reindex>` in order to make use of this. You may limit the reindex to only the search parameters of type 'quantity' that you actually use (e.g. ``Observation.value-quantity``).
 
 Features
 ^^^^^^^^
@@ -627,7 +627,7 @@ Fixes
 #. An error message for when a query argument has no value is improved.
 #. When :ref:`SMART-on-FHIR <feature_accesscontrol>` is enabled, and the received token contains a launch context, the :ref:`_history<restful_history>` operation is no longer available. Because Vonk does not retain the search parameter index for historical resources, it cannot guarantee that these resources fall within the launch context (at least not in a performant way). To avoid information leakage we decided to disable this case altogether.
 #. A Create interaction without an id in the resource, with :ref:`SMART-on-FHIR <feature_accesscontrol>` enabled, resulted in an exception.
-#. You can now escape the questionmark '?' in a query argument by prepending it with a backslash '\'.
+#. You can now escape the question mark '?' in a query argument by prepending it with a backslash '\'.
 #. A Quantity search using 'lt' on MongoDb resulted in too many results. 
 
 .. _vonk_releasenotes_370:
@@ -640,7 +640,7 @@ Database
 
 .. attention::
 
-   To accomodate for feature #2 below there is an automatic migration carried out for SQL Server and SQLite. This migration might take some time, so please test it first. For MongoDb, you will have to :ref:`feature_customsp_reindex_all`. If this is not feasible for your database, please :ref:`vonk-contact` for assistance.
+   To accommodate for feature #2 below there is an automatic migration carried out for SQL Server and SQLite. This migration might take some time, so please test it first. For MongoDb, you will have to :ref:`feature_customsp_reindex_all`. If this is not feasible for your database, please :ref:`vonk-contact` for assistance.
 
 Features
 ^^^^^^^^
@@ -696,11 +696,11 @@ Feature
 
 #. Sort: The :ref:`sorting <restful_search_sort>` that was implemented for the SQL/SQLite repositories in the previous version is now also implemented for MongoDb.
 #. Terminology: The :ref:`local terminology service <feature_terminology>`, built in to the Vonk Administration API, is upgraded to support R4 and R5 (and still R3 of course).
-#. Vonk can now index and search on searchparameters that reference a nested resource, like Bundle.message.
+#. Vonk can now index and search on search parameters that reference a nested resource, like Bundle.message.
    
    .. attention::
    
-      Note that any nested resources have to be indexed by Vonk. For new data that is done automatically. But if you want to use this on existing data, you have to :ref:`reindex for the searchparameters <feature_customsp_reindex_specific>` you want to use it on. Those will most notably be Bundle.message and Bundle.composition.
+      Note that any nested resources have to be indexed by Vonk. For new data that is done automatically. But if you want to use this on existing data, you have to :ref:`reindex for the search parameters <feature_customsp_reindex_specific>` you want to use it on. Those will most notably be Bundle.message and Bundle.composition.
 
 #. If you accidentally provide a body in a GET or DELETE request, Vonk will now ignore that body instead of returning an error.
 
@@ -722,10 +722,10 @@ Release 3.5.0
 Feature
 ^^^^^^^
 
-#. Search reference by identifier: FHIR R4 allows you to `search a reference by its identifier <http://hl7.org/fhir/R4/search.html#reference>`_. We added support for this in Vonk. Note that any identifiers in reference elements have to be indexed by Vonk. For new data that is done automatically. But if you want to use this on existing data, you have to :ref:`reindex for the searchparameters <feature_customsp_reindex_specific>` you want to use it on. E.g. Observation.patient. 
+#. Search reference by identifier: FHIR R4 allows you to `search a reference by its identifier <http://hl7.org/fhir/R4/search.html#reference>`_. We added support for this in Vonk. Note that any identifiers in reference elements have to be indexed by Vonk. For new data that is done automatically. But if you want to use this on existing data, you have to :ref:`reindex for the search parameters <feature_customsp_reindex_specific>` you want to use it on. E.g. Observation.patient. 
 #. AuditEvent logging: In release 3.3.0 we already added support for logging audit information to a file. With this release we add to that logging that same information in AuditEvent resources. These resources are written to the Vonk Data database (not the Administration database). Users are not allowed to update or delete these resources. See :ref:`feature_auditing` for more background.
 #. Audit logging: We added ``[Request]`` or ``[Response]`` to the log lines so you can distinguish them better.
-#. Sort: We started implementing :ref:`sorting <restful_search_sort>`. This release provides sorting for searchparameters of the types string, number, uri, reference, datetime and token, on the repositories SQL, SQLite and Memory. On the roadmap is extending this support to MongoDb and to quantity searchparameters.
+#. Sort: We started implementing :ref:`sorting <restful_search_sort>`. This release provides sorting for search parameters of the types string, number, uri, reference, datetime and token, on the repositories SQL, SQLite and Memory. On the roadmap is extending this support to MongoDb and to quantity search parameters.
 #. :ref:`feature_terminologyintegration`: You can configure Vonk to route the terminology operations to external terminology servers. You can even configure a preferred server for certain code systems like LOINC or Snomed-CT. On the roadmap is to also allow you to use these servers for validation of codes and for token searches.
 #. We implemented `$meta-delete <http://hl7.org/fhir/R4/resource-operation-meta-delete.html>`_, see :ref:`Meta plugins <vonk_plugins_meta>`.
 #. Loading plugins can lead to unexpected errors. We made the process and the log friendlier, so you can spot configuration errors more easily:
@@ -741,16 +741,16 @@ Fix
 ^^^
 
 #. You could load invalid XML in the Resource.text through a JSON payload. When that resource was then retrieved in XML, it would fail with an InternalServerError. Vonk will now return an OperationOutcome telling you what the problem is. You can then correct it by using JSON.
-#. Composite searchparameters were not parsed correctly. Now they are. So you don't see warnings like ``Composite SearchParameter 'CodeSystem.context-type-quantity' doesn't have components.`` anymore.  
-#. Indexing for the _profile searchparameter was broken for R4 since Vonk 3.2.1. We fixed it. If you added new resources with Vonk 3.2.1 - 3.4.0, you need to :ref:`reindex for the Resource._profile <feature_customsp_reindex_specific>` parameter.
+#. Composite search parameters were not parsed correctly. Now they are. So you don't see warnings like ``Composite SearchParameter 'CodeSystem.context-type-quantity' doesn't have components.`` anymore.  
+#. Indexing for the _profile search parameter was broken for R4 since Vonk 3.2.1. We fixed it. If you added new resources with Vonk 3.2.1 - 3.4.0, you need to :ref:`reindex for the Resource._profile <feature_customsp_reindex_specific>` parameter.
 #. Audit log: ``%temp%`` in the path setting was evaluated as ``<current directory>\%temp%``. Fixed that to evaluate to the systems temporary directory.
 #. The logsettings.json configured the Serilog RollingFile sink by default. That is deprecated, so we replaced it with the File sink.
-#. :ref:`feature_customsp_reindex_specific` now returns an error if you forget to actually specify a searchparameter.
+#. :ref:`feature_customsp_reindex_specific` now returns an error if you forget to actually specify a search parameter.
 #. An InternalServerError was returned when you validate a resource that is syntactically incorrect. Like a Patient with multiple id's. Vonk now returns an OperationOutcome with the actual problem.
 #. The configuration for the FHIR Mapper was simplified. You only need to include ``Vonk.Plugin.Mapping``. Check appsettings.default.json for the new pipeline.
-#. Maybe you got accustomed to ignoring a list of warnings at startup of Vonk. We cleaned up the list so that if there is a warning, it is worthwile investigating the cause of it.
+#. Maybe you got accustomed to ignoring a list of warnings at startup of Vonk. We cleaned up the list so that if there is a warning, it is worthwhile investigating the cause of it.
 #. The appsettings and logsettings can contain relative file paths for several settings, like the ``License:LicenseFile``. These were evaluated against the current working directory, but that could lead to problems if that was *not* the Vonk directory. We solved that: all relative paths are evaluated against the Vonk directory.
-#. The docker image for version 3.4.0 was tagged ``3.4.0-``. With 3.5.0 we removed the superfluous hypen at the end.
+#. The docker image for version 3.4.0 was tagged ``3.4.0-``. With 3.5.0 we removed the superfluous hyphen at the end.
 #. We updated the documentation on :ref:`use_docker` on SQL Server to be clearer about the order of the steps to take.
 #. We updated the documentation on :ref:`vonk_plugins_landingpage` to match .NET Core 3.1.
 
@@ -801,8 +801,8 @@ Feature
 Fix
 ^^^
 
-#. Indexing of a quantity in resource could fail with a Statuscode 500 if it had no ``.value`` but only extensions.
-#. The use of a SearchParameter of type ``reference`` having no ``target`` failed. These searchparameters are now signalled upon import.
+#. Indexing of a quantity in resource could fail with a Status code 500 if it had no ``.value`` but only extensions.
+#. The use of a SearchParameter of type ``reference`` having no ``target`` failed. These search parameters are now signalled upon import.
 #. Since R4 it is valid to search for a quantity without specifying the unit. Vonk now accepts that.
 #. A transaction response bundle could contain an empty ``response.etag`` element, which is invalid.
 #. :ref:`feature_preload` was not working since the upgrade to .NET Core 3.0. That has been fixed. It is still only available for STU3 though.
@@ -891,7 +891,7 @@ Plugin and Facade API
 ^^^^^^^^^^^^^^^^^^^^^
 
 #. Vonk.Facade.Relational now supports the use of the .Include() function of EntityFramework Core. To do so, override ``RelationalQuery.GetEntitySet(DbContext dbContext)``.
-#. Vonk.Facade.Relational now supports sorting. Override ``RelationalQueryFactory.AddResultShape(SortShape sortShape) and return a RelationalShorShape using the extension method ``SortQuery()``.
+#. Vonk.Facade.Relational now supports sorting. Override ``RelationalQueryFactory.AddResultShape(SortShape sortShape) and return a RelationalSortShape using the extension method ``SortQuery()``.
 
 
 .. _vonk_releasenotes_313:
@@ -901,7 +901,7 @@ Release 3.1.3 hotfix
 
 Fix
 ^^^
-#. Fixed behaviour on conditional updates in transactions. In odd circumstances Vonk could crash on this.
+#. Fixed behavior on conditional updates in transactions. In odd circumstances Vonk could crash on this.
 
 .. _vonk_releasenotes_310:
 
@@ -1036,7 +1036,7 @@ Feature
 ^^^^^^^
 
 #. :ref:`feature_subscription` works for R4 also. Note that a Subscription will only be activated for resource changes in the same FHIR version as the Subscription itself.
-#. :ref:`conformance_fromdisk` works for R4 also. Use a directoryname that ends with ``.R4`` for R4 conformance resources.
+#. :ref:`conformance_fromdisk` works for R4 also. Use a directory name that ends with ``.R4`` for R4 conformance resources.
 #. :ref:`feature_customsp_reindex` works for R4 also. Issue a reindex with a fhirVersion parameter in the Accept header, and it will be executed for the SearchParameters defined for that FHIR version.
 #. Allow for non-hl7 prefixed canonical urls for conformance resources (since sdf-7 is lifted). See :ref:`feature_customresources`.
 #. Custom Resources can be validated, both individually and as part of a bundle. See :ref:`feature_customresources`.
@@ -1047,7 +1047,7 @@ Fix
 ^^^
 
 #. _include did not work for R4.
-#. _include gave a 500 responsecode if a resource contains absolute references.
+#. _include gave a 500 response code if a resource contains absolute references.
 #. A resource with unknown elements could result in an uncaught ``Hl7.Fhir.ElementModel.StructuralTypeException``.
 #. The homepage stated that Vonk was only for STU3. Fixed that.
 #. Bundle.timestamp element (new in R4) was not populated in bundles returned from Search and History operations.
@@ -1152,14 +1152,14 @@ Fix
 
 #. A SearchParameter of type token did not work on an element of type string, e.g. CodeSystem.version.
 #. Search with POST was broken.
-#. If a long running task is active (responsecode 423, see :ref:`conformance_import` and :ref:`feature_customsp_reindex`), the OperationOutcome reporting that will now hide issues stating that all the arguments were not supported (since that is not the cause of the error).
+#. If a long running task is active (response code 423, see :ref:`conformance_import` and :ref:`feature_customsp_reindex`), the OperationOutcome reporting that will now hide issues stating that all the arguments were not supported (since that is not the cause of the error).
 #. Overriding an array in the settings was hard - it would still inherit part of the base setting if the base array was longer. 
    We changed this: an array will always overwrite the complete base array.
    Note that this may trick you if you currently override a single array element with an environment variable. See :ref:`configure_levels`.
 #. The element ``meta.source`` cannot be changed on subsequent updates to a resource (R4 specific)
 #. SearchParameter ``StructureDefinition.ext-context`` yielded many errors in the log because the definition of the fhirpath in the specification is not correct. We provided a corrected version in errataFhir40.zip (see :ref:`feature_errata`).
 #. :ref:`disable_interactions` was not evaluated for custom operations.
-#. Delete of an instance accepted searchparameters on the url.
+#. Delete of an instance accepted search parameters on the url.
 #. Transactions: references to other resources in the transaction were not updated if the resource being referenced was in the transaction as an update (PUT).
    (this error was introduced in 2.0.0).
 

@@ -19,7 +19,7 @@ The command above will install FSI from this `NuGet package <https://www.nuget.o
 
 .. note::
 
-  Make sure that the dotnet tools directory is added to your path, this makes it possible bo run the ``fsi`` command from any directory.
+  Make sure that the dotnet tools directory is added to your path, this makes it possible to run the ``fsi`` command from any directory.
 
     - Please find more information on where globally installed tools are located in `this article <https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools#install-a-global-tool>`_. 
     - For Linux and Mac, make sure you add your ``.profile`` or ``.bash_profile`` to your path.
@@ -124,17 +124,17 @@ Supported arguments
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--mongoConnectionstring <connectionstring>``    | mongodb/connectionString         | yes      | Connection string to Firely Server MongoDb database                                                                                                 |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--mongoPar <mongoPar>``                         | mongodb/saveParallel             |          | The # of batches to save in parallel. Depends on your bandwidth to MongoDb and its processing power                                                 |
+| ``--mongoPar <mongoPar>``                         | mongodb/saveParallel             |          | The number of batches to save in parallel. Depends on your bandwidth to MongoDb and its processing power                                            |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--mongoExistQryPar <mongoExistQryPar>``         | mongodb/queryExistenceParallel   |          | The number of parallel threads querying the DB to check whether a resource exists (only when ``--update-existing-resources`` is set to false)       |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--mongoBatch <mongoBatch>``                     | mongodb/batchSize                |          | The # of resources to save in each batch                                                                                                            |
+| ``--mongoBatch <mongoBatch>``                     | mongodb/batchSize                |          | The number of resources to save in each batch                                                                                                       |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``-c``, ``--connectionstring <connectionstring>`` | sqlServer/connectionString       | yes      | Connection string to Firely Server SQL Server database                                                                                              |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--sqlPar <sqlPar>``                             | sqlServer/saveParallel           |          | The # of batches to save in parallel. Depends on your bandwidth to SQL Server and its processing power                                              |
+| ``--sqlPar <sqlPar>``                             | sqlServer/saveParallel           |          | The number of batches to save in parallel. Depends on your bandwidth to SQL Server and its processing power                                         |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--sqlBatch <sqlBatch>``                         | sqlServer/saveBatchSize          |          | The # of resources to save in each batch. SQL Server must be able to process it within the CommandTimeout.                                          |
+| ``--sqlBatch <sqlBatch>``                         | sqlServer/saveBatchSize          |          | The number of resources to save in each batch. SQL Server must be able to process it within the CommandTimeout.                                     |
 |                                                   |                                  |          | It is recommended to set this value to at least 500 for optimal performance                                                                         |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--sqlTimeout <sqlTimeout>``                     | sqlServer/commandTimeOut         |          | The time SQL Server is allowed to process a batch of resources                                                                                      |
@@ -169,7 +169,7 @@ Supported arguments
 Examples
 --------
 
-Runs the import for files located in directory **/path/to/your/input/files** and its subdirectories using license file **/path/to/your/license/fsi-license.json** targeting the database defined by the connection string. In case if a resource being imported already exists in the target database, it gets skipped.
+Runs the import for files located in directory **/path/to/your/input/files** and its subdirectories using license file **/path/to/your/license/fsi-license.json** targeting the database defined by the connection string. In case a resource being imported already exists in the target database, it gets skipped.
 
 .. code-block:: bash
 
@@ -196,7 +196,7 @@ Same as above but targeting a MongoDB database.
   --dbType MongoDb
   -s ./path/to/your/input/files \
   --license /path/to/your/license/fsi-license.json \
-  -mongoConnectionstring 'mongodb://username:password@localhost:27017/vonkdata'
+  --mongoConnectionstring 'mongodb://username:password@localhost:27017/vonkdata'
 
 Monitoring
 ----------
@@ -213,7 +213,8 @@ Performance counters
 You can get insights into the tool performance by means of performance counters. There are many ways to monitor the performance counters. One of the options is using `dotnet-counters <https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-counters>`_.
 
 To monitor the counters for FSI, you can execute the following command:
-:: 
+
+::
 
   dotnet-counters monitor --counters 'System.Runtime','FSI Processing'  --process-id <process_id>
 

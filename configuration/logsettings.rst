@@ -29,7 +29,7 @@ To change the level of logging, follow these steps:
 *	Change the setting for :code:`Default` from ``Error`` to the level you need, from the choice of
 	``Verbose``, ``Debug``, ``Information``, ``Warning``, ``Error`` and ``Fatal``.
 
-You can deviate from the default mimimum level for specific namespaces. You do this by specifying the namespace
+You can deviate from the default minimum level for specific namespaces. You do this by specifying the namespace
 and the log event level you would like for this namespace, for example::
 
 	"MinimumLevel": {
@@ -117,7 +117,7 @@ Settings for the Console sink:
 		* ``{Username}``: Name of the logged in user - if applicable
 		* ``{Application}``: Name of the application (in case other applications are logging to the same sink). Is set to ``Vonk`` at the bottom of the logsettings file
 		* ``{Level}``: Level of the log, see the values in :ref:`configure_log_level`
-		* ``{MachineName}``: Name of the machine hosting the Firely Server instance. Expecially useful when running multiple instances all logging to the same file.
+		* ``{MachineName}``: Name of the machine hosting the Firely Server instance. Especially useful when running multiple instances all logging to the same file.
 		* ``{RequestId}``: Unique id of the web request, useful to correlate log statements
 		* ``{Message}}``: Actual message being logged
 		* ``{Exception}``: If an error is logged, Firely Server may include the original exception. That is then formatted here.

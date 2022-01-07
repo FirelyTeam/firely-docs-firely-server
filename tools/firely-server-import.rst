@@ -179,6 +179,8 @@ When importing the data, it is handy to have the logging enabled, as it would ca
 
 You can configure the log settings the same way as you do for Firely Server: :ref:`configure_log`. 
 
+.. _tool_fsi_performance_counters:
+
 Performance counters
 ^^^^^^^^^^^^^^^^^^^^
 You can get insights into the tool performance by means of performance counters. There are many ways to monitor the performance counters. One of the options is using `dotnet-counters <https://docs.microsoft.com/en-us/dotnet/core/diagnostics/dotnet-counters>`_.
@@ -211,6 +213,17 @@ Your license already permits the usage of FSI if it contains ``http://fire.ly/vo
 
 Release notes
 -------------
+
+.. _fsi_releasenotes_1.1.0:
+
+Release 1.1.0
+^^^^^^^^^^^^^
+
+* Feature: added support for MongoDb!
+* Feature: added support for performance counters using dotnet-counters. See :ref:`tool_fsi_performance_counters` on how to setup and use dotnet-counters.
+* FSI has been upgraded to .NET 6.
+* The Firely .NET SDK that FSI uses has been upgraded to 3.7.0.
+* Multiple smaller fixes to improve reliability and performance of the tool.
 
 .. _fsi_releasenotes_1.0.0:
 

@@ -230,13 +230,28 @@ Whether you use MongoDB or SQL Server, you can have Firely Server log in detail 
 	"MinimumLevel": {
 		"Default": "Error",
 		"Override": {
-			"Vonk.Repository.Sql.Raw": "Verbose",
-			"Vonk.Repository.Document.Db": "Verbose",
-			"Vonk": "Warning"
+			"Vonk.Repository": "Verbose"
 		}
 	},
 
-If you do so you probably don't want all this detail in your console sink, so you can limit the level for that, see `Console`_ above.
+You can also control the logsettings for the different repositories more finely granulated:
+
+	"MinimumLevel": {
+		"Default": "Error",
+		"Override": {
+			// (for versions before FS 4.6.0)
+			"Vonk.Repository.Sql": "Verbose",
+			// OR (for FS 4.6.0 or later AND if Sql.Raw is enabled)
+			"Vonk.Repository.Sql.Raw": "Verbose",
+			// OR (for MongoDb)
+			"Vonk.Repository.Document.Db": "Verbose",
+			// OR (for SQLite)
+			"Vonk.Repository": "Verbose",
+			"Microsoft.EntityFrameworkCore": "Verbose"
+		}
+	},
+
+Remember to adjust your sink settings so that ``"restrictedToMinimumLevel": "Verbose"`` is set. If you do so you probably don't want all this detail in your console sink, so you can limit the level for that, see `Console`_ above.
 
 .. _configure_log_database_query_params:
 

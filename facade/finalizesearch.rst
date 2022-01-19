@@ -17,7 +17,7 @@ the order of inclusion, and adds to the services. For background information, se
 * Add a static class to your project called ``ViSiConfiguration``
 * Add the following code to it::
 
-    [VonkConfiguration(order: 240)]
+    [VonkConfiguration(order: 210)]
     public static class ViSiConfiguration
     {
         public static IServiceCollection AddViSiServices(this IServiceCollection services, IConfiguration configuration)
@@ -30,6 +30,11 @@ the order of inclusion, and adds to the services. For background information, se
             return services;
         }
     }
+
+.. note::
+  As of Firely Server version 4.4.0, your Facade should not have an order greater than or equal to 211. 
+  The reason for this is that the MemoryAdministrationConfiguration (order: 211) used by the admin endpoint
+  tries to resolve the ISearchRepository.
 
 2. Create your Facade plugin
 ----------------------------

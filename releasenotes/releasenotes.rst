@@ -244,6 +244,7 @@ Plugin and Facade
 #. The interfaces PrioritizedResourceResolver(R3|R4|R5) and their implementations are no longer available. It is advised to construct your own StructureDefinitionSummaryProvider incl. a MultiResolver combining your own resource resolver and the IConformanceCache provided by Firely Server.
 #. The interface IConformanceCacheInvalidation has been moved from Vonk.Core.Import to Vonk.Core.Conformance
 #. The classes SpecificationZipResolver(R3|R4|R5) are no longer available. Please use the IPrioritizedResourceResolvers instead.
+#. Starting from this version, a Facade should not have an order greater than or equal to 211. The reason for this is that upon configuring the administration database, Firely Server checks whether an ISearchRepository is registered. The earliest of these configurations is at order 211.
 
 .. _vonk_releasenotes_430:
 

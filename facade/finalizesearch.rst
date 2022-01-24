@@ -33,8 +33,8 @@ the order of inclusion, and adds to the services. For background information, se
 
 .. note::
   As of Firely Server version 4.4.0, your Facade should not have an order greater than or equal to 211. 
-  The reason for this is that the MemoryAdministrationConfiguration (order: 211) used by the admin endpoint
-  tries to resolve the ISearchRepository.
+  The reason for this is that upon configuring the administration database, Firely Server checks 
+  whether an ISearchRepository is registered. The earliest of these configurations is at order 211.
 
 2. Create your Facade plugin
 ----------------------------

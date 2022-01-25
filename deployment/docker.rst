@@ -340,7 +340,42 @@ Use this command to spin up a Firely Server container and MongoDB container: |br
 
 Open a browser and use the address http://localhost:8080/. This will show the landing page of Firely Server.
 
+.. _license_as_environment_variable:
 
+Providing license via an environment variable
+---------------------------------------------
+
+The examples above demonstrate how to provide a license by mounting a license file from the host's filesystem to the filesystem within a container. 
+Starting from Firely Server v4.7.0, the license can also be provided as a string via an environment variable named ``VONK_License:LicenseString``.
+This is meant to simplify deployments of Firely Server within Docker as you don't have to store the license file on the host's filesystem anymore.
+
+The value of that variable should contain the same text as the license file but all in one line.
+
+The example below shows how to spin up a Docker container by supplying the license as a variable.
+
+.. code-block:: bash
+
+  docker run -d \
+    -p 8080:4080 \
+    --name vonk.server \
+    -e 'VONK_License:LicenseString={ "LicenseOptions": { "Kind": "Production", "ValidUntil": "2022-10-30", "Licensee": "example@fire.ly", "Plugins": [ ... ] }, "Signature": "..." }' \
+    simplifier/vonk
+
+If you use docker-compose, you can specify the variable in you docker-compose file like this:
+
+.. code-block:: yaml
+   :linenos:
+
+   version: '3'
+
+   services:
+
+     vonk-web:
+       image: simplifier/vonk
+       ports:
+         - "8080:4080"
+       environment:
+         - 'VONK_License:LicenseString={ "LicenseOptions": { "Kind": "Production", "ValidUntil": "2022-10-30", "Licensee": "example@fire.ly", "Plugins": [ ... ] }, "Signature": "..." }'
 
 .. |br| raw:: html
 

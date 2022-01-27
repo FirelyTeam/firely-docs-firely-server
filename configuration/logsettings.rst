@@ -234,7 +234,7 @@ Whether you use MongoDB or SQL Server, you can have Firely Server log in detail 
 		}
 	},
 
-You can also control the logsettings for the different repositories more finely granulated:
+You can also control the logsettings for the different repositories more finely granulated::
 
 	"MinimumLevel": {
 		"Default": "Error",

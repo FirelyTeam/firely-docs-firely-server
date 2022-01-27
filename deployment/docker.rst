@@ -358,7 +358,7 @@ The example below shows how to spin up a Docker container by supplying the licen
   docker run -d \
     -p 8080:4080 \
     --name vonk.server \
-    -e 'VONK_License:LicenseString={ "LicenseOptions": { "Kind": "Production", "ValidUntil": "2022-10-30", "Licensee": "example@fire.ly", "Plugins": [ ... ] }, "Signature": "..." }' \
+    -e "VONK_License:LicenseString={ 'LicenseOptions': { 'Kind': 'Production', 'ValidUntil': '2022-10-30', 'Licensee': 'example@fire.ly', 'Plugins': [ ... ] }, 'Signature': '...' }" \
     simplifier/vonk
 
 If you use docker-compose, you can specify the variable in you docker-compose file like this:
@@ -375,7 +375,7 @@ If you use docker-compose, you can specify the variable in you docker-compose fi
        ports:
          - "8080:4080"
        environment:
-         - 'VONK_License:LicenseString={ "LicenseOptions": { "Kind": "Production", "ValidUntil": "2022-10-30", "Licensee": "example@fire.ly", "Plugins": [ ... ] }, "Signature": "..." }'
+         - "VONK_License:LicenseString={ 'LicenseOptions': { 'Kind': 'Production', 'ValidUntil': '2022-10-30', 'Licensee': 'example@fire.ly', 'Plugins': [ ... ] }, 'Signature': '...' }"
 
 .. |br| raw:: html
 

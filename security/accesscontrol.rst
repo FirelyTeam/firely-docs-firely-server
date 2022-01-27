@@ -133,6 +133,11 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
         "TypeLevelInteractions": "create, search, history, conditional_create",
         "WholeSystemInteractions": "batch, transaction, history, search"
       },
+      "TokenIntrospection": {
+        "ClientId": "Firely Server",
+        "ClientSecret": "secret"
+      },
+      "ShowAuthorizationPII": false,      
     //"AccessTokenScopeReplace": "-"
     }
 
@@ -147,6 +152,8 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
 * ClaimsNamespace: Some authorization providers will prefix all their claims with a namespace, e.g. ``http://my.company.org/auth/user/*.read``. Configure the namespace here to make Firely Server interpret it correctly. It will then strip off that prefix and interpret it as just ``user/*.read``. By default no namespace is configured.
 * RequireHttpsToProvider: Token exchange with an Authorization server should always happen over https. However, in a local testing scenario you may need to use http. Then you can set this to 'false'. The default value is 'true'. 
 * Protected: This setting controls which of the interactions actually require authentication. In the example values provided here, $validate is not in the TypeLevelInteractions. This means that you can use POST [base-url]/Patient/$validate without authorization. Since you only read Conformance resources with this interaction, this might make sense.
+* TokenIntrospection: This setting is configurable when you use `reference tokens <https://docs.duendesoftware.com/identityserver/v5/apis/aspnetcore/reference/>`_.
+* ShowAuthorizationPII: This is a flag to indicate whether or not PII is shown in logs.
 * AccessTokenScopeReplace: (FS v4.7.0) With this optional setting you tell Firely Server which character replaces the ``/`` (forward slash) character in a SMART scope. This setting is needed in cases like working with Azure Active Directory (see details in section :ref:`feature_accesscontrol_aad`). 
 
 .. _feature_accesscontrol_compartment:

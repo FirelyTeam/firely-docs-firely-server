@@ -237,13 +237,17 @@ Therefor when you use AAD to provide SMART on FHIR scopes to Firely Server, you 
 
 1. In a SMART scope, use another character (for instance ``-``) instead of ``/``. For example:
 
-  * ``user-*.read``
-  * ``user-*.write``
-  * ``patient-Observation.r``
+  * ``user/*.read`` becomes ``user-*.read``
+  * ``user/*.write`` becomes ``user-*.write``
+  * ``patient/Observation.r`` becomes ``patient-Observation.r``
   
   If the used character (for instance ``-``) is already in your SMART scope, then you can use ``\`` (backward slash) to escape it.
   
-  * ``patient-Observation.r?_id=Test\-With\-Dashes``
+  * ``patient/Observation.r?_id=Id-With-Dashes`` becomes ``patient-Observation.r?_id=Id\-With\-Dashes``
+
+  If a ``\`` (backward slash) is already in your SMART scope, then you can escape it with another ``\``.
+
+  * ``patient/Observation.r?_id=Id\With\BackwardSlash`` becomes ``patient-Observation.r?_id=Id\\With\\BackwardSlash`` 
 
 2. Tell Firely Server which character is used in Step 1, then Firely Server will generate a proper `SMART on FHIR scope <http://hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html>`_ and handle the request further. This can be configured via setting ``AccessTokenScopeReplace``. 
 

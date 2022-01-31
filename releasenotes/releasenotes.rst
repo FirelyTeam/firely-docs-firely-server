@@ -26,14 +26,52 @@ The default FHIR version of the `public Firely Server endpoint <https://server.f
 
 .. _vonk_releasenotes_470:
 
-Release 4.7.0, TBD
-------------------
+Release 4.7.0, Feb 1st, 20222
+-----------------------------
 
 .. attention::    
-    With version 4.7.0, Firely Server migrated to dotnet 6.0. In order to run the binaries, `ASP.NET Core Runtime 6.x<https://dotnet.microsoft.com/en-us/download/dotnet/6.0>` needs to be installed.
+    With version 4.7.0, Firely Server migrated to .NET 6.0. In order to run the binaries, `ASP.NET Core Runtime 6.x <https://dotnet.microsoft.com/en-us/download/dotnet/6.0>`_ needs to be installed.
 
-    Please also ensure that your plugins for Firely Server are targeting at least dotnet 6.0.
 
+Feature
+^^^^^^^
+
+#. BulkDataExport is now supported for MongoDB as well. Get started with the :ref:`Bulk Data Export documentation<feature_bulkdataexport>`.
+#. Circular references in transaction bundles are now supported. Bundles of type ``transaction`` and ``batch`` are permitted to contain resources referencing another resource within the same bundle. This also means that you can now cross reference ``PUT`` and ``POST`` entries.
+#. An option to configure additional token issuers is now available. This is used in settings where the token issuer deviates from the token audience. This new setting replaces the existing ``AdditionalBaseEndpoints``. The setting needs to be adjusted manually as it will not be migrated automatically.
+#. Firely Server now supports receiving document bundles on the transaction base endpoint. Firely Server will extract the narrative of document bundles and store this within a DocumentReference resource. 
+#. Added support for transforming SMART scopes issued by Azure Active Directory.
+#. Firely Server will now recognize the ``name`` claim in JSON Web Tokens and also include its content in the logs.
+#. It is now possible to provide the Firely Server license via an environment variable.
+
+Plugins
+^^^^^^^
+
+.. attention::    
+    Please ensure that your plugins for Firely Server are targeting at least ``net6.0``. Plugins that are targeting ``netstandard2.0`` or ``netstandard2.1`` do not need to be updated.
+
+#. BulkDataExport interfaces were made publicly available in order to provide these to Firely Server's facade implementers.
+#. Upgraded the .NET SDK to 3.7.0. Please review its release notes for changes.
+
+Logging improvements
+^^^^^^^^^^^^^^^^^^^^
+
+#. Error messages including information about authorization validation and authentication requests are now enriched with user information if ``ShowAuthorizationPII`` is enabled.
+#. Authorization/Authentication logging messages are now enriched with more information when logging is set to ``debug``.
+#. In case SSL is activated, but a ``.pfx`` file could not be found, Firely Server will now log this error more explicitly. 
+
+Fix
+^^^
+
+#. Fixed a bug where newly created SQL connections were not closed properly with the raw SQL configuration.
+#. Fixed a bug that prevented searching on the ContactPoint datatype with a query of type ``system|value``. Although this combination is disallowed by the FHIR specification, Firely Server still allows it. We do not provide a migration for this issue. Please :ref:`vonk-contact` if this is an issue for you.
+#. Fixed a bug that returned invalid self links without escaped whitespaces in bundles.
+#. Improved support for use of Firely Server with Azure SQL. 
+
+Other
+^^^^^
+
+#. Firely Server will no longer support CosmosDb starting with version 4.7.0.
 
 .. _vonk_releasenotes_462:
 

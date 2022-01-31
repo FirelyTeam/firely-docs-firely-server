@@ -147,14 +147,14 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
     * FilterType: Both a launch context and a CompartmentDefinition are defined by a resourcetype. Use FilterType to define for which launch context and related CompartmentDefinition this Filter is applicable.
     * FilterArgument: Translates the value of the launch context to a search argument. You can use any supported search parameter defined on FilterType. It should contain the name of the launch context enclosed in hashes (e.g. #patient#), which is substituted by the value of the claim.
 * Authority: The base url of your identity provider, such that ``{{base_url}}/.well-known/openid-configuration`` returns a valid configuration response (`OpenID Connect Discovery documentation <https://openid.net/specs/openid-connect-discovery-1_0.html#rfc.section.4.2>`_). At minimum, the ``jwks_uri``, ``token_endpoint`` and ``authorization_endpoint`` keys are required in addition to the keys required by the speficiation. See :ref:`feature_accesscontrol_idprovider` for more background.
-* AdditionalEndpoints: (FS v4.7.0) Optional configuration setting. Add additional issuers and/or base authority endpoints that your identity provider also uses for operations that are listed in the .well-known document. 
+* AdditionalEndpoints: Optional configuration setting. Add additional issuers and/or base authority endpoints that your identity provider also uses for operations that are listed in the .well-known document. 
 * Audience: Defines the name of this Firely Server instance as it is known to the Authorization server. Default is 'firelyserver'.
 * ClaimsNamespace: Some authorization providers will prefix all their claims with a namespace, e.g. ``http://my.company.org/auth/user/*.read``. Configure the namespace here to make Firely Server interpret it correctly. It will then strip off that prefix and interpret it as just ``user/*.read``. By default no namespace is configured.
 * RequireHttpsToProvider: Token exchange with an Authorization server should always happen over https. However, in a local testing scenario you may need to use http. Then you can set this to 'false'. The default value is 'true'. 
 * Protected: This setting controls which of the interactions actually require authentication. In the example values provided here, $validate is not in the TypeLevelInteractions. This means that you can use POST [base-url]/Patient/$validate without authorization. Since you only read Conformance resources with this interaction, this might make sense.
 * TokenIntrospection: This setting is configurable when you use `reference tokens <https://docs.duendesoftware.com/identityserver/v5/apis/aspnetcore/reference/>`_.
 * ShowAuthorizationPII: This is a flag to indicate whether or not PII is shown in logs.
-* AccessTokenScopeReplace: (FS v4.7.0) With this optional setting you tell Firely Server which character replaces the ``/`` (forward slash) character in a SMART scope. This setting is needed in cases like working with Azure Active Directory (see details in section :ref:`feature_accesscontrol_aad`). 
+* AccessTokenScopeReplace: With this optional setting you tell Firely Server which character replaces the ``/`` (forward slash) character in a SMART scope. This setting is needed in cases like working with Azure Active Directory (see details in section :ref:`feature_accesscontrol_aad`). 
 
 .. _feature_accesscontrol_compartment:
 
@@ -249,14 +249,14 @@ Therefor when you use AAD to provide SMART on FHIR scopes to Firely Server, you 
 
   * ``patient/Observation.r?_id=Id\With\BackwardSlash`` becomes ``patient-Observation.r?_id=Id\\With\\BackwardSlash`` 
 
-2. Tell Firely Server which character is used in Step 1, then Firely Server will generate a proper `SMART on FHIR scope <http://hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html>`_ and handle the request further. This can be configured via setting ``AccessTokenScopeReplace``. 
+2. Configure Firely Server which character is used in Step 1, then Firely Server will generate a proper `SMART on FHIR scope <http://hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html>`_ and handle the request further. This can be configured via setting ``AccessTokenScopeReplace``. 
 
 For the first step above, instead of doing it manually, you can deploy `SMART on FHIR AAD Proxy <https://github.com/azure-smart-health/smart-on-fhir-aad-proxy>`_ to Azure, which helps you to replace ``/`` to ``-`` in a SMART scope.
 The other option would be to follow `Quickstart: Deploy Azure API for FHIR using Azure portal <https://docs.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/fhir-paas-portal-quickstart>`_, check "SMART on FHIR proxy" box and use the proxy by following `Tutorial: Azure Active Directory SMART on FHIR proxy <https://docs.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/use-smart-on-fhir-proxy>`_.
 
 .. warning:: 
-  When you use the proxy, be careful with the `SMART on FHIR v2 scopes <http://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html>`_. Becasue ``-`` is allowed there (see examples below). 
-  In those cases, the proxy simply replaces ``/`` with ``-`` and not able to escape the original ``-``, then Firely Server could not figure out which ``-`` is original, which makes the request failed.
+  When you use the SMART on FHIR AAD Proxy, be careful with `SMART on FHIR v2 scopes <http://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html>`_.  ``-`` is an allowed character within the access scope (see examples below). 
+  In those cases, the proxy simply replaces ``/`` with ``-`` and does not escape the original ``-``, then Firely Server cannot figure out which ``-`` is original, which will result in a failed request.
 
   * ``patient/Observation.rs?category=http://terminology.hl7.org/CodeSystem/observation-category|laboratory``
   * ``Observation.rs?code:in=http://valueset.example.org/ValueSet/diabetes-codes`` 

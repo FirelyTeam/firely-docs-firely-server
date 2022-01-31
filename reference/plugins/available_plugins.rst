@@ -146,6 +146,12 @@ Support for different FHIR versions
 :Order: 112
 :Description: Registers an ``Hl7.Fhir.Specification.IStructureDefinitionSummaryProvider`` for FHIR STU3 (or R3).
 
+:Name: FHIR R3 Validation
+:Configuration: ``Vonk.Fhir.R3.Validation.ValidationConfigurationR3``
+:License token: http://fire.ly/vonk/plugins/fhirr3
+:Order: 4845
+:Description: Registers a validator for FHIR STU3 (or R3).
+
 .. _vonk_plugins_fhir_r4:
 
 :Name: FHIR R4
@@ -159,6 +165,12 @@ Support for different FHIR versions
 :License token: http://fire.ly/vonk/plugins/fhirr4
 :Order: 112
 :Description: Registers an ``Hl7.Fhir.Specification.IStructureDefinitionSummaryProvider`` for FHIR R4.
+
+:Name: FHIR R4 Validation
+:Configuration: ``Vonk.Fhir.R4.Validation.ValidationConfigurationR4``
+:License token: http://fire.ly/vonk/plugins/fhirr4
+:Order: 4845
+:Description: Registers a validator for FHIR R4.
 
 .. _vonk_plugins_rest:
 

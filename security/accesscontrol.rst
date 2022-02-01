@@ -153,7 +153,7 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
 * RequireHttpsToProvider: Token exchange with an Authorization server should always happen over https. However, in a local testing scenario you may need to use http. Then you can set this to 'false'. The default value is 'true'. 
 * Protected: This setting controls which of the interactions actually require authentication. In the example values provided here, $validate is not in the TypeLevelInteractions. This means that you can use POST [base-url]/Patient/$validate without authorization. Since you only read Conformance resources with this interaction, this might make sense.
 * TokenIntrospection: This setting is configurable when you use `reference tokens <https://docs.duendesoftware.com/identityserver/v5/apis/aspnetcore/reference/>`_.
-* ShowAuthorizationPII: This is a flag to indicate whether or not PII is shown in logs.
+* ShowAuthorizationPII: This is a flag to indicate whether or not personally identifiable information is shown in logs.
 * AccessTokenScopeReplace: With this optional setting you tell Firely Server which character replaces the ``/`` (forward slash) character in a SMART scope. This setting is needed in cases like working with Azure Active Directory (see details in section :ref:`feature_accesscontrol_aad`). 
 
 .. _feature_accesscontrol_compartment:

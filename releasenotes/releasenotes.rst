@@ -38,7 +38,7 @@ Feature
 
 #. BulkDataExport is now supported for MongoDB as well. Get started with the :ref:`Bulk Data Export documentation<feature_bulkdataexport>`.
 #. Circular references in transaction bundles are now supported. Bundles of type ``transaction`` and ``batch`` are permitted to contain resources referencing another resource within the same bundle. This also means that you can now cross reference ``PUT`` and ``POST`` entries.
-#. An option to configure additional token issuers is now available. This is used in settings where the token issuer deviates from the token audience. This new setting replaces the existing ``AdditionalBaseEndpoints``. The setting needs to be adjusted manually as it will not be migrated automatically.
+#. An option to configure additional token issuers is now available. This is used in settings where the token issuer deviates from the token audience. This new setting replaces the existing ``AdditionalEndpointBaseAddresses``. The setting needs to be adjusted manually as it will not be migrated automatically.
 #. Firely Server now supports receiving document bundles on the transaction base endpoint. Firely Server will extract the narrative of document bundles and store this within a DocumentReference resource. 
 #. Added support for transforming SMART scopes issued by Azure Active Directory.
 #. Firely Server will now recognize the ``name`` claim in JSON Web Tokens and also include its content in the logs.
@@ -48,7 +48,7 @@ Plugins
 ^^^^^^^
 
 .. attention::    
-    Please ensure that your plugins for Firely Server are targeting at least ``net6.0``. Plugins that are targeting ``netstandard2.0`` or ``netstandard2.1`` do not need to be updated.
+   Plugins that are targeting ``netstandard2.0`` or ``netstandard2.1`` do not need to be updated. Please ensure that your plugins for Firely Server are targeting at least ``net6.0``. 
 
 #. BulkDataExport interfaces were made publicly available in order to provide these to Firely Server's facade implementers.
 #. Upgraded the .NET SDK to 3.7.0. Please review its release notes for changes.

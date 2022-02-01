@@ -251,7 +251,7 @@ Therefore when you use AAD to provide SMART on FHIR scopes to Firely Server, you
 
 2. Configure Firely Server which character is used in Step 1, then Firely Server will generate a proper `SMART on FHIR scope <http://hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html>`_ and handle the request further. This can be configured via setting ``AccessTokenScopeReplace``. 
 
-For the first step above, instead of doing it manually, you can deploy `SMART on FHIR AAD Proxy <https://github.com/azure-smart-health/smart-on-fhir-aad-proxy>`_ to Azure, which helps you to replace ``/`` to ``-`` in a SMART scope.
+For the first step above, instead of doing it manually, you can deploy `SMART on FHIR AAD Proxy <https://github.com/azure-smart-health/smart-on-fhir-aad-proxy>`_ to Azure, which helps you to replace ``/`` to ``-`` in a SMART scope when you request your access token.
 The other option would be to follow `Quickstart: Deploy Azure API for FHIR using Azure portal <https://docs.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/fhir-paas-portal-quickstart>`_, check "SMART on FHIR proxy" box and use the proxy by following `Tutorial: Azure Active Directory SMART on FHIR proxy <https://docs.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/use-smart-on-fhir-proxy>`_.
 
 .. warning:: 

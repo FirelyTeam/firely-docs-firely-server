@@ -233,7 +233,7 @@ Azure Active Directory
 ----------------------
 
 Azure Active Directory (v2.0) does not allow to define a scope with ``/`` (forward slash) in it, which is not compatible with the structure of a `SMART on FHIR scope <http://hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html>`_. 
-Therefor when you use AAD to provide SMART on FHIR scopes to Firely Server, you need to take following steps
+Therefore when you use AAD to provide SMART on FHIR scopes to Firely Server, you need to take the following steps
 
 1. In a SMART scope, use another character (for instance ``-``) instead of ``/``. For example:
 

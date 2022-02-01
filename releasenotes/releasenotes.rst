@@ -42,7 +42,7 @@ Feature
 #. Firely Server now supports receiving document bundles on the transaction base endpoint. Firely Server will extract the narrative of document bundles and store this within a DocumentReference resource. 
 #. Added support for transforming :ref:`SMART scopes issued by Azure Active Directory documentation<feature_accesscontrol_aad>`.
 #. Firely Server will now recognize the ``name`` claim in JSON Web Tokens and also include its content in the logs.
-#. It is now possible to provide the Firely Server license via an environment variable.
+#. It is now possible to :ref:`provide the Firely Server license via an environment variable<license_as_environment_variable>`.
 
 Plugins
 ^^^^^^^

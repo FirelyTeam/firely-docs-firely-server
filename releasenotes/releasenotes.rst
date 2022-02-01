@@ -47,7 +47,7 @@ Feature
 Plugins
 ^^^^^^^
 
-#. BulkDataExport interfaces were made publicly available in order to provide these to Firely Server's facade implementers.
+#. BulkDataExport interfaces were made publicly available in order to provide these to Firely Server's facade implementers. The Bulk Data Export page now has a section on :ref:`BDE for facades<feature_bulkdataexport_facade>`.
 #. Upgraded the .NET SDK to 3.7.0. Please review its `release notes <https://github.com/FirelyTeam/firely-net-sdk/releases>`_ for changes.
 
 Logging improvements

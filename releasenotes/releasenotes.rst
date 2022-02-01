@@ -39,7 +39,7 @@ Feature
 #. BulkDataExport is now supported for MongoDB as well. Get started with the :ref:`Bulk Data Export documentation<feature_bulkdataexport>`.
 #. Circular references in transaction bundles are now supported. Bundles of type ``transaction`` and ``batch`` are permitted to contain resources referencing another resource within the same bundle. This also means that you can now cross reference ``PUT`` and ``POST`` entries.
 #. An option to configure additional token issuers is now available. This is used in settings where the token issuer deviates from the token audience. This new setting replaces the existing ``AdditionalEndpointBaseAddresses``. The setting needs to be adjusted manually as it will not be migrated automatically. Please check the :ref:`configuration documentation <feature_accesscontrol_config>` on how to use it.
-#. Firely Server now supports receiving document bundles on the transaction base endpoint. Firely Server will extract the narrative of document bundles and store this within a DocumentReference resource. Read more about it in the :ref:`documentation<restful_capabilities>`.
+#. Firely Server now supports receiving document bundles on the base endpoint. Firely Server will extract the narrative of document bundles and store this within a DocumentReference resource. Read more about it in the :ref:`documentation<restful_documenthandling>`.
 #. Added support for transforming :ref:`SMART scopes issued by Azure Active Directory documentation<feature_accesscontrol_aad>`.
 #. Firely Server will now recognize the ``name`` claim in JSON Web Tokens and also include its content in the logs.
 #. It is now possible to :ref:`provide the Firely Server license via an environment variable<license_as_environment_variable>`.

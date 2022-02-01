@@ -232,6 +232,8 @@ Capabilities
 On the Capabilities interaction (``<firely-server-endpoint>/metadata``) Firely Server returns a CapabilityStatement that is built dynamically from the 
 supported ResourceTypes, SearchParameters and interactions. E.g. if you :ref:`feature_customsp_configure`, the SearchParameters that are actually loaded appear in the CapabilityStatement.
 
+.. _restful_documenthandling:
+
 Document endpoint
 -----------------
 

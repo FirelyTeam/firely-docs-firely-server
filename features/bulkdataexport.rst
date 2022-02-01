@@ -154,6 +154,8 @@ Performing a GET request on this $exportfilerequest url returns a body of FHIR r
   
     application/fhir+ndjson
 
+.. _feature_bulkdataexport_facade:
+
 Facade
 -------
 

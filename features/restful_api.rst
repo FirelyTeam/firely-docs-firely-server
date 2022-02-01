@@ -220,7 +220,6 @@ Transaction
 Transactions are supported, with these limitations:
 
 #. Of the three storage implementations, only SQL Server and SQLite truly support transactions. On :ref:`MongoDB<configure_mongodb>` and :ref:`Memory<configure_memory>`, transaction support can be simulated at the FHIR level, but not be enforced on the database level.
-#. References between resources in the transaction can point backwards or forwards. Only circular references are not supported. 
 #. The ``/administration`` endpoint does not support transactions.
 
 You can limit the number of entries accepted in a single transaction. See :ref:`batch_options`.
@@ -232,6 +231,15 @@ Capabilities
 
 On the Capabilities interaction (``<firely-server-endpoint>/metadata``) Firely Server returns a CapabilityStatement that is built dynamically from the 
 supported ResourceTypes, SearchParameters and interactions. E.g. if you :ref:`feature_customsp_configure`, the SearchParameters that are actually loaded appear in the CapabilityStatement.
+
+.. _restful_documenthandling:
+
+Document endpoint
+-----------------
+
+Firely Server supports submitting `FHIR document bundles <https://www.hl7.org/fhir/documents.html#3.3>`_ to the base endpoint of the server. The current version of Firely Server will only extract the unstructured part of the document, i.e. the narrative of the document bundle. The submission of the document will return a DocumentReference containing an attachment linking to a Binary resource containing the original narrative. Please note that only the top-level narrative will be extracted. No section narrative will be handled. Updates to narratives from documents with the same document identifier will result in an Update interaction on the DocumentReference.
+
+Please make sure that ``Vonk.Plugin.DocumentHandling.DocumentHandlingConfiguration`` is enabled in the pipeline options to use this feature.
 
 .. _restful_notsupported:
 

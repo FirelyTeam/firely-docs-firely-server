@@ -8,7 +8,7 @@ The Bulk Data Export Service enables the $export operation from the Fhir specifi
 
 Appsettings
 -----------
-To start using the Bulk Data Export Service (BDE) you will first have to add the plugin (Vonk.Plugin.BulkDataExport) to the PipelineOptions in the appsettings.
+To start using the Bulk Data Export Service (BDE) you will first have to add the relevant plugins (Vonk.Plugin.BulkDataExport.[Level]BulkDataExportConfiguration) to the PipelineOptions in the appsettings. In the example below we have enabled all three levels: Patient, Group and System.
 
 .. code-block:: JavaScript
 
@@ -33,18 +33,18 @@ To start using the Bulk Data Export Service (BDE) you will first have to add the
           "Vonk.Plugin.ConvertOperation.ConvertOperationConfiguration",
           "Vonk.Plugin.BinaryWrapper",
           "Vonk.Plugin.Audit",
-          "Vonk.Plugins.TerminologyIntegration",
-          "Vonk.Plugin.BulkDataExport"
+          "Vonk.Plugins.TerminologyIntegration",          
+          "Vonk.Plugin.BulkDataExport.SystemBulkDataExportConfiguration",
+          "Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration",
+          "Vonk.Plugin.BulkDataExport.PatientBulkDataExportConfiguration",
         ],
         "Exclude": [
           "Vonk.Subscriptions.Administration"
         ]
       }, ...etc...
 
-.. note::
-    We did not implement BDE for all database types. Make sure the admin database is configured for either SQL Server or SQLite and the data database is configured for SQL Server.
     
-Bulk Data Export Service works as an asynchronous operation. To store the all operation-related information, it is necessary to enable a "Task Repository" on the admin database. Please configure either "Vonk.Repository.Sqlite.SqliteTaskConfiguration" or "Vonk.Repository.Sql.SqlTaskConfiguration" on the administration pipeline.
+Bulk Data Export Service works as an asynchronous operation. To store the all operation-related information, it is necessary to enable a "Task Repository" on the admin database. Please enable the relevant "Vonk.Repository.[database-type].[database-type]TaskConfiguration" in the administration pipeline options, depending on the database type you use for the admin database. In the example below we have enabled the task repository for SQLite: "Vonk.Repository.Sqlite.SqliteTaskConfiguration".
 
 .. code-block:: JavaScript
 
@@ -63,6 +63,7 @@ Bulk Data Export Service works as an asynchronous operation. To store the all op
           "Vonk.Repository.Sql.Raw.KAdminSearchConfiguration",
           "Vonk.Repository.Sqlite.SqliteTaskConfiguration",
           "Vonk.Repository.Sqlite.SqliteAdministrationConfiguration",
+          //"Vonk.Repository.MongoDb.MongoDbTaskConfiguration",
           "Vonk.Repository.MongoDb.MongoDbAdminConfiguration",
           "Vonk.Repository.Memory.MemoryAdministrationConfiguration",
           "Vonk.Subscriptions.Administration",
@@ -152,3 +153,67 @@ Performing a GET request on this $exportfilerequest url returns a body of FHIR r
   ::    
   
     application/fhir+ndjson
+
+.. _feature_bulkdataexport_facade:
+
+Facade
+-------
+
+We support BDE for a facade. As always with a facade implementation, the parts dealing with the underlying proprietary datastore need to be implemented by you. Below you find an overview of the relevant steps for implementing BDE for a facade.
+
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Export level | Area                                            | Setting                                                            | Action                                           |
++==============+=================================================+====================================================================+==================================================+
+| All          | PipelineOptions for the administration endpoint | "Vonk.Repository.[database-type].[database-type]TaskConfiguration" | Enable for relevant administration database type |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| All          | SupportedInteractions.WholeSystemInteractions   | $exportstatus                                                      | Enable                                           |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| All          | SupportedInteractions.WholeSystemInteractions   | $exportfilerequest                                                 | Enable                                           |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| All          | Facade plugin                                   | IBulkDataExportSnapshotRepository                                  | Implement                                        |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Patient      | PipelineOptions for the \ (root) endpoint       | "Vonk.Plugin.BulkDataExport.PatientBulkDataExportConfiguration"    | Enable                                           |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Patient      | SupportedInteractions.TypeLevelInteractions     | $export                                                            | Enable                                           |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Patient      | Facade plugin                                   | IPatientBulkDataExportRepository                                   | Implement                                        |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Group        | PipelineOptions for the \ (root) endpoint       | "Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration"      | Enable                                           |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Group        | SupportedInteractions.InstanceLevelInteractions | $export                                                            | Enable                                           |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Group        | Facade plugin                                   | IGroupBulkDataExportRepository                                     | Implement                                        |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| System       | PipelineOptions for the \ (root) endpoint       | "Vonk.Plugin.BulkDataExport.SystemBulkDataExportConfiguration"     | Enable                                           |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| System       | SupportedInteractions.SystemLevelInteractions   | $export                                                            | Enable                                           |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| System       | Facade plugin                                   | ISystemBulkDataExportRepository                                    | Implement                                        |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+
+.. note::
+
+  The interfaces below can be found in Vonk.Core version 4.7.0 and higher.
+
+ISystemBulkDataExportRepository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The class implementing this interface is responsible for creating (and eventually deleting) a snapshot of the relevant data. This snapshot will be used at a later time for retrieving the data, mapping it to FHIR and writing the resources to the output files. How you store this snapshot is up to you. 
+
+.. attention::
+
+  The current implementation of the Bulk Data Export plugin for facades does not trigger ISystemBulkDataExportRepository.DeleteSnapshot(string taskId). This will be resolved in the upcoming release of Firely Server.
+
+IPatientBulkDataExportRepository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Used when performing a Patient level export. It should retrieve the snapshot, use this to obtain the relevant data from the proprietary datastore and transform this to FHIR resources. Only data directly associated with the relevant Patient resources should be returned.
+
+IGroupBulkDataExportRepository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Used when performing a Group level export. It should retrieve the snapshot, use this to obtain the relevant data from the proprietary datastore and transform this to FHIR resources.
+
+ISystemBulkDataExportRepository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Used when performing a System level export. It should retrieve the snapshot, use this to obtain the relevant data from the proprietary datastore and transform this to FHIR resources.
+
+
+  

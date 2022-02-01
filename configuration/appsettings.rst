@@ -146,7 +146,11 @@ License
     }
 
 
-The :ref:`vonk_getting_started` explains how to obtain a licensefile for Firely Server. Once you have it, put the path to it in the ``LicenseFile`` setting. Note that in json you either use forward slashes (/) or double backward slashes (\\\\\\) as path separators.
+The :ref:`vonk_getting_started` explains how to obtain a licensefile for Firely Server. Once you have it, put the path to it in the ``LicenseFile`` setting. Note that in json you either use forward slashes (/) or double backward slashes (\\\\) as path separators.
+
+.. note::
+
+  It is also possible to supply a license via an environment variable. This functionality is handy when Firely Server is running within a Docker container. See :ref:`license_as_environment_variable` for details.
 
 Other settings:
 

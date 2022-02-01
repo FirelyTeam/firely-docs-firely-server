@@ -47,17 +47,14 @@ Feature
 Plugins
 ^^^^^^^
 
-.. attention::    
-   Plugins that are targeting ``netstandard2.0`` or ``netstandard2.1`` do not need to be updated. Please ensure that your plugins for Firely Server are targeting at least ``net6.0``. 
-
 #. BulkDataExport interfaces were made publicly available in order to provide these to Firely Server's facade implementers.
-#. Upgraded the .NET SDK to 3.7.0. Please review its release notes for changes.
+#. Upgraded the .NET SDK to 3.7.0. Please review its `release notes <https://github.com/FirelyTeam/firely-net-sdk/releases>`_ for changes.
 
 Logging improvements
 ^^^^^^^^^^^^^^^^^^^^
 
 #. Error messages including information about authorization validation and authentication requests are now enriched with user information if ``ShowAuthorizationPII`` is enabled.
-#. Authorization/Authentication logging messages are now enriched with more information when logging level is set to ``Debug``.
+#. Authorization/Authentication logging messages are now enriched with more information when logging level for the namespace ``Vonk.Smart`` is set to ``Debug``.
 #. In case :ref:`SSL is activated<configure_hosting>`, but the ``.pfx`` file configured in ``CertificateFile`` could not be found, Firely Server will now log this error more explicitly. 
 
 Fix

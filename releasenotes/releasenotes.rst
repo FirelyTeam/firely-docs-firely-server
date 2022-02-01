@@ -58,7 +58,7 @@ Logging improvements
 
 #. Error messages including information about authorization validation and authentication requests are now enriched with user information if ``ShowAuthorizationPII`` is enabled.
 #. Authorization/Authentication logging messages are now enriched with more information when logging is set to ``debug``.
-#. In case SSL is activated, but a ``.pfx`` file could not be found, Firely Server will now log this error more explicitly. 
+#. In case :ref:`SSL is activated<configure_hosting>`, but the ``.pfx`` file configured in ``CertificateFile`` could not be found, Firely Server will now log this error more explicitly. 
 
 Fix
 ^^^

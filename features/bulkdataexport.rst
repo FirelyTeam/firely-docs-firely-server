@@ -4,17 +4,11 @@ Bulk Data Export
 ================
 
 Firely Server provides the option to export resources with the Bulk Data Export Service. 
-The Bulk Data Export Service enables the $export operation from the Fhir specification. Read more about the `$export request flow <https://hl7.org/fhir/uv/bulkdata/export/index.html#request-flow>`_.
+The Bulk Data Export Service enables the $export operation from the Fhir specification. Read more about the `$export request flow <https://hl7.org/fhir/uv/bulkdata/export/index.html#request-flow>`_
 
 Appsettings
 -----------
 To start using the Bulk Data Export Service (BDE) you will first have to add the relevant plugins (Vonk.Plugin.BulkDataExport.[Level]BulkDataExportConfiguration) to the PipelineOptions in the appsettings. In the example below we have enabled all three levels: Patient, Group and System.
-
-#. ``Vonk.Plugin.BulkDataExport.SystemBulkDataExportConfiguration``
-#. ``Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration``
-#. ``Vonk.Plugin.BulkDataExport.PatientBulkDataExportConfiguration``
-
-Most users should include all of them in order to use the full BDE specification. In case you would like to exert more control, feel free to include only a subset.
 
 .. code-block:: JavaScript
 
@@ -51,10 +45,6 @@ Most users should include all of them in order to use the full BDE specification
 
     
 Bulk Data Export Service works as an asynchronous operation. To store the all operation-related information, it is necessary to enable a "Task Repository" on the admin database. Please enable the relevant "Vonk.Repository.[database-type].[database-type]TaskConfiguration" in the administration pipeline options, depending on the database type you use for the admin database. In the example below we have enabled the task repository for SQLite: "Vonk.Repository.Sqlite.SqliteTaskConfiguration".
-
-#. ``Vonk.Repository.Sqlite.SqliteTaskConfiguration``
-#. ``Vonk.Repository.Sql.SqlTaskConfiguration``
-#. ``Vonk.Repository.MongoDb.MongoDbTaskConfiguration``
 
 .. code-block:: JavaScript
 

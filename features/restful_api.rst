@@ -235,6 +235,11 @@ supported ResourceTypes, SearchParameters and interactions. E.g. if you :ref:`fe
 
 .. _restful_notsupported:
 
+Document endpoint
+-----------------
+
+Firely Server supports submitting documents on the base endpoint of the server. The current version of Firely Server will only extract the unstructured part of the document, i.e. the narrative of the doucment bundle. The submission of the document will return a DocumentReference containing an attachment linking to a Binary resource containing the original narrative. Please note that only the top-level narrative will be extracted. No section narrative will be handled. Updates to narratives from documents with the same document identifier will result in an Update interaction on the DocumentReference.
+
 Not supported interactions
 --------------------------
 

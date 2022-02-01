@@ -691,11 +691,23 @@ Administration API
 Bulk Data
 ---------
 
-:Name: Bulk Data Export
-:Configuration: ``Vonk.Plugin.BulkDataExport``
+:Name: System Bulk Data Export
+:Configuration: ``Vonk.Plugin.BulkDataExport.SystemBulkDataExportConfiguration``
+:license token: ``http://fire.ly/vonk/plugins/bulk-data-export``
+:Order: 5003
+:Description: Support for system-level ``$export`` operation. See :ref:`feature_bulkdataexport`.
+
+:Name: Group Bulk Data Export
+:Configuration: ``Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration``
+:license token: ``http://fire.ly/vonk/plugins/bulk-data-export``
+:Order: 5004
+:Description: Support for instance-level ``$export`` operation. See :ref:`feature_bulkdataexport`.
+
+:Name: Patient Bulk Data Export
+:Configuration: ``Vonk.Plugin.BulkDataExport.PatientBulkDataExportConfiguration``
 :license token: ``http://fire.ly/vonk/plugins/bulk-data-export``
 :Order: 5005
-:Description: Request an export of bulk data sets. See :ref:`feature_bulkdataexport`.
+:Description: Support for type-level ``$export`` operation. See :ref:`feature_bulkdataexport`.
 
 :Name: Patient everything
 :Configuration: ``Vonk.Plugin.PatientEverything``

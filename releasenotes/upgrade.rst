@@ -63,7 +63,7 @@ Using Docker
 Revisit :ref:`use_docker`.
 
 #. Stop the running container for Firely Server: ``> docker stop vonk.server``.
-#. Pull the latest image for Firely Server: ``> docker pull simplifier/vonk``
+#. Pull the latest image for Firely Server: ``> docker pull firely/server`` (versions 4.6 and older: ``> docker pull simplifier/vonk``)
 #. Check the :ref:`vonk_releasenotes` for any new settings that you may want to apply or change from their defaults, and apply that to the ``environment`` setting in the docker-compose file.
 #. Check the :ref:`vonk_releasenotes` for any action that you need to take specifically for this upgrade.
 #. Create a backup of your current databases, both the main Resource database and the Administration database. See :ref:`configure_repository` and your docker-compose file to find the details on where your databases are.
@@ -80,7 +80,7 @@ If anything went wrong, go back:
 
 #. Stop the (new) running container of Firely Server.
 #. Restore both databases from your backup.
-#. Specify your previous image of Firely Server in the docker command or in the docker-compose file: ``simplifier\vonk:<previous-version-tag>``
+#. Specify your previous image of Firely Server in the docker command or in the docker-compose file: ``firely/server:<previous-version-tag>``
 #. Start the container based on this previous image.
 #. It should start as it did before you began the upgrade.
 #. Report the problem to the Firely Server helpdesk, see :ref:`vonk-contact`.

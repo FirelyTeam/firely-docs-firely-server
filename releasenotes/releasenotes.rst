@@ -69,6 +69,7 @@ Other
 ^^^^^
 
 #. Firely Server will no longer support CosmosDb starting with version 4.7.0.
+#. The Docker image name has changed from `simplifier/vonk <https://hub.docker.com/repository/docker/simplifier/vonk>`_ to `firely/server <https://hub.docker.com/r/firely/server>`_. The old image name will be maintained for a few months to allow for a smooth transition. When updating to version 4.7.0, you should start to use the new image name. Versions 4.6.2 and older will stay available (only) on 'simplifier/vonk'.
 
 .. _vonk_releasenotes_462:
 

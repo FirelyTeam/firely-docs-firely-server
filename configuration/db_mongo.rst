@@ -24,7 +24,7 @@ In this version issue `SERVER-7568 <https://jira.mongodb.org/browse/SERVER-7568>
 * If you have your own database in MongoDB already, change the ``MongoDbOptions`` to reflect your settings::
 
    "MongoDbOptions": {
-       "ConnectionString": "mongodb://localhost/vonkstu3",
+       "ConnectionString": "mongodb://localhost/vonkdata",
        "EntryCollection": "vonkentries",
        "SimulateTransactions": "false"
    },
@@ -64,7 +64,7 @@ This works the same as with the normal Firely Server database, except that you:
      "Administration": {
          "Repository": "MongoDB",
          "MongoDbOptions": {
-             "ConnectionString": "mongodb://localhost/vonkstu3",
+             "ConnectionString": "mongodb://localhost/vonkadmin",
              "EntryCollection": "vonkadmin",
              "SimulateTransactions": "false"
          }

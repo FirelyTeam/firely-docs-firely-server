@@ -44,12 +44,11 @@ Using ISearchRepository
 
    .. code-block:: csharp
 
-      var args = new ArgumentCollection
+      var args = new ArgumentCollection(new IArgument[]
       {
-         new Argument(ArgumentSource.Internal, ArgumentNames.resourceType, "Patient") { MustHandle = true //optional },
-         new Argument(ArgumentSource.Internal, "name", "Fred") { MustHandle = true //optional },
-      }
-      .AddCount(20);
+            new Argument(ArgumentSource.Internal, ArgumentNames.resourceType, "Patient") {MustHandle = true}, // MustHandle = true is optional
+            new Argument(ArgumentSource.Internal, "name", "Fred") {MustHandle = true} // MustHandle = true is optional
+      }).AddCount(20);
 
    .. note::
 

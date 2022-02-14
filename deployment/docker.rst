@@ -204,7 +204,7 @@ We will use docker-compose to achieve this.
          - vonk-sqlserver-db
        environment:
          - VONK_Repository=SQL
-         - VONK_SqlDbOptions:ConnectionString=Initial Catalog=VonkData;Data Source=vonk-sqlserver-db,1433;User ID=sa;Password=SQLServerStrong(!)Password*
+         - VONK_SqlDbOptions:ConnectionString=Initial Catalog=VonkData;Data Source=vonk-sqlserver-db,1433;User ID=sa;Password=SQLServerStrong(!)Password*;Encrypt=False
          - VONK_SqlDbOptions:SchemaName=vonk
          - VONK_SqlDbOptions:AutoUpdateDatabase=true
          - VONK_SqlDbOptions:AutoUpdateConnectionString=Initial Catalog=VonkData;Data Source=vonk-sqlserver-db,1433;User ID=sa;Password=SQLServerStrong(!)Password*

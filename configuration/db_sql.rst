@@ -49,6 +49,10 @@ In both cases:
 
 *   The site `connectionstrings.com <https://www.connectionstrings.com/sqlconnection/>`_ is useful for determining the correct connectionstring for your environment.
 
+.. attention::
+
+    The SQL driver in Firely Server will by default use Encrypt=True in its connection string. Please use valid certificates to secure the connection or explicitly disable the feature by overwriting it in your own connection string. See `Introduction to Microsoft.Data.SqlClient namespace - Microsoft <https://docs.microsoft.com/en-us/sql/connect/ado-net/introduction-microsoft-data-sqlclient-namespace?view=sql-server-ver15#encrypt-default-value-set-to-true>`_ for more details. 
+
 *   If you will only use Windows Accounts, you can use the (default) Authentication Mode, which is Windows Authentication Mode. But if you also want to use SQL Server accounts, you have to run it in Mixed Mode. Refer to `Authentication in SQL Server <https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/authentication-in-sql-server>`_ for more information.
 
 *   Although we encourage you to use :ref:`SQLite for Firely Server Administration <sqlite_admin_reasons>`, you can still use SQL Server for Firely Server Administration as well::

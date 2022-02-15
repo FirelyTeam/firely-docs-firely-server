@@ -24,10 +24,24 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_471:
+
+Release 4.7.1, Feb 15th, 2022
+-----------------------------
+
+Fix
+^^^
+
+#. An invalid CapabilityStatement was created by Firely Server in case a custom SearchParameter overwriting a common SearchParameter was loaded, e.g. "_id". ``CapabilityStatement.rest.resource.searchParam.definition`` contains now the canonical of the more specific SearchParameter.
+
+#. The default CapabilityStatement contained an invalid canonical in the .url element.
+
+#. Enforce referential integrity for the elements "Composition.patient" and "Composition.encounter" when submitting a document bundle to the base endpoint. The corresponding resources need to be already present on the server (matching based on identifier), otherwise the bundle is rejected.
+
 .. _vonk_releasenotes_470:
 
-Release 4.7.0, Feb 1st, 20222
------------------------------
+Release 4.7.0, Feb 1st, 2022
+----------------------------
 
 .. attention::    
     With version 4.7.0, Firely Server migrated to .NET 6.0. In order to run the binaries, `ASP.NET Core Runtime 6.x <https://dotnet.microsoft.com/en-us/download/dotnet/6.0>`_ needs to be installed.

@@ -43,6 +43,7 @@ The following steps are necessary in order to execute the test collection agains
 
 .. image:: ../images/Compliance_ForkTestCollectionPostman.png
    :align: center
+   :width: 500
 
 #. Sign-In with your Postman account
 
@@ -50,6 +51,7 @@ The following steps are necessary in order to execute the test collection agains
 
 .. image:: ../images/Compliance_EnvironmentTestCollectionPostman.png
    :align: center
+   :width: 800
 
 #. Make sure that the environment is selected as the active environment
 
@@ -57,5 +59,6 @@ The following steps are necessary in order to execute the test collection agains
 
 .. image:: ../images/Compliance_USCoreTesrCollectionPostman.png
    :align: center
+   :width: 500
 
 #. Execute the transaction request, the expected response is "HTTP 200 - OK".

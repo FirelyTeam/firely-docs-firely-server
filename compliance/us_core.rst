@@ -53,7 +53,7 @@ The following steps are necessary in order to execute the test collection agains
        :align: center
        :width: 800
 
-#. Make sure that the environment is selected as the active environment
+#. Make sure that the newly created environment is selected as the active environment
 
 #. Open the collection "Firely Server - US Core Tests"
 

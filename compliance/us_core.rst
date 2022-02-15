@@ -8,6 +8,8 @@ US CORE
   * Firely Server can be populated with resources conforming to US Core, including all elements marked as Must-Support
   * All search and CRUD interactions defined by US Core are supported, including optional search parameters
   
+See `How to Test Firely Server on Inferno <https://fire.ly/ebook-how-to-test-firely-server-on-inferno/>`_ for more information on how to pass the offical 21st Century Cures Act test.
+  
 Known Limitations
 ^^^^^^^^^^^^^^^^^
 

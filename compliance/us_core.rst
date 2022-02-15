@@ -41,12 +41,21 @@ The following steps are necessary in order to execute the test collection agains
 
 #. Select "Fork Collection" or "View collection" in the Postman dialog
 
+.. image:: ../images/Compliance_ForkTestCollectionPostman.png
+   :align: center
+
 #. Sign-In with your Postman account
 
 #. `Create a new Postman environment <https://learning.postman.com/docs/sending-requests/managing-environments/#creating-environments>`_ with a "BASE_URL" variable and ajust the URL to your server endpoint
 
+.. image:: ../images/Compliance_EnvironmentTestCollectionPostman.png
+   :align: center
+
 #. Make sure that the environment is selected as the active environment
 
 #. Open the collection "Firely Server - US Core Tests"
+
+.. image:: ../images/Compliance_USCoreTesrCollectionPostman.png
+   :align: center
 
 #. Execute the transaction request, the expected response is "HTTP 200 - OK".

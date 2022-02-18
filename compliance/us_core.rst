@@ -59,7 +59,7 @@ The following steps are necessary in order to execute the test collection agains
 
 #. Open the collection "Firely Server - US Core Tests"
 
-    .. image:: ../images/Compliance_USCoreTesrCollectionPostman.png
+    .. image:: ../images/Compliance_USCoreTestCollectionPostman.png
        :align: center
        :width: 500
 

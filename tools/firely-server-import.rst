@@ -108,6 +108,8 @@ Supported arguments
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | CLI argument                                      | Appsettings parameter name       | Required | Description                                                                                                                                         |
 +===================================================+==================================+==========+=====================================================================================================================================================+
+| ``--settings <settingsJsonFile>``                 |                                  |          | Custom settings json file                                                                                                                           |
++---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``-f``, ``--fhir-version <R3|R4>``                | fhirVersion                      |          | FHIR version of the input                                                                                                                           |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``-s``, ``--source <source>``                     | source                           | yes      | Input directory for work (this directory is visited recursively including all the subdirectories)                                                   |
@@ -170,6 +172,23 @@ Supported arguments
 
 Examples
 --------
+
+Specify a custom settings file **/path/to/your/custom/settings/appsettings.instance.json**.
+
+.. code-block:: bash
+
+  fsi \
+  --settings ./path/to/your/custom/settings/appsettings.instance.json 
+
+.. note::
+  If :code:`--settings` is omitted, FSI searches following folders sequentially and tries to find :code:`appsettings.instance.json`. The first occurrence will be used if FSI finds one, otherwise the default :code:`appsettings.json` will be used.  
+  
+  * Current launched folder |br| 
+    e.g. :code:`C:\Users\Bob\Desktop`  
+  * FSI installation folder |br|
+    e.g. :code:`C:\Users\Bob\.dotnet\tools`  
+  * FSI installation :code:`dll` folder |br| 
+    e.g. :code:`C:\Users\Bob\.dotnet\tools\.store\firely.server.ingest\version\firely.server.ingest\version\tools\net6.0\any`
 
 Runs the import for files located in directory **/path/to/your/input/files** and its subdirectories using license file **/path/to/your/license/fsi-license.json** targeting the database defined by the connection string. In case a resource being imported already exists in the target database, it gets skipped.
 
@@ -266,3 +285,8 @@ Release 1.0.0
 * Performance: optimized memory consumption (especially, when reading large `*.ndjson` files)
 * Feature: quantitative values can be automatically canonicalized to UCUM values (see --useUcum CLI option)
 * Multiple smaller fixes to improve reliability and performance of the tool
+
+
+.. |br| raw:: html
+
+   <br />

@@ -177,20 +177,19 @@ Specify a custom settings file **/path/to/your/custom/settings/appsettings.insta
 
 .. code-block:: bash
 
-  fsi \
-  --settings ./path/to/your/custom/settings/appsettings.instance.json 
+  fsi --settings ./path/to/your/custom/settings/appsettings.instance.json 
 
 .. note::
-  If :code:`--settings` is omitted, FSI searches following folders sequentially and tries to find :code:`appsettings.instance.json`. The first occurrence will be used if FSI finds one, otherwise the default :code:`appsettings.json` will be used.  
+  If ``--settings`` is omitted, FSI searches following folders sequentially and tries to find ``appsettings.instance.json``. The first occurrence will be used if FSI finds one, otherwise the default ``appsettings.json`` will be used.  
   
   * Current launched folder |br| 
-    e.g. :code:`C:\Users\Bob\Desktop`  
+    e.g. ``C:\Users\Bob\Desktop``  
   * FSI installation folder |br|
-    e.g. :code:`C:\Users\Bob\.dotnet\tools`  
-  * FSI installation :code:`dll` folder |br| 
-    e.g. :code:`C:\Users\Bob\.dotnet\tools\.store\firely.server.ingest\version\firely.server.ingest\version\tools\net6.0\any`
+    e.g. ``C:\Users\Bob\.dotnet\tools``  
+  * FSI installation ``dll`` folder |br| 
+    e.g. ``C:\Users\Bob\.dotnet\tools\.store\firely.server.ingest\version\firely.server.ingest\version\tools\net6.0\any``
 
-Runs the import for files located in directory **/path/to/your/input/files** and its subdirectories using license file **/path/to/your/license/fsi-license.json** targeting the database defined by the connection string. In case a resource being imported already exists in the target database, it gets skipped.
+Run the import for files located in directory **/path/to/your/input/files** and its subdirectories using license file **/path/to/your/license/fsi-license.json** targeting the database defined by the connection string. In case a resource being imported already exists in the target database, it gets skipped.
 
 .. code-block:: bash
 

@@ -34,6 +34,13 @@ Plugins
 
 #. Upgraded the .NET SDK to 3.8.0. Please review its `release notes <https://github.com/FirelyTeam/firely-net-sdk/releases>`_ for changes.
 
+Database
+^^^^^^^^
+
+#. SQL Server (all changes below applicable only when plugin ``Vonk.Repository.Sql.Raw`` is enabled)
+
+   1. Improved database size by compressing the resource JSON.
+
 Perfomance
 ^^^^^^^^^^
 

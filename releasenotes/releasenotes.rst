@@ -24,7 +24,31 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
-.. _vonk_releasenotes_471:
+.. _vonk_releasenotes_480:
+
+Release 4.8.0, Mar 14th, 2022
+-----------------------------
+
+Plugins
+^^^^^^^
+
+#. Upgraded the .NET SDK to 3.8.0. Please review its `release notes <https://github.com/FirelyTeam/firely-net-sdk/releases>`_ for changes.
+
+Perfomance
+^^^^^^^^^^
+
+#. Improved performance for  update, _include and conditional create interactions
+
+Fix
+^^^
+
+#. Fixed exception by improving transaction handling when updating and deleting the same resource in parallel.
+#. Use correct restful interaction codes in AuditEvent.subtype when recording a request to Firely Server
+#. AuditEvent.action contained the wrong code when recording a SEARCH interaction
+#. Fixed searching using the :identifier modifier in case the identifier system is not a valid URL
+#. Searching using a If-None-Exist header was not scoped to an information model, i.e. a request using FHIR R4 also matched resources STU3 resources
+#. Improved error message if $lastN operation is enabled but the corresponding repository is not inlcuded in the pipeline options
+#. Changed CapabilityStatement.software.name to Firely Server
 
 Release 4.7.1, Feb 15th, 2022
 -----------------------------

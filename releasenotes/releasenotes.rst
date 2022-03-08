@@ -46,7 +46,7 @@ Fix
 #. Use correct restful interaction codes in AuditEvent.subtype when recording a request to Firely Server
 #. AuditEvent.action contained the wrong code when recording a SEARCH interaction
 #. Fixed searching using the :identifier modifier in case the identifier system is not a valid URL
-#. Searching using a If-None-Exist header was not scoped to an information model, i.e. a request using FHIR R4 also matched resources STU3 resources
+#. Searching using a If-None-Exist header was not scoped to an information model, i.e. a request using FHIR R4 also matched STU3 resources
 #. Improved error message if $lastN operation is enabled but the corresponding repository is not inlcuded in the pipeline options
 #. Changed CapabilityStatement.software.name to Firely Server
 

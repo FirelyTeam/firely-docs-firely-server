@@ -135,6 +135,7 @@ Database
 #. MongoDB
 
    #. Improved performance of searches within a compartment
+   #. Added an index ``ix_sysinfo`` to quickly retrieve the ``VonkVersion`` document.
 
 Features
 ^^^^^^^^
@@ -266,7 +267,7 @@ Fix
 #. The logsettings for MongoDB included an outdated configuration.
 
 Feature
-^^^
+^^^^^^^
 
 #. Improved error messages if an internal exception occurred due to failing filesystem access.
 #. The `$lastN operation <https://www.hl7.org/fhir/observation-operation-lastn.html>`_ is now available when using SQL Server as the backend for Firely Server. See :ref:`lastn` for more information.

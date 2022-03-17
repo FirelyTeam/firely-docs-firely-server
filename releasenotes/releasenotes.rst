@@ -26,7 +26,7 @@ The default FHIR version of the `public Firely Server endpoint <https://server.f
 
 .. _vonk_releasenotes_480:
 
-Release 4.8.0, Mar 14th, 2022
+Release 4.8.0, Mar 21st, 2022
 -----------------------------
 
 Plugins
@@ -41,10 +41,15 @@ Database
 
    1. Improved database size by compressing the resource JSON.
 
-Perfomance
+Performance
 ^^^^^^^^^^
 
 #. Improved performance for  update, _include and conditional create interactions
+
+Feature
+^^^^^^^
+
+#. You can now control the inclusion of the ``fhirVersion`` mimetype parameter in the Content-Type header of the response. See :ref:`feature_multiversion_endpoints`. We chose to change the default for FHIR STU3 to *not* include it as this parameter was introduced with FHIR R4.
 
 Fix
 ^^^

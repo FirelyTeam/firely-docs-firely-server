@@ -50,3 +50,34 @@ This is very misleading. The actual error is that you probably tried to run ``do
 The same error can happen if you have built a Docker image of your own with ``dotnet vonk.server.dll`` as entrypoint.
 
 .NET 5 fixed this and more clearly states that the dll is missing.
+
+
+Homepage takes long to load
+---------------------------
+
+The html homepage that is provided with Firely Server may take a long time to load, even though the server seems fully up and running.
+
+The homepage consumes the bootstrap.js library from a CDN. The delay may be caused by a firewall slowing down that download.
+
+The remedy is to disable the homepage in the pipelinesettings:
+
+   ::
+   
+      "PipelineOptions": {
+        "PluginDirectory": "./plugins",
+        "Branches": [
+        {
+          "Path": "/",
+          "Include": [
+            "Vonk.Core",
+            ...,
+            // "Vonk.UI.Demo", <-- disable this one
+            ...
+          ],
+        },
+        {
+          "Path": "/administration",
+          ...
+        }
+        ]
+      }

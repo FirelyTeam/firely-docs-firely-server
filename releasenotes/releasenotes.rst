@@ -37,12 +37,21 @@ Plugins
 Database
 ^^^^^^^^
 
-#. SQL Server (all changes below applicable only when plugin ``Vonk.Repository.Sql.Raw`` is enabled)
+#. SQL Server
 
-   1. Improved database size by compressing the resource JSON.
+   1. Reduced database size by compressing the resource JSON.
+
+   .. attention::
+
+      This change requires a complex SQL migration which can be long if you have many resources. To estimate how long it will take for you, you can try running the migration for a subset of your data. The overall migration time will grow linearly with the number of resources in the database.
+
+      For our test database containing ~185mln FHIR resources, the migration took approximately 1.5 days.
+
+      If you have questions about the migration, please :ref:`contact us<vonk-contact>`.
+
 
 Performance
-^^^^^^^^^^
+^^^^^^^^^^^
 
 #. Improved performance for  update, _include and conditional create interactions
 
@@ -62,6 +71,7 @@ Fix
 #. Searching using a If-None-Exist header was not scoped to an information model, i.e. a request using FHIR R4 also matched STU3 resources
 #. Improved error message if $lastN operation is enabled but the corresponding repository is not inlcuded in the pipeline options
 #. Changed CapabilityStatement.software.name to Firely Server
+#. Fixed SQL Server maintenance job timeouts on large SQL Server databases
 
 Release 4.7.1, Feb 15th, 2022
 -----------------------------

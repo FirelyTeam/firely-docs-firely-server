@@ -53,7 +53,7 @@ Database
 Performance
 ^^^^^^^^^^^
 
-#. Improved performance for  update, _include and conditional create interactions
+#. Improved performance for update, _include/_revinclude and conditional create interactions
 
 Feature
 ^^^^^^^
@@ -72,6 +72,7 @@ Fix
 #. Improved error message if $lastN operation is enabled but the corresponding repository is not inlcuded in the pipeline options
 #. Changed CapabilityStatement.software.name to Firely Server
 #. Fixed SQL Server maintenance job timeouts on large SQL Server databases
+#. Improved Bundle reference resolving in some corner cases, which are clarified in the `specification <https://jira.hl7.org/browse/FHIR-29271>`_
 
 Release 4.7.1, Feb 15th, 2022
 -----------------------------

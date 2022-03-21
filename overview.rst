@@ -16,7 +16,7 @@ Firely Server comes in several editions:
 * Sandbox: try it right now on https://server.fire.ly
 * Evaluation: get an evaluation license from `Simplifier.net <https://simplifier.net/firely-server>`_, allowing you to explore all functionality for free during a week (renewable)
 * Community: use Firely Server for free, but only on SQLite
-* Commercial use with professional support in different scales: Startup, Growth, Scale and Enterprise 
+* Commercial use with professional support in different tiers: Startup or Scale
 
 .. TODO: license link to Simplifier for Community 
 

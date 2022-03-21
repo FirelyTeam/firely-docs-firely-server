@@ -51,7 +51,6 @@ The same error can happen if you have built a Docker image of your own with ``do
 
 .NET 5 fixed this and more clearly states that the dll is missing.
 
-
 Homepage takes long to load
 ---------------------------
 

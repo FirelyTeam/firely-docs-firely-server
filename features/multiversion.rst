@@ -17,6 +17,9 @@ Accepted values for the parameter are:
 
 You can add the fhirVersion to the Accept and/or the Content-Type header. If you specify it on both, the fhirVersion parameters have to be the same.
 
+.. note::
+   The fhirVersion parameter is also part of the Content-Type header of the response by Firely Server. Settings can control this, see :ref:`feature_multiversion_endpoints` below.
+
 The examples below explain the behaviour with STU3, but if you replace fhirVersion with 4.0, it works exactly the same on R4. 
 
 .. note:: 
@@ -128,6 +131,7 @@ Assigning an endpoint to a FHIR version is exactly equivalent to adding that par
 
    "InformationModel": {
       "Default": "Fhir4.0",
+      "IncludeFhirVersion": ["Fhir4.0", "Fhir5.0"],
       "Mapping": {
          "Mode": "Path",
          "Map": {
@@ -170,6 +174,12 @@ and the administration call
 
 
 As you can see, on a mapped endpoint it is never necessary to use a FHIR ``_format`` parameter or a ``fhirVersion`` MIME parameter in a ``Content-Type`` or ``Accept`` header.
+
+Response Content-Type
+^^^^^^^^^^^^^^^^^^^^^
+
+The setting ``IncludeFhirVersion`` is used for the Content-Type of the response from Firely Server. Some clients cannot handle a parameter on the mimetype, and the fhirVersion parameter was originally not part of FHIR STU3. Therefore this settings allows you to specify for which FHIR versions this parameter should be included in the Content-Type header.
+By default we set it to FHIR R4 and R5, as for STU3 the fhirVersion may be unexpected for clients.
 
 .. _feature_multi_version_r5:
 

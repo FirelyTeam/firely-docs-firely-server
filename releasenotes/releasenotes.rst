@@ -24,7 +24,55 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
-.. _vonk_releasenotes_471:
+.. _vonk_releasenotes_480:
+
+Release 4.8.0, Mar 21st, 2022
+-----------------------------
+
+Plugins
+^^^^^^^
+
+#. Upgraded the .NET SDK to 3.8.0. Please review its `release notes <https://github.com/FirelyTeam/firely-net-sdk/releases>`_ for changes.
+
+Database
+^^^^^^^^
+
+#. SQL Server
+
+   1. Reduced database size by compressing the resource JSON.
+
+   .. attention::
+
+      This change requires a complex SQL migration which can be long if you have many resources. To estimate how long it will take for you, you can try running the migration for a subset of your data. The overall migration time will grow linearly with the number of resources in the database.
+
+      For our test database containing ~185mln FHIR resources, the migration took approximately 1.5 days.
+
+      If you have questions about the migration, please :ref:`contact us<vonk-contact>`.
+
+
+Performance
+^^^^^^^^^^^
+
+#. Improved performance for update, _include/_revinclude and conditional create interactions
+
+Feature
+^^^^^^^
+
+#. You can now control the inclusion of the ``fhirVersion`` mimetype parameter in the Content-Type header of the response. See :ref:`feature_multiversion_endpoints`. We chose to change the default for FHIR STU3 to *not* include it as this parameter was introduced with FHIR R4.
+
+Fix
+^^^
+
+#. Fixed exception by improving transaction handling when updating and deleting the same resource in parallel.
+#. Use correct restful interaction codes in AuditEvent.subtype when recording a request to Firely Server
+#. AuditEvent.action contained the wrong code when recording a SEARCH interaction
+#. The name of a custom operation is now recorded in an AuditEvent
+#. Fixed searching using the :identifier modifier in case the identifier system is not a valid URL
+#. Searching using a If-None-Exist header was not scoped to an information model, i.e. a request using FHIR R4 also matched STU3 resources
+#. Improved error message if $lastN operation is enabled but the corresponding repository is not inlcuded in the pipeline options
+#. Changed CapabilityStatement.software.name to Firely Server
+#. Fixed SQL Server maintenance job timeouts on large SQL Server databases
+#. Improved Bundle reference resolving in some corner cases, which are clarified in the `specification <https://jira.hl7.org/browse/FHIR-29271>`_
 
 Release 4.7.1, Feb 15th, 2022
 -----------------------------

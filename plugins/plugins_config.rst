@@ -44,6 +44,7 @@ Configuration of the pipeline in Firely Server is done with ``PipelineOptions`` 
           "Vonk.Repository.MongoDb.MongoDbAdminConfiguration",
           "Vonk.Repository.Memory.MemoryAdministrationConfiguration",
           "Vonk.Subscriptions.Administration",
+          "Vonk.Plugins.Terminology",
           "Vonk.Administration"
         ],
         "Exclude": [

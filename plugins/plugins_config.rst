@@ -22,6 +22,7 @@ Configuration of the pipeline in Firely Server is done with ``PipelineOptions`` 
           "Vonk.Subscriptions",
           "Vonk.Smart",
           "Vonk.UI.Demo",
+          "Vonk.Plugins.Terminology",
           "Vonk.Plugin.DocumentOperation.DocumentOperationConfiguration",
           "Vonk.Plugin.ConvertOperation.ConvertOperationConfiguration",
           "Vonk.Plugin.BinaryWrapper.BinaryWrapperConfiguration",

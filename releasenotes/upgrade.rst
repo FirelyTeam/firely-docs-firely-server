@@ -123,3 +123,60 @@ So start with upgrading the references right away.
 Especially for Facades to relational databases: match the version of EntityFrameworkCore that the new version of Firely Server is using. Check the list of changes to see whether we upgraded.
 
 .. _SDK release notes: https://github.com/FirelyTeam/firely-net-sdk/releases
+
+.. _migrations:
+
+Migrations
+----------
+
+Sometimes, an upgrade of the database schema is needed in order to introduce performance improvements or enable new features. Depending on the database that is used, Firely Server provides different techniques to migrate the data. Most migrations can be performed automatically whereas in some cases, manual migrations are preferable.
+
+One of these cases is a scenario in which Firely Server operates at scale, handling billions of resources. In such a scenario, manual migrations are preferable as they might take longer than expected and come with challenges. In this section, we will elaborate on some of these challenges and how to mitigate them. 
+
+MongoDB
+^^^^^^^
+
+For Firely Server instances running on MongoDB, we consider databases with more than 500GB as large. Migrations for these databases take a long time which is why we introduced external migration scripts with Firely Server 4.5.0. These external scripts are written in JavaScript and allow to exert more control at the cost of some convenience. 
+
+The migration scripts usually perform two operations in this order: 
+   #. Migrate the existing data using the ``updateMany()`` operator.
+   #. Update the system information document to the next version.
+
+While migrating large databases, it is possible that the migration script times out, is interrupted or encounters other unforeseen circumstances. In this case, migrations initiated by the ``updateMany()`` operator will continue running in the background. The update of the schema version, however, will not succeed and needs to be performed manually. Follow these steps to do so: 
+
+#. Connect to your MongoDB host.
+#. Open a MongoDB shell by executing ``mongo`` from the command line.
+#. Switch to the vonk database: ``use vonkdata``
+#. Check whether the current migration is still running with: ``db.currentOp()``. You will likely see multiple operations in this command's output. Look for an operation that resembles the commands included in the ``try {} catch {}`` block in the migration's JavaScript file. If any such operation is still listed, the migration is still running.
+#. Wait until the operation associated with the migration has finished.
+#. Afterwards, retrieve the system document id by executing:
+
+      .. code-block::
+
+         db.vonkentries.findOne(
+            { 
+                  "LatestMigration": { $exists: true }
+            }
+         )
+
+#. Note down the value of the _id field, for example ``ObjectId("61bc7dab260c691f4c0f78d4")``
+#. Open the JavaScript migration script. Note down the value of the next FS and migration version. You will find these values as constants at the top of the migration script or in a ``coll.updateOne()`` command at the end of the script.
+#. Open a mongo shell on your host and exchange ObjectId, VonkVersion and LatestMigration to the previously noted values:
+
+      .. code-block::
+
+         db.vonkentries.updateOne(
+            {
+               _id: ObjectId("61bc7dab260c691f4c0f78d4")
+            },
+            {
+               "$set": {
+                     VonkVersion: "4.9.0",
+                     LatestMigration: 22
+               }
+            }
+         )
+
+#. Execute this command in your mongo shell
+
+That's it! The migration of the data is finished and the document containing the system information is updated accordingly. You should now be able to start the new version of Firely Server.

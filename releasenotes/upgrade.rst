@@ -147,7 +147,7 @@ While migrating large databases, it is possible that the migration script times 
 #. Connect to your MongoDB host.
 #. Open a MongoDB shell by executing ``mongo`` from the command line.
 #. Switch to the vonk database: ``use vonkdata``
-#. Check whether the current migration is still running with: ``db.currentOp()`` 
+#. Check whether the current migration is still running with: ``db.currentOp()``. You will likely see multiple operations in this command's output. Look for an operation that resembles the commands included in the ``try {} catch {}`` block in the migration's JavaScript file. If any such operation is still listed, the migration is still running.
 #. Wait until the operation associated with the migration has finished.
 #. Afterwards, retrieve the system document id by executing:
 

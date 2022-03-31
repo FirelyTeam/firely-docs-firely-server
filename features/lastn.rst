@@ -8,8 +8,6 @@ Description
 
 This plugin implements the Observation $lastn operation, as described in https://www.hl7.org/fhir/observation-operation-lastn.html. This operation returns the most recent or last n=number of observations for a patient within a given category (e.g. vital-signs, laboratory, etc.).
 
-Currently, the functionality is only available if you use SQL Server for your data.
-
 ::
 
   GET <base-url>/Observation/$lastn
@@ -25,15 +23,10 @@ Optional parameters:
 * **max**: maximum number of Observations to return from each group;
 * other search parameters defined for the Observation resource.
 
-.. attention::
-  Current limitations are:
-  
-  * $lastn has been implemented only for SQL Server databases.
-  * the patient or subject reference must be a direct reference (using the ``id`` of the Patient), see the examples. A chained argument like ``patient.identifier=123`` is not yet supported.
-
 Appsettings
 -----------
-To start using the $lastn operation you will first have to add the plugin ``Vonk.Plugin.LastN`` to the PipelineOptions in the appsettings. The plugin has a dependency on ``Vonk.Repository.Sql.Raw.KSearchConfiguration``, which, therefore, should also be included in the pipeline.
+To start using the $lastn operation you will first have to add the plugin ``Vonk.Plugin.LastN`` to the PipelineOptions in the appsettings. 
+The plugin depends on ``Vonk.Repository.Sql.Raw.KSearchConfiguration`` and ``Vonk.Repository.MongoDb.MongoDbVonkConfiguration``, which, therefore, should also be included in the pipeline if you use SQL Server or MongoDb respectively.
 
 .. code-block:: JavaScript
 
@@ -44,16 +37,14 @@ To start using the $lastn operation you will first have to add the plugin ``Vonk
         "Path": "/",
         "Include": [
           ...
-          "Vonk.Repository.Sql.Raw.KSearchConfiguration",
+          "Vonk.Repository.Sql.Raw.KSearchConfiguration", // If SQL Server is used
+          "Vonk.Repository.MongoDb.MongoDbVonkConfiguration", // If MongoDb is used
           "Vonk.Plugin.LastN",
         ],
         "Exclude": [
           ...
         ]
       }, ...etc...
-
-.. note::
-    We did not yet implement $lastn for all database types. Make sure the data database is configured for SQL Server.
 
 Examples
 --------

@@ -26,7 +26,7 @@ The default FHIR version of the `public Firely Server endpoint <https://server.f
 
 .. _vonk_releasenotes_481:
 
-Release 4.8.1, Mar 4th, 2022
+Release 4.8.1, Mar 5th, 2022
 -----------------------------
 
 .. _vonk_releasenotes_480:

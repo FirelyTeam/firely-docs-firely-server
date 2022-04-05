@@ -162,7 +162,7 @@
         ]
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Patient"
       }
     },
@@ -209,7 +209,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -256,7 +256,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -303,7 +303,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -350,7 +350,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -429,7 +429,7 @@
         ]
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -476,7 +476,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -523,7 +523,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -570,7 +570,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -617,7 +617,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -664,7 +664,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -711,7 +711,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -758,7 +758,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -805,7 +805,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -852,7 +852,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -899,7 +899,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -950,7 +950,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -997,7 +997,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -1485,7 +1485,7 @@
         ]
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -1532,7 +1532,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -1579,7 +1579,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -1626,7 +1626,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -1673,7 +1673,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -1720,7 +1720,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -1767,7 +1767,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -1814,7 +1814,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -1861,7 +1861,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -1940,7 +1940,7 @@
         ]
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -1987,7 +1987,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2034,7 +2034,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2081,7 +2081,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2128,7 +2128,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2175,7 +2175,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2222,7 +2222,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2269,7 +2269,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2316,7 +2316,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2363,7 +2363,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2410,7 +2410,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2457,7 +2457,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2504,7 +2504,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2551,7 +2551,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2598,7 +2598,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2645,7 +2645,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2692,7 +2692,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2739,7 +2739,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2786,7 +2786,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2833,7 +2833,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2880,7 +2880,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2927,7 +2927,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -2978,7 +2978,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -3025,7 +3025,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -3513,7 +3513,7 @@
         ]
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -3560,7 +3560,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -3607,7 +3607,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -3654,7 +3654,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -3701,7 +3701,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -3780,7 +3780,7 @@
         ]
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -3827,7 +3827,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -3874,7 +3874,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -3921,7 +3921,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -3968,7 +3968,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4015,7 +4015,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4062,7 +4062,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4109,7 +4109,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4156,7 +4156,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4203,7 +4203,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4250,7 +4250,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4297,7 +4297,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4344,7 +4344,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4391,7 +4391,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4438,7 +4438,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4485,7 +4485,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4532,7 +4532,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4583,7 +4583,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -4630,7 +4630,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5118,7 +5118,7 @@
         ]
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5165,7 +5165,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5212,7 +5212,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5264,7 +5264,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5311,7 +5311,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5358,7 +5358,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5410,7 +5410,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5489,7 +5489,7 @@
         ]
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5536,7 +5536,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5587,7 +5587,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5638,7 +5638,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5689,7 +5689,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5740,7 +5740,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5791,7 +5791,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5842,7 +5842,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5893,7 +5893,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5944,7 +5944,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -5995,7 +5995,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     },
@@ -6046,7 +6046,7 @@
         }
       },
       "request": {
-        "method": "PUT",
+        "method": "POST",
         "url": "Observation"
       }
     }

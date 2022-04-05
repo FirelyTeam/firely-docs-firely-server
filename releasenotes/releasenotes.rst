@@ -24,7 +24,23 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_481:
+
+Release 4.8.1, Mar 5th, 2022
+-----------------------------
+
 .. _vonk_releasenotes_480:
+
+Plugins
+^^^^^^^
+
+#. Upgraded the .NET SDK to 3.8.2. Please review its `release notes <https://github.com/FirelyTeam/firely-net-sdk/releases>`_ for changes.
+
+Feature
+^^^^^^
+
+#. A new option to configure settings regarding TLS client certificates has been introduced in the "Hosting" options. This option allows to set the `ClientCertificateMode <https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?view=aspnetcore-6.0#client-certificates>`_.
+#. Validation of transaction/batch bundles has been enabled by default when posting the resources to the transaction endpoint of Firely Server. Please note that the transaction is executed synchronously. To avoid client timeouts, the default value for the MaxBatchEntries (SizeLimits options) has been reduced to 200. 
 
 Release 4.8.0, Mar 21st, 2022
 -----------------------------

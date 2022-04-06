@@ -60,4 +60,4 @@ When using this header, make sure that the header value only contains the domain
 **Does not work:**
 
 - fire/
-- https://fire
+- https://fire.ly

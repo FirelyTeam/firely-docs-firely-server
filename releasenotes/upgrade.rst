@@ -142,7 +142,15 @@ The migration scripts usually perform two operations in this order:
    #. Migrate the existing data using the ``updateMany()`` operator.
    #. Update the system information document to the next version.
 
-While migrating large databases, it is possible that the migration script times out, is interrupted or encounters other unforeseen circumstances. In this case, migrations initiated by the ``updateMany()`` operator will continue running in the background. The update of the schema version, however, will not succeed and needs to be performed manually. Follow these steps to do so: 
+While migrating large databases manually via SSH it is always a risk that the connection with the remote computer breaks and the SSH session terminates. Normally, this would also mean that all programs started within that SSH session will also be terminated including the migration. To prevent this from happening, we recommend using the ``screen`` tool to perform the migration. Using it allows programs to continue running even if the SSH connection breaks.
+
+#. Install the ``screen`` tool or check whether it is installed with ``screen --version``
+#. Start a screen session: ``screen``
+#. Execute the migration script in this screen session
+#. In case the SSH connection breaks, you can connect via SSH again and get access to the running migration process using the command ``screen -r``
+#. Wait until the migration is done and restart Firely Server
+
+In case the migration actually times out or is interrupted, the ``updateMany()`` operator will continue running in the background. The update of the schema version, however, will not succeed and needs to be performed manually. Follow these steps to do so: 
 
 #. Connect to your MongoDB host.
 #. Open a MongoDB shell by executing ``mongo`` from the command line.

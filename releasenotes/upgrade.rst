@@ -142,7 +142,7 @@ The migration scripts usually perform two operations in this order:
    #. Migrate the existing data using the ``updateMany()`` operator.
    #. Update the system information document to the next version.
 
-While migrating large databases, it is possible that the migration script times out, is interrupted or encounters other unforeseen circumstances. We therefore recommend using the ``screen`` tool to perform the migration:
+While migrating large databases manually via SSH it is always a risk that the connection with the remote computer breaks and the SSH session terminates. Normally, this would also mean that all programs started within that SSH session will also be terminated including the migration. To prevent this from happening, we recommend using the ``screen`` tool to perform the migration. Using it allows programs to continue running even if the SSH connection gets broken.
 
 #. Install the ``screen`` tool or check whether it is installed with ``screen --version``
 #. Start a screen session: ``screen``

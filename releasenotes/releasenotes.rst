@@ -90,6 +90,11 @@ Fix
 #. Fixed SQL Server maintenance job timeouts on large SQL Server databases
 #. Improved Bundle reference resolving in some corner cases, which are clarified in the `specification <https://jira.hl7.org/browse/FHIR-29271>`_
 
+Security
+^^^^^^^^
+
+#. According to the `best practices <https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user>`_ of docker, Firely Server container runs now under the user and group ``firely:firely`` instead of running under ``root`` privileges.
+
 Release 4.7.1, Feb 15th, 2022
 -----------------------------
 

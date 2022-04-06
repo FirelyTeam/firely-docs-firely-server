@@ -147,7 +147,7 @@ While migrating large databases, it is possible that the migration script times 
 #. Install the ``screen`` tool or check whether it is installed with ``screen --version``
 #. Start a screen session: ``screen``
 #. Execute the migration script in this screen session
-#. In case the connection breaks, you can reconnect to the session via ``screen -r``
+#. In case the SSH connection breaks, you can connect via SSH again and get access to the running migration process using the command ``screen -r``
 #. Wait until the migration is done and restart Firely Server
 
 In case the migration actually times out or is interrupted, the ``updateMany()`` operator will continue running in the background. The update of the schema version, however, will not succeed and needs to be performed manually. Follow these steps to do so: 

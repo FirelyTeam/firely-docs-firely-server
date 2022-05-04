@@ -11,3 +11,4 @@ Additionally, any necessary configuration to re-produce these testing results wi
    :titlesonly:
 
    us_core
+   nictiz

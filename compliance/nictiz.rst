@@ -1,1 +1,18 @@
+Nictiz
+=======
 
+* Tested Version: Firely Server has been tested against `nictiz.fhir.nl.stu3.zib2017 version 2.1.12 <https://simplifier.net/nictizstu3-zib2017>`_
+* The conformance resources are **NOT** loaded by default in the standard SQLite Administration Database of Firely Server. Please see :ref:`conformance_import` on how to load the profiles, extensions and ValueSets into Firely Server.
+
+Known Limitations
+^^^^^^^^^^^^^^^^^
+
+The following tickets represent outstanding issues with the above-mentioned specification:
+
+* https://bits.nictiz.nl/browse/MM-3218
+* https://bits.nictiz.nl/browse/MM-3219
+
+Test Data
+^^^^^^^^^
+
+Offical test data can be found in the Simplifier project for `Nictiz STU3 Zib 2017 <https://simplifier.net/NictizSTU3-Zib2017/~introduction>`_.

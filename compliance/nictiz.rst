@@ -12,6 +12,8 @@ The following tickets represent outstanding issues with the above-mentioned spec
 * https://bits.nictiz.nl/browse/MM-3218
 * https://bits.nictiz.nl/browse/MM-3219
 
+These issues do not influence the validation of instances against the erroneous profiles. However, the profiles cannot be loaded via the administration REST API as the validation on that endpoint will reject the StructureDefinitions. 
+
 Test Data
 ^^^^^^^^^
 

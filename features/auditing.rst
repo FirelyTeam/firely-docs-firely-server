@@ -20,6 +20,8 @@ You can exclude requests from generating audit logs (both audit log file and aud
 This is helpful to reduce clutter in the logs. For example, you could exclude logging for an endpoint that is used for health monitoring of the server.
 The example below disables audit logging for all GET requests to /Patient and sub resources or operations.
 
+.. code-block:: JavaScript
+
    "Audit": {
       "ExcludedRequests": [
          {
@@ -37,8 +39,8 @@ The UrlPath property is required, but not otherwise checked (e.g. if it points t
 The wildcard (\*) can be used to expand matching in different ways, e.g.:
 
 * /Medication* will match /Medication, /MedicationRequest, /MedicationAdministration, etc
-* /$* will match all system level operations
-* /*/*/$validate will match all validation operations on all resources
+* /$\* will match all system level operations
+* /\*/\*/$validate will match all validation operations on all resources
 
 The Method property is optional. If left out, null, empty or given the value \*, it will match all HTTP verbs. 
 You can enter multiple verbs, delimited by the \| symbol (e.g. GET\|POST).
@@ -47,6 +49,8 @@ Audit log file configuration
 ----------------------------
 
 Configure where to put the audit log file and the format of its lines in the appsettings (see :ref:`configure_appsettings`)::
+
+.. code-block:: JavaScript
 
    "Audit": {
       "PathFormat": "./audit/AuditLog-{Date}.log"

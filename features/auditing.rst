@@ -13,10 +13,44 @@ All features can be enabled by including ``Vonk.Plugins.Audit`` in the pipeline.
 
 You can enable specific features by narrowing the namespace that you include in the pipeline, see the available plugins listed under :ref:`vonk_plugins_audit`.
 
+General configuration
+----------------------------
+
+You can exclude requests from generating audit logs (both audit log file and audit event logging). 
+This is helpful to reduce clutter in the logs. For example, you could exclude logging for an endpoint that is used for health monitoring of the server.
+The example below disables audit logging for all GET requests to /Patient and sub resources or operations.
+
+.. code-block:: JavaScript
+
+   "Audit": {
+      "ExcludedRequests": [
+         {
+            "UrlPath": "/Patient",
+            "Method": "GET"
+         },
+         {
+            "UrlPath": "/Patient/*",
+            "Method": "GET"
+         }
+      ]
+   },
+
+The UrlPath property is required, but not otherwise checked (e.g. if it points to an existing resource).
+The wildcard (\*) can be used to expand matching in different ways, e.g.:
+
+* /Medication* will match /Medication, /MedicationRequest, /MedicationAdministration, etc
+* /$\* will match all system level operations
+* /\*/\*/$validate will match all validation operations on all resources
+
+The Method property is optional. If left out, null, empty or given the value \*, it will match all HTTP verbs. 
+You can enter multiple verbs, delimited by the \| symbol (e.g. GET\|POST).
+
 Audit log file configuration
 ----------------------------
 
 Configure where to put the audit log file and the format of its lines in the appsettings (see :ref:`configure_appsettings`)::
+
+.. code-block:: JavaScript
 
    "Audit": {
       "PathFormat": "./audit/AuditLog-{Date}.log"

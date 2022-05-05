@@ -359,7 +359,7 @@ You can test it using a dummy authorization server and Postman as a REST client.
 .. _OAuth2 provider: https://en.wikipedia.org/wiki/List_of_OAuth_providers
 .. _SMART on FHIR: http://docs.smarthealthit.org/
 .. _SMART App Authorization Guide: http://docs.smarthealthit.org/authorization/
-.. _Scopes and Launch Context: http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context/index.html
+.. _Scopes and Launch Context: http://hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html
 .. _Patient CompartmentDefinition: http://www.hl7.org/implement/standards/fhir/compartmentdefinition-patient.html
 .. _ASP.NET Core Identity: https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity
 

@@ -50,8 +50,6 @@ Audit log file configuration
 
 Configure where to put the audit log file and the format of its lines in the appsettings (see :ref:`configure_appsettings`)::
 
-.. code-block:: JavaScript
-
    "Audit": {
       "PathFormat": "./audit/AuditLog-{Date}.log"
       "OutputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Application}] [Audit] [Machine: {MachineName}] [ReqId: {RequestId}] [IP-Address: {Ip}] [Connection: {ConnectionId}] [UserId: {UserId}] [Username: {Username}] [Path: {Path}] [Action: {Action}] [Resource: {Resource} Key:{ResourceKey}] [StatusCode: {StatusCode}] {NewLine}"

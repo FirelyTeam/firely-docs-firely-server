@@ -24,12 +24,27 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_482:
+
+Release 4.8.2, May 10th, 2022
+-----------------------------
+
+Feature
+^^^^^^^
+
+#. A new setting has been introduced in the "Hosting" settings to configure path base. Please check `Firely Server settings page <https://docs.fire.ly/projects/Firely-Server/en/latest/configuration/appsettings.html#http-and-https>`_ for details.
+
+Fix
+^^^
+
+#. US-Core profiles in conformance resources database `vonkadmin.db` are downgraded from version `4.0.0 <http://hl7.org/fhir/us/core/>`_ to `3.1.1 <http://hl7.org/fhir/us/core/STU3.1.1/>`_. The upgrade in previous Firely Server was unintentional.
+#. CapabilityStatement is cached now based on the absolute request url. With this fix, CapabilityStatement can be properly cached when a request contains `X-Forwarded-* headers <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Forwarded>`_.
+#. For MongoDB repository, set `allowDiskUse` to `true` when using `aggregate` command. This fix solves memory restriction error during aggregation stages (See `MongoDB document <https://www.mongodb.com/docs/manual/reference/command/aggregate/#command-fields>`_ for details). 
+
 .. _vonk_releasenotes_481:
 
 Release 4.8.1, Mar 5th, 2022
 -----------------------------
-
-.. _vonk_releasenotes_480:
 
 Plugins
 ^^^^^^^
@@ -37,10 +52,12 @@ Plugins
 #. Upgraded the .NET SDK to 3.8.2. Please review its `release notes <https://github.com/FirelyTeam/firely-net-sdk/releases>`_ for changes.
 
 Feature
-^^^^^^
+^^^^^^^
 
 #. A new option to configure settings regarding TLS client certificates has been introduced in the "Hosting" options. This option allows to set the `ClientCertificateMode <https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?view=aspnetcore-6.0#client-certificates>`_.
 #. Validation of transaction/batch bundles has been enabled by default when posting the resources to the transaction endpoint of Firely Server. Please note that the transaction is executed synchronously. To avoid client timeouts, the default value for the MaxBatchEntries (SizeLimits options) has been reduced to 200. 
+
+.. _vonk_releasenotes_480:
 
 Release 4.8.0, Mar 21st, 2022
 -----------------------------

@@ -170,6 +170,8 @@ Supported arguments
 | ``-?``, ``-h``, ``--help``                        |                                  |          | Show help and usage information                                                                                                                     |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 
+.. _tool_fsi_examples:
+
 Examples
 --------
 
@@ -263,6 +265,15 @@ Your license already permits the usage of FSI if it contains ``http://fire.ly/vo
 
 Release notes
 -------------
+
+.. _fsi_releasenotes_1.2.0:
+
+Release 1.2.0
+^^^^^^^^^^^^^
+
+* Ability to provide a path to a custom ``appsettings.json`` file via a command-line argument (see :ref:`examples<tool_fsi_examples>` above)
+* Bugfix: ensure FSI uses all available values from the SQL PK-generating sequences when inserting data to the vonk.entry and component tables
+
 
 .. _fsi_releasenotes_1.1.0:
 

@@ -527,13 +527,13 @@ Auditing
 :Configuration: ``Vonk.Plugin.Audit.AuditEventTransactionConfiguration``
 :License token: http://fire.ly/vonk/plugins/audit
 :Order: 3160
-:Description: Logs requests and responses for transactions to a file. See :ref:`feature_auditing` for more info.
+:Description: Logs requests and responses for transactions to the database. See :ref:`feature_auditing` for more info.
 
 :Name: AuditEvent logging
 :Configuration: ``Vonk.Plugin.Audit.AuditEventConfiguration``
 :License token: http://fire.ly/vonk/plugins/audit
 :Order: 3170
-:Description: Logs requests and responses to a file. See :ref:`feature_auditing` for more info.
+:Description: Logs requests and responses to the database. See :ref:`feature_auditing` for more info.
 
 .. _vonk_plugins_demoui:
 

@@ -24,6 +24,30 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_490:
+
+Release 4.9.0, TBD
+-----------------------------
+
+Fix
+^^^
+#. Fixed an issue where a "/" was missing the fullUrl of a "search" bundle in case a information model mapping with mode "Path" is used.
+#. Fixed an issue where a new resource id was not created when POST was used in a batch or transaction bundle and but a resource id was already provided
+#. An invalid system URI was provided in AuditEvent.source.observer.identifier
+#. Adjusted the implementation of conditional create to match the description in https://jira.hl7.org/browse/FHIR-31965.
+#. Money.currency was not indexed correctly in FHIR R4. Please :ref:`contact us<vonk-contact>` if you are using the SearchParameters "price-override" on ChargeItem or "totalgross" / "totalnet" on Invoice. A migration for these fields will be provided upon request. Otherwise, please re-index these SearchParameters. 
+
+Feature
+^^^^^^^
+
+#. It is now possible to define exclude filters in the appsettings to configure which requests against Firely Server should not be audited. In certain cases, this enables to reduce the number of captured AuditEvent resources. See :ref:`<feature_auditing>` for more details.
+#. Firely Server will throw a startup exception if no default ITerminologyService is registerd.
+#. CapabilityStatement.rest.resource.conditionalRead is now set by default to 'full-support' by default.
+#. _total is now included by default in every self-link of a "search" bundle.
+#. Added support for permanently deleting resources from the database. See <TBD> for more details.
+#. Improved the error message in case the JSON serialization format of a FHIR resource does not contains a valid "resourceType" Element.
+# Improved validation in case a non-conformant URI is given in Quantity.system. It MUST be a valid absolute URI. In all other cases, a warning will be logged and the element will not be indexed.
+
 .. _vonk_releasenotes_482:
 
 Release 4.8.2, May 10th, 2022

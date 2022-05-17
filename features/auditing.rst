@@ -9,11 +9,35 @@ Firely Server can log access through the RESTful API for auditing purposes. It h
 #. Include user id and name from the JWT token (if present) in the audit log lines.
 #. Write the audit information to AuditEvent resources in the Firely Server Data database.
 
-All features can be enabled by including ``Vonk.Plugins.Audit`` in the pipeline. See :ref:`vonk_plugins_config` for details on how to do that.
+These features can be enabled by including ``Vonk.Plugins.Audit`` in the pipeline.
 
-You can enable specific features by narrowing the namespace that you include in the pipeline, see the available plugins listed under :ref:`vonk_plugins_audit`.
+.. code-block:: JavaScript
 
-General configuration
+   "PipelineOptions": {
+      "PluginDirectory": "./plugins",
+      "Branches": [
+         {
+            "Path": "/",
+            "Include": [
+               "Vonk.Core",
+               ...
+               "Vonk.Plugin.Audit"
+            ],
+            ...
+         },
+         ...
+      ]
+   }
+
+See :ref:`vonk_plugins_config` for more details on pipeline configuration.
+
+At present, you can choose either to enable both file and database logging, or only database logging.
+To enable only database logging, replace Vonk.Plugin.Audit with Vonk.Plugin.Audit.AuditEventConfiguration.
+In addition, you can choose to log every call or only transaction batches.
+When you include a specific configuration class and want to enable username logging, you have to include Vonk.Plugin.Audit.UsernameLoggingConfiguration.
+Please see :ref:`vonk_plugins_audit` for the available options.
+
+Filtering configuration
 ----------------------------
 
 You can exclude requests from generating audit logs (both audit log file and audit event logging). 

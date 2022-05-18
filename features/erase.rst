@@ -18,7 +18,7 @@ Use the following request to erase all versions (including the historical versio
 
   POST <base-url>/Patient/example/$erase
 
-Use the following request to erase the specified version and all the older versions of the ``Patient/example`` resource from the database.
+Use the following request to erase the specified version ``xyz`` and all the older versions (based on meta.lastUpdated) of the ``Patient/example`` resource from the database.
 
 ::
 

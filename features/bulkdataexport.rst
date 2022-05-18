@@ -8,7 +8,7 @@ The Bulk Data Export Service enables the $export operation from the Fhir specifi
 
 Appsettings
 -----------
-To start using the Bulk Data Export Service (BDE) you will first have to add the relevant plugins (Vonk.Plugin.BulkDataExport.[Level]BulkDataExportConfiguration) to the PipelineOptions in the appsettings. In the example below we have enabled all three levels: Patient, Group and System.
+To start using the Bulk Data Export Service (BDE) you will first have to add the relevant plugins (Vonk.Plugin.BulkDataExport.[Level]BulkDataExportConfiguration) to the PipelineOptions in the appsettings. In the example below we have enabled all three levels: Patient, Group and System. Bulk Data Export is supported on all databases used for the non-admin endpoint.
 
 .. code-block:: JavaScript
 
@@ -44,7 +44,7 @@ To start using the Bulk Data Export Service (BDE) you will first have to add the
       }, ...etc...
 
     
-Bulk Data Export Service works as an asynchronous operation. To store the all operation-related information, it is necessary to enable a "Task Repository" on the admin database. Please enable the relevant "Vonk.Repository.[database-type].[database-type]TaskConfiguration" in the administration pipeline options, depending on the database type you use for the admin database. In the example below we have enabled the task repository for SQLite: "Vonk.Repository.Sqlite.SqliteTaskConfiguration".
+Bulk Data Export Service works as an asynchronous operation. To store the all operation-related information, it is necessary to enable a "Task Repository" on the admin database. Please enable the relevant "Vonk.Repository.[database-type].[database-type]TaskConfiguration" in the administration pipeline options, depending on the database type you use for the admin database. All supported databases can be used as a task repository. In the example below we have enabled the task repository for SQLite: "Vonk.Repository.Sqlite.SqliteTaskConfiguration".
 
 .. code-block:: JavaScript
 

@@ -417,6 +417,14 @@ FHIR RESTful interactions
 :Order: 5007
 :Description: Implements `FHIR $lastn <https://www.hl7.org/fhir/observation-operation-lastn.html>`_ on Observation resources.
 
+.. _vonk_plugins_erase:
+
+:Name: Erase
+:Configuration: ``Vonk.Plugin.EraseOperation.EraseOperationConfiguration``
+:License token: http://fire.ly/vonk/plugins/erase
+:Order: 5300
+:Description: Provides functionality to hard-delete FHIR resources in Firely Server database as opposed to the soft-delete used by default.
+
 .. _vonk_plugins_terminology:
 
 Terminology

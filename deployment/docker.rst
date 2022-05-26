@@ -142,6 +142,26 @@ Powershell
 
 You should see a ``vonkdata.db`` appear in the ``./resourcedata`` folder, and a log file in the ``./log`` folder. From here you can experiment with other settings. You can also easily keep different settings files side-by-side, mapping the one you want to test into the container, e.g. ``-v ${PWD}/some-weird-settings.json:/app/appsettings.instance.json``.
 
+Mounting a your custom plugins folder into the container
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In a similar way as described above, you can mount your custom plugins into the container. However, this will replace the default plugings; they need to be added manually.
+
+- Download the binaries of your server version from https://downloads.simplifier.net/firely-server/versions/
+- Create a plugin folder, including the default plugins (extracted from the downloaded archive)
+- Create ``appsettings.instance.json`` with the appropriate Pipeline section (see :ref:`vonk_plugins_config`)
+- Mount the files and folder as shown below
+
+.. code-block::
+   
+   docker run -d -p 8080:4080 --name firely.server `
+   -v ${PWD}/firelyserver-license.json:/app/firelyserver-license.json `
+   -v ${PWD}/appsettings.instance.json:/app/appsettings.instance.json `
+   -v ${PWD}/plugins:/app/plugins `
+   firely/server
+
+The server is now accessible on ``http://localhost:8080/``.
+
 Spinning up with a docker-compose file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Another way to spin up a Firely Server container is to use a docker-compose file. The above example can also be established by the following ``docker-compose-sqlite.yml``:

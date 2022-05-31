@@ -92,3 +92,8 @@ Any argument that is reported as in Error, or not handled will automatically sho
 
 In the next paragraph you will configure your Firely Server to use your Facade, and can -- finally --  try out some searches.
 The paragraph after that expands the project to support ViSiBloodPressure Observations, and details how to add custom search parameters.
+
+.. note::
+    Your implementation of ``ISearchRepository`` may have other dependencies than the ones listed above, but it cannot be dependent upon ``IStructureDefinitionSummaryProvider``. 
+    That causes a circular dependency, and will have you wait for a response from the server indefinitely.
+    This means that in the implementation you can work with POCO's (as is done in this tutorial) or with 'raw' ``SourceNode`` instances, but not with ``ITypedElement`` (for the latter two see the Firely .NET SDK).

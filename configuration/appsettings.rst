@@ -235,10 +235,11 @@ http and https
         //"HttpsPort": 4081, // Enable this to use https
         //"CertificateFile": "<your-certificate-file>.pfx", //Relevant when HttpsPort is present
         //"CertificatePassword" : "<cert-pass>" // Relevant when HttpsPort is present
+        //"PathBase": "<subpath-to-firely-server>",
         "ClientCertificateMode": "NoCertificate" // NoCertificate, AllowCertificate, RequireCertificate
     },
 
-Refer to :ref:`configure_hosting` for enabling https and adjusting port numbers. The ClientCertificateMode will instruct Firely Server to request or require a TLS client certificate. See `ASP .NET Core - Client Certificates <https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?view=aspnetcore-6.0#client-certificates>`_ for more information.
+Refer to :ref:`configure_hosting` for enabling https and adjusting port numbers. The `PathBase` enables the option to specify a path as part of root path (See `PathBase middleware <https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.usepathbaseextensions.usepathbase?view=aspnetcore-6.0>`_ for more information). The `ClientCertificateMode` will instruct Firely Server to request or require a TLS client certificate (See `ASP .NET Core - Client Certificates <https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?view=aspnetcore-6.0#client-certificates>`_ for more information).
 
 .. _validation_options:
 

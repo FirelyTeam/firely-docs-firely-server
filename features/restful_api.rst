@@ -92,6 +92,8 @@ Firely Server also supports ``_include:iterate`` and ``_revinclude:iterate``, as
       }
    },
 
+When searching with the ``:exact`` modifier the server handles `grapheme clusters <http://hl7.org/fhir/R4B/search.html#modifiers>`_. 
+
 .. _restful_search_sort:
 
 Sorting
@@ -109,6 +111,7 @@ Sorting
 for the repositories:
 
 * SQL
+* MongoDB
 * SQLite
 * Memory
 
@@ -155,6 +158,7 @@ How is sort evaluated?
 
 * Firely Server uses the default collation as configured on the database server. This collation defines the ordering of characters.
 
+* Sorting on ``_score`` is not supported.
 
 .. _restful_search_limitations:
 
@@ -168,12 +172,19 @@ The following parameters and options are not yet supported:
 #. ``_query``
 #. ``_containedType``
 #. ``_filter``
+#. ``Location.near`` (geo matching is not supported)
 #. ``:approx`` modifier on a quantity SearchParameter
 #. ``:text`` modifier on a string SearchParameter
-#. ``:above``, ``:below``, ``:in``, ``:not-in`` modifiers on a token SearchParameter
-#. ``:above`` on a uri SearchParameter (``:below`` *is* supported)
+#. ``:above``, ``:below``, ``:in``, ``:not-in``, ``of-type`` modifiers on a token SearchParameter, ``above`` and ``below`` are also not supported for `Mime Types <http://hl7.org/fhir/R4B/search.html#mimetype>`_.
+#. ``:above``, ``:below`` modifiers on a reference SearchParameter (only valid on a `strict hierarchy <http://hl7.org/fhir/R4B/search.html#recursive>`_)
+#. ``:below`` modifier on uri SearchParameters that act on canonical elements, see `References and versions <http://hl7.org/fhir/R4B/search.html#versions>`_.
 #. ``*`` wildcard on ``_include`` and ``_revinclude``
+#. ``_include`` and ``_revinclude`` will match the current version of the referenced resources, also if the reference is versioned.
 #. ``_pretty``
+#. Implicit ranges are supported on dates, datetimes and quantities with a UCUM unit. But not on other quantities and number parameters.
+#. Search parameter arguments in exponential form (e.g. 1.8e2).
+#. ``Prefer: handling=strict/lenient``: Firely server is always lenient on search parameter errors.
+#. ``_total=estimate``, only ``none`` and ``accurate`` are supported.
 
 Furthermore:
 

@@ -42,9 +42,6 @@ If you allow for multiple deletes, you have to specify a maximum number of resou
         }
     }
 
-.. note::
-   For multiple deletes to work, transactions must be supported by and enabled for the underlying store.
-
 .. _restful_crud_limitations:
 
 Limitations on CRUD

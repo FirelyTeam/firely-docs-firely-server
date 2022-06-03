@@ -58,7 +58,9 @@ The Firely Server ``SmartContextMiddleware`` component extracts the claims defin
 
 SMART on FHIR defines launch contexts for Patient, Encounter and Location, extendible with others if needed. 
 If a request is done with a Patient launch context, and the user is allowed to see other resource types as well, these other resource types are restricted by the `Patient CompartmentDefinition`_.
-To enable access to additional resources (outside the compartment), the client must request additional scopes.
+
+.. note::
+  To enable access to additional resources (outside the compartment), the client must request additional scopes.
 
 .. _accesscontrol_custom_authentication:
 

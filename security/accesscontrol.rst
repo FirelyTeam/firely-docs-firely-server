@@ -59,6 +59,9 @@ The Firely Server ``SmartContextMiddleware`` component extracts the claims defin
 SMART on FHIR defines launch contexts for Patient, Encounter and Location, extendible with others if needed. 
 If a request is done with a Patient launch context, and the user is allowed to see other resource types as well, these other resource types are restricted by the `Patient CompartmentDefinition`_.
 
+.. note::
+  To enable access to additional resources (outside the compartment), the client must request additional scopes.
+
 .. _accesscontrol_custom_authentication:
 
 Custom Authentication
@@ -223,7 +226,7 @@ A valid access token for Firely Server at minimum will have:
 * the ``iss`` claim with the base url of the OAuth server
 * the ``aud`` the same value you've entered in ``SmartAuthorizationOptions.Audience``
 * the ``scope`` field with the scopes granted by this access token
-* optionally, the compartment claim, if you'd like to limit this token to a certain compartment. Such a claim may be requested by using a context scope or launching a part of an EHR launch. See `Requesting context with scopes <http://www.hl7.org/fhir/smart-app-launch/scopes-and-launch-context/#requesting-context-with-scopes>`_ for more details. For example, in case of Patient data access where the ``launch/patient`` scope is used, include the ``patient`` claim with the patient's id or identifier (:ref:`feature_accesscontrol_compartment`) and make sure to request the ``patient/<permissions>`` scope permissions. Compartment claims combined with ``user/<permissions>`` claims are not taken into acccount.
+* optionally, the compartment claim, if you'd like to limit this token to a certain compartment. Such a claim may be requested by using a context scope or launching a part of an EHR launch. See `Requesting context with scopes <http://www.hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html>`_ for more details. For example, in case of Patient data access where the ``launch/patient`` scope is used, include the ``patient`` claim with the patient's id or identifier (:ref:`feature_accesscontrol_compartment`) and make sure to request the ``patient/<permissions>`` scope permissions. Compartment claims combined with ``user/<permissions>`` claims are not taken into acccount.
 
 .. warning:: Firely Server will not enforce any access control for resources outside of the specified compartment. Some compartment definitions do not include crucial resource types like 'Patient' or their corresponding resource type, i.e. all resources of this type regardless of any claims in the access token will be returned if requested. Please use this feature with caution! Additional custom access control is highly recommended.
 
@@ -232,7 +235,7 @@ A valid access token for Firely Server at minimum will have:
 Azure Active Directory
 ----------------------
 
-Azure Active Directory (v2.0) does not allow to define a scope with ``/`` (forward slash) in it, which is not compatible with the structure of a `SMART on FHIR scope <http://hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html>`_. 
+Azure Active Directory (v2.0) does not allow to define a scope with ``/`` (forward slash) in it, which is not compatible with the structure of a `SMART on FHIR scope <http://www.hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html>`_. 
 Therefore when you use AAD to provide SMART on FHIR scopes to Firely Server, you need to take the following steps
 
 1. In a SMART scope, use another character (for instance ``-``) instead of ``/``. For example:
@@ -249,7 +252,7 @@ Therefore when you use AAD to provide SMART on FHIR scopes to Firely Server, you
 
   * ``patient/Observation.r?_id=Id\With\BackwardSlash`` becomes ``patient-Observation.r?_id=Id\\With\\BackwardSlash`` 
 
-2. Configure Firely Server which character is used in Step 1, then Firely Server will generate a proper `SMART on FHIR scope <http://hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html>`_ and handle the request further. This can be configured via setting ``AccessTokenScopeReplace``. 
+2. Configure Firely Server which character is used in Step 1, then Firely Server will generate a proper `SMART on FHIR scope <http://www.hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html>`_ and handle the request further. This can be configured via setting ``AccessTokenScopeReplace``. 
 
 For the first step above, instead of doing it manually, you can deploy `SMART on FHIR AAD Proxy <https://github.com/azure-smart-health/smart-on-fhir-aad-proxy>`_ to Azure, which helps you to replace ``/`` to ``-`` in a SMART scope when you request your access token.
 The other option would be to follow `Quickstart: Deploy Azure API for FHIR using Azure portal <https://docs.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/fhir-paas-portal-quickstart>`_, check "SMART on FHIR proxy" box and use the proxy by following `Tutorial: Azure Active Directory SMART on FHIR proxy <https://docs.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/use-smart-on-fhir-proxy>`_.
@@ -359,7 +362,7 @@ You can test it using a dummy authorization server and Postman as a REST client.
 .. _OAuth2 provider: https://en.wikipedia.org/wiki/List_of_OAuth_providers
 .. _SMART on FHIR: http://docs.smarthealthit.org/
 .. _SMART App Authorization Guide: http://docs.smarthealthit.org/authorization/
-.. _Scopes and Launch Context: http://hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html
+.. _Scopes and Launch Context: http://www.hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html
 .. _Patient CompartmentDefinition: http://www.hl7.org/implement/standards/fhir/compartmentdefinition-patient.html
 .. _ASP.NET Core Identity: https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity
 

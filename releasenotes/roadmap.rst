@@ -13,7 +13,7 @@ Disclaimer: No rights can be derived from this roadmap.
 Q2
 ^^
 
-* Various performance improvments and adoption of features currently only available for SQL Server on MongoDB
+* Addition of various performance improvements and features to our MongoDB implementation which are currently only available for SQL Server
   
   * Support for transactions 
 
@@ -22,11 +22,11 @@ Q3
 
 * Check compliance with CMS ImplementationGuides
 
-* Bulk data export as a separate service - deploy and scale it independently of Firely Server itself
+* Bulk data export as a separate service - deploy and scale it independently of Firely Server
 
-* New Firely Validator as a separate service - deploy and scale it independently of Firely Server itself
+* New Firely Validator as a separate service - deploy and scale it independently of Firely Server
 
-* Provide production-ready IdentityServer instance bundled together with Firely Server
+* Provide production-ready IdentityServer instance bundled with Firely Server
 
 
 Q4

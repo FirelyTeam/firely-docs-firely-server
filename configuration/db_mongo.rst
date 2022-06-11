@@ -25,8 +25,7 @@ In this version issue `SERVER-7568 <https://jira.mongodb.org/browse/SERVER-7568>
 
    "MongoDbOptions": {
        "ConnectionString": "mongodb://localhost/vonkdata",
-       "EntryCollection": "vonkentries",
-       "SimulateTransactions": "false"
+       "EntryCollection": "vonkentries"
    },
 
 * If MongoDB does not have a database and/or collection by this name, Firely Server will create it for you.
@@ -45,9 +44,6 @@ In this version issue `SERVER-7568 <https://jira.mongodb.org/browse/SERVER-7568>
             ]
         }
 
-* You can set SimulateTransactions to "true" if you want to experiment with `FHIR transactions <https://www.hl7.org/fhir/http.html#transaction>`_.
-  MongoDB does not support real transactions across documents, so in case of an error already processed entries will NOT be rolled back. 
-
 .. _configure_mongodb_admin:
 
 Using MongoDB for the Administration API database
@@ -65,8 +61,7 @@ This works the same as with the normal Firely Server database, except that you:
          "Repository": "MongoDB",
          "MongoDbOptions": {
              "ConnectionString": "mongodb://localhost/vonkadmin",
-             "EntryCollection": "vonkadmin",
-             "SimulateTransactions": "false"
+             "EntryCollection": "vonkadmin"
          }
      }
 
@@ -87,6 +82,10 @@ This works the same as with the normal Firely Server database, except that you:
 .. attention::
 
     For MongoDb it is essential to retain the ``.vonk-import-history.json`` file. Please read :ref:`vonk_conformance_history` for details.
+
+MongoDB Transactions
+--------------------
+In versions prior to v4.9 transactions were simulated. From Firely Server v4.9 and onwards transactions using MongoDb are now fully supported. 
 
 Tips and hints for using MongoDb for Firely Server
 --------------------------------------------------

@@ -83,9 +83,34 @@ This works the same as with the normal Firely Server database, except that you:
 
     For MongoDb it is essential to retain the ``.vonk-import-history.json`` file. Please read :ref:`vonk_conformance_history` for details.
 
+.. _mongodb_transactions:
+
 MongoDB Transactions
 --------------------
-In versions prior to v4.9 transactions were simulated. From Firely Server v4.9 and onwards transactions using MongoDb are now fully supported. 
+
+.. note::
+    When utilizing MongoDb transactions we strongly advise to use MongoDb v4.2 or higher.
+
+In Firely Server versions prior to v4.9 transactions were simulated for development and test purposes. From Firely Server v4.9 and onwards transactions using MongoDb are now fully supported.
+
+With MongoDb transactions, there are a few things to consider:
+
+#. Firely Server only uses transactions in the following cases:
+
+    #. When uploading a transaction bundle.
+    #. When performing a conditional delete that targets more than one resource.
+
+#. MongoDb transactions in Firely Server always use Read Concern `"snapshot"` and Write Concern `"majority"`, regardless of what was specified through the connection string.
+#. Please read the official MongoDb documentation for production considerations when using transactions: `MongoDb manual <https://www.mongodb.com/docs/manual/core/transactions-production-consideration/>`_
+#. Using the correct Read and Write Concern for your MongoDb replica set is very important:
+
+    #. For PSA (Primary-Secondary-Arbiter) replica sets the Write Concern should be `"w=1"`
+    #. For PSS (Primary-Secondary-Secondary) replica sets the Write Concern should be `"w=majority"`
+    #. Choosing the right Read Concern level is dependent on your use case, you should try and test what works best for you.
+    #. The Read and Write Concern can be set through the connection string in Firely Server, for example: `"mongodb+srv://fs-cluster0.mongodb.net/firely?w=majority&readConcernLevel=local"`
+
+#. MongoDb imposes a transaction runtime limit of `60s`. For self-hosted MongoDb instances you can modify this limit using `"transactionLifetimeLimitSeconds"`. However, for MongoDb Atlas deployments this limit cannot be changed. 
+#. Although MongoDb transactions are supported as early as v4.0, please be aware of the following issue. In MongoDb v4.0 all write operations are contained in a single oplog entry. The oplog entry for the transaction must be within the BSON document size limit of 16MB. For v4.2+ every write operation gets its own oplog entry. This removes the 16MB total size limit for a transaction imposed by the single oplog entry for all its write operations. Note that each single oplog entry still has a limit of 16 MB. We highly recommend in using MongoDb v4.2 or higher when using transactions.
 
 Tips and hints for using MongoDb for Firely Server
 --------------------------------------------------

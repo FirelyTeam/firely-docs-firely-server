@@ -219,7 +219,7 @@ We will use docker-compose to achieve this.
      vonk-web:
        image: firely/server
        ports:
-       - "8080:4080"
+         - "8080:4080"
        depends_on:
          - vonk-sqlserver-db
        environment:
@@ -238,7 +238,7 @@ We will use docker-compose to achieve this.
          - .:/app/license
    
      vonk-sqlserver-db:
-       image: microsoft/mssql-server-linux
+       image: mcr.microsoft.com/mssql/server
        ports:
          - "1433:1433"
        environment:
@@ -254,6 +254,9 @@ Save the text above to a file in your working directory with the name ``docker-c
 ``firelyserver-license.json`` and is residing in your working directory (see :ref:`getting_started_docker` on how to obtain the license), **not** in a subdirectory named ``license`` (that is an internal directory inside the container).
 If your license file has a different name, use that name instead of ``firelyserver-license`` in the text above.
 
+.. warning:: Without specifying MSSQL_PID, the server will run SQL Server Developer Edition. For production, you are responsible for obtaining the appropriate license (and setting the value accordingly). |br| See https://hub.docker.com/_/microsoft-mssql-server for more information.
+
+.. note:: The current configuration will use SQL Server 2019. There are other versions of SQL server available, which can be selected by adding a tag to the value of vonk-sqlserver-db:image (e.g. mcr.microsoft.com/mssql/server:2022-latest) in the yml-file. |br| We have successfully tested 2017-latest, 2019-latest and 2022-latest.
 
 Then use this command to spin up a Firely Server container and SQL container: |br|
 ``> docker-compose -f docker-compose.mssqlserver.yml up -d``

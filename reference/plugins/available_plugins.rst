@@ -26,7 +26,7 @@ Infrastructural plugins
 :Configuration: ``Vonk.Core.Infra.MaintenanceConfiguration``
 :License token: http://fire.ly/vonk/plugins/infra
 :Order: 20
-:Description: Periodically cleans the indexed values for deleted or superceded resources from the database.
+:Description: Periodically cleans the indexed values for deleted or superseded resources from the database.
 
 .. _vonk_plugins_license:
 

@@ -94,6 +94,27 @@ environment variable::
 
    VONKLOG_Serilog:MinimumLevel:Override:Vonk.Configuration=Information
 
+.. _configure_envvar_audit_log:
+
+Audit log settings with Environment Variables
+---------------------------------------------
+
+You can control the :ref:`configure_audit_log_file` with Environment Variables the same way as the :ref:`configure_envvar_appsettings` above. 
+The difference is in the prefix. For the log settings we use 'VONKAUDITLOG\_'.
+
+audit.logsettings.json
+
+   "AuditLog": {
+      "WriteTo": [
+         {
+            "Name": "File", 
+            "Args": {
+               "path": "./audit/AuditLog.log"
+
+environment variable::
+
+   VONKAUDITLOG_AuditLog:WriteTo:0:Args:path=./other/directory/AuditLog.log
+
 .. _configure_envvar_windows:
 
 Changing Environment Variables on Windows

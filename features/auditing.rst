@@ -103,7 +103,7 @@ Firely Server comes with default settings in ``audit.logsettings.default.json``.
             }
          ]
       }
-   },
+   }
 
 
 The values that you can set for the File sink Args are:
@@ -147,6 +147,34 @@ Seq server::
 			}
 
 * Change ``serverUrl`` to the URL of your Seq server
+
+Audit Log reliability and performance considerations
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The default Serilog log sink in ``audit.logsettings.default.json`` is a asynchronous wrapper around a File sink, which means that audit log messages are pushed to a background worker thread to be written to the log file on disk. This improves application performance as the writing to the audit log is non-blocking. The async wrapper uses a buffer to collect the messages that need to be logged. For the current Serilog Async implementation, the default memory buffer feeding the worker thread is capped to 10,000 items. If this limit is reached any further log events will be dropped until the buffer is below this limit again. To change the limit you can add ``bufferSize`` to the audit logsettings. See `Serilog.Sinks.Async <https://github.com/serilog/serilog-sinks-async>`_ for more details.
+
+In normal circumstances the buffer will regularly be flushed to the underlying sink. However, when the buffer limit does get reached the reliability of writing messages is compromised and some messages will get lost while the async wrapper tries to recover. If reliability of the auditing is very important, you might want to consider using a synchronous file sink instead. See the ``audit.logsettings.default.json`` for an example of a synchronous File sink configuration.
+
+.. code-block:: JavaScript
+
+   {
+      "AuditLog": {
+         "WriteTo": [
+            {
+               "Name": "File", 
+               "Args": {
+                  "path": "./audit/AuditLog.log",
+                  "rollingInterval": "Day",
+                  "fileSizeLimitBytes": "",
+                  "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Application}] [Audit] {RequestResponse} [Machine: {MachineName}] [ReqId: {RequestId}] [IP-Address: {Ip}] [Connection: {ConnectionId}] [UserId: {UserId}] [Username: {Username}] [Path: {Path}] [Parameters: {Parameters}] [Action: {Action}] [Resource: {Resource} Key:{ResourceKey}] [StatusCode: {StatusCode}] {NewLine}"
+               }
+            }
+         ]
+      }
+   }
+
+
+The downside is that writing to the audit log is blocking and Firely Server now has to wait on the log to finish before it can continue, which in turn affects performance. You will have to try and test what works best for your use case.
 
 AuditEvent logging
 ------------------

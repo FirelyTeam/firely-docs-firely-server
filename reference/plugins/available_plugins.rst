@@ -84,6 +84,14 @@ Infrastructural plugins
 :Order: 1170
 :Description: If Vonk processes a task that could lead to inconsistent output, all other requests are rejected by this plugin. Long running tasks are e.g. the :ref:`conformance_import` and :ref:`feature_customsp_reindex`.
 
+.. _vonk_plugins_healthcheck:
+
+:Name: Long running tasks
+:Configuration: ``Vonk.Core.Infra.HealthCheckConfiguration``
+:License token: <none>
+:Order: 1180
+:Description: Health check, for use in e.g. Kubernetes probes or Docker healthchecks. See :ref:`feature_healthcheck` for possible results.
+
 .. _vonk_plugins_compartments:
 
 :Name: Compartments

@@ -200,6 +200,10 @@ To stop the container, run: |br|
     Strictly the settings for ``VONK_Repository`` and ``VONK_Administration`` are not needed here, since SQLite is the default setting. The settings are included to show where to configure the type of database to use.
     Much more information on that topic is in the paragraphs below.
 
+.. note::
+
+    If you want to use a healthcheck in your docker-compose file, use the :ref:`$healthstatus <feature_healthcheck>` operation.
+
 Running Docker with a SQL Server container
 ------------------------------------------
 

@@ -24,6 +24,16 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_490:
+
+Release 4.9.0, <date> , 2022
+-----------------------------
+
+Feature
+^^^^^^^
+
+#. We introduced a specific endpoint for healthchecks, see :ref:`feature_healthcheck``.
+
 .. _vonk_releasenotes_482:
 
 Release 4.8.2, May 10th, 2022

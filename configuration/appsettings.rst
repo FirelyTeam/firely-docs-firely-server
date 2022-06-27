@@ -190,8 +190,7 @@ MongoDB
 
     "MongoDbOptions": {
         "ConnectionString": "mongodb://localhost/vonkdata",
-        "EntryCollection": "vonkentries",
-        "SimulateTransactions": "false"
+        "EntryCollection": "vonkentries"
     },
 
 

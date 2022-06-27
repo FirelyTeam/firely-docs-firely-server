@@ -72,6 +72,7 @@ If you want to specify input parameters in the file, you can use the snippet bel
     "updateExistingResources": true,
     "useUcum": false,
     "databaseType": "SQL",
+	"haltOnError": false,
 
     "sqlserver": {
       "connectionString": "<connectionstring to the Firely Server SQL Server database>",
@@ -123,6 +124,8 @@ Supported arguments
 | ``--useUcum <true|false>``                        | useUcum                          |          | When true, any quantitative data will be canonicalized to UCUM. Otherwise, only the original value and unit will be kept                            |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--dbType <MongoDb|SQL>``                        | databaseType                     |          | Specifies the target database type                                                                                                                  |
++---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``--haltOnError <true|false>``                    | haltOnError                      |          | When true, stop application on single error. Default = false.                                                                                       |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--mongoCollection <mongoCollection>``           | mongodb/entryCollection          |          | Collection name for entries                                                                                                                         |
 +---------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+

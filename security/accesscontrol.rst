@@ -41,7 +41,7 @@ Authorization in Firely Server by default is based on `SMART on FHIR`_ and more 
 * scope=[array of individual scopes]
 * patient=123: the user is allowed access to resources in the compartment of patient 123 -- see :ref:`feature_accesscontrol_compartment`.
 
-.. note:: To complete a write request (POST, PUT or DELETE) with a conditional statement (see https://hl7.org/fhir/http.html) requires read permission on the condition. |br| Therefore, user/\*.write will usually require additional ``read`` scopes.
+.. note:: A conditional create, update or delete (see the `FHIR http specification <https://hl7.org/fhir/http.html>`_), requires read permissions on the condition. |br| Therefore, ``user/*.write`` will usually require additional ``read`` scopes.
 
 SMART on FHIR also defines scopes starting with 'patient/' instead of 'user/'. In Firely Server these are evaluated equally. But with a scope of 'patient/' you are required to also have a 'patient=...' launch context to know to which patient the user connects. It is also possible to apply a launch context to a user scope, for example the scope can look like "launch user/\*.read". In your authorization server you can specify the resources that are in the launch context parameter.
 

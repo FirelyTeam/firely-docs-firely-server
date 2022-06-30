@@ -80,3 +80,38 @@ The remedy is to disable the homepage in the pipelinesettings:
         }
         ]
       }
+
+Register a service in your plugin or Facade
+-------------------------------------------
+
+Often you will want to use .NET Core provided services, or services from other common libraries in your Facade or plugin.
+Firely Server itself may or may not register the same service or interface already. There is a safe way to register a service if it is not registered already.
+The example below shows that for an ``IMemoryCache``:
+
+  ::
+
+      public static IServiceCollection ConfigureServices(this IServiceCollection services)
+      {
+        services.TryAddSingleton<IMemoryCache, MemoryCache>();
+      }
+
+      //using it in a constructor
+      public class MyPluginService{
+        public MyPluginService(IMemoryCache cache){...}
+      }
+
+However, should Firely Server itself have registered a service for the same interface already, you will get that one injected. Even safer is to make sure you get your own injected, e.g. by registering a derived class:
+
+  ::
+
+      public class MyMemoryCache: MemoryCache{}
+
+      public static IServiceCollection ConfigureServices(this IServiceCollection services)
+      {
+        services.TryAddSingleton<MyMemoryCache>();
+      }
+
+      //using it in a constructor
+      public class MyPluginService{
+        public MyPluginService(MyMemoryCache cache){...}
+      }

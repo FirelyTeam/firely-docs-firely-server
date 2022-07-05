@@ -7,7 +7,7 @@ Subscriptions can be managed in the :ref:`administration_api`, on the ``/adminis
 to the regular FHIR endpoint, it will be stored but not evaluated. Subscriptions posted to the
 ``/administration`` endpoint will be processed and evaluated for each POST/PUT to the server.
 
-Firely Server currently only supports STU3/R4-style Subscriptions with a Channel of type rest-hook.
+Firely Server currently only supports STU3/R4-style Subscriptions.
 
 If you are :ref:`not permitted <configure_administration_access>` to access the /Subscription endpoint, Firely Server will return statuscode 403.
 
@@ -18,6 +18,45 @@ FHIR versions
 
 You POST a Subscription with a fhirVersion parameter (see :ref:`feature_multiversion`) or to a version specific endpoint. It will then respond to changes on resources *in that FHIR version*.
 So if you need a Subscription on both STU3 and R4 resources, POST that Subscription for both FHIR versions.
+
+Channels
+--------
+
+According to the FHIR specification, a channel defines how a FHIR server notifies other systems when resources get created or updated. The specification describes several channel types. Currently, Firely Server supports only *rest-hook* channel type.
+
+Below is an example of a Subscption resource that uses this channel type.
+
+.. code-block:: json
+
+  {
+    "resourceType": "Subscription",
+    "id": "example",
+    "status": "requested",
+    "contact": [
+      {
+        "system": "phone",
+        "value": "ext 4123"
+      }
+    ],
+    "end": "2025-01-01T00:00:00Z",
+    "reason": "Monitor new neonatal function",
+    "criteria": "Observation?code=http://loinc.org|1975-2",
+    "channel": {
+      "type": "rest-hook",
+      "endpoint": "https://my-subscription-endpoint.com",
+      "payload": "application/fhir+json",
+      "header": [
+        "Authorization: Bearer secret-token-abc-123"
+      ]
+    }
+  }
+
+Once this Subscription resource is posted to Firely Server, the server will be sending notifications to the specified *endpoint* whenever a resource matching the search *criteria* gets created or updated. It is possible to provide *headers* that will be copied over to the notification requests. It may come in handy if the notifications endpoint is secured and the Authorization header must be used. The *payload* option defines the format of the notification payload. The following values can be used:
+
+- *application/fhir+json* and *application/json*
+- *application/fhir+xml* and *application/xml*
+
+The payload will contain the created/updated resource in the FHIR format. If the payload option is omitted, the notifications will be sent without the body.
 
 .. _subscription_configure:
 

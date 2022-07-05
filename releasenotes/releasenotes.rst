@@ -73,6 +73,7 @@ Performance
 #. Improved validation performance of large resources. Firely Server will now executes the validation of bundles in a linear amount of time compared to the number of resources in the bundle.
 #. Improved performance for chained searches in case SMART on FHIR es enabled.
 
+
 .. _vonk_releasenotes_482:
 
 Release 4.8.2, May 10th, 2022
@@ -151,7 +152,7 @@ Fix
 #. The name of a custom operation is now recorded in an AuditEvent
 #. Fixed searching using the :identifier modifier in case the identifier system is not a valid URL
 #. Searching using a If-None-Exist header was not scoped to an information model, i.e. a request using FHIR R4 also matched STU3 resources
-#. Improved error message if $lastN operation is enabled but the corresponding repository is not inlcuded in the pipeline options
+#. Improved error message if $lastN operation is enabled but the corresponding repository is not included in the pipeline options
 #. Changed CapabilityStatement.software.name to Firely Server
 #. Fixed SQL Server maintenance job timeouts on large SQL Server databases
 #. Improved Bundle reference resolving in some corner cases, which are clarified in the `specification <https://jira.hl7.org/browse/FHIR-29271>`_
@@ -669,7 +670,7 @@ Fixes
 #. If a Facade returned a resource without an id from the Create method, an error was caused by a log statement. Fixed that.
 #. Indexing ``Subscription.channel[0].endpoint[0]`` failed for R4. Fixed that. This means you can't search for existing Subscriptions by ``Subscription.url`` on the /administration endpoint for FHIR R4.
 #. Postman was updated w.r.t. acquiring tokens. We adjusted the :ref:`documentation on that <feature_accesscontrol_postman>` accordingly.
-#. If a patient claim was included in a SMART on FHIR access token, the request would be scoped to the Patient compartment regardless of the scope claims. We fixed this by allowing "user" scopes to access FHIR resources outside of the Patient compartment regardless of the patient claim. See `Launch context arrives with your access_token <http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context/index.html#launch-context-arrives-with-your-access_token>`_ for more background information.
+#. If a patient claim was included in a SMART on FHIR access token, the request would be scoped to the Patient compartment regardless of the scope claims. We fixed this by allowing "user" scopes to access FHIR resources outside of the Patient compartment regardless of the patient claim. See `Launch context arrives with your access_token <http://hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html#launch-context-arrives-with-your-access_token>`_ for more background information.
 
 Plugin and Facade
 ^^^^^^^^^^^^^^^^^

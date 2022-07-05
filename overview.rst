@@ -58,7 +58,7 @@ Plugins
 
 A plugin is a library of code that you can buy, clone or create yourself that implements additional or replacement functionality in Firely Server. Examples are:
 
-* Implementation of a custom operation. E.g. $document (generate a document Bundle based on a Composition resource), which is available on GitHub. Or $transform (execute a FHIR Mapping on a source structure to produce a target structure), which is developed by Healex and can be bought separately.
+* Implementation of a custom operation. E.g. $document (generate a document Bundle based on a Composition resource), which is available on `GitHub <https://github.com/FirelyTeam/Vonk.Plugin.DocumentOperation>`_.
 * Implementation of a cross-cutting concern. Imagine that in your organization every resource that is created or updated must be logged to a very specific location. You may create a plugin that does exactly that.
 * Special handling of specific requests. E.g. requests for a Binary resource where you need to merge in binary data from one of your systems.
 * Provide custom authentication and authorization methods for compliancy with business or governmental rules.

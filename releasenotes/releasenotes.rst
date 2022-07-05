@@ -37,6 +37,18 @@ Security
 Database
 ^^^^^^^^
 
+#. Changed the serialization format of decimal from from string to use the native decimal type in MongoDB to improve performance.
+
+.. attention::
+    The upgrade procedure for Firely Server running on MongoDb will execute a mandatory migration for this change. If your collection contains a lot of resources, this may take a very long time. Therefore, the MongoDb upgrade script has to be executed manually. The script can be found in `mongodb\FS_SchemaUpgrade_Data_v21_v22.js`
+    
+    Here are some guidelines:
+
+   * We tested it on a MongoDb collection with a size of 500GB. The upgrade script took around 24 hours to complete on a fairly powerful machine.
+   * As always, make sure you have a backup of your database that has been tried and tested before you begin the upgrade.
+   * Please make sure that Firely Server is shutdown before you execute the script.
+   * If you encounter problems running the script, or need any assistance, please :ref:`vonk-contact`.
+
 Fix
 ^^^
 #. Fixed an issue where a "/" was missing in the fullUrl of a "search" bundle in case a information model mapping with mode "Path" was used.

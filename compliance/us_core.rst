@@ -1,7 +1,7 @@
 US CORE
 =======
 
-* Tested Version: Firely Server has been tested against `US Core Version 4.0.0 - STU4 Release <https://hl7.org/fhir/us/core/STU4/terminology.html>`_
+* Tested Version: Firely Server has been tested against `US Core Version 3.1.1 - STU3 Release <https://hl7.org/fhir/us/core/STU3.1.1/terminology.html>`_
 * All StructureDefinitions for profiles and extensions are loaded by default in the standard SQLite Administration Database of Firely Server. No additional configuration needed in order to validate against these conformance resources.
 * Firely Server provides full `"Profile Support and Interaction Support" <http://hl7.org/fhir/us/core/STU4/conformance-expectations.html#profile-support--interaction-support>`_:
   

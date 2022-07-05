@@ -105,12 +105,7 @@ Sorting
 * datetime
 * token
 
-for the repositories:
-
-* SQL
-* MongoDB
-* SQLite
-* Memory
+for the all supported repositories.
 
 How is sort evaluated?
 

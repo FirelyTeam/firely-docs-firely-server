@@ -38,7 +38,7 @@ Database
 ^^^^^^^^
 
 #. Changed the serialization format of decimal from from string to use the native decimal type in MongoDB to improve performance.
-#. For SQL Server database, if you upgrade Firely Server all the way from v4.2.1, it is likely that the resulting index ``vonk.ref.ref_name_relativereference`` differ from a clean installation of the Firely Server. The upgrade procedure will try to fix the index automatically. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually. The script for `admin` database can be found in ``sqlserver/FS_SchemaUpgrade_Admin_v22_v23.sql`` and the script for `data` database can be found in ``sqlserver/FS_SchemaUpgrade_Data_v23_v24.sql``. 
+#. For SQL Server database, if you upgrade Firely Server all the way from v4.2.1, it is likely that the resulting index ``vonk.ref.ref_name_relativereference`` differ from a clean installation of the Firely Server. The upgrade procedure will try to fix the index automatically. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually. The script for the `admin` database can be found in ``sqlserver/FS_SchemaUpgrade_Admin_v22_v23.sql`` and the script for the `data` database can be found in ``sqlserver/FS_SchemaUpgrade_Data_v23_v24.sql``. 
 
 .. attention::
     The upgrade procedure for Firely Server running on MongoDb will execute a mandatory migration for this change. If your collection contains a lot of resources, this may take a very long time. Therefore, the MongoDb upgrade script has to be executed manually. The script can be found in `mongodb\FS_SchemaUpgrade_Data_v21_v22.js`

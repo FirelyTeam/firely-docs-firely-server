@@ -26,27 +26,52 @@ The default FHIR version of the `public Firely Server endpoint <https://server.f
 
 .. _vonk_releasenotes_490:
 
-Release 4.9.0, TBD
+Release 4.9.0, July 6th, 2022
 -----------------------------
+
+Security
+^^^^^^^^
+
+#. Upgraded Microsoft.AspNetCore.Authentication.JwtBearer dependency as a mitigation for `CVE-2021-34532 <https://github.com/dotnet/aspnetcore/security/advisories/GHSA-q7cg-43mg-qp69>`_.
+
+Database
+^^^^^^^^
 
 Fix
 ^^^
-#. Fixed an issue where a "/" was missing the fullUrl of a "search" bundle in case a information model mapping with mode "Path" is used.
-#. Fixed an issue where a new resource id was not created when POST was used in a batch or transaction bundle and but a resource id was already provided
-#. An invalid system URI was provided in AuditEvent.source.observer.identifier
+#. Fixed an issue where a "/" was missing in the fullUrl of a "search" bundle in case a information model mapping with mode "Path" was used.
+#. Fixed an issue where a new resource id was not created when POST was used in a batch or transaction bundle and a resource id was already provided.
+#. An invalid system URI was provided by default in AuditEvent.source.observer.identifier.
 #. Adjusted the implementation of conditional create to match the description in https://jira.hl7.org/browse/FHIR-31965.
-#. Money.currency was not indexed correctly in FHIR R4. Please :ref:`contact us<vonk-contact>` if you are using the SearchParameters "price-override" on ChargeItem or "totalgross" / "totalnet" on Invoice. A migration for these fields will be provided upon request. Otherwise, please re-index these SearchParameters. 
+#. Money.currency was not indexed correctly in FHIR R4. Please :ref:`contact us<vonk-contact>` if you are using the SearchParameters "price-override" on ChargeItem or "totalgross" / "totalnet" on Invoice. A migration for these fields will be provided upon request. Otherwise, please re-index these SearchParameters.
+# Fixed an issue where bundles with conformance claims in meta.profile would have been validated against the profile claims even if the validation level was only set to "Core".
+#. Validating a resource with an element containing only an extension and no value against validation level "Core" will no longer result in an error.
+#. Providing an invalid token to an unsecured operation does not lead to an HTTP 401 error status code.
 
 Feature
 ^^^^^^^
 
+#. Transaction rollbacks are now fully supported when running Firely Server on MogoDB. Please note that the SimulateTransaction setting is now longer available. See :ref:`mongodb_transactions` for more details.
+#. $lastN is now available if Firely Server is running on MongoDB. See :ref:`lastn` for more details.
 #. It is now possible to define exclude filters in the appsettings to configure which requests against Firely Server should not be audited. In certain cases, this enables to reduce the number of captured AuditEvent resources. See :ref:`<feature_auditing>` for more details.
+#. The AuditEvent logging will now by default also capture the the query parameters sent to Firely Server. These parameters will also be stored in case a request fails (HTTP 4xx or 5xx).
+# The log sinks of the AuditEvent logging is now adjustable in the logsettings. See :ref:`<configure_audit_log_file>` for more details.
 #. Firely Server will throw a startup exception if no default ITerminologyService is registerd.
 #. CapabilityStatement.rest.resource.conditionalRead is now set by default to 'full-support' by default.
 #. _total is now included by default in every self-link of a "search" bundle.
-#. Added support for permanently deleting resources from the database. See <TBD> for more details.
+#. Added support for permanently deleting resources from the database. See :ref:`erase for more details.
 #. Improved the error message in case the JSON serialization format of a FHIR resource does not contains a valid "resourceType" Element.
 # Improved validation in case a non-conformant URI is given in Quantity.system. It MUST be a valid absolute URI. In all other cases, a warning will be logged and the element will not be indexed.
+#. Improved error message logging in case SQL script fails when the database upgrade is performed automatically by Firely Server.
+#. Improved log message in case Firely Server SQL schema needs to be updated by adding the current schema version and the target schema version.
+#. Improved access control by now longer allowing retrieving resources outside of the Patient comparment if SMART on FHIR is enabled and patient-level scopes are provided by the client. Additional resources need to be explicitly allowed by the token.
+#. Improved error message in case a condition create/update/delete operation is executed with SMART on FHIR enabled and the client provides a token with limited permissions (e.g. only write-scopes).
+
+Performance
+^^^^^^^^^^^
+
+#. Improved validation performance of large resources. Firely Server will now executes the validation of bundles in a linear amount of time compared to the number of resources in the bundle.
+#. Improved performance for chained searches in case SMART on FHIR es enabled.
 
 .. _vonk_releasenotes_482:
 

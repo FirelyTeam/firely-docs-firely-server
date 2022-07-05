@@ -59,7 +59,7 @@ Feature
 #. Firely Server will throw a startup exception if no default ITerminologyService is registerd.
 #. CapabilityStatement.rest.resource.conditionalRead is now set by default to 'full-support' by default.
 #. _total is now included by default in every self-link of a "search" bundle.
-#. Added support for permanently deleting resources from the database. See :ref:`erase for more details.
+#. Added support for permanently deleting resources from the database. See :ref:`erase` for more details. You will need an updated license file. Please :ref:`contact us<vonk-contact>` to us if you want to use the feature.
 #. Improved the error message in case the JSON serialization format of a FHIR resource does not contains a valid "resourceType" Element.
 # Improved validation in case a non-conformant URI is given in Quantity.system. It MUST be a valid absolute URI. In all other cases, a warning will be logged and the element will not be indexed.
 #. Improved error message logging in case SQL script fails when the database upgrade is performed automatically by Firely Server.

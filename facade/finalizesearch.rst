@@ -36,6 +36,9 @@ the order of inclusion, and adds to the services. For background information, se
   The reason for this is that upon configuring the administration database, Firely Server checks 
   whether an ISearchRepository is registered. The earliest of these configurations is at order 211.
 
+.. note::
+  Should you need to register any other classes or interface, please see :ref:`vonk_plugins_di` for more background.
+
 2. Create your Facade plugin
 ----------------------------
 

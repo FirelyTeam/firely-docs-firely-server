@@ -37,11 +37,11 @@ Security
 Database
 ^^^^^^^^
 
-#. Changed the serialization format of decimal from from string to use the native decimal type in MongoDB to improve performance.
-#. For SQL Server database, if you upgrade Firely Server all the way from v4.2.1, it is likely that the resulting index ``vonk.ref.ref_name_relativereference`` differ from a clean installation of the Firely Server. The upgrade procedure will try to fix the index automatically. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually. The script for the `admin` database can be found in ``sqlserver/FS_SchemaUpgrade_Admin_v22_v23.sql`` and the script for the `data` database can be found in ``sqlserver/FS_SchemaUpgrade_Data_v23_v24.sql``. 
+#. Switched the serialization format for decimal types from string to the native decimal type in MongoDB to improve performance.
+#. For SQL Server database, if you upgrade Firely Server all the way from v4.2.1, it is likely that the resulting index ``vonk.ref.ref_name_relativereference`` differ from a clean installation of Firely Server. The upgrade procedure will try to fix the index automatically. If your database is large, this may take too long and the upgrade process will time out. If that happens you need to run the upgrade script manually. The script for the `admin` database can be found in ``sqlserver/FS_SchemaUpgrade_Admin_v22_v23.sql`` and the script for the `data` database can be found in ``sqlserver/FS_SchemaUpgrade_Data_v23_v24.sql``. 
 
 .. attention::
-    The upgrade procedure for Firely Server running on MongoDb will execute a mandatory migration for this change. If your collection contains a lot of resources, this may take a very long time. Therefore, the MongoDb upgrade script has to be executed manually. The script can be found in `mongodb\FS_SchemaUpgrade_Data_v21_v22.js`
+    The upgrade procedure for Firely Server running on MongoDb requires a mandatory migration. If your collection contains a lot of resources, this may take a very long time. Therefore, the MongoDb upgrade script has to be executed manually. The script can be found in `mongodb\FS_SchemaUpgrade_Data_v21_v22.js`
     
     Here are some guidelines:
 
@@ -52,7 +52,7 @@ Database
 
 Fix
 ^^^
-#. Fixed an issue where a "/" was missing in the fullUrl of a "search" bundle in case a information model mapping with mode "Path" was used.
+#. Fixed an issue where a "/" was missing in the fullUrl of a "search" bundle in case an information model mapping with mode "Path" was used.
 #. Fixed an issue where a new resource id was not created when POST was used in a batch or transaction bundle and a resource id was already provided.
 #. An invalid system URI was provided by default in AuditEvent.source.observer.identifier.
 #. Adjusted the implementation of conditional create to match the description in https://jira.hl7.org/browse/FHIR-31965.
@@ -64,27 +64,27 @@ Fix
 Feature
 ^^^^^^^
 
-#. Transaction rollbacks are now fully supported when running Firely Server on MogoDB. Please note that the SimulateTransaction setting is now longer available. See :ref:`mongodb_transactions` for more details.
+#. Transaction rollbacks are now fully supported when running Firely Server on MogoDB. Please note that the SimulateTransaction setting is no longer available. See :ref:`mongodb_transactions` for more details.
 #. $lastN is now available if Firely Server is running on MongoDB. See :ref:`lastn` for more details.
-#. It is now possible to define exclude filters in the appsettings to configure which requests against Firely Server should not be audited. In certain cases, this enables to reduce the number of captured AuditEvent resources. See :ref:`<feature_auditing>` for more details.
-#. The AuditEvent logging will now by default also capture the the query parameters sent to Firely Server. These parameters will also be stored in case a request fails (HTTP 4xx or 5xx).
-#. The log sinks of the AuditEvent logging is now adjustable in the logsettings. See :ref:`<configure_audit_log_file>` for more details.
-#. Firely Server will throw a startup exception if no default ITerminologyService is registerd.
-#. CapabilityStatement.rest.resource.conditionalRead is now set by default to 'full-support' by default.
-#. _total is now included by default in every self-link of a "search" bundle.
+#. It is now possible to define exclusion criteria in the appsettings to configure which requests against Firely Server should not be audited. In certain cases, this can reduce the number of captured AuditEvent resources. See :ref:`<feature_auditing>` for more details.
+#. By default, the AuditEvent logging will now include the query parameters sent to Firely Server. These parameters will also be stored in case a request fails (HTTP 4xx or 5xx).
+#. The log sinks for AuditEvent logging are now configurable in the logsettings. See :ref:`<configure_audit_log_file>` for more details.
+#. Firely Server will throw a startup exception if no default ITerminologyService is registered.
+#. CapabilityStatement.rest.resource.conditionalRead is now set to 'full-support' by default.
+#. _total is now included in every self-link of a "search" bundle by default.
 #. Added support for permanently deleting resources from the database. See :ref:`erase` for more details. You will need an updated license file. Please :ref:`contact us<vonk-contact>` to us if you want to use the feature.
 #. Improved the error message in case the JSON serialization format of a FHIR resource does not contains a valid "resourceType" Element.
 #. Improved validation in case a non-conformant URI is given in Quantity.system. It MUST be a valid absolute URI. In all other cases, a warning will be logged and the element will not be indexed.
 #. Improved error message logging in case SQL script fails when the database upgrade is performed automatically by Firely Server.
 #. Improved log message in case Firely Server SQL schema needs to be updated by adding the current schema version and the target schema version.
-#. Improved access control by now longer allowing retrieving resources outside of the Patient comparment if SMART on FHIR is enabled and patient-level scopes are provided by the client. Additional resources need to be explicitly allowed by the token.
+#. Improved access control by no longer allowing retrieval of resources outside of the Patient compartment if SMART on FHIR is enabled and patient-level scopes are provided by the client. Additional resources need to be explicitly allowed by the token.
 #. Improved error message in case a condition create/update/delete operation is executed with SMART on FHIR enabled and the client provides a token with limited permissions (e.g. only write-scopes).
 
 Performance
 ^^^^^^^^^^^
 
-#. Improved validation performance of large resources. Firely Server will now executes the validation of bundles in a linear amount of time compared to the number of resources in the bundle.
-#. Improved performance for chained searches in case SMART on FHIR es enabled.
+#. Improved validation performance of large resources. Firely Server will now execute the validation of bundles in a linear amount of time compared to the number of resources in the bundle.
+#. Improved performance for chained searches in case SMART on FHIR is enabled.
 
 
 .. _vonk_releasenotes_482:

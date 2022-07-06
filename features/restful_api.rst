@@ -30,7 +30,7 @@ Configuration
 ^^^^^^^^^^^^^
 
 A conditional delete interaction may match multiple resources. You can configure the server to delete all matches, or reject the operation (effectively only allowing single matches to be deleted).
-Allowing multiple deletes requires support for transactions on the database (SQL Server or SQLite). 
+Allowing multiple deletes requires support for transactions on the database (MongoDb, SQL Server or SQLite). 
 If you allow for multiple deletes, you have to specify a maximum number of resources that can be deleted at once, to save you from accidentally deleting too many resources.
 
 ::
@@ -47,7 +47,7 @@ If you allow for multiple deletes, you have to specify a maximum number of resou
 Limitations on CRUD
 ^^^^^^^^^^^^^^^^^^^
 
-#. Simultaneous conditional creates and updates are not entirely transactionally safe:
+#. Simultaneous conditional creates and updates are not entirely transactional safe:
    
    * Two conditional updates may both result in a ``create``, although the result of one may be a match to the other.
    * Two conditional creates may both succeed, although the result of one may be a match to the other.
@@ -105,12 +105,7 @@ Sorting
 * datetime
 * token
 
-for the repositories:
-
-* SQL
-* MongoDB
-* SQLite
-* Memory
+for the all supported repositories.
 
 How is sort evaluated?
 
@@ -228,9 +223,8 @@ Note that batches are not supported in the ``/administration`` endpoint.
 Transaction
 -----------
 
-Transactions are supported, with these limitations:
+Transactions are supported, but with the following limitation:
 
-#. Of the three storage implementations, only SQL Server and SQLite truly support transactions. On :ref:`MongoDB<configure_mongodb>` and :ref:`Memory<configure_memory>`, transaction support can be simulated at the FHIR level, but not be enforced on the database level.
 #. The ``/administration`` endpoint does not support transactions.
 
 You can limit the number of entries accepted in a single transaction. See :ref:`batch_options`.

@@ -26,13 +26,14 @@ The default FHIR version of the `public Firely Server endpoint <https://server.f
 
 .. _vonk_releasenotes_490:
 
-Release 4.9.0, <date> , 2022
------------------------------
+Release 4.9.0, June 27th, 2022
+------------------------------
 
 Feature
 ^^^^^^^
 
 #. We introduced a specific endpoint for healthchecks, see :ref:`feature_healthcheck``.
+#. Firely Server now fully supports transactions on MongoDb. See :ref:`MongoDb transactions<mongodb_transactions>` in our MongoDB configuration documentation for more details.
 
 .. _vonk_releasenotes_482:
 
@@ -112,7 +113,7 @@ Fix
 #. The name of a custom operation is now recorded in an AuditEvent
 #. Fixed searching using the :identifier modifier in case the identifier system is not a valid URL
 #. Searching using a If-None-Exist header was not scoped to an information model, i.e. a request using FHIR R4 also matched STU3 resources
-#. Improved error message if $lastN operation is enabled but the corresponding repository is not inlcuded in the pipeline options
+#. Improved error message if $lastN operation is enabled but the corresponding repository is not included in the pipeline options
 #. Changed CapabilityStatement.software.name to Firely Server
 #. Fixed SQL Server maintenance job timeouts on large SQL Server databases
 #. Improved Bundle reference resolving in some corner cases, which are clarified in the `specification <https://jira.hl7.org/browse/FHIR-29271>`_

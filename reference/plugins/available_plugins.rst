@@ -412,7 +412,7 @@ FHIR RESTful interactions
 :Configuration: ``Vonk.Core.Operations.Transaction.FhirTransactionConfiguration``
 :License token: http://fire.ly/vonk/plugins/transaction
 :Order: 3120
-:Description: Process a transaction Bundle by sending each entry through the rest of the processing pipeline and gathering the results. Different from Batch, Transaction succeeds or fails as a whole. Transaction requires an implementation of ``Vonk.Core.Repository.IRepoTransactionService`` for transaction support by the underlying repository. The SQL Server and SQLite implementations provides a real one, whereas the MongoDb provides a simulated implementation, to allow you to experiment with transactions on MongoDb.
+:Description: Process a transaction Bundle by sending each entry through the rest of the processing pipeline and gathering the results. Different from Batch, Transaction succeeds or fails as a whole. Transaction requires an implementation of ``Vonk.Core.Repository.IRepoTransactionService`` for transaction support by the underlying repository.
 :Options: 
    * ``SizeLimits``, see :ref:`validation_options`
    * ``Repository``, see :ref:`configure_repository`
@@ -653,7 +653,7 @@ Repository implementations
 :Configuration: ``Vonk.Repository.MongoDbConfiguration``
 :license token: http://fire.ly/vonk/plugins/repository/mongo-db
 :Order: 230
-:Description: Implements a repository in MongoDb that fully supports all of the capabilities of Firely Server, except Transactions.
+:Description: Implements a repository in MongoDb that fully supports all of the capabilities of Firely Server.
 
 :Name: MongoDb Administration Repository
 :Configuration: ``Vonk.Repository.MemoryAdministrationConfiguration``

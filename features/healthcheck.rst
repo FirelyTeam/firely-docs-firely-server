@@ -41,7 +41,7 @@ The ``$readiness`` operation may return one of these http status codes:
 #. 200 OK: Firely Server is up and running and ready to process requests.
 #. 423 Locked: Firely Server is busy with a long running operation and cannot process requests.  This could among others be a :ref:`database migration <upgrade>` or an :ref:`import of conformance resources <conformance_import>`. The response will have an OperationOutcome with additional details.
 #. 402 Payment Required: The license is expired or otherwise invalid.
-#. 500 or higher: An unexpected error happened, the server is not running or not reachable (in the latter case the error actually comes from a component in front of Firely Server).
+#. 500 or higher: An unexpected error happened, the server is not running or not reachable (in the latter case the error originates from a component in front of Firely Server).
 
 
 Configuration

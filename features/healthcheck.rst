@@ -7,7 +7,7 @@ Description
 -----------
 
 It can be useful to check whether Firely Server is still up and running, and ready to handle requests. Either just for notification, or for automatic failover.
-Another use is to have dependent services wait with starting for Firely Server to be up, e.g. in a docker-compose or in a Helm chart.
+A prominent use case is to start dependent services only after Firely Server is up and running, e.g. in a docker-compose or in a Helm chart.
 
 Firely Server provides two endpoints, each in the form a of a FHIR custom operation, for different purposes:
 

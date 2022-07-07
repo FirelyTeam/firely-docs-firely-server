@@ -202,7 +202,7 @@ To stop the container, run: |br|
 
 .. note::
 
-    If you want to use a healthcheck in your docker-compose file, use the :ref:`$healthstatus <feature_healthcheck>` operation.
+    If you want to use a healthcheck in your docker-compose file, see :ref:`feature_healthcheck`.
 
 Running Docker with a SQL Server container
 ------------------------------------------

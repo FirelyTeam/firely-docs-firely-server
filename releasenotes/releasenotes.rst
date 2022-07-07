@@ -26,13 +26,13 @@ The default FHIR version of the `public Firely Server endpoint <https://server.f
 
 .. _vonk_releasenotes_490:
 
-Release 4.9.0, June 27th, 2022
+Release 4.10.0, <date>, 2022
 ------------------------------
 
 Feature
 ^^^^^^^
 
-#. We introduced a specific endpoint for healthchecks, see :ref:`feature_healthcheck``.
+#. We introduced endpoints for healthchecks, both liveness and readiness, see :ref:`feature_healthcheck`.
 #. Firely Server now fully supports transactions on MongoDb. See :ref:`MongoDb transactions<mongodb_transactions>` in our MongoDB configuration documentation for more details.
 
 .. _vonk_releasenotes_482:

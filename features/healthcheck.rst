@@ -34,7 +34,7 @@ The ``$liveness`` operation may return one of these http status codes:
 
 #. 200 OK: Firely Server is up and running (but may still be blocked by a long running process).
 #. 402 Payment Required: The license is expired or otherwise invalid.
-#. 500 or higher: An unexpected error happened, the server is not running or not reachable (in the latter case the error actually comes from a component in front of Firely Server).
+#. 500 or higher: An unexpected error happened, the server is not running or not reachable (in the latter case the error originates from a component in front of Firely Server).
 
 The ``$readiness`` operation may return one of these http status codes:
 

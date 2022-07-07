@@ -17,7 +17,7 @@ Firely Server provides two endpoints, each in the form a of a FHIR custom operat
 These align - intentionally - with the use of liveness and readiness probes in Kubernetes.
 
 The major difference is in the ability to handle requests. Some operations on Firely Server can trigger a long running process during which the server cannot reliably handle requests, see the :ref:`Long running tasks plugin <vonk_plugins_longrunning>`. 
-If this is the case, the ``$liveness`` operation will return a ``200 OK`` status regardless. So you can be sure the server is up, and should not be restarted (that would just delay the long running process). The ``$readiness`` operation however, will in this case return ``423 Locked``. If no long running processes are active, both operations will have the same output.
+If this is the case, the ``$liveness`` operation will return a ``200 OK`` status regardless, indicating the server is up and should not be restarted (that would just delay the long running process). The ``$readiness`` operation however, would return ``423 Locked`` in this case. If no long running processes are active, both operations will have the same output, namely ``200 OK``.
 
 If you have assigned different endpoints to different FHIR versions (see :ref:`here <feature_multiversion_endpoints>`), you can also invoke it on each FHIR version. The result is always the same for all versions that are configured in the server. E.g:
 

@@ -59,11 +59,13 @@ Fix
 #. Money.currency was not indexed correctly in FHIR R4. Please :ref:`contact us<vonk-contact>` if you are using the SearchParameters "price-override" on ChargeItem or "totalgross" / "totalnet" on Invoice. A migration for these fields will be provided upon request. Otherwise, please re-index these SearchParameters. See :ref:feature_customsp_reindex` for more details.
 #. Fixed an issue where bundles with conformance claims in meta.profile would have been validated against the profile claims even if the validation level was only set to "Core".
 #. Validating a resource with an element containing only an extension and no value against validation level "Core" will no longer result in an error.
-#. Providing an invalid token to an unsecured operation does not lead to an HTTP 401 error status code. The invalid token is now being ignored.
+#. SoF: Providing an invalid token to an unsecured operation does not lead to an HTTP 401 error status code. The invalid token is now being ignored.
+#. SoF: Fixed unauthorized issue when performing PATCH request with ``patient`` scope.
 
 Feature
 ^^^^^^^
 
+#. Inferno, The ONC test tool: Firely Server is updated to pass all the tests in the latest ONC test kit (version 2.2.1)! Do you want a demo of this? :ref:`vonk-contact`!.
 #. Transaction rollbacks are now fully supported when running Firely Server on MogoDB. Please note that the SimulateTransaction setting is no longer available. See :ref:`mongodb_transactions` for more details.
 #. $lastN is now available if Firely Server is running on MongoDB. See :ref:`lastn` for more details.
 #. It is now possible to define exclusion criteria in the appsettings to configure which requests against Firely Server should not be audited. In certain cases, this can reduce the number of captured AuditEvent resources. See :ref:`<feature_auditing>` for more details.

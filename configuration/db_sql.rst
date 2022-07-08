@@ -186,6 +186,12 @@ Create a database and users by script, and have Firely Server create the schema
             }
         }
 
+Run schema migrations manually
+------------------------------
+It is possible to disable automatic migrations for the database, by setting AutoUpdateDatabase to false. Regardless, with a new version, the schema must be upgraded for the application to run.
+With auto-updating disabled, an error will halt the startup. The error contains the version of the current schema and the required schema version of the server. 
+You must use the SQL script(s) in the /sqlserver folder to update your database to the required version.
+
 .. _overview_of_permissions:
 
 Overview of permissions

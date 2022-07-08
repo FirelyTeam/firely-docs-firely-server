@@ -142,6 +142,26 @@ Powershell
 
 You should see a ``vonkdata.db`` appear in the ``./resourcedata`` folder, and a log file in the ``./log`` folder. From here you can experiment with other settings. You can also easily keep different settings files side-by-side, mapping the one you want to test into the container, e.g. ``-v ${PWD}/some-weird-settings.json:/app/appsettings.instance.json``.
 
+Mounting a your custom plugins folder into the container
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In a similar way as described above, you can mount your custom plugins into the container. However, this will replace the default plugings; they need to be added manually.
+
+- Download the binaries of your server version from https://downloads.simplifier.net/firely-server/versions/
+- Create a plugin folder, including the default plugins (extracted from the downloaded archive)
+- Create ``appsettings.instance.json`` with the appropriate Pipeline section (see :ref:`vonk_plugins_config`)
+- Mount the files and folder as shown below
+
+.. code-block::
+   
+   docker run -d -p 8080:4080 --name firely.server `
+   -v ${PWD}/firelyserver-license.json:/app/firelyserver-license.json `
+   -v ${PWD}/appsettings.instance.json:/app/appsettings.instance.json `
+   -v ${PWD}/plugins:/app/plugins `
+   firely/server
+
+The server is now accessible on ``http://localhost:8080/``.
+
 Spinning up with a docker-compose file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Another way to spin up a Firely Server container is to use a docker-compose file. The above example can also be established by the following ``docker-compose-sqlite.yml``:
@@ -199,7 +219,7 @@ We will use docker-compose to achieve this.
      vonk-web:
        image: firely/server
        ports:
-       - "8080:4080"
+         - "8080:4080"
        depends_on:
          - vonk-sqlserver-db
        environment:
@@ -218,7 +238,7 @@ We will use docker-compose to achieve this.
          - .:/app/license
    
      vonk-sqlserver-db:
-       image: microsoft/mssql-server-linux
+       image: mcr.microsoft.com/mssql/server
        ports:
          - "1433:1433"
        environment:
@@ -234,6 +254,9 @@ Save the text above to a file in your working directory with the name ``docker-c
 ``firelyserver-license.json`` and is residing in your working directory (see :ref:`getting_started_docker` on how to obtain the license), **not** in a subdirectory named ``license`` (that is an internal directory inside the container).
 If your license file has a different name, use that name instead of ``firelyserver-license`` in the text above.
 
+.. warning:: Without specifying MSSQL_PID, the server will run SQL Server Developer Edition. For production, you are responsible for obtaining the appropriate license (and setting the value accordingly). |br| See https://hub.docker.com/_/microsoft-mssql-server for more information.
+
+.. note:: The current configuration will use SQL Server 2019. There are other versions of SQL server available, which can be selected by adding a tag to the value of vonk-sqlserver-db:image (e.g. mcr.microsoft.com/mssql/server:2022-latest) in the yml-file. |br| We have successfully tested 2017-latest, 2019-latest and 2022-latest.
 
 Then use this command to spin up a Firely Server container and SQL container: |br|
 ``> docker-compose -f docker-compose.mssqlserver.yml up -d``

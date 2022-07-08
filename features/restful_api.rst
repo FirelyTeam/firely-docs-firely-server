@@ -30,7 +30,7 @@ Configuration
 ^^^^^^^^^^^^^
 
 A conditional delete interaction may match multiple resources. You can configure the server to delete all matches, or reject the operation (effectively only allowing single matches to be deleted).
-Allowing multiple deletes requires support for transactions on the database (SQL Server or SQLite). 
+Allowing multiple deletes requires support for transactions on the database (MongoDb, SQL Server or SQLite). 
 If you allow for multiple deletes, you have to specify a maximum number of resources that can be deleted at once, to save you from accidentally deleting too many resources.
 
 ::
@@ -47,7 +47,7 @@ If you allow for multiple deletes, you have to specify a maximum number of resou
 Limitations on CRUD
 ^^^^^^^^^^^^^^^^^^^
 
-#. Simultaneous conditional creates and updates are not entirely transactionally safe:
+#. Simultaneous conditional creates and updates are not entirely transactional safe:
    
    * Two conditional updates may both result in a ``create``, although the result of one may be a match to the other.
    * Two conditional creates may both succeed, although the result of one may be a match to the other.
@@ -88,6 +88,8 @@ Firely Server also supports ``_include:iterate`` and ``_revinclude:iterate``, as
          "MaximumIncludeIterationDepth": 1
       }
    },
+
+When searching with the ``:exact`` modifier the server handles `grapheme clusters <http://hl7.org/fhir/R4B/search.html#modifiers>`_. 
 
 .. _restful_search_sort:
 
@@ -148,6 +150,7 @@ How is sort evaluated?
 
 * Firely Server uses the default collation as configured on the database server. This collation defines the ordering of characters.
 
+* Sorting on ``_score`` is not supported.
 
 .. _restful_search_limitations:
 
@@ -161,12 +164,19 @@ The following parameters and options are not yet supported:
 #. ``_query``
 #. ``_containedType``
 #. ``_filter``
+#. ``Location.near`` (geo matching is not supported)
 #. ``:approx`` modifier on a quantity SearchParameter
 #. ``:text`` modifier on a string SearchParameter
-#. ``:above``, ``:below``, ``:in``, ``:not-in`` modifiers on a token SearchParameter
-#. ``:above`` on a uri SearchParameter (``:below`` *is* supported)
+#. ``:above``, ``:below``, ``:in``, ``:not-in``, ``of-type`` modifiers on a token SearchParameter, ``above`` and ``below`` are also not supported for `Mime Types <http://hl7.org/fhir/R4B/search.html#mimetype>`_.
+#. ``:above``, ``:below`` modifiers on a reference SearchParameter (only valid on a `strict hierarchy <http://hl7.org/fhir/R4B/search.html#recursive>`_)
+#. ``:below`` modifier on uri SearchParameters that act on canonical elements, see `References and versions <http://hl7.org/fhir/R4B/search.html#versions>`_.
 #. ``*`` wildcard on ``_include`` and ``_revinclude``
+#. ``_include`` and ``_revinclude`` will match the current version of the referenced resources, also if the reference is versioned.
 #. ``_pretty``
+#. Implicit ranges are supported on dates, datetimes and quantities with a UCUM unit. But not on other quantities and number parameters.
+#. Search parameter arguments in exponential form (e.g. 1.8e2).
+#. ``Prefer: handling=strict/lenient``: Firely server is always lenient on search parameter errors.
+#. ``_total=estimate``, only ``none`` and ``accurate`` are supported.
 
 Furthermore:
 
@@ -213,9 +223,8 @@ Note that batches are not supported in the ``/administration`` endpoint.
 Transaction
 -----------
 
-Transactions are supported, with these limitations:
+Transactions are supported, but with the following limitation:
 
-#. Of the three storage implementations, only SQL Server and SQLite truly support transactions. On :ref:`MongoDB<configure_mongodb>` and :ref:`Memory<configure_memory>`, transaction support can be simulated at the FHIR level, but not be enforced on the database level.
 #. The ``/administration`` endpoint does not support transactions.
 
 You can limit the number of entries accepted in a single transaction. See :ref:`batch_options`.

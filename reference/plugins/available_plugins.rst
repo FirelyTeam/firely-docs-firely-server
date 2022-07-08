@@ -26,7 +26,7 @@ Infrastructural plugins
 :Configuration: ``Vonk.Core.Infra.MaintenanceConfiguration``
 :License token: http://fire.ly/vonk/plugins/infra
 :Order: 20
-:Description: Periodically cleans the indexed values for deleted or superceded resources from the database.
+:Description: Periodically cleans the indexed values for deleted or superseded resources from the database.
 
 .. _vonk_plugins_license:
 
@@ -404,7 +404,7 @@ FHIR RESTful interactions
 :Configuration: ``Vonk.Core.Operations.Transaction.FhirTransactionConfiguration``
 :License token: http://fire.ly/vonk/plugins/transaction
 :Order: 3120
-:Description: Process a transaction Bundle by sending each entry through the rest of the processing pipeline and gathering the results. Different from Batch, Transaction succeeds or fails as a whole. Transaction requires an implementation of ``Vonk.Core.Repository.IRepoTransactionService`` for transaction support by the underlying repository. The SQL Server and SQLite implementations provides a real one, whereas the MongoDb provides a simulated implementation, to allow you to experiment with transactions on MongoDb.
+:Description: Process a transaction Bundle by sending each entry through the rest of the processing pipeline and gathering the results. Different from Batch, Transaction succeeds or fails as a whole. Transaction requires an implementation of ``Vonk.Core.Repository.IRepoTransactionService`` for transaction support by the underlying repository.
 :Options: 
    * ``SizeLimits``, see :ref:`validation_options`
    * ``Repository``, see :ref:`configure_repository`
@@ -416,6 +416,14 @@ FHIR RESTful interactions
 :License token: http://fire.ly/vonk/plugins/lastn
 :Order: 5007
 :Description: Implements `FHIR $lastn <https://www.hl7.org/fhir/observation-operation-lastn.html>`_ on Observation resources.
+
+.. _vonk_plugins_erase:
+
+:Name: Erase
+:Configuration: ``Vonk.Plugin.EraseOperation.EraseOperationConfiguration``
+:License token: http://fire.ly/vonk/plugins/erase
+:Order: 5300
+:Description: Provides functionality to hard-delete FHIR resources in Firely Server database as opposed to the soft-delete used by default.
 
 .. _vonk_plugins_terminology:
 
@@ -527,13 +535,13 @@ Auditing
 :Configuration: ``Vonk.Plugin.Audit.AuditEventTransactionConfiguration``
 :License token: http://fire.ly/vonk/plugins/audit
 :Order: 3160
-:Description: Logs requests and responses for transactions to a file. See :ref:`feature_auditing` for more info.
+:Description: Logs requests and responses for transactions to the database. See :ref:`feature_auditing` for more info.
 
 :Name: AuditEvent logging
 :Configuration: ``Vonk.Plugin.Audit.AuditEventConfiguration``
 :License token: http://fire.ly/vonk/plugins/audit
 :Order: 3170
-:Description: Logs requests and responses to a file. See :ref:`feature_auditing` for more info.
+:Description: Logs requests and responses to the database. See :ref:`feature_auditing` for more info.
 
 .. _vonk_plugins_demoui:
 
@@ -637,7 +645,7 @@ Repository implementations
 :Configuration: ``Vonk.Repository.MongoDbConfiguration``
 :license token: http://fire.ly/vonk/plugins/repository/mongo-db
 :Order: 230
-:Description: Implements a repository in MongoDb that fully supports all of the capabilities of Firely Server, except Transactions.
+:Description: Implements a repository in MongoDb that fully supports all of the capabilities of Firely Server.
 
 :Name: MongoDb Administration Repository
 :Configuration: ``Vonk.Repository.MemoryAdministrationConfiguration``

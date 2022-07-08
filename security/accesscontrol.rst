@@ -41,6 +41,8 @@ Authorization in Firely Server by default is based on `SMART on FHIR`_ and more 
 * scope=[array of individual scopes]
 * patient=123: the user is allowed access to resources in the compartment of patient 123 -- see :ref:`feature_accesscontrol_compartment`.
 
+.. note:: A conditional create, update or delete (see the `FHIR http specification <https://hl7.org/fhir/http.html>`_), requires read permissions on the condition. Therefore, ``user/*.write`` will usually require additional ``read`` scopes.
+
 SMART on FHIR also defines scopes starting with 'patient/' instead of 'user/'. In Firely Server these are evaluated equally. But with a scope of 'patient/' you are required to also have a 'patient=...' launch context to know to which patient the user connects. It is also possible to apply a launch context to a user scope, for example the scope can look like "launch user/\*.read". In your authorization server you can specify the resources that are in the launch context parameter.
 
 The assignment of these claims to users, systems or groups is managed in the OAuth2 authorization server and not in Firely Server. Firely Server does, however, need a way to access these scopes - so if your OAuth server is issuing a self-encoded token, ensure that it has a ``scope`` field with all of the granted scopes inside it.
@@ -58,6 +60,9 @@ The Firely Server ``SmartContextMiddleware`` component extracts the claims defin
 
 SMART on FHIR defines launch contexts for Patient, Encounter and Location, extendible with others if needed. 
 If a request is done with a Patient launch context, and the user is allowed to see other resource types as well, these other resource types are restricted by the `Patient CompartmentDefinition`_.
+
+.. note::
+  To enable access to additional resources (outside the compartment), the client must request additional scopes.
 
 .. _accesscontrol_custom_authentication:
 
@@ -122,8 +127,8 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
       ],
       "Authority": "url-to-your-identity-provider",
     //"AdditionalEndpoints": {  //optional, only needed for certain identity provider setups
-    //   "Issuers": ["additonal-url-to-your-identity-provider"],
-    //   "BaseEndpoints" : ["additonal-url-to-your-identity-provider"]
+    //   "Issuers": ["additional-url-to-your-identity-provider"],
+    //   "BaseEndpoints" : ["additional-url-to-your-identity-provider"]
     //},      
       "Audience": "name-of-your-fhir-server" //Default this is empty
     //"ClaimsNamespace": "http://smarthealthit.org",
@@ -146,7 +151,7 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
 
     * FilterType: Both a launch context and a CompartmentDefinition are defined by a resourcetype. Use FilterType to define for which launch context and related CompartmentDefinition this Filter is applicable.
     * FilterArgument: Translates the value of the launch context to a search argument. You can use any supported search parameter defined on FilterType. It should contain the name of the launch context enclosed in hashes (e.g. #patient#), which is substituted by the value of the claim.
-* Authority: The base url of your identity provider, such that ``{{base_url}}/.well-known/openid-configuration`` returns a valid configuration response (`OpenID Connect Discovery documentation <https://openid.net/specs/openid-connect-discovery-1_0.html#rfc.section.4.2>`_). At minimum, the ``jwks_uri``, ``token_endpoint`` and ``authorization_endpoint`` keys are required in addition to the keys required by the speficiation. See :ref:`feature_accesscontrol_idprovider` for more background.
+* Authority: The base url of your identity provider, such that ``{{base_url}}/.well-known/openid-configuration`` returns a valid configuration response (`OpenID Connect Discovery documentation <https://openid.net/specs/openid-connect-discovery-1_0.html#rfc.section.4.2>`_). At minimum, the ``jwks_uri``, ``token_endpoint`` and ``authorization_endpoint`` keys are required in addition to the keys required by the specification. See :ref:`feature_accesscontrol_idprovider` for more background.
 * AdditionalEndpoints: Optional configuration setting. Add additional base authority endpoints that your identity provider also uses for operations that are listed in the .well-known document. The additional issuer setting will currently only extend the list of issuer urls that are valid within the issuer claim in the token passed to Firely Server. The token validation will be adjusted accordingly. Please note that it does not influence which issuer urls are allowed in the .well-known/openid-configuration document of the authorization server.
 * Audience: Defines the name of this Firely Server instance as it is known to the Authorization server. Default is 'firelyserver'.
 * ClaimsNamespace: Some authorization providers will prefix all their claims with a namespace, e.g. ``http://my.company.org/auth/user/*.read``. Configure the namespace here to make Firely Server interpret it correctly. It will then strip off that prefix and interpret it as just ``user/*.read``. By default no namespace is configured.
@@ -223,7 +228,7 @@ A valid access token for Firely Server at minimum will have:
 * the ``iss`` claim with the base url of the OAuth server
 * the ``aud`` the same value you've entered in ``SmartAuthorizationOptions.Audience``
 * the ``scope`` field with the scopes granted by this access token
-* optionally, the compartment claim, if you'd like to limit this token to a certain compartment. Such a claim may be requested by using a context scope or launching a part of an EHR launch. See `Requesting context with scopes <http://www.hl7.org/fhir/smart-app-launch/scopes-and-launch-context/#requesting-context-with-scopes>`_ for more details. For example, in case of Patient data access where the ``launch/patient`` scope is used, include the ``patient`` claim with the patient's id or identifier (:ref:`feature_accesscontrol_compartment`) and make sure to request the ``patient/<permissions>`` scope permissions. Compartment claims combined with ``user/<permissions>`` claims are not taken into acccount.
+* optionally, the compartment claim, if you'd like to limit this token to a certain compartment. Such a claim may be requested by using a context scope or launching a part of an EHR launch. See `Requesting context with scopes <http://www.hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html>`_ for more details. For example, in case of Patient data access where the ``launch/patient`` scope is used, include the ``patient`` claim with the patient's id or identifier (:ref:`feature_accesscontrol_compartment`) and make sure to request the ``patient/<permissions>`` scope permissions. Compartment claims combined with ``user/<permissions>`` claims are not taken into account.
 
 .. warning:: Firely Server will not enforce any access control for resources outside of the specified compartment. Some compartment definitions do not include crucial resource types like 'Patient' or their corresponding resource type, i.e. all resources of this type regardless of any claims in the access token will be returned if requested. Please use this feature with caution! Additional custom access control is highly recommended.
 
@@ -232,7 +237,7 @@ A valid access token for Firely Server at minimum will have:
 Azure Active Directory
 ----------------------
 
-Azure Active Directory (v2.0) does not allow to define a scope with ``/`` (forward slash) in it, which is not compatible with the structure of a `SMART on FHIR scope <http://hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html>`_. 
+Azure Active Directory (v2.0) does not allow to define a scope with ``/`` (forward slash) in it, which is not compatible with the structure of a `SMART on FHIR scope <http://www.hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html>`_. 
 Therefore when you use AAD to provide SMART on FHIR scopes to Firely Server, you need to take the following steps
 
 1. In a SMART scope, use another character (for instance ``-``) instead of ``/``. For example:
@@ -249,7 +254,7 @@ Therefore when you use AAD to provide SMART on FHIR scopes to Firely Server, you
 
   * ``patient/Observation.r?_id=Id\With\BackwardSlash`` becomes ``patient-Observation.r?_id=Id\\With\\BackwardSlash`` 
 
-2. Configure Firely Server which character is used in Step 1, then Firely Server will generate a proper `SMART on FHIR scope <http://hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html>`_ and handle the request further. This can be configured via setting ``AccessTokenScopeReplace``. 
+2. Configure Firely Server which character is used in Step 1, then Firely Server will generate a proper `SMART on FHIR scope <http://www.hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html>`_ and handle the request further. This can be configured via setting ``AccessTokenScopeReplace``. 
 
 For the first step above, instead of doing it manually, you can deploy `SMART on FHIR AAD Proxy <https://github.com/azure-smart-health/smart-on-fhir-aad-proxy>`_ to Azure, which helps you to replace ``/`` to ``-`` in a SMART scope when you request your access token.
 The other option would be to follow `Quickstart: Deploy Azure API for FHIR using Azure portal <https://docs.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/fhir-paas-portal-quickstart>`_, check "SMART on FHIR proxy" box and use the proxy by following `Tutorial: Azure Active Directory SMART on FHIR proxy <https://docs.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/use-smart-on-fhir-proxy>`_.
@@ -280,7 +285,7 @@ In this paragraph we will explain how Access Control Decisions are made for the 
 
       :Request: ``GET [base]/Observation?code=x89``
       :Type-Access: User must have read access to Observation, otherwise a 401 is returned. 
-      :Compartment: If a Patient Compartment is active, the links from Observation to Patient will be added to the search. In pseudo code: ``GET [base]/Obervation?code=x89& (subject:Patient.identifier=123 OR performer:Patient.identifier=123)``
+      :Compartment: If a Patient Compartment is active, the links from Observation to Patient will be added to the search. In pseudo code: ``GET [base]/Observation?code=x89& (subject:Patient.identifier=123 OR performer:Patient.identifier=123)``
 
    #. Search on type not related to compartment
 
@@ -359,7 +364,7 @@ You can test it using a dummy authorization server and Postman as a REST client.
 .. _OAuth2 provider: https://en.wikipedia.org/wiki/List_of_OAuth_providers
 .. _SMART on FHIR: http://docs.smarthealthit.org/
 .. _SMART App Authorization Guide: http://docs.smarthealthit.org/authorization/
-.. _Scopes and Launch Context: http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context/index.html
+.. _Scopes and Launch Context: http://www.hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html
 .. _Patient CompartmentDefinition: http://www.hl7.org/implement/standards/fhir/compartmentdefinition-patient.html
 .. _ASP.NET Core Identity: https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity
 

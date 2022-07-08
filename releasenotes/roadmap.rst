@@ -7,63 +7,30 @@ This page lists the features and changes we have planned for the foreseeable fut
 
 Disclaimer: No rights can be derived from this roadmap.
 
-2021
+2022
 ----
-
-Q1
-^^
-
-* Full ONC/CMS compliance
-
-* Firely Server: ONC Edition
-
-   * Downloadable version of Firely Server that is fully compliant with the ONC Cures Act Final Rule
-
-* CAR factory/files
-
-   * Greatly reduces start-up time of Firely Server and other services
-
-
-* Firely Validator (CLI)
-
-   * Separate validation service as a CLI tool
-
 
 Q2
 ^^
 
-* Bulk data export for MongoDB
-
-* Bulk data import tool for MS SQL Server
-
-   * CLI tool for bulk ingestion of data into Firely Server
-
-* Firely Validator for cloud environments
-
-   * Separate validation service optimized for usage in cloud environments
-
-* Firely Server: CMS Edition
-
-   * Downloadable version of Firely Server that is fully compliant with the CMS Final Rule
-
-* Full compliance with MedMij standard
+* Addition of various performance improvements and features to our MongoDB implementation which are currently only available for SQL Server
+  
+  * Support for transactions 
 
 Q3
 ^^
 
-* Firely Server: MedMij Edition
+* Check compliance with CMS ImplementationGuides
 
-   * Downloadable version of Firely Server that is fully compliant with the MedMij standards
+* Bulk data export as a separate service - deploy and scale it independently of Firely Server
 
-* Bulk data export as a separate service - deploy and scale it independently of Firely Server itself.
+* New Firely Validator as a separate service - deploy and scale it independently of Firely Server
 
-* Bulk data import tool for MongoDB
+* Provide production-ready IdentityServer instance bundled with Firely Server
 
-   * CLI tool for bulk ingestion of data into Firely Server
 
 Q4
 ^^
 
-* FHIR transaction support for MongoDB
-
 * Enhanced support for subscriptions
+* R4B Support

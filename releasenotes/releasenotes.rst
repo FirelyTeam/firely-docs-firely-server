@@ -59,7 +59,7 @@ Fix
 #. Money.currency was not indexed correctly in FHIR R4. Please :ref:`contact us<vonk-contact>` if you are using the SearchParameters "price-override" on ChargeItem or "totalgross" / "totalnet" on Invoice. A migration for these fields will be provided upon request. Otherwise, please re-index these SearchParameters.
 #. Fixed an issue where bundles with conformance claims in meta.profile would have been validated against the profile claims even if the validation level was only set to "Core".
 #. Validating a resource with an element containing only an extension and no value against validation level "Core" will no longer result in an error.
-#. Providing an invalid token to an unsecured operation does not lead to an HTTP 401 error status code.
+#. Providing an invalid token to an unsecured operation does not lead to an HTTP 401 error status code. The invalid token is now being ignored.
 
 Feature
 ^^^^^^^

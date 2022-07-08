@@ -54,7 +54,7 @@ Fix
 ^^^
 #. Fixed an issue where a "/" was missing in the fullUrl of a "search" bundle in case an information model mapping with mode "Path" was used.
 #. Fixed an issue where a new resource id was not created when POST was used in a batch or transaction bundle and a resource id was already provided.
-#. An invalid system URI was provided by default in AuditEvent.source.observer.identifier.
+#. An invalid system URI was provided by default in AuditEvent.source.observer.identifier. Now "http://vonk.fire.ly/fhir/sid/devices|firely-server" is being used to identify Firely Server itself.
 #. Adjusted the implementation of conditional create to match the description in https://jira.hl7.org/browse/FHIR-31965.
 #. Money.currency was not indexed correctly in FHIR R4. Please :ref:`contact us<vonk-contact>` if you are using the SearchParameters "price-override" on ChargeItem or "totalgross" / "totalnet" on Invoice. A migration for these fields will be provided upon request. Otherwise, please re-index these SearchParameters.
 #. Fixed an issue where bundles with conformance claims in meta.profile would have been validated against the profile claims even if the validation level was only set to "Core".

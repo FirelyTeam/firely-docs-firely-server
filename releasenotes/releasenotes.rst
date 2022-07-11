@@ -26,6 +26,15 @@ The default FHIR version of the `public Firely Server endpoint <https://server.f
 
 .. _vonk_releasenotes_490:
 
+Release 4.10.0, <date>, 2022
+------------------------------
+
+Feature
+^^^^^^^
+
+#. We introduced endpoints for healthchecks, both liveness and readiness, see :ref:`feature_healthcheck`.
+
+
 Release 4.9.0, July 6th, 2022
 -----------------------------
 
@@ -85,7 +94,6 @@ Performance
 
 #. Improved validation performance of large resources. Firely Server will now execute the validation of bundles in a linear amount of time compared to the number of resources in the bundle.
 #. Improved performance for chained searches in case SMART on FHIR is enabled.
-
 
 .. _vonk_releasenotes_482:
 

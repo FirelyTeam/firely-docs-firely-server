@@ -39,7 +39,7 @@ As you may have noticed, the methods resemble those in an ASP.NET Core Startup c
    * IConfiguration  
    * IHostingEnvironment
 
-   These services will be injected automatically by Firely Server.
+   These services will be injected automatically by Firely Server. See below for additional guidance on how to register services in the DI container.
 :Configure: The main requirements for this method are:
 
    * It is public static;
@@ -51,3 +51,40 @@ As you may have noticed, the methods resemble those in an ASP.NET Core Startup c
    These services will be injected automatically by Firely Server.
 
 We provided an :ref:`example<vonk_plugins_landingpage>` of this: creating your own landing page.
+
+.. _vonk_plugins_di:
+
+Register a service in your plugin
+---------------------------------
+
+Often you will want to use .NET Core provided services, or services from other common libraries in your Facade or plugin.
+Firely Server itself may or may not register the same service or interface already. There is a safe way to register a service if it is not registered already.
+The example below shows that for an ``IMemoryCache``:
+
+  ::
+
+      public static IServiceCollection ConfigureServices(this IServiceCollection services)
+      {
+        services.TryAddSingleton<IMemoryCache, MemoryCache>();
+      }
+
+      //using it in a constructor
+      public class MyPluginService{
+        public MyPluginService(IMemoryCache cache){...}
+      }
+
+However, should Firely Server itself have registered a service for the same interface already, you will get that one injected. Even safer is to make sure you get your own injected, e.g. by registering a derived class:
+
+  ::
+
+      public class MyMemoryCache: MemoryCache{}
+
+      public static IServiceCollection ConfigureServices(this IServiceCollection services)
+      {
+        services.TryAddSingleton<MyMemoryCache>();
+      }
+
+      //using it in a constructor
+      public class MyPluginService{
+        public MyPluginService(MyMemoryCache cache){...}
+      }

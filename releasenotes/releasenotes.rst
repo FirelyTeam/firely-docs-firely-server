@@ -57,32 +57,34 @@ Database
    * We tested it on a MongoDb collection with a size of 500GB. The upgrade script took around 24 hours to complete on a fairly powerful machine.
    * As always, make sure you have a backup of your database that has been tried and tested before you begin the upgrade.
    * Please make sure that Firely Server is shutdown before you execute the script.
-   * If you encounter problems running the script, or need any assistance, please :ref:`vonk-contact`.
+   * If you encounter problems running the script, or need any assistance, please :ref:`contact us<vonk-contact>`.
 
 Fix
 ^^^
 #. Fixed an issue where a "/" was missing in the fullUrl of a "search" bundle in case an information model mapping with mode "Path" was used.
 #. Fixed an issue where a new resource id was not created when POST was used in a batch or transaction bundle and a resource id was already provided.
-#. An invalid system URI was provided by default in AuditEvent.source.observer.identifier. Now "http://vonk.fire.ly/fhir/sid/devices|firely-server" is being used to identify Firely Server itself.
+#. An invalid system URI was provided by default in AuditEvent.source.observer.identifier. Now ``http://vonk.fire.ly/fhir/sid/devices|firely-server`` is being used to identify Firely Server itself.
 #. Adjusted the implementation of conditional create to match the description in https://jira.hl7.org/browse/FHIR-31965.
-#. Money.currency was not indexed correctly in FHIR R4. Please :ref:`contact us<vonk-contact>` if you are using the SearchParameters "price-override" on ChargeItem or "totalgross" / "totalnet" on Invoice. A migration for these fields will be provided upon request. Otherwise, please re-index these SearchParameters. See :ref:feature_customsp_reindex` for more details.
+#. Money.currency was not indexed correctly in FHIR R4. Please :ref:`contact us<vonk-contact>` if you are using the SearchParameters "price-override" on ChargeItem or "totalgross" / "totalnet" on Invoice. A migration for these fields will be provided upon request. Otherwise, please re-index these SearchParameters. See :ref:`feature_customsp_reindex` for more details.
 #. Fixed an issue where bundles with conformance claims in meta.profile would have been validated against the profile claims even if the validation level was only set to "Core".
 #. Validating a resource with an element containing only an extension and no value against validation level "Core" will no longer result in an error.
-#. Providing an invalid token to an unsecured operation does not lead to an HTTP 401 error status code. The invalid token is now being ignored.
+#. SoF: Providing an invalid token to an unsecured operation does not lead to an HTTP 401 error status code. The invalid token is now being ignored.
+#. SoF: Fixed unauthorized issue when performing PATCH request with ``patient`` scope.
 
 Feature
 ^^^^^^^
 
-#. Transaction rollbacks are now fully supported when running Firely Server on MogoDB. Please note that the SimulateTransaction setting is no longer available. See :ref:`mongodb_transactions` for more details.
+#. Inferno, the ONC test tool: Firely Server is updated to pass all the tests in the latest ONC test kit (version 2.2.1)! Do you want a demo of this? :ref:`vonk-contact`.
+#. Transactions, including rollbacks, are now fully supported when running Firely Server on MongoDB. Please note that the SimulateTransaction setting is no longer available. See :ref:`mongodb_transactions` for more details.
 #. $lastN is now available if Firely Server is running on MongoDB. See :ref:`lastn` for more details.
-#. It is now possible to define exclusion criteria in the appsettings to configure which requests against Firely Server should not be audited. In certain cases, this can reduce the number of captured AuditEvent resources. See :ref:`<feature_auditing>` for more details.
+#. It is now possible to define exclusion criteria in the appsettings to configure which requests against Firely Server should not be audited. In certain cases, this can reduce the number of captured AuditEvent resources. See :ref:`feature_auditing` for more details.
 #. By default, the AuditEvent logging will now include the query parameters sent to Firely Server. These parameters will also be stored in case a request fails (HTTP 4xx or 5xx).
-#. The log sinks for AuditEvent logging are now configurable in the logsettings. See :ref:`<configure_audit_log_file>` for more details.
-#. Firely Server will throw a startup exception if no default ITerminologyService is registered.
+#. The log sinks for AuditEvent logging are now configurable in the logsettings. See :ref:`configure_audit_log_file` for more details.
+#. Firely Server will throw a startup exception if no default ``ITerminologyService`` is registered.
 #. CapabilityStatement.rest.resource.conditionalRead is now set to 'full-support' by default.
 #. _total is now included in every self-link of a "search" bundle by default.
-#. Added support for permanently deleting resources from the database. See :ref:`erase` for more details. You will need an updated license file. Please :ref:`contact us<vonk-contact>` to us if you want to use the feature.
-#. Improved the error message in case the JSON serialization format of a FHIR resource does not contains a valid "resourceType" Element.
+#. Added support for permanently deleting resources from the database. See :ref:`erase` for more details. You will need an updated license file. Please :ref:`contact us<vonk-contact>` if you want to use the feature.
+#. Improved the error message in case the JSON serialization format of a FHIR resource does not contain a valid "resourceType" Element.
 #. Improved validation in case a non-conformant URI is given in Quantity.system. It MUST be a valid absolute URI. In all other cases, a warning will be logged and the element will not be indexed.
 #. Improved error message logging in case SQL script fails when the database upgrade is performed automatically by Firely Server.
 #. Improved log message in case Firely Server SQL schema needs to be updated by adding the current schema version and the target schema version.
@@ -92,7 +94,7 @@ Feature
 Performance
 ^^^^^^^^^^^
 
-#. Improved validation performance of large resources. Firely Server will now execute the validation of bundles in a linear amount of time compared to the number of resources in the bundle.
+#. Improved validation performance of large resources. Firely Server will now execute the validation of bundles in a linear amount of time depending on the number of resources in the bundle.
 #. Improved performance for chained searches in case SMART on FHIR is enabled.
 
 .. _vonk_releasenotes_482:
@@ -176,7 +178,7 @@ Fix
 #. Improved error message if $lastN operation is enabled but the corresponding repository is not included in the pipeline options
 #. Changed CapabilityStatement.software.name to Firely Server
 #. Fixed SQL Server maintenance job timeouts on large SQL Server databases
-#. Improved Bundle reference resolving in some corner cases, which are clarified in the `specification <https://jira.hl7.org/browse/FHIR-29271>`_
+#. Improved Bundle reference resolving in some corner cases, which are clarified in the `this HL7 Jira issue <https://jira.hl7.org/browse/FHIR-29271>`_
 
 Security
 ^^^^^^^^

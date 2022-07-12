@@ -48,7 +48,7 @@ Database
    * We tested it on a MongoDb collection with a size of 500GB. The upgrade script took around 24 hours to complete on a fairly powerful machine.
    * As always, make sure you have a backup of your database that has been tried and tested before you begin the upgrade.
    * Please make sure that Firely Server is shutdown before you execute the script.
-   * If you encounter problems running the script, or need any assistance, please :ref:`vonk-contact`.
+   * If you encounter problems running the script, or need any assistance, please :ref:`contact us<vonk-contact>`.
 
 Fix
 ^^^

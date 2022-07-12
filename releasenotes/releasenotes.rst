@@ -65,7 +65,7 @@ Fix
 Feature
 ^^^^^^^
 
-#. Inferno, The ONC test tool: Firely Server is updated to pass all the tests in the latest ONC test kit (version 2.2.1)! Do you want a demo of this? :ref:`vonk-contact`.
+#. Inferno, the ONC test tool: Firely Server is updated to pass all the tests in the latest ONC test kit (version 2.2.1)! Do you want a demo of this? :ref:`vonk-contact`.
 #. Transactions, including rollbacks, are now fully supported when running Firely Server on MongoDB. Please note that the SimulateTransaction setting is no longer available. See :ref:`mongodb_transactions` for more details.
 #. $lastN is now available if Firely Server is running on MongoDB. See :ref:`lastn` for more details.
 #. It is now possible to define exclusion criteria in the appsettings to configure which requests against Firely Server should not be audited. In certain cases, this can reduce the number of captured AuditEvent resources. See :ref:`feature_auditing` for more details.
@@ -74,7 +74,7 @@ Feature
 #. Firely Server will throw a startup exception if no default ``ITerminologyService`` is registered.
 #. CapabilityStatement.rest.resource.conditionalRead is now set to 'full-support' by default.
 #. _total is now included in every self-link of a "search" bundle by default.
-#. Added support for permanently deleting resources from the database. See :ref:`erase` for more details. You will need an updated license file. Please :ref:`contact us<vonk-contact>` to us if you want to use the feature.
+#. Added support for permanently deleting resources from the database. See :ref:`erase` for more details. You will need an updated license file. Please :ref:`contact us<vonk-contact>` if you want to use the feature.
 #. Improved the error message in case the JSON serialization format of a FHIR resource does not contain a valid "resourceType" Element.
 #. Improved validation in case a non-conformant URI is given in Quantity.system. It MUST be a valid absolute URI. In all other cases, a warning will be logged and the element will not be indexed.
 #. Improved error message logging in case SQL script fails when the database upgrade is performed automatically by Firely Server.
@@ -85,7 +85,7 @@ Feature
 Performance
 ^^^^^^^^^^^
 
-#. Improved validation performance of large resources. Firely Server will now execute the validation of bundles in a linear amount of time compared to the number of resources in the bundle.
+#. Improved validation performance of large resources. Firely Server will now execute the validation of bundles in a linear amount of time depending on the number of resources in the bundle.
 #. Improved performance for chained searches in case SMART on FHIR is enabled.
 
 

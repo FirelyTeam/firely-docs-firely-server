@@ -132,3 +132,33 @@ Tips and hints for using MongoDb for Firely Server
 #. With regards to Firely Server version and MongoDB version:
     #. If you are on a Firely Server (Vonk) version < v3.6, you can keep using MongoDB v4.0 or higher.
     #. If you are on Firely Server (Vonk) v3.6 or higher and are unable to migrate to MongoDB 4.4 (relatively soon), please contact us if you need assistance.
+
+.. _mongodb_diskspace:
+
+MongoDB disk space requirements
+-------------------------------
+
+A MongoDB database has no single size, but several characteristics that tell us something about the size of the data:
+
+:nr of documents: This is not indicative of any storage size, because documents can be sized very differently.
+:document size: The size in bytes of all the documents in a database, uncompressed.
+:index size: The size in bytes of all the indexes in a database, uncompressed.
+:storage size: The actual space used for storage of the documents and indexes. Since the storage engine of MongoDB (WiredTiger) compresses data by default, this is often substantially less than the document and index sizes combined.
+:disk space used: The size of the database file on disk. Because data can become fragmented, this is larger than the storage size.
+
+The sizes that are relevant for estimating the disk space requirements are the storage size and the disk space used. At Firely we host a test instance on a MongoDB Atlas M40 cluster, with 1 primary and 2 replicas. 
+Based on that we can calculate these sizes:
+
+#. storage size: ~ 1 GB per 1.000.000 (1 mln) resources
+#. disk size: ~ 2 times the storage size, so 2 GB per 1 mln resources, *per replica*, allowing for a fragmentation ratio up to 50%
+#. buffer: 20% of disk size (see below)
+
+Storage size may differ based on the size of the resources you host. These estimations are based on Synthea patient records. But e.g. ExplanationOfBenefit resources are typically much larger than the average Observation resource.
+
+Fragmentation in MongoDB occurs when data is deleted. New data is appended at the end of the data file. Firely Server will delete data upon update, delete and $erase operations. 
+This means that you should account for more or less fragmentation based on how many of these operations you expect will be performed on your Firely Server instance.
+If fragmentation gets too high, you can `compact <https://www.mongodb.com/docs/manual/reference/command/compact/>`_ the collection with resources (by default named ``vonkentries``).
+
+On top of the requirements for storing the resources and indexes, we allow MongoDB to use the disk as an overflow buffer for larger-than-memory operations (like sorting a very large resultset). Please reserve about 20% extra disk space for that.
+
+We recommend to monitor the health of your MongoDB cluster actively to avoid disk space issues.

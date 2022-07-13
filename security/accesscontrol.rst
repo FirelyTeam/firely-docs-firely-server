@@ -162,7 +162,7 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
 * AccessTokenScopeReplace: With this optional setting you tell Firely Server which character replaces the ``/`` (forward slash) character in a SMART scope. This setting is needed in cases like working with Azure Active Directory (see details in section :ref:`feature_accesscontrol_aad`). 
 
 .. note:: 
-  After properly configuring Firely Server to work with an OAuth2 authorization server and the SMART is enabled for Firely Server, you are able to discover the SMART configuration metadata by retrieving ``.well-known/smart-configuration``. 
+  After properly configuring Firely Server to work with an OAuth2 authorization server and SMART is enabled for Firely Server, you are able to discover the SMART configuration metadata by retrieving ``<base-url>/.well-known/smart-configuration``. 
   
   Please check sectoin `Retrieve .well-known/smart-configuration <https://build.fhir.org/ig/HL7/smart-app-launch/app-launch.html#retrieve-well-knownsmart-configuration>`_  in SMART specification for more details on how to request the metadata and how to interpret the response.
 

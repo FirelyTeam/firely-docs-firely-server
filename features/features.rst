@@ -27,5 +27,6 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    multiversion
    hipaa
    erase
+   healthcheck
 
 .. add files here

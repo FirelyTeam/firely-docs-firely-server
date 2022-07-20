@@ -24,7 +24,8 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
-.. _vonk_releasenotes_490:
+
+.. _vonk_releasenotes_4_10_0:
 
 Release 4.10.0, <date>, 2022
 ------------------------------
@@ -34,6 +35,21 @@ Feature
 
 #. We introduced endpoints for healthchecks, both liveness and readiness, see :ref:`feature_healthcheck`.
 
+Fix
+^^^
+
+#. Indexing has been fixed for search parameters of type `reference` that index resource elements of type `uri`. The following SearchParameters were affected by the bug:
+
+  - FHIR4: ConceptMap-source-uri, ConceptMap-target-uri, PlanDefinition-definition
+  - STU3: ImplementationGuide-resource, Provenance-agent
+  
+  Consider :ref:`re-indexing<feature_customsp_reindex_specific>` your database for these search parameters if you use them.
+
+  .. note::
+
+    Please note that due to a mistake in the official STU3 specification, search parameters `ConceptMap-source-uri`, `ConceptMap-target-uri` still do not work as expected. The correct search parameter expressions would be `ConceptMap.source.as(uri)` and `ConceptMap.target.as(uri)` while the specification contains `ConceptMap.source.as(Uri)` and `ConceptMap.target.as(Uri)` respectively. The issue has been addressed in R4.
+
+.. _vonk_releasenotes_490:
 
 Release 4.9.0, July 6th, 2022
 -----------------------------

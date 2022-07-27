@@ -35,6 +35,24 @@ Feature
 
 #. We introduced endpoints for healthchecks, both liveness and readiness, see :ref:`feature_healthcheck`.
 
+Database
+^^^^^^^^
+
+#. We introduced new optimizations for the MongoDB data schema and queries. Please read below notes for the upgrade process.
+
+.. attention::
+    The upgrade procedure for Firely Server running on MongoDb requires a mandatory migration. If your collection contains a lot of resources, this may take a very long time. Therefore, the MongoDb upgrade script has to be executed manually. The script can be found in `mongodb\FS_SchemaUpgrade_Data_v22_v23.js`
+    
+    Here are some guidelines:
+
+   * We tested it on a MongoDb collection with a size of 500GB. The upgrade script took around 24 hours to complete on a fairly powerful machine.
+   * As always, make sure you have a backup of your database that has been tried and tested before you begin the upgrade.
+   * Please make sure that Firely Server is shutdown before you execute the script.
+   * If you encounter problems running the script, or need any assistance, please :ref:`contact us<vonk-contact>`.
+
+    The update script will update the data that is stored in the database. Although Firely Server can be started as soon as the migration is finished, it will have decreased performance during the first day of operation. This is due to a change in indexes which requires them to be rebuilt in the background.
+
+
 Fix
 ^^^
 

@@ -35,11 +35,11 @@ Fix
 #. Fixed an issue with _include and _revinclude in case the (rev-)include link was pointing to an element of type "canonical" and not of type "reference".
 #. "_total" was added as default parameter in the v4.9.0 release. Therefore it must be handled in a facade implementation. The Vonk.Facade.Relational package now handles the case of "_total=accurate". All other argument values must still be handled in the ISearchRepository implementation.
 #. Reading the specification.zip file from a read-only disk caused an exception.
-#. Excluding the UrlMappingService from the pipeline configuration and executing an CRUD operations caused an exception.
+#. Excluding the UrlMappingService from the pipeline configuration and executing a CRUD operation caused an exception.
 
 Feature
 ^^^^^^^
-#. The exposed `SMART capabilities <http://hl7.org/fhir/smart-app-launch/conformance.html#capabilities>`_ in the .well-known/smart-configuration can now be configured in the appsettings. See SmartAuthorizationOptions.SmartCapabilities.
+#. The exposed `SMART capabilities <http://hl7.org/fhir/smart-app-launch/conformance.html#capabilities>`_ in the .well-known/smart-configuration can now be configured in the appsettings. See section ``SmartAuthorizationOptions.SmartCapabilities``.
 
 .. _vonk_releasenotes_490:
 

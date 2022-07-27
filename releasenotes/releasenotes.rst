@@ -38,7 +38,7 @@ Feature
 Database
 ^^^^^^^^
 
-#. We introduced new optimizations for the MongoDB data schema and queries. Please read below notes for the upgrade process.
+#. We introduced new optimizations for the MongoDB data schema and queries. These optimizations will improve search performance for elements of type ``dateTime`` and ``decimal``. Please read below notes for the upgrade process.
 
 .. attention::
     The upgrade procedure for Firely Server running on MongoDb requires a mandatory migration. If your collection contains a lot of resources, this may take a very long time. Therefore, the MongoDb upgrade script has to be executed manually. The script can be found in `mongodb\FS_SchemaUpgrade_Data_v22_v23.js`

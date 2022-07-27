@@ -24,6 +24,23 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
+.. _vonk_releasenotes_491:
+
+Release 4.9.1, August 1th, 2022
+-------------------------------
+
+
+Fix
+^^^
+#. Fixed an issue with _include and _revinclude in case the (rev-)include link was pointing to an element of type "canonical" and not of type "reference".
+#. "_total" was added as default parameter in the v4.9.0 release. Therefore it must be handled in a facade implementation. The Vonk.Facade.Relational package now handles the case of "_total=accurate". All other argument values must still be handled in the ISearchRepository implementation.
+#. Reading the specification.zip file from a read-only disk caused an exception.
+#. Excluding the UrlMappingService from the pipeline configuration and executing an CRUD operations caused an exception.
+
+Feature
+^^^^^^^
+#. The exposed `SMART capabilities <http://hl7.org/fhir/smart-app-launch/conformance.html#capabilities>`_ in the .well-known/smart-configuration can now be configured in the appsettings. See SmartAuthorizationOptions.SmartCapabilities.
+
 .. _vonk_releasenotes_490:
 
 Release 4.9.0, July 6th, 2022

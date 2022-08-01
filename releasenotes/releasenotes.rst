@@ -39,7 +39,7 @@ Fix
 
 Feature
 ^^^^^^^
-#. The exposed `SMART capabilities <http://hl7.org/fhir/smart-app-launch/conformance.html#capabilities>`_ in the .well-known/smart-configuration can now be configured in the appsettings. See section ``SmartAuthorizationOptions.SmartCapabilities``.
+#. The exposed `SMART capabilities <http://hl7.org/fhir/smart-app-launch/conformance.html#capabilities>`_ in the .well-known/smart-configuration can now be configured in the appsettings. See ``SmartAuthorizationOptions.SmartCapabilities`` in section :ref:`SMART Configuration<feature_accesscontrol_config>`.
 
 .. _vonk_releasenotes_490:
 

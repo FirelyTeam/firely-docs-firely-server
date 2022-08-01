@@ -107,23 +107,23 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
         {
           "FilterType": "Patient", //Filter on a Patient compartment if a 'patient' launch scope is in the auth token
           "FilterArgument": "identifier=#patient#" //... for the Patient that has an identifier matching the value of that 'patient' launch scope
-        },
-        {
-          "FilterType": "Encounter", //Filter on an Encounter compartment if an 'encounter' launch scope is in the auth token
-          "FilterArgument": "identifier=#encounter#" //... for the Encounter that has an identifier matching the value of that 'encounter' launch scope
-        },
-        {
-          "FilterType": "RelatedPerson", //Filter on a RelatedPerson compartment if a 'relatedperson' launch scope is in the auth token
-          "FilterArgument": "identifier=#relatedperson#" //... for the RelatedPerson that has an identifier matching the value of that 'relatedperson' launch scope
-        },
-        {
-          "FilterType": "Practitioner", //Filter on a Practitioner compartment if a 'practitioner' launch scope is in the auth token
-          "FilterArgument": "identifier=#practitioner#" //... for the Practitioner that has an identifier matching the value of that 'practitioner' launch scope
-        },
-        {
-          "FilterType": "Device", //Filter on a Device compartment if a 'device' launch scope is in the auth token
-          "FilterArgument": "identifier=#device#" //... for the Device that has an identifier matching the value of that 'device' launch scope
         }
+        //{
+        //  "FilterType": "Encounter", //Filter on an Encounter compartment if an 'encounter' launch scope is in the auth token
+        //  "FilterArgument": "identifier=#encounter#" //... for the Encounter that has an identifier matching the value of that 'encounter' launch scope
+        //},
+        //{
+        //  "FilterType": "RelatedPerson", //Filter on a RelatedPerson compartment if a 'relatedperson' launch scope is in the auth token
+        //  "FilterArgument": "identifier=#relatedperson#" //... for the RelatedPerson that has an identifier matching the value of that 'relatedperson' launch scope
+        //},
+        //{
+        //  "FilterType": "Practitioner", //Filter on a Practitioner compartment if a 'practitioner' launch scope is in the auth token
+        //  "FilterArgument": "identifier=#practitioner#" //... for the Practitioner that has an identifier matching the value of that 'practitioner' launch scope
+        //},
+        //{
+        //  "FilterType": "Device", //Filter on a Device compartment if a 'device' launch scope is in the auth token
+        //  "FilterArgument": "identifier=#device#" //... for the Device that has an identifier matching the value of that 'device' launch scope
+        //}
       ],
       "Authority": "url-to-your-identity-provider",
     //"AdditionalEndpoints": {  //optional, only needed for certain identity provider setups
@@ -143,7 +143,28 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
         "ClientSecret": "secret"
       },
       "ShowAuthorizationPII": false,      
-    //"AccessTokenScopeReplace": "-"
+    //"AccessTokenScopeReplace": "-",
+      "SmartCapabilities": [
+        "LaunchStandalone",
+        "LaunchEhr",
+        //"AuthorizePost",
+        "ClientPublic",
+        "ClientConfidentialSymmetric",
+        //"ClientConfidentialAsymmetric",
+        "SsoOpenidConnect",
+        "ContextStandalonePatient",
+        "ContextStandaloneEncounter",
+        "ContextEhrPatient",
+        "ContextEhrEncounter",
+        "PermissionPatient",
+        "PermissionUser",
+        "PermissionOffline",
+        "PermissionOnline",
+        "PermissionV1",
+        //"PermissionV2",
+        "ContextStyle",
+        "ContextBanner"
+      ]
     }
 
 * Enabled: With this setting you can disable ('false') the authentication and authorization altogether. When it is enabled ('true'), Firely Server will also evaluate the other settings. The default value is 'false'. This implies that authorization is disabled as if no SmartAuthorizationOptions section is present in the settings.
@@ -160,9 +181,10 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
 * TokenIntrospection: This setting is configurable when you use `reference tokens <https://docs.duendesoftware.com/identityserver/v5/apis/aspnetcore/reference/>`_.
 * ShowAuthorizationPII: This is a flag to indicate whether or not personally identifiable information is shown in logs.
 * AccessTokenScopeReplace: With this optional setting you tell Firely Server which character replaces the ``/`` (forward slash) character in a SMART scope. This setting is needed in cases like working with Azure Active Directory (see details in section :ref:`feature_accesscontrol_aad`). 
+* SmartCapabilities: This setting can be used to configure `SMART capabilities <http://hl7.org/fhir/smart-app-launch/conformance.html#smart-on-fhir-oauth-authorization-endpoints-and-capabilities>`_. All capabilities listed here are supported by Firely Server, you can enable/disable specific capabilities based on your authorization server implementation. 
 
 .. note:: 
-  After properly configuring Firely Server to work with an OAuth2 authorization server and SMART is enabled for Firely Server, you are able to discover the SMART configuration metadata by retrieving ``<base-url>/.well-known/smart-configuration``. 
+  After properly configuring Firely Server to work with an OAuth2 authorization server, enabling SMART and configuring the SmartCapabilities for Firely Server, you are able to discover the SMART configuration metadata by retrieving ``<base-url>/.well-known/smart-configuration``. 
   
   Please check section `Retrieve .well-known/smart-configuration <https://build.fhir.org/ig/HL7/smart-app-launch/app-launch.html#retrieve-well-knownsmart-configuration>`_  in the SMART specification for more details on how to request the metadata and how to interpret the response.
 

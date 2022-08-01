@@ -70,7 +70,6 @@ If you want to specify input parameters in the file, you can use the snippet bel
     "fhirVersion": "R4",
     "license": "C:\\data\\deploy\\vonk\\license\\performance-test-license.json",
     "updateExistingResources": true,
-    "useUcum": false,
     "databaseType": "SQL",
     "haltOnError": false,
 
@@ -123,8 +122,6 @@ Supported arguments
 |                                                          |                                  |          | When false, existing records in the database are skipped.                                                                                           |
 |                                                          |                                  |          | When onlyIfNewer, existing records with meta:LastUpdated greater in the database are skipped. ``--dbType <MongoDb>`` not supported for onlyIfNewer. |
 |                                                          |                                  |          | Default = true.                                                                                                                                     |
-+----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--useUcum <true|false>``                               | useUcum                          |          | When true, any quantitative data will be canonicalized to UCUM. Otherwise, only the original value and unit will be kept                            |
 +----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--dbType <MongoDb|SQL>``                               | databaseType                     |          | Specifies the target database type                                                                                                                  |
 +----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -276,6 +273,14 @@ Release notes
 
 Release 1.4.0, <date to be specified>
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Added a new mode ``onlyIfNewer`` for option ``--update-existing-resources`` (see the CLI options above)
+
+  .. note::
+
+    This option is currently supported only for SQL Server
+
+* The setting ``--useUcum`` has been removed. From now on, all quantitative values get automatically canonicalized to UCUM values
 
 * Indexing has been fixed for search parameters of type `reference` that index resource elements of type `uri`. The following SearchParameters were affected by the bug:
 

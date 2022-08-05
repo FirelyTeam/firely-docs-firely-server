@@ -34,6 +34,7 @@ Feature
 ^^^^^^^
 
 #. We introduced endpoints for healthchecks, both liveness and readiness, see :ref:`feature_healthcheck`.
+#. The reference Binary.securityContext can now be used as a link for the Patient compartment. If SMART on FHIR is enabled and a "patient"-level scope is being used, Binary resources must now point to a Patient resource matching the "patient" claim in the access token. For facade and plugin implementations this change means that the ICompartment information is now available for requests on the "Binary" resource type.
 
 Database
 ^^^^^^^^

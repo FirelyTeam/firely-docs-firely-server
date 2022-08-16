@@ -186,8 +186,8 @@ By default we set it to FHIR R4 and R5, as for STU3 the fhirVersion may be unexp
 Support for R5 (experimental!)
 ------------------------------
 
-By default the binaries for supporting R5 are included in the Firely Server distribution (since Firely Server (Vonk) 3.3.0). But also by default these binaries are not loaded. See the PipelineOptions in appsettings.default, where ``Vonk.Fhir.R5`` is commented out. 
+By default the binaries for supporting R5 are included in the Firely Server distribution (since Firely Server (Vonk) 3.3.0). By default these binaries are not loaded. See the PipelineOptions in appsettings.default, where ``Vonk.Fhir.R5`` is commented out. Re-enable these in your appsettings.instance.
 
-Re-enable these in your appsettings.instance and you are good to go.
+The creation of AuditEvents is currently not supported for R5. Please disable ``Vonk.Plugin.Audit`` in the root endpoint of the PipelineOptions.
 
 Note that there is not yet an ``errata_Fhir5.0.zip`` and Firely Server will complain about that in the log. You can ignore that message.

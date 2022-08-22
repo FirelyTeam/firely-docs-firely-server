@@ -26,6 +26,14 @@ The default FHIR version of the `public Firely Server endpoint <https://server.f
 
 .. _vonk_releasenotes_491:
 
+Release 4.9.2, August 24th, 2022
+--------------------------------
+
+Fix
+^^^
+#. Starting with Firely Server v4.9.0, validation was only performed against the core specification even if the validation level was set to "Full" and resources sent to Firely Server contained a meta.profile claim.
+
+
 Release 4.9.1, August 1th, 2022
 -------------------------------
 

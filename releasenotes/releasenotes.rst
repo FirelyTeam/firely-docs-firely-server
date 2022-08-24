@@ -35,6 +35,11 @@ Feature
 
 #. We introduced endpoints for healthchecks, both liveness and readiness, see :ref:`feature_healthcheck`.
 #. The reference Binary.securityContext can now be used as a link for the Patient compartment. If SMART on FHIR is enabled and a "patient"-level scope is being used, Binary resources must now point to a Patient resource matching the "patient" claim in the access token. For facade and plugin implementations this change means that the ICompartment information is now available for requests on the "Binary" resource type.
+#. We added support of ``:of-type`` search modifier for search parameters targeting Identifier elements (e.g. ``Patient.identifier``). See the `FHIR spec article on search <https://www.hl7.org/fhir/r4/search.html#token>`_ for more information.
+
+   .. note::
+
+     After the update, all new resources containing Identifier elements will be automatically indexed and become searchable with the ``:of-type`` modifier. If you want to make discoverable the data you already have, you would need to :ref:`re-index<feature_customsp_reindex_specific>` your data for some of the search parameters you want to use with the ``:of-type`` modifier.
 
 Database
 ^^^^^^^^

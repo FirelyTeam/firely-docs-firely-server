@@ -1,4 +1,4 @@
-.. _x-provenance:
+.. _feature_x-provenance:
 
 X-Provenance header
 ===================

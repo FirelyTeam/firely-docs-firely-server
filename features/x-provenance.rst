@@ -13,7 +13,7 @@ The X-Provenance header can be used to add a Provenance resource upon creating o
 Linking the Provenance resource
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Provenance must point to it's target resource through the ``target`` property (see `Provenance#resource <https://www.hl7.org/fhir/Provenance.html#resource>`_)
+Provenance must point to its target resource through the ``target`` property (see `Provenance#resource <https://www.hl7.org/fhir/Provenance.html#resource>`_)
 The ``target`` will be automatically deduced from the created/updated resource and does not need to be included in the header. 
 The reference will point to the current version (after create/update) of the resource.
 

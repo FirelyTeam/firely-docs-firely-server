@@ -269,6 +269,13 @@ Your license already permits the usage of FSI if it contains ``http://fire.ly/vo
 Release notes
 -------------
 
+.. _fsi_releasenotes_1.3.1:
+
+Release 1.3.1
+^^^^^^^^^^^^^
+
+* Fixed a bug that sometimes caused an exception when ingesting data to Sql Server
+
 .. _fsi_releasenotes_1.3.0:
 
 Release 1.3.0

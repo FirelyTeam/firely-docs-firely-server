@@ -27,9 +27,7 @@ Validation of the Provenance resource follows the settings for validation (see :
 Limitations
 ^^^^^^^^^^^
 
-You can only include a resource with type Provenance in the header value.
-
-.. warning:: Bear in mind that the maximum header length of the web server applies (e.g. IIS 8KB/16KB).
+The maximum header length of the web server applies (e.g. IIS 8KB/16KB).
 
 Example
 -------

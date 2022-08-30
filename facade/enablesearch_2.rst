@@ -88,7 +88,14 @@ The gist of the implementation is to switch the querying based on the ResourceTy
 
 What happens behind the scenes is that the QueryBuilderContext creates a QueryBuilder that analyzes all the arguments and options, and translates that into calls into your PatientQueryFactory.
 This pattern offers maximum assistance in processing the search, but also gives you full control over the raw arguments in case you need that for anything.
-Any argument that is reported as in Error, or not handled will automatically show up in the OperationOutcome of the Firely Server response.
+
+.. admonition:: Throwing exceptions during query building
+    :class: hint
+
+    | When calling ``QueryContext.CreateQuery(...)``, the underlying code (``QueryBuilder`` and ``ArgumentHandler``) uses your ``PatientQueryFactory`` to create a ``PatientQuery`` to retrieve the data.
+    | Both ``QueryBuilder`` and ``ArgumentHandler`` are part of Vonk.Core and follow the default behavior of Firely Server.
+    | One consequence is that, if you throw exceptions in ``PatientQueryFactory``, they will be converted by ``ArgumentHandler`` to an ``Issue`` on the argument, and the argument will be ignored. These arguments are later automatically converted to an ``OperationOutcome`` in the search result bundle to tell the caller he made a mistake.
+    | If you want to act on arguments with problems, you can do so by inspecting the argument collection after query creation, in your implementation of ``ISearchRepository``.
 
 In the next paragraph you will configure your Firely Server to use your Facade, and can -- finally --  try out some searches.
 The paragraph after that expands the project to support ViSiBloodPressure Observations, and details how to add custom search parameters.

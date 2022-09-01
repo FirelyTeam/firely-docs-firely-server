@@ -274,7 +274,7 @@ Release notes
 Release 1.3.1
 ^^^^^^^^^^^^^
 
-* Fixed a bug that sometimes caused an exception when ingesting data to Sql Server
+* Corrected an exception when multiple batch threads are processing and saving in parallel to SQL Server.
 
 .. _fsi_releasenotes_1.3.0:
 

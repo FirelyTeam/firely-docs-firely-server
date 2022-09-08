@@ -63,6 +63,7 @@ Database
 Fix
 ^^^
 
+#. The order of loading knowlegde and conformance resource has been fixed for R4. Now the definitions stored in the ZIP file will not override those stored in the database.
 #. Indexing has been fixed for search parameters of type `reference` that index resource elements of type `uri`. The following SearchParameters were affected by the bug:
 
   - FHIR4: ConceptMap-source-uri, ConceptMap-target-uri, PlanDefinition-definition

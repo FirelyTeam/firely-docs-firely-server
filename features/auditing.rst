@@ -95,7 +95,7 @@ Firely Server comes with default settings in ``audit.logsettings.default.json``.
                            "path": "./audit/AuditLog.log",
                            "rollingInterval": "Day",
                            "fileSizeLimitBytes": "",
-                           "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Application}] [Audit] {RequestResponse} [Machine: {MachineName}] [ReqId: {RequestId}] [IP-Address: {Ip}] [Connection: {ConnectionId}] [UserId: {UserId}] [Username: {Username}] [Path: {Path}] [Parameters: {Parameters}] [Action: {Action}] [Resource: {Resource} Key:{ResourceKey}] [StatusCode: {StatusCode}] {NewLine}"
+                           "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Application}] [Audit] {RequestResponse} [Machine: {MachineName}] [ReqId: {RequestId}] [IP-Address: {Ip}] [Connection: {ConnectionId}] [UserId: {UserId}] [Username: {Username}] [Path: {Path}] [Parameters: {Parameters}] [Action: {Action}] [Resource: {Resource} Key:{ResourceKey}] [Search results: {SearchResultSummary}] [StatusCode: {StatusCode}] {NewLine}"
                         }
                      }
                   ]

@@ -63,6 +63,7 @@ Database
 Fix
 ^^^
 
+#. The order of loading knowlegde and conformance resources has been fixed. Now, the definitions stored in the administration database are loaded first and the definitions from the ZIP file are loaded last. Any custom implementations of IModelContributor are loaded after the database and before the ZIP file.
 #. Indexing has been fixed for search parameters of type `reference` that index resource elements of type `uri`. The following SearchParameters were affected by the bug:
 
   - FHIR4: ConceptMap-source-uri, ConceptMap-target-uri, PlanDefinition-definition

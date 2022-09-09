@@ -64,6 +64,17 @@ Fix
 ^^^
 
 #. The order of loading knowlegde and conformance resources has been fixed. Now, the definitions stored in the administration database are loaded first and the definitions from the ZIP file are loaded last. Any custom implementations of IModelContributor are loaded after the database and before the ZIP file.
+#. | An erratum to the specification of R4 has been made, changing the type of search parameter Resource-profile from uri to reference (with target StructureDefinition). This was an ommision in R4 and has been fixed in R5. 
+   | The change allows searching for _profile with the :above and :below modifier. To take advantage of it, the following steps must be taken:
+
+   - Optionally but recommanded: before upgrading, remove the current index data for Resource._profile (see :ref:`re-indexing<feature_customsp_reindex_specific>`)
+   - Upgrade Firely Server, execute the database migrations and start the server
+   - Re-index Resource._profile (see :ref:`re-indexing<feature_customsp_reindex_specific>`)
+
+  .. note::
+
+     If you have made changes to SearchParameter/Resource-profile-Fhir4.0 and want to search with the :above/:below modifier, you must update your definition to be of type `reference` with target `StructureDefinition`
+
 #. Indexing has been fixed for search parameters of type `reference` that index resource elements of type `uri`. The following SearchParameters were affected by the bug:
 
   - FHIR4: ConceptMap-source-uri, ConceptMap-target-uri, PlanDefinition-definition

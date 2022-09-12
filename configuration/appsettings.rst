@@ -413,7 +413,7 @@ Information model
 -----------------
 
 Firely Server supports the use of multiple information models (currently FHIR STU3 and R4) simultaneously. The ``InformationModel`` section contains the related settings.
-By default, Firely Server serves both versions from the root of your web service, defaulting to STU3 when the client does not use Accept or _format to specify either one. Mapping a path or a subdomain to a specific version creates an additional URI serving only that particular version.
+By default, Firely Server serves both versions from the root of your web service, defaulting to R4 when the client does not use Accept or _format to specify either one. Mapping a path or a subdomain to a specific version creates an additional URI serving only that particular version.
 ::
 
   "InformationModel": {

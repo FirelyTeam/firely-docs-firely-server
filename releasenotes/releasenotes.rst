@@ -87,6 +87,31 @@ Fix
 
     Please note that due to a mistake in the official STU3 specification, search parameters `ConceptMap-source-uri`, `ConceptMap-target-uri` still do not work as expected. The correct search parameter expressions would be `ConceptMap.source.as(uri)` and `ConceptMap.target.as(uri)` while the specification contains `ConceptMap.source.as(Uri)` and `ConceptMap.target.as(Uri)` respectively. The issue has been addressed in R4.
 
+.. _vonk_releasenotes_491:
+
+Release 4.9.2, August 24th, 2022
+--------------------------------
+
+Fix
+^^^
+#. Starting with Firely Server v4.9.0, validation was only performed against the core specification even if the validation level was set to "Full" and resources sent to Firely Server contained a meta.profile claim.
+
+
+Release 4.9.1, August 1th, 2022
+-------------------------------
+
+
+Fix
+^^^
+#. Fixed an issue with _include and _revinclude in case the (rev-)include link was pointing to an element of type "canonical" and not of type "reference".
+#. "_total" was added as default parameter in the v4.9.0 release. Therefore it must be handled in a facade implementation. The Vonk.Facade.Relational package now handles the case of "_total=accurate". All other argument values must still be handled in the ISearchRepository implementation.
+#. Reading the specification.zip file from a read-only disk caused an exception.
+#. Excluding the UrlMappingService from the pipeline configuration and executing a CRUD operation caused an exception.
+
+Feature
+^^^^^^^
+#. The exposed `SMART capabilities <http://hl7.org/fhir/smart-app-launch/conformance.html#capabilities>`_ in the .well-known/smart-configuration can now be configured in the appsettings. See ``SmartAuthorizationOptions.SmartCapabilities`` in section :ref:`SMART Configuration<feature_accesscontrol_config>`.
+
 .. _vonk_releasenotes_490:
 
 Release 4.9.0, July 6th, 2022

@@ -292,6 +292,13 @@ Release 1.4.0, <date to be specified>
   .. note::
 
     Please note that due to a mistake in the official STU3 specification, search parameters `ConceptMap-source-uri`, `ConceptMap-target-uri` still do not work as expected. The correct search parameter expressions would be `ConceptMap.source.as(uri)` and `ConceptMap.target.as(uri)` while the specification contains `ConceptMap.source.as(Uri)` and `ConceptMap.target.as(Uri)` respectively. The issue has been addressed in R4.
+    
+.. _fsi_releasenotes_1.3.1:
+
+Release 1.3.1
+^^^^^^^^^^^^^
+
+* Corrected an exception when multiple batch threads are processing and saving in parallel to SQL Server.
 
 .. _fsi_releasenotes_1.3.0:
 

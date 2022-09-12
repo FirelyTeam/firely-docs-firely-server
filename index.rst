@@ -36,7 +36,7 @@ or support contract.
    Security <security/security>
    Performance <performance/performance>
    Features <features/features>
-   Compliance <compliance/compliance>
+   Compliance & Certification <compliance/compliance>
    Administration API <administration_api>
    Plugins <plugins/plugins>
    Facade <facade/facade>

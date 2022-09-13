@@ -72,6 +72,7 @@ If you want to specify input parameters in the file, you can use the snippet bel
     "updateExistingResources": true,
     "databaseType": "SQL",
     "haltOnError": false,
+    "convertAbsoluteUrlsToRelative":[]
 
     "sqlserver": {
       "connectionString": "<connectionstring to the Firely Server SQL Server database>",
@@ -96,6 +97,8 @@ If you want to specify input parameters in the file, you can use the snippet bel
       "metaBufferSize": 50,
       "typeParallel": 4,
       "typeBufferSize": 50,
+      "absoluteToRelativeParallel": 1,
+      "absoluteToRelativeBufferSize": 50,
       "indexParallel": -1, //this is usually the most time consuming process - give it as much CPU time as possible.
       "indexBufferSize": 50,
       "maxActiveResources": 15000
@@ -127,6 +130,9 @@ Supported arguments
 +----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--haltOnError <true|false>``                           | haltOnError                      |          | When true, stop application on single error. Default = false.                                                                                       |
 +----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``--convertAbsoluteUrlsToRelative <[array of values]>``  | convertAbsoluteUrlsToRelative    |          | Convert absolute URLs to relative for servers in this array. The array values must match exactly the base URL otherwise no changes are made.        |
+|                                                          |                                  |          | Example: Setting of ``http://example.org/R4`` will convert an absolute URL ``http://example.org/R4/Patient/123`` to relative as ``Patient/123``     |
++----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--mongoCollection <mongoCollection>``                  | mongodb/entryCollection          |          | Collection name for entries                                                                                                                         |
 +----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--mongoConnectionstring <connectionstring>``           | mongodb/connectionString         | yes      | Connection string to Firely Server MongoDb database                                                                                                 |
@@ -148,8 +154,6 @@ Supported arguments
 +----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--sqlExistQryPar <sqlExistQryPar>``                    | sqlserver/queryExistenceParallel |          | The number of parallel threads querying the DB to check whether a resource exists (only when ``--update-existing-resources`` is set to false).      |
 +----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--sqlIndexes``                                         | sqlServer/liftIndexes            |          | Experimental! Removes all the indexes before the import and re-applies them afterwards                                                              |
-+----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--readPar <readPar>``                                  | workflow/readParallel            |          | Number of threads to read from the source. Reading is quite fast so it need not be high                                                             |
 +----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--readBuffer <readBuffer>``                            | workflow/readBufferSize          |          | Number of resources to buffer after reading                                                                                                         |
@@ -161,6 +165,12 @@ Supported arguments
 | ``--typePar <typePar>``                                  | workflow/typeParallel            |          | Number of threads to add type information. Should be higher than ReadParallel                                                                       |
 +----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--typeBuffer <typeBuffer>``                            | workflow/typeBufferSize          |          | Number of resources to buffer for adding type information                                                                                           |
++----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``--absRelPar <absRelPar>``                              | workflow/                        |          | Number of threads when converting absolute to relative references. Should be higher than ReadParallel                                               |
+|                                                          | absoluteToRelativeParallel       |          |                                                                                                                                                     |
++----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``--absRelBuffer <absRelBuffer>``                        | workflow/                        |          | Number of resources to buffer when converting absolute to relative references                                                                       |
+|                                                          | absoluteToRelativeBufferSize     |          |                                                                                                                                                     |
 +----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--indexPar <indexPar>``                                | workflow/indexParallel           |          | Number of threads to index the search parameters. This is typically the most resource intensive step and should have the most threads               |
 +----------------------------------------------------------+----------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+

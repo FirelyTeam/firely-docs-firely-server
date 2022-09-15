@@ -24,7 +24,16 @@ Public Endpoint Announcement 8 July 2021
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.
 
-.. _vonk_releasenotes_491:
+.. _vonk_releasenotes_493:
+
+Release 4.9.3, September 15th, 2022
+--------------------------------
+
+Fix
+^^^
+#. Starting with Firely Server v4.9.0, a specific search query could fail, with multiple includes on the same parameter, having different type modifier, e.g. `Coverage?_include=Coverage:payor:Patient&_include=Coverage:payor:Organization`. That is fixed.
+
+.. _vonk_releasenotes_492:
 
 Release 4.9.2, August 24th, 2022
 --------------------------------

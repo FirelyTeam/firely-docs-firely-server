@@ -87,7 +87,16 @@ Fix
 
     Please note that due to a mistake in the official STU3 specification, search parameters `ConceptMap-source-uri`, `ConceptMap-target-uri` still do not work as expected. The correct search parameter expressions would be `ConceptMap.source.as(uri)` and `ConceptMap.target.as(uri)` while the specification contains `ConceptMap.source.as(Uri)` and `ConceptMap.target.as(Uri)` respectively. The issue has been addressed in R4.
 
-.. _vonk_releasenotes_491:
+.. _vonk_releasenotes_493:
+
+Release 4.9.3, September 15th, 2022
+--------------------------------
+
+Fix
+^^^
+#. Starting with Firely Server v4.9.0, a specific search query could fail, with multiple includes on the same parameter, having different type modifier, e.g. `Coverage?_include=Coverage:payor:Patient&_include=Coverage:payor:Organization`. That is fixed.
+
+.. _vonk_releasenotes_492:
 
 Release 4.9.2, August 24th, 2022
 --------------------------------
@@ -96,6 +105,7 @@ Fix
 ^^^
 #. Starting with Firely Server v4.9.0, validation was only performed against the core specification even if the validation level was set to "Full" and resources sent to Firely Server contained a meta.profile claim.
 
+.. _vonk_releasenotes_491:
 
 Release 4.9.1, August 1th, 2022
 -------------------------------

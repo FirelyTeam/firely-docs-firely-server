@@ -33,59 +33,80 @@ Release 4.10.0, <date>, 2022
 Feature
 ^^^^^^^
 
-#. We introduced endpoints for healthchecks, both liveness and readiness, see :ref:`feature_healthcheck`.
-#. We added support for the X-Provenance header, see :ref:`feature_x-provenance`.
-#. The reference Binary.securityContext can now be used as a link for the Patient compartment. If SMART on FHIR is enabled and a "patient"-level scope is being used, Binary resources must now point to a Patient resource matching the "patient" claim in the access token. For facade and plugin implementations this change means that the ICompartment information is now available for requests on the "Binary" resource type.
-#. We enhanced audit logging by exposing the literal references of current page of the results from a search request. For file logging, this information can be included by adding SearchResultSummary to the output template. In AuditEvent resources, each search result (reference) is included as an ``entity`` node, in addition to the entity node for the bundle with the query parameters. 
-#. We added support of ``:of-type`` search modifier for search parameters targeting Identifier elements (e.g. ``Patient.identifier``). See the `FHIR spec article on search <https://www.hl7.org/fhir/r4/search.html#token>`_ for more information.
+#. HealthCheck: We introduced endpoints for healthchecks, both liveness and readiness, see :ref:`feature_healthcheck`.
+#. Provenance: We added support for the X-Provenance header, see :ref:`feature_x-provenance`.
+#. Compartments: The reference searchparameter ``Binary.securityContext`` can now be used as a link for the Patient compartment. If SMART on FHIR is enabled and a "patient"-level scope is being used, Binary resources must now point to a Patient resource matching the "patient" claim in the access token. For facade and plugin implementations this change means that the ``ICompartment`` information is now available for requests on the ``Binary`` resource type.
+#. Audit on search: We enhanced audit logging by exposing the literal references of the current page of the results from a search request. For file logging, this information can be included by adding ``SearchResultSummary`` to the :ref:`output template <configure_audit_log_file>`. In AuditEvent resources, each search result (reference) is included as an ``entity`` node, in addition to the entity node for the bundle with the query parameters. 
+#. Search: We added support of ``:of-type`` search modifier for search parameters targeting Identifier elements (e.g. ``Patient.identifier``). See the `FHIR spec article on search <https://www.hl7.org/fhir/r4/search.html#token>`_ for more information.
 
    .. note::
 
      After the update, all new resources containing Identifier elements will be automatically indexed and become searchable with the ``:of-type`` modifier. If you want to make discoverable the data you already have, you would need to :ref:`re-index<feature_customsp_reindex_specific>` your data for some of the search parameters you want to use with the ``:of-type`` modifier.
 
+#. Search: Added support for the ``Prefer`` header when searching, with allowed values ``handling=strict`` or ``handling=lenient``, as per `the specification <http://build.fhir.org/search.html#errors>`_.  
+#. Search: Added support for wildcards on ``_include=*`` and ```_revinclude=*```, so you can (rev)include all linked resource at once, as specified with `search <http://hl7.org/fhir/search.html#revinclude>`_.
+#. Search: Canonical references can now be searched using the ``:below`` modifier, that will match a prefix of the version, as specified for `References and versions <https://www.hl7.org/fhir/search.html#versions>`_
+#. US Core: Added support for the ``$docref`` operation. Firely Server can retrieve all existing DocumentReferences for a Patient, but cannot yet generate a document. This operation is defined as part of the `US Core implementation guide <http://hl7.org/fhir/us/core/OperationDefinition-docref.html)>`_.
+#. Mimetype: If a request did not specify a mimetype in the ``Accept`` header, Firely Server would default to ``application/fhir+json``. If you prefer XML, this default can now be set in the :ref:`http_options`.
+#. :ref:`feature_preload` is updated and now works for all FHIR versions. Please note that this feature is still meant for limited amounts of (mainly example) data. For loading large amounts of data we recommend to use :ref:`tool_fsi`.
+
 Database
 ^^^^^^^^
 
-#. We introduced new optimizations for the MongoDB data schema and queries. These optimizations will improve search performance for elements of type ``dateTime`` and ``decimal``. Please read below notes for the upgrade process.
+#. We introduced new optimizations for the **MongoDB** data schema and queries. These optimizations will improve search performance for elements of type ``dateTime`` and ``decimal``. Please read below notes for the upgrade process.
 
-.. attention::
-    The upgrade procedure for Firely Server running on MongoDb requires a mandatory migration. If your collection contains a lot of resources, this may take a very long time. Therefore, the MongoDb upgrade script has to be executed manually. The script can be found in `mongodb\FS_SchemaUpgrade_Data_v22_v23.js`
-    
-    Here are some guidelines:
+   .. attention::
+      The upgrade procedure for Firely Server running on MongoDb requires a mandatory migration. If your collection contains a lot of resources, this may take a very long time. Therefore, the MongoDb upgrade script has to be executed manually. The script can be found in `mongodb\FS_SchemaUpgrade_Data_v22_v23.js`
+      
+      Here are some guidelines:
 
-   * We tested it on a MongoDb collection with a size of 500GB. The upgrade script took around 24 hours to complete on a fairly powerful machine.
-   * As always, make sure you have a backup of your database that has been tried and tested before you begin the upgrade.
-   * Please make sure that Firely Server is shutdown before you execute the script.
-   * If you encounter problems running the script, or need any assistance, please :ref:`contact us<vonk-contact>`.
+      * We tested it on a MongoDb collection with a size of 500GB. The upgrade script took around 24 hours to complete on a fairly powerful machine.
+      * As always, make sure you have a backup of your database that has been tried and tested before you begin the upgrade.
+      * Please make sure that Firely Server is shutdown before you execute the script.
+      * If you encounter problems running the script, or need any assistance, please :ref:`contact us<vonk-contact>`.
 
-    The update script will update the data that is stored in the database. Although Firely Server can be started as soon as the migration is finished, it will have decreased performance during the first day of operation. This is due to a change in indexes which requires them to be rebuilt in the background.
+      The update script will update the data that is stored in the database. Although Firely Server can be started as soon as the migration is finished, it will have decreased performance during the first day of operation. This is due to a change in indexes which requires them to be rebuilt in the background.
 
+#. We introduced user defined table types in **SQL Server** for an optimization in :ref:`Firely Server Ingest 1.4.0 <fsi_releasenotes_1.4.0>`. The update is in migration script ``FS_SchemaUpgrade_Data_v24_v25.sql`` and will be applied automatically when ``AutoUpdateDatabase=true`` in the settings.
 
 Fix
 ^^^
 
-#. The order of loading knowlegde and conformance resources has been fixed. Now, the definitions stored in the administration database are loaded first and the definitions from the ZIP file are loaded last. Any custom implementations of IModelContributor are loaded after the database and before the ZIP file.
-#. | An erratum to the specification of R4 has been made, changing the type of search parameter Resource-profile from uri to reference (with target StructureDefinition). This was an ommision in R4 and has been fixed in R5. 
-   | The change allows searching for _profile with the :above and :below modifier. To take advantage of it, the following steps must be taken:
+#. Administration: The order of loading knowledge and conformance resources has been fixed. We made sure that the definitions stored in the administration database take precedence over the definitions from the ``specification.zip`` file. 
+   Any custom implementations of ``IModelContributor`` are loaded after the database and before the ZIP file.
+#. Search: An erratum to the specification of R4 has been made, changing the type of search parameter ``Resource-profile`` from uri to reference (with target StructureDefinition). This was an ommision in R4 and has been fixed in R5. 
+   The change allows searching for _profile with the ``:above`` and ``:below`` modifier. To take advantage of it, the following steps must be taken:
 
-   - Optionally but recommanded: before upgrading, remove the current index data for Resource._profile (see :ref:`re-indexing<feature_customsp_reindex_specific>`)
+   - Optionally but recommended: before upgrading, remove the current index data for Resource._profile (see :ref:`re-indexing<feature_customsp_reindex_specific>`)
    - Upgrade Firely Server, execute the database migrations and start the server
    - Re-index Resource._profile (see :ref:`re-indexing<feature_customsp_reindex_specific>`)
 
-  .. note::
+   .. note::
 
-     If you have made changes to SearchParameter/Resource-profile-Fhir4.0 and want to search with the :above/:below modifier, you must update your definition to be of type `reference` with target `StructureDefinition`
+      If you have made manual changes to SearchParameter/Resource-profile-Fhir4.0 and want to search with the :above/:below modifier, you must update your definition to be of type `reference` with target `StructureDefinition`
 
-#. Indexing has been fixed for search parameters of type `reference` that index resource elements of type `uri`. The following SearchParameters were affected by the bug:
+#. Search: Indexing has been fixed for search parameters of type `reference` that index resource elements of type `uri`. The following SearchParameters were affected by the bug:
+   Consider :ref:`re-indexing<feature_customsp_reindex_specific>` your database for these search parameters if you use them.
 
-  - FHIR4: ConceptMap-source-uri, ConceptMap-target-uri, PlanDefinition-definition
-  - STU3: ImplementationGuide-resource, Provenance-agent
-  
-  Consider :ref:`re-indexing<feature_customsp_reindex_specific>` your database for these search parameters if you use them.
+   - FHIR4: ConceptMap-source-uri, ConceptMap-target-uri, PlanDefinition-definition
+   - STU3: ImplementationGuide-resource, Provenance-agent
 
-  .. note::
+   .. note::
 
-    Please note that due to a mistake in the official STU3 specification, search parameters `ConceptMap-source-uri`, `ConceptMap-target-uri` still do not work as expected. The correct search parameter expressions would be `ConceptMap.source.as(uri)` and `ConceptMap.target.as(uri)` while the specification contains `ConceptMap.source.as(Uri)` and `ConceptMap.target.as(Uri)` respectively. The issue has been addressed in R4.
+      Please note that due to a mistake in the official STU3 specification, search parameters `ConceptMap-source-uri`, `ConceptMap-target-uri` still do not work as expected. The correct search parameter expressions would be `ConceptMap.source.as(uri)` and `ConceptMap.target.as(uri)` while the specification contains `ConceptMap.source.as(Uri)` and `ConceptMap.target.as(Uri)` respectively. The issue has been addressed in R4.
+
+#. SMART: With SMART on FHIR enabled, an update-on-create (creating a new resource with an update / PUT) was allways denied. This is now fixed.
+#. Subscription: if the resthook url in a Subscription did not end with a slash (``/``), it would get shortened to the last slash in the url. This is now fixed, the whole url is used.
+
+Plugin and Facade
+^^^^^^^^^^^^^^^^^
+
+#. Facade: When building predicates in a Facade implementation of ``ISearchRepository`` / ``IRepoQueryFactory``, exceptions where only translated to the OperationOutcome, but not logged. Now they are also logged.
+#. API: We will narrow the public programming API in the ``Vonk.Core`` package in the next major release. To alert you to that, we deprecated the parts that will be removed from the public API. 
+
+   .. attention::
+
+      Please try to build your plugin or facade against ``Vonk.Core 4.10.0`` to check if you use any of the deprecated parts. If you think some part should not be deprecated, please let us know with a support ticket.
 
 .. _vonk_releasenotes_493:
 

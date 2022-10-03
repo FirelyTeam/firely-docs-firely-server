@@ -292,6 +292,20 @@ This will limit the number of entries that are accepted in a single Batch or Tra
   This setting has been moved to the ``SizeLimits`` setting as of Firely Server (Vonk) version 0.7.1, and the logs will show a warning that it
   is deprecated when you still have it in your appsettings file.
 
+.. _http_options:
+
+Response options
+----------------
+::
+
+    "HttpOptions": {
+      "DefaultResponseType": "application/fhir+json"
+    }
+
+* If no mediatype is specified in an ``Accept`` header, use the ``DefaultResponseType``.
+* Options are ``application/fhir+json`` or ``application/fhir+xml``
+* Firely Server will attach the mimetype parameter ``fhirVersion`` based on the FHIR version that is requested (see :ref:`feature_multiversion`).
+
 .. _sizelimits_options:
 
 Protect against large input

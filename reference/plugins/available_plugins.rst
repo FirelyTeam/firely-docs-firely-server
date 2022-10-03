@@ -600,6 +600,14 @@ Documents
 :Order: 4950
 :Description: Allows `FHIR document bundles <https://www.hl7.org/fhir/documents.html#3.3>`_ to be posted to the base endpoint. Consult the :ref:`documentation <restful_documenthandling>` for more information.
 
+.. _vonk_plugins_docrefoperation:
+
+:Name: US Core Fetch DocumentReference operation
+:Configuration: ``Vonk.Plugin.DocRefOperation.DocRefOperationConfiguration``
+:License token: http://fire.ly/vonk/plugins/docref
+:Order: 5350
+:Description: Allows fetching DocumentReference resources related to a patient. Implements the `US Core Fetch DocumentReference <http://hl7.org/fhir/us/core/OperationDefinition-docref.html>`_ operation. Generating a document is not yet supported.
+
 .. _vonk_plugins_convert:
 
 Conversion

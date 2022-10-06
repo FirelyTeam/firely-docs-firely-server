@@ -281,8 +281,9 @@ Release notes
 
 .. _fsi_releasenotes_1.4.0:
 
-Release 1.4.0, <date to be specified>
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Release 1.4.0, October 6th, 2022
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 * Added new setting ``convertAbsoluteUrlsToRelative`` which is an array of server URL base values. This feature converts absolute URL references to relative references for the given server URL base array. Example: Setting of ``http://example.org/R4`` will convert an absolute URL ``http://example.org/R4/Patient/123`` to relative as ``Patient/123``. 
 
 * Added a new mode ``onlyIfNewer`` for option ``--update-existing-resources`` (see the CLI options above)

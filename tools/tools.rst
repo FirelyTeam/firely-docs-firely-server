@@ -9,4 +9,4 @@ This section contains documentation about tools that can improve your Firely Ser
    :maxdepth: 1
    :titlesonly:
 
-   firely-server-import
+   firely-server-ingest

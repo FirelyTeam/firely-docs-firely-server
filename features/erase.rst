@@ -1,7 +1,7 @@
 .. _erase:
 
 $erase resources
-===================
+================
 
 Description
 -----------

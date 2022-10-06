@@ -167,15 +167,12 @@ The following parameters and options are not yet supported:
 #. ``Location.near`` (geo matching is not supported)
 #. ``:approx`` modifier on a quantity SearchParameter
 #. ``:text`` modifier on a string SearchParameter
-#. ``:above``, ``:below``, ``:in``, ``:not-in``, ``of-type`` modifiers on a token SearchParameter, ``above`` and ``below`` are also not supported for `Mime Types <http://hl7.org/fhir/R4B/search.html#mimetype>`_.
+#. ``:above``, ``:below``, ``:in`` and ``:not-in`` modifiers on a token SearchParameter, ``above`` and ``below`` are also not supported for `Mime Types <http://hl7.org/fhir/R4B/search.html#mimetype>`_.
 #. ``:above``, ``:below`` modifiers on a reference SearchParameter (only valid on a `strict hierarchy <http://hl7.org/fhir/R4B/search.html#recursive>`_)
-#. ``:below`` modifier on uri SearchParameters that act on canonical elements, see `References and versions <http://hl7.org/fhir/R4B/search.html#versions>`_.
-#. ``*`` wildcard on ``_include`` and ``_revinclude``
 #. ``_include`` and ``_revinclude`` will match the current version of the referenced resources, also if the reference is versioned.
 #. ``_pretty``
 #. Implicit ranges are supported on dates, datetimes and quantities with a UCUM unit. But not on other quantities and number parameters.
 #. Search parameter arguments in exponential form (e.g. 1.8e2).
-#. ``Prefer: handling=strict/lenient``: Firely server is always lenient on search parameter errors.
 #. ``_total=estimate``, only ``none`` and ``accurate`` are supported.
 
 Furthermore:

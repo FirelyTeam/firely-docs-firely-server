@@ -76,6 +76,14 @@ Infrastructural plugins
 :Order: 1130
 :Description: Registers an implementation of IFormatter that can write the ``IVonkContext.Response.Payload`` to the response body in the requested format. Does not add a processor to the pipeline.
 
+.. _vonk_plugins_liveness:
+
+:Name: Liveness probe
+:Configuration: ``Vonk.Core.Infra.LivenessCheckConfiguration``
+:License token: <none>
+:Order: 1160
+:Description: Check whether the server is active, for use in e.g. Kubernetes liveness probes or Docker healthchecks. See :ref:`feature_healthcheck` for possible results.
+
 .. _vonk_plugins_longrunning:
 
 :Name: Long running tasks
@@ -83,6 +91,14 @@ Infrastructural plugins
 :License token: http://fire.ly/vonk/plugins/infra
 :Order: 1170
 :Description: If Vonk processes a task that could lead to inconsistent output, all other requests are rejected by this plugin. Long running tasks are e.g. the :ref:`conformance_import` and :ref:`feature_customsp_reindex`.
+
+.. _vonk_plugins_readiness:
+
+:Name: Readiness probe
+:Configuration: ``Vonk.Core.Infra.ReadinessCheckConfiguration``
+:License token: <none>
+:Order: 1180
+:Description: Check whether the server can handle requests, for use in e.g. Kubernetes readiness probes or Docker healthchecks. See :ref:`feature_healthcheck` for possible results.
 
 .. _vonk_plugins_compartments:
 
@@ -583,6 +599,14 @@ Documents
 :License token: http://fire.ly/vonk/plugins/documenthandling
 :Order: 4950
 :Description: Allows `FHIR document bundles <https://www.hl7.org/fhir/documents.html#3.3>`_ to be posted to the base endpoint. Consult the :ref:`documentation <restful_documenthandling>` for more information.
+
+.. _vonk_plugins_docrefoperation:
+
+:Name: US Core Fetch DocumentReference operation
+:Configuration: ``Vonk.Plugin.DocRefOperation.DocRefOperationConfiguration``
+:License token: http://fire.ly/vonk/plugins/docref
+:Order: 5350
+:Description: Allows fetching DocumentReference resources related to a patient. Implements the `US Core Fetch DocumentReference <http://hl7.org/fhir/us/core/OperationDefinition-docref.html>`_ operation. Generating a document is not yet supported.
 
 .. _vonk_plugins_convert:
 

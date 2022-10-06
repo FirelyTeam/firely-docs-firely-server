@@ -22,10 +22,12 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    errata
    subscription
    auditing
+   x-provenance
    resetdb
    preload
    multiversion
    hipaa
    erase
+   healthcheck
 
 .. add files here

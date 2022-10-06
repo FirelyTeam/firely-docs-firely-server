@@ -41,11 +41,16 @@ Authorization in Firely Server by default is based on `SMART on FHIR`_ and more 
 * scope=[array of individual scopes]
 * patient=123: the user is allowed access to resources in the compartment of patient 123 -- see :ref:`feature_accesscontrol_compartment`.
 
+See section :ref:`_tokens` for detailed requirements regarding the structure of the access token in order to enable Firely Server to enforce these scopes.
+
 .. note:: A conditional create, update or delete (see the `FHIR http specification <https://hl7.org/fhir/http.html>`_), requires read permissions on the condition. Therefore, ``user/*.write`` will usually require additional ``read`` scopes.
 
-SMART on FHIR also defines scopes starting with 'patient/' instead of 'user/'. In Firely Server these are evaluated equally. But with a scope of 'patient/' you are required to also have a 'patient=...' launch context to know to which patient the user connects. It is also possible to apply a launch context to a user scope, for example the scope can look like "launch user/\*.read". In your authorization server you can specify the resources that are in the launch context parameter.
+SMART on FHIR also defines scopes starting with 'patient/' instead of 'user/'. In Firely Server these are evaluated differently. With a scope of 'patient/' you are required to also have a 'patient=...' launch context to know to which patient the user connects.  As mentioned above, any request is scoped to the patient compartment and requests are rejected if the patient claim is not provided in the access token.
 
-The assignment of these claims to users, systems or groups is managed in the OAuth2 authorization server and not in Firely Server. Firely Server does, however, need a way to access these scopes - so if your OAuth server is issuing a self-encoded token, ensure that it has a ``scope`` field with all of the granted scopes inside it.
+Firely Server will additionally handle user-level scopes by checking the syntax of the SMART on FHIR scopes within the access token. It enforces that only allowed resources types are accessed and only allowed actions are executed.
+
+.. attention::
+Requests using a user-level scope are not limited a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly adviced to implement additional security measures using a custom plugin, e.g. by enforcing a certain Practitioner or Encounter context.
 
 Access Control Engine
 ---------------------

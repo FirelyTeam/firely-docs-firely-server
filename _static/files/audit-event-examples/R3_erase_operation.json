@@ -1,0 +1,189 @@
+{
+    "resourceType": "AuditEvent",
+    "type": {
+        "system": "http://hl7.org/fhir/audit-event-type",
+        "code": "rest",
+        "display": "RESTful Operation"
+    },
+    "subtype": [
+        {
+            "system": "http://hl7.org/fhir/http-verb",
+            "code": "POST"
+        },
+        {
+            "system": "http://hl7.org/fhir/restful-interaction",
+            "code": "operation"
+        }
+    ],
+    "extension": [
+        {
+            "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-AuditEvent.category",
+            "valueCodeableConcept": {
+                "text": "Executed custom operation $erase"
+            }
+        }
+    ],
+    "action": "E",
+    "recorded": "2022-10-07T14:13:36.090+00:00",
+    "outcome": "0",
+    "outcomeDesc": "200",
+    "agent": [
+        {
+            "userId": {
+                "value": "unknown"
+            },
+            "reference": {
+                "display": "anonymous"
+            },
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-AuditEvent.agent.type",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "https://profiles.ihe.net/ITI/BALP/CodeSystem/UserAgentTypes",
+                                "code": "UserOauthAgent",
+                                "display": "User OAuth Agent participant"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "requestor": true,
+            "network": {
+                "address": "127.0.0.1",
+                "type": "2"
+            }
+        },
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-AuditEvent.agent.type",
+                    "valueCodeableConcept": {
+                        "coding": [
+                            {
+                                "system": "http://dicom.nema.org/resources/ontology/DCM",
+                                "code": "110152",
+                                "display": "Destination Role ID"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    ],
+    "source": {
+        "site": "Firely Server",
+        "type": [
+            {
+                "system": "http://hl7.org/fhir/security-source-type",
+                "code": "4",
+                "display": "Application Server"
+            }
+        ],
+        "extension": [
+            {
+                "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-AuditEvent.source.observer",
+                "valueReference": {
+                    "identifier": {
+                        "system": "http://vonk.fire.ly/fhir/sid/devices",
+                        "value": "firely-server"
+                    },
+                    "display": "SERVER_HOST_NAME"
+                }
+            }
+        ]
+    },
+    "entity": [
+        {
+            "reference": {
+                "identifier": {
+                    "value": "REQUEST_ID"
+                },
+                "extension": [
+                    {
+                        "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-Reference.type",
+                        "valueUri": "Device"
+                    }
+                ]
+            },
+            "type": {
+                "system": "http://fire.ly/fhir/sid/api-diagnostics",
+                "code": "RequestId"
+            }
+        },
+        {
+            "reference": {
+                "identifier": {
+                    "value": "CONNECTION_ID"
+                },
+                "extension": [
+                    {
+                        "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-Reference.type",
+                        "valueUri": "Device"
+                    }
+                ]
+            },
+            "type": {
+                "system": "http://fire.ly/fhir/sid/api-diagnostics",
+                "code": "ConnectionId"
+            }
+        },
+        {
+            "detail": [
+                {
+                    "type": "path",
+                    "value": "LyRlcmFzZQ=="
+                }
+            ]
+        },
+        {
+            "reference": {
+                "reference": "ResourceType1/instance-id1/_history/version-id1"
+            },
+            "type": {
+                "system": "http://hl7.org/fhir/resource-types",
+                "code": "ResourceType1",
+                "display": "ResourceType1"
+            },
+            "detail": [
+                {
+                    "type": "ResourceKey",
+                    "value": "UmVzb3VyY2VUeXBlMS9pbnN0YW5jZS1pZDEvX2hpc3RvcnkvdmVyc2lvbi1pZDE="
+                }
+            ]
+        },
+        {
+            "reference": {
+                "reference": "ResourceType2/instance-id2/_history/version-id1"
+            },
+            "type": {
+                "system": "http://hl7.org/fhir/resource-types",
+                "code": "ResourceType2",
+                "display": "ResourceType2"
+            },
+            "detail": [
+                {
+                    "type": "ResourceKey",
+                    "value": "UmVzb3VyY2VUeXBlMi9pbnN0YW5jZS1pZDIvX2hpc3RvcnkvdmVyc2lvbi1pZDE="
+                }
+            ]
+        },
+        {
+            "reference": {
+                "reference": "ResourceType2/instance-id2/_history/version-id2"
+            },
+            "type": {
+                "system": "http://hl7.org/fhir/resource-types",
+                "code": "ResourceType2",
+                "display": "ResourceType2"
+            },
+            "detail": [
+                {
+                    "type": "ResourceKey",
+                    "value": "UmVzb3VyY2VUeXBlMi9pbnN0YW5jZS1pZDIvX2hpc3RvcnkvdmVyc2lvbi1pZDI="
+                }
+            ]
+        }
+    ]
+}

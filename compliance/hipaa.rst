@@ -1,4 +1,4 @@
-.. _feature_hipaa:
+.. _hipaa:
 
 HIPAA compliance
 ================

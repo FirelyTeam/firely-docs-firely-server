@@ -81,6 +81,29 @@ Quantity search on UCUM quantities automatically converts units to a canonical f
 
 .. warning:: Queries that request resource types not included in the current compartment's CompartmentDefinition will yield default search results. Example: Searching for Practitioner resources within a Patient's compartment will return all Practitioner resources, including the ones not linked to the patient.
 
+`Search on versioned references <http://www.hl7.org/implement/standards/fhir/search.html#versions>`_ is supported. Suppose that there is a ``Provenance`` resouce, which references to a versioned ``Patient`` resouce. For example:
+::
+
+   "resourceType": "Provenance",
+   "target": [
+      {
+         "reference": "Patient/[patient_id]/_history/[patient_version_id]",
+         "display": "Patient details:"
+      }
+   ],
+
+Following queries return a search match for the ``Provenance`` resouce
+::
+
+   GET [BASE]/Provenance?target=Patient/[patient_id]/_history/[patient_version_id]
+   
+   GET [BASE]/Provenance?target=Patient/[patient_id]
+
+For the example above, if the ``Patient`` resource is updated, which means the [patient_version_id] is updated, and chaining is performed (see example below), then the ``Provenance`` resouce referencing previous version of ``Patient`` will still be returned together with an OperationOutcome to indicate the discrepancy.
+::
+
+   GET [BASE]/Provenance?target.identifier=[patient_identifier]
+
 Firely Server also supports ``_include:iterate`` and ``_revinclude:iterate``, as well as its STU3 counterparts ``_include:recurse`` and ``_revinclude:recurse``. See `the specification <http://hl7.org/fhir/R4/search.html#revinclude>`_ for the definition of those. You can configure the maximum level of recursion::
 
    "FhirCapabilities": {
@@ -88,6 +111,8 @@ Firely Server also supports ``_include:iterate`` and ``_revinclude:iterate``, as
          "MaximumIncludeIterationDepth": 1
       }
    },
+
+.. warning:: ``_include`` isn't supported for a versioned reference
 
 When searching with the ``:exact`` modifier the server handles `grapheme clusters <http://hl7.org/fhir/R4B/search.html#modifiers>`_. 
 

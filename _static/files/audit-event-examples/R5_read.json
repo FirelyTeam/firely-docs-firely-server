@@ -1,34 +1,41 @@
 {
     "resourceType": "AuditEvent",
-    "extension": [
+    "category": [
         {
-            "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-AuditEvent.type",
-            "valueCoding": {
-                "system": "http://hl7.org/fhir/audit-event-type",
-                "code": "rest",
-                "display": "RESTful Operation"
-            }
+            "coding": [
+                {
+                    "system": "http://terminology.hl7.org/CodeSystem/audit-event-type",
+                    "code": "rest",
+                    "display": "RESTful Operation"
+                }
+            ]
         },
         {
-            "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-AuditEvent.subtype",
-            "valueCoding": {
-                "system": "http://hl7.org/fhir/http-verb",
-                "code": "GET"
-            }
-        },
-        {
-            "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-AuditEvent.subtype",
-            "valueCoding": {
-                "system": "http://hl7.org/fhir/restful-interaction",
-                "code": "read"
-            }
+            "coding": [
+                {
+                    "system": "http://hl7.org/fhir/http-verb",
+                    "code": "GET",
+                    "display": "GET"
+                }
+            ]
         }
     ],
+    "code": {
+        "coding": [
+            {
+                "system": "http://hl7.org/fhir/restful-interaction",
+                "code": "read",
+                "display": "read"
+            }
+        ]
+    },
     "action": "R",
-    "recorded": "2022-10-07T14:21:40.563+00:00",
+    "recorded": "2022-10-17T13:03:12.548+00:00",
     "outcome": {
         "code": {
-            "code": "0"
+            "system": "http://terminology.hl7.org/CodeSystem/audit-event-outcome",
+            "code": "success",
+            "display": "Success"
         },
         "detail": [
             {
@@ -38,18 +45,12 @@
     },
     "agent": [
         {
-            "extension": [
-                {
-                    "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-AuditEvent.agent.altId",
-                    "valueString": "unknown"
-                },
-                {
-                    "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-AuditEvent.agent.network.type",
-                    "valueCode": "2"
-                }
-            ],
             "who": {
-                "display": "anonymous"
+                "display": "%USER_NAME%",
+                "identifier": {
+                    "system": "%TOKEN_ISSUER%",
+                    "value": "%USER_ID%"
+                }
             },
             "type": {
                 "coding": [
@@ -61,18 +62,32 @@
                 ]
             },
             "requestor": true,
-            "networkString": "127.0.0.1"
+            "policy": [
+                "%TOKEN_JWT_ID%"
+            ]
         },
         {
             "type": {
                 "coding": [
                     {
                         "system": "http://dicom.nema.org/resources/ontology/DCM",
-                        "code": "110152",
-                        "display": "Destination Role ID"
+                        "code": "110153",
+                        "display": "Source Role ID"
                     }
                 ]
-            }
+            },
+            "who": {
+                "identifier": {
+                    "value": "%TOKEN_CLIENT_ID%"
+                }
+            },
+            "networkString": "127.0.0.1",
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-AuditEvent.agent.network.type",
+                    "valueCode": "2"
+                }
+            ]
         }
     ],
     "source": {
@@ -92,7 +107,7 @@
         ],
         "observer": {
             "identifier": {
-                "system": "http://vonk.fire.ly/fhir/sid/devices",
+                "system": "http://fire.ly/fhir/sid/devices",
                 "value": "firely-server"
             },
             "display": "SERVER_HOST_NAME"
@@ -102,46 +117,91 @@
         {
             "what": {
                 "identifier": {
+                    "system": "http://fire.ly/fhir/sid/api-diagnostics-requestid",
                     "value": "REQUEST_ID"
-                },
-                "type": "Device"
+                }
             },
             "extension": [
                 {
                     "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-AuditEvent.entity.type",
                     "valueCoding": {
-                        "system": "http://fire.ly/fhir/sid/api-diagnostics",
-                        "code": "RequestId"
+                        "system": "http://terminology.hl7.org/CodeSystem/audit-entity-type",
+                        "code": "2",
+                        "display": "System Object"
                     }
                 }
-            ]
+            ],
+            "role": {
+                "coding": [
+                    {
+                        "system": "http://terminology.hl7.org/CodeSystem/object-role",
+                        "code": "13",
+                        "display": "Security Resource"
+                    }
+                ]
+            }
         },
         {
             "what": {
                 "identifier": {
+                    "system": "http://fire.ly/fhir/sid/api-diagnostics-connectionid",
                     "value": "CONNECTION_ID"
-                },
-                "type": "Device"
+                }
             },
             "extension": [
                 {
                     "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-AuditEvent.entity.type",
                     "valueCoding": {
-                        "system": "http://fire.ly/fhir/sid/api-diagnostics",
-                        "code": "ConnectionId"
+                        "system": "http://terminology.hl7.org/CodeSystem/audit-entity-type",
+                        "code": "2",
+                        "display": "System Object"
                     }
                 }
-            ]
+            ],
+            "role": {
+                "coding": [
+                    {
+                        "system": "http://terminology.hl7.org/CodeSystem/object-role",
+                        "code": "13",
+                        "display": "Security Resource"
+                    }
+                ]
+            }
         },
         {
             "detail": [
                 {
                     "type": {
-                        "text": "path"
+                        "coding": [
+                            {
+                                "system": "http://dicom.nema.org/resources/ontology/DCM",
+                                "code": "110112",
+                                "display": "Query"
+                            }
+                        ]
                     },
                     "valueString": "/Patient/instance-id"
                 }
-            ]
+            ],
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/4.0/StructureDefinition/extension-AuditEvent.entity.type",
+                    "valueCoding": {
+                        "system": "http://terminology.hl7.org/CodeSystem/audit-entity-type",
+                        "code": "2",
+                        "display": "System Object"
+                    }
+                }
+            ],
+            "role": {
+                "coding": [
+                    {
+                        "system": "http://terminology.hl7.org/CodeSystem/object-role",
+                        "code": "24",
+                        "display": "Query"
+                    }
+                ]
+            }
         },
         {
             "what": {
@@ -155,14 +215,6 @@
                         "code": "Patient",
                         "display": "Patient"
                     }
-                }
-            ],
-            "detail": [
-                {
-                    "type": {
-                        "text": "ResourceKey"
-                    },
-                    "valueString": "Patient/instance-id/_history/version-id"
                 }
             ]
         }

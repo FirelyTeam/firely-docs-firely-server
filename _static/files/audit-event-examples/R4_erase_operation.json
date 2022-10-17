@@ -1,18 +1,20 @@
 {
     "resourceType": "AuditEvent",
     "type": {
-        "system": "http://hl7.org/fhir/audit-event-type",
+        "system": "http://terminology.hl7.org/CodeSystem/audit-event-type",
         "code": "rest",
         "display": "RESTful Operation"
     },
     "subtype": [
         {
             "system": "http://hl7.org/fhir/http-verb",
-            "code": "POST"
+            "code": "POST",
+            "display": "POST"
         },
         {
             "system": "http://hl7.org/fhir/restful-interaction",
-            "code": "operation"
+            "code": "operation",
+            "display": "operation"
         }
     ],
     "extension": [
@@ -24,14 +26,17 @@
         }
     ],
     "action": "E",
-    "recorded": "2022-10-07T14:14:36.839+00:00",
+    "recorded": "2022-10-17T13:05:14.049+00:00",
     "outcome": "0",
     "outcomeDesc": "200",
     "agent": [
         {
-            "altId": "unknown",
             "who": {
-                "display": "anonymous"
+                "display": "%USER_NAME%",
+                "identifier": {
+                    "system": "%TOKEN_ISSUER%",
+                    "value": "%USER_ID%"
+                }
             },
             "type": {
                 "coding": [
@@ -43,20 +48,28 @@
                 ]
             },
             "requestor": true,
-            "network": {
-                "address": "127.0.0.1",
-                "type": "2"
-            }
+            "policy": [
+                "%TOKEN_JWT_ID%"
+            ]
         },
         {
             "type": {
                 "coding": [
                     {
                         "system": "http://dicom.nema.org/resources/ontology/DCM",
-                        "code": "110152",
-                        "display": "Destination Role ID"
+                        "code": "110153",
+                        "display": "Source Role ID"
                     }
                 ]
+            },
+            "who": {
+                "identifier": {
+                    "value": "%TOKEN_CLIENT_ID%"
+                }
+            },
+            "network": {
+                "address": "127.0.0.1",
+                "type": "2"
             }
         }
     ],
@@ -71,7 +84,7 @@
         ],
         "observer": {
             "identifier": {
-                "system": "http://vonk.fire.ly/fhir/sid/devices",
+                "system": "http://fire.ly/fhir/sid/devices",
                 "value": "firely-server"
             },
             "display": "SERVER_HOST_NAME"
@@ -81,25 +94,37 @@
         {
             "what": {
                 "identifier": {
+                    "system": "http://fire.ly/fhir/sid/api-diagnostics-requestid",
                     "value": "REQUEST_ID"
-                },
-                "type": "Device"
+                }
             },
             "type": {
-                "system": "http://fire.ly/fhir/sid/api-diagnostics",
-                "code": "RequestId"
+                "system": "http://terminology.hl7.org/CodeSystem/audit-entity-type",
+                "code": "2",
+                "display": "System Object"
+            },
+            "role": {
+                "system": "http://terminology.hl7.org/CodeSystem/object-role",
+                "code": "13",
+                "display": "Security Resource"
             }
         },
         {
             "what": {
                 "identifier": {
+                    "system": "http://fire.ly/fhir/sid/api-diagnostics-connectionid",
                     "value": "CONNECTION_ID"
-                },
-                "type": "Device"
+                }
             },
             "type": {
-                "system": "http://fire.ly/fhir/sid/api-diagnostics",
-                "code": "ConnectionId"
+                "system": "http://terminology.hl7.org/CodeSystem/audit-entity-type",
+                "code": "2",
+                "display": "System Object"
+            },
+            "role": {
+                "system": "http://terminology.hl7.org/CodeSystem/object-role",
+                "code": "13",
+                "display": "Security Resource"
             }
         },
         {
@@ -108,16 +133,31 @@
                     "type": "path",
                     "valueString": "/$erase"
                 }
-            ]
+            ],
+            "type": {
+                "system": "http://terminology.hl7.org/CodeSystem/audit-entity-type",
+                "code": "2",
+                "display": "System Object"
+            },
+            "role": {
+                "system": "http://terminology.hl7.org/CodeSystem/object-role",
+                "code": "24",
+                "display": "Query"
+            }
         },
         {
             "what": {
-                "reference": "ResourceType1/instance-id1/_history/version-id1"
+                "reference": "ResourceType1/instance-id1"
             },
             "type": {
                 "system": "http://hl7.org/fhir/resource-types",
                 "code": "ResourceType1",
                 "display": "ResourceType1"
+            },
+            "lifecycle": {
+                "system": "http://terminology.hl7.org/CodeSystem/iso-21089-lifecycle",
+                "code": "destroy",
+                "display": "Destroy/Delete Record Lifecycle Event"
             },
             "detail": [
                 {
@@ -128,30 +168,23 @@
         },
         {
             "what": {
-                "reference": "ResourceType2/instance-id2/_history/version-id1"
+                "reference": "ResourceType2/instance-id2"
             },
             "type": {
                 "system": "http://hl7.org/fhir/resource-types",
                 "code": "ResourceType2",
                 "display": "ResourceType2"
+            },
+            "lifecycle": {
+                "system": "http://terminology.hl7.org/CodeSystem/iso-21089-lifecycle",
+                "code": "destroy",
+                "display": "Destroy/Delete Record Lifecycle Event"
             },
             "detail": [
                 {
                     "type": "ResourceKey",
                     "valueString": "ResourceType2/instance-id2/_history/version-id1"
-                }
-            ]
-        },
-        {
-            "what": {
-                "reference": "ResourceType2/instance-id2/_history/version-id2"
-            },
-            "type": {
-                "system": "http://hl7.org/fhir/resource-types",
-                "code": "ResourceType2",
-                "display": "ResourceType2"
-            },
-            "detail": [
+                },
                 {
                     "type": "ResourceKey",
                     "valueString": "ResourceType2/instance-id2/_history/version-id2"

@@ -14,8 +14,7 @@ Known Limitations
 ^^^^^^^^^^^^^^^^^
 
 * In order to validate resources claiming to conform to US Core, it is necessary to configure Firely Server to use an external terminology server incl. support for expanding SNOMED CT and LOINC ValueSets. See :ref:`feature_terminology`.
-* The `on-demand`` parameter is not supported for the ``$docref`` operation on DocumentReference resources
-* No conformance claim is added by default to CapabilityStatement.instantiates
+* The `on-demand` parameter is not supported for the ``$docref`` operation on DocumentReference resources
   
 Test Data
 ^^^^^^^^^

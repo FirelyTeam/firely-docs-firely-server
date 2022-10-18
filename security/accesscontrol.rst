@@ -41,7 +41,7 @@ Authorization in Firely Server by default is based on `SMART on FHIR`_ and more 
 * scope=[array of individual scopes]
 * patient=123: the user is allowed access to resources in the compartment of patient 123 -- see :ref:`feature_accesscontrol_compartment`.
 
-See section :ref:`_tokens` for detailed requirements regarding the structure of the access token in order to enable Firely Server to enforce these scopes.
+See section :ref:`accesstokens` for detailed requirements regarding the structure of the access token in order to enable Firely Server to enforce these scopes.
 
 .. note:: A conditional create, update or delete (see the `FHIR http specification <https://hl7.org/fhir/http.html>`_), requires read permissions on the condition. Therefore, ``user/*.write`` will usually require additional ``read`` scopes.
 
@@ -50,7 +50,7 @@ SMART on FHIR also defines scopes starting with 'patient/' instead of 'user/'. I
 Firely Server will additionally handle user-level scopes by checking the syntax of the SMART on FHIR scopes within the access token. It enforces that only allowed resources types are accessed and only allowed actions are executed.
 
 .. attention::
-Requests using a user-level scope are not limited a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly adviced to implement additional security measures using a custom plugin, e.g. by enforcing a certain Practitioner or Encounter context.
+  Requests using a user-level scope are not limited a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly adviced to implement additional security measures using a custom plugin, e.g. by enforcing a certain Practitioner or Encounter context.
 
 Access Control Engine
 ---------------------
@@ -247,6 +247,8 @@ But you can also take advantage of it and allow access only to the patients from
 In this example the claim is still called 'patient', although it contains an Identifier of a General Practitioner. This is because the CompartmentDefinition is selected by matching its code to the name of the claim, regardless of the value the claim contains. 
 
 If multiple resources match the Compartment, that is no problem for Firely Server. You can simply configure the Filters according to the business rules in your organization.
+
+.. _accesstokens:
 
 Tokens
 ------

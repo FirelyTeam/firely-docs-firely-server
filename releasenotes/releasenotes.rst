@@ -111,7 +111,7 @@ Plugin and Facade
 .. _vonk_releasenotes_493:
 
 Release 4.9.3, September 15th, 2022
---------------------------------
+-----------------------------------
 
 Fix
 ^^^

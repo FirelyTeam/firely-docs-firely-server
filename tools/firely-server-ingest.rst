@@ -11,7 +11,7 @@ The tool supports ingestion into SQL Server and MongoDB databases.
 
 Installation
 ------------
-To install the tool, you first need to have .NET Core SDK v6.x installed on your computer. You can download it `here <https://dotnet.microsoft.com/en-us/download>`_. Once it is installed, execute the following command:
+To install the tool, you first need to have .NET Core SDK v6.x installed on your computer. You can download it `here <https://dotnet.microsoft.com/en-us/download>`__. Once it is installed, execute the following command:
 
 ::
 

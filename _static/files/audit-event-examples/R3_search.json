@@ -18,7 +18,7 @@
     }
   ],
   "action": "E",
-  "recorded": "2022-10-18T09:30:46.546+00:00",
+  "recorded": "2022-10-18T13:05:19.153+00:00",
   "outcome": "0",
   "outcomeDesc": "200",
   "agent": [
@@ -140,12 +140,12 @@
         }
       ],
       "type": {
-        "system": "http://terminology.hl7.org/CodeSystem/audit-entity-type",
+        "system": "http://hl7.org/fhir/audit-entity-type",
         "code": "2",
         "display": "System Object"
       },
       "role": {
-        "system": "http://terminology.hl7.org/CodeSystem/object-role",
+        "system": "http://hl7.org/fhir/object-role",
         "code": "24",
         "display": "Query"
       }

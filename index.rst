@@ -27,17 +27,15 @@ or support contract.
 
    Overview <overview>
    Getting started <getting_started>
-   Release notes <releasenotes/releasenotes>
-   How to upgrade <releasenotes/upgrade>
-   Roadmap <releasenotes/roadmap>
+   Releases & upgrade management <releasenotes/releasenotes>
    FAQ <faq>
    Configuration <configuration/configuration>
    Deployment <deployment/deployment>
-   Security <security/security>
-   Performance <performance/performance>
    Features <features/features>
-   Compliance & Certification <compliance/compliance>
+   Security <security/security>
    Administration API <administration_api>
+   Performance <performance/performance>
+   Compliance & Certification <compliance/compliance>
    Plugins <plugins/plugins>
    Facade <facade/facade>
    Reference <reference/reference>

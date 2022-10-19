@@ -1,12 +1,12 @@
 .. _vonk_releasenotes_history:
 
-Older Vonk Release notes
-========================
+Old Firely Server release notes (v2.x and earlier)
+==================================================
 
 .. _vonk_releasenotes_220:
 
 Release 2.2.0
---------------------
+-------------
 
 Database
 ^^^^^^^^
@@ -860,6 +860,5 @@ Release 0.3.0.0
 6. Performance
 
   #. Added indexes to MongoDb and SQL Server implementations.
-
 
 .. _Older SDK release notes: https://docs.fire.ly/projects/Firely-NET-SDK/releasenotes.html

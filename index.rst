@@ -36,8 +36,6 @@ or support contract.
    Administration API <administration_api>
    Performance <performance/performance>
    Compliance & Certification <compliance/compliance>
-   Plugins <plugins/plugins>
-   Facade <facade/facade>
-   Reference <reference/reference>
+   Programming API Reference & Plugins<reference/reference>
    Tools <tools/tools>
    contact

@@ -38,4 +38,5 @@ or support contract.
    Compliance & Certification <compliance/compliance>
    Programming API Reference & Plugins<reference/reference>
    Tools <tools/tools>
+   OpenAPI <openapi/openapi>
    contact

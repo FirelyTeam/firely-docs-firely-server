@@ -35,7 +35,9 @@ environment variable::
 
 To access an embedded value, using the ':' separator:
 
-appsettings.json::
+appsettings.json:
+
+.. code-block:: json
 
 	"Administration" : {
 		"SqlDbOptions" : {
@@ -57,18 +59,20 @@ Arrays in Environment Variables
 
 Sometimes the appsettings allow for an array of values, e.g. in the setting for ``AllowedProfiles`` in :ref:`feature_prevalidation`. You can address them by appending an extra colon and an index number.
 
-appsettings.json::
+appsettings.json:
 
-  "Validation": {
-    "ValidateIncomingResources": "true",
-    "AllowedProfiles": 
-    [
-        http://hl7.org/fhir/StructureDefinition/daf-patient, 
-        http://hl7.org/fhir/StructureDefinition/daf-allergyintolerance
-    ]
-  },
+.. code-block:: json
 
-environment variables::
+   "Validation": {
+      "ValidateIncomingResources": "true",
+      "AllowedProfiles": 
+      [
+         "http://hl7.org/fhir/StructureDefinition/daf-patient", 
+         "http://hl7.org/fhir/StructureDefinition/daf-allergyintolerance"
+      ]
+   }
+
+environment variables:
 
 	VONK_Validation:ValidateIncomingResources=true
 	VONK_Validation:AllowedProfiles:0=http://hl7.org/fhir/StructureDefinition/daf-patient
@@ -85,12 +89,14 @@ The difference is in the prefix. For the log settings we use 'VONKLOG\_'.
 
 logsettings.json
 
+.. code-block:: json
+
    "Serilog": {
         "MinimumLevel": {
             "Override": {
                 "Vonk.Configuration": "Information",
 
-environment variable::
+environment variable:
 
    VONKLOG_Serilog:MinimumLevel:Override:Vonk.Configuration=Information
 
@@ -103,6 +109,8 @@ You can control the :ref:`configure_audit_log_file` with Environment Variables t
 The difference is in the prefix. For the log settings we use 'VONKAUDITLOG\_'.
 
 audit.logsettings.json
+
+.. code-block:: json
 
    "AuditLog": {
       "WriteTo": [

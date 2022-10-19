@@ -10,8 +10,6 @@ Conflicting resources upon import
 
 When importing specification.zip for R4, Firely Server will report errors like these::
 
-::
-
    Artifact C:\Users\<user>\AppData\Local\Temp\FhirArtifactCache-1.5.0-Hl7.Fhir.R4.Specification\specification_Fhir4_0\dataelements.xml could not be imported. Error message: Found multiple conflicting resources with the same resource uri identifier.
 
    Url: http://hl7.org/fhir/StructureDefinition/de-Quantity.value
@@ -24,9 +22,7 @@ The error message is actually correct, since there *are* duplicate fullUrls in d
 Searchparameter errors for composite parameters
 -----------------------------------------------
 
-When importing specification.zip for various FHIR versions, Firely Server will report errors like these:
-
-::
+When importing specification.zip for various FHIR versions, Firely Server will report errors like these::
 
    Composite SearchParameter 'CodeSystem.context-type-quantity' doesn't have components.
 
@@ -39,9 +35,8 @@ However, the implementation of this check seems to have an error so too many com
 
 Since version 4.0 Vonk was renamed to Firely Server, including the main entrypoint. It changed from ``vonk.server.dll`` to ``firely.server.dll``.
 
-If you now still run ``dotnet vonk.server.dll`` on .NET runtime 3.1 it will state this error:
-
-   ::
+If you now still run ``dotnet vonk.server.dll`` on .NET runtime 3.1 it will state this error::
+      
       It was not possible to find any installed .NET Core SDKs
       Did you mean to run .NET Core SDK commands? Install a .NET Core SDK from: https://aka.ms/dotnet-download
 

@@ -11,7 +11,7 @@ This list uses the NuGet package names (or prefixes of them) so you can easily l
 #. Microsoft.AspNetCore.* - Apache 2.0
 #. Microsoft.ApplicationInsights.* - MIT
 #. Microsoft.Bcl.AsyncInterfaces - MIT
-#. Microsoft.EntityFrameworkCore.* - Apache 2.0
+#. Microsoft.EntityFrameworkCore.* - MIT
 #. Microsoft.Extensions.* - MIT
 #. Microsoft.AspNet.WebApi.Client - `MS-.NET-Library License <https://go.microsoft.com/fwlink/?LinkId=329770>`_
 #. System.Interactive.Async - MIT

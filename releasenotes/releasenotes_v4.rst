@@ -123,7 +123,7 @@ Feature
 
 .. _announcement_vonk_8_july_2021:
 
-Public Endpoint Announcement 8 July 2021
+Public Endpoint Announcement 8 July 2022
 ----------------------------------------
 
 The default FHIR version of the `public Firely Server endpoint <https://server.fire.ly/>`_ is now R4.

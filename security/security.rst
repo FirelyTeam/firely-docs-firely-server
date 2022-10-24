@@ -11,5 +11,6 @@ secure access to the data in your server.
    :titlesonly:
 
    accesscontrol
+   auditing
 
 .. add files here

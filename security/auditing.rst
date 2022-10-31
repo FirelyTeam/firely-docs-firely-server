@@ -292,7 +292,8 @@ To implement such a plugin, it is helpful to understand how AuditEvents get crea
    :width: 800
 
 
-See an example plugin below. This plugin captures all the token claims from the original request and then includes those claims into the AuditEvent.
+See an example plugin below. This plugin captures all the token claims from the original request and then includes those claims into the AuditEvent. Note that you need to work with SourceNodes at this level. You can read more about manipulating the SourceNodes :ref:`here <vonk_reference_api_elementmodel>` and in the `Firely .NET SDK documentation <https://docs.fire.ly/projects/Firely-NET-SDK/parsing/poco-parsing.html>`_.
+
 
 .. code-block:: CSharp
 

@@ -236,3 +236,126 @@ The table below contains some elements you can find in the generated AuditEvents
 +-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
 | Example ($erase operation)  | :download:`download <../_static/files/audit-event-examples/R3_erase_operation.json>`  | :download:`download <../_static/files/audit-event-examples/R4_erase_operation.json>`  | :download:`download <../_static/files/audit-event-examples/R5_erase_operation.json>`  |
 +-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+
+.. _audit_event_customization:
+
+AuditEvent customization
+------------------------
+
+If you need to include additional information in the standard AuditEvents, you can do that with a custom plugin. 
+
+To implement such a plugin, it is helpful to understand how AuditEvents get created in Firely Server. Whenever the server receives an incoming HTTP request, a middleware registered in ``AuditEventConfiguration`` first passes it transparently to the downstream handlers. Then, when the original requests get handled, the audit middleware creates another artificial request and passes it down the stream again. This time, the request contains a creation operation with the AuditEvent as a payload. Like any other request in Firely Server, this request can be intercepted and changed using a pre-handler before it continues down the pipeline until ``CreateOperationMiddleware`` handles it. The order of the customization plugin should be greater than ``3170`` and less than ``4420``.
+  
+
+.. @startuml
+
+.. title "AuditEvent creation process"
+
+.. participant "AuditEventMiddleware (order 3170)" as aem
+.. participant "..." as hOther
+.. participant "AuditEventCustomizationMiddleware" as aecm
+.. participant "..." as hOther2
+.. participant "CreateOperationMiddleware (order 4420)" as hCreate
+
+.. -> aem: original HTTP request
+.. activate aem
+.. aem -> hOther: original HTTP request
+.. activate hOther
+.. hOther --> aem
+.. deactivate hOther
+
+.. aem -> hOther: AuditEvent creation \nrequest context
+.. activate hOther
+.. hOther -> aecm: AuditEvent creation \nrequest context
+.. activate aecm
+.. aecm -> aecm: Customize payload
+.. activate aecm
+.. deactivate aecm
+.. aecm -> hOther2: AuditEvent creation \nrequest context
+.. activate hOther2
+.. hOther2 -> hCreate
+.. activate hCreate
+.. hCreate --> hOther2
+.. deactivate hCreate
+.. hOther2 --> aecm
+.. deactivate hOther2
+.. aecm --> hOther
+.. deactivate aecm
+.. hOther --> aem
+.. deactivate hOther
+.. <-- aem
+.. deactivate aem
+
+.. @enduml
+
+.. image:: ../../_static/images/auditing/AuditEvent-customization.svg
+   :width: 800
+
+
+See an example plugin below. This plugin captures all the token claims from the original request and then includes those claims into the AuditEvent. Note that you need to work with SourceNodes at this level. You can read more about manipulating the SourceNodes :ref:`here <vonk_reference_api_elementmodel>` and in the `Firely .NET SDK documentation <https://docs.fire.ly/projects/Firely-NET-SDK/parsing/poco-parsing.html>`_.
+
+
+.. code-block:: CSharp
+
+   [VonkConfiguration(order: 3175)]
+   public static class AuditEventCustomizationConfiguration
+   {
+      public static IServiceCollection ConfigureServices(IServiceCollection services)
+      {
+         services.AddScoped<AuditEventCustomizationService>();
+         return services;
+      }
+      
+      public static IApplicationBuilder Configure(IApplicationBuilder builder)
+      {
+         builder.OnInteraction(VonkInteraction.all).PreHandleWith<AuditEventCustomizationService>((s, ctx) => s.CaptureOriginalRequestInfo(ctx));
+         builder.OnInteraction(VonkInteraction.type_create).AndResourceTypes("AuditEvent").PreHandleWith<AuditEventCustomizationService>((s, ctx) => s.AmendAuditEvent(ctx));
+         return builder;
+      }
+
+      private class AuditEventCustomizationService
+      {
+         private ClaimsPrincipal _user;
+
+         public void CaptureOriginalRequestInfo(IVonkContext ctx)
+         {
+               if (!IsAuditEventCreationRequest(ctx))
+               {
+                  _user = ctx.HttpContext().User;
+               }
+         }
+
+         public void AmendAuditEvent(IVonkContext ctx)
+         {
+               if (IsAuditEventCreationRequest(ctx) && _user != null)
+               {
+                  if (ctx.Request.Payload.Success)
+                  {
+                     var payloadResource = ctx.Request.Payload.Resource;
+                     var resource = SourceNode.FromNode(payloadResource);
+
+                     foreach (var claim in _user.Claims)
+                     {
+                           resource = resource.Add(SourceNode.Node("extension",
+                              SourceNode.Valued("url", $"tokenValue-{claim.Type}"),
+                              SourceNode.Valued("valueString", claim.Value)
+                           ));
+                     }
+
+                     ctx.Request.Payload = new RequestPayload
+                     {
+                           Resource = resource.ToIResource(payloadResource.InformationModel),
+                           StatusCode = ctx.Request.Payload.StatusCode,
+                           Success = true
+                     };
+                  }
+               }
+         }
+
+         private static bool IsAuditEventCreationRequest(IVonkContext ctx) =>
+               ctx.Request.Interaction == VonkInteraction.type_create 
+               && ctx.Arguments.TryGetArgument(ArgumentNames.resourceType, out var arg) 
+               && arg is {Source: ArgumentSource.Internal};
+      }
+   }
+

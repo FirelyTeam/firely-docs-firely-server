@@ -176,10 +176,16 @@ In normal circumstances the buffer will regularly be flushed to the underlying s
 
 The downside is that writing to the audit log is blocking and Firely Server now has to wait on the log to finish before it can continue, which in turn affects performance. You will have to try and test what works best for your use case.
 
+.. _audit_event_logging:
+
 AuditEvent logging
 ------------------
 
 There is no further configuration for AuditEvent logging. If you include it in the pipeline, it will start generating AuditEvent resources.
+
+.. note::
+
+   AuditEvents will not get generated if your configuration restricts the list of supported FHIR resources and ``AuditEvent`` is not included (see :ref:`supportedmodel`).
 
 For transactions and batches the audit plugin will create an AuditEvent for the transaction/batch as a whole *and* one for every entry in the transaction/batch.
 

@@ -390,7 +390,8 @@ Be aware that:
 
 * support for _type and _id must not be disabled
 * the Administration API requires support for the 'url' SearchParameter on the conformance resourcetypes
-* this uses the search parameter names, not the path within the resource - so for example to specify `Patient.address.postalCode <http://hl7.org/fhir/R4/patient.html#search>`_ as a supported location, you'd use ``"Patient.address-postalcode"``.
+* this uses the search parameter names, not the path within the resource - so for example to specify `Patient.address.postalCode <http://hl7.org/fhir/R4/patient.html#search>`_ as a supported location, you'd use ``"Patient.address-postalcode"``
+* if the support of `AuditEvent` resources is disabled, the AuditEvents will not get generated (see :ref:`audit_event_logging`).
 
 .. _disable_interactions:
 

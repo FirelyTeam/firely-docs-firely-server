@@ -13,7 +13,7 @@ resources:
 variables:
 - group: Git credentials
 - name: SwaggerUiDirectory
-  value: $(Build.SourcesDirectory)/firely-docs-firely-server/_static/Swagger/
+  value: $(Build.SourcesDirectory)/firely-docs-firely-server/_static/swagger/
 - name: OpenApiDirectoryName
   value: OpenApiJson
 - name: SwaggerConfigFilename

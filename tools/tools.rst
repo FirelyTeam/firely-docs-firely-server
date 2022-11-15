@@ -10,3 +10,4 @@ This section contains documentation about tools that can improve your Firely Ser
    :titlesonly:
 
    firely-server-ingest
+   firely-auth/firely-auth

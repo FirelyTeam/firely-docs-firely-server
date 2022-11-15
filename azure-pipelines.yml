@@ -2,11 +2,12 @@
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
-# resources:
-#   repositories:
-  # - repository: FhirCodegen # The name used to reference this repository in the checkout step
-  #   type: github
-  #   name: MyGitHubOrgOrUser/MyGitHubRepo
+resources:
+  repositories:
+  - repository: FhirCodegen
+    type: github
+    name: microsoft/fhir-codegen
+    endpoint: GitHub - FirelyTeam
 
 trigger: none
 
@@ -16,7 +17,7 @@ pool:
 steps:
 - checkout: self
 
-- checkout: github://microsoft/fhir-codegen.git@dev
+- checkout: FhirCodegen
 
 
 # - script: echo Hello, world!

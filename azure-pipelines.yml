@@ -22,8 +22,8 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'run'
-    projects: '$(Build.SourcesDirectory)/FhirCodegen/src/fhir-codegen-cli/fhir-codegen-cli.csproj.csproj'
-    arguments: '--fhir-server-url https://server.fire.ly/ --resolve-external false --language-options OpenApi|SingleResponses=true|Metadata=true|SchemaLevel=names|MultiFile=true --output-path $(Build.SourcesDirectory)/_static/Swagger/OpenApiJson --language OpenApi'
+    projects: '$(Build.SourcesDirectory)/fhir-codegen/src/fhir-codegen-cli/fhir-codegen-cli.csproj.csproj'
+    arguments: '--fhir-server-url https://server.fire.ly/ --resolve-external false --language-options OpenApi|SingleResponses=true|Metadata=true|SchemaLevel=names|MultiFile=true --output-path $(Build.SourcesDirectory)/firely-docs-firely-server/_static/Swagger/OpenApiJson --language OpenApi'
 
 # - script: echo Hello, world!
 #   displayName: 'Run a one-line script'

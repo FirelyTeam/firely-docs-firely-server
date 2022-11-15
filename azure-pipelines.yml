@@ -37,5 +37,5 @@ steps:
     git checkout -b swagger_ui_update_$(Build.BuildNumber)
     git add .
     git commit -m "Updating public documentation"
-    git push --set-upstream origin swagger_ui_update_$(Build.BuildNumber)
+    git push --set-upstream origin2 swagger_ui_update_$(Build.BuildNumber)
   displayName: 'Making a new branch'

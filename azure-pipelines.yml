@@ -12,6 +12,12 @@ resources:
 
 variables:
 - group: Git credentials
+- name: OpenApiOutputDirectory
+  value: $(Build.SourcesDirectory)/firely-docs-firely-server/_static/Swagger/OpenApiJson
+- name: SwaggerConfigurationFile
+  value: $(OpenApiOutputDirectory)/swagger-config.json
+- name: FhirServerUrl
+  value: https://server.fire.ly/
 
 trigger: none
 
@@ -27,7 +33,7 @@ steps:
   inputs:
     command: 'run'
     projects: '$(Build.SourcesDirectory)/fhir-codegen/src/fhir-codegen-cli/fhir-codegen-cli.csproj'
-    arguments: '--fhir-server-url https://server.fire.ly/ --resolve-external false --language-options OpenApi|SingleResponses=true|Metadata=true|SchemaLevel=names|MultiFile=true --output-path $(Build.SourcesDirectory)/firely-docs-firely-server/_static/Swagger/OpenApiJson --language OpenApi'
+    arguments: '--fhir-server-url $(FhirServerUrl) --resolve-external false --language-options OpenApi|SingleResponses=true|Metadata=true|SchemaLevel=names|MultiFile=true --output-path $(OpenApiOutputDirectory) --language OpenApi'
 
 - script: |
     cd $(Build.SourcesDirectory)/firely-docs-firely-server

@@ -16,7 +16,7 @@ pool:
 steps:
 - checkout: self
 
-- checkout: git://microsoft/fhir-codegen.git@dev
+- checkout: github://microsoft/fhir-codegen.git@dev
 
 
 # - script: echo Hello, world!

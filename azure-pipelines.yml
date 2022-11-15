@@ -22,7 +22,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'run'
-    projects: '$(Build.SourcesDirectory)/fhir-codegen/src/fhir-codegen-cli/fhir-codegen-cli.csproj.csproj'
+    projects: '$(Build.SourcesDirectory)/fhir-codegen/src/fhir-codegen-cli/fhir-codegen-cli.csproj'
     arguments: '--fhir-server-url https://server.fire.ly/ --resolve-external false --language-options OpenApi|SingleResponses=true|Metadata=true|SchemaLevel=names|MultiFile=true --output-path $(Build.SourcesDirectory)/firely-docs-firely-server/_static/Swagger/OpenApiJson --language OpenApi'
 
 # - script: echo Hello, world!

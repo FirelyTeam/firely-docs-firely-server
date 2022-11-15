@@ -26,10 +26,10 @@ steps:
     projects: '$(Build.SourcesDirectory)/fhir-codegen/src/fhir-codegen-cli/fhir-codegen-cli.csproj'
     arguments: '--fhir-server-url https://server.fire.ly/ --resolve-external false --language-options OpenApi|SingleResponses=true|Metadata=true|SchemaLevel=names|MultiFile=true --output-path $(Build.SourcesDirectory)/firely-docs-firely-server/_static/Swagger/OpenApiJson --language OpenApi'
 
-# - script: echo Hello, world!
-#   displayName: 'Run a one-line script'
-
-# - script: |
-#     echo Add other tasks to build, test, and deploy your project.
-#     echo See https://aka.ms/yaml
-#   displayName: 'Run a multi-line script'
+- script: |
+    cd $(Build.SourcesDirectory)/firely-docs-firely-server
+    git checkout -b swagger_ui_update_$(Build.BuildNumber)
+    git add .
+    git commit -m "Updating public documentation"
+    git push --set-upstream origin swagger_ui_update_$(Build.BuildNumber)
+  displayName: 'Making a new branch'

@@ -7,7 +7,7 @@ resources:
   - repository: FhirCodegen
     type: github
     name: microsoft/fhir-codegen
-    endpoint: GitHub - FirelyTeam
+    endpoint: FirelyTeam
     ref: dev
 
 trigger: none

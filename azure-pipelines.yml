@@ -12,12 +12,18 @@ resources:
 
 variables:
 - group: Git credentials
-- name: OpenApiOutputDirectory
-  value: $(Build.SourcesDirectory)/firely-docs-firely-server/_static/Swagger/OpenApiJson
-- name: SwaggerConfigurationFile
-  value: $(OpenApiOutputDirectory)/swagger-config.json
+- name: SwaggerUiDirectory
+  value: $(Build.SourcesDirectory)/firely-docs-firely-server/_static/swagger/
+- name: OpenApiDirectoryName
+  value: OpenApiJson
+- name: SwaggerConfigFilename
+  value: swagger-config.json
+
 - name: FhirServerUrl
   value: https://server.fire.ly/
+
+- name: OpenApiOutputDirectory
+  value: $(SwaggerUiDirectory)/$(OpenApiDirectoryName)
 
 trigger: none
 
@@ -34,6 +40,30 @@ steps:
     command: 'run'
     projects: '$(Build.SourcesDirectory)/fhir-codegen/src/fhir-codegen-cli/fhir-codegen-cli.csproj'
     arguments: '--fhir-server-url $(FhirServerUrl) --resolve-external false --language-options OpenApi|SingleResponses=true|Metadata=true|SchemaLevel=names|MultiFile=true --output-path $(OpenApiOutputDirectory) --language OpenApi'
+
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      $urls = gci $(OpenApiOutputDirectory) -Exclude '$(SwaggerConfigFilename)' | %{
+          $name = $_.Name -replace '(.*_)+' `
+          -replace '.json' `
+          -replace '^Root$', 'SystemOperations' `
+          -csplit '(?=[A-Z])' -ne '' -join ' '
+      
+          [PSCustomObject]@{
+              name = $name;
+              url = "./$(OpenApiDirectoryName)/$($_.Name)"
+          }
+        }
+      
+      $json = New-Object -Type PSCustomObject `
+        | Add-Member -name "urls" -value $urls -MemberType NoteProperty -PassThru `
+        | Add-Member -name "urls.primaryName" -value "System Operations" -MemberType NoteProperty  -PassThru
+        | ConvertTo-Json
+      
+      $json | Out-File $(OpenApiOutputDirectory)/$(SwaggerConfigFilename)
 
 - script: |
     cd $(Build.SourcesDirectory)/firely-docs-firely-server

@@ -28,6 +28,8 @@ steps:
 
 - script: |
     cd $(Build.SourcesDirectory)/firely-docs-firely-server
+    git config --global user.email "azuredevopsbuild@test.com"
+    git config --global user.name "Azure DevOps build"
     git checkout -b swagger_ui_update_$(Build.BuildNumber)
     git add .
     git commit -m "Updating public documentation"

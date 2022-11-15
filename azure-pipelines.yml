@@ -1,0 +1,47 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+resources:
+  repositories:
+  - repository: FhirCodegen
+    type: github
+    name: microsoft/fhir-codegen
+    endpoint: FirelyTeam
+    ref: dev
+
+variables:
+- group: Git credentials
+- name: OpenApiOutputDirectory
+  value: $(Build.SourcesDirectory)/firely-docs-firely-server/_static/Swagger/OpenApiJson
+- name: SwaggerConfigurationFile
+  value: $(OpenApiOutputDirectory)/swagger-config.json
+- name: FhirServerUrl
+  value: https://server.fire.ly/
+
+trigger: none
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- checkout: self
+
+- checkout: FhirCodegen
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'run'
+    projects: '$(Build.SourcesDirectory)/fhir-codegen/src/fhir-codegen-cli/fhir-codegen-cli.csproj'
+    arguments: '--fhir-server-url $(FhirServerUrl) --resolve-external false --language-options OpenApi|SingleResponses=true|Metadata=true|SchemaLevel=names|MultiFile=true --output-path $(OpenApiOutputDirectory) --language OpenApi'
+
+- script: |
+    cd $(Build.SourcesDirectory)/firely-docs-firely-server
+    git config --global user.email "azuredevopsbuild@test.com"
+    git config --global user.name "Azure DevOps build"
+    git remote add origin2 https://$(git_token)@github.com/FirelyTeam/firely-docs-firely-server.git
+    git checkout -b swagger_ui_update_$(Build.BuildNumber)
+    git add .
+    git commit -m "Updating public documentation"
+    git push --set-upstream origin2 swagger_ui_update_$(Build.BuildNumber)
+  displayName: 'Making a new branch'

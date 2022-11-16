@@ -1,0 +1,601 @@
+{
+  "urls": [
+    {
+      "name": "System Operations",
+      "url": "./OpenApiJson/OpenApi_R4__Root.json"
+    },
+    {
+      "name": "Account",
+      "url": "./OpenApiJson/OpenApi_R4_Account.json"
+    },
+    {
+      "name": "Activity Definition",
+      "url": "./OpenApiJson/OpenApi_R4_ActivityDefinition.json"
+    },
+    {
+      "name": "Adverse Event",
+      "url": "./OpenApiJson/OpenApi_R4_AdverseEvent.json"
+    },
+    {
+      "name": "Allergy Intolerance",
+      "url": "./OpenApiJson/OpenApi_R4_AllergyIntolerance.json"
+    },
+    {
+      "name": "Appointment",
+      "url": "./OpenApiJson/OpenApi_R4_Appointment.json"
+    },
+    {
+      "name": "Appointment Response",
+      "url": "./OpenApiJson/OpenApi_R4_AppointmentResponse.json"
+    },
+    {
+      "name": "Audit Event",
+      "url": "./OpenApiJson/OpenApi_R4_AuditEvent.json"
+    },
+    {
+      "name": "Basic",
+      "url": "./OpenApiJson/OpenApi_R4_Basic.json"
+    },
+    {
+      "name": "Binary",
+      "url": "./OpenApiJson/OpenApi_R4_Binary.json"
+    },
+    {
+      "name": "Biologically Derived Product",
+      "url": "./OpenApiJson/OpenApi_R4_BiologicallyDerivedProduct.json"
+    },
+    {
+      "name": "Body Structure",
+      "url": "./OpenApiJson/OpenApi_R4_BodyStructure.json"
+    },
+    {
+      "name": "Bundle",
+      "url": "./OpenApiJson/OpenApi_R4_Bundle.json"
+    },
+    {
+      "name": "Capability Statement",
+      "url": "./OpenApiJson/OpenApi_R4_CapabilityStatement.json"
+    },
+    {
+      "name": "Care Plan",
+      "url": "./OpenApiJson/OpenApi_R4_CarePlan.json"
+    },
+    {
+      "name": "Care Team",
+      "url": "./OpenApiJson/OpenApi_R4_CareTeam.json"
+    },
+    {
+      "name": "Catalog Entry",
+      "url": "./OpenApiJson/OpenApi_R4_CatalogEntry.json"
+    },
+    {
+      "name": "Charge Item",
+      "url": "./OpenApiJson/OpenApi_R4_ChargeItem.json"
+    },
+    {
+      "name": "Charge Item Definition",
+      "url": "./OpenApiJson/OpenApi_R4_ChargeItemDefinition.json"
+    },
+    {
+      "name": "Claim",
+      "url": "./OpenApiJson/OpenApi_R4_Claim.json"
+    },
+    {
+      "name": "Claim Response",
+      "url": "./OpenApiJson/OpenApi_R4_ClaimResponse.json"
+    },
+    {
+      "name": "Clinical Impression",
+      "url": "./OpenApiJson/OpenApi_R4_ClinicalImpression.json"
+    },
+    {
+      "name": "Code System",
+      "url": "./OpenApiJson/OpenApi_R4_CodeSystem.json"
+    },
+    {
+      "name": "Communication",
+      "url": "./OpenApiJson/OpenApi_R4_Communication.json"
+    },
+    {
+      "name": "Communication Request",
+      "url": "./OpenApiJson/OpenApi_R4_CommunicationRequest.json"
+    },
+    {
+      "name": "Compartment Definition",
+      "url": "./OpenApiJson/OpenApi_R4_CompartmentDefinition.json"
+    },
+    {
+      "name": "Composition",
+      "url": "./OpenApiJson/OpenApi_R4_Composition.json"
+    },
+    {
+      "name": "Concept Map",
+      "url": "./OpenApiJson/OpenApi_R4_ConceptMap.json"
+    },
+    {
+      "name": "Condition",
+      "url": "./OpenApiJson/OpenApi_R4_Condition.json"
+    },
+    {
+      "name": "Consent",
+      "url": "./OpenApiJson/OpenApi_R4_Consent.json"
+    },
+    {
+      "name": "Contract",
+      "url": "./OpenApiJson/OpenApi_R4_Contract.json"
+    },
+    {
+      "name": "Coverage",
+      "url": "./OpenApiJson/OpenApi_R4_Coverage.json"
+    },
+    {
+      "name": "Coverage Eligibility Request",
+      "url": "./OpenApiJson/OpenApi_R4_CoverageEligibilityRequest.json"
+    },
+    {
+      "name": "Coverage Eligibility Response",
+      "url": "./OpenApiJson/OpenApi_R4_CoverageEligibilityResponse.json"
+    },
+    {
+      "name": "Detected Issue",
+      "url": "./OpenApiJson/OpenApi_R4_DetectedIssue.json"
+    },
+    {
+      "name": "Device",
+      "url": "./OpenApiJson/OpenApi_R4_Device.json"
+    },
+    {
+      "name": "Device Definition",
+      "url": "./OpenApiJson/OpenApi_R4_DeviceDefinition.json"
+    },
+    {
+      "name": "Device Metric",
+      "url": "./OpenApiJson/OpenApi_R4_DeviceMetric.json"
+    },
+    {
+      "name": "Device Request",
+      "url": "./OpenApiJson/OpenApi_R4_DeviceRequest.json"
+    },
+    {
+      "name": "Device Use Statement",
+      "url": "./OpenApiJson/OpenApi_R4_DeviceUseStatement.json"
+    },
+    {
+      "name": "Diagnostic Report",
+      "url": "./OpenApiJson/OpenApi_R4_DiagnosticReport.json"
+    },
+    {
+      "name": "Document Manifest",
+      "url": "./OpenApiJson/OpenApi_R4_DocumentManifest.json"
+    },
+    {
+      "name": "Document Reference",
+      "url": "./OpenApiJson/OpenApi_R4_DocumentReference.json"
+    },
+    {
+      "name": "Effect Evidence Synthesis",
+      "url": "./OpenApiJson/OpenApi_R4_EffectEvidenceSynthesis.json"
+    },
+    {
+      "name": "Encounter",
+      "url": "./OpenApiJson/OpenApi_R4_Encounter.json"
+    },
+    {
+      "name": "Endpoint",
+      "url": "./OpenApiJson/OpenApi_R4_Endpoint.json"
+    },
+    {
+      "name": "Enrollment Request",
+      "url": "./OpenApiJson/OpenApi_R4_EnrollmentRequest.json"
+    },
+    {
+      "name": "Enrollment Response",
+      "url": "./OpenApiJson/OpenApi_R4_EnrollmentResponse.json"
+    },
+    {
+      "name": "Episode Of Care",
+      "url": "./OpenApiJson/OpenApi_R4_EpisodeOfCare.json"
+    },
+    {
+      "name": "Event Definition",
+      "url": "./OpenApiJson/OpenApi_R4_EventDefinition.json"
+    },
+    {
+      "name": "Evidence",
+      "url": "./OpenApiJson/OpenApi_R4_Evidence.json"
+    },
+    {
+      "name": "Evidence Variable",
+      "url": "./OpenApiJson/OpenApi_R4_EvidenceVariable.json"
+    },
+    {
+      "name": "Example Scenario",
+      "url": "./OpenApiJson/OpenApi_R4_ExampleScenario.json"
+    },
+    {
+      "name": "Explanation Of Benefit",
+      "url": "./OpenApiJson/OpenApi_R4_ExplanationOfBenefit.json"
+    },
+    {
+      "name": "Family Member History",
+      "url": "./OpenApiJson/OpenApi_R4_FamilyMemberHistory.json"
+    },
+    {
+      "name": "Flag",
+      "url": "./OpenApiJson/OpenApi_R4_Flag.json"
+    },
+    {
+      "name": "Goal",
+      "url": "./OpenApiJson/OpenApi_R4_Goal.json"
+    },
+    {
+      "name": "Graph Definition",
+      "url": "./OpenApiJson/OpenApi_R4_GraphDefinition.json"
+    },
+    {
+      "name": "Group",
+      "url": "./OpenApiJson/OpenApi_R4_Group.json"
+    },
+    {
+      "name": "Guidance Response",
+      "url": "./OpenApiJson/OpenApi_R4_GuidanceResponse.json"
+    },
+    {
+      "name": "Healthcare Service",
+      "url": "./OpenApiJson/OpenApi_R4_HealthcareService.json"
+    },
+    {
+      "name": "Imaging Study",
+      "url": "./OpenApiJson/OpenApi_R4_ImagingStudy.json"
+    },
+    {
+      "name": "Immunization",
+      "url": "./OpenApiJson/OpenApi_R4_Immunization.json"
+    },
+    {
+      "name": "Immunization Evaluation",
+      "url": "./OpenApiJson/OpenApi_R4_ImmunizationEvaluation.json"
+    },
+    {
+      "name": "Immunization Recommendation",
+      "url": "./OpenApiJson/OpenApi_R4_ImmunizationRecommendation.json"
+    },
+    {
+      "name": "Implementation Guide",
+      "url": "./OpenApiJson/OpenApi_R4_ImplementationGuide.json"
+    },
+    {
+      "name": "Insurance Plan",
+      "url": "./OpenApiJson/OpenApi_R4_InsurancePlan.json"
+    },
+    {
+      "name": "Invoice",
+      "url": "./OpenApiJson/OpenApi_R4_Invoice.json"
+    },
+    {
+      "name": "Library",
+      "url": "./OpenApiJson/OpenApi_R4_Library.json"
+    },
+    {
+      "name": "Linkage",
+      "url": "./OpenApiJson/OpenApi_R4_Linkage.json"
+    },
+    {
+      "name": "List",
+      "url": "./OpenApiJson/OpenApi_R4_List.json"
+    },
+    {
+      "name": "Location",
+      "url": "./OpenApiJson/OpenApi_R4_Location.json"
+    },
+    {
+      "name": "Measure",
+      "url": "./OpenApiJson/OpenApi_R4_Measure.json"
+    },
+    {
+      "name": "Measure Report",
+      "url": "./OpenApiJson/OpenApi_R4_MeasureReport.json"
+    },
+    {
+      "name": "Media",
+      "url": "./OpenApiJson/OpenApi_R4_Media.json"
+    },
+    {
+      "name": "Medication",
+      "url": "./OpenApiJson/OpenApi_R4_Medication.json"
+    },
+    {
+      "name": "Medication Administration",
+      "url": "./OpenApiJson/OpenApi_R4_MedicationAdministration.json"
+    },
+    {
+      "name": "Medication Dispense",
+      "url": "./OpenApiJson/OpenApi_R4_MedicationDispense.json"
+    },
+    {
+      "name": "Medication Knowledge",
+      "url": "./OpenApiJson/OpenApi_R4_MedicationKnowledge.json"
+    },
+    {
+      "name": "Medication Request",
+      "url": "./OpenApiJson/OpenApi_R4_MedicationRequest.json"
+    },
+    {
+      "name": "Medication Statement",
+      "url": "./OpenApiJson/OpenApi_R4_MedicationStatement.json"
+    },
+    {
+      "name": "Medicinal Product",
+      "url": "./OpenApiJson/OpenApi_R4_MedicinalProduct.json"
+    },
+    {
+      "name": "Medicinal Product Authorization",
+      "url": "./OpenApiJson/OpenApi_R4_MedicinalProductAuthorization.json"
+    },
+    {
+      "name": "Medicinal Product Contraindication",
+      "url": "./OpenApiJson/OpenApi_R4_MedicinalProductContraindication.json"
+    },
+    {
+      "name": "Medicinal Product Indication",
+      "url": "./OpenApiJson/OpenApi_R4_MedicinalProductIndication.json"
+    },
+    {
+      "name": "Medicinal Product Ingredient",
+      "url": "./OpenApiJson/OpenApi_R4_MedicinalProductIngredient.json"
+    },
+    {
+      "name": "Medicinal Product Interaction",
+      "url": "./OpenApiJson/OpenApi_R4_MedicinalProductInteraction.json"
+    },
+    {
+      "name": "Medicinal Product Manufactured",
+      "url": "./OpenApiJson/OpenApi_R4_MedicinalProductManufactured.json"
+    },
+    {
+      "name": "Medicinal Product Packaged",
+      "url": "./OpenApiJson/OpenApi_R4_MedicinalProductPackaged.json"
+    },
+    {
+      "name": "Medicinal Product Pharmaceutical",
+      "url": "./OpenApiJson/OpenApi_R4_MedicinalProductPharmaceutical.json"
+    },
+    {
+      "name": "Medicinal Product Undesirable Effect",
+      "url": "./OpenApiJson/OpenApi_R4_MedicinalProductUndesirableEffect.json"
+    },
+    {
+      "name": "Message Definition",
+      "url": "./OpenApiJson/OpenApi_R4_MessageDefinition.json"
+    },
+    {
+      "name": "Message Header",
+      "url": "./OpenApiJson/OpenApi_R4_MessageHeader.json"
+    },
+    {
+      "name": "metadata",
+      "url": "./OpenApiJson/OpenApi_R4_metadata.json"
+    },
+    {
+      "name": "Molecular Sequence",
+      "url": "./OpenApiJson/OpenApi_R4_MolecularSequence.json"
+    },
+    {
+      "name": "Naming System",
+      "url": "./OpenApiJson/OpenApi_R4_NamingSystem.json"
+    },
+    {
+      "name": "Nutrition Order",
+      "url": "./OpenApiJson/OpenApi_R4_NutritionOrder.json"
+    },
+    {
+      "name": "Observation",
+      "url": "./OpenApiJson/OpenApi_R4_Observation.json"
+    },
+    {
+      "name": "Observation Definition",
+      "url": "./OpenApiJson/OpenApi_R4_ObservationDefinition.json"
+    },
+    {
+      "name": "Operation Definition",
+      "url": "./OpenApiJson/OpenApi_R4_OperationDefinition.json"
+    },
+    {
+      "name": "Operation Outcome",
+      "url": "./OpenApiJson/OpenApi_R4_OperationOutcome.json"
+    },
+    {
+      "name": "Organization",
+      "url": "./OpenApiJson/OpenApi_R4_Organization.json"
+    },
+    {
+      "name": "Organization Affiliation",
+      "url": "./OpenApiJson/OpenApi_R4_OrganizationAffiliation.json"
+    },
+    {
+      "name": "Parameters",
+      "url": "./OpenApiJson/OpenApi_R4_Parameters.json"
+    },
+    {
+      "name": "Patient",
+      "url": "./OpenApiJson/OpenApi_R4_Patient.json"
+    },
+    {
+      "name": "Payment Notice",
+      "url": "./OpenApiJson/OpenApi_R4_PaymentNotice.json"
+    },
+    {
+      "name": "Payment Reconciliation",
+      "url": "./OpenApiJson/OpenApi_R4_PaymentReconciliation.json"
+    },
+    {
+      "name": "Person",
+      "url": "./OpenApiJson/OpenApi_R4_Person.json"
+    },
+    {
+      "name": "Plan Definition",
+      "url": "./OpenApiJson/OpenApi_R4_PlanDefinition.json"
+    },
+    {
+      "name": "Practitioner",
+      "url": "./OpenApiJson/OpenApi_R4_Practitioner.json"
+    },
+    {
+      "name": "Practitioner Role",
+      "url": "./OpenApiJson/OpenApi_R4_PractitionerRole.json"
+    },
+    {
+      "name": "Procedure",
+      "url": "./OpenApiJson/OpenApi_R4_Procedure.json"
+    },
+    {
+      "name": "Provenance",
+      "url": "./OpenApiJson/OpenApi_R4_Provenance.json"
+    },
+    {
+      "name": "Questionnaire",
+      "url": "./OpenApiJson/OpenApi_R4_Questionnaire.json"
+    },
+    {
+      "name": "Questionnaire Response",
+      "url": "./OpenApiJson/OpenApi_R4_QuestionnaireResponse.json"
+    },
+    {
+      "name": "Related Person",
+      "url": "./OpenApiJson/OpenApi_R4_RelatedPerson.json"
+    },
+    {
+      "name": "Request Group",
+      "url": "./OpenApiJson/OpenApi_R4_RequestGroup.json"
+    },
+    {
+      "name": "Research Definition",
+      "url": "./OpenApiJson/OpenApi_R4_ResearchDefinition.json"
+    },
+    {
+      "name": "Research Element Definition",
+      "url": "./OpenApiJson/OpenApi_R4_ResearchElementDefinition.json"
+    },
+    {
+      "name": "Research Study",
+      "url": "./OpenApiJson/OpenApi_R4_ResearchStudy.json"
+    },
+    {
+      "name": "Research Subject",
+      "url": "./OpenApiJson/OpenApi_R4_ResearchSubject.json"
+    },
+    {
+      "name": "Resource",
+      "url": "./OpenApiJson/OpenApi_R4_Resource.json"
+    },
+    {
+      "name": "Risk Assessment",
+      "url": "./OpenApiJson/OpenApi_R4_RiskAssessment.json"
+    },
+    {
+      "name": "Risk Evidence Synthesis",
+      "url": "./OpenApiJson/OpenApi_R4_RiskEvidenceSynthesis.json"
+    },
+    {
+      "name": "Schedule",
+      "url": "./OpenApiJson/OpenApi_R4_Schedule.json"
+    },
+    {
+      "name": "Search Parameter",
+      "url": "./OpenApiJson/OpenApi_R4_SearchParameter.json"
+    },
+    {
+      "name": "Service Request",
+      "url": "./OpenApiJson/OpenApi_R4_ServiceRequest.json"
+    },
+    {
+      "name": "Slot",
+      "url": "./OpenApiJson/OpenApi_R4_Slot.json"
+    },
+    {
+      "name": "Specimen",
+      "url": "./OpenApiJson/OpenApi_R4_Specimen.json"
+    },
+    {
+      "name": "Specimen Definition",
+      "url": "./OpenApiJson/OpenApi_R4_SpecimenDefinition.json"
+    },
+    {
+      "name": "Structure Definition",
+      "url": "./OpenApiJson/OpenApi_R4_StructureDefinition.json"
+    },
+    {
+      "name": "Structure Map",
+      "url": "./OpenApiJson/OpenApi_R4_StructureMap.json"
+    },
+    {
+      "name": "Subscription",
+      "url": "./OpenApiJson/OpenApi_R4_Subscription.json"
+    },
+    {
+      "name": "Substance",
+      "url": "./OpenApiJson/OpenApi_R4_Substance.json"
+    },
+    {
+      "name": "Substance Nucleic Acid",
+      "url": "./OpenApiJson/OpenApi_R4_SubstanceNucleicAcid.json"
+    },
+    {
+      "name": "Substance Polymer",
+      "url": "./OpenApiJson/OpenApi_R4_SubstancePolymer.json"
+    },
+    {
+      "name": "Substance Protein",
+      "url": "./OpenApiJson/OpenApi_R4_SubstanceProtein.json"
+    },
+    {
+      "name": "Substance Reference Information",
+      "url": "./OpenApiJson/OpenApi_R4_SubstanceReferenceInformation.json"
+    },
+    {
+      "name": "Substance Source Material",
+      "url": "./OpenApiJson/OpenApi_R4_SubstanceSourceMaterial.json"
+    },
+    {
+      "name": "Substance Specification",
+      "url": "./OpenApiJson/OpenApi_R4_SubstanceSpecification.json"
+    },
+    {
+      "name": "Supply Delivery",
+      "url": "./OpenApiJson/OpenApi_R4_SupplyDelivery.json"
+    },
+    {
+      "name": "Supply Request",
+      "url": "./OpenApiJson/OpenApi_R4_SupplyRequest.json"
+    },
+    {
+      "name": "Task",
+      "url": "./OpenApiJson/OpenApi_R4_Task.json"
+    },
+    {
+      "name": "Terminology Capabilities",
+      "url": "./OpenApiJson/OpenApi_R4_TerminologyCapabilities.json"
+    },
+    {
+      "name": "Test Report",
+      "url": "./OpenApiJson/OpenApi_R4_TestReport.json"
+    },
+    {
+      "name": "Test Script",
+      "url": "./OpenApiJson/OpenApi_R4_TestScript.json"
+    },
+    {
+      "name": "Value Set",
+      "url": "./OpenApiJson/OpenApi_R4_ValueSet.json"
+    },
+    {
+      "name": "Verification Result",
+      "url": "./OpenApiJson/OpenApi_R4_VerificationResult.json"
+    },
+    {
+      "name": "Vision Prescription",
+      "url": "./OpenApiJson/OpenApi_R4_VisionPrescription.json"
+    }
+  ],
+  "urls.primaryName": "System Operations"
+}

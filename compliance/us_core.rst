@@ -3,7 +3,7 @@ US Core / 21th Century Cures Act
 
 * Tested Version: Firely Server has been tested against `US Core Version 3.1.1 - STU3 Release <https://hl7.org/fhir/us/core/STU3.1.1/profiles.html>`_
 * All StructureDefinitions for profiles and extensions are loaded by default in the standard SQLite administration database of Firely Server. No additional configuration needed in order to validate against these conformance resources.
-* Firely Server provides full `conformance as defined in "Claiming Conformance to a US Core Profile"
+* Firely Server provides full `conformance as defined in `"Claiming Conformance to a US Core Profile"
  <https://hl7.org/fhir/us/core/STU3.1.1/general-guidance.html#claiming-conformance-to-a-us-core-profile>`_:
   
   * Firely Server can be populated with resources conforming to US Core

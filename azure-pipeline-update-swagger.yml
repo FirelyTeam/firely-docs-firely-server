@@ -74,14 +74,14 @@ steps:
       git checkout -b $(RemoteBranchName)
 
       git add .
-      git commit -m "Updating public documentation"
+      git commit -m 'Updating public documentation'
 
-      git config --global user.email "automated-build@azuredevops.com"
-      git config --global user.name "Azure DevOps build"
+      git config --global user.email 'automated-build@azuredevops.com'
+      git config --global user.name 'Azure DevOps build'
       git remote add origin2 https://$(git_token)@github.com/FirelyTeam/firely-docs-firely-server.git
-      git push --set-upstream origin2 "$(RemoteBranchName)"
+      git push --set-upstream origin2 '$(RemoteBranchName)'
 
-      echo "Updates have been pushed to remote branch '$(RemoteBranchName)'
+      echo 'Updates have been pushed to remote branch $(RemoteBranchName)'
     else
       echo 'There is nothing to push; no branch will be created'
     fi

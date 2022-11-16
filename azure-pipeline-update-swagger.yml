@@ -73,11 +73,12 @@ steps:
     if [[ `git status --porcelain` ]]; then
       git checkout -b $(RemoteBranchName)
 
+      git config --global user.email 'automated-build@azuredevops.com'
+      git config --global user.name 'Azure DevOps build'
+
       git add .
       git commit -m 'Updating public documentation'
 
-      git config --global user.email 'automated-build@azuredevops.com'
-      git config --global user.name 'Azure DevOps build'
       git remote add origin2 https://$(git_token)@github.com/FirelyTeam/firely-docs-firely-server.git
       git push --set-upstream origin2 '$(RemoteBranchName)'
 

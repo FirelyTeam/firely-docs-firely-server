@@ -81,8 +81,8 @@ steps:
       git remote add origin2 https://$(git_token)@github.com/FirelyTeam/firely-docs-firely-server.git
       git push --set-upstream origin2 "$(RemoteBranchName)"
 
-      echo "Updates have been pushed to remote branch "$(RemoteBranchName)"
+      echo "Updates have been pushed to remote branch '$(RemoteBranchName)'
     else
-      echo "There is nothing to push; no branch will be created"
+      echo 'There is nothing to push; no branch will be created'
     fi
   displayName: 'Making a new branch in firely-docs-firely-server repo'

@@ -1,7 +1,5 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+name: Update Public Swagger Documentation (create branch)
+
 resources:
   repositories:
   - repository: FhirCodegen
@@ -21,9 +19,12 @@ variables:
 
 - name: FhirServerUrl
   value: https://server.fire.ly/
-
 - name: OpenApiOutputDirectory
   value: $(SwaggerUiDirectory)/$(OpenApiDirectoryName)
+- name: BranchNamePrefix
+  value: swagger_ui_update_
+- name: RemoteBranchName
+  value: $(BranchNamePrefix)$(Build.BuildNumber)
 
 trigger: none
 
@@ -32,21 +33,23 @@ pool:
 
 steps:
 - checkout: self
-
 - checkout: FhirCodegen
-
 - task: DotNetCoreCLI@2
+  displayName: Generating OpenAPI files from the capability statement
   inputs:
     command: 'run'
     projects: '$(Build.SourcesDirectory)/fhir-codegen/src/fhir-codegen-cli/fhir-codegen-cli.csproj'
     arguments: '--fhir-server-url $(FhirServerUrl) --resolve-external false --language-options OpenApi|SingleResponses=true|Metadata=true|SchemaLevel=names|MultiFile=true --output-path $(OpenApiOutputDirectory) --language OpenApi'
-
-
 - task: PowerShell@2
+  displayName: Preparing SwaggerUI configuration file
   inputs:
     targetType: 'inline'
     script: |
       $urls = gci $(OpenApiOutputDirectory) -Exclude '$(SwaggerConfigFilename)' | %{
+          # The code below converts file names to human-readable resource names. Examples:
+          # OpenApi_R4_AdverseEvent.json =>  "Adverse Event"
+          # OpenApi_R4_Bundle.json =>  "Bundle"
+          # OpenApi_R4__Root.json => "System Operations" (exception)
           $name = $_.Name -replace '(.*_)+' `
           -replace '.json' `
           -replace '^Root$', 'SystemOperations' `
@@ -63,15 +66,25 @@ steps:
         | Add-Member -name "urls.primaryName" -value "System Operations" -MemberType NoteProperty  -PassThru
         | ConvertTo-Json
       
-      $json | Out-File $(OpenApiOutputDirectory)/$(SwaggerConfigFilename)
+      Write-Host $json
 
+      $json | Out-File $(OpenApiOutputDirectory)/$(SwaggerConfigFilename)
 - script: |
     cd $(Build.SourcesDirectory)/firely-docs-firely-server
-    git config --global user.email "azuredevopsbuild@test.com"
-    git config --global user.name "Azure DevOps build"
-    git remote add origin2 https://$(git_token)@github.com/FirelyTeam/firely-docs-firely-server.git
-    git checkout -b swagger_ui_update_$(Build.BuildNumber)
-    git add .
-    git commit -m "Updating public documentation"
-    git push --set-upstream origin2 swagger_ui_update_$(Build.BuildNumber)
-  displayName: 'Making a new branch'
+
+    if [[ `git status --porcelain` ]]; then
+      git checkout -b $(RemoteBranchName)
+
+      git add .
+      git commit -m "Updating public documentation"
+
+      git config --global user.email "automated-build@azuredevops.com"
+      git config --global user.name "Azure DevOps build"
+      git remote add origin2 https://$(git_token)@github.com/FirelyTeam/firely-docs-firely-server.git
+      git push --set-upstream origin2 swagger_ui_update_$(Build.BuildNumber)
+
+      echo Updates have been pushed to remote branch $(RemoteBranchName)
+    else
+      echo There is nothing to push; no branch will be created
+    fi
+  displayName: 'Making a new branch in firely-docs-firely-server repo'

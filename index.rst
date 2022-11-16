@@ -5,7 +5,7 @@ Welcome to the Firely Server's documentation!
 
 Firely Server is the answer to the growing need for a stable server that can be used in a variety of production environments.
 A public sandbox is available at https://server.fire.ly, which is is free to use and intended for
-testing and educational purposes only.
+testing and educational purposes only. For convenience, the public server API can be explored using our Swagger-based `web UI <_static/swagger>`_.
 
 .. image:: ./images/firelyserver_home.png
   :align: center

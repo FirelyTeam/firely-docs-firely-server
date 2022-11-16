@@ -31,7 +31,11 @@ Glossary of terms in authorization
         A JWT is self contained, so it has all the data in it for the :term:`fhir server` to check its validity.
         This however means that the token cannot be revoked in case of malicious use. The token remains valid until its expiration time is past.
 
-        A JWT is encoded into a single string. You can easily decode it on `JWT.io<https://jwt.io>`_.
+        A JWT is encoded into a single string. You can easily decode it on `JWT.io <https://jwt.io>`_.
+
+    JWK
+        JWK is an abbreviation of JSON Web Key. It defines a JSON structure for a key. A client can sign requests with a private key and publish a JWK for the corresponding public key for Firely Auth to use when validating the signature.
+        Multiple JWKs are usually published on a url in the form of a JWKS - a JSON Web Key Set. Multiple keys allow for key rotation without downtime.
 
     reference token
         A reference token is a string that does not contain any information about what is granted. Instead it is a _reference_ to 
@@ -70,7 +74,7 @@ Glossary of terms in authorization
         Then Firely Auth includes the claim in the access token. The client presents the access token as part of its request to Firely Server.
         Finally Firely Server must understand the claim and will restrict access to resources accordingly.
 
-        Firely Server and Firely Auth understand the `http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html <claims as defined by SMART on FHIR>`_ (v1 and v2).
+        Firely Server and Firely Auth understand the `claims as defined by SMART on FHIR <SMART on FHIR claims>`_ (v1 and v2).
 
     refresh token
         The Refresh Token grant type is used by clients to exchange a refresh token for an access token when the access token has expired.
@@ -78,3 +82,15 @@ Glossary of terms in authorization
 
     token introspection endpoint
         Endpoint offered by Firely Auth to inspect a :term:`reference token`.
+
+    confidential client
+        A :term:`client` that can guard a shared secret. E.g. a web application, where the code lives on a well managed server.
+        See also `SMART on FHIR clients`_.
+    
+    public client
+        A :term:`client` that cannot guard a shared secret, e.g. because its code is public. Like in native apps or some Single Page Applications.
+        See also `SMART on FHIR clients`_.
+
+
+.. _SMART on FHIR clients: http://hl7.org/fhir/smart-app-launch/app-launch.html#support-for-public-and-confidential-apps
+.. _SMART on FHIR claims: http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html

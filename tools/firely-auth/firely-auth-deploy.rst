@@ -48,7 +48,7 @@ Use of the SQL Server user store requires Microsoft SQL Server version 2016 or n
 Using your favourite database administration tool:
 
 - create a new database, e.g. 'firely_auth_store'
-- in this database, execute the script `scripts/InitializeSchema.sql`, available in the binaries
+- in this database, execute the script ``scripts/InitializeSchema.sql``, available in the binaries
 - create a connectionstring to this database
 - configure :ref:`firely_auth_settings_userstore`
   

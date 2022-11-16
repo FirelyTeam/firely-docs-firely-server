@@ -25,7 +25,7 @@ Commands and parameters
 For brevity here is a full list of the available commands and their parameters.
 
 The parameter '--connectionString' or `-cs` is used multiple times. Use the same connectionstring as in :ref:`firely_auth_deploy_sql`.
-You can set the connectionstring in an environment variable `FIRELY_IDENTITY_SERVER_USERS_CONNECTION_STRING` so you don't need to repeat it all the time.
+You can set the connectionstring in an environment variable ``FIRELY_IDENTITY_SERVER_USERS_CONNECTION_STRING`` so you don't need to repeat it all the time.
 
 - ``./Firely.IdentityServer.ManagementApp.exe```
 

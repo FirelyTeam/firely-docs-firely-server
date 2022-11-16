@@ -27,11 +27,8 @@ Step 1 - Software
 Firely Auth is distributed as .NET Core 6 binaries and in a Docker image. For this introduction we will use the binaries.
 
 #. Install .NET Core 6 Runtime
-#. Download the zip file with Firely Auth binaries from 
+#. Download the zip file with Firely Auth binaries from `the downloadserver <https://downloads.simplifier.net/firely-server/firely-auth-latest.zip>`_
 #. Extract the zip to a location from where you are allowed to execute the program. We will call this the 'bin-directory'.
-
-.. 
-    [TODO] add binary download site
 
 Step 2 - License
 ^^^^^^^^^^^^^^^^
@@ -40,18 +37,15 @@ Firely Auth is licensed, like all plugins and add-ons of Firely Server. It uses 
 Firely Auth requires this token to be present in the license file: ``http://fire.ly/server/auth``.
 If you don't have this in your license file yet, you probably need to acquire Firely Auth first. Please :ref:`vonk-contact` for that.
 
-By default Firely Auth will look for a license file named ``firely-server-license.json``, adjacent to the ``Firely.IdentityServer.exe`` [TODO]
-You can adjust the location of the license file in the configration settings. [TODO]
+By default Firely Auth will look for a license file named ``firely-server-license.json``, adjacent to the ``Firely.IdentityServer.Core.exe`` 
+You can adjust the location of the license file in the configration settings, see :ref:`firely_auth_settings_license`.
 
 With the license in place, you can start Firely Auth by running::
 
-    > ./Firely.IdentityServer.exe
+    > ./Firely.IdentityServer.Core.exe
 
 And you can access it with a browser on ``https://localhost:5001``. It will use a self-signed certificate by default, for which your browser will warn you.
 Accept the risk and proceed to the website.
-
-.. 
-    [TODO: Does it come with a certificate? Or do we add info how to create a self-signed certificate]
 
 Firely Auth will present you with a login screen. But what user to login as?
 
@@ -72,16 +66,10 @@ For this introduction we will configure a user in the In memory store.
     {
         "Username": "alice",
         "Password": "AlicePassword1!",
-        "Claims": [
-            {
-                "Name": "scope",
-                "Value": "user/*.r"
-            }
-        ]
+        "Claims": []
     }
 
-The claim added in the ``Claims`` array is a SMART on FHIR v2 type of claim. It allows a client (an app or website) to read (``r``) all FHIR resourcetypes (``*``) 
-as a ``user`` to the system, so for all patients. The latter in contrast to a ``patient`` who would only have access to her own data.
+We won't add any claims yet - see :ref:`firely_auth_settings_userstore` to read up on how they work.
 
 If you did this, you can stop Firely Auth again in the command window you started it in (``Ctrl+C``), and start it again. 
 You should now be able to login as ``alice`` with the password as configured above.
@@ -96,13 +84,9 @@ This means that Firely Auth must know these clients upfront. For each client sev
 For this introduction we will add Postman as a client, so you can test requests without actually building a client yourself.
 We'll just provide the correct settings here. The settings are documented in detail on :ref:`firely_auth_settings_clients`
 
-..
-    [TODO: Add self-signed certificate to Postmand / Chrome, instead of disabling SSL verification]
-    https://blog.postman.com/using-self-signed-certificates-with-postman/
-
-.. 
-    TODO: Update Pygments lexer to 2.12 or higher to support comments in JSON
-    https://github.com/pygments/pygments/releases/tag/2.12.0
+.. note:: 
+    Making Postman trust the self-signed certificate of Firely Auth is outside the scope of this tutorial.
+    For the purpose of this tutorial you can instruct Postman to not check SSL certificates.
 
 .. code-block:: json
 
@@ -187,8 +171,9 @@ Check that it runs without authorization before proceeding with the next step, b
 .. image:: /images/auth_postman_fs_meta.png
 
 
-To be able to test the next steps, add a few example resources by issueing the ''Add exmple resources`` request from the Postman collection (while authorization is still off)
-It sends a bundle with two Patient resources and an Observation related to each of them.
+To be able to test the next steps, add a few example resources by issueing a batch request (``POST <base>/R4/``) 
+with :download:`this bundle </_static/files/FA_TestData.json>` (while authorization is still off).
+It contains two Patient resources and an Observation related to each of them.
 
 Now we will connect Firely Server and Firely Auth. This requires mutual settings.
 
@@ -257,7 +242,7 @@ In **Firely Server**, all the settings are in the section ``SmartAuthorizationOp
     ]
   },
 
-All settings are discussed in detail in :ref:`firely-auth-settings-server`, and we'll focus on the connection with Firely Auth here:
+All settings are discussed in detail in :ref:`firely_auth_settings_server`, and we'll focus on the connection with Firely Auth here:
 
 - Authority: the address where Firely Auth can be reached.
 - Audience: By default ``Firely Server``, should match the ``FhirServerConfig.Name`` setting in Firely Auth and the requested ``aud`` in Postman.

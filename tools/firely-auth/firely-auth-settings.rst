@@ -10,10 +10,10 @@ Settings files and variables
 
 Just like Firely Server itself, Firely Auth features a hierarchy of settings files and veriables. From lowest to highest priority:
 
-- `appsettings.default.json` - This comes with the binaries (and in the Docker container) and contains sensible defaults for most settings. 
+- ``appsettings.default.json`` - This comes with the binaries (and in the Docker container) and contains sensible defaults for most settings. 
   You can change this file, but it might accidentally be overwritten upon a new release. Instead, put your settings in one of the following places.
-- `appsettings.instance.json` - This file is meant to override settings for this instance of Firely Auth. You can create this file yourself by copying (parts of) `appsettings.default.json`.
-- Environment variables with the prefix `FIRELY_AUTH_` - Use environment variables to more easily configure settings from CI/CD pipelines, secure vaults etc.
+- ``appsettings.instance.json`` - This file is meant to override settings for this instance of Firely Auth. You can create this file yourself by copying (parts of) ``appsettings.default.json``.
+- Environment variables with the prefix ``FIRELY_AUTH_`` - Use environment variables to more easily configure settings from CI/CD pipelines, secure vaults etc.
 
 Unsure how to name your variables? This works the same as with :ref:`configure_envvar`.
 
@@ -25,7 +25,7 @@ Sections
 License
 ^^^^^^^
 
-Use the License settings to set the location to the license file. A relative path is evaluated relative to the executable `Firely.IdentityServer.exe`.
+Use the License settings to set the location to the license file. A relative path is evaluated relative to the executable ``Firely.IdentityServer.Core.exe``.
 You can use the same licensefile that came with Firely Server.
 
 .. code-block:: json
@@ -62,7 +62,7 @@ Nevertheless you can control the settings for Kestrel.
    },
  
 These settings are not Firely Auth specific, and you can read more about them in the `Microsoft documentation <https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints>`_.
-In that documentation you can also read how to use the ``Https`` setting instead of ``HttpsFromPem`` to use a `.pfx` file for your SSL certificate.
+In that documentation you can also read how to use the ``Https`` setting instead of ``HttpsFromPem`` to use a ``.pfx`` file for your SSL certificate.
 
 .. _firely_auth_settings_server:
 
@@ -142,16 +142,16 @@ Key management
 
 Firely Auth can work with multiple signature keys, used to sign access tokens. 
 
-- `RSA_Config`: defines the RSA algorithms that are supported. In the config above all available algoriths are listed.
+- ``RSA_Config``: defines the RSA algorithms that are supported. In the config above all available algoriths are listed.
   Inferno tests require at least RS256 for all Single Patient tests, and for Bulk Data Export a RS384 or higher is needed.
 
-  - `RSA_JWK`: allows to provide a pre-generated JSON Web Key. If this is not provided, Firely Auth will generate a key.
-  - `SupportedAlgorithms`: limit this list to the algorithms that you need in your setup. In the config above all available algoriths are listed.
+  - ``RSA_JWK``: allows to provide a pre-generated JSON Web Key. If this is not provided, Firely Auth will generate a key.
+  - ``SupportedAlgorithms``: limit this list to the algorithms that you need in your setup. In the config above all available algoriths are listed.
 
-- `EC_Config`: defines the EC (Elliptic Curve) algorithms that are supported. Inferno tests for Bulk Data Export require support for EC keys.
+- ``EC_Config``: defines the EC (Elliptic Curve) algorithms that are supported. Inferno tests for Bulk Data Export require support for EC keys.
 
-  - `JWK_ES*`: allows to provide a pre-generated JSON Web Key. If this is not provided, Firely Auth will generate a key for each of the supported algorithms.
-  - `SupportedAlgorithms`: limit this list to the algorithms that you need in your setup. In the config above all available algoriths are listed.
+  - ``JWK_ES*``: allows to provide a pre-generated JSON Web Key. If this is not provided, Firely Auth will generate a key for each of the supported algorithms.
+  - ``SupportedAlgorithms``: limit this list to the algorithms that you need in your setup. In the config above all available algoriths are listed.
 
 Note that a single RSA key can be used for all supported algorithms. However, an EC key is tied to a specific algorithm, therefore you can supply a key for each of the algorithms.
 
@@ -212,21 +212,21 @@ See :ref:`firely_auth_deploy_sql` for details on setting up the database.
       }
   },
 
-- `Type`: select the type of store to use
-- `InMemory`: settings for the InMemory store
+- ``Type``: select the type of store to use
+- ``InMemory``: settings for the InMemory store
 
-  - `AllowedUsers`: list of users
-  - `Username`: login for a user
-  - `Password`: password for the user, in clear text
-  - `Claims`: currently to be used for a single claim, to link the user to a Patient resource (and thereby to a Patient compartment) in Firely Server. 
+  - ``AllowedUsers``: list of users
+  - ``Username``: login for a user
+  - ``Password``: password for the user, in clear text
+  - ``Claims``: currently to be used for a single claim, to link the user to a Patient resource (and thereby to a Patient compartment) in Firely Server. 
 
-    - `Name`: name of the claim, currently only `patient` is supported
-    - `Value`: logical id of the related Patient resource (`Patient/id`)
-      In the token this value will be expanded to an absolute url by prepending it with `FhirServerConfig.FHIR_BASE_URL` (see :ref:`firely_auth_settings_server`).
+    - ``Name``: name of the claim, currently only ``patient`` is supported
+    - ``Value``: logical id of the related Patient resource (``Patient/id``)
+      In the token this value will be expanded to an absolute url by prepending it with ``FhirServerConfig.FHIR_BASE_URL`` (see :ref:`firely_auth_settings_server`).
 
-- `SqlServer`: settings for the SQL Server store
+- ``SqlServer``: settings for the SQL Server store
   
-  - `ConnectionString`: connection string to the SQL Server database where the users are to be stored. 
+  - ``ConnectionString``: connection string to the SQL Server database where the users are to be stored. 
     This database and the schema therein must be created beforehand with a script. 
 
 .. _firely_auth_settings_clients:
@@ -234,3 +234,64 @@ See :ref:`firely_auth_deploy_sql` for details on setting up the database.
 Clients
 ^^^^^^^
 
+The ``ClientRegistrationConfig`` is used to register the :term:`clients <client>` that are allowed to request access tokens from Firely Auth.
+
+.. code-block:: json
+
+  "ClientRegistrationConfig": {
+      "AllowedClients": [
+          {
+              "ClientId": "Jv3nZkaxN36ucP33",
+              "ClientName": "Postman",
+              "Description": "Postman API testing tool",
+              "Enabled": true,
+              "RequireConsent": true,
+              "RedirectUris": ["https://www.getpostman.com/oauth2/callback", "https://oauth.pstmn.io/v1/callback"],
+              "ClientSecrets": [{"SecretType": "SharedSecret", "Secret": "re4&ih)+HQu~w"}], // SharedSecret, JWK
+              "AllowedGrantTypes": ["client_credentials", "authorization_code"],
+              "AllowedSmartLegacyActions": [],
+              "AllowedSmartActions": ["c", "r", "u", "d", "s"],
+              "AllowedSmartSubjects": [ "patient", "user", "system"],
+              "AlwaysIncludeUserClaimsInIdToken": true,
+              "RequirePkce": false,
+              "AllowOfflineAccess": false, // Whether app can request refresh tokens while the user is online, see http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-a-refresh-token
+              "AllowOnlineAccess": false, // Whether app can request refresh tokens while the user is offline, see http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-a-refresh-token
+              "AllowFirelySpecialScopes": true, // Allow app to request scopes for Firely Server specific operations. Currently just 'http://server.fire.ly/auth/scope/erase-operation'
+              "RequireClientSecret": true, // no secret for authentication is not allowed
+              "LaunchIds": [] // Empty means 'accept all launch ids'
+          }
+      ]
+  }
+
+You register a :term:`client` in the ``AllowedClients`` array. For each client you can configure these settings:
+
+- ``ClientId``: string: unique identifier for this client. It should be known to the client as well
+- ``ClientName``: string: human readable name for the client, it is shown on the consent page
+- ``Description``: string:  human readable description of the client
+- ``Enabled``: true / false: simple switch to enable or disable a client (instead of removing it from the list)
+- ``RequireConsent``: true / false: when true, Firely Auth will show the user a page for consent to granting the requested scopes to the client, otherwise all requested and valid scopes will be granted automatically.
+- ``RedirectUris``: array of strings: url(s) on which Firely Auth will send the authorization code and access token. The client can specify one of the preregistered urls for a specific request.
+- ``ClientSecrets``: secrets can be of type ``SharedSecret`` or ``JWK``. You can have multiple of each, so you can accept two secrets for a short period of time to support key rotation and an update window for the client
+
+  - SharedSecret: ``{"SecretType": "SharedSecret", "Secret": "<a secret string shared with the client>"}`` - this can be used for either :term:`client credentials` or :term:`authorization code flow`, but only with a :term:`confidential client`.
+  - JWK: ``{"SecretType": "JWK", "SecretUrl": "<JWKS url>"}`` - where the JWKS url hosts a JSON Web Key Set that can be retrieved by Firely Auth, see also :term:`JWK`.
+  - JWK: ``{"SecretType": "JWK", "Secret": "<JWK>"}`` - where JWK is the contents of a :term:``JWK``. Use this if the client cannot host a url with a JWKS. 
+    Use one entry for each key in the keyset. Note that the JWK json structure is enbedded in a string, so you need to escape the quotes within the JWK.
+    The url option above is recommended. 
+
+- ``AllowedGrantTypes``: array of either or both ``"client_credentials"`` and ``"authorization_code"``, referring to :term:`client credentials` and :term:`authorization code flow`. Use ``client credentials`` only for a :term:`confidential client`.
+- ``AllowedSmartLegacyActions``: Firely Auth can also still support SMART on FHIR v1, where the actions are ``read`` and ``write``.
+- ``AllowedSmartActions``: Actions on resources that can be granted in SMART on FHIR v2: ``c``, ``r``, ``u``, ``d`` and/or ``s``, see `SMART on FHIR V2 scopes`_
+- ``AllowedSmartSubjects``: Categories of 'subjects' to which resource actions can be granted. Can be ``system``, ``user`` and/or ``patient``
+- ``AlwaysIncludeUserClaimsInIdToken``: true / false: When requesting both an id token and access token, should the user claims always be added to the id token instead of requiring the client to use the userinfo endpoint. Default is false
+- ``Require PKCE``: true / false - see :term:`PKCE`. true is recommended for a :term:`public client` and can offer an extra layer of security for :term:`confidential client`.
+- ``AllowOfflineAccess``: true / false - Whether app can request refresh tokens while the user is online, see `SMART on FHIR refresh tokens`_
+- ``AllowOnlineAccess``: true / false - Whether app can request refresh tokens while the user is offline, see `SMART on FHIR refresh tokens`_. A user is offline if he is logged out of Firely Auth, either manually or by expiration
+- ``AllowFirelySpecialScopes``: true / false - Allow app to request scopes for Firely Server specific operations. Currently just 'http://server.fire.ly/auth/scope/erase-operation'
+- ``RequireClientSecret``: true / false - In theory you could allow clients without a client secret. That is not recommeded.
+- ``LaunchIds``: array of string - a 'launch id' could restrict access based on e.g. some currently active EHR context. Since Firely Auth is not connected to an EHR, this currently can only be set statically.
+  Providing an empty array will make Firely Auth accept any launch id sent by the client (including none).  
+
+
+.. _SMART on FHIR V2 scopes: http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-clinical-data
+.. _SMART on FHIR refresh tokens: http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-a-refresh-token

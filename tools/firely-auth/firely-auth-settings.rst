@@ -254,11 +254,11 @@ The ``ClientRegistrationConfig`` is used to register the :term:`clients <client>
               "AllowedSmartSubjects": [ "patient", "user", "system"],
               "AlwaysIncludeUserClaimsInIdToken": true,
               "RequirePkce": false,
-              "AllowOfflineAccess": false, // Whether app can request refresh tokens while the user is online, see http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-a-refresh-token
-              "AllowOnlineAccess": false, // Whether app can request refresh tokens while the user is offline, see http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-a-refresh-token
-              "AllowFirelySpecialScopes": true, // Allow app to request scopes for Firely Server specific operations. Currently just 'http://server.fire.ly/auth/scope/erase-operation'
-              "RequireClientSecret": true, // no secret for authentication is not allowed
-              "LaunchIds": [] // Empty means 'accept all launch ids'
+              "AllowOfflineAccess": false,
+              "AllowOnlineAccess": false,
+              "AllowFirelySpecialScopes": true,
+              "RequireClientSecret": true,
+              "LaunchIds": []
           }
       ]
   }

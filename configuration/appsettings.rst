@@ -257,8 +257,8 @@ Refer to :ref:`feature_prevalidation`.
 
 .. _bundle_options:
 
-Search and History
-------------------
+Search size
+-----------
 ::
 
     "BundleOptions": {
@@ -268,7 +268,7 @@ Search and History
     },
 
 
-The Search and History interactions return a bundle with results. Users can specify the number of results that they want to receive in one response with the ``_count`` parameter.
+The Search interactions returns a bundle with results. Users can specify the number of results that they want to receive in one response with the ``_count`` parameter.
 
 * ``DefaultCount`` sets the number of results if the user has not specified a ``_count`` parameter.
 * ``MaxCount`` sets the number of results in case the user specifies a ``_count`` value higher than this maximum. This is to protect Firely Server from being overloaded.
@@ -409,6 +409,8 @@ But you can disable interactions by removing them from these lists.
 
 If you implement a custom operation in a plugin, you should also add the name of that operation at the correct level. E.g. add ``$convert`` to ``TypeLevelInteractions`` to allow ``<base>/<resourcetype>/$convert``.
 
+.. _settings_subscriptions:
+
 Subscriptions
 -------------
 ::
@@ -488,6 +490,10 @@ History size
   }
 
 See :ref:`restful_history`.
+
+.. _settings_smart:
+
+The settings for authorization with SMART on FHIR are covered in :ref:`feature_accesscontrol_config`.
 
 .. _settings_pipeline:
 

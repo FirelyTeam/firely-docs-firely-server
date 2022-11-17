@@ -258,7 +258,8 @@ The ``ClientRegistrationConfig`` is used to register the :term:`clients <client>
               "AllowOnlineAccess": false,
               "AllowFirelySpecialScopes": true,
               "RequireClientSecret": true,
-              "LaunchIds": []
+              "LaunchIds": [],
+              "RefreshTokenLifetime": "30"
           }
       ]
   }
@@ -291,6 +292,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``RequireClientSecret``: true / false - In theory you could allow clients without a client secret. That is not recommeded.
 - ``LaunchIds``: array of string - a 'launch id' could restrict access based on e.g. some currently active EHR context. Since Firely Auth is not connected to an EHR, this currently can only be set statically.
   Providing an empty array will make Firely Auth accept any launch id sent by the client (including none).  
+- ``RefreshTokenLifetime``: If the client is allowed to use a :term:`refresh token`, how long should it be valid? The value is in days. You can also use HH:mm:ss for lower values.
 
 
 .. _SMART on FHIR V2 scopes: http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-clinical-data

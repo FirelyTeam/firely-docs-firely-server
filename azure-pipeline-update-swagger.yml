@@ -116,7 +116,7 @@ steps:
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer $(git_token)" \
           "$apiRepoUrl/pulls" \
-          -d $prRequestBody
+          -d "$prRequestBody"
 
         echo 'Updates have been pushed to remote branch $(RemoteBranchName) and the PR has been created'
       else

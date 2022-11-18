@@ -67,7 +67,7 @@ steps:
       
       $json | Out-File $(OpenApiOutputDirectory)/$(SwaggerConfigFilename)
 
-      $fsVersion = (gci $(OpenApiDirectoryName)/OpenApi_*.json | select -First 1 | gc | ConvertFrom-json).info.version
+      $fsVersion = (gci $(OpenApiOutputDirectory)/OpenApi_*.json | select -First 1 | gc | ConvertFrom-json).info.version
       Write-Host "Generated Swagger config for Firely Server v$fsVersion"
       Write-Host $json
       Write-Host "##vso[task.setvariable variable=fsVersion;]$fsVersion"

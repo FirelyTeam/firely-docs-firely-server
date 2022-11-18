@@ -83,7 +83,9 @@ steps:
       git remote add origin2 https://$(git_token)@github.com/FirelyTeam/firely-docs-firely-server.git
       git push --set-upstream origin2 '$(RemoteBranchName)'
       
-      apiRepoUrl=${url//github.com/api.github.com/repos}
+      # Convert repo url   https://github.com/FirelyTeam/firely-docs-firely-server
+      # to to rest API url https://api.github.com/repos/FirelyTeam/firely-docs-firely-server
+      apiRepoUrl=${$(Build.Repository.Uri)//github.com/api.github.com/repos}
       echo "Repo API URL: $apiRepoUrl"
 
       curl \

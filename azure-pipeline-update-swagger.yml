@@ -85,7 +85,9 @@ steps:
       
       # Convert repo url   https://github.com/FirelyTeam/firely-docs-firely-server
       # to to rest API url https://api.github.com/repos/FirelyTeam/firely-docs-firely-server
-      apiRepoUrl=${$(Build.Repository.Uri)//github.com/api.github.com/repos}
+      repoUrl=$(Build.Repository.Uri)
+      echo "Repo URL: $repoUrl"
+      apiRepoUrl=${repoUrl//github.com/api.github.com/repos}
       echo "Repo API URL: $apiRepoUrl"
 
       curl \

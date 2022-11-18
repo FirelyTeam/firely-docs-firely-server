@@ -2,9 +2,9 @@ resources:
   repositories:
   - repository: FhirCodegen
     type: github
-    name: microsoft/fhir-codegen
+    name: FirelyTeam/fhir-codegen
     endpoint: FirelyTeam
-    ref: dev
+    ref: refs/tags/open-api-gen-support
 
 variables:
 - group: Git credentials

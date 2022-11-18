@@ -100,7 +100,7 @@ steps:
 
         # Convert ref/heads/branch-name
         # To      branch-name
-        baseBranch=$(Build.SourceBranchName)
+        baseBranch=$(Build.SourceBranch)
         baseBranch=${baseBranch//refs\/heads\//}
 
         prRequestBody="{\

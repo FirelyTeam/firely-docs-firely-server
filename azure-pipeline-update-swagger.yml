@@ -81,7 +81,7 @@ steps:
       cd $(Build.SourcesDirectory)/firely-docs-firely-server
 
       if [[ `git status --porcelain` ]]; then
-        git checkout -b $(RemoteBranchName)
+        git checkout -b $(RemoteBranchName) --quiet
 
         git config --global user.email 'automated-build@azuredevops.com'
         git config --global user.name 'Azure DevOps build'

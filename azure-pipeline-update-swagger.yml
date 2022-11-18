@@ -84,7 +84,7 @@ steps:
       git push --set-upstream origin2 '$(RemoteBranchName)'
       
       apiRepoUrl=${url//github.com/api.github.com/repos}
-      echo 'Repo API URL: $apiRepoUrl'
+      echo "Repo API URL: $apiRepoUrl"
 
       curl \
         -X POST \

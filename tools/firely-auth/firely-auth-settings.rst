@@ -151,7 +151,7 @@ Firely Auth can work with multiple signature keys, used to sign access tokens.
 - ``EC_Config``: defines the EC (Elliptic Curve) algorithms that are supported. Inferno tests for Bulk Data Export require support for EC keys.
 
   - ``JWK_ES*``: allows to provide a pre-generated JSON Web Key. If this is not provided, Firely Auth will generate a key for each of the supported algorithms.
-  - ``SupportedAlgorithms``: limit this list to the algorithms that you need in your setup. In the config above all available algoriths are listed.
+  - ``SupportedAlgorithms``: limit this list to the algorithms that you need in your setup. In the config above all available algorithms are listed.
 
 Note that a single RSA key can be used for all supported algorithms. However, an EC key is tied to a specific algorithm, therefore you can supply a key for each of the algorithms.
 

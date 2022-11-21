@@ -61,6 +61,6 @@ Using your favourite database administration tool:
       }
     }
 
-In the connectionstring you can use a user that is only allowed to read and write from the existing tables, no further DDL is needed.
+In the connection string you can use a user that is only allowed to read and write from the existing tables, no further DDL is needed.
 
 To add users to the store, you can use the :ref:`firely_auth_mgmt`.

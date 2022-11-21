@@ -38,7 +38,7 @@ Firely Auth requires this token to be present in the license file: ``http://fire
 If you don't have this in your license file yet, you probably need to acquire Firely Auth first. Please :ref:`vonk-contact` for that.
 
 By default Firely Auth will look for a license file named ``firely-server-license.json``, adjacent to the ``Firely.IdentityServer.Core.exe`` 
-You can adjust the location of the license file in the configration settings, see :ref:`firely_auth_settings_license`.
+You can adjust the location of the license file in the configuration settings, see :ref:`firely_auth_settings_license`.
 
 With the license in place, you can start Firely Auth by running::
 

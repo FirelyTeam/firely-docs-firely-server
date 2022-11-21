@@ -171,7 +171,7 @@ Check that it runs without authorization before proceeding with the next step, b
 .. image:: /images/auth_postman_fs_meta.png
 
 
-To be able to test the next steps, add a few example resources by issueing a batch request (``POST <base>/R4/``) 
+To be able to test the next steps, add a few example resources by issuing a batch request (``POST <base>/R4/``) 
 with :download:`this bundle </_static/files/FA_TestData.json>` (while authorization is still off).
 It contains two Patient resources and an Observation related to each of them.
 

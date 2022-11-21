@@ -49,7 +49,7 @@ Using your favourite database administration tool:
 
 - create a new database, e.g. 'firely_auth_store'
 - in this database, execute the script ``scripts/InitializeSchema.sql``, available in the binaries
-- create a connectionstring to this database
+- create a connection string to this database
 - configure :ref:`firely_auth_settings_userstore`
   
   .. code-block:: json

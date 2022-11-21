@@ -27,7 +27,7 @@ Step 1 - Software
 Firely Auth is distributed as .NET Core 6 binaries and in a Docker image. For this introduction we will use the binaries.
 
 #. Install .NET Core 6 Runtime
-#. Download the zip file with Firely Auth binaries from `the downloadserver <https://downloads.simplifier.net/firely-server/firely-auth-latest.zip>`_
+#. Download the zip file with Firely Auth binaries from `the download server <https://downloads.simplifier.net/firely-server/firely-auth-latest.zip>`_
 #. Extract the zip to a location from where you are allowed to execute the program. We will call this the 'bin-directory'.
 
 Step 2 - License

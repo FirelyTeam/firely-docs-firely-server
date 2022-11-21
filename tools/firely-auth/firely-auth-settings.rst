@@ -140,7 +140,7 @@ Key management
       }
   }
 
-Firely Auth can work with multiple signature keys, used to sign access tokens. 
+Firely Auth can work with multiple signature keys, used to sign access and other tokens. 
 
 - ``RSA_Config``: defines the RSA algorithms that are supported. In the config above all available algoriths are listed.
   Inferno tests require at least RS256 for all Single Patient tests, and for Bulk Data Export a RS384 or higher is needed.

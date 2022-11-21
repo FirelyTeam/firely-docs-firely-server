@@ -193,7 +193,7 @@ The ``Name`` in this section serves two purposes:
 
 The ``FHIR_BASE_URL`` is the url on which Firely Server can be reached by the requesting app. It is used to turn the ``fhirUser`` claim (e.g. ``Patient/123``) into a full url.
 
-In **Firely Server**, all the settings are in the section ``SmartAuthorizationOptions``:abbr:
+In **Firely Server**, all the settings are in the section :ref:`SmartAuthorizationOptions <feature_accesscontrol_config>`
 
 .. code-block:: json
 

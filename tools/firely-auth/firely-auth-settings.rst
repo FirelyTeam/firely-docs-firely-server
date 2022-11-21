@@ -146,7 +146,7 @@ Firely Auth can work with multiple signature keys, used to sign access tokens.
   Inferno tests require at least RS256 for all Single Patient tests, and for Bulk Data Export a RS384 or higher is needed.
 
   - ``RSA_JWK``: allows to provide a pre-generated JSON Web Key. If this is not provided, Firely Auth will generate a key.
-  - ``SupportedAlgorithms``: limit this list to the algorithms that you need in your setup. In the config above all available algoriths are listed.
+  - ``SupportedAlgorithms``: limit this list to the algorithms that you need in your setup. In the config above all available algorithms are listed.
 
 - ``EC_Config``: defines the EC (Elliptic Curve) algorithms that are supported. Inferno tests for Bulk Data Export require support for EC keys.
 

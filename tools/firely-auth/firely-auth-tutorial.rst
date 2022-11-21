@@ -16,7 +16,7 @@ Firely Auth can be used to fulfill all of them.
 
 There are various ways to get to know Firely Auth and the way it works together with Firely Server.
 As an introduction we'll setup both to make an example Postman collection work. 
-In the configuration section, we discuss the configuation that is possible both in Firely Auth itself and in Firely Server.
+In the configuration section, we discuss the configuration that is possible both in Firely Auth itself and in Firely Server.
 
 Getting started
 ---------------

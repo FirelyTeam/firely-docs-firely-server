@@ -1,6 +1,6 @@
 .. _firely_auth_releasenotes:
 
-Firely Auth releasenotes
+Firely Auth release notes
 ========================
 
 Release 3.0.0, December 2022

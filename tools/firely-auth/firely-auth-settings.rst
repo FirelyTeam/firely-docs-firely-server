@@ -8,7 +8,7 @@ Firely Auth can be configured extensively. This page lists all the settings and 
 Settings files and variables
 ----------------------------
 
-Just like Firely Server itself, Firely Auth features a hierarchy of settings files and veriables. From lowest to highest priority:
+Just like Firely Server itself, Firely Auth features a hierarchy of settings files and variables. From lowest to highest priority:
 
 - ``appsettings.default.json`` - This comes with the binaries (and in the Docker container) and contains sensible defaults for most settings. 
   You can change this file, but it might accidentally be overwritten upon a new release. Instead, put your settings in one of the following places.

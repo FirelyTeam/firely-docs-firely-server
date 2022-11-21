@@ -276,7 +276,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
   - SharedSecret: ``{"SecretType": "SharedSecret", "Secret": "<a secret string shared with the client>"}`` - this can be used for either :term:`client credentials` or :term:`authorization code flow`, but only with a :term:`confidential client`.
   - JWK: ``{"SecretType": "JWK", "SecretUrl": "<JWKS url>"}`` - where the JWKS url hosts a JSON Web Key Set that can be retrieved by Firely Auth, see also :term:`JWK`.
-  - JWK: ``{"SecretType": "JWK", "Secret": "<JWK>"}`` - where JWK is the contents of a :term:``JWK``. Use this if the client cannot host a url with a JWKS. 
+  - JWK: ``{"SecretType": "JWK", "Secret": "<JWK>"}`` - where JWK is the contents of a :term:`JWK`. Use this if the client cannot host a url with a JWKS. 
     Use one entry for each key in the keyset. Note that the JWK json structure is enbedded in a string, so you need to escape the quotes within the JWK.
     The url option above is recommended. 
 

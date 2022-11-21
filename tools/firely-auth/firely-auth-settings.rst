@@ -26,7 +26,7 @@ License
 ^^^^^^^
 
 Use the License settings to set the location to the license file. A relative path is evaluated relative to the executable ``Firely.IdentityServer.Core.exe``.
-You can use the same licensefile that came with Firely Server.
+You can use the same license file that came with Firely Server.
 
 .. code-block:: json
 

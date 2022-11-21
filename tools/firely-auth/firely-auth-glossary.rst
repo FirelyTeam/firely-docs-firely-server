@@ -69,7 +69,7 @@ Glossary of terms in authorization
         A :term:`confidential client` may use credentials (similar to username / password, but for software) to request an :term:`access token` directly from Firely Auth.
 
     claim
-        An element in a an :term:`access token` that tells Firely Server that the :term:`client` claims to have access to certain resources.
+        An element in an :term:`access token` that tells Firely Server that the :term:`client` claims to have access to certain resources.
         A client requests a claim. Then Firely Auth will optionally as the :term:`user` for consent to grant this claim to the client.
         Then Firely Auth includes the claim in the access token. The client presents the access token as part of its request to Firely Server.
         Finally Firely Server must understand the claim and will restrict access to resources accordingly.

@@ -16,7 +16,7 @@ Firely Auth can be used to fulfill all of them.
 
 There are various ways to get to know Firely Auth and the way it works together with Firely Server.
 As an introduction we'll setup both to make an example Postman collection work. 
-In the configuration section, we discuss the configuation that is possible both in Firely Auth itself and in Firely Server.
+In the configuration section, we discuss the configuration that is possible both in Firely Auth itself and in Firely Server.
 
 Getting started
 ---------------
@@ -27,7 +27,7 @@ Step 1 - Software
 Firely Auth is distributed as .NET Core 6 binaries and in a Docker image. For this introduction we will use the binaries.
 
 #. Install .NET Core 6 Runtime
-#. Download the zip file with Firely Auth binaries from `the downloadserver <https://downloads.simplifier.net/firely-server/firely-auth-latest.zip>`_
+#. Download the zip file with Firely Auth binaries from `the download server <https://downloads.simplifier.net/firely-server/firely-auth-latest.zip>`_
 #. Extract the zip to a location from where you are allowed to execute the program. We will call this the 'bin-directory'.
 
 Step 2 - License
@@ -38,7 +38,7 @@ Firely Auth requires this token to be present in the license file: ``http://fire
 If you don't have this in your license file yet, you probably need to acquire Firely Auth first. Please :ref:`vonk-contact` for that.
 
 By default Firely Auth will look for a license file named ``firely-server-license.json``, adjacent to the ``Firely.IdentityServer.Core.exe`` 
-You can adjust the location of the license file in the configration settings, see :ref:`firely_auth_settings_license`.
+You can adjust the location of the license file in the configuration settings, see :ref:`firely_auth_settings_license`.
 
 With the license in place, you can start Firely Auth by running::
 
@@ -171,7 +171,7 @@ Check that it runs without authorization before proceeding with the next step, b
 .. image:: /images/auth_postman_fs_meta.png
 
 
-To be able to test the next steps, add a few example resources by issueing a batch request (``POST <base>/R4/``) 
+To be able to test the next steps, add a few example resources by issuing a batch request (``POST <base>/R4/``) 
 with :download:`this bundle </_static/files/FA_TestData.json>` (while authorization is still off).
 It contains two Patient resources and an Observation related to each of them.
 

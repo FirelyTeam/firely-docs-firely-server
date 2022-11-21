@@ -38,7 +38,7 @@ Glossary of terms in authorization
         Multiple JWKs are usually published on a url in the form of a JWKS - a JSON Web Key Set. Multiple keys allow for key rotation without downtime.
 
     reference token
-        A reference token is a string that does not contain any information about what is granted. Instead it is a _reference_ to 
+        A reference token is a string that does not contain any information about what is granted. Instead it is a *reference* to 
         the actual token that is kept within Firely Auth. For Firely Server to check a reference token it sends the token 
         to the :ref:`token introspection endpoint` of Firely Auth. Firely Auth will then send the validity along with relevant claims to Firely Server.
         A reference token is slower to validate than a :term:`JWT` because of the roundtrip to Firely Auth. 
@@ -69,7 +69,7 @@ Glossary of terms in authorization
         A :term:`confidential client` may use credentials (similar to username / password, but for software) to request an :term:`access token` directly from Firely Auth.
 
     claim
-        An element in a an :term:`access token` that tells Firely Server that the :term:`client` claims to have access to certain resources.
+        An element in an :term:`access token` that tells Firely Server that the :term:`client` claims to have access to certain resources.
         A client requests a claim. Then Firely Auth will optionally as the :term:`user` for consent to grant this claim to the client.
         Then Firely Auth includes the claim in the access token. The client presents the access token as part of its request to Firely Server.
         Finally Firely Server must understand the claim and will restrict access to resources accordingly.

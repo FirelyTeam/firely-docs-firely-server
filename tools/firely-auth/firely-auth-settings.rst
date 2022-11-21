@@ -8,7 +8,7 @@ Firely Auth can be configured extensively. This page lists all the settings and 
 Settings files and variables
 ----------------------------
 
-Just like Firely Server itself, Firely Auth features a hierarchy of settings files and veriables. From lowest to highest priority:
+Just like Firely Server itself, Firely Auth features a hierarchy of settings files and variables. From lowest to highest priority:
 
 - ``appsettings.default.json`` - This comes with the binaries (and in the Docker container) and contains sensible defaults for most settings. 
   You can change this file, but it might accidentally be overwritten upon a new release. Instead, put your settings in one of the following places.
@@ -26,7 +26,7 @@ License
 ^^^^^^^
 
 Use the License settings to set the location to the license file. A relative path is evaluated relative to the executable ``Firely.IdentityServer.Core.exe``.
-You can use the same licensefile that came with Firely Server.
+You can use the same license file that came with Firely Server.
 
 .. code-block:: json
 
@@ -142,16 +142,16 @@ Key management
 
 Firely Auth can work with multiple signature keys, used to sign access and other tokens. 
 
-- ``RSA_Config``: defines the RSA algorithms that are supported. In the config above all available algoriths are listed.
+- ``RSA_Config``: defines the RSA algorithms that are supported. In the config above all available algorithms are listed.
   Inferno tests require at least RS256 for all Single Patient tests, and for Bulk Data Export a RS384 or higher is needed.
 
   - ``RSA_JWK``: allows to provide a pre-generated JSON Web Key. If this is not provided, Firely Auth will generate a key.
-  - ``SupportedAlgorithms``: limit this list to the algorithms that you need in your setup. In the config above all available algoriths are listed.
+  - ``SupportedAlgorithms``: limit this list to the algorithms that you need in your setup. In the config above all available algorithms are listed.
 
 - ``EC_Config``: defines the EC (Elliptic Curve) algorithms that are supported. Inferno tests for Bulk Data Export require support for EC keys.
 
   - ``JWK_ES*``: allows to provide a pre-generated JSON Web Key. If this is not provided, Firely Auth will generate a key for each of the supported algorithms.
-  - ``SupportedAlgorithms``: limit this list to the algorithms that you need in your setup. In the config above all available algoriths are listed.
+  - ``SupportedAlgorithms``: limit this list to the algorithms that you need in your setup. In the config above all available algorithms are listed.
 
 Note that a single RSA key can be used for all supported algorithms. However, an EC key is tied to a specific algorithm, therefore you can supply a key for each of the algorithms.
 
@@ -276,7 +276,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
   - SharedSecret: ``{"SecretType": "SharedSecret", "Secret": "<a secret string shared with the client>"}`` - this can be used for either :term:`client credentials` or :term:`authorization code flow`, but only with a :term:`confidential client`.
   - JWK: ``{"SecretType": "JWK", "SecretUrl": "<JWKS url>"}`` - where the JWKS url hosts a JSON Web Key Set that can be retrieved by Firely Auth, see also :term:`JWK`.
-  - JWK: ``{"SecretType": "JWK", "Secret": "<JWK>"}`` - where JWK is the contents of a :term:``JWK``. Use this if the client cannot host a url with a JWKS. 
+  - JWK: ``{"SecretType": "JWK", "Secret": "<JWK>"}`` - where JWK is the contents of a :term:`JWK`. Use this if the client cannot host a url with a JWKS. 
     Use one entry for each key in the keyset. Note that the JWK json structure is enbedded in a string, so you need to escape the quotes within the JWK.
     The url option above is recommended. 
 

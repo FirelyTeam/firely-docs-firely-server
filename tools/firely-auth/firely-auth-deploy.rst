@@ -49,7 +49,7 @@ Using your favourite database administration tool:
 
 - create a new database, e.g. 'firely_auth_store'
 - in this database, execute the script ``scripts/InitializeSchema.sql``, available in the binaries
-- create a connectionstring to this database
+- create a connection string to this database
 - configure :ref:`firely_auth_settings_userstore`
   
   .. code-block:: json
@@ -61,6 +61,6 @@ Using your favourite database administration tool:
       }
     }
 
-In the connectionstring you can use a user that is only allowed to read and write from the existing tables, no further DDL is needed.
+In the connection string you can use a user that is only allowed to read and write from the existing tables, no further DDL is needed.
 
 To add users to the store, you can use the :ref:`firely_auth_mgmt`.

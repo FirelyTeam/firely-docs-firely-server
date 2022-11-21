@@ -4,7 +4,7 @@ Firely Auth Bill of Materials
 =============================
 
 Firely Auth is mainly built using libraries from Duende, Microsoft .Net Core and ASP.NET Core, along with a limited list of other libraries.
-This is the full list of direct depencies that Firely Auth has on other libraries, along with their licenses.
+This is the full list of direct dependencies that Firely Auth has on other libraries, along with their licenses.
 
 This list uses the NuGet package names (or prefixes of them) so you can easily lookup further details of those packages on `NuGet.org <https://www.nuget.org>`_ if needed.
 

@@ -29,6 +29,11 @@ Limitations
 
 The maximum header length of the web server applies (e.g. IIS 8KB/16KB).
 
+Facade implementations
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. note:: The provenance header functionality is dependent on transaction services. If transaction support is disabled in facade implementations, the configuration for the provenance header should be disabled as well. 
+
 Example
 -------
 

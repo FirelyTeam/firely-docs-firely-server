@@ -83,7 +83,6 @@ To make Firely Server known to Firely Auth, fill in the ``FhirServerConfig``:
 
   - It can be added to the token as the value of the ``aud`` (audience) claim, if the client requests so. 
     To have it accepted by Firely Server, set its ``SmartAuthorizationOptions:Audience`` setting to the same value.
-    (This currently only works for the Authorization Code flow.)
   - It correlates with the clients allowed to access the token introspection endpoint (see below).
     Therefore it should match the value of ``TokenIntrospectionConfig:TokenIntrospectionResources:Name``
 

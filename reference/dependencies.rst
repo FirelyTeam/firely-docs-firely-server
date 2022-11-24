@@ -49,6 +49,8 @@ For unittesting:
 #. coverlet.collector - MIT
 #. WireMock.Net - Apache 2.0
 
+.. _firely_oss_license:
+
 Firely OSS License
 ------------------
 

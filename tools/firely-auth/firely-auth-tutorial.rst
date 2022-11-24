@@ -66,7 +66,7 @@ For this introduction we will configure a user in the In memory store.
     {
         "Username": "alice",
         "Password": "AlicePassword1!",
-        "Claims": []
+        "AdditionalClaims": []
     }
 
 We won't add any claims yet - see :ref:`firely_auth_settings_userstore` to read up on how they work.

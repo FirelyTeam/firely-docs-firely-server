@@ -1,4 +1,4 @@
-.. _vonk_tools:
+.. _firely_auth_index:
 
 Firely Auth
 ===========

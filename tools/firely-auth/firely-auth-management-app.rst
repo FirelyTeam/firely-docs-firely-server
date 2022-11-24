@@ -41,7 +41,7 @@ You can set the connectionstring in an environment variable ``FIRELY_IDENTITY_SE
       ``-cs, --connectionString``
       ``-u, --username``: username
       ``-p, --password``: password - enclose in double quotes if it contains spaces.
-      ``-cl`, --claim <name=value> [<name=value> ...]``: list of claims for this user, see 'Claims' under :ref:`firely_auth_settings_userstore`
+      ``-cl`, --claim <name=value> [<name=value> ...]``: list of additional claims for this user, see 'AdditionalClaims' under :ref:`firely_auth_settings_userstore`
 
     - ``delete``: delete a user so the user no longer has access
       

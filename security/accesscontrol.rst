@@ -1,7 +1,7 @@
 .. _feature_accesscontrol:
 
-Access control and SMART
-========================
+Access control and SMART on FHIR
+================================
 
 .. contents:: Contents
   :depth: 1
@@ -11,7 +11,7 @@ Access control and SMART
 
 Concepts
 --------
-This explanation of access control and SMART in Firely Server requires basic understanding of the :ref:`architecture <architecture>` of Firely Server, so you know what is meant by middleware components and repository interfaces.
+This explanation of access control and SMART on FHIR in Firely Server requires basic understanding of the :ref:`architecture <architecture>` of Firely Server, so you know what is meant by middleware components and repository interfaces.
 It also presumes general knowledge about authentication and OAuth2.
 
 Access control generally consists of the following parts, which will be addressed one by one:
@@ -20,6 +20,8 @@ Access control generally consists of the following parts, which will be addresse
 - Authentication: Prove your identification -- usually with a password, a certificate or some other (combination of) secret(s) owned by you.
 - Authorization: What are you allowed to read or change based on your identification?
 - Access Control Engine: Enforce the authorization in the context of a specific request.
+
+Note that Firely offers :ref:`feature_accesscontrol_firely_auth` as an OAuth2 provider that is optimized to use in the context of SMART on FHIR. 
 
 Identification and Authentication
 ---------------------------------
@@ -38,10 +40,10 @@ Both versions define a syntax for expressing "scope"-claims within an access tok
 
 These are examples of scopes and launch contexts that are recognized by Firely Server (SMART v1):
 
-* scope=user/Observation.read: the user is allowed to read Observation resources
-* scope=user/Encounter.write: the user is allowed to write Encounter resources
-* scope=user/\*.read: the user is allowed to read any type of resource
-* scope=user/\*.write: the user is allowed to write any type of resource
+* scope=user/Observation.r: the user is allowed to read Observation resources
+* scope=user/Encounter.crud: the user is allowed to read, create, update and delete Encounter resources
+* scope=user/\*.rs: the user is allowed to read and search any type of resource
+* scope=user/\*.cud: the user is allowed to create, update and delete any type of resource
 * scope=[array of individual scopes]
 * patient=123: the user is allowed access to resources in the compartment of patient 123 -- see :ref:`feature_accesscontrol_compartment`.
 
@@ -71,6 +73,13 @@ Firely Server will additionally handle user-level scopes by checking the syntax 
 
 .. attention::
   Requests using a user-level scope are not limited a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly adviced to implement additional security measures using a custom plugin, e.g. by enforcing a certain Practitioner or Encounter context.
+
+SMART on FHIR scopes are used to:
+
+- configure a client: which scopes can it request?
+- request authorization: client requests a set of scopes
+- consent: user consents to the client using the requested scopes
+- access token: Firely Server can read from the access token which scopes the client is granted (an intersection of the three above)
 
 Access Control Engine
 ---------------------
@@ -287,6 +296,14 @@ A valid access token for Firely Server at minimum will have:
 
 .. warning:: Firely Server will not enforce any access control for resources outside of the specified compartment. Some compartment definitions do not include crucial resource types like 'Patient' or their corresponding resource type, i.e. all resources of this type regardless of any claims in the access token will be returned if requested. Please use this feature with caution! Additional custom access control is highly recommended.
 
+.. _feature_accesscontrol_firely_auth
+
+Firely Auth
+-----------
+
+Firely provides an optimized OAuth2 provider that understands SMART on FHIR scopes and the FHIR resource types they apply to out of the box. Along with the SoF specific launch claims and all the various client authentication flows.
+This product is called Firely Auth and can be acquired as part of Firely Server. You can also evaluate it using a Firely Server evaluation license. See :ref:`firely_auth_index` for more information.
+
 .. _feature_accesscontrol_aad:
 
 Azure Active Directory
@@ -410,12 +427,23 @@ In this paragraph we will explain how Access Control Decisions are made for the 
 Testing
 -------
 
-Testing the access control functionality is possible on a local instance of Firely Server. It is not available for the `publicly hosted test server <http://server.fire.ly>`_.
+Testing the access control functionality is possible on the `publicly hosted test server <http://server.fire.ly>`_ as well as on a local instance.
 
-You can test it using a dummy authorization server and Postman as a REST client. Please refer to these pages for instructions:
+On the public endpoint, there are 2 predefined users and 1 client, intended to be used from Postman:
 
-* :ref:`feature_accesscontrol_idprovider`
-* :ref:`feature_accesscontrol_postman`
+- Client:
+
+  - Client ID: ``postman``
+  - Client secret: ``YXTHXspjK.2!rsz8jKQT``
+
+- Auth URL: ``https://auth.fire.ly/connect/authorize``
+- Access Token URL: ``https://auth.fire.ly/connect/token``
+- User: 
+
+  - Username: ``alice``
+  - Password: ``password``
+
+You can test it locally using Firely Auth and Postman as a REST client. Please refer to :ref:`firely_auth_introduction` for instructions:
 
 You might also find it useful to enable more extensive authorization failure logging - Firely Server defaults to a secure setup and does not show what exactly went wrong during authorization. To do so, set the ``ASPNETCORE_ENVIRONMENT`` environment variable to ``Development``.
 

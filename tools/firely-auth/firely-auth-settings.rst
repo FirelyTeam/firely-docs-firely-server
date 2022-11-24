@@ -87,8 +87,13 @@ To make Firely Server known to Firely Auth, fill in the ``FhirServerConfig``:
   - It correlates with the clients allowed to access the token introspection endpoint (see below).
     Therefore it should match the value of ``TokenIntrospectionConfig:TokenIntrospectionResources:Name``
 
-- ``FHIR_BASE_URL``: A token can have a claim in the form of ``patient=<base>/Patient/123``, to define the compartment the client is restricted to.
-  This url is used as the ``base`` part in that url, and should match the base url of Firely Server, as it is accessed by the client.
+- ``FHIR_BASE_URL``: This also has two uses:
+
+  - A token can have a claim in the form of ``patient=<base>/Patient/123``, to define the compartment the client is restricted to.
+    This url is used as the ``base`` part in that url, and should match the base url of Firely Server, as it is accessed by the client.
+  - If an ``aud`` parameter is provided *in the authorize request*, it has to match this url. 
+    E.g. in Postman you can provide this parameter by adding it to the Auth URL, like this: ``{{ids}}/connect/authorize?aud=http://localhost:4080`` 
+    See the ``aud`` parameter in `SMART on FHIR authorization request`_
 
 .. _firely_auth_settings_tokentypes:
 
@@ -186,7 +191,7 @@ Therefore we register the users with Firely Auth. Firely Auth supports two types
 
 For the InMemory store, the users and their passwords are listed in plain text in this configuration. This is useful for testing, but not recommended for production use.
 
-The SqlServer store stores the users and their encrypted passwords in a MS SQL Server database. 
+The SqlServer store stores the users and their encrypted passwords in a MS SQL Server database. Also the `fhirUser` and `patient` claims for each user can be stored. 
 See :ref:`firely_auth_deploy_sql` for details on setting up the database.
 
 .. code-block:: json
@@ -198,7 +203,7 @@ See :ref:`firely_auth_deploy_sql` for details on setting up the database.
               {
                   "Username": "bob",
                   "Password": "password",
-                  "Claims": [
+                  "AdditionalClaims": [
                       {
                           "Name": "patient",
                           "Value": "Patient/a123"
@@ -218,10 +223,10 @@ See :ref:`firely_auth_deploy_sql` for details on setting up the database.
   - ``AllowedUsers``: list of users
   - ``Username``: login for a user
   - ``Password``: password for the user, in clear text
-  - ``Claims``: currently to be used for a single claim, to link the user to a Patient resource (and thereby to a Patient compartment) in Firely Server. 
+  - ``AdditionalClaims``: currently to be used for a single claim, to link the user to a Patient resource (and thereby to a Patient compartment), or a 'user' resource like a Practitioner in Firely Server. 
 
-    - ``Name``: name of the claim, currently only ``patient`` is supported
-    - ``Value``: logical id of the related Patient resource (``Patient/id``)
+    - ``Name``: name of the claim, currently only ``patient`` and ``fhirUser`` are supported
+    - ``Value``: logical id of the related Patient or Practitioner resource (``Patient/id``)
       In the token this value will be expanded to an absolute url by prepending it with ``FhirServerConfig.FHIR_BASE_URL`` (see :ref:`firely_auth_settings_server`).
 
 - ``SqlServer``: settings for the SQL Server store
@@ -297,3 +302,4 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
 .. _SMART on FHIR V2 scopes: http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-clinical-data
 .. _SMART on FHIR refresh tokens: http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-a-refresh-token
+.. _SMART on FHIR authorization request: http://hl7.org/fhir/smart-app-launch/app-launch.html#request-4

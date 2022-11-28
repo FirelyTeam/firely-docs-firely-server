@@ -161,10 +161,8 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
         //}
       ],
       "Authority": "url-to-your-identity-provider",
-    //"AdditionalEndpoints": {  //optional, only needed for certain identity provider setups
-    //   "Issuers": ["additional-url-to-your-identity-provider"],
-    //   "BaseEndpoints" : ["additional-url-to-your-identity-provider"]
-    //},      
+    //"AdditionalBaseEndpointsInDiscoveryDocument": ["additional-url-to-your-identity-provider"],
+    //"AdditionalIssuersInToken": ["additional-url-to-your-identity-provider"],   
       "Audience": "name-of-your-fhir-server" //Default this is empty
     //"ClaimsNamespace": "http://smarthealthit.org",
       "RequireHttpsToProvider": false, //You want this set to true (the default) in a production environment!
@@ -208,7 +206,8 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
     * FilterType: Both a launch context and a CompartmentDefinition are defined by a resourcetype. Use FilterType to define for which launch context and related CompartmentDefinition this Filter is applicable.
     * FilterArgument: Translates the value of the launch context to a search argument. You can use any supported search parameter defined on FilterType. It should contain the name of the launch context enclosed in hashes (e.g. #patient#), which is substituted by the value of the claim.
 * Authority: The base url of your identity provider, such that ``{{base_url}}/.well-known/openid-configuration`` returns a valid configuration response (`OpenID Connect Discovery documentation <https://openid.net/specs/openid-connect-discovery-1_0.html#rfc.section.4.2>`_). At minimum, the ``jwks_uri``, ``token_endpoint`` and ``authorization_endpoint`` keys are required in addition to the keys required by the specification. See :ref:`feature_accesscontrol_idprovider` for more background.
-* AdditionalEndpoints: Optional configuration setting. Add additional base authority endpoints that your identity provider also uses for operations that are listed in the .well-known document. The additional issuer setting will currently only extend the list of issuer urls that are valid within the issuer claim in the token passed to Firely Server. The token validation will be adjusted accordingly. Please note that it does not influence which issuer urls are allowed in the .well-known/openid-configuration document of the authorization server.
+* AdditionalBaseEndpointsInDiscoveryDocument: Optional configuration setting. Add additional base authority endpoints that your identity provider also uses for operations that are listed in the .well-known document. 
+* AdditionalIssuersInToken: Optional configuration setting. The additional issuer setting will extend the list of issuer urls that are valid within the issuer claim in the token passed to Firely Server. The token validation will be adjusted accordingly. Please note that it does not influence which issuer urls are allowed in the .well-known/openid-configuration document of the authorization server.
 * Audience: Defines the name of this Firely Server instance as it is known to the Authorization server. Default is 'firelyserver'.
 * ClaimsNamespace: Some authorization providers will prefix all their claims with a namespace, e.g. ``http://my.company.org/auth/user/*.read``. Configure the namespace here to make Firely Server interpret it correctly. It will then strip off that prefix and interpret it as just ``user/*.read``. By default no namespace is configured.
 * RequireHttpsToProvider: Token exchange with an Authorization server should always happen over https. However, in a local testing scenario you may need to use http. Then you can set this to 'false'. The default value is 'true'. 

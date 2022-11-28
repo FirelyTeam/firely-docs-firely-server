@@ -40,7 +40,7 @@ Glossary of terms in authorization
     reference token
         A reference token is a string that does not contain any information about what is granted. Instead it is a *reference* to 
         the actual token that is kept within Firely Auth. For Firely Server to check a reference token it sends the token 
-        to the :ref:`token introspection endpoint` of Firely Auth. Firely Auth will then send the validity along with relevant claims to Firely Server.
+        to the :term:`token introspection endpoint` of Firely Auth. Firely Auth will then send the validity along with relevant claims to Firely Server.
         A reference token is slower to validate than a :term:`JWT` because of the roundtrip to Firely Auth. 
         But it is safer than a :term:`JWT` because the :term:`client` cannot read any information from the token and the 
         token can be revoked before its original expiration time.

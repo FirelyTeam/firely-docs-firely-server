@@ -296,7 +296,7 @@ A valid access token for Firely Server at minimum will have:
 
 .. warning:: Firely Server will not enforce any access control for resources outside of the specified compartment. Some compartment definitions do not include crucial resource types like 'Patient' or their corresponding resource type, i.e. all resources of this type regardless of any claims in the access token will be returned if requested. Please use this feature with caution! Additional custom access control is highly recommended.
 
-.. _feature_accesscontrol_firely_auth
+.. _feature_accesscontrol_firely_auth:
 
 Firely Auth
 -----------

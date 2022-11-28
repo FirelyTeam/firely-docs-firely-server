@@ -10,6 +10,11 @@ The X-Provenance header can be used to add a Provenance resource upon creating o
 
 .. note:: In the case of a conditional create, where the resource was already present, the Provenance resource is not created.
 
+Facade implementations
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. note:: The provenance header functionality is dependent on transaction services. If transaction support is disabled in your facade implementation, the configuration for the provenance header should be disabled as well. 
+
 Linking the Provenance resource
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

@@ -787,7 +787,7 @@ Fixes
 #. The ``import[.R4]`` folder allows for importing custom StructureDefinition resources. If any of them had no id, the error on that caused an exception. Fixed that.
 #. If a Facade returned a resource without an id from the Create method, an error was caused by a log statement. Fixed that.
 #. Indexing ``Subscription.channel[0].endpoint[0]`` failed for R4. Fixed that. This means you can't search for existing Subscriptions by ``Subscription.url`` on the /administration endpoint for FHIR R4.
-#. Postman was updated w.r.t. acquiring tokens. We adjusted the :ref:`documentation on that <feature_accesscontrol_postman>` accordingly.
+#. Postman was updated w.r.t. acquiring tokens. We adjusted the :ref:`documentation on that <firely_auth_introduction>` accordingly.
 #. If a patient claim was included in a SMART on FHIR access token, the request would be scoped to the Patient compartment regardless of the scope claims. We fixed this by allowing "user" scopes to access FHIR resources outside of the Patient compartment regardless of the patient claim. See `Launch context arrives with your access_token <http://hl7.org/fhir/smart-app-launch/1.0.0/scopes-and-launch-context/index.html#launch-context-arrives-with-your-access_token>`_ for more background information.
 
 Plugin and Facade

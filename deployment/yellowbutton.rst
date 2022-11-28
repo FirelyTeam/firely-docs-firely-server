@@ -19,9 +19,9 @@ If you still need to install Docker for Windows, please read :ref:`docker_win` f
 Getting the server
 ------------------
 
-Go to `Simplifier`_ and open the project page of the project that has the profiles that are relevant to you. For our example we took the US-Core project. Note that it has to be an *STU3* project.
+Go to `Simplifier`_ and open the project page of the project that has the profiles that are relevant to you. For our example we took the US-Core project. 
 
-On the project page, click the Download button, and in the dropdown menu that appears, click 'US-Core FHIR Server' (the name here will reflect the name of the project). It is shown in the image below with the menu item marked in yellow. The light blue marking shows you where to check whether this is a FHIR STU3 project.
+On the project page, click the Download button, and in the dropdown menu that appears, click 'US-Core FHIR Server' (the name here will reflect the name of the project). It is shown in the image below with the menu item marked in yellow. 
 
 .. image:: ../images/yellow_SimplifierDownload.png
   :align: left

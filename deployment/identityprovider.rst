@@ -16,8 +16,4 @@ For more details, see :ref:`firely_auth_index`.
 
 To allow you to test :ref:`feature_accesscontrol`, we provide you with :ref:`instructions <firely_auth_introduction>` to build and run Firely Auth in which you can configure the necessary clients, claims and users yourself to test different scenarios.
 
-.. |br| raw:: html
-
-   <br />
-
 .. _SMART on FHIR: http://docs.smarthealthit.org/

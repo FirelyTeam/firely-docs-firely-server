@@ -12,4 +12,5 @@ Additionally, any necessary configuration to re-produce these testing results wi
 
    us_core
    nictiz
+   gdpr
    hipaa

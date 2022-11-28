@@ -245,7 +245,6 @@ The table below contains some elements you can find in the generated AuditEvents
 | Example ($erase operation)  | :download:`download <../_static/files/audit-event-examples/R3_erase_operation.json>`  | :download:`download <../_static/files/audit-event-examples/R4_erase_operation.json>`  | :download:`download <../_static/files/audit-event-examples/R5_erase_operation.json>`  |
 +-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
 
-<<<<<<< HEAD
 .. _audit_event_customization:
 
 AuditEvent customization
@@ -368,7 +367,6 @@ See an example plugin below. This plugin captures all the token claims from the 
       }
    }
 
-=======
 
 References
 ^^^^^^^^^^
@@ -377,4 +375,3 @@ References
 * `FHIR R4 AuditEvent <http://hl7.org/fhir/auditevent.html>`_
 * `FHIR R5 AuditEvent <http://hl7.org/fhir/2022Sep/auditevent.html>`_
 * `Basic Audit Log Patterns (BALP) <https://profiles.ihe.net/ITI/BALP/index.html>`_
->>>>>>> e4b217cc9cbfd4b75d8a183989d731dedd1822e4

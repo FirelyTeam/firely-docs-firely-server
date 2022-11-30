@@ -27,6 +27,5 @@ In order to test the :ref:`feature_accesscontrol` you will need to :ref:`feature
    Firely Server for your Simplifier project <yellowbutton>
    reverseProxy/reverseProxy
    identityprovider
-   accesscontrol_postman
    Performance <../performance/performance>
 

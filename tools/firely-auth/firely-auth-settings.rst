@@ -276,7 +276,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``Enabled``: true / false: simple switch to enable or disable a client (instead of removing it from the list)
 - ``RequireConsent``: true / false: when true, Firely Auth will show the user a page for consent to granting the requested scopes to the client, otherwise all requested and valid scopes will be granted automatically.
 - ``RedirectUris``: array of strings: url(s) on which Firely Auth will send the authorization code and access token. The client can specify one of the preregistered urls for a specific request.
-- ``ClientSecrets``: secrets can be of type ``SharedSecret`` or ``JWK``. You can have multiple of each, so you can accept two secrets for a short period of time to support key rotation and an update window for the client
+- ``ClientSecrets``: secrets can be of type ``SharedSecret`` or ``JWK``. You can have multiple of each, so you can accept two secrets for a short period of time to support key rotation and an update window for the client. The ``ClientSecrets`` section is ignored if ``RequireClientSecret`` is set to ``false``.
 
   - SharedSecret: ``{"SecretType": "SharedSecret", "Secret": "<a secret string shared with the client>"}`` - this can be used for either :term:`client credentials` or :term:`authorization code flow`, but only with a :term:`confidential client`.
   - JWK: ``{"SecretType": "JWK", "SecretUrl": "<JWKS url>"}`` - where the JWKS url hosts a JSON Web Key Set that can be retrieved by Firely Auth, see also :term:`JWK`.
@@ -293,9 +293,9 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``AllowOfflineAccess``: true / false - Whether app can request refresh tokens while the user is online, see `SMART on FHIR refresh tokens`_
 - ``AllowOnlineAccess``: true / false - Whether app can request refresh tokens while the user is offline, see `SMART on FHIR refresh tokens`_. A user is offline if he is logged out of Firely Auth, either manually or by expiration
 - ``AllowFirelySpecialScopes``: true / false - Allow app to request scopes for Firely Server specific operations. Currently just 'http://server.fire.ly/auth/scope/erase-operation'
-- ``RequireClientSecret``: true / false - In theory you could allow clients without a client secret. That is not recommeded.
+- ``RequireClientSecret``: true / false - A :term:`public client` cannot hold a secret, and then this can be set to ``false``. Then the ``ClientSecrets`` section is ignored. See also the note below.
 - ``LaunchIds``: array of string - a 'launch id' could restrict access based on e.g. some currently active EHR context. Since Firely Auth is not connected to an EHR, this currently can only be set statically.
-  Providing an empty array will make Firely Auth accept any launch id sent by the client (including none).  
+  Providing an empty array will make Firely Auth accept any launch id sent by the client (including none).
 - ``RefreshTokenLifetime``: If the client is allowed to use a :term:`refresh token`, how long should it be valid? The value is in days. You can also use HH:mm:ss for lower values.
 
 

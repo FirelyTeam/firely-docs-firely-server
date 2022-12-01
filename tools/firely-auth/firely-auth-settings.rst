@@ -304,16 +304,48 @@ Inferno test settings
 The Inferno test suite for ONC Certification (g)(10) Standardized API has tests using the "Inferno-Public" client. For this client, ``RequireClientSecret`` has to be set to ``false``.
 The same suite also issues a launch id as part of test 3.3. For this to succeed, add the launch id that is used to the ``LaunchIds`` array of the 'Inferno' client.
 
-You can use these settings as a reference for testing this suite:
+Below you will find the settings that can act as a reference for testing this suite. On top of that you will need to arrange:
+
+For hosting (either directly with Kestrel as shown below, or with a reverse proxy that sits in front)
+
+- SSL certificate for Firely Auth
+- SSL certificate for Firely Server
+- Configure both to use SSL protocols TLS 1.2 and 1.3
+
+Necessary data:
+
+- Pre-load one version of US-Core conformance resources to the Firely Server administration endpoint
+- Pre-load the example resource of the same version of US-Core to the regular endpoint
+
+We have a full walkthrough of Inferno testing available as a whitepaper, see `our resources <https://fire.ly/resources/>`_.
 
 Firely Auth settings:
 ^^^^^^^^^^^^^^^^^^^^^
 
-Put these settings in ``appsettings.instance.json`` next to the executable.
+Put these settings in ``appsettings.instance.json`` next to the executable. 
+
+For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need to provide a certificate for that (either to Kestrel as shown below, or to a reverse proxy that sits in front).
 
 .. code-block:: json
 
   {
+    "Kestrel": {
+      "Endpoints": {
+        "Http": {
+          "Url": "http://localhost:5100"
+        },
+        "HttpsFromPem": {
+          "Url": "https://localhost:5101",
+          "SslProtocols": [ "Tls12", "Tls13" ],
+          "Certificate": {
+            "Path": "cert.pem",
+            "KeyPath": "cert-key.pem"
+          }
+        }
+    // Use "Https" option instead if you want to use a .pfx file. See https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints
+    }
+   },
+
     "FhirServerConfig": {
       "Name": "Firely Server",
       "FHIR_BASE_URL": "<url where you host Firely Server>"
@@ -352,7 +384,7 @@ Put these settings in ``appsettings.instance.json`` next to the executable.
         "AllowedUsers": [
           {
             "Username": "alice",
-            "Password": "password",
+            "Password": "p@sSw0rd",
             "AdditionalClaims": [
               {
                 "Name": "patient",
@@ -360,7 +392,7 @@ Put these settings in ``appsettings.instance.json`` next to the executable.
               },
               {
                 "Name": "fhirUser",
-                "Value": "Patient/<same id as above>"
+                "Value": "Practitioner/<id of a practitioner"
               }
             ]
           }
@@ -375,17 +407,17 @@ Put these settings in ``appsettings.instance.json`` next to the executable.
           "Enabled": true,
           "RequireConsent": true,
           "RedirectUris": [ "https://inferno.healthit.gov/suites/custom/smart/launch", "https://inferno.healthit.gov/suites/custom/smart/redirect" ],
-          "AllowedGrantTypes": [ "client_credentials", "authorization_code" ],
+          "AllowedGrantTypes": [ "authorization_code" ],
           "ClientSecrets": [
             {
               "SecretType": "SharedSecret",
               "Secret": "secret"
             }
           ],
-          "AllowFirelySpecialScopes": true,
+          "AllowFirelySpecialScopes": false,
           "AllowedSmartLegacyActions": [ "read", "write", "*" ],
           "AllowedSmartActions": [ "c", "r", "u", "d", "s" ],
-          "AllowedSmartSubjects": [ "patient", "user", "system" ],
+          "AllowedSmartSubjects": [ "patient", "user" ],
           "AlwaysIncludeUserClaimsInIdToken": true,
           "RequirePkce": false,
           "AllowOfflineAccess": true,
@@ -448,8 +480,17 @@ Firely Server settings
 
 Put these settings in appsettings.instance.json, next to the executable.
 
+For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need to provide a certificate for that (either to Kestrel as shown below, or to a reverse proxy that sits in front).
+
 .. code-block:: json
 
+  "Hosting": {
+    "HttpPort": 4080,
+    "HttpsPort": 4081, // Enable this to use https
+    "CertificateFile": "<your-certificate-file>.pfx", //Relevant when HttpsPort is present
+    "CertificatePassword" : "<cert-pass>", // Relevant when HttpsPort is present
+    "SslProtocols": [ "Tls12", "Tls13" ] // Relevant when HttpsPort is present.
+  },
   "SmartAuthorizationOptions": {
     "Enabled": true,
     "Filters": [
@@ -494,6 +535,31 @@ Put these settings in appsettings.instance.json, next to the executable.
       "ContextBanner"
     ]
   },
+  //PipelineOptions: make sure that Vonk.Plugin.SoFv2 is enabled
+  "PipelineOptions": { 
+    "PluginDirectory": "./plugins",
+    "Branches": [
+      {
+        "Path": "/",
+        "Include": [
+          //all other default plugins...
+          "Vonk.Plugin.SoFv2",
+        ],
+        "Exclude": [
+          //...
+        ]
+      },
+      {
+        "Path": "/administration",
+        "Include": [
+          //...
+        ],
+        "Exclude": [
+          //...
+        ]
+      }
+    ]
+  }
 
 
 .. _SMART on FHIR V2 scopes: http://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-clinical-data

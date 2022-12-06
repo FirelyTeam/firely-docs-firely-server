@@ -41,6 +41,48 @@
             "schema": {
               "$ref": "#/definitions/MedicationKnowledge"
             }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "405": {
+            "description": "METHOD NOT ALLOWED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "412": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "422": {
+            "description": "UNPROCESSABLE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -175,6 +217,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Bundle"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -315,6 +369,42 @@
             "schema": {
               "$ref": "#/definitions/MedicationKnowledge"
             }
+          },
+          "202": {
+            "description": "ACCEPTED"
+          },
+          "204": {
+            "description": "NO CONTENT"
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "405": {
+            "description": "METHOD NOT ALLOWED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -347,6 +437,30 @@
             "schema": {
               "$ref": "#/definitions/MedicationKnowledge"
             }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "412": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -376,6 +490,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/MedicationKnowledge"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -518,6 +644,48 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/MedicationKnowledge"
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "405": {
+            "description": "METHOD NOT ALLOWED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "412": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "422": {
+            "description": "UNPROCESSABLE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -743,6 +911,18 @@
             "schema": {
               "$ref": "#/definitions/Bundle"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -785,6 +965,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/MedicationKnowledge"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -833,6 +1025,18 @@
             "schema": {
               "$ref": "#/definitions/Parameters"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -879,6 +1083,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Parameters"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -927,6 +1143,18 @@
             "schema": {
               "$ref": "#/definitions/Parameters"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -971,6 +1199,18 @@
             "schema": {
               "$ref": "#/definitions/Parameters"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -987,6 +1227,10 @@
   "definitions": {
     "MedicationKnowledge": {
       "description": "Definition of Medication Knowledge",
+      "type": "object"
+    },
+    "OperationOutcome": {
+      "description": "Information about the success/failure of an action",
       "type": "object"
     },
     "Bundle": {
@@ -1198,7 +1442,7 @@
     "code": {
       "in": "query",
       "name": "code",
-      "description": "Search by task code",
+      "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Code that identifies the allergy or intolerance\r\n* [Condition](condition.html): Code for the condition\r\n* [DeviceRequest](devicerequest.html): Code for what is being requested/ordered\r\n* [DiagnosticReport](diagnosticreport.html): The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a condition code\r\n* [List](list.html): What the purpose of this list is\r\n* [Medication](medication.html): Returns medications for a specific code\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication code\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine code\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions of this medication code\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication code\r\n* [Observation](observation.html): The code of the observation type\r\n* [Procedure](procedure.html): A code to identify a  procedure\r\n* [ServiceRequest](servicerequest.html): What is being requested/ordered\r\n",
       "type": "string",
       "collectionFormat": "multi"
     },
@@ -1212,14 +1456,14 @@
     "ingredient": {
       "in": "query",
       "name": "ingredient",
-      "description": "Medication(s) or substance(s) contained in the medication",
+      "description": "Returns medications for this ingredient reference",
       "type": "string",
       "collectionFormat": "multi"
     },
     "ingredient-code": {
       "in": "query",
       "name": "ingredient-code",
-      "description": "Medication(s) or substance(s) contained in the medication",
+      "description": "Returns medications for this ingredient code",
       "type": "string",
       "collectionFormat": "multi"
     },
@@ -1268,7 +1512,7 @@
     "status": {
       "in": "query",
       "name": "status",
-      "description": "The current status of the event definition",
+      "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The current status of the capability statement\r\n* [CodeSystem](codesystem.html): The current status of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The current status of the compartment definition\r\n* [ConceptMap](conceptmap.html): The current status of the concept map\r\n* [GraphDefinition](graphdefinition.html): The current status of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The current status of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The current status of the message definition\r\n* [NamingSystem](namingsystem.html): The current status of the naming system\r\n* [OperationDefinition](operationdefinition.html): The current status of the operation definition\r\n* [SearchParameter](searchparameter.html): The current status of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The current status of the structure definition\r\n* [StructureMap](structuremap.html): The current status of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The current status of the terminology capabilities\r\n* [ValueSet](valueset.html): The current status of the value set\r\n",
       "type": "string",
       "collectionFormat": "multi"
     },

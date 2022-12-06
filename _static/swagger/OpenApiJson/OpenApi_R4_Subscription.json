@@ -41,6 +41,48 @@
             "schema": {
               "$ref": "#/definitions/Subscription"
             }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "405": {
+            "description": "METHOD NOT ALLOWED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "412": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "422": {
+            "description": "UNPROCESSABLE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -154,6 +196,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Bundle"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -273,6 +327,42 @@
             "schema": {
               "$ref": "#/definitions/Subscription"
             }
+          },
+          "202": {
+            "description": "ACCEPTED"
+          },
+          "204": {
+            "description": "NO CONTENT"
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "405": {
+            "description": "METHOD NOT ALLOWED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -305,6 +395,30 @@
             "schema": {
               "$ref": "#/definitions/Subscription"
             }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "412": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -334,6 +448,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Subscription"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -455,6 +581,48 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Subscription"
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "405": {
+            "description": "METHOD NOT ALLOWED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "412": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "422": {
+            "description": "UNPROCESSABLE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -645,6 +813,18 @@
             "schema": {
               "$ref": "#/definitions/Bundle"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -687,6 +867,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Subscription"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -735,6 +927,18 @@
             "schema": {
               "$ref": "#/definitions/Parameters"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -781,6 +985,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Parameters"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -829,6 +1045,18 @@
             "schema": {
               "$ref": "#/definitions/Parameters"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -873,6 +1101,18 @@
             "schema": {
               "$ref": "#/definitions/Parameters"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -889,6 +1129,10 @@
   "definitions": {
     "Subscription": {
       "description": "Server push subscription criteria",
+      "type": "object"
+    },
+    "OperationOutcome": {
+      "description": "Information about the success/failure of an action",
       "type": "object"
     },
     "Bundle": {
@@ -1107,21 +1351,21 @@
     "status": {
       "in": "query",
       "name": "status",
-      "description": "The current status of the event definition",
+      "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The current status of the capability statement\r\n* [CodeSystem](codesystem.html): The current status of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The current status of the compartment definition\r\n* [ConceptMap](conceptmap.html): The current status of the concept map\r\n* [GraphDefinition](graphdefinition.html): The current status of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The current status of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The current status of the message definition\r\n* [NamingSystem](namingsystem.html): The current status of the naming system\r\n* [OperationDefinition](operationdefinition.html): The current status of the operation definition\r\n* [SearchParameter](searchparameter.html): The current status of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The current status of the structure definition\r\n* [StructureMap](structuremap.html): The current status of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The current status of the terminology capabilities\r\n* [ValueSet](valueset.html): The current status of the value set\r\n",
       "type": "string",
       "collectionFormat": "multi"
     },
     "type": {
       "in": "query",
       "name": "type",
-      "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): allergy | intolerance - Underlying mechanism (if known)\r\n* [Composition](composition.html): Kind of composition (LOINC if possible)\r\n* [DocumentManifest](documentmanifest.html): Kind of document set\r\n* [DocumentReference](documentreference.html): Kind of document (LOINC if possible)\r\n* [Encounter](encounter.html): Specific type of encounter\r\n* [EpisodeOfCare](episodeofcare.html): Type/class  - e.g. specialist referral, disease management\r\n",
+      "description": "The kind of coverage (health plan, auto, Workers Compensation)",
       "type": "string",
       "collectionFormat": "multi"
     },
     "url": {
       "in": "query",
       "name": "url",
-      "description": "The uri that identifies the event definition",
+      "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The uri that identifies the capability statement\r\n* [CodeSystem](codesystem.html): The uri that identifies the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The uri that identifies the compartment definition\r\n* [ConceptMap](conceptmap.html): The uri that identifies the concept map\r\n* [GraphDefinition](graphdefinition.html): The uri that identifies the graph definition\r\n* [ImplementationGuide](implementationguide.html): The uri that identifies the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The uri that identifies the message definition\r\n* [OperationDefinition](operationdefinition.html): The uri that identifies the operation definition\r\n* [SearchParameter](searchparameter.html): The uri that identifies the search parameter\r\n* [StructureDefinition](structuredefinition.html): The uri that identifies the structure definition\r\n* [StructureMap](structuremap.html): The uri that identifies the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The uri that identifies the terminology capabilities\r\n* [ValueSet](valueset.html): The uri that identifies the value set\r\n",
       "type": "string",
       "collectionFormat": "multi"
     },

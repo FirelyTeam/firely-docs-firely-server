@@ -41,6 +41,48 @@
             "schema": {
               "$ref": "#/definitions/MessageHeader"
             }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "405": {
+            "description": "METHOD NOT ALLOWED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "412": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "422": {
+            "description": "UNPROCESSABLE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -178,6 +220,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Bundle"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -321,6 +375,42 @@
             "schema": {
               "$ref": "#/definitions/MessageHeader"
             }
+          },
+          "202": {
+            "description": "ACCEPTED"
+          },
+          "204": {
+            "description": "NO CONTENT"
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "405": {
+            "description": "METHOD NOT ALLOWED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -353,6 +443,30 @@
             "schema": {
               "$ref": "#/definitions/MessageHeader"
             }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "412": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -382,6 +496,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/MessageHeader"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -527,6 +653,48 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/MessageHeader"
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "405": {
+            "description": "METHOD NOT ALLOWED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "412": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "422": {
+            "description": "UNPROCESSABLE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -757,6 +925,18 @@
             "schema": {
               "$ref": "#/definitions/Bundle"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -799,6 +979,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/MessageHeader"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -847,6 +1039,18 @@
             "schema": {
               "$ref": "#/definitions/Parameters"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -893,6 +1097,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Parameters"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -941,6 +1157,18 @@
             "schema": {
               "$ref": "#/definitions/Parameters"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -985,6 +1213,18 @@
             "schema": {
               "$ref": "#/definitions/Parameters"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -1001,6 +1241,10 @@
   "definitions": {
     "MessageHeader": {
       "description": "A resource that describes a message that is exchanged between systems",
+      "type": "object"
+    },
+    "OperationOutcome": {
+      "description": "Information about the success/failure of an action",
       "type": "object"
     },
     "Bundle": {
@@ -1198,21 +1442,21 @@
     "author": {
       "in": "query",
       "name": "author",
-      "description": "Who and/or what authored the document",
+      "description": "The author of the request group",
       "type": "string",
       "collectionFormat": "multi"
     },
     "code": {
       "in": "query",
       "name": "code",
-      "description": "Search by task code",
+      "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Code that identifies the allergy or intolerance\r\n* [Condition](condition.html): Code for the condition\r\n* [DeviceRequest](devicerequest.html): Code for what is being requested/ordered\r\n* [DiagnosticReport](diagnosticreport.html): The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a condition code\r\n* [List](list.html): What the purpose of this list is\r\n* [Medication](medication.html): Returns medications for a specific code\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication code\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine code\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions of this medication code\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication code\r\n* [Observation](observation.html): The code of the observation type\r\n* [Procedure](procedure.html): A code to identify a  procedure\r\n* [ServiceRequest](servicerequest.html): What is being requested/ordered\r\n",
       "type": "string",
       "collectionFormat": "multi"
     },
     "destination": {
       "in": "query",
       "name": "destination",
-      "description": "Name of system",
+      "description": "Returns dispenses that should be sent to a specific destination",
       "type": "string",
       "collectionFormat": "multi"
     },
@@ -1226,28 +1470,28 @@
     "enterer": {
       "in": "query",
       "name": "enterer",
-      "description": "The party responsible for the entry of the Claim",
+      "description": "The party who is responsible for the request",
       "type": "string",
       "collectionFormat": "multi"
     },
     "event": {
       "in": "query",
       "name": "event",
-      "description": "Main clinical acts documented",
+      "description": "The event that triggers the message or link to the event definition.",
       "type": "string",
       "collectionFormat": "multi"
     },
     "focus": {
       "in": "query",
       "name": "focus",
-      "description": "Search by task focus",
+      "description": "A resource that is a permitted focus of the message",
       "type": "string",
       "collectionFormat": "multi"
     },
     "receiver": {
       "in": "query",
       "name": "receiver",
-      "description": "Who collected the Supply",
+      "description": "The identity of a receiver to list dispenses for",
       "type": "string",
       "collectionFormat": "multi"
     },
@@ -1275,7 +1519,7 @@
     "source": {
       "in": "query",
       "name": "source",
-      "description": "Who or where the information in the statement came from",
+      "description": "Who and/or what defined the list contents (aka Author)",
       "type": "string",
       "collectionFormat": "multi"
     },

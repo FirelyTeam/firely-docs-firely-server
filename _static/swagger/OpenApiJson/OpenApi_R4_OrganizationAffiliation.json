@@ -41,6 +41,48 @@
             "schema": {
               "$ref": "#/definitions/OrganizationAffiliation"
             }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "405": {
+            "description": "METHOD NOT ALLOWED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "412": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "422": {
+            "description": "UNPROCESSABLE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -178,6 +220,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Bundle"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -321,6 +375,42 @@
             "schema": {
               "$ref": "#/definitions/OrganizationAffiliation"
             }
+          },
+          "202": {
+            "description": "ACCEPTED"
+          },
+          "204": {
+            "description": "NO CONTENT"
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "405": {
+            "description": "METHOD NOT ALLOWED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -353,6 +443,30 @@
             "schema": {
               "$ref": "#/definitions/OrganizationAffiliation"
             }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "412": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -382,6 +496,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/OrganizationAffiliation"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -527,6 +653,48 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/OrganizationAffiliation"
+            }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "401": {
+            "description": "NOT AUTHORIZED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "405": {
+            "description": "METHOD NOT ALLOWED",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "409": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "412": {
+            "description": "CONFLICT",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "422": {
+            "description": "UNPROCESSABLE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -757,6 +925,18 @@
             "schema": {
               "$ref": "#/definitions/Bundle"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -799,6 +979,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/OrganizationAffiliation"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -847,6 +1039,18 @@
             "schema": {
               "$ref": "#/definitions/Parameters"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -893,6 +1097,18 @@
             "description": "OK",
             "schema": {
               "$ref": "#/definitions/Parameters"
+            }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
             }
           }
         }
@@ -941,6 +1157,18 @@
             "schema": {
               "$ref": "#/definitions/Parameters"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -985,6 +1213,18 @@
             "schema": {
               "$ref": "#/definitions/Parameters"
             }
+          },
+          "410": {
+            "description": "GONE",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/OperationOutcome"
+            }
           }
         }
       },
@@ -1001,6 +1241,10 @@
   "definitions": {
     "OrganizationAffiliation": {
       "description": "Defines an affiliation/assotiation/relationship between 2 distinct oganizations, that is not a part-of relationship/sub-division relationship",
+      "type": "object"
+    },
+    "OperationOutcome": {
+      "description": "Information about the success/failure of an action",
       "type": "object"
     },
     "Bundle": {
@@ -1198,14 +1442,14 @@
     "active": {
       "in": "query",
       "name": "active",
-      "description": "The Healthcare Service is currently marked as active",
+      "description": "Indicates if the related person record is active",
       "type": "string",
       "collectionFormat": "multi"
     },
     "date": {
       "in": "query",
       "name": "date",
-      "description": "The event definition publication date",
+      "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The capability statement publication date\r\n* [CodeSystem](codesystem.html): The code system publication date\r\n* [CompartmentDefinition](compartmentdefinition.html): The compartment definition publication date\r\n* [ConceptMap](conceptmap.html): The concept map publication date\r\n* [GraphDefinition](graphdefinition.html): The graph definition publication date\r\n* [ImplementationGuide](implementationguide.html): The implementation guide publication date\r\n* [MessageDefinition](messagedefinition.html): The message definition publication date\r\n* [NamingSystem](namingsystem.html): The naming system publication date\r\n* [OperationDefinition](operationdefinition.html): The operation definition publication date\r\n* [SearchParameter](searchparameter.html): The search parameter publication date\r\n* [StructureDefinition](structuredefinition.html): The structure definition publication date\r\n* [StructureMap](structuremap.html): The structure map publication date\r\n* [TerminologyCapabilities](terminologycapabilities.html): The terminology capabilities publication date\r\n* [ValueSet](valueset.html): The value set publication date\r\n",
       "type": "string",
       "collectionFormat": "multi"
     },
@@ -1219,21 +1463,21 @@
     "endpoint": {
       "in": "query",
       "name": "endpoint",
-      "description": "Technical endpoints providing access to electronic services operated for the healthcare service",
+      "description": "The endpoint for the study or series",
       "type": "string",
       "collectionFormat": "multi"
     },
     "identifier": {
       "in": "query",
       "name": "identifier",
-      "description": "External identifier for the event definition",
+      "description": "Multiple Resources: \r\n\r\n* [CodeSystem](codesystem.html): External identifier for the code system\r\n* [ConceptMap](conceptmap.html): External identifier for the concept map\r\n* [MessageDefinition](messagedefinition.html): External identifier for the message definition\r\n* [StructureDefinition](structuredefinition.html): External identifier for the structure definition\r\n* [StructureMap](structuremap.html): External identifier for the structure map\r\n* [ValueSet](valueset.html): External identifier for the value set\r\n",
       "type": "string",
       "collectionFormat": "multi"
     },
     "location": {
       "in": "query",
       "name": "location",
-      "description": "Location the encounter takes place",
+      "description": "The service delivery location or facility in which the vaccine was / was to be administered",
       "type": "string",
       "collectionFormat": "multi"
     },
@@ -1268,7 +1512,7 @@
     "role": {
       "in": "query",
       "name": "role",
-      "description": "The practitioner can perform this role at for the organization",
+      "description": "Definition of the role the participatingOrganization plays",
       "type": "string",
       "collectionFormat": "multi"
     },
@@ -1282,14 +1526,14 @@
     "specialty": {
       "in": "query",
       "name": "specialty",
-      "description": "The specialty of the service provided by this healthcare service",
+      "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
       "type": "string",
       "collectionFormat": "multi"
     },
     "telecom": {
       "in": "query",
       "name": "telecom",
-      "description": "Contact details for individual or organization",
+      "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): The value in any kind of telecom details of the patient\r\n* [Person](person.html): The value in any kind of contact\r\n* [Practitioner](practitioner.html): The value in any kind of contact\r\n* [PractitionerRole](practitionerrole.html): The value in any kind of contact\r\n* [RelatedPerson](relatedperson.html): The value in any kind of contact\r\n",
       "type": "string",
       "collectionFormat": "multi"
     },

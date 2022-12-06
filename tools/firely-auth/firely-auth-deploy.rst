@@ -16,7 +16,9 @@ Configure the path to the license file in the appsettings, section :ref:`firely_
 Executable / binaries
 ---------------------
 
-You can download the binaries in a zip file from `the downloadserver <https://downloads.simplifier.net/firely-server/firely-auth-latest.zip>`_
+You can request a copy of the binaries from Firely through our :ref:`contact page <vonk-contact>`
+
+.. You can download the binaries in a zip file from `the downloadserver <https://downloads.simplifier.net/firely-server/firely-auth-latest.zip>`_
 
 .. _firely_auth_deploy_docker:
 

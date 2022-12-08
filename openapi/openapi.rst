@@ -32,7 +32,7 @@ A sample configuration is listed below:
 	fhir-codegen-cli 
 		--fhir-server-url <FhirServerUrl> 
 		--resolve-external false 
-		--language-options OpenApi|SingleResponses=false|Metadata=true|SchemaLevel=names|MultiFile=true 
+		--language-options "OpenApi|SingleResponses=false|Metadata=true|SchemaLevel=names|MultiFile=true" 
 		--output-path <OpenApiOutputDirectory> 
 		--language OpenApi
 

@@ -12,6 +12,7 @@ This section contains documentation about Firely Auth.
    firely-auth-releasenotes
    firely-auth-tutorial
    firely-auth-settings
+   firely-auth-mfa
    firely-auth-deploy
    firely-auth-glossary
    firely-auth-management-app

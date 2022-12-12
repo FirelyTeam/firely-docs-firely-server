@@ -21,6 +21,7 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    conformanceresources
    errata
    subscription
+   auditing
    x-provenance
    resetdb
    preload

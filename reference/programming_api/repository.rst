@@ -67,7 +67,7 @@ Using ISearchRepository
 
       var searchResult = await _searchRepository.Search(args, options);
 
-#. Check the status of the arguments, expecially if they could not be ignored (MustHandle = true). Because this is a common pattern, there is an extension method ``CheckHandled`` that throws a VonkParameterException if MustHandle arguments are not handled.
+#. Check the status of the arguments, especially if they could not be ignored (MustHandle = true). Because this is a common pattern, there is an extension method ``CheckHandled`` that throws a VonkParameterException if MustHandle arguments are not handled.
 
    .. code-block:: csharp
 

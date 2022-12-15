@@ -263,7 +263,8 @@ The ``ClientRegistrationConfig`` is used to register the :term:`clients <client>
               "AllowFirelySpecialScopes": true,
               "RequireClientSecret": true,
               "LaunchIds": [],
-              "RefreshTokenLifetime": "30"
+              "RefreshTokenLifetime": "30",
+              "RequireMfa": true
           }
       ]
   }
@@ -297,6 +298,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``LaunchIds``: array of string - a 'launch id' could restrict access based on e.g. some currently active EHR context. Since Firely Auth is not connected to an EHR, this currently can only be set statically.
   Providing an empty array will make Firely Auth accept any launch id sent by the client (including none).
 - ``RefreshTokenLifetime``: If the client is allowed to use a :term:`refresh token`, how long should it be valid? The value is in days. You can also use HH:mm:ss for lower values.
+- ``RequireMfa``: true / false, default is false. A user granting access to this client has to enable and use Multi Factor Authentication. See :ref:`firely_auth_mfa`
 
 Inferno test settings
 ---------------------

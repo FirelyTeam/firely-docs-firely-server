@@ -110,7 +110,8 @@ We'll just provide the correct settings here. The settings are documented in det
                 "AllowOnlineAccess": false, 
                 "AllowFirelySpecialScopes": true, 
                 "RequireClientSecret": true, 
-                "LaunchIds": [] 
+                "LaunchIds": [],
+                "RequireMfa": false
             }
         ]
     }

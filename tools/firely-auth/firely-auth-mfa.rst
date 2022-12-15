@@ -13,12 +13,15 @@ If these resources are especially sensitive - as is often the case for Patient H
 This is called multi factor authentication. Since a client is restricted to certain scopes (see ``AllowedSmartSubjects`` in :ref:`firely_auth_settings_clients`), it makes sense to require MFA for clients that potentially have access to sensible resources.
 Therefore the ``RequireMfa`` setting is part of the ``AllowedClients`` settings.
 
+Multi factor authentication in Firely Auth is based on using a time-based one-time password. The user can use one of the many available Authenticator apps available for either Android or iOS to generate such a password. 
+
 If this setting is set to ``true``, the user should first:
 
 - log in to Firely Auth through the UI, so outside of an authorization request
 - enable 2 Factor Authentication from the menu
+- register Firely Auth with the Authenticator app using a QRCode
 - log out
 
-From now on, when the client requests an access token, the user can login as usual and he/she will be asked to sign in with both a password and a verification code from an authenticator app.
+From now on, when the client requests an access token, the user can login as usual and they will be asked to sign in with both a password and a verification code from the authenticator app.
 
 Should the client request an access token when the user has not set up 2FA yet, the authentication will fail with the error ``interaction_required``.

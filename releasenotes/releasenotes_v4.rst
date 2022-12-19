@@ -13,6 +13,11 @@ Feature
 
 #. HealthCheck: We introduced endpoints for healthchecks, both liveness and readiness, see :ref:`feature_healthcheck`.
 #. Provenance: We added support for the X-Provenance header, see :ref:`feature_x-provenance`.
+
+   .. note::
+
+     If you use this release as a facade implementation, you need to disable the provenance header configuration in the pipeline.
+
 #. Compartments: The reference searchparameter ``Binary.securityContext`` can now be used as a link for the Patient compartment. If SMART on FHIR is enabled and a "patient"-level scope is being used, Binary resources must now point to a Patient resource matching the "patient" claim in the access token. For facade and plugin implementations this change means that the ``ICompartment`` information is now available for requests on the ``Binary`` resource type.
 #. Audit on search: We enhanced audit logging by exposing the literal references of the current page of the results from a search request. For file logging, this information can be included by adding ``SearchResultSummary`` to the :ref:`output template <configure_audit_log_file>`. In AuditEvent resources, each search result (reference) is included as an ``entity`` node, in addition to the entity node for the bundle with the query parameters. 
 #. Search: We added support of ``:of-type`` search modifier for search parameters targeting Identifier elements (e.g. ``Patient.identifier``). See the `FHIR spec article on search <https://www.hl7.org/fhir/r4/search.html#token>`_ for more information.

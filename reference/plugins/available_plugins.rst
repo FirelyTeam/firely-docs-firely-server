@@ -755,4 +755,11 @@ Bulk Data
 :Order: 5006
 :Description: Request a Patient record. See :ref:`feature_patienteverything`.
 
+X-Provenance header
+-------------------
 
+:Name: X-Provenance header
+:Configuration: ``Vonk.Plugin.Operations.Provenance.ProvenanceHeaderConfiguration``
+:license token: http://fire.ly/vonk/plugins/transaction
+:Order: 1230
+:Description: Support for the X-Provenance header that adds a Provenance resource upon creating or updating another resource. See :ref:`feature_x-provenance`.

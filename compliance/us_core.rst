@@ -1,14 +1,24 @@
 US Core / 21th Century Cures Act
 ================================
 
-* Tested Version: Firely Server has been tested against `US Core Version 3.1.1 - STU3 Release <https://hl7.org/fhir/us/core/STU3.1.1/profiles.html>`_
-* All StructureDefinitions for profiles and extensions are loaded by default in the standard SQLite administration database of Firely Server. No additional configuration needed in order to validate against these conformance resources.
-* Firely Server provides full `conformance as defined in `"Claiming Conformance to a US Core Profile" <https://hl7.org/fhir/us/core/STU3.1.1/general-guidance.html#claiming-conformance-to-a-us-core-profile>`_:
+* Firely Server provides full `profile and interaction support as defined in `"Conforming to US Core" <https://hl7.org/fhir/us/core/general-requirements.html#profile-support--interaction-support>`_:
   
   * Firely Server can be populated with resources conforming to US Core
   * All elements defined as must-support by the implementation guide are supported
   * All references between FHIR resources defined as must-support by the implementation guide are supported
   * All search and CRUD interactions defined by US Core are supported, including optional search parameters
+
+* Firely provides offical support for the following versions of the US Core ImplementationGuide:
+
+ ================== ========= ========================================
+ US Core Version    Status    References                                                                 
+ ================== ========= ========================================                                                                             
+  US Core 3.1.1      ✅         http://hl7.org/fhir/us/core/STU3.1.1/                                 
+  US Core 4.0.0      ✅         http://hl7.org/fhir/us/core/STU4/                                                                                                                      
+ ================== ========= ======================================== 
+
+
+* All StructureDefinitions for profiles and extensions (v3.1.1) are loaded by default in the standard SQLite administration database of Firely Server. No additional configuration needed in order to validate against these conformance resources.
   
 See `How to Test Firely Server on Inferno <https://fire.ly/ebook-how-to-test-firely-server-on-inferno/>`_ for more information on how to pass the official 21st Century Cures Act test.
   

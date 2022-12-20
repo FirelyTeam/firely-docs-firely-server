@@ -40,6 +40,7 @@ If you don't have this in your license file yet, you probably need to acquire Fi
 
 By default Firely Auth will look for a license file named ``firely-server-license.json``, adjacent to the ``Firely.IdentityServer.Core.exe`` 
 You can adjust the location of the license file in the configuration settings, see :ref:`firely_auth_settings_license`.
+Additionally you will have to place a file called ``Duende_License.key`` also adjacent to the ``Firely.IdentityServer.Core.exe``. Please note that the path to this file cannot be configured. 
 
 With the license in place, you can start Firely Auth by running::
 

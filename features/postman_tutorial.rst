@@ -13,7 +13,7 @@ Sign up for and install Postman. For more information about Postman, see `Get St
 Using Postman
 -------------
 
-#. Click the following "Run in Postman" link:
+#. Click the following "Fork postman collection into your workspace" link:
 
     .. raw:: html
 

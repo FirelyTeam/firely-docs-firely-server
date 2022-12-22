@@ -1,6 +1,6 @@
 .. _postman_tutorial:
 
-Postman Tutorial
+Postman Setup
 ================
 
 This article will walk through setting up Postman to access Firely Server restful endpoint.

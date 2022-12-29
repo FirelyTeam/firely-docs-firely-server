@@ -3,11 +3,11 @@
 Auditing
 ========
 
-Firely Server can log access through the RESTful API for auditing purposes. It has 3 features:
+Firely Server can log access through the RESTful API for auditing purposes. It has three main features:
 
 #. Write requests and responses to a separate audit logfile.
 #. Include user id and name from the JWT token (if present) in the audit log lines.
-#. Write the audit information to AuditEvent resources in the Firely Server Data database.
+#. Write the audit information as FHIR AuditEvent resources in the Firely Server Data database.
 
 These features can be enabled by including ``Vonk.Plugins.Audit`` in the pipeline.
 
@@ -181,7 +181,7 @@ The downside is that writing to the audit log is blocking and Firely Server now 
 AuditEvent logging
 ------------------
 
-There is no further configuration for AuditEvent logging. If you include it in the pipeline, it will start generating AuditEvent resources.
+There is no further configuration for AuditEvent logging. If you include it in the pipeline, it will start generating AuditEvent resources, conforming to the IHE `Basic Audit Log Patterns (BALP)`_ ImplementationGuide.
 
 .. note::
 
@@ -374,4 +374,6 @@ References
 * `FHIR STU3 (R3) AuditEvent <http://hl7.org/fhir/STU3/auditevent.html>`_
 * `FHIR R4 AuditEvent <http://hl7.org/fhir/auditevent.html>`_
 * `FHIR R5 AuditEvent <http://hl7.org/fhir/2022Sep/auditevent.html>`_
-* `Basic Audit Log Patterns (BALP) <https://profiles.ihe.net/ITI/BALP/index.html>`_
+* `Basic Audit Log Patterns (BALP)`_
+
+.. _Basic Audit Log Patterns (BALP): https://profiles.ihe.net/ITI/BALP/index.html

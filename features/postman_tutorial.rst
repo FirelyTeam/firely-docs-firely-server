@@ -71,7 +71,7 @@ Using Postman
             "date": "2022-12-07T19:14:07.7140229+00:00",
             "publisher": "Firely"
 
-#. The collection folder "Create Example Data" should be executed next. This will setup FHIR records for the basic examples in  "Retrieve Example Data" and as well as other examples throughout the collection.
+#. The collection folder "Create Example Data" should be executed next. This will setup FHIR records for the basic examples in  "Retrieve Example Data" as well as other examples throughout the collection.
     
     .. image:: ../images/postman_tutorial_createdata.png
        :align: center

@@ -568,7 +568,7 @@ Demo UI
 :Configuration: ``Vonk.UI.Demo.DemoUIConfiguration.DemoUIConfiguration``
 :License token: http://fire.ly/vonk/plugins/demoui
 :Order: 800
-:Description: Provides the landing page that you see when you request the base url from a browser. If you want to provide your own landing page, replace this plugin with your own. There is an example of that, see :ref:`vonk_plugins_landingpage`.
+:Description: Provides the landing page that you see when you request the base url from a browser. If you want to provide your own landing page, replace this plugin with your own.
 
 .. _vonk_plugins_document:
 

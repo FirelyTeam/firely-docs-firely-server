@@ -52,7 +52,7 @@ Plugin and Facade
 #. Firely Server now uses the `Firely .NET SDK 4.3.0 <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v4.3.0-stu3>`_. Follow the link for an overview of all changes.
 #. Please note that the ``Vonk.Smart`` package will not be published on NuGet anymore.
 
-The following modules of the public API are deprecated and no longer available to Facade developers:
+Below modules of the public API are deprecated and no longer available to Facade developers. Please consult chapter :ref:`vonk_reference` for a full overview of the public API.
 
 #. ``Simplifier.Licensing``
 #. ``Vonk.Core.Common.IGenericResourceResolver``

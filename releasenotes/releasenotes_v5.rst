@@ -7,8 +7,8 @@ Current Firely Server release notes (v5.x)
 
 Release 5.0.0-beta1, TBD, 2023
 ------------------------------
-
-TODO: ADD WARNING THAT THIS IS A BETA RELEASE
+.. warning::
+    This is a beta release of Firely Server 5.0.0. Although the core functionality remains fully intact, parts of the public API have been removed or heavily modified. Please consult the list below and check whether your implementation is affected by these changes.
 
 Breaking changes
 ^^^^^^^^^^^^^^^^
@@ -124,7 +124,7 @@ The following modules of the public API have either been deprecated, are no long
 Feature
 ^^^^^^^
 
-#. G (10) certification
+#. Firely Server is now certified according to the `ONC Certification (g)(10) Standardized API <https://inferno.healthit.gov/suites/test_sessions/10cad0a0-1d6e-4648-b2c8-70cefbf260c5>`_
 #. Bulk Data Export now supports SMART on FHIR v2.
 #. Contents of the audit event log can now be modified via a plugin.
 #. Firely Server now uses the Firely .NET SDK 4.3.0.
@@ -159,5 +159,4 @@ Configuration
 
 Deprecation
 ^^^^^^^^^^^
-
 #. Vonk Loader has been deprecated.

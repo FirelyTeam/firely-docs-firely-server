@@ -24,7 +24,7 @@ Channels
 
 According to the FHIR specification, a channel defines how a FHIR server notifies other systems when resources get created or updated. The specification describes several channel types. Currently, Firely Server supports only *rest-hook* channel type.
 
-Below is an example of a Subscption resource that uses this channel type.
+Below is an example of a Subscription resource that uses this channel type.
 
 .. code-block:: json
 

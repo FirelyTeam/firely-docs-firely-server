@@ -26,38 +26,25 @@ For non Windows systems, or if you want to use Docker for Windows, please look a
         "LicenseFile": "firelyserver-trial-license.json"
     }
 
+
+Configuration
+-------------
+
+The section :ref:`configure_vonk` explains how you can further configure the Firely Server.
+
+.. _vonk_run:
+
+Running Firely Server
+---------------------
+
 .. important:: 
 	
 	The next step assumes you have a .NET Core environment installed. If not, please 
 	`download and install <https://dotnet.microsoft.com/en-us/download/dotnet/6.0>`_ **ASP.NET Core Runtime 6.x.xx Hosting Bundle** before you continue.
 	Choose the latest security patch to mitigate security issues in previous versions.
 
-6.	Open a command prompt or Powershell, navigate to the working directory and run:
-	:code:`> dotnet .\Firely.Server.dll`
-
-	Firely Server will then run on port 4080 of the system.
-	
-7.	If you want to check if Firely Server is running correctly, open a browser and go to :code:`localhost:4080`.
-	You should see a homepage similar to this:
-   
-.. image:: ./images/localhost_home.png
-  :align: center
-
-Please note that the third example query ``/Patient/example`` will only work if you first PUT a Patient with the id 'example'.
-You can get this `example from the specification <http://www.hl7.org/implement/standards/fhir/patient-example.json>`_.
-
-Configuration
--------------
-
-The section :ref:`configure_vonk` explains how you can configure the Firely Server.
-
-.. _vonk_run:
-
-Running the server
-------------------
-
-When you have completed your configuration changes, you can run the server.
-Open a command prompt or Powershell, navigate to your working directory and run:
+When you have completed your configuration changes, start the server.
+Open a command prompt or Powershell, navigate to your working directory and execute:
 ::
 
 	> dotnet .\Firely.Server.dll
@@ -66,3 +53,23 @@ Open a command prompt or Powershell, navigate to your working directory and run:
 .. |br| raw:: html
 
    <br />
+
+
+Access Firely Server
+--------------------
+Firely Server will by default run on port 4080 of the system. Check if Firely Server is running correctly, open a browser and navigate to :code:`localhost:4080`.
+	
+You will see the following homepage:
+   
+.. image:: ./images/localhost_home.png
+  :align: center
+
+The following links provide documentation and samples for testing the Firely Server restful endpoint:
+
+.. toctree::
+   :maxdepth: 1
+   :titlesonly:   
+   
+   Postman Tutorial  <../features/postman_tutorial>
+   US Core & Postman Tests  <../compliance/us_core>
+   

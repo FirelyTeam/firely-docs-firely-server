@@ -114,6 +114,45 @@ Firely Server also supports ``_include:iterate`` and ``_revinclude:iterate``, as
 
 .. warning:: ``_include`` isn't supported for a versioned reference
 
+Modifiers
+^^^^^^^^^
+
+Modifiers can influence the behaviour of a search parameter. Modifiers are defined per search parameter type in the FHIR core specification.
+Firely Server supports modifiers for the following data types:
+
++-----------------------------+----------------+-------------+
+| Search parameter types      | Modifier name  | Supported?  |
++=============================+================+=============+
+| All search parameter types  | :missing       | ✅          |
++-----------------------------+----------------+-------------+
+| string                      | :exact         | ✅          |
++-----------------------------+----------------+-------------+
+| string                      | :contains      | ✅          |
++-----------------------------+----------------+-------------+
+| token                       | :text          | ✅          |
++-----------------------------+----------------+-------------+
+| token                       | :in            | ❌          |
++-----------------------------+----------------+-------------+
+| token                       | :below         | ❌          |
++-----------------------------+----------------+-------------+
+| token                       | :above         | ❌          |
++-----------------------------+----------------+-------------+
+| token                       | :not-in        | ❌          |
++-----------------------------+----------------+-------------+
+| reference                   | :[type]        | ✅          |
++-----------------------------+----------------+-------------+
+| reference                   | :identifier    | ✅          |
++-----------------------------+----------------+-------------+
+| reference                   | :above         | ❌          |
++-----------------------------+----------------+-------------+
+| reference                   | :below         | ❌          |
++-----------------------------+----------------+-------------+
+| uri                         | :below         | ✅          |
++-----------------------------+----------------+-------------+
+| uri                         | :above         | ❌          |
++-----------------------------+----------------+-------------+
+
+
 When searching with the ``:exact`` modifier the server handles `grapheme clusters <http://hl7.org/fhir/R4B/search.html#modifiers>`_. 
 
 .. _restful_search_sort:

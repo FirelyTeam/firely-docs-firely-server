@@ -101,7 +101,7 @@ Features
 #. The :ref:`vonk_reference_api_ivonkcontext` now lets you access the original HttpContext.
 #. The CapabilityStatement now lists the profiles that are known to Vonk (in its Administration database) under ``CapabilityStatement.rest.resource.supportedProfile`` (>= R4 only) and the base profile for a resource under ``CapabilityStatement.rest.resource.profile``.
 #. We extended the security extension on the CapabilityStatement to include the endpoints for ``register``, ``manage``, ``introspect`` and ``revoke``.
-#. ``IAdministrationSearchRepository`` and ``IAdministrationChangeRepository`` interfaces are no publicly available. Use with care.
+#. ``IAdministrationSearchRepository`` and ``IAdministrationChangeRepository`` interfaces are now publicly available. Use with care.
 
 
 Fixes

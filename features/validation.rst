@@ -1,7 +1,7 @@
 .. _feature_validation:
 
-Validation
-==========
+Validation - $validate
+======================
 
 Firely Server can validate a resource against a profile as defined in the `$validate`_ operation. 
 

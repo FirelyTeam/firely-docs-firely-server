@@ -1,7 +1,7 @@
 .. _feature_patienteverything:
 
-Patient $everything
-===================
+Patient-level Export - $everything
+==================================
 
 Description
 -----------

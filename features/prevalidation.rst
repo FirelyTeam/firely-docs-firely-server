@@ -58,12 +58,3 @@ When you add canonical urls of StructureDefinitions to this list, Firely Server 
 So in the example above, Firely Server will only allow resources that conform to either the DAF Patient profile or the DAF AllergyIntolerance profile.
 
 Note that the resource has to declare conformance to the profile in its ``meta.profile`` element. Firely Server will *not* try to validate a resource against all the ``Validation.AllowedProfiles`` to see whether the resource conforms to any of them, only those that the resource claims conformance to.
-
-Upgrading from < 2.0
---------------------
-
-Previous to version 2.0.0, the setting was ``"ValidateIncomingResources":"true" // or false``. The corresponding settings since version 2.0.0 are:
-
-* true / no AllowedProfiles => ``"Level":"Core"``
-* true / with AllowedProfiles => ``"Level":"Full"``, keep the AllowedProfiles as it is.
-* false => ``"Level":"Off"``

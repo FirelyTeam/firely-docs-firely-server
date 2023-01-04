@@ -117,7 +117,7 @@ Firely Server also supports ``_include:iterate`` and ``_revinclude:iterate``, as
 Modifiers
 ^^^^^^^^^
 
-Modifiers can influence the behaviour of a search parameter. Modifiers are defined per search parameter type in the FHIR core specification.
+Modifiers can influence the behaviour of a search parameter. Modifiers are defined per search parameter type in the `FHIR core specification <https://www.hl7.org/fhir/search.html#modifiers>`_.
 Firely Server supports modifiers for the following data types:
 
 +-----------------------------+----------------+-------------+

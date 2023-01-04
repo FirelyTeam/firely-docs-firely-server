@@ -21,7 +21,7 @@ Add Firely Server Packages
 1. Tools > NuGet Package Manager > Package Manager Console
 
    * Run ``Install-Package Vonk.Core``
-   * Run ``Install-Package Vonk.Fhir.R3`` (if you want to use R3)
-   * Run ``Install-Package Vonk.Fhir.R4`` (if you want to use R4)
+   * Run ``Install-Package Hl7.Fhir.Specification.STU3`` (if you want to use R3)
+   * Run ``Install-Package Hl7.Fhir.Specification.R4`` (if you want to use R4)
 
 .. note:: You can install the latest beta release of the Firely Server packages by adding ``-IncludePrerelease`` to the install command.

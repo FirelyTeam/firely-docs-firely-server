@@ -8,7 +8,7 @@ $docref is being implemented as defined in the `US Core <https://hl7.org/fhir/us
 
 Currently the following limitations exist:
 
-#. The ``on-demand`` parameter is not supported, $docref will only operate on already exiting DocumentReference resources
+#. The ``on-demand`` parameter is not supported, $docref will only operate on already existing DocumentReference resources
 #. The ``profile`` parameter is not supported
 
 Configuration

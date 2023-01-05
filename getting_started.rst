@@ -22,6 +22,7 @@ For non Windows systems, or if you want to use Docker for Windows, please look a
 5.	Open ``appsettings.json``, copy the ``LicenseFile`` setting from ``appsettings.default.json`` to it and change this property to the name of your license file. For example
 ::
 
+	{
     "License": {
         "LicenseFile": "firelyserver-trial-license.json"
     }

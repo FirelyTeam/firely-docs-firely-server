@@ -1,7 +1,7 @@
 .. _feature_snapshot:
 
-Snapshot generation
-===================
+Snapshot generation - $snapshot
+===============================
 
 Firely Server is capable of generating a snapshot for a StructureDefinition. This operation is not defined in the FHIR Specification.
 

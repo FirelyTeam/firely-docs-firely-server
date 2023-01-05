@@ -1,7 +1,7 @@
 .. _feature_healthcheck:
 
-Liveness and readiness
-========================
+Liveness and readiness - $liveness, $readiness
+==============================================
 
 Description
 -----------

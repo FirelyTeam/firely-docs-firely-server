@@ -236,7 +236,6 @@ Fix
 #. The appsettings and logsettings can contain relative file paths for several settings, like the ``License:LicenseFile``. These were evaluated against the current working directory, but that could lead to problems if that was *not* the Vonk directory. We solved that: all relative paths are evaluated against the Vonk directory.
 #. The docker image for version 3.4.0 was tagged ``3.4.0-``. With 3.5.0 we removed the superfluous hyphen at the end.
 #. We updated the documentation on :ref:`use_docker` on SQL Server to be clearer about the order of the steps to take.
-#. We updated the documentation on :ref:`vonk_plugins_landingpage` to match .NET Core 3.1.
 
 Plugins & Facade
 ^^^^^^^^^^^^^^^^

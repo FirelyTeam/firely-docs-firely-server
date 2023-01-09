@@ -434,7 +434,7 @@ Features and fixes
 ^^^^^^^^^^^^^^^^^^
 
 #. Feature: :ref:`Vonk FHIR Plugins<vonk_plugins>` has been released. You can now add libraries with your own plugins through configuration. 
-#. Feature: Through :ref:`Vonk FHIR Pluginss<vonk_plugins>` you can replace the landing page with one in your own style. We provided an :ref:`example<vonk_plugins_landingpage>` on how to do that.
+#. Feature: Through :ref:`Vonk FHIR Pluginss<vonk_plugins>` you can replace the landing page with one in your own style.
 #. Feature: You can now start Vonk from within another directory than the Vonk binaries directory, e.g. ``c:\programs>dotnet .\vonk\vonk.server.dll``.
 #. Feature: You can configure the maximum number of entries allowed in a Batch or Transaction, to avoid overloading Vonk. See :ref:`batch_options`.
 #. Upgrade: We upgraded the FHIR .NET API to version 0.96.0, see the `Older SDK release notes`_ for details.

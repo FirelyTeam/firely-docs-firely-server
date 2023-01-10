@@ -29,7 +29,7 @@ Fix
 #. Bulk Data Export now returns a succesful status code (``202``) instead of an erroneous status code if no resources were matched for an export. The resulting export will include an empty array as described in the `specification <https://hl7.org/fhir/uv/bulkdata/export/index.html#response---complete-status>`_.
 #. Upon commencing a Bulk Data Export, Firely Server now correctly handles ``Prefer`` headers as outlined `in the specification <https://hl7.org/fhir/uv/bulkdata/export/index.html#headers>`_.
 #. ``Device`` can now be added as an additional resource in a Bulk Data export.
-#. Empty search parameters are now ignored by the server instead of resulting in an error response.
+#. Search parameters without a value are now ignored by the server instead of resulting in an error response.
 #. Firely Server now creates valid FHIR R5 AuditEvents.
 #. Searching for a resource with multiple sort fields does not throw an exception anymore when Firely Server runs on a SQL database.
 #. When using the ``If-Modified-Since`` header, only resources that were modified after the specified timestamp are returned. Because of a precision mismatch (seconds vs. milliseconds), wrong resources were sometimes returned before this fix.

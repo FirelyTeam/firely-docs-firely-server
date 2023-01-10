@@ -296,7 +296,7 @@ To implement such a plugin, it is helpful to understand how AuditEvents get crea
 
 .. @enduml
 
-.. image:: ../../_static/images/auditing/AuditEvent-customization.svg
+.. image:: ../_static/images/auditing/AuditEvent-customization.svg
    :width: 800
 
 

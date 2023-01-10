@@ -23,7 +23,6 @@ You can use the following code as a template for a plugin:
    using Vonk.Core.Context;
    using Vonk.Core.Context.Features;
    using Vonk.Core.Pluggability;
-   using Vonk.Fhir.R3;
    using F = Hl7.Fhir.Model;
 
    namespace com.mycompany.vonk.myplugin
@@ -36,7 +35,7 @@ You can use the following code as a template for a plugin:
             var (request, args, response) = vonkContext.Parts();
             //do something with the request
             //write something to the response
-            response.Payload = new F.Patient{Id = "pat1"}.ToIResource();
+            response.Payload = new F.Patient{Id = "pat1"}.ToIResource(VonkConstants.Model.FhirR4);
             response.HttpResult = 200;
          }
       }

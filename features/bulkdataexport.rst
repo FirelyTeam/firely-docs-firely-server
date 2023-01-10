@@ -6,9 +6,16 @@ Bulk Data Export
 Firely Server provides the option to export resources with the Bulk Data Export Service. 
 The Bulk Data Export Service enables the $export operation from the Fhir specification. Read more about the `$export request flow <https://hl7.org/fhir/uv/bulkdata/export/index.html#request-flow>`_
 
+.. note:: 
+
+  To use Bulk Data Export you have to configure either :ref:`SQL Server <configure_sql>` or :ref:`MongoDB <configure_mongodb>` for the data database. Or you can implement it as part of a :ref:`feature_bulkdataexport_facade`.
+
+  The Administration database can be configured to any of the three supported databases.
+
 Appsettings
 -----------
-To start using the Bulk Data Export Service (BDE) you will first have to add the relevant plugins (Vonk.Plugin.BulkDataExport.[Level]BulkDataExportConfiguration) to the PipelineOptions in the appsettings. In the example below we have enabled all three levels: Patient, Group and System. Bulk Data Export is supported on all databases used for the non-admin endpoint.
+To start using the Bulk Data Export Service (BDE) you will first have to add the relevant plugins (Vonk.Plugin.BulkDataExport.[Level]BulkDataExportConfiguration) to the PipelineOptions in the appsettings. 
+In the example below we have enabled all three levels: Patient, Group and System.
 
 .. code-block:: JavaScript
 

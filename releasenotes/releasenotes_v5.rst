@@ -57,6 +57,7 @@ Plugin and Facade
 ^^^^^^^^^^^^^^^^^
 
 #. Firely Server now uses the `Firely .NET SDK 4.3.0 <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v4.3.0-stu3>`_. Follow the link for an overview of all changes.
+
 .. warning::
     Due to the above namespace change, all of your plugins need to be recompiled against this FS release.
 

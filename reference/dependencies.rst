@@ -32,6 +32,7 @@ This list uses the NuGet package names (or prefixes of them) so you can easily l
 #. Fhir.Metrics - as Hl7.Fhir
 #. Simplifier.Licensing - as Hl7.Fhir
 #. Dapper - Apache 2.0
+#. SQLitePCLRaw.lib.e_sqlite3 - Apache 2.0
 #. SqlKata.* - MIT
 
 MongoDB: 

@@ -1,10 +1,9 @@
 
 Permissions (AccessPolicy)
 --------------------------
-Firely Server supports filtering the granted access scopes for a client by using built-in custom access policy resources. 
-The access policy decisions are based on HL7 SMART on FHIR scopes, both SMART on FHIR v1 and v2 scopes are supported.
-The structure definitions are preloaded in Firely Server and can be viewed on the administration endpoint API or in Simplifier under 
-`Firely Server Definitions - Access Policy (R4) <https://simplifier.net/Vonk-ResourcesR4/~resources?text=access&fhirVersion=R4&sortBy=RankScore_desc>`_ .
+Firely Server supports filtering the requested client scopes by using built-in custom access policy resources. Both Smart-V1 and Smart-V2 scopes are supported. 
+The resource definitions are preloaded in Firely Server and can be viewed on the administration endpoint API or in Simplier under 
+`Firely Server Definitions - Access Policy <https://simplifier.net/Vonk-ResourcesR4/~resources?text=access&fhirVersion=R4&sortBy=RankScore_desc>`_ .
 The *AccessPolicyDefinition* resource controls the scopes which are permissible. 
 The *AccessPolicy* resource contains the references to Patient, Group, Practitioner, PractitionerRole, Person, RelatedPerson and Device for which the AccessPolicyDefinition applies.
 If a reference (Patient, Group, ...) is not referenced by an AccessPolicy, the requested scopes are granted without filtering.

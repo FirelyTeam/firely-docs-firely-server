@@ -85,6 +85,14 @@ See the folowing code snippet::
             });
             }
         }
+
+Make sure to register this class in your PluginConfiguration.cs::
+
+    public static IServiceCollection ConfigureServices(IServiceCollection services)
+        {
+            services.TryAddContextAware<ICapabilityStatementContributor, CapabilityStatementContributor>(ServiceLifetime.Transient);
+            return services;
+        }
         
 .. _middleware: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware
 .. _dependency injection: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection

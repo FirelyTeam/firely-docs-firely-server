@@ -245,6 +245,80 @@ The table below contains some elements you can find in the generated AuditEvents
 | Example ($erase operation)  | :download:`download <../_static/files/audit-event-examples/R3_erase_operation.json>`  | :download:`download <../_static/files/audit-event-examples/R4_erase_operation.json>`  | :download:`download <../_static/files/audit-event-examples/R5_erase_operation.json>`  |
 +-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
 
+
+.. _audit_event_signature:
+
+AuditEvent Signature
+--------------------
+
+An AditEvent Signature is a Provenance FHIR resource which contains a signature of the complete AuditEvent FHIR resource JSON. 
+This Provenance FHIR resource also includes a reference to an AuditEvent FHIR resource from which the signature is created. 
+
+.. note::
+
+   AuditEvent Signatures will not get generated if your configuration restricts the list of supported FHIR resources and ``Provenance`` is not included (see :ref:`supportedmodel`).
+
+AuditEvent Signature configuration
+----------------------------------
+
+By default generation of an AuditEvent Signature is disabled.
+To enable generation of an AuditEvent Signature add the following configuration to your Audit plugin configuration.
+
+.. code-block:: JavaScript
+
+   "Audit": {
+      "AuditEventSignatureEnabled": true, // Default is false
+      "AuditEventSignatureSecret": 
+      {
+          "SecretType": "JWKS", // Currently only supported type
+          // This is an example secret. Generate your own and do not use this example 'Secret' in your configuration!
+          "Secret": "{'keys':[{'kty':'EC','use':'sig','key_ops':['sign','verify'],'alg':'ES256','kid':'66e56ebf-a8de-4cfe-9710-3f2f44ec262f','crv':'P-256','x':'FO0bvAsRHC-wKMczT4xFPWQXI_fhFzqW2l9WxU29Hdc','y':'MHYht76KAnxHhatfB_BdyIuUtbpkK0g0Wuy5940oei4','d':'Nt1RXXNt6s5ytd88T7YhRePd7BqC4rh5WCOtJxdOzTs'}]}"
+      }
+    },
+
+Currenlty an ``AuditEventSignatureSecret`` can only contain a JSON Web Key Set ``Secret``.
+A JSON Web Key Set (JWKS) is a set of JSON Web Tokens (JWT) keys. 
+The JWKS is used for creating the signature of an AuditEvent.
+
+.. note::
+
+   Currently only the first key in a JSON Web Key Set is used to create signature of an AuditEvent.
+
+The following code snippet in C# is an example how you can generate a JSON Web Key Set. 
+
+.. code-block:: CSharp
+
+   using CreativeCode.JWK.KeyParts;
+   using CreativeCode.JWK;
+   
+   ...
+    
+   private static string CreateJSONWebKeySet()
+   {
+       var algorithm = Algorithm.ES256;
+       var keyUse = PublicKeyUse.Signature;
+       var keyOperations = new HashSet<KeyOperation>(new[] 
+                                { 
+                                    KeyOperation.ComputeDigitalSignature, 
+                                    KeyOperation.VerifyDigitalSignature 
+                                });
+       var jwk = new JWK(algorithm, keyUse, keyOperations);
+       var jwks = new JWKS(new[]{ jwk });
+
+       return jwks.Export();
+   }
+
+Output of ``CreateJSONWebKeySet`` should look like this
+
+.. code-block:: CSharp
+
+  {"keys":[{"kty":"EC","use":"sig","key_ops":["sign","verify"],"alg":"ES256","kid":"66e56ebf-a8de-4cfe-9710-3f2f44ec262f","crv":"P-256","x":"FO0bvAsRHC-wKMczT4xFPWQXI_fhFzqW2l9WxU29Hdc","y":"MHYht76KAnxHhatfB_BdyIuUtbpkK0g0Wuy5940oei4","d":"Nt1RXXNt6s5ytd88T7YhRePd7BqC4rh5WCOtJxdOzTs"}]}
+
+.. note::
+
+   Replace ``"`` with ``'`` in the output of ``CreateJSONWebKeySet`` to use it as ``Secret`` of ``AuditEventSignatureSecret`` in Audit plugin configuration,
+
+
 .. _audit_event_customization:
 
 AuditEvent customization
@@ -375,5 +449,6 @@ References
 * `FHIR R4 AuditEvent <http://hl7.org/fhir/auditevent.html>`_
 * `FHIR R5 AuditEvent <http://hl7.org/fhir/2022Sep/auditevent.html>`_
 * `Basic Audit Log Patterns (BALP)`_
+* `JSON Web Key RFC <https://www.rfc-editor.org/rfc/rfc7517>`_
 
 .. _Basic Audit Log Patterns (BALP): https://profiles.ihe.net/ITI/BALP/index.html

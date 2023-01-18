@@ -69,6 +69,31 @@ Every component knows what interaction it adds to the capabilities. Therefore, w
 Typically, every component has an implementation of :code:`ICapabilityStatementContributor`, in which it gets access to the :code:`ICapabilityStatementBuilder`. 
 The latter provides methods to add information to the CapabilityStatement without having to worry about what is already added by other components or the order of execution.
 
+These methods are especially handy for implementers of a `facade <facade/facade>`_. Plugins implemented in the facade do not automatically end up in the ``/metadata`` endpoint of Firely Server, but :code:`ICapabilityStatementContributor` and :code:`ICapabilityStatementBuilder` can be used to make sure the plugins are visible in the CapabilityStatement.
+For example, you have implemented a Bulk Data Export plugin in your facade and you would like to make sure this is visible in the CapabilityStatement.instantiates of Firely Server.
+You can add a CapabilityStatementContributor class to your plugin code that implements the :code:`ICapabilityStatementContributor`. 
+Within this class you can implement the :code:`ICapabilityStatementBuilder` to add your plugin to the CapabilityStatement.instantiates. 
+See the folowing code snippet::
+
+    internal class CapabilityStatementContributor: ICapabilityStatementContributor
+    {
+        public void ContributeToCapabilityStatement(ICapabilityStatementBuilder builder)
+        {
+            builder.UseCapabilityStatementEditor(cse =>
+            {
+                cse.AddInstantiates("http://hl7.org/fhir/uv/bulkdata/CapabilityStatement/bulk-data");
+            });
+            }
+        }
+
+Make sure to register this class in your PluginConfiguration.cs::
+
+    public static IServiceCollection ConfigureServices(IServiceCollection services)
+        {
+            services.TryAddContextAware<ICapabilityStatementContributor, CapabilityStatementContributor>(ServiceLifetime.Transient);
+            return services;
+        }
+        
 .. _middleware: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware
 .. _dependency injection: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection
 .. _FHIR RESTful API: http://www.hl7.org/implement/standards/fhir/http.html

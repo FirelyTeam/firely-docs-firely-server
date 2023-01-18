@@ -314,9 +314,24 @@ Output of ``CreateJSONWebKeySet`` should look like this
 
   {"keys":[{"kty":"EC","use":"sig","key_ops":["sign","verify"],"alg":"ES256","kid":"66e56ebf-a8de-4cfe-9710-3f2f44ec262f","crv":"P-256","x":"FO0bvAsRHC-wKMczT4xFPWQXI_fhFzqW2l9WxU29Hdc","y":"MHYht76KAnxHhatfB_BdyIuUtbpkK0g0Wuy5940oei4","d":"Nt1RXXNt6s5ytd88T7YhRePd7BqC4rh5WCOtJxdOzTs"}]}
 
+
+If you are using Ubuntu linux, you can also install ``jose`` command to generate a JSON Web Key Set.
+
+Install Ubuntu package ``jose``
+
+.. code-block:: shell-session
+  
+  sudo apt install jose -y
+
+Generate JSON Web Key Set
+
+.. code-block:: shell-session
+
+  jose jwk gen -i '{"kty":"EC","crv":"P-256","use":"sig","key_ops":["sign","verify"],"alg":"ES256","kid":"yourkeyid"}' -s -o ec.jwk
+
 .. note::
 
-   Replace ``"`` with ``'`` in the output of ``CreateJSONWebKeySet`` to use it as ``Secret`` of ``AuditEventSignatureSecret`` in Audit plugin configuration,
+   Replace ``"`` with ``'`` in the output to use it as ``Secret`` of ``AuditEventSignatureSecret`` in Audit plugin configuration,
 
 
 .. _audit_event_customization:

@@ -19,12 +19,15 @@ For non Windows systems, or if you want to use Docker for Windows, please look a
 	You will use this file for settings that you want to differ from the defaults in ``appsettings.default.json``.
 	For more background on how the settings are processed, see :ref:`configure_appsettings`
 
-5.	Open ``appsettings.json``, copy the ``LicenseFile`` setting from ``appsettings.default.json`` to it and change this property to the name of your license file. For example
+5.	Open ``appsettings.json``, copy the ``LicenseFile`` setting from ``appsettings.default.json`` to it and change this property to the name of your license file. For example:
 ::
 
-    "License": {
-        "LicenseFile": "firelyserver-trial-license.json"
-    }
+	{
+    		"License": 
+		{
+        		"LicenseFile": "firelyserver-license.json"
+    		}
+	}
 
 
 Configuration

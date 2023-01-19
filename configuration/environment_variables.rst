@@ -123,6 +123,20 @@ environment variable::
 
    VONKAUDITLOG_AuditLog:WriteTo:0:Args:path=./other/directory/AuditLog.log
 
+.. _configure_envvar_call_stack:
+
+Return of call stack and Environment Variables
+----------------------------------------------
+
+When first implementing Firely Server or for debugging purposes it can be convenient to have the call stack returned even though the server throws a 500 error code. If no specific environment variables are set, Firely Server will return **'Oops! Something went wrong :('** with a 500 error code. The call stack will only appear in the log. 
+Setting the 'ASPNETCORE_ENVIRONMENT' variable to production will have the same result::
+   
+   ASPNETCORE_ENVIRONMENT=Production
+
+When the 'ASPNETCORE_ENVIRONMENT' variable is set to development the call stack is returned, even when a 500 error code is thrown by the server::
+   
+   ASPNETCORE_ENVIRONMENT=Development
+
 .. _configure_envvar_windows:
 
 Changing Environment Variables on Windows

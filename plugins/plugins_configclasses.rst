@@ -50,8 +50,6 @@ As you may have noticed, the methods resemble those in an ASP.NET Core Startup c
    Beyond that, you may add formal arguments for services that you may need during configuration. Here you can use services that are available from the ASP.NET Core hosting process *and* any services you have added yourself earlier. For services in request scope please note that this method is not run in request scope.
    These services will be injected automatically by Firely Server.
 
-We provided an :ref:`example<vonk_plugins_landingpage>` of this: creating your own landing page.
-
 .. _vonk_plugins_di:
 
 Register a service in your plugin

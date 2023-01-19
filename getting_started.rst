@@ -23,11 +23,9 @@ For non Windows systems, or if you want to use Docker for Windows, please look a
 ::
 
 	{
-    		"License": 
-		{
-        		"LicenseFile": "firelyserver-license.json"
-    		}
-	}
+    "License": {
+        "LicenseFile": "firelyserver-trial-license.json"
+    }
 
 
 Configuration

@@ -3,11 +3,11 @@
 Auditing
 ========
 
-Firely Server can log access through the RESTful API for auditing purposes. It has 3 features:
+Firely Server can log access through the RESTful API for auditing purposes. It has three main features:
 
 #. Write requests and responses to a separate audit logfile.
 #. Include user id and name from the JWT token (if present) in the audit log lines.
-#. Write the audit information to AuditEvent resources in the Firely Server Data database.
+#. Write the audit information as FHIR AuditEvent resources in the Firely Server Data database.
 
 These features can be enabled by including ``Vonk.Plugins.Audit`` in the pipeline.
 
@@ -176,11 +176,294 @@ In normal circumstances the buffer will regularly be flushed to the underlying s
 
 The downside is that writing to the audit log is blocking and Firely Server now has to wait on the log to finish before it can continue, which in turn affects performance. You will have to try and test what works best for your use case.
 
+.. _audit_event_logging:
+
 AuditEvent logging
 ------------------
 
-There is no further configuration for AuditEvent logging. If you include it in the pipeline, it will start generating AuditEvent resources.
+There is no further configuration for AuditEvent logging. If you include it in the pipeline, it will start generating AuditEvent resources, conforming to the IHE `Basic Audit Log Patterns (BALP)`_ ImplementationGuide.
+
+.. note::
+
+   AuditEvents will not get generated if your configuration restricts the list of supported FHIR resources and ``AuditEvent`` is not included (see :ref:`supportedmodel`).
 
 For transactions and batches the audit plugin will create an AuditEvent for the transaction/batch as a whole *and* one for every entry in the transaction/batch.
 
 Firely Server does not allow you to update or delete the AuditEvent resources through the RESTful API so the Audit log cannot be tampered with. You can of course still manipulate these resources directly on the database, for instance to offload a surplus of old AuditEvent resources elsewhere. Please :ref:`vonk-contact` us for details if you want to do this.
+
+The table below contains some elements you can find in the generated AuditEvents and the paths where those elements are located (might differ per FHIR version). The table also includes links to AuditEvent examples.
+
+.. note::
+
+  When the order of an item in an array is shown using a colon syntax (e.g. ``:requestId``, ``:query``), that means the order is not deterministic. You need to examine each item's ``type`` and/or ``role`` elements to identify the right item.
+
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Property name               | AuditEvent (R3)                                                                       | AuditEvent (R4)                                                                       | AuditEvent (R5)                                                                       |
++=============================+=======================================================================================+=======================================================================================+=======================================================================================+
+| MachineName                 | ``source.extension[0].valueReference.display``                                        | ``source.observer.display``                                                           | ``source.observer.display``                                                           |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Action                      | ``action``                                                                            | ``action``                                                                            | ``action``                                                                            |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Timestamp                   | ``recorded``                                                                          | ``recorded``                                                                          | ``recorded``                                                                          |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Status Code                 | ``outcomeDesc``                                                                       | ``outcomeDesc``                                                                       | ``outcome.detail[0].text``                                                            |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Application                 | ``source.site``                                                                       | ``source.site``                                                                       | ``source.site.display``                                                               |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| IP Address                  | ``agent[:client].network.address``                                                    | ``agent[:client].network.address``                                                    | ``agent[:client].networkString``                                                      |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Client Id                   | ``agent[:client].reference.identifier.value``                                         | ``agent[:client].who.identifier.value``                                               | ``agent[:client].who.identifier.value``                                               |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| TokenIssuer                 | ``agent[:user].reference.identifier.system``                                          | ``agent[:user].who.identifier.system``                                                | ``agent[:user].who.identifier.system``                                                |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Jwt Id                      | ``agent[:user].policy[0]``                                                            | ``agent[:user].policy[0]``                                                            | ``agent[:user].policy[0]``                                                            |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| User Id                     | ``agent[:user].reference.identifier.value`` and ``agent[:user].userId.value``         | ``agent[:user].who.identifier.value``                                                 | ``agent[:user].who.identifier.value``                                                 |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Username                    | ``agent[:user].reference.display``                                                    | ``agent[:user].who.display``                                                          | ``agent[:user].who.display``                                                          |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Path                        | ``entity[:query].detail[0].value``                                                    | ``entity[:query].detail[0].valueString``                                              | ``entity[:query].detail[0].valueString``                                              |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Request Id                  | ``entity[:requestId].reference.identifier.value``                                     | ``entity[:requestId].what.identifier.value``                                          | ``entity[:requestId].what.identifier.value``                                          |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Connection                  | ``entity[:connectionId].reference.identifier.value``                                  | ``entity[:connectionId].what.identifier.value``                                       | ``entity[:connectionId].what.identifier.value``                                       |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Search Parameters           | ``entity[:responseDetails].query``                                                    | ``entity[:responseDetails].query``                                                    | ``entity[:responseDetails].query``                                                    |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Resource                    | ``entity[:responseDetails].type.display``                                             | ``entity[:responseDetails].type.display``                                             | ``entity[:responseDetails].extension[0].valueCoding.display``                         |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Resource Key                | ``entity[:responseDetails].reference.reference``                                      | ``entity[:responseDetails].what.reference``                                           | ``entity[:responseDetails].what.reference``                                           |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Search Results              | ``entity[:responseDetails].detail``                                                   | ``entity[:responseDetails].detail``                                                   | ``entity[:responseDetails].detail``                                                   |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+|                             |                                                                                       |                                                                                       |                                                                                       |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Example (search)            | :download:`download <../_static/files/audit-event-examples/R3_search.json>`           | :download:`download <../_static/files/audit-event-examples/R4_search.json>`           | :download:`download <../_static/files/audit-event-examples/R5_search.json>`           |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Example (read)              | :download:`download <../_static/files/audit-event-examples/R3_read.json>`             | :download:`download <../_static/files/audit-event-examples/R4_read.json>`             | :download:`download <../_static/files/audit-event-examples/R5_read.json>`             |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+| Example ($erase operation)  | :download:`download <../_static/files/audit-event-examples/R3_erase_operation.json>`  | :download:`download <../_static/files/audit-event-examples/R4_erase_operation.json>`  | :download:`download <../_static/files/audit-event-examples/R5_erase_operation.json>`  |
++-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+
+
+.. _audit_event_signature:
+
+AuditEvent Signature
+--------------------
+
+An AditEvent Signature is a Provenance FHIR resource which contains a signature of the complete AuditEvent FHIR resource JSON. 
+This Provenance FHIR resource also includes a reference to an AuditEvent FHIR resource from which the signature is created. 
+
+.. note::
+
+   AuditEvent Signatures will not get generated if your configuration restricts the list of supported FHIR resources and ``Provenance`` is not included (see :ref:`supportedmodel`).
+
+AuditEvent Signature configuration
+----------------------------------
+
+By default generation of an AuditEvent Signature is disabled.
+To enable generation of an AuditEvent Signature add the following configuration to your Audit plugin configuration.
+
+.. code-block:: JavaScript
+
+   "Audit": {
+      "AuditEventSignatureEnabled": true, // Default is false
+      "AuditEventSignatureSecret": 
+      {
+          "SecretType": "JWKS", // Currently only supported type
+          // This is an example secret. Generate your own and do not use this example 'Secret' in your configuration!
+          "Secret": "{'keys':[{'kty':'EC','use':'sig','key_ops':['sign','verify'],'alg':'ES256','kid':'66e56ebf-a8de-4cfe-9710-3f2f44ec262f','crv':'P-256','x':'FO0bvAsRHC-wKMczT4xFPWQXI_fhFzqW2l9WxU29Hdc','y':'MHYht76KAnxHhatfB_BdyIuUtbpkK0g0Wuy5940oei4','d':'Nt1RXXNt6s5ytd88T7YhRePd7BqC4rh5WCOtJxdOzTs'}]}"
+      }
+    },
+
+Currenlty an ``AuditEventSignatureSecret`` can only contain a JSON Web Key Set ``Secret``.
+A JSON Web Key Set (JWKS) is a set of JSON Web Tokens (JWT) keys. 
+The JWKS is used for creating the signature of an AuditEvent.
+
+.. note::
+
+   Currently only the first key in a JSON Web Key Set is used to create signature of an AuditEvent.
+
+The following code snippet in C# is an example how you can generate a JSON Web Key Set. 
+
+.. code-block:: CSharp
+
+   using CreativeCode.JWK.KeyParts;
+   using CreativeCode.JWK;
+   
+   ...
+    
+   private static string CreateJSONWebKeySet()
+   {
+       var algorithm = Algorithm.ES256;
+       var keyUse = PublicKeyUse.Signature;
+       var keyOperations = new HashSet<KeyOperation>(new[] 
+                                { 
+                                    KeyOperation.ComputeDigitalSignature, 
+                                    KeyOperation.VerifyDigitalSignature 
+                                });
+       var jwk = new JWK(algorithm, keyUse, keyOperations);
+       var jwks = new JWKS(new[]{ jwk });
+
+       return jwks.Export();
+   }
+
+Output of ``CreateJSONWebKeySet`` should look like this
+
+.. code-block:: CSharp
+
+  {"keys":[{"kty":"EC","use":"sig","key_ops":["sign","verify"],"alg":"ES256","kid":"66e56ebf-a8de-4cfe-9710-3f2f44ec262f","crv":"P-256","x":"FO0bvAsRHC-wKMczT4xFPWQXI_fhFzqW2l9WxU29Hdc","y":"MHYht76KAnxHhatfB_BdyIuUtbpkK0g0Wuy5940oei4","d":"Nt1RXXNt6s5ytd88T7YhRePd7BqC4rh5WCOtJxdOzTs"}]}
+
+
+If you are using Ubuntu linux, you can also install ``jose`` command to generate a JSON Web Key Set.
+
+Install Ubuntu package ``jose``
+
+.. code-block:: shell-session
+  
+  sudo apt install jose -y
+
+Generate JSON Web Key Set
+
+.. code-block:: shell-session
+
+  jose jwk gen -i '{"kty":"EC","crv":"P-256","use":"sig","key_ops":["sign","verify"],"alg":"ES256","kid":"yourkeyid"}' -s -o ec.jwk
+
+.. note::
+
+   Replace ``"`` with ``'`` in the output to use it as ``Secret`` of ``AuditEventSignatureSecret`` in Audit plugin configuration,
+
+
+.. _audit_event_customization:
+
+AuditEvent customization
+------------------------
+
+If you need to include additional information in the standard AuditEvents, you can do that with a custom plugin. 
+
+To implement such a plugin, it is helpful to understand how AuditEvents get created in Firely Server. Whenever the server receives an incoming HTTP request, a middleware registered in ``AuditEventConfiguration`` first passes it transparently to the downstream handlers. Then, when the original requests get handled, the audit middleware creates another artificial request and passes it down the stream again. This time, the request contains a creation operation with the AuditEvent as a payload. Like any other request in Firely Server, this request can be intercepted and changed using a pre-handler before it continues down the pipeline until ``CreateOperationMiddleware`` handles it. The order of the customization plugin should be greater than ``3170`` and less than ``4420``.
+  
+
+.. @startuml
+
+.. title "AuditEvent creation process"
+
+.. participant "AuditEventMiddleware (order 3170)" as aem
+.. participant "..." as hOther
+.. participant "AuditEventCustomizationMiddleware" as aecm
+.. participant "..." as hOther2
+.. participant "CreateOperationMiddleware (order 4420)" as hCreate
+
+.. -> aem: original HTTP request
+.. activate aem
+.. aem -> hOther: original HTTP request
+.. activate hOther
+.. hOther --> aem
+.. deactivate hOther
+
+.. aem -> hOther: AuditEvent creation \nrequest context
+.. activate hOther
+.. hOther -> aecm: AuditEvent creation \nrequest context
+.. activate aecm
+.. aecm -> aecm: Customize payload
+.. activate aecm
+.. deactivate aecm
+.. aecm -> hOther2: AuditEvent creation \nrequest context
+.. activate hOther2
+.. hOther2 -> hCreate
+.. activate hCreate
+.. hCreate --> hOther2
+.. deactivate hCreate
+.. hOther2 --> aecm
+.. deactivate hOther2
+.. aecm --> hOther
+.. deactivate aecm
+.. hOther --> aem
+.. deactivate hOther
+.. <-- aem
+.. deactivate aem
+
+.. @enduml
+
+.. image:: ../_static/images/auditing/AuditEvent-customization.svg
+   :width: 800
+
+
+See an example plugin below. This plugin captures all the token claims from the original request and then includes those claims into the AuditEvent. Note that you need to work with SourceNodes at this level. You can read more about manipulating the SourceNodes :ref:`here <vonk_reference_api_elementmodel>` and in the `Firely .NET SDK documentation <https://docs.fire.ly/projects/Firely-NET-SDK/parsing/poco-parsing.html>`_.
+
+
+.. code-block:: CSharp
+
+   [VonkConfiguration(order: 3175)]
+   public static class AuditEventCustomizationConfiguration
+   {
+      public static IServiceCollection ConfigureServices(IServiceCollection services)
+      {
+         services.AddScoped<AuditEventCustomizationService>();
+         return services;
+      }
+      
+      public static IApplicationBuilder Configure(IApplicationBuilder builder)
+      {
+         builder.OnInteraction(VonkInteraction.all).PreHandleWith<AuditEventCustomizationService>((s, ctx) => s.CaptureOriginalRequestInfo(ctx));
+         builder.OnInteraction(VonkInteraction.type_create).AndResourceTypes("AuditEvent").PreHandleWith<AuditEventCustomizationService>((s, ctx) => s.AmendAuditEvent(ctx));
+         return builder;
+      }
+
+      private class AuditEventCustomizationService
+      {
+         private ClaimsPrincipal _user;
+
+         public void CaptureOriginalRequestInfo(IVonkContext ctx)
+         {
+               if (!IsAuditEventCreationRequest(ctx))
+               {
+                  _user = ctx.HttpContext().User;
+               }
+         }
+
+         public void AmendAuditEvent(IVonkContext ctx)
+         {
+               if (IsAuditEventCreationRequest(ctx) && _user != null)
+               {
+                  if (ctx.Request.Payload.Success)
+                  {
+                     var payloadResource = ctx.Request.Payload.Resource;
+                     var resource = SourceNode.FromNode(payloadResource);
+
+                     foreach (var claim in _user.Claims)
+                     {
+                           resource = resource.Add(SourceNode.Node("extension",
+                              SourceNode.Valued("url", $"tokenValue-{claim.Type}"),
+                              SourceNode.Valued("valueString", claim.Value)
+                           ));
+                     }
+
+                     ctx.Request.Payload = new RequestPayload
+                     {
+                           Resource = resource.ToIResource(payloadResource.InformationModel),
+                           StatusCode = ctx.Request.Payload.StatusCode,
+                           Success = true
+                     };
+                  }
+               }
+         }
+
+         private static bool IsAuditEventCreationRequest(IVonkContext ctx) =>
+               ctx.Request.Interaction == VonkInteraction.type_create 
+               && ctx.Arguments.TryGetArgument(ArgumentNames.resourceType, out var arg) 
+               && arg is {Source: ArgumentSource.Internal};
+      }
+   }
+
+
+References
+^^^^^^^^^^
+
+* `FHIR STU3 (R3) AuditEvent <http://hl7.org/fhir/STU3/auditevent.html>`_
+* `FHIR R4 AuditEvent <http://hl7.org/fhir/auditevent.html>`_
+* `FHIR R5 AuditEvent <http://hl7.org/fhir/2022Sep/auditevent.html>`_
+* `Basic Audit Log Patterns (BALP)`_
+* `JSON Web Key RFC <https://www.rfc-editor.org/rfc/rfc7517>`_
+
+.. _Basic Audit Log Patterns (BALP): https://profiles.ihe.net/ITI/BALP/index.html

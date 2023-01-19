@@ -1,7 +1,7 @@
 .. _vonk_releasenotes_history_v4:
 
-Current Firely Server release notes (v4.x)
-==========================================
+Old Firely Server release notes (v4.x)
+======================================
 
 .. _vonk_releasenotes_4_10_0:
 

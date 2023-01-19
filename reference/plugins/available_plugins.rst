@@ -550,7 +550,7 @@ Auditing
 :Name: AuditEvent logging for transactions
 :Configuration: ``Vonk.Plugin.Audit.AuditEventTransactionConfiguration``
 :License token: http://fire.ly/vonk/plugins/audit
-:Order: 3160
+:Order: 3105
 :Description: Logs requests and responses for transactions to the database. See :ref:`feature_auditing` for more info.
 
 :Name: AuditEvent logging

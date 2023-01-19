@@ -1,7 +1,7 @@
 .. _lastn:
 
-$lastN Observations
-===================
+Observation - $lastN
+====================
 
 Description
 -----------

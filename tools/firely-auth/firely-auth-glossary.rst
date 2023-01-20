@@ -5,6 +5,9 @@ Glossary of terms in authorization
 
 .. glossary::
 
+    authorization server
+        An instance of Firely Auth that can provide a :term:`access token` and potentially :term:`refresh token` to a :term:`client`
+
     user
         The patient, practitioner or other person that uses a :term:`client` to access resources on Firely Server. 
         In OAuth terms this is the 'resource owner'.
@@ -15,9 +18,6 @@ Glossary of terms in authorization
     fhir server
         An instance of Firely Server hosting resources that can be accessed by a :term:`client` on behalf of a :term:`user`.
         In OAuth terms this is usually referred to as a 'resource server'.
-
-    authorization server
-        An instance of Firely Auth that can provide a :term:`access token` and potentially :term:`refresh token` to a :term:`client`
 
     access token
         A string issued by the :term:`authorization server` to the requesting :term:`client`, that the client then needs to present to 

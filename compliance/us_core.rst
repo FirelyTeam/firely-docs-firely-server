@@ -1,7 +1,7 @@
 US Core / 21th Century Cures Act
 ================================
 
-* Firely Server provides full `profile and interaction support as defined in `"Conforming to US Core" <https://hl7.org/fhir/us/core/general-requirements.html#profile-support--interaction-support>`_:
+* Firely Server provides full profile and interaction support as defined in `"Conforming to US Core" <https://hl7.org/fhir/us/core/general-requirements.html#profile-support--interaction-support>`_:
   
   * Firely Server can be populated with resources conforming to US Core
   * All elements defined as must-support by the implementation guide are supported

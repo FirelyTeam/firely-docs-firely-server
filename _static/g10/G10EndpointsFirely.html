@@ -6,23 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Firely Server Endpoint list</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
 </head>
 
 <body>
     <div class="container">
-        
+
         <a href="https://fire.ly/g10-certification/"><img style="padding-top: 25px;" src="https://fire.ly/wp-content/themes/firely/images/logo.svg" /></a>
 
         <br><br>
-
+        <div id="id01"></div>
         <h1>Firely Server FHIR Endpoints</h1>
-        <p>These are the endpoints of known Firely Server installations conforming to (g)(10) Standardized API for
-            patient and population services.</p>
-        <p><a href="https://docs.fire.ly/projects/Firely-Server/en/latest/_static/g10/EndpointBundleFirely.json">Download
-                the endpoints as a FHIR Bundle</a></p>
+        <p>
+            These are the endpoints of known Firely Server installations conforming to (g)(10) Standardized API for
+            patient and population services.
+        </p>
+        <p>
+            <a href="EndpointBundleFirely.json"> Download the endpoints as a FHIR Bundle </a>
+        </p>
 
-        <table class="table table-hover table-bordered">
+        <table class="table table-hover table-bordered" id="eptable">
             <thead class="table-dark">
                 <tr>
                     <th scope="col">Endpoint name</th>
@@ -30,17 +34,48 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Firely B.V. FHIR Endpoint - Production</td>
-                    <td><a href="https://server.fire.ly/r4">https://server.fire.ly/r4</a></td>
-                </tr>
             </tbody>
         </table>
     </div>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
 
+        var xmlhttp = new XMLHttpRequest();
+        var url = "EndpointBundleFirely.json";
+
+        xmlhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var json = JSON.parse(this.responseText);
+                buildRows(json);
+            }
+        };
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+
+        var table = document.getElementById('eptable').getElementsByTagName('tbody')[0];
+    
+        function buildRows(json) {
+            var i;
+            for (i = 0; i < json.entry.length; i++) {
+
+                var resourceName = json.entry[i].resource.name;
+                var resourceAddress = json.entry[i].resource.address;
+
+                var row = table.insertRow(table.rows.length);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+
+                cell1.innerHTML = resourceName;
+                cell2.innerHTML = '<a href=' + resourceAddress + '>'+resourceAddress+'</a>';
+            }
+
+        };
+    });
+</script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-        crossorigin="anonymous"></script>
+            integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+            crossorigin="anonymous"></script>
 </body>
+
 
 </html>

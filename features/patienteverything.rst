@@ -6,7 +6,7 @@ Patient-level Export - $everything
 Description
 -----------
 
-This plugin implements the Patient $everything operation, as described in https://www.hl7.org/fhir/operation-patient-everything.html. This operation returns all resources associated with a single patient. The resources returned are determined by the Patient compartment, defined in https://www.hl7.org/fhir/compartmentdefinition-patient.html. Currently, the functionality is only available if you use SQL server for your data.
+This plugin implements the Patient $everything operation, as described in https://www.hl7.org/fhir/operation-patient-everything.html. This operation returns all resources associated with a single patient. The resources returned are determined by the Patient compartment, defined in https://www.hl7.org/fhir/compartmentdefinition-patient.html. Currently, the functionality is only available if you use SQL server or MongoDB for your data.
 
 ::
 

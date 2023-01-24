@@ -5,6 +5,10 @@
       "url": "./OpenApiJson/OpenApi_R4__Root.json"
     },
     {
+      "name": "System Operations",
+      "url": "./OpenApiJson/OpenApi_R4__SystemOperations.json"
+    },
+    {
       "name": "Account",
       "url": "./OpenApiJson/OpenApi_R4_Account.json"
     },

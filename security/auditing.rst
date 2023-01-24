@@ -250,10 +250,11 @@ The table below contains some elements you can find in the generated AuditEvents
 
 AuditEvent Integrity
 --------------------
-Firely server provides a mechanism to validate the integrity of the audit events. On the one hand, it provides a way to sign the audit event once they are generated,
-and on the other hand, it offers a custom operation to validate the signatures.
+Firely server provides a mechanism to validate the integrity of the AuditEvents. 
+On the one hand, it provides a way to sign the AuditEvent upon creation,
+and on the other hand, it offers a custom operation to validate the signatures, ensuring that the AuditEvents have not been tampered.
   
-AuditEvent Signature
+AuditEvent Signature 
 ^^^^^^^^^^^^^^^^^^^^
 
 An AuditEvent Signature is a Provenance FHIR resource which contains a signature of the complete AuditEvent FHIR resource JSON. 
@@ -265,27 +266,27 @@ This Provenance FHIR resource also includes a reference to an AuditEvent FHIR re
 
 AuditEvent Integrity Validation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-The validation of the audit event integrity is done by checking that the associated signature of an audit event still matches the current audit event content.
-This verification is an asynchronous operation which is triggered by calling the custom operation `$verify-integrity` on the AuditEvent type, using
-the AuditEvent search parameters (see https://www.hl7.org/fhir/auditevent.html#search) to specify which audit events should be validated. Note that only
-audit events created before the call are considered.
+The validation of the AuditEvent integrity is done by checking that the associated signature of an AuditEvent still matches the current AuditEvent content.
+This verification is an asynchronous operation which is triggered by calling the custom operation ``$verify-integrity`` on the AuditEvent type, using
+the AuditEvent search parameters (see https://www.hl7.org/fhir/auditevent.html#search) to specify which AuditEvents should be validated. Note that only
+AuditEvents created before the call are considered.
 
-
-For example, the following query will trigger the integrity validation of all auti events created in January 2022.
+For example, the following query will trigger the integrity validation of all AuditEvents created in January 2022.
 
 .. code-block:: shell-session
 
-curl --location --request GET 'http://127.0.0.1:4080/R4/AuditEvent/$verify-integrity?date=ge2022-01-01&date=le2022-01-31' \
---header 'Prefer: respond-async'
+  curl '${BASE_URL}/AuditEvent/$verify-integrity?date=ge2022-01-01&date=le2022-01-31' \
+   --header 'Prefer: respond-async'
 
-If the call is accpepted, the status code should be 202 and the `Content-Location` header should contain the URL where the status of the operation can be retrieved.
+If the request succeeds, the status code should be 202, the body should contain an operation outcome with a single issue of information severity
+and the ``Content-Location`` header should contain the URL where the status of the operation can be retrieved.
 
 While the operation is still in progress, the status endpoint should return a 202 status code.
 
 In case of failure during the operation, the status endpoint should return a 4xx or 5xx status code with an operation outcome stating the issue(s).
 
 Finally, once the operation is terminated, the status code of the reply should be 200 and the body should contain an operation outcome.
-If all audit events had a valid signatures, the body should be:
+If all AuditEvents had a valid signatures, the body should be:
 
 .. code-block:: JavaScript
 
@@ -321,7 +322,7 @@ If all audit events had a valid signatures, the body should be:
     ]
   }
 
-If some audit events  were not valid, in addition to the informational issues listed above, there should be one processing issue
+If some AuditEvents  were not valid, in addition to the informational issues listed above, there should be one processing issue
 (see https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-processing) per validation error:
  
 .. code-block:: JavaScript
@@ -350,25 +351,48 @@ Finally, if the number of validation failures is higher than the pre-configured 
 
 
 
-AuditEvent Integrity configuration
+AuditEvent Integrity Configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-By default the integrity of AuditEvent is disabled. In order to enable it, you have to modify the settings of the server.
+By default, the signature of the AuditEvent and their verification is disabled. In order to enable it, you have to modify the settings of the server.
 
-First of all, in the `PipelineOPtions`, you need to remove `"Vonk.Plugin.Audit.Integrity"` form the listed of excluded plugin.
+First of all, in the `PipelineOptions`, you need to have `"Vonk.Plugin.Audit.Integrity"` (or a prefix of it) as part of the plugin pipelines. 
+As it is listed in the ``Exclude`` section by default, you have to remove it from this section:
 
 .. code-block:: JavaScript
 
    "PipelineOptions": {
       "PluginDirectory": "./plugins",
-      "Branches": [...],
+      "Branches": [
+         ...
+         "Vonk.Plugin.Audit",
+         ...
+      ],
       "Exclude": [
            "Vonk.Subscriptions.Administration"
-           // "Vonk.Plugin.Audit.Integrity"
          ]
     },
 
-In addition, you need to explicitely enable the generation of audit event signatures.
-To enable generation of an AuditEvent Signature add the following configuration to your Audit plugin configuration.
+Also, as part of the ``Administration`` pipeline, you need to enable the support for the asynchronous tasks as they are used
+for the asynchronous processing of the integrity verification operation. This is done by having the Task configuration corresponding
+to the database type used for the administration:
+
+.. code-block:: JavaScript
+  
+  {
+        "Path": "/administration",
+        "Include": [
+          ...
+          "Vonk.Repository.Sql.SqlTaskConfiguration",
+          or
+          "Vonk.Repository.Sqlite.SqliteTaskConfiguration",
+          or
+          "Vonk.Repository.MongoDb.MongoDbTaskConfiguration",
+          ...
+        ]
+      }
+
+
+In addition to the pipelines setup, you need to configure properly the ``Audit`` section of the settings:
 
 .. code-block:: JavaScript
 
@@ -384,10 +408,12 @@ To enable generation of an AuditEvent Signature add the following configuration 
       "InvalidAuditEventProcessingThreshold" : 100 
     },
 
-``AuditEventSignatureEnabled`` must be set to `true` to enable the signature generation.
+with:
 
-``AuditEventSignatureSecret`` specifies the secret to be used when signing the audit event. Currently, it can only contain a JSON Web Key Set ``Secret``.
-A JSON Web Key Set (JWKS) is a set of JSON Web Tokens (JWT) keys. The next section details how to generate a JWKS.
+``AuditEventSignatureEnabled`` must be set to ``true`` to enable the signature generation.
+
+``AuditEventSignatureSecret`` specifies the secret to be used when signing the AuditEvent. Currently, it can only contain a JSON Web Key Set ``Secret``. 
+ A JSON Web Key Set (JWKS) is a set of JSON Web Tokens (JWT) keys. The next section details how to generate a JWKS.
 
 .. note::
 
@@ -395,12 +421,13 @@ A JSON Web Key Set (JWKS) is a set of JSON Web Tokens (JWT) keys. The next secti
 
 ``AsyncProcessingRepeatPeriod`` defines the period in milliseconds for the loop checking if a new integrity validation request is pending.
 
-``InvalidAuditEventProcessingThreshold`` specifies the threshold on the maximum number of invalid audit event signatures. Once this threshold
+``InvalidAuditEventProcessingThreshold`` specifies the threshold on the maximum number of invalid AuditEvent signatures. Once this threshold
 is reached, the operation is terminated and a specific issue is log in the operation outcome.
 
 
-The final configuration required for enabling the integrity vaidation is to add the custom operations requires for checking the integrity of the audit event.
-For that, you have to add the type-level custom operations `$verify-integrity` and the system-level custom operation `$verify-integrity-status`, as follows: 
+Finally, in order to enable the integrity verification, the corresponding custom operations must be listed as part of the
+``SupportedInteractions``. 
+For that, you have to add the type-level custom operations ``$verify-integrity`` and the system-level custom operation ``$verify-integrity-status``, as follows: 
 
 .. code-block:: JavaScript
 
@@ -409,7 +436,6 @@ For that, you have to add the type-level custom operations `$verify-integrity` a
     "TypeLevelInteractions": "..., $verify-integrity",
     "WholeSystemInteractions": "..., $verify-integrity-status"
   }
-
 
 JSON Web Key Set generation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -246,22 +246,128 @@ The table below contains some elements you can find in the generated AuditEvents
 +-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
 
 
-.. _audit_event_signature:
+.. _audit_event_integrity:
 
-AuditEvent Signature
+AuditEvent Integrity
 --------------------
+Firely server provides a mechanism to validate the integrity of the audit events. On the one hand, it provides a way to sign the audit event once they are generated,
+and on the other hand, it offers a custom operation to validate the signatures.
+  
+AuditEvent Signature
+^^^^^^^^^^^^^^^^^^^^
 
-An AditEvent Signature is a Provenance FHIR resource which contains a signature of the complete AuditEvent FHIR resource JSON. 
+An AuditEvent Signature is a Provenance FHIR resource which contains a signature of the complete AuditEvent FHIR resource JSON. 
 This Provenance FHIR resource also includes a reference to an AuditEvent FHIR resource from which the signature is created. 
 
 .. note::
 
    AuditEvent Signatures will not get generated if your configuration restricts the list of supported FHIR resources and ``Provenance`` is not included (see :ref:`supportedmodel`).
 
-AuditEvent Signature configuration
-----------------------------------
+AuditEvent Integrity Validation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The validation of the audit event integrity is done by checking that the associated signature of an audit event still matches the current audit event content.
+This verification is an asynchronous operation which is triggered by calling the custom operation `$verify-integrity` on the AuditEvent type, using
+the AuditEvent search parameters (see https://www.hl7.org/fhir/auditevent.html#search) to specify which audit events should be validated. Note that only
+audit events created before the call are considered.
 
-By default generation of an AuditEvent Signature is disabled.
+
+For example, the following query will trigger the integrity validation of all auti events created in January 2022.
+
+.. code-block:: shell-session
+
+curl --location --request GET 'http://127.0.0.1:4080/R4/AuditEvent/$verify-integrity?date=ge2022-01-01&date=le2022-01-31' \
+--header 'Prefer: respond-async'
+
+If the call is accpepted, the status code should be 202 and the `Content-Location` header should contain the URL where the status of the operation can be retrieved.
+
+While the operation is still in progress, the status endpoint should return a 202 status code.
+
+In case of failure during the operation, the status endpoint should return a 4xx or 5xx status code with an operation outcome stating the issue(s).
+
+Finally, once the operation is terminated, the status code of the reply should be 200 and the body should contain an operation outcome.
+If all audit events had a valid signatures, the body should be:
+
+.. code-block:: JavaScript
+
+  {
+    "resourceType": "OperationOutcome",
+    "text": 
+        {
+            "status": "All Audit Event signatures validated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>All Audit Event signatures validated</p>\n    </div>"
+        },
+    "issue": [
+       {
+         "severity": "information",
+         "code": "informational",
+         "details": {
+           "text": "xx Audit Event processed"
+         },
+       }
+       {
+         "severity": "information",
+         "code": "informational",
+         "details": {
+           "text": "Transaction time: xxx"
+           }
+       },
+       {
+         "severity": "information",
+         "code": "informational",
+         "details": {
+           "text": "Original Request: xxx"
+           }
+       } 
+    ]
+  }
+
+If some audit events  were not valid, in addition to the informational issues listed above, there should be one processing issue
+(see https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-processing) per validation error:
+ 
+.. code-block:: JavaScript
+   
+  {
+      "severity": "error",
+      "code": "processing",
+      "expression": "AuditEvent/event_id", 
+      "details": {
+        "text": "Signature for the event does not match audit event content"
+        }
+   } 
+    
+
+Finally, if the number of validation failures is higher than the pre-configured threshold, an additional error should be reported:
+
+.. code-block:: JavaScript
+
+  {
+      "severity": "error",
+      "code": "too-costly",
+      "details": {
+          "text": "Process interrupted because too many signature validation errors encountered."
+        }
+   } 
+
+
+
+AuditEvent Integrity configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+By default the integrity of AuditEvent is disabled. In order to enable it, you have to modify the settings of the server.
+
+First of all, in the `PipelineOPtions`, you need to remove `"Vonk.Plugin.Audit.Integrity"` form the listed of excluded plugin.
+
+.. code-block:: JavaScript
+
+   "PipelineOptions": {
+      "PluginDirectory": "./plugins",
+      "Branches": [...],
+      "Exclude": [
+           "Vonk.Subscriptions.Administration"
+           // "Vonk.Plugin.Audit.Integrity"
+         ]
+    },
+
+In addition, you need to explicitely enable the generation of audit event signatures.
 To enable generation of an AuditEvent Signature add the following configuration to your Audit plugin configuration.
 
 .. code-block:: JavaScript
@@ -273,16 +379,40 @@ To enable generation of an AuditEvent Signature add the following configuration 
           "SecretType": "JWKS", // Currently only supported type
           // This is an example secret. Generate your own and do not use this example 'Secret' in your configuration!
           "Secret": "{'keys':[{'kty':'EC','use':'sig','key_ops':['sign','verify'],'alg':'ES256','kid':'66e56ebf-a8de-4cfe-9710-3f2f44ec262f','crv':'P-256','x':'FO0bvAsRHC-wKMczT4xFPWQXI_fhFzqW2l9WxU29Hdc','y':'MHYht76KAnxHhatfB_BdyIuUtbpkK0g0Wuy5940oei4','d':'Nt1RXXNt6s5ytd88T7YhRePd7BqC4rh5WCOtJxdOzTs'}]}"
-      }
+      },
+      "AsyncProcessingRepeatPeriod" : 10000,
+      "InvalidAuditEventProcessingThreshold" : 100 
     },
 
-Currenlty an ``AuditEventSignatureSecret`` can only contain a JSON Web Key Set ``Secret``.
-A JSON Web Key Set (JWKS) is a set of JSON Web Tokens (JWT) keys. 
-The JWKS is used for creating the signature of an AuditEvent.
+``AuditEventSignatureEnabled`` must be set to `true` to enable the signature generation.
+
+``AuditEventSignatureSecret`` specifies the secret to be used when signing the audit event. Currently, it can only contain a JSON Web Key Set ``Secret``.
+A JSON Web Key Set (JWKS) is a set of JSON Web Tokens (JWT) keys. The next section details how to generate a JWKS.
 
 .. note::
 
    Currently only the first key in a JSON Web Key Set is used to create signature of an AuditEvent.
+
+``AsyncProcessingRepeatPeriod`` defines the period in milliseconds for the loop checking if a new integrity validation request is pending.
+
+``InvalidAuditEventProcessingThreshold`` specifies the threshold on the maximum number of invalid audit event signatures. Once this threshold
+is reached, the operation is terminated and a specific issue is log in the operation outcome.
+
+
+The final configuration required for enabling the integrity vaidation is to add the custom operations requires for checking the integrity of the audit event.
+For that, you have to add the type-level custom operations `$verify-integrity` and the system-level custom operation `$verify-integrity-status`, as follows: 
+
+.. code-block:: JavaScript
+
+  "SupportedInteractions": {
+    "InstanceLevelInteractions": "...",
+    "TypeLevelInteractions": "..., $verify-integrity",
+    "WholeSystemInteractions": "..., $verify-integrity-status"
+  }
+
+
+JSON Web Key Set generation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The following code snippet in C# is an example how you can generate a JSON Web Key Set. 
 
@@ -332,6 +462,7 @@ Generate JSON Web Key Set
 .. note::
 
    Replace ``"`` with ``'`` in the output to use it as ``Secret`` of ``AuditEventSignatureSecret`` in Audit plugin configuration,
+
 
 
 .. _audit_event_customization:

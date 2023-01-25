@@ -2,10 +2,6 @@
   "urls": [
     {
       "name": "System Operations",
-      "url": "./OpenApiJson/OpenApi_R4__Root.json"
-    },
-    {
-      "name": "System Operations",
       "url": "./OpenApiJson/OpenApi_R4__SystemOperations.json"
     },
     {
@@ -375,10 +371,6 @@
     {
       "name": "Message Header",
       "url": "./OpenApiJson/OpenApi_R4_MessageHeader.json"
-    },
-    {
-      "name": "metadata",
-      "url": "./OpenApiJson/OpenApi_R4_metadata.json"
     },
     {
       "name": "Molecular Sequence",

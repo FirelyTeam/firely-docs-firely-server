@@ -3,12 +3,23 @@
 Current Firely Server release notes (v5.x)
 ==========================================
 
-.. _vonk_releasenotes_5_0_0:
+.. _vonk_releasenotes_5_0_0-beta1:
 
 Release 5.0.0-beta1, January 19th, 2023
 ------------------------------
 .. attention::
     This is a beta release of Firely Server 5.0.0. Although the core functionality remains fully intact, parts of the public API have been removed or heavily modified. Please consult the list under section 'Plugin and Facade' and check whether your implementation is affected by these changes.
+
+Database
+^^^^^^^^
+
+#. Because of feature 6 below, the database was updated for both **SQL Server** and **MongoDB**. Firely Server will usually perform the upgrade automatically. See for details :ref:`migrations`.
+
+   #. SQL Server is upgraded from schema 25 to **26**. The upgrade script file is named ``/sqlserver/FS_SchemaUpgrade_Data_v25_v26.sql``.
+   #. MongoDB is upgraded from schema 24 to **25**. The upgrade script file is named ``/mongodb/FS_SchemaUpgrade_Data_v24_v25``.
+   #. The administration database is not affected by this change, so you don't need to upgrade that.
+
+#. The database upgrade means that you also need an upgraded version of Firely Server Ingest, :ref:`version 2.0<fsi_releasenotes_2.0.0>`
 
 Feature
 ^^^^^^^

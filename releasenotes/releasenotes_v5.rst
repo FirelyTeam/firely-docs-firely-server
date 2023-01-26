@@ -13,7 +13,7 @@ Release 5.0.0-beta1, January 19th, 2023
 Database
 ^^^^^^^^
 
-#. Because of feature 6 below, the database was updated for both **SQL Server** and **MongoDB**. Firely Server will usually perform the upgrade automatically. See for details :ref:`migrations`.
+#. Because of feature 6 below, searching on version-specific references, the database was updated for both **SQL Server** and **MongoDB**. Firely Server will usually perform the upgrade automatically. See for details :ref:`migrations`.
 
    #. SQL Server is upgraded from schema 25 to **26**. The upgrade script file is named ``/sqlserver/FS_SchemaUpgrade_Data_v25_v26.sql``.
    #. MongoDB is upgraded from schema 24 to **25**. The upgrade script file is named ``/mongodb/FS_SchemaUpgrade_Data_v24_v25``.

@@ -285,7 +285,7 @@ Release 2.0.0, January 26th, 2023
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Upgraded to work with the database schemas for :ref:`Firely Server 5.0.0-beta1<vonk_releasenotes_5_0_0-beta1>`
-* 
+* Indexing has been updated to support searching for version-specific references.
 
 .. _fsi_releasenotes_1.4.0:
 

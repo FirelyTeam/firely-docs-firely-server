@@ -3,12 +3,60 @@
 Current Firely Server release notes (v5.x)
 ==========================================
 
-.. _vonk_releasenotes_5_0_0:
+.. _vonk_releasenotes_5_0_0-beta1:
 
 Release 5.0.0-beta1, January 19th, 2023
 ---------------------------------------
 .. attention::
     This is a beta release of Firely Server 5.0.0. Although the core functionality remains fully intact, parts of the public API have been removed or heavily modified. Please consult the list under section 'Plugin and Facade' and check whether your implementation is affected by these changes.
+
+Configuration
+^^^^^^^^^^^^^
+.. attention::
+    Parts of the configuration were overhauled, starting with FS 5.0.0-beta1. 
+    If you have adjusted the :ref:`appsettings<configure_appsettings>` either in ``appsettings.instance.json`` or in environment variables, 
+    make sure to to update your configuration accordingly. Please follow the bullets below.
+
+#. The configuration section for additional endpoints in the discovery document and additional issuers in tokens has been reworked. Consult the :ref:`SMART Configuration section<feature_accesscontrol_config>` for more details.
+#. Add this new namespace to the root (``/``) path of the :ref:`PipelineOptions<settings_pipeline>`: ``Vonk.Plugin.Operations``. The result should look like this:
+
+    .. code-block:: json
+        :emphasize-lines: 8
+
+        "PipelineOptions": {
+            "PluginDirectory": "./plugins",
+            "Branches": [
+            {
+                "Path": "/",
+                "Include": [
+                    "Vonk.Core",
+                    "Vonk.Plugin.Operations",
+                    "Vonk.Fhir.R3",
+                    "Vonk.Fhir.R4",
+                    //etc.
+                ]
+            },
+            {
+                "Path": "/administration",
+                "Include": [
+                    "Vonk.Core",
+                    //etc.
+                ]
+            }
+            ]
+        }
+
+
+Database
+^^^^^^^^
+
+#. Because of feature 6 below, searching on version-specific references, the database was updated for both **SQL Server** and **MongoDB**. Firely Server will usually perform the upgrade automatically. See for details :ref:`migrations`.
+
+   #. SQL Server is upgraded from schema 25 to **26**. The upgrade script file is named ``/sqlserver/FS_SchemaUpgrade_Data_v25_v26.sql``.
+   #. MongoDB is upgraded from schema 24 to **25**. The upgrade script file is named ``/mongodb/FS_SchemaUpgrade_Data_v24_v25``.
+   #. The administration database is not affected by this change, so you don't need to upgrade that.
+
+#. The database upgrade means that you also need an upgraded version of Firely Server Ingest, :ref:`version 2.0<fsi_releasenotes_2.0.0>`
 
 Feature
 ^^^^^^^
@@ -43,15 +91,6 @@ Fix
 #. Firely Server now returns the correct CodeSystem ``http://terminology.hl7.org/CodeSystem/restful-security-service`` within the security section of its ``CapabilityStatement``. Before this change, the old R3 CodeSystem ``http://hl7.org/fhir/restful-security-service`` was falsely returned.
 #. Firely Server will now handle duplicate DLLs and assemblies more gracefully in case they were accidently added to its plugin directory.
 #. When overwriting Search Parameters, the new Search Parameters will now be included in the CapabilityStatement instead of the overwritten ones. This feature was introduced with Firely Server ``4.7.0`` but broke in between the last releases.
-
-Configuration
-^^^^^^^^^^^^^
-.. attention::
-    Parts of the configuration were overhauled for starting with FS 5.0.0-beta1. Please check every bullet point below and make sure to update your configuration accordingly.
-
-#. The configuration section for additional endpoints in the discovery document and additional issuers in tokens has been reworked. Consult the :ref:`SMART Configuration section<feature_accesscontrol_config>` for more details.
-#. In case you defined a custom pipeline, please adjust it as follows: 
-    #. Add this namespace: `Vonk.Core.Operations`
 
 Plugin and Facade
 ^^^^^^^^^^^^^^^^^

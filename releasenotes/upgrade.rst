@@ -188,3 +188,17 @@ In case the migration actually times out or is interrupted, the ``updateMany()``
 #. Execute this command in your mongo shell
 
 That's it! The migration of the data is finished and the document containing the system information is updated accordingly. You should now be able to start the new version of Firely Server.
+
+SQL Server
+^^^^^^^^^^
+
+#. Have a tool at hand that can execute T-SQL scripts. E.g. SQL Server Management Studio.
+#. Connect to the Firely Server database to be upgraded. We advice to try the script on an acceptance database first.
+#. Stop all instances of Firely Server that are connected to this database to avoid erroneous behaviour.
+#. Open the script matching your current migration.
+   #. All migration scripts are in the `/sqlserver` subdirectory of the Firely Server distribution.
+   #. The release notes mention the script name for a specific upgrade.
+#. Run the script. Some migrations may take quite long.
+#. Check the messages. A succesful upgrade should end with ``Upgraded to Firely Server database schema <new database schema number> in <database name>``.
+#. Now you can start Firely Server again. 
+

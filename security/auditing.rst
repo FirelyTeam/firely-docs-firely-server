@@ -426,7 +426,7 @@ with:
 is reached, the operation is terminated and a specific issue is log in the operation outcome.
 
 ``AuditEventVerificationBatchSize`` specifies the batch size when validating the AuditEvent signatures, 
-expressed as number of AuditEvent to verify in one step. We recommend to fix this to 500 when using SqlServer or MongoDb as data backend, and 
+expressed as number of AuditEvent to verify in one step. We recommend to to set this value to 500 when using SqlServer or MongoDb as data backend, and 
 20 when using SQLite.
         
 .. note::

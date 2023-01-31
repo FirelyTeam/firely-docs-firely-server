@@ -405,7 +405,8 @@ In addition to the pipelines setup, you need to configure properly the ``Audit``
           "Secret": "{'keys':[{'kty':'EC','use':'sig','key_ops':['sign','verify'],'alg':'ES256','kid':'66e56ebf-a8de-4cfe-9710-3f2f44ec262f','crv':'P-256','x':'FO0bvAsRHC-wKMczT4xFPWQXI_fhFzqW2l9WxU29Hdc','y':'MHYht76KAnxHhatfB_BdyIuUtbpkK0g0Wuy5940oei4','d':'Nt1RXXNt6s5ytd88T7YhRePd7BqC4rh5WCOtJxdOzTs'}]}"
       },
       "AsyncProcessingRepeatPeriod" : 10000,
-      "InvalidAuditEventProcessingThreshold" : 100 
+      "InvalidAuditEventProcessingThreshold" : 100,
+      "AuditEventVerificationBatchSize": 20 
     },
 
 with:
@@ -424,6 +425,16 @@ with:
 ``InvalidAuditEventProcessingThreshold`` specifies the threshold on the maximum number of invalid AuditEvent signatures. Once this threshold
 is reached, the operation is terminated and a specific issue is log in the operation outcome.
 
+``AuditEventVerificationBatchSize`` specifies the batch size when validating the AuditEvent signatures, 
+expressed as number of AuditEvent to verify in one step. We recommend to to set this value to 500 when using SqlServer or MongoDb as data backend, and 
+20 when using SQLite.
+        
+.. note::
+   
+   When using SQLite, setting ``AuditEventVerificationBatchSize`` will prevent the validation of AuditEvent signature as SQLite 
+   has a limitation on the query size it supports. Concretely, when the provided value is too large, the `$verify-signature`operation 
+   would fail, indicating the following error:
+   ``SqliteException (0x80004005): SQLite Error 1: 'parser stack overflow'``
 
 Finally, in order to enable the integrity verification, the corresponding custom operations must be listed as part of the
 ``SupportedInteractions``. 

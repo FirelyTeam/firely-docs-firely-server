@@ -9,7 +9,7 @@ Firely Server can log access through the RESTful API for auditing purposes. It h
 #. Include user id and name from the JWT token (if present) in the audit log lines.
 #. Write the audit information as FHIR AuditEvent resources in the Firely Server Data database.
 
-These features can be enabled by including ``Vonk.Plugins.Audit`` in the pipeline.
+These features can be enabled by including ``Vonk.Plugin.Audit`` in the pipeline.
 
 .. code-block:: JavaScript
 

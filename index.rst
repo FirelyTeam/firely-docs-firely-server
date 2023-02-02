@@ -26,17 +26,11 @@ or support contract.
    :caption: Firely Server Docs:
 
    Overview <overview>
-   Getting started <getting_started>
-   Releases & upgrade management <releasenotes/releasenotes>
-   FAQ <faq>
-   Configuration <configuration/configuration>
-   Deployment <deployment/deployment>
-   Features <features/features>
-   Security <security/security>
-   Administration API <administration_api>
-   Performance <performance/performance>
+   Getting started <getting_started/getting_started>
+   Management <management/management>
+   Features and Tools <features_and_tools/features>
+   Programming API Reference<reference/reference>
    Compliance & Certification <compliance/compliance>
-   Programming API Reference & Plugins<reference/reference>
-   Tools <tools/tools>
-   OpenAPI <openapi/openapi>
+   Releases <releasenotes/releasenotes>
+   FAQ <faq>
    contact

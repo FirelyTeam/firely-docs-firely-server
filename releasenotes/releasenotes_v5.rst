@@ -6,7 +6,7 @@ Current Firely Server release notes (v5.x)
 .. _vonk_releasenotes_5_0_0-beta1:
 
 Release 5.0.0-beta1, January 19th, 2023
-------------------------------
+---------------------------------------
 .. attention::
     This is a beta release of Firely Server 5.0.0. Although the core functionality remains fully intact, parts of the public API have been removed or heavily modified. Please consult the list under section 'Plugin and Facade' and check whether your implementation is affected by these changes.
 

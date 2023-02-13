@@ -19,8 +19,10 @@ US Core / 21th Century Cures Act
 
 
 * All StructureDefinitions for profiles and extensions (v3.1.1) are loaded by default in the standard SQLite administration database of Firely Server. No additional configuration needed in order to validate against these conformance resources.
+
+* A mapping between USCDI and the US Core profiles can be found in the `US Core ImplementationGuide <http://build.fhir.org/ig/HL7/US-Core/uscdi.html>`_.
   
-See `How to Test Firely Server on Inferno <https://fire.ly/ebook-how-to-test-firely-server-on-inferno/>`_ for more information on how to pass the official 21st Century Cures Act test.
+See `How to Test Firely Server on Inferno <https://fire.ly/ebook-how-to-test-firely-server-on-inferno/>`_ for more information on how to pass the official 21st Century Cures Act test. See :ref:`firely_auth_introduction` for details on how to configure a client to interact with Firely Server and Firely Auth.
   
 Known Limitations
 ^^^^^^^^^^^^^^^^^

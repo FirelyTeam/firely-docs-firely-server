@@ -300,6 +300,14 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``RefreshTokenLifetime``: If the client is allowed to use a :term:`refresh token`, how long should it be valid? The value is in days. You can also use HH:mm:ss for lower values.
 - ``RequireMfa``: true / false, default is false. A user granting access to this client has to enable and use Multi Factor Authentication. See :ref:`firely_auth_mfa`
 
+.. _firely_auth_settings_allowedorigins:
+
+AllowedOrigins
+^^^^^^^^^^^^^^
+
+By default CORS is enabled for all origins communicating over https. To adjust this, change the allowed origins in the ``AllowedOrigins`` setting.
+Wildcards can be used, for example to allow all ports: ``"https://localhost:*"``, or to allow all subdomains ``"https://*.fire.ly"``.
+
 Inferno test settings
 ---------------------
 

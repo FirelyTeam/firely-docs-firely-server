@@ -3,30 +3,69 @@
 Multiple versions of FHIR
 =========================
 
-Since version 3.0.0 Firely Server can run multiple versions of FHIR side-by-side in the same server. This page explains how this works and what the consequences are.
+Since version 3.0.0, Firely Server can run multiple versions of FHIR side-by-side on the same instance. This page explains how it works and what the consequences are.
+
+Configuration
+-------------
+
+In order to run multiple FHIR versions at the same time, all required binaries need to be loaded upon startup. Include every version in your ``PipelineOptions`` (both regular and administration) within the appsettings as shown in this example for FHIR STU3, R4 and R5:
+
+::   
+
+   "PipelineOptions": {
+      "Branches": [
+         {
+         "Path": "/",
+         "Include": [
+            ...
+            "Vonk.Fhir.R3",
+            "Vonk.Fhir.R4",
+            "Vonk.Fhir.R5",
+            ...
+         ],
+         "Exclude": [
+            ...
+         ]
+         },
+         {
+         "Path": "/administration",
+         "Include": [
+            ...
+            "Vonk.Fhir.R3",
+            "Vonk.Fhir.R4",
+            "Vonk.Fhir.R5",
+            ...
+         ],
+         "Exclude": [
+            ...
+         ]
+         }
+      ]
+   }
 
 Requests
 --------
 
-The FHIR Specification explains the mimetype parameter that distinguishes one FHIR version from another in the paragraph on the `FHIR Version parameter <http://hl7.org/fhir/R4/http.html#version-parameter>`_.
-Firely Server uses this approach to let you choose the model for your request. Below are examples on how to use the fhirVersion parameter and how in influences the behaviour of Firely Server. 
+The FHIR Specification explains the MIME-type parameter that distinguishes one FHIR version from another in the paragraph on the `FHIR Version parameter <http://hl7.org/fhir/R4/http.html#version-parameter>`_.
+Firely Server uses this approach to let you choose the model for your request. Below are examples on how to use the ``fhirVersion`` parameter and how it influences the behaviour of Firely Server. 
 Accepted values for the parameter are:
 
-* fhirVersion=3.0, for FHIR STU3
-* fhirVersion=4.0, for FHIR R4
+* ``fhirVersion=3.0``, for FHIR STU3
+* ``fhirVersion=4.0``, for FHIR R4
+* ``fhirVersion=5.0``, for FHIR R5
 
-You can add the fhirVersion to the Accept and/or the Content-Type header. If you specify it on both, the fhirVersion parameters have to be the same.
+You can add the ``fhirVersion`` value to the ``Accept`` and/or the ``Content-Type`` header. If you specify it on both, the ``fhirVersion`` values have to be the same.
 
 .. note::
-   The fhirVersion parameter is also part of the Content-Type header of the response by Firely Server. Settings can control this, see :ref:`feature_multiversion_endpoints` below.
+   The ``fhirVersion`` parameter is also part of Firely Server's response's ``Content-Type`` header. This can be adjusted via the settings, see :ref:`feature_multiversion_endpoints` below.
 
-The examples below explain the behaviour with STU3, but if you replace fhirVersion with 4.0, it works exactly the same on R4. 
-
-.. note:: 
-   If you do not specify a fhirVersion parameter, Firely Server will use fhirVersion=3.0 (STU3) as a default. This way the behaviour is compatible with previous versions of Firely Server. If you like, you can change the ``Default`` in :ref:`information_model`
+The examples below explain the behaviour with STU3, but if you replace ``fhirVersion`` with 4.0 or 5.0, it works exactly the same on R4 or R5. 
 
 .. note:: 
-   If you use both an Accept header and a Content-Type header, the fhirVersion parameter for both must be the same. So this would be *invalid*:
+   If you do not specify a ``fhirVersion`` parameter, Firely Server will use the default information model that is configured within the appsettings. If you like, you can change the ``Default`` in :ref:`information_model`
+
+.. note:: 
+   If you use both an ``Accept`` and a ``Content-Type`` header, the ``fhirVersion`` parameter for both must be the same. So this would be *invalid*:
    ::
 
       POST <base>/Patient
@@ -51,7 +90,7 @@ Create a Patient resource in STU3. This will only be retrievable when accessed w
 
    {<valid Patient JSON body>}
 
-Update a Patient resource in STU3.::
+Update a Patient resource in STU3::
 
    PUT <base>/Patient/123
    Content-Type=application/fhir+json; fhirVersion=3.0
@@ -59,11 +98,11 @@ Update a Patient resource in STU3.::
 
    {<valid Patient JSON body with id: 123>}
 
-#. If no resource with this id existed before: it will be created with this id. (This was already always the behaviour of Firely Server.)
+#. If no resource with this id existed before: it will be created with this id. (This is Firely Server's default behaviour.)
 #. If a resource with this id existed before, in STU3: update it.
-#. If a resource with this id already exists in R4: you will get an error with an OperationOutcome saying that a resource with this id already exists with a different informationmodel.
+#. If a resource with this id already exists in R4: you will get an error with an OperationOutcome saying that a resource with this id already exists with a different information model.
 
-.. note:: Id's still have to be unique within a resourcetype, regardless of the FHIR version.
+.. note:: Ids still have to be unique within a resourcetype, regardless of the FHIR version.
 
 Delete a Patient resource.::
 
@@ -93,9 +132,9 @@ Conformance resources like StructureDefinition and SearchParameter are registere
 
 #. If you add a StructureDefinition or SearchParameter via the Administration API, you can decide for yourself whether to append the FHIR version to the id or not. 
    Just note that you cannot use the same id for different FHIR versions.
-#. Depending on the fhirVersion parameter Firely Server evaluates whether a resourcetype or searchparameter is valid in that FHIR version. E.g. 'VerificationResult' is only valid in R4, but 'DataElement' is only valid in R3.
+#. Depending on the ``fhirVersion`` parameter Firely Server evaluates whether a resourcetype or searchparameter is valid in that FHIR version. E.g. 'VerificationResult' is only valid in R4, but 'DataElement' is only valid in R3.
 #. For validation, the StructureDefinitions and terminology resources needed are only searched for in the FHIR version of the resource that is being validated.
-#. When you :ref:`conformance_administration_api`, a StructureDefinition can only be posted to the Administration API in the context of a FHIR Version that matches the StructureDefinition.fhirVersion.
+#. When you :ref:`conformance_administration_api`, a StructureDefinition can only be posted to the Administration API in the context of a FHIR Version that matches the ``StructureDefinition.fhirVersion``.
    So this works::
    
       POST <base>/administration/StructureDefinition
@@ -108,9 +147,9 @@ Conformance resources like StructureDefinition and SearchParameter are registere
          "fhirVersion": "4.0.0" //Note the FHIR version matching the Content-Type
       }
 
-   But it would not work if ``"fhirVersion"="3.0.1"``
+   But it would not work if ``"fhirVersion"="3.0.1"`` is set.
 
-#. If you :ref:`conformance_on_demand`, this will be done for all the importfiles described above, regardless of the fhirVersion in the Accept header.
+#. If you :ref:`conformance_on_demand`, this will be done for all the importfiles described above, regardless of the ``fhirVersion`` in the ``Accept`` header.
 
 .. _feature_multiversion_singleversion:
 
@@ -126,17 +165,18 @@ Running different versions on different endpoints
 
 To assign endpoints to different versions, create a mapping in :ref:`information_model`. Use the ``Mode`` switch to select either a path or a subdomain mapping, assigning your endpoints in the ``Map`` array. Mapped endpoints will only accept the version you have specified. The web service root ('/' and '/administration/') will still accept all supported versions.
 
-Assigning an endpoint to a FHIR version is exactly equivalent to adding that particular ``fhirVersion`` MIME parameter to every single request sent to that endpoint. So using these settings:
+Assigning an endpoint to a FHIR version is equivalent to adding that particular ``fhirVersion`` MIME parameter to every single request sent to that endpoint. So using these settings:
 ::   
 
    "InformationModel": {
       "Default": "Fhir4.0",
-      "IncludeFhirVersion": ["Fhir4.0", "Fhir5.0"],
+      "IncludeFhirVersion": ["Fhir3.0", "Fhir4.0", "Fhir5.0"],
       "Mapping": {
          "Mode": "Path",
          "Map": {
             "/R3": "Fhir3.0",
-            "/R4": "Fhir4.0"
+            "/R4": "Fhir4.0",
+            "/R5": "Fhir5.0"
          }
       }
    }
@@ -178,16 +218,12 @@ As you can see, on a mapped endpoint it is never necessary to use a FHIR ``_form
 Response Content-Type
 ^^^^^^^^^^^^^^^^^^^^^
 
-The setting ``IncludeFhirVersion`` is used for the Content-Type of the response from Firely Server. Some clients cannot handle a parameter on the mimetype, and the fhirVersion parameter was originally not part of FHIR STU3. Therefore this settings allows you to specify for which FHIR versions this parameter should be included in the Content-Type header.
+The setting ``IncludeFhirVersion`` is used for the ``Content-Type`` of the response from Firely Server. Some clients cannot handle a parameter on the MIME-type, and the fhirVersion parameter was originally not part of FHIR STU3. Therefore this settings allows you to specify for which FHIR versions this parameter should be included in the Content-Type header.
 By default we set it to FHIR R4 and R5, as for STU3 the fhirVersion may be unexpected for clients.
 
 .. _feature_multi_version_r5:
 
-Support for R5 (experimental!)
+Support for R5
 ------------------------------
-
-By default the binaries for supporting R5 are included in the Firely Server distribution (since Firely Server (Vonk) 3.3.0). By default these binaries are not loaded. See the PipelineOptions in appsettings.default, where ``Vonk.Fhir.R5`` is commented out. Re-enable these in your appsettings.instance.
-
-The creation of AuditEvents is currently not supported for R5. Please disable ``Vonk.Plugin.Audit`` in the root endpoint of the PipelineOptions.
 
 Note that there is not yet an ``errata_Fhir5.0.zip`` and Firely Server will complain about that in the log. You can ignore that message.

@@ -8,7 +8,7 @@ Since version 3.0.0, Firely Server can run multiple versions of FHIR side-by-sid
 Configuration
 -------------
 
-In order to run multiple FHIR versions at the same time, all required binaries need to be loaded upon startup. Include every version in your ``PipelineOptions`` within the appsettings as shown in this example for FHIR STU3, R4 and R5:
+In order to run multiple FHIR versions at the same time, all required binaries need to be loaded upon startup. Include every version in your ``PipelineOptions`` (both regular and administration) within the appsettings as shown in this example for FHIR STU3, R4 and R5:
 
 ::   
 

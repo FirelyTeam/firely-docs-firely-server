@@ -14,7 +14,8 @@ US Core / 21th Century Cures Act
  US Core Version    Status    References                                                                 
  ================== ========= ========================================                                                                             
   US Core 3.1.1      ✅         http://hl7.org/fhir/us/core/STU3.1.1/                                 
-  US Core 4.0.0      ✅         http://hl7.org/fhir/us/core/STU4/                                                                                                                      
+  US Core 4.0.0      ✅         http://hl7.org/fhir/us/core/STU4/      
+  US Core 5.0.1      ✅         http://hl7.org/fhir/us/core/STU5.0.1/ 
  ================== ========= ======================================== 
 
 

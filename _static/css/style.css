@@ -209,6 +209,7 @@ div.wy-menu.rst-pro {
 }
 
 .toggle .header > p {
+	cursor: pointer;
 	font-weight: 700;
 	line-height: 1;
 	display: block;

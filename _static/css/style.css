@@ -199,3 +199,29 @@ div.wy-menu.rst-pro {
 .injected dd div {
 	padding: 6px 6px 6px 0 !important;
 }
+
+
+.toggle {
+	padding: 0 12px;
+	line-height: 24px;
+	margin-bottom: 24px;
+	background: #ededed;
+}
+
+.toggle .header > p {
+	font-weight: 700;
+	line-height: 1;
+	display: block;
+	color: #fff;
+	background: #6ab0de;
+	padding: 6px 12px;
+	margin: -12px -12px 12px;
+}
+
+.toggle .header > p:before {
+    content: "▶ ";
+}
+
+.toggle .header.open > p:before {
+    content: "▼ ";
+}

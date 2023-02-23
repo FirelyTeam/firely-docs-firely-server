@@ -3,6 +3,342 @@
 Current Firely Server release notes (v5.x)
 ==========================================
 
+.. _vonk_releasenotes_5_0_0:
+
+Release 5.0.0-beta1, [TBD: specify date]
+----------------------------------------
+
+API cleanup (relevant to plugin developers)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We cleaned up the public API: classes and methods that had been earlier marked as deprecated have now been made private and therefore not available for plugin developers anymore. This makes us more flexible in developing Firely Server in the future because we don't need to maintain the functionality that anyone has hardly used. If you find out that something that you've been using in the previous versions is not available anymore, please get in touch with us.
+
+Additionally, in many places, where we used to refer to SearchParameter.name, we are now using SearchParameter.code. This was made to be more aligned with the specification. For you, as a plugin developer, that means several changes:
+
+* Class ``Vonk.Core.Common.VonkConstants.ParameterNames`` has been renamed to ``Vonk.Core.Common.VonkConstants.ParameterCodes``
+* Method ``static VonkSearchParameter IModelServiceExtensions.FindSearchParameterByName`` has been renamed to ``static VonkSearchParameter FindSearchParameterByCode``
+* Method ``static IEnumerable<VonkSearchParameter> IModelServiceExtensions.FindSearchParametersByName`` has been renamed to ``static IEnumerable<VonkSearchParameter> IModelServiceExtensions.FindSearchParametersByCode``
+* Property ``String VonkSearchParameter.Name`` has been renamed to ``String VonkSearchParameter.Code``
+* Property ``String VonkSearchParameterComponent.ParameterName`` has been renamed to ``String VonkSearchParameterComponent.ParameterCode``
+
+.. container:: toggle
+
+    .. container:: header
+
+        List of classes/structs/interfaces removed from the public API
+
+    .. code ::
+
+        Vonk.Core.Common.IGenericResourceResolver
+        Vonk.Core.Common.VonkConstants.ParameterNames
+            renamed to Vonk.Core.Common.VonkConstants.ParameterCodes
+        Vonk.Core.Configuration.ConfigurationLogger
+        Vonk.Core.Configuration.CoreConfiguration
+        Vonk.Core.Conformance.ConformanceConfiguration
+        Vonk.Core.Conformance.IConformanceCache
+        Vonk.Core.Conformance.IConformanceCacheInvalidation
+        Vonk.Core.Context.ContextConfiguration
+        Vonk.Core.Context.Elements.ElementsConfiguration
+        Vonk.Core.Context.Elements.ElementsHandler
+        Vonk.Core.Context.Elements.ElementsMiddleware
+        Vonk.Core.Context.Elements.SummaryConfiguration
+        Vonk.Core.Context.Elements.SummaryMiddleware
+        Vonk.Core.Context.Features.CompartmentFeatureMiddleware
+        Vonk.Core.Context.Features.CompartmentsConfiguration
+        Vonk.Core.Context.Features.VonkContextFeaturesExtensions
+        Vonk.Core.Context.Format.FormatConfiguration
+        Vonk.Core.Context.Format.FormatConformance
+        Vonk.Core.Context.Format.Formatter
+        Vonk.Core.Context.Guards.DefaultShapesConfiguration
+        Vonk.Core.Context.Guards.DefaultShapesService
+        Vonk.Core.Context.Guards.SizeLimits
+        Vonk.Core.Context.Guards.SizeLimitsConfiguration
+        Vonk.Core.Context.Guards.SizeLimitsMiddleware
+        Vonk.Core.Context.Guards.SupportedInteractionConfiguration
+        Vonk.Core.Context.Guards.SupportedInteractionsService
+        Vonk.Core.Context.Http.EndpointMapping
+        Vonk.Core.Context.Http.HttpToVonkConfiguration
+        Vonk.Core.Context.Http.InformationModelEndpointConfiguration
+        Vonk.Core.Context.Http.InformationModelMappingMode
+        Vonk.Core.Context.Http.InformationModelOptions
+        Vonk.Core.Context.Http.VonkExceptionMiddleware
+        Vonk.Core.Context.Http.VonkHttpRequest
+        Vonk.Core.Context.Http.VonkToHttpConfiguration
+        Vonk.Core.Context.Http.VonkToHttpMiddleware
+        Vonk.Core.Context.Internal.VonkInternalArguments
+        Vonk.Core.Context.Internal.VonkResourceContext
+        Vonk.Core.Context.Internal.VonkResourceRequest
+        Vonk.Core.Context.Internal.VonkUrlArguments
+        Vonk.Core.Context.IVonkResponseFeatureExtensions
+        Vonk.Core.Context.OutputPreference.Prefer
+        Vonk.Core.Context.OutputPreference.PreferService
+        Vonk.Core.Context.OutputPreference.SupportedPreferHeaders
+        Vonk.Core.Context.UrlMapping.UriPatchFactory
+        Vonk.Core.Context.UrlMapping.UrlMappingConfiguration
+        Vonk.Core.Context.UrlMapping.UrlMappingService
+        Vonk.Core.Context.VonkBaseArguments
+        Vonk.Core.Context.VonkBaseRequest
+        Vonk.Core.Context.VonkHttpArguments
+        Vonk.Core.Context.VonkResponse
+        Vonk.Core.Import.ArtifactReadService
+        Vonk.Core.Import.FhirRestEndpoint
+        Vonk.Core.Import.FhirRestReader
+        Vonk.Core.Import.IArtifactReader
+        Vonk.Core.Import.IArtifactReaderFactory
+        Vonk.Core.Import.ImportSource
+        Vonk.Core.Import.ReadResult
+        Vonk.Core.Import.ReadResult.ResultState
+        Vonk.Core.Import.SourceSupportAttribute
+        Vonk.Core.Infra.LivenessCheckConfiguration
+        Vonk.Core.Infra.LongRunning.LongRunningConfiguration
+        Vonk.Core.Infra.Maintenance.IMaintenanceJob
+        Vonk.Core.Infra.Maintenance.MaintenanceConfiguration
+        Vonk.Core.Infra.ReadinessCheckConfiguration
+        Vonk.Core.Infra.ResponseCache.CapabilityCache
+        Vonk.Core.Infra.ResponseCache.CapabilityCacheConfiguration
+        Vonk.Core.Infra.ResponseCache.CapabilityCacheExtensions
+        Vonk.Core.Infra.ResponseCache.CapabilityCacheOptions
+        Vonk.Core.Infra.ResponseCache.CapabilityCacheServicesExtensions
+        Vonk.Core.Licensing.LicenseConfiguration
+        Vonk.Core.Licensing.LicenseOptions
+        Vonk.Core.Licensing.LicenseService
+        Vonk.Core.Metadata.CapabilityStatementBuilder
+        Vonk.Core.Metadata.CompartmentInfo
+        Vonk.Core.Metadata.CompartmentReference
+        Vonk.Core.Metadata.CompartmentService
+        Vonk.Core.Metadata.MetadataCache
+        Vonk.Core.Metadata.MetadataConfiguration
+        Vonk.Core.Metadata.ModelService
+        Vonk.Core.Metadata.ModelServiceConformance
+        Vonk.Core.Model.CommonExtensions
+        Vonk.Core.Model.Compartment
+        Vonk.Core.Operations.Capability.CapabilityConfiguration
+        Vonk.Core.Operations.Capability.ConformanceService
+        Vonk.Core.Operations.Capability.VonkCoreConformance
+        Vonk.Core.Operations.Common.IPagingSource
+        Vonk.Core.Operations.Common.PagingService
+        Vonk.Core.Operations.Common.ResourceResolutionException
+        Vonk.Core.Operations.ConditionalCrud.ConditionalCreateConfiguration
+        Vonk.Core.Operations.ConditionalCrud.ConditionalCreateConformance
+        Vonk.Core.Operations.ConditionalCrud.ConditionalCreateService
+        Vonk.Core.Operations.ConditionalCrud.ConditionalCrudConfiguration
+        Vonk.Core.Operations.ConditionalCrud.ConditionalDeleteConfiguration
+        Vonk.Core.Operations.ConditionalCrud.ConditionalDeleteConformance
+        Vonk.Core.Operations.ConditionalCrud.ConditionalDeleteService
+        Vonk.Core.Operations.ConditionalCrud.ConditionalUpdateConfiguration
+        Vonk.Core.Operations.ConditionalCrud.ConditionalUpdateConformance
+        Vonk.Core.Operations.ConditionalCrud.ConditionalUpdateService
+        Vonk.Core.Operations.ConditionalDeleteOptions
+        Vonk.Core.Operations.ConditionalDeleteType
+        Vonk.Core.Operations.Crud.CreateConfiguration
+        Vonk.Core.Operations.Crud.CreateConformance
+        Vonk.Core.Operations.Crud.CreateService
+        Vonk.Core.Operations.Crud.DeleteConfiguration
+        Vonk.Core.Operations.Crud.DeleteConformance
+        Vonk.Core.Operations.Crud.DeleteService
+        Vonk.Core.Operations.Crud.DeleteValidationService
+        Vonk.Core.Operations.Crud.FhirPatchConfiguration
+        Vonk.Core.Operations.Crud.PatchConformance
+        Vonk.Core.Operations.Crud.ReadConfiguration
+        Vonk.Core.Operations.Crud.ReadConformance
+        Vonk.Core.Operations.Crud.ReadService
+        Vonk.Core.Operations.Crud.UpdateConfiguration
+        Vonk.Core.Operations.Crud.UpdateConformance
+        Vonk.Core.Operations.Crud.UpdateService
+        Vonk.Core.Operations.Crud.UpdateServiceBase
+        Vonk.Core.Operations.FhirCapabilities
+        Vonk.Core.Operations.FhirSearchOptions
+        Vonk.Core.Operations.History.HistoryConfiguration
+        Vonk.Core.Operations.History.HistoryConformance
+        Vonk.Core.Operations.History.HistoryOptions
+        Vonk.Core.Operations.History.HistoryService
+        Vonk.Core.Operations.History.VersionReadConfiguration
+        Vonk.Core.Operations.MetaOperation.MetaAddConfiguration
+        Vonk.Core.Operations.MetaOperation.MetaAddService
+        Vonk.Core.Operations.MetaOperation.MetaConfiguration
+        Vonk.Core.Operations.MetaOperation.MetaDeleteConfiguration
+        Vonk.Core.Operations.MetaOperation.MetaDeleteService
+        Vonk.Core.Operations.MetaOperation.MetaService
+        Vonk.Core.Operations.MetaOperation.MetaUtils
+        Vonk.Core.Operations.Provenance.ProvenanceHeaderConfiguration
+        Vonk.Core.Operations.Search.IncludeConfiguration
+        Vonk.Core.Operations.Search.IncludeService
+        Vonk.Core.Operations.Search.SearchConfiguration
+        Vonk.Core.Operations.Search.SearchConformance
+        Vonk.Core.Operations.Search.SearchService
+        Vonk.Core.Operations.SnapshotGeneration.ISnapshotGenerator
+        Vonk.Core.Operations.SnapshotGeneration.SnapshotGenerationConfiguration
+        Vonk.Core.Operations.SnapshotGeneration.SnapshotGenerationConformance
+        Vonk.Core.Operations.SnapshotGeneration.SnapshotGenerationService
+        Vonk.Core.Operations.Transaction.BatchConformance
+        Vonk.Core.Operations.Transaction.BatchMiddleware
+        Vonk.Core.Operations.Transaction.BatchService
+        Vonk.Core.Operations.Transaction.FhirBatchConfiguration
+        Vonk.Core.Operations.Transaction.FhirTransactionConfiguration
+        Vonk.Core.Operations.Transaction.FhirTransactionConformance
+        Vonk.Core.Operations.Transaction.FhirTransactionMiddleware
+        Vonk.Core.Operations.Transaction.FhirTransactionService
+        Vonk.Core.Operations.Transaction.ReferenceResolver
+        Vonk.Core.Operations.Validation.InstanceValidationConfiguration
+        Vonk.Core.Operations.Validation.InstanceValidationService
+        Vonk.Core.Operations.Validation.PrevalidationConfiguration
+        Vonk.Core.Operations.Validation.ProfileFilterConfiguration
+        Vonk.Core.Operations.Validation.ProfileFilterService
+        Vonk.Core.Operations.Validation.StructuralValidationConfiguration
+        Vonk.Core.Operations.Validation.ValidationConfiguration
+        Vonk.Core.Operations.Validation.ValidationConformance
+        Vonk.Core.Operations.Validation.ValidationOptions
+        Vonk.Core.Operations.Validation.ValidationOptions.ValidationLevel
+        Vonk.Core.Operations.Validation.ValidationService
+        Vonk.Core.Operations.VersionsOperation.SupportedFhirVersionsDTO
+        Vonk.Core.Operations.VersionsOperation.VersionsOperationConfiguration
+        Vonk.Core.Operations.VonkImplementationConformance
+        Vonk.Core.Operations.VonkServerConformance
+        Vonk.Core.Pluggability.BaseModelBuilder
+        Vonk.Core.Pluggability.IModelBuilder
+        Vonk.Core.Pluggability.IModelBuilderExtensions
+        Vonk.Core.Pluggability.IRepositoryConformanceSource
+        Vonk.Core.Pluggability.ModelContributors.CompartmentDefinitionConverter
+        Vonk.Core.Pluggability.ModelContributors.ContributorChanged
+        Vonk.Core.Pluggability.ModelContributors.IInformationModelContributor
+        Vonk.Core.Pluggability.ModelContributors.IModelContributor
+        Vonk.Core.Pluggability.ModelContributors.IObservableModelContributor
+        Vonk.Core.Pluggability.ModelContributors.ModelContributorsConfiguration
+        Vonk.Core.Pluggability.ModelServiceCollectionExtensions
+        Vonk.Core.Pluggability.OperationType
+        Vonk.Core.Pluggability.PipelineBranch
+        Vonk.Core.Pluggability.PipelineOptions
+        Vonk.Core.Pluggability.PluggabilityConfiguration
+        Vonk.Core.Pluggability.SupportedModelConfigurationService
+        Vonk.Core.Pluggability.SupportedModelOptions
+        Vonk.Core.Pluggability.VonkConfigurer
+        Vonk.Core.Pluggability.VonkConfigurerConfiguration
+        Vonk.Core.Pluggability.VonkInteractionAsyncMiddleware<TService>
+        Vonk.Core.Pluggability.VonkInteractionMiddleware<TService>
+        Vonk.Core.Pluggability.VonkInteractionMiddlewareExtensions
+        Vonk.Core.Quartz.QuartzConfiguration
+        Vonk.Core.Quartz.QuartzJobFactory
+        Vonk.Core.Quartz.QuartzServicesUtilities
+        Vonk.Core.Repository.ComponentFilterFactory
+        Vonk.Core.Repository.EntryComponent
+        Vonk.Core.Repository.EntryIndexerContext
+        Vonk.Core.Repository.Generic.GenericEntryBuilder<B, E>
+        Vonk.Core.Repository.Generic.GenericEntryFactory<E>
+        Vonk.Core.Repository.Generic.GenericEntryIndexerContext<B, E>
+        Vonk.Core.Repository.Generic.IGenericEntry
+        Vonk.Core.Repository.HistoryEntry
+        Vonk.Core.Repository.HistoryEntryExtensions
+        Vonk.Core.Repository.HistoryResult
+        Vonk.Core.Repository.IAdministrationChangeRepository
+        Vonk.Core.Repository.IDateTimeComponent
+        Vonk.Core.Repository.IEntryComponent
+        Vonk.Core.Repository.IEntryQuery<T>
+        Vonk.Core.Repository.IIndexBatchProcessor
+        Vonk.Core.Repository.INumberComponent
+        Vonk.Core.Repository.IQuantityComponent
+        Vonk.Core.Repository.IReferenceComponent
+        Vonk.Core.Repository.IReplaceRepository
+        Vonk.Core.Repository.IResetRepository
+        Vonk.Core.Repository.IStringComponent
+        Vonk.Core.Repository.ITokenComponent
+        Vonk.Core.Repository.IUriComponent
+        Vonk.Core.Repository.Memory.CanonicalComponent
+        Vonk.Core.Repository.Memory.CompartmentComponent
+        Vonk.Core.Repository.Memory.DateTimeComponent
+        Vonk.Core.Repository.Memory.MemoryEntry
+        Vonk.Core.Repository.Memory.MemoryEntryBuilder
+        Vonk.Core.Repository.Memory.MemoryEntryExtensions
+        Vonk.Core.Repository.Memory.MemoryEntryFactory
+        Vonk.Core.Repository.Memory.MemoryEntryIndexerContext
+        Vonk.Core.Repository.Memory.MemoryIndexingBatch
+        Vonk.Core.Repository.Memory.MemoryQuery
+        Vonk.Core.Repository.Memory.MemoryQueryFactory
+        Vonk.Core.Repository.Memory.NumberComponent
+        Vonk.Core.Repository.Memory.QuantityComponent
+        Vonk.Core.Repository.Memory.ReferenceComponent
+        Vonk.Core.Repository.Memory.StringComponent
+        Vonk.Core.Repository.Memory.TokenComponent
+        Vonk.Core.Repository.Memory.UriComponent
+        Vonk.Core.Repository.QueryBuilderConformance
+        Vonk.Core.Repository.RepositoryIndexSupportConfiguration
+        Vonk.Core.Repository.RepositorySearchSupportConfiguration
+        Vonk.Core.Security.AuthorizationConfiguration
+        Vonk.Core.Security.AuthorizationExceptionMiddleware
+        Vonk.Core.Security.WriteAuthorizer
+        Vonk.Core.Serialization.ParsingOptions
+        Vonk.Core.Serialization.SerializationConfiguration
+        Vonk.Core.Serialization.SerializationService
+        Vonk.Core.Support.AttributeSupportExtensions
+        Vonk.Core.Support.BundleHelpers
+        Vonk.Core.Support.CachedDictionary<K, V>
+        Vonk.Core.Support.Configuration.ConfigurationExtensions
+        Vonk.Core.Support.EnumWrapper<TWrapperEnum, TWrappedEnum>
+        Vonk.Core.Support.Fail<T>
+        Vonk.Core.Support.HttpContextExtensions
+        Vonk.Core.Support.IApplicationBuilderExtensions
+        Vonk.Core.Support.IoAccessWrapper
+        Vonk.Core.Support.IServiceScopeExtensions
+        Vonk.Core.Support.LinqKitExtensions
+        Vonk.Core.Support.ListWrapper<TItemInterface, TItemWrapper, TWrappedItem>
+        Vonk.Core.Support.Ok<T>
+        Vonk.Core.Support.QuantityExtensions
+        Vonk.Core.Support.Result
+        Vonk.Core.Support.Result<T>
+        Vonk.Core.Support.TypedElementExtensions
+        Vonk.Core.Support.UriExtensions
+        Vonk.Core.Support.VonkSearchParameterEqualityComparer
+        Vonk.Core.Support.Wrapper<T>
+        Vonk.Fhir.Operations.Validation.ValidationClient
+
+.. container:: toggle
+
+    .. container:: header
+    
+        List of methods/properties removed from the public API
+
+    .. code ::
+
+        static IResource IResourceExtensions.Cache(this IResource original, String name, Object toCache, Type cacheAsType)
+        static IResource IResourceExtensions.Cache(this IResource original, Object toCache)
+        static IResource IResourceExtensions.Cache<T>(this IResource original, T toCache)
+        static IResource IResourceExtensions.Cache(this IResource original, String name, Object toCache)
+        static IResource IResourceExtensions.Cache<T>(this IResource original, String name, T toCache)
+        static IEnumerable<Object> IResourceExtensions.GetCached(this IResource from, Type cachedAsType = null, String name = null)
+        static IEnumerable<T> IResourceExtensions.GetCached<T>(this IResource from, String name = null)
+        static Boolean IResourceExtensions.TryGetCached<T>(this IResource from, out T result)
+        static Boolean IResourceExtensions.TryGetCached<T>(this IResource from, String name, out T result)
+        static IEnumerable<Object> IResourceExtensions.GetCached(this IResource from, String name)
+        static OperationOutcome IVonkOutcomeExtensions.ToOperationOutcome(this VonkOutcome vonkOutcome, IStructureDefinitionSummaryProvider schemaProvider)
+        static VonkOutcome IVonkOutcomeExtensions.ToVonkOutcome(this OperationOutcome operationOutcome)
+        static void IVonkOutcomeExtensions.AddIssue(this VonkOutcome vonkOutcome, IssueComponent issueComponent)
+        static void QueryableExtensions.RunInBatches<T>(this IQueryable<T> collection, Int32 batchSize, Action<IEnumerable<T>> action)
+        static Task QueryableExtensions.RunInBatchesAsync<T>(this IQueryable<T> collection, Int32 batchSize, Func<IEnumerable<T>, Task> action)
+        SpecificationZipLocator.SpecificationZipLocator(IHostingEnvironment hostingEnv, ILogger<SpecificationZipLocator> logger)
+        static Boolean StringExtensions.TrySplitCanonical(this String reference, out String uri, out String version)
+
+        static VonkSearchParameter IModelServiceExtensions.FindSearchParameterByName(this IModelService modelService, String parameterName, String resourceTypeName)
+            signature changed to static VonkSearchParameter FindSearchParameterByCode(this IModelService modelService, string parameterCode, string resourceTypeName)
+        static IEnumerable<VonkSearchParameter> IModelServiceExtensions.FindSearchParametersByName(this IModelService modelService, String parameterName, params String[] resourceTypeNames)
+            signature changed to static IEnumerable<VonkSearchParameter> IModelServiceExtensions.FindSearchParametersByCode(this IModelService modelService, String parameterCode, params String[] resourceTypeNames)
+        String VonkSearchParameter.Name.get
+            signature changed to String VonkSearchParameter.Code.get
+        void VonkSearchParameter.Name.set
+            signature changed void VonkSearchParameter.Code.set
+        String VonkSearchParameterComponent.ParameterName.get
+            signature changed String VonkSearchParameterComponent.ParameterCode.get
+        void VonkSearchParameterComponent.ParameterName.set
+            signature changed void VonkSearchParameterComponent.ParameterCode.set
+        Q IRepoQueryFactory<Q>.Filter(String parameterName, IFilterValue value)
+            signature changed to Q IRepoQueryFactory<Q>.Filter(String parameterCode, IFilterValue value)
+        IncludeShape.IncludeShape(String sourceType, String parameterName, String[] targetTypes, Boolean recurse = false)
+            signature changed to IncludeShape.IncludeShape(String sourceType, String parameterCode, String[] targetTypes, Boolean recurse = false)
+        RevIncludeShape.RevIncludeShape(String sourceType, String parameterName, String[] targetTypes, Boolean recurse = false)
+            signature changed to RevIncludeShape.RevIncludeShape(String sourceType, String parameterName, String[] targetTypes, Boolean recurse = false)
+        SortShape.SortShape(String parameterName, SearchParamType parameterType, SortDirection direction = SortDirection.ascending, Int32 priority = 1)
+            signature changed to SortShape.SortShape(String parameterCode, SearchParamType parameterType, SortDirection direction = SortDirection.ascending, Int32 priority = 1)
+
+
+
 .. _vonk_releasenotes_5_0_0-beta1:
 
 Release 5.0.0-beta1, January 19th, 2023

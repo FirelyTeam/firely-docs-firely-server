@@ -13,7 +13,7 @@ API cleanup (relevant to plugin developers)
 
 We cleaned up the public API: classes and methods that had been earlier marked as deprecated have now been made private and therefore not available for plugin developers anymore. This makes us more flexible in developing Firely Server in the future because we don't need to maintain the functionality that anyone has hardly used. If you find out that something that you've been using in the previous versions is not available anymore, please get in touch with us.
 
-Additionally, in many places, where we used to refer to SearchParameter.name, we are now using SearchParameter.code. This was made to be more aligned with the specification. For you, as a plugin developer, that means several changes:
+Additionally, in many places where we used to refer to SearchParameter.name, we are now using SearchParameter.code. This was made to be more aligned with the specification. For you, as a plugin developer, that means several changes:
 
 * Class ``Vonk.Core.Common.VonkConstants.ParameterNames`` has been renamed to ``Vonk.Core.Common.VonkConstants.ParameterCodes``
 * Method ``static VonkSearchParameter IModelServiceExtensions.FindSearchParameterByName`` has been renamed to ``static VonkSearchParameter FindSearchParameterByCode``

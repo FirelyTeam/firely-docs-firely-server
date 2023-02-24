@@ -32,10 +32,10 @@ or support contract.
    Configuration <configuration/configuration>
    Deployment <deployment/deployment>
    Features <features/features>
-   Security <security/security>
+   Security & Compliance <security/security>
    Administration API <administration_api>
    Performance <performance/performance>
-   Compliance & Certification <compliance/compliance>
+   Certification <compliance/compliance>
    Programming API Reference & Plugins<reference/reference>
    Tools <tools/tools>
    OpenAPI <openapi/openapi>

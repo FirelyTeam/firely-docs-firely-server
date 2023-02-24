@@ -12,5 +12,7 @@ secure access to the data in your server.
 
    accesscontrol
    auditing
+   gdpr
+   hipaa
 
 .. add files here

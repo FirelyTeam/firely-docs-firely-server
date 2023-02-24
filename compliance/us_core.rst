@@ -1,12 +1,21 @@
 US Core / 21th Century Cures Act
 ================================
 
-* Firely Server provides full profile and interaction support as defined in `"Conforming to US Core" <https://hl7.org/fhir/us/core/general-requirements.html#profile-support--interaction-support>`_:
-  
-  * Firely Server can be populated with resources conforming to US Core
-  * All elements defined as must-support by the implementation guide are supported
-  * All references between FHIR resources defined as must-support by the implementation guide are supported
-  * All search and CRUD interactions defined by US Core are supported, including optional search parameters
+Overview
+^^^^^^^^
+
+   .. note::
+
+     Firely Server v5 has been offically certified against §170.315 g(10) 2015 Cures Edition Health IT. For more details, see our `CHPL listing <https://chpl.healthit.gov/#/organizations/developers/2144>`_.
+     Mandatory disclosures can be found `here <https://fire.ly/g10-certification/>`_.
+
+Firely Server can be used out-of-the-box to comply with important criteria for the 21th Century Cures Act. 
+See the `Standard referenced <https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#test_procedure>`_ section provided by the ONC for a full list of standards working in combination to provide an API conforming to §170.315 g(10) 2015 Cures Edition Health IT.
+
+See `How to Test Firely Server on Inferno <https://fire.ly/ebook-how-to-test-firely-server-on-inferno/>`_ for more information on how to pass the official 21st Century Cures Act test. See :ref:`firely_auth_introduction` for details on how to configure a client to interact with Firely Server and Firely Auth.
+
+Supported versions
+^^^^^^^^^^^^^^^^^^
 
 * Firely provides offical support for the following versions of the US Core ImplementationGuide:
 
@@ -16,15 +25,33 @@ US Core / 21th Century Cures Act
   US Core 3.1.1      ✅         http://hl7.org/fhir/us/core/STU3.1.1/                                 
   US Core 4.0.0      ✅         http://hl7.org/fhir/us/core/STU4/      
   US Core 5.0.1      ✅         http://hl7.org/fhir/us/core/STU5.0.1/ 
- ================== ========= ======================================== 
+ ================== ========= ========================================
 
+* All versions of SMART on FHIR and Bulk Data Access approved for the `SVAP Process in 2022 <https://www.healthit.gov/topic/standards-version-advancement-process-svap>`_ are supported by Firely Server:
+
+ ======================== ======== ============================================
+ ImplementationGuide       Status   References                                                                 
+ ======================== ======== ============================================                                                                             
+  Bulk Data Access 1.0.0   ✅        http://hl7.org/fhir/uv/bulkdata/STU1.0.1                               
+  Bulk Data Access 2.0.0   ✅        http://hl7.org/fhir/uv/bulkdata/STU2     
+  SMART on FHIR 1.0.0      ✅        http://hl7.org/fhir/smart-app-launch/1.0.0
+  SMART on FHIR 2.0.0      ✅        http://hl7.org/fhir/smart-app-launch/STU2 
+ ======================== ======== ============================================  
+
+Conformance & Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Firely Server provides full profile and interaction support as defined in `"Conforming to US Core" <https://hl7.org/fhir/us/core/general-requirements.html#profile-support--interaction-support>`_:
+  
+  * Firely Server can be populated with resources conforming to US Core
+  * All elements defined as must-support by the implementation guide are supported
+  * All references between FHIR resources defined as must-support by the implementation guide are supported
+  * All search and CRUD interactions defined by US Core are supported, including optional search parameters
 
 * All StructureDefinitions for profiles and extensions (v3.1.1) are loaded by default in the standard SQLite administration database of Firely Server. No additional configuration needed in order to validate against these conformance resources.
 
 * A mapping between USCDI and the US Core profiles can be found in the `US Core ImplementationGuide <http://build.fhir.org/ig/HL7/US-Core/uscdi.html>`_.
-  
-See `How to Test Firely Server on Inferno <https://fire.ly/ebook-how-to-test-firely-server-on-inferno/>`_ for more information on how to pass the official 21st Century Cures Act test. See :ref:`firely_auth_introduction` for details on how to configure a client to interact with Firely Server and Firely Auth.
-  
+
 Known Limitations
 ^^^^^^^^^^^^^^^^^
 

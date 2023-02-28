@@ -1,7 +1,7 @@
 .. _upgrade:
 
-How to upgrade Firely Server?
-=============================
+Upgrading Firely Server
+=======================
 
 The process for upgrading Firely Server depends on whether you have a vanilla Firely Server, you added your own plugins or are running a Facade.
 This page describes the general process for each situation. Please refer to the :ref:`vonk_releasenotes` for details per each released version of Firely Server.

@@ -1,3 +1,5 @@
+.. _vonk_performance:
+
 Performance of Firely Server
 ============================
 

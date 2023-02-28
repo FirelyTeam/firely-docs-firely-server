@@ -20,18 +20,14 @@ For non Windows systems, or if you want to use Docker for Windows, please look a
 	For more background on how the settings are processed, see :ref:`configure_appsettings`
 
 5.	Open ``appsettings.json``, copy the ``LicenseFile`` setting from ``appsettings.default.json`` to it and change this property to the name of your license file. For example:
-::
+	::
 
-	{
-    "License": {
-        "LicenseFile": "firelyserver-trial-license.json"
-    }
+		{
+		"License": {
+			"LicenseFile": "firelyserver-trial-license.json"
+		}
 
-
-Configuration
--------------
-
-The section :ref:`configure_vonk` explains how you can further configure the Firely Server.
+1. You can further configure Firely Server by adjusting the ``appsettings.json``. The section :ref:`configure_vonk` explains possible configuration settings.
 
 .. _vonk_run:
 
@@ -62,5 +58,7 @@ Firely Server will by default run on port 4080 of the system. Check if Firely Se
 	
 You will see the following homepage:
    
-.. image:: ../../images/localhost_home.png
+.. image:: ../images/localhost_home.png
   :align: center
+
+The next step is to explore Firely Server functionality using Postman. The section :ref:`postman_tutorial` will guide you through this.

@@ -10,9 +10,5 @@ The pages below describe the use of plugins within firely server. In addition to
    :titlesonly:
 
    Available plugins <available_plugins>
-   Custom Operations <custom_operations/customoperations>
-   bulkdataexport
-   terminology
-   x-provenance
    Custom Plugins <custom_plugins/custom_plugins>
 

@@ -3,10 +3,6 @@
 Access control and SMART on FHIR
 ================================
 
-.. contents:: Contents
-  :depth: 1
-  :local:
-
 .. _feature_accesscontrol_concepts:
 
 Concepts

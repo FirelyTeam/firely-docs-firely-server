@@ -49,7 +49,7 @@ The plugin depends on ``Vonk.Repository.Sql.Raw.KSearchConfiguration`` and ``Von
 Examples
 --------
 
-The examples below use a predefined set of resources. You can add those resources to your instance of the server to reproduce the examples. To do it, please execute the following transaction bundle: :download:`download <../../../_static/files/lastN-example-bundle.json>`. The transaction bundle contains a patient with id = **examplePatient** and a list of Observations for that patient.
+The examples below use a predefined set of resources. You can add those resources to your instance of the server to reproduce the examples. To do it, please execute the following transaction bundle: :download:`download <../../_static/files/lastN-example-bundle.json>`. The transaction bundle contains a patient with id = **examplePatient** and a list of Observations for that patient.
 
 
 Fetch the last 3 results for all vitals for a patient

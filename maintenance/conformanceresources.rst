@@ -187,7 +187,7 @@ Open the project of your choice on https://simplifier.net. There are two limitat
 
 Then on the overview page of the project click 'Endpoint' and copy the value you see there:
 
-   .. image:: ../../images/simplifier-vonk-endpoint.png
+   .. image:: ../images/simplifier-vonk-endpoint.png
       :align: center
 
 By default the endpoint is ``https://stu3.simplifier.net/<projectname>``

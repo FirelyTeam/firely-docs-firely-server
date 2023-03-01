@@ -5,8 +5,103 @@ Current Firely Server release notes (v5.x)
 
 .. _vonk_releasenotes_5_0_0:
 
-Release 5.0.0-beta1, [TBD: specify date]
-----------------------------------------
+Release 5.0.0, February 9th, 2023
+----------------------------------
+
+Configuration
+^^^^^^^^^^^^^
+.. attention::
+    Parts of the configuration were overhauled.
+    If you have adjusted the :ref:`appsettings<configure_appsettings>` either in ``appsettings.instance.json`` or in environment variables, 
+    make sure to to update your configuration accordingly. Please follow the bullets below.
+
+#. The configuration section for additional endpoints in the discovery document and additional issuers in tokens has been reworked. Consult the :ref:`SMART Configuration section<feature_accesscontrol_config>` for more details.
+#. Add this new namespace to the root (``/``) path of the :ref:`PipelineOptions<settings_pipeline>`: ``Vonk.Plugin.Operations``. The result should look like this:
+
+    .. code-block::
+        :emphasize-lines: 8
+
+        "PipelineOptions": {
+            "PluginDirectory": "./plugins",
+            "Branches": [
+            {
+                "Path": "/",
+                "Include": [
+                    "Vonk.Core",
+                    "Vonk.Plugin.Operations",
+                    "Vonk.Fhir.R3",
+                    "Vonk.Fhir.R4",
+                    //etc.
+                ]
+            },
+            {
+                "Path": "/administration",
+                "Include": [
+                    "Vonk.Core",
+                    //etc.
+                ]
+            }
+            ]
+        }
+
+
+Database
+^^^^^^^^
+
+#. Because of feature 6 below, searching on version-specific references, the database was updated for both **SQL Server** and **MongoDB**. Firely Server will usually perform the upgrade automatically. See for details :ref:`migrations`.
+
+   #. SQL Server is upgraded from schema 25 to **26**. The upgrade script file is named ``/sqlserver/FS_SchemaUpgrade_Data_v25_v26.sql``.
+   #. MongoDB is upgraded from schema 24 to **25**. The upgrade script file is named ``/mongodb/FS_SchemaUpgrade_Data_v24_v25``.
+   #. The administration database is not affected by this change, so you don't need to upgrade that.
+
+#. The database upgrade means that you also need an upgraded version of Firely Server Ingest, :ref:`version 2.0<fsi_releasenotes_2.0.0>`
+
+Feature
+^^^^^^^
+
+#. The initial public version of Firely Auth has been released. Firely Auth is an optimized OAuth2 provider that understands SMART on FHIR scopes and the FHIR resource types they apply to out of the box. See :ref:`firely_auth_index` for more information.
+#. The default information model for Firely Server is now R4.
+#. Bulk Data Export now supports SMART on FHIR v2.
+#. Our :ref:`SMART on FHIR documentation <feature_accesscontrol>` has been updated for SMART on FHIR v2.
+#. Contents of AuditEvents can now be modified via a plugin. See :ref:`AuditEvent customization <audit_event_customization>` for further info.
+#. Firely Server now supports searching on version-specific references. Consult the `FHIR specification <https://www.hl7.org/fhir/search.html#versions>`_ for more information.
+#. Firely Server now generates FHIR AuditEvent resources conforming to `IHE Basic Audit Log Patterns <https://profiles.ihe.net/ITI/BALP/index.html>`_. Fields that are included in the audit event log and AuditEvent resources now contain the same content.
+
+Fix
+^^^
+
+#. When performing a Bulk Data Export request with a Firely Server instance running on a SQL database, it will return the Group resource even if it has no members. 
+#. FS now declares support for Bulk Data Export Group export operations in its CapabilityStatement. This features was available before, but missing from FS's CapabilityStatement. 
+#. Bulk Data Export now returns a succesful status code (``202``) instead of an erroneous status code if no resources were matched for an export. The resulting export will include an empty array as described in the `specification <https://hl7.org/fhir/uv/bulkdata/export/index.html#response---complete-status>`_.
+#. Upon commencing a Bulk Data Export, Firely Server now correctly handles ``Prefer`` headers as outlined `in the specification <https://hl7.org/fhir/uv/bulkdata/export/index.html#headers>`_.
+#. ``Device`` can now be added as an additional resource in a Bulk Data export.
+#. Search parameters without a value are now ignored by the server instead of resulting in an error response.
+#. Firely Server now creates valid FHIR R5 AuditEvents.
+#. Searching for a resource with multiple sort fields does not throw an exception anymore when Firely Server runs on a SQL database.
+#. When using the ``If-Modified-Since`` header, only resources that were modified after the specified timestamp are returned. Because of a precision mismatch (seconds vs. milliseconds), wrong resources were sometimes returned before this fix.
+#. When updating a deleted resource conditionally, Firely Server does not throw an exception anymore.
+#. Firely Server now returns the correct issue code (``business-rule`` instead of ``invalid``) in the OperationOutcome when performing a conditional update using ``_id`` as a parameter. Additionally, the error message has been improved when a resource in a different information model is matched via the ``id`` field.
+#. When executing a ``POST``-based search, Firely Server will now return the correct self-link as seen in ``GET``-based searches.
+#. The client id of the default SMART authorization options have been changed from ``vonk`` to ``firelyserver``.
+#. Firely Server now returns improved error messages if the client is not allowed to perform searches.
+#. Support for Firely Server using a SQLite database on arm64-based Macs was improved. 
+#. During SMART on FHIR v2 discovery, Firely Server now returns the ``grant_types_supported`` field.
+#. Firely Server now returns the correct CodeSystem ``http://terminology.hl7.org/CodeSystem/restful-security-service`` within the security section of its ``CapabilityStatement``. Before this change, the old R3 CodeSystem ``http://hl7.org/fhir/restful-security-service`` was falsely returned.
+#. Firely Server will now handle duplicate DLLs and assemblies more gracefully in case they were accidently added to its plugin directory.
+#. When overwriting Search Parameters, the new Search Parameters will now be included in the CapabilityStatement instead of the overwritten ones. This feature was introduced with Firely Server ``4.7.0`` but broke in between the last releases.
+
+Plugin and Facade
+^^^^^^^^^^^^^^^^^
+
+#. Firely Server now uses the `Firely .NET SDK 4.3.0 <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v4.3.0-stu3>`_. Follow the link for an overview of all changes.
+
+.. warning::
+    Due to the above namespace change, all of your plugins need to be recompiled against this FS release.
+
+#. Please note that the ``Vonk.Smart`` package will not be published on NuGet anymore.
+
+
+#. 
 
 API cleanup (relevant to plugin developers)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -337,7 +432,10 @@ Additionally, in many places where we used to refer to SearchParameter.name, we 
         SortShape.SortShape(String parameterName, SearchParamType parameterType, SortDirection direction = SortDirection.ascending, Int32 priority = 1)
             signature changed to SortShape.SortShape(String parameterCode, SearchParamType parameterType, SortDirection direction = SortDirection.ascending, Int32 priority = 1)
 
+Other
+^^^^^
 
+#. Vonk Loader has been deprecated.
 
 .. _vonk_releasenotes_5_0_0-beta1:
 
@@ -356,7 +454,7 @@ Configuration
 #. The configuration section for additional endpoints in the discovery document and additional issuers in tokens has been reworked. Consult the :ref:`SMART Configuration section<feature_accesscontrol_config>` for more details.
 #. Add this new namespace to the root (``/``) path of the :ref:`PipelineOptions<settings_pipeline>`: ``Vonk.Plugin.Operations``. The result should look like this:
 
-    .. code-block:: json
+    .. code-block::
         :emphasize-lines: 8
 
         "PipelineOptions": {

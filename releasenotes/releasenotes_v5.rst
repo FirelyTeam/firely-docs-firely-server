@@ -67,11 +67,11 @@ Feature
 #. Firely Server now generates FHIR AuditEvent resources conforming to `IHE Basic Audit Log Patterns <https://profiles.ihe.net/ITI/BALP/index.html>`_. Fields that are included in the audit event log and AuditEvent resources now contain the same content.
 #. Contents of AuditEvents can now be modified via a plugin. See :ref:`AuditEvent customization <audit_event_customization>` for further info.
 #. Two new operations have been added, namely ``$verify-integrity`` and ``$verify-integrity-status``. These allow you to verify that no AuditEvents have been manipulated on the server. See :ref:`audit_event_integrity` on how to use this feature.
+#. You can now add signatures to ``AuditEvents``. See :ref:`audit_event_integrity` for more information.
 #. Firely Server now supports searching on version-specific references. Consult the `FHIR specification <https://www.hl7.org/fhir/search.html#versions>`_ for more information.
 #. Serilog CorrelationId support has been enabled in Firely Server. Please consult the `official documentation <https://github.com/ekmsystems/serilog-enrichers-correlation-id>`_ on how to configure it.
 #. We have added a public :ref:`Postman collection <postman_tutorial>` to test Firely Server's RESTful endpoints.
-#. You can now add signatures to ``AuditEvents``. See :ref:`audit_event_integrity` for more information.
-#. Wildcard support for ``include`` is now declared in the ``CapabilityStatement``.
+#. Wildcard support for ``include`` is now declared in Firely Server's ``CapabilityStatement``.
 
 Fix
 ^^^
@@ -93,14 +93,14 @@ Fix
 #. Support for Firely Server using a SQLite database on arm64-based Macs was improved. 
 #. During SMART on FHIR v2 discovery, Firely Server now returns the ``grant_types_supported`` field.
 #. Firely Server now returns the correct CodeSystem ``http://terminology.hl7.org/CodeSystem/restful-security-service`` within the security section of its ``CapabilityStatement``. Before this change, the old R3 CodeSystem ``http://hl7.org/fhir/restful-security-service`` was falsely returned.
-#. Firely Server will now handle duplicate DLLs and assemblies more gracefully in case they were accidently added to its plugin directory.
+#. Firely Server will now handle duplicate DLLs and assemblies more gracefully in case they were accidentally added to its plugin directory.
 #. When overwriting Search Parameters, the new Search Parameters will now be included in the CapabilityStatement instead of the overwritten ones. This feature was introduced with Firely Server ``4.7.0`` but broke in between the last releases.
 #. The two SearchParameters ``ConceptMap-target-uri`` and ``ConceptMap-source-uri`` for ``ConceptMap`` have been fixed.
 #. For FHIR STU3 and R4, ``Contract``, ``GuidanceResponse`` and ``Task`` have been added to the ``Patient`` compartment.
 #. Firely Server now returns a ``404`` and ``OperationOutcome`` when the status of a cancelled export is requested.
 #. When preloading resources via Firely Server's import feature, no more errors will be logged if subfolders are present.
 #. Warnings and errors with regards to ``AuditEvent`` indexing problems have been fixed and will no longer appear in the log.
-#. Searching on ``period`` with equal start/end times that are either at the start or beginning of the year will now return the correct results. Previously, these searches did not return any results.
+#. Searches on ``period`` elements that have equal start/end times either at the start or beginning of the year will now return the correct results. Previously, these searches did not return any results.
 #. The US Core ``patient`` search parameters have been fixed. They now only target ``Patient``, not ``Group`` and ``Patient``.
 #. The response for unsupported ``Prefer`` headers has been improved. The ``Prefer`` header's value is now included in the ``OperationOutcome``.
 #. Firely Server will now respond with a ``408`` instead of a ``500`` status code in case the ``$everything`` operation times out.
@@ -545,7 +545,7 @@ Fix
 #. Support for Firely Server using a SQLite database on arm64-based Macs was improved. 
 #. During SMART on FHIR v2 discovery, Firely Server now returns the ``grant_types_supported`` field.
 #. Firely Server now returns the correct CodeSystem ``http://terminology.hl7.org/CodeSystem/restful-security-service`` within the security section of its ``CapabilityStatement``. Before this change, the old R3 CodeSystem ``http://hl7.org/fhir/restful-security-service`` was falsely returned.
-#. Firely Server will now handle duplicate DLLs and assemblies more gracefully in case they were accidently added to its plugin directory.
+#. Firely Server will now handle duplicate DLLs and assemblies more gracefully in case they were accidentally added to its plugin directory.
 #. When overwriting Search Parameters, the new Search Parameters will now be included in the CapabilityStatement instead of the overwritten ones. This feature was introduced with Firely Server ``4.7.0`` but broke in between the last releases.
 
 Plugin and Facade

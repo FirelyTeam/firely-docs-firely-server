@@ -48,7 +48,7 @@ Configuration
 Database
 ^^^^^^^^
 
-#. Because of feature 6 below, searching on version-specific references, the database was updated for both **SQL Server** and **MongoDB**. Firely Server will usually perform the upgrade automatically. See for details :ref:`migrations`.
+#. Because of feature 6 below, searching on version-specific references, the database was updated for both **SQL Server** and **MongoDB**. Firely Server will usually perform the upgrade automatically. For details, see :ref:`migrations`.
 
    #. SQL Server is upgraded from schema 25 to **26**. The upgrade script file is named ``/sqlserver/FS_SchemaUpgrade_Data_v25_v26.sql``.
    #. MongoDB is upgraded from schema 24 to **25**. The upgrade script file is named ``/mongodb/FS_SchemaUpgrade_Data_v24_v25``.
@@ -66,11 +66,11 @@ Feature
 #. Our :ref:`SMART on FHIR documentation <feature_accesscontrol>` has been updated for SMART on FHIR v2.
 #. Firely Server now generates FHIR AuditEvent resources conforming to `IHE Basic Audit Log Patterns <https://profiles.ihe.net/ITI/BALP/index.html>`_. Fields that are included in the audit event log and AuditEvent resources now contain the same content.
 #. Contents of AuditEvents can now be modified via a plugin. See :ref:`AuditEvent customization <audit_event_customization>` for further info.
-#. Two new operations have been added, namely ``$verify-integrity`` and ``$verify-integrity-status``. These allow you to verify that no AuditEvents have been manipulated on the server. See :ref:`_audit_event_integrity` on how to use this feature.
+#. Two new operations have been added, namely ``$verify-integrity`` and ``$verify-integrity-status``. These allow you to verify that no AuditEvents have been manipulated on the server. See :ref:`audit_event_integrity` on how to use this feature.
 #. Firely Server now supports searching on version-specific references. Consult the `FHIR specification <https://www.hl7.org/fhir/search.html#versions>`_ for more information.
-#. Serilog CorrelationId support has been enabled in Firely Server. Please consult the `official documentation <https://github.com/ekmsystems/serilog-enrichers-correlation-id>` on how to configure it.
-#. We have added a public :ref:`Postman collection <_postman_tutorial>` to test Firely Server's RESTful endpoints.
-#. You can now add signatures to ``AuditEvents``. See :ref:`_audit_event_integrity` for more information.
+#. Serilog CorrelationId support has been enabled in Firely Server. Please consult the `official documentation <https://github.com/ekmsystems/serilog-enrichers-correlation-id>`_ on how to configure it.
+#. We have added a public :ref:`Postman collection <postman_tutorial>` to test Firely Server's RESTful endpoints.
+#. You can now add signatures to ``AuditEvents``. See :ref:`audit_event_integrity` for more information.
 #. Wildcard support for ``include`` is now declared in the ``CapabilityStatement``.
 
 Fix
@@ -123,7 +123,7 @@ Plugin and Facade
     Due to the above changes, all of your plugins need to be recompiled against this FS release.
 
 #. Please note that the ``Vonk.Smart`` package will not be published on NuGet anymore.
-#. The ``appsettings`` in our :ref:`Vonk.Facade.Starter project <https://github.com/FirelyTeam/Vonk.Facade.Starter>` now reflect the namespace changes introduced with FS 5.0.0.
+#. The ``appsettings`` in our `Vonk.Facade.Starter project <https://github.com/FirelyTeam/Vonk.Facade.Starter>`_ now reflect the namespace changes introduced with FS 5.0.0.
 
 API cleanup (relevant to plugin developers)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -506,7 +506,7 @@ Configuration
 Database
 ^^^^^^^^
 
-#. Because of feature 6 below, searching on version-specific references, the database was updated for both **SQL Server** and **MongoDB**. Firely Server will usually perform the upgrade automatically. See for details :ref:`migrations`.
+#. Because of feature 6 below, searching on version-specific references, the database was updated for both **SQL Server** and **MongoDB**. Firely Server will usually perform the upgrade automatically. For details, see :ref:`migrations`.
 
    #. SQL Server is upgraded from schema 25 to **26**. The upgrade script file is named ``/sqlserver/FS_SchemaUpgrade_Data_v25_v26.sql``.
    #. MongoDB is upgraded from schema 24 to **25**. The upgrade script file is named ``/mongodb/FS_SchemaUpgrade_Data_v24_v25``.

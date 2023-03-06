@@ -62,6 +62,10 @@ Feature
 #. The initial public version of Firely Auth has been released. Firely Auth is an optimized OAuth2 provider that understands SMART on FHIR scopes and the FHIR resource types they apply to out of the box. See :ref:`firely_auth_index` for more information.
 #. The default information model for Firely Server is now R4.
 #. FHIR R5 is now officially supported and not considered experimental anymore.
+
+   .. attention::
+       If you used R5 with Firely Server before and your administration database is either SQL or MongoDB based, you need to either delete it or reimport all FHIR R5 artifacts. If you use SQLite, you should use our new administration database that is distributed with Firely Server. If you need any assistance, please :ref:`contact us<vonk-contact>`.
+
 #. Bulk Data Export now supports SMART on FHIR v2.
 #. Our :ref:`SMART on FHIR documentation <feature_accesscontrol>` has been updated for SMART on FHIR v2.
 #. Firely Server now generates FHIR AuditEvent resources conforming to `IHE Basic Audit Log Patterns <https://profiles.ihe.net/ITI/BALP/index.html>`_. Fields that are included in the audit event log and AuditEvent resources now contain the same content.
@@ -119,8 +123,8 @@ Plugin and Facade
 #. Firely Server and internal plugins now use the `Firely .NET SDK 5.0.0 <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.0.0>`_. Follow the link for an overview of all changes.
 #. ``Vonk.Core`` now targets ``net6.0``. 
 
-.. warning::
-    Due to the above changes, all of your plugins need to be recompiled against this FS release.
+   .. warning::
+       Due to the above changes, all of your plugins need to be recompiled against this FS release.
 
 #. Please note that the ``Vonk.Smart`` package will not be published on NuGet anymore.
 #. The ``appsettings`` in our `Vonk.Facade.Starter project <https://github.com/FirelyTeam/Vonk.Facade.Starter>`_ now reflect the namespace changes introduced with FS 5.0.0.

@@ -95,7 +95,7 @@ Fix
 #. When updating a deleted resource conditionally, Firely Server does not throw an exception anymore.
 #. Firely Server now returns the correct issue code (``business-rule`` instead of ``invalid``) in the OperationOutcome when performing a conditional update using ``_id`` as a parameter. Additionally, the error message has been improved when a resource in a different information model is matched via the ``id`` field.
 #. When executing a ``POST``-based search, Firely Server will now return the correct self-link as seen in ``GET``-based searches.
-#. Firely Server now returns improved error messages if the client is not allowed to perform searches.
+#. Firely Server now returns improved error messages if the client is not allowed to perform searches due to insufficient SMART v2 scopes.
 #. Support for Firely Server using a SQLite database on arm64-based Macs was improved. 
 #. During SMART on FHIR v2 discovery, Firely Server now returns the ``grant_types_supported`` field.
 #. Firely Server now returns the correct CodeSystem ``http://terminology.hl7.org/CodeSystem/restful-security-service`` within the security section of its ``CapabilityStatement``. Before this change, the old R3 CodeSystem ``http://hl7.org/fhir/restful-security-service`` was falsely returned.

@@ -8,6 +8,8 @@ Current Firely Server release notes (v5.x)
 Release 5.0.0, February 9th, 2023
 ----------------------------------
 
+We are thrilled to announce the release of our new major version 5.0 of Firely Server. The team has worked hard to incorporate new features and improvements that we believe will enhance your experience greatly. We are excited to share this new release with our customers and look forward to their feedback.
+
 Configuration
 ^^^^^^^^^^^^^
 .. attention::
@@ -462,6 +464,9 @@ Other
 ^^^^^
 
 #. Vonk Loader has been deprecated.
+
+.. note::
+    With the release of Firely Server 5.0, we will officially stop support for Firely Server v3.x. We will continue supporting customers that run Firely Server v4.x instances.
 
 .. _vonk_releasenotes_5_0_0-beta1:
 

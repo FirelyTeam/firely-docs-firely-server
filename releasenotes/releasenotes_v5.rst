@@ -6,7 +6,7 @@ Current Firely Server release notes (v5.x)
 .. _vonk_releasenotes_5_0_0:
 
 Release 5.0.0, February 9th, 2023
-----------------------------------
+---------------------------------
 
 We are thrilled to announce the release of our new major version 5.0 of Firely Server. The team has worked hard to incorporate new features and improvements that we believe will enhance your experience greatly. We are excited to share this new release with our customers and look forward to their feedback.
 
@@ -69,6 +69,7 @@ Feature
    .. attention::
        If you used R5 with Firely Server before and your administration database is either SQL or MongoDB based, you need to either delete it or reimport all FHIR R5 artifacts. If you use SQLite, you should use our new administration database that is distributed with Firely Server. If you need any assistance, please :ref:`contact us<vonk-contact>`.
 
+#. Firely Server is now certified according to §170.315 (g)(10) Standardized API for patient and population services, see `our G10 feature page <https://fire.ly/g10-certification/>`_ for more information.
 #. Bulk Data Export now supports SMART on FHIR v2.
 #. Our :ref:`SMART on FHIR documentation <feature_accesscontrol>` has been updated for SMART on FHIR v2.
 #. Firely Server now generates FHIR AuditEvent resources conforming to `IHE Basic Audit Log Patterns <https://profiles.ihe.net/ITI/BALP/index.html>`_. Fields that are included in the audit event log and AuditEvent resources now contain the same content.
@@ -109,7 +110,7 @@ Fix
 #. Searches on ``period`` elements that have equal start/end times either at the start or beginning of the year will now return the correct results. Previously, these searches did not return any results.
 #. The US Core ``patient`` search parameters have been fixed. They now only target ``Patient``, not ``Group`` and ``Patient``.
 #. The response for unsupported ``Prefer`` headers has been improved. The ``Prefer`` header's value is now included in the ``OperationOutcome``.
-#. Firely Server will now respond with a ``408`` instead of a ``500`` status code in case the ``$everything`` operation times out.
+#. Firely Server will now respond more gracefully with a ``408`` instead of a ``500`` status code in case the ``$everything`` operation times out.
 #. Custom ``SearchParameters`` can now include the character '-' in ``code``.
 #. The copyright data in Firely Server's executable has been updated.
 #. Miscellaneous flaws in Firely Server's `Swagger documentation UI <_static/swagger>`_ have been fixed.

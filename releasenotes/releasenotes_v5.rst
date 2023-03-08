@@ -72,6 +72,7 @@ Feature
 #. Firely Server is now certified according to §170.315 (g)(10) Standardized API for patient and population services, see `our G10 feature page <https://fire.ly/g10-certification/>`_ for more information.
 #. Bulk Data Export now supports SMART on FHIR v2.
 #. Our :ref:`SMART on FHIR documentation <feature_accesscontrol>` has been updated for SMART on FHIR v2.
+#. Support for our ``AccessPolicy`` resource has been added. This allows building of custom access policy resources. See the :ref:`AccessPolicy section <feature_accesscontrol_permissions>` to learn more about it.
 #. Firely Server now generates FHIR AuditEvent resources conforming to `IHE Basic Audit Log Patterns <https://profiles.ihe.net/ITI/BALP/index.html>`_. Fields that are included in the audit event log and AuditEvent resources now contain the same content.
 #. Contents of AuditEvents can now be modified via a plugin. See :ref:`AuditEvent customization <audit_event_customization>` for further info.
 #. Two new operations have been added, namely ``$verify-integrity`` and ``$verify-integrity-status``. These allow you to verify that no AuditEvents have been manipulated on the server. See :ref:`audit_event_integrity` on how to use this feature.

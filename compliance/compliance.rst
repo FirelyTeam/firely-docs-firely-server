@@ -4,7 +4,7 @@ Compliance with national ImplementationGuides and certification programs
 ========================================================================
 
 The following section will highlight against which national ImplementationGuides and certification programs Firely Server has been successfully tested.
-Additionally, any necessary configuration to re-produce these testing results will be outlined. Moreover, we provide insights on how Firely Server can contribute to meet HIPAA and GDPR requirements. 
+Additionally, any necessary configuration to re-produce these testing results will be outlined.
 
 .. list-table:: Firely Server Compliance Overview
    :widths: 10, 10, 10, 10

@@ -57,7 +57,7 @@ Database
    #. MongoDB is upgraded from schema 24 to **25**. The upgrade script file is named ``/mongodb/FS_SchemaUpgrade_Data_v24_v25``.
    #. The administration database is not affected by this change, so you don't need to upgrade that.
 
-#. The database upgrade means that you also need an upgraded version of Firely Server Ingest, :ref:`version 2.0<fsi_releasenotes_2.0.1>`
+#. The database upgrade means that you also need an upgraded version of Firely Server Ingest, :ref:`version 2.0.1<fsi_releasenotes_2.0.1>`
 
 Feature
 ^^^^^^^
@@ -118,6 +118,7 @@ Fix
 Security
 ^^^^^^^^
 
+#. We upgraded our MongoDB drivers to fix a recently discovered security vulnerability. According to `CVE <https://cve.mitre.org/>`_ Firely Server is not vulnerable.
 #. All of the contents included in Firely Server's index page are now hosted locally which prevents attackers from injecting malicious Javascript via manipulating externally hosted content.
 
 Plugin and Facade
@@ -467,7 +468,7 @@ Other
 #. Vonk Loader has been deprecated.
 
 .. note::
-    With the release of Firely Server 5.0, we will officially stop support for Firely Server v3.x. We will continue supporting customers that run Firely Server v4.x instances.
+    With the release of Firely Server 5.0, we will officially stop support for Firely Server v3.x. We will continue supporting customers that run Firely Server v4.x.
 
 .. _vonk_releasenotes_5_0_0-beta1:
 

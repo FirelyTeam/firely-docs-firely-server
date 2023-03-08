@@ -127,6 +127,7 @@ Plugin and Facade
 
 #. Firely Server and internal plugins now use the `Firely .NET SDK 5.0.0 <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.0.0>`_. Follow the link for an overview of all changes.
 #. ``Vonk.Core`` now targets ``net6.0``. 
+#. All ``Microsoft.EntityFrameworkCore.*`` packages have been updated to version ``6.0.13``. Please upgrade your plugin or facade to this version as well.
 
    .. warning::
        Due to the above changes, all of your plugins need to be recompiled against this FS release.

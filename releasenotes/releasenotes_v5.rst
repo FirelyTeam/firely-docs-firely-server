@@ -553,7 +553,7 @@ Fix
 #. Firely Server now returns improved error messages if the client is not allowed to perform searches.
 #. Support for Firely Server using a SQLite database on arm64-based Macs was improved. 
 #. During SMART on FHIR v2 discovery, Firely Server now returns the ``grant_types_supported`` field.
-#. Firely Server now returns the correct CodeSystem ``http://terminology.hl7.org/CodeSystem/restful-security-service`` within the security section of its ``CapabilityStatement``. Before this change, the old R3 CodeSystem ``http://hl7.org/fhir/restful-security-service`` was falsely returned.
+#. Firely Server now returns the correct CodeSystem ``http://terminology.hl7.org/CodeSystem/restful-security-service`` within the security section of its R4 ``CapabilityStatement``. Before this change, the old R3 CodeSystem ``http://hl7.org/fhir/restful-security-service`` was falsely returned.
 #. Firely Server will now handle duplicate DLLs and assemblies more gracefully in case they were accidentally added to its plugin directory.
 #. When overwriting Search Parameters, the new Search Parameters will now be included in the CapabilityStatement instead of the overwritten ones. This feature was introduced with Firely Server ``4.7.0`` but broke in between the last releases.
 

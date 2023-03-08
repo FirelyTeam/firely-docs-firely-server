@@ -102,7 +102,7 @@ Fix
 #. Firely Server will now handle duplicate DLLs and assemblies more gracefully in case they were accidentally added to its plugin directory.
 #. When overwriting Search Parameters, the new Search Parameters will now be included in the CapabilityStatement instead of the overwritten ones. This feature was introduced with Firely Server ``4.7.0`` but broke in between the last releases.
 #. The two SearchParameters ``ConceptMap-target-uri`` and ``ConceptMap-source-uri`` for ``ConceptMap`` have been fixed.
-#. For FHIR STU3 and R4, ``Contract``, ``GuidanceResponse`` and ``Task`` have been added to the ``Patient`` compartment.
+#. For FHIR STU3 and R4, ``Contract``, ``GuidanceResponse`` and ``Task`` have been added to the ``Patient`` compartment. This fix is backported from the FHIR R5 release.
 #. Firely Server now returns a ``404`` and ``OperationOutcome`` when the status of a cancelled export is requested.
 #. When preloading resources via Firely Server's import feature, no more errors will be logged if subfolders are present.
 #. Warnings and errors with regards to ``AuditEvent`` indexing problems have been fixed and will no longer appear in the log.

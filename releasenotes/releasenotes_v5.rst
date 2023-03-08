@@ -18,6 +18,7 @@ Configuration
     make sure to to update your configuration accordingly. Please follow the bullets below.
 
 #. The configuration section for additional endpoints in the discovery document and additional issuers in tokens has been reworked. Consult the :ref:`SMART Configuration section<feature_accesscontrol_config>` for more details.
+#. The client id of the default SMART authorization options have been changed from ``vonk`` to ``firelyserver``.
 #. Add this new namespace to the root (``/``) path of the :ref:`PipelineOptions<settings_pipeline>`: ``Vonk.Plugin.Operations``. The result should look like this:
 
     .. code-block::
@@ -63,7 +64,7 @@ Feature
 
 #. The initial public version of Firely Auth has been released. Firely Auth is an optimized OAuth2 provider that understands SMART on FHIR scopes and the FHIR resource types they apply to out of the box. See :ref:`firely_auth_index` for more information.
 #. The default information model for Firely Server is now R4.
-#. FHIR R5 is now officially supported and not considered experimental anymore.
+#. FHIR R5 (based on v5.0.0-snapshot3) is now officially supported and not considered experimental anymore. We will also support the final release of FHIR R5 once it is published.
 
    .. attention::
        If you used R5 with Firely Server before and your administration database is either SQL or MongoDB based, you need to either delete it or reimport all FHIR R5 artifacts. If you use SQLite, you should use our new administration database that is distributed with Firely Server. If you need any assistance, please :ref:`contact us<vonk-contact>`.
@@ -94,7 +95,6 @@ Fix
 #. When updating a deleted resource conditionally, Firely Server does not throw an exception anymore.
 #. Firely Server now returns the correct issue code (``business-rule`` instead of ``invalid``) in the OperationOutcome when performing a conditional update using ``_id`` as a parameter. Additionally, the error message has been improved when a resource in a different information model is matched via the ``id`` field.
 #. When executing a ``POST``-based search, Firely Server will now return the correct self-link as seen in ``GET``-based searches.
-#. The client id of the default SMART authorization options have been changed from ``vonk`` to ``firelyserver``.
 #. Firely Server now returns improved error messages if the client is not allowed to perform searches.
 #. Support for Firely Server using a SQLite database on arm64-based Macs was improved. 
 #. During SMART on FHIR v2 discovery, Firely Server now returns the ``grant_types_supported`` field.

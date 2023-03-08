@@ -3,6 +3,24 @@
 Old Firely Server release notes (v4.x)
 ======================================
 
+.. _vonk_releasenotes_4_10_1:
+
+Release 4.10.1, March 14th, 2023
+---------------------------------
+
+.. attention::
+   This is a security related release which addresses a security vulnerability in the MongoDB driver that Firely Server uses. **This update is highly recommended for all customers.**
+
+Security
+^^^^^^^^
+
+#. We upgraded our MongoDB drivers to fix a recently discovered security vulnerability. According to `CVE <https://cve.mitre.org/>`_ Firely Server is not vulnerable.
+
+Fix
+^^^
+
+#. We fixed a bug where the self-link in a response Bundle was incorrect when using the SearchAnonymization feature.
+
 .. _vonk_releasenotes_4_10_0:
 
 Release 4.10.0, October 6th, 2022

@@ -12,7 +12,7 @@ Additionally, any necessary configuration to re-produce these testing results wi
    
    * - ImplementationGuide
      - Supported version
-     - Supporting Tools
+     - Supporting documentation
      - Realm
      - Package Link
 
@@ -33,8 +33,7 @@ Additionally, any necessary configuration to re-produce these testing results wi
      - * ✔️ v1.0.1
        * ✔️ v2.0.0
   
-     - * :ref:`Firely Server Ingest <tool_fsi>`
-       * :ref:`Bulk Data Export <feature_bulkdataexport>`
+     - * :ref:`Bulk Data Export <feature_bulkdataexport>`
 
      - * 🌍
 

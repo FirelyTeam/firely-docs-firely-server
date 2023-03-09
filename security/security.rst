@@ -1,7 +1,7 @@
 .. _vonk_security:
 
-Security tools
-==============
+Security and Tools
+==================
 
 Here you will find more information on implementing SMART on FHIR in Firely Server along with Firely's authorization tool: Firely Auth.
 You will also find a section describing the steps to be taken for auditing in Firely Server.

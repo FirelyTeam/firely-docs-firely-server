@@ -27,7 +27,7 @@ For non Windows systems, or if you want to use Docker for Windows, please look a
 			"LicenseFile": "firelyserver-trial-license.json"
 		}
 
-1. You can further configure Firely Server by adjusting the ``appsettings.json``. The section :ref:`configure_vonk` explains possible configuration settings.
+6. You can further configure Firely Server by adjusting the ``appsettings.json``. The section :ref:`configure_vonk` explains possible configuration settings.
 
 .. _vonk_run:
 

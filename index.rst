@@ -27,7 +27,7 @@ or support contract.
    Setting up Firely Server <setting_up_firely_server/setting_up_firely_server>
    Maintenance and Management <maintenance/maintenance>
    Features and Tools <features_and_tools/features>
-   Security tools <security/security>
+   Security and Tools <security/security>
    Programming API Reference<reference/reference>
    Compliance & Certification <compliance/compliance>
    Releases <releasenotes/releasenotes>

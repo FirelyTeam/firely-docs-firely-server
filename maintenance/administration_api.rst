@@ -3,15 +3,12 @@
 Firely Server Administration API
 ================================
 
-Besides the regular FHIR endpoint, Firely Server also exposes an Administration API. The endpoint for this is:
+The Administration database utilizes the Administration API. The endpoint for this API is:
 ::
 
    http(s)://<firely-server-endpoint>/administration
 
-Functions
----------
-
-The following functions are available in the Administration API.
+The following functions are available in the Administration API:
 
 * :ref:`conformance`
 * :ref:`feature_subscription`

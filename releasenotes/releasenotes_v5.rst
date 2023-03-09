@@ -115,6 +115,7 @@ Fix
 #. Custom ``SearchParameters`` can now include the character '-' in ``code``.
 #. The copyright data in Firely Server's executable has been updated.
 #. Miscellaneous flaws in Firely Server's `Swagger documentation UI <_static/swagger>`_ have been fixed.
+#. Custom resources are no longer exposed in the CapabilityStatement. The required binding on CapabilityStatement.rest.resource.type led to a validation error.
 
 Security
 ^^^^^^^^

@@ -120,7 +120,7 @@ Fix
 Security
 ^^^^^^^^
 
-#. We upgraded our MongoDB drivers to fix a recently discovered security vulnerability. According to `CVE <https://cve.mitre.org/>`_ Firely Server is not vulnerable.
+#. We upgraded our MongoDB drivers to fix a recently discovered security vulnerability. According to `CVE-2022-4828 <https://www.cve.org/CVERecord?id=CVE-2022-48282>`_ Firely Server is not vulnerable.
 #. All of the contents included in Firely Server's index page are now hosted locally which prevents attackers from injecting malicious Javascript via manipulating externally hosted content.
 
 Plugin and Facade

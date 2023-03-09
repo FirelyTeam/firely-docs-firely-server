@@ -279,6 +279,13 @@ Your license already permits the usage of FSI if it contains ``http://fire.ly/vo
 Release notes
 -------------
 
+.. _fsi_releasenotes_2.0.1:
+
+Release 2.0.1, Feburary 12th, 2023
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Fix: Add support for schema version 25 for MongoDb
+
 .. _fsi_releasenotes_2.0.0:
 
 Release 2.0.0, January 26th, 2023

@@ -4,7 +4,7 @@ Compliance with national ImplementationGuides and certification programs
 ========================================================================
 
 The following section will highlight against which national ImplementationGuides and certification programs Firely Server has been successfully tested.
-Additionally, any necessary configuration to re-produce these testing results will be outlined. Moreover, we provide insights on how Firely Server can contribute to meet HIPAA and GDPR requirements. 
+Additionally, any necessary configuration to re-produce these testing results will be outlined.
 
 .. list-table:: Firely Server Compliance Overview
    :widths: 10, 10, 10, 10, 10
@@ -54,13 +54,13 @@ Additionally, any necessary configuration to re-produce these testing results wi
 
      - * ✔️ v3.1.1
        * ✔️ v4.0.0
-  
-     - 
+       * ✔️ v5.0.1
       
      - * 🇺🇸
 
      - * `hl7.fhir.us.core|3.1.1 <https://registry.fhir.org/package/hl7.fhir.us.core|3.1.1>`_
        * `hl7.fhir.us.core|4.0.0 <https://registry.fhir.org/package/hl7.fhir.us.core|4.0.0>`_
+       * `hl7.fhir.us.core|5.0.1 <https://registry.fhir.org/package/hl7.fhir.us.core|5.0.1>`_
        
 
    * - * `ISiK - Basis (Stufe 1) <https://gematik.github.io/spec-ISiK-Basismodul/IG/1.0.7/ImplementationGuide-markdown-Einfuehrung.html>`_
@@ -79,5 +79,3 @@ Additionally, any necessary configuration to re-produce these testing results wi
 
    us_core
    nictiz
-   gdpr
-   hipaa

@@ -102,7 +102,7 @@ We'll just provide the correct settings here. The settings are documented in det
                 "RequireConsent": true,
                 "RedirectUris": ["https://www.getpostman.com/oauth2/callback", "https://oauth.pstmn.io/v1/callback"],
                 "ClientSecrets": [{"SecretType": "SharedSecret", "Secret": "re4&ih)+HQu~w"}], 
-                "AllowedGrantTypes": ["client_credentials"],
+                "AllowedGrantTypes": ["client_credentials", "authorization_code"],
                 "AllowedSmartLegacyActions": [],
                 "AllowedSmartActions": ["c", "r", "u", "d", "s"],
                 "AllowedSmartSubjects": [ "patient", "user", "system"],
@@ -244,6 +244,10 @@ In **Firely Server**, all the settings are in the section :ref:`SmartAuthorizati
       "ContextBanner"
     ]
   },
+
+.. note::
+    For the scope that is setup in postman to work, you need to have the ``Vonk.Plugin.SoFv2`` plugin enabled and the ``Vonk.Smart`` plugin disabled in your PipelineOptions
+    If you cannot change this, then adjust the scope in the authorization configuration in postman to: ``openid fhirUser user/*.read``
 
 All settings are discussed in detail in :ref:`firely_auth_settings_server`, and we'll focus on the connection with Firely Auth here:
 

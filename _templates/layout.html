@@ -35,3 +35,34 @@
 {% include "searchbox.html" %}
 
 {% endblock %}
+
+{% block footer %}
+ <script type="text/javascript">
+    $(document).ready(function() {
+        $(".toggle > *").hide();
+        $(".toggle .header").show();
+        $(".toggle .header").attr("tabindex", "0");
+        $(".toggle .header").attr("role", "button");
+        $(".toggle .header").click(function(event) {
+            $(this).parent().children().not(".header").slideToggle(400);
+            $(this).parent().children(".header").toggleClass("open");
+
+            event.preventDefault();
+        });
+        $(".toggle .header").keypress(function(event) {
+            if (
+                event instanceof KeyboardEvent &&
+                event.key !== "Enter" &&
+                event.key !== " "
+            ) {
+                return;
+            }
+
+            $(this).parent().children().not(".header").slideToggle(400);
+            $(this).parent().children(".header").toggleClass("open");
+
+            event.preventDefault();
+        });
+    });
+</script>
+{% endblock %}

@@ -9,7 +9,7 @@ Firely Server can log access through the RESTful API for auditing purposes. It h
 #. Include user id and name from the JWT token (if present) in the audit log lines.
 #. Write the audit information as FHIR AuditEvent resources in the Firely Server Data database.
 
-These features can be enabled by including ``Vonk.Plugins.Audit`` in the pipeline.
+These features can be enabled by including ``Vonk.Plugin.Audit`` in the pipeline.
 
 .. code-block:: JavaScript
 
@@ -244,6 +244,262 @@ The table below contains some elements you can find in the generated AuditEvents
 +-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
 | Example ($erase operation)  | :download:`download <../_static/files/audit-event-examples/R3_erase_operation.json>`  | :download:`download <../_static/files/audit-event-examples/R4_erase_operation.json>`  | :download:`download <../_static/files/audit-event-examples/R5_erase_operation.json>`  |
 +-----------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+---------------------------------------------------------------------------------------+
+
+
+.. _audit_event_integrity:
+
+AuditEvent Integrity
+--------------------
+Firely server provides a mechanism to validate the integrity of the AuditEvents. 
+On the one hand, it provides a way to sign the AuditEvent upon creation,
+and on the other hand, it offers a custom operation to validate the signatures, ensuring that the AuditEvents have not been tampered.
+  
+AuditEvent Signature 
+^^^^^^^^^^^^^^^^^^^^
+
+An AuditEvent Signature is a Provenance FHIR resource which contains a signature of the complete AuditEvent FHIR resource JSON. 
+This Provenance FHIR resource also includes a reference to an AuditEvent FHIR resource from which the signature is created. 
+
+.. note::
+
+   AuditEvent Signatures will not get generated if your configuration restricts the list of supported FHIR resources and ``Provenance`` is not included (see :ref:`supportedmodel`).
+
+AuditEvent Integrity Validation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The validation of the AuditEvent integrity is done by checking that the associated signature of an AuditEvent still matches the current AuditEvent content.
+This verification is an asynchronous operation which is triggered by calling the custom operation ``$verify-integrity`` on the AuditEvent type, using
+the AuditEvent search parameters (see https://www.hl7.org/fhir/auditevent.html#search) to specify which AuditEvents should be validated. Note that only
+AuditEvents created before the call are considered.
+
+For example, the following query will trigger the integrity validation of all AuditEvents created in January 2022.
+
+.. code-block:: shell-session
+
+  curl '${BASE_URL}/AuditEvent/$verify-integrity?date=ge2022-01-01&date=le2022-01-31' \
+   --header 'Prefer: respond-async'
+
+If the request succeeds, the status code should be 202, the body should contain an operation outcome with a single issue of information severity
+and the ``Content-Location`` header should contain the URL where the status of the operation can be retrieved.
+
+While the operation is still in progress, the status endpoint should return a 202 status code.
+
+In case of failure during the operation, the status endpoint should return a 4xx or 5xx status code with an operation outcome stating the issue(s).
+
+Finally, once the operation is terminated, the status code of the reply should be 200 and the body should contain an operation outcome.
+If all AuditEvents had a valid signatures, the body should be:
+
+.. code-block:: JavaScript
+
+  {
+    "resourceType": "OperationOutcome",
+    "text": 
+        {
+            "status": "All Audit Event signatures validated",
+            "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>All Audit Event signatures validated</p>\n    </div>"
+        },
+    "issue": [
+       {
+         "severity": "information",
+         "code": "informational",
+         "details": {
+           "text": "xx Audit Event processed"
+         },
+       }
+       {
+         "severity": "information",
+         "code": "informational",
+         "details": {
+           "text": "Transaction time: xxx"
+           }
+       },
+       {
+         "severity": "information",
+         "code": "informational",
+         "details": {
+           "text": "Original Request: xxx"
+           }
+       } 
+    ]
+  }
+
+If some AuditEvents  were not valid, in addition to the informational issues listed above, there should be one processing issue
+(see https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-processing) per validation error:
+ 
+.. code-block:: JavaScript
+   
+  {
+      "severity": "error",
+      "code": "processing",
+      "expression": "AuditEvent/event_id", 
+      "details": {
+        "text": "Signature for the event does not match audit event content"
+        }
+   } 
+    
+
+Finally, if the number of validation failures is higher than the pre-configured threshold, an additional error should be reported:
+
+.. code-block:: JavaScript
+
+  {
+      "severity": "error",
+      "code": "too-costly",
+      "details": {
+          "text": "Process interrupted because too many signature validation errors encountered."
+        }
+   } 
+
+
+
+AuditEvent Integrity Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+By default, the signature of the AuditEvent and their verification is disabled. In order to enable it, you have to modify the settings of the server.
+
+First of all, in the `PipelineOptions`, you need to have `"Vonk.Plugin.Audit.Integrity"` (or a prefix of it) as part of the plugin pipelines. 
+As it is listed in the ``Exclude`` section by default, you have to remove it from this section:
+
+.. code-block:: JavaScript
+
+   "PipelineOptions": {
+      "PluginDirectory": "./plugins",
+      "Branches": [
+         ...
+         "Vonk.Plugin.Audit",
+         ...
+      ],
+      "Exclude": [
+           "Vonk.Subscriptions.Administration"
+         ]
+    },
+
+Also, as part of the ``Administration`` pipeline, you need to enable the support for the asynchronous tasks as they are used
+for the asynchronous processing of the integrity verification operation. This is done by having the Task configuration corresponding
+to the database type used for the administration:
+
+.. code-block:: JavaScript
+  
+  {
+        "Path": "/administration",
+        "Include": [
+          ...
+          "Vonk.Repository.Sql.SqlTaskConfiguration",
+          or
+          "Vonk.Repository.Sqlite.SqliteTaskConfiguration",
+          or
+          "Vonk.Repository.MongoDb.MongoDbTaskConfiguration",
+          ...
+        ]
+      }
+
+
+In addition to the pipelines setup, you need to configure properly the ``Audit`` section of the settings:
+
+.. code-block:: JavaScript
+
+   "Audit": {
+      "AuditEventSignatureEnabled": true, // Default is false
+      "AuditEventSignatureSecret": 
+      {
+          "SecretType": "JWKS", // Currently only supported type
+          // This is an example secret. Generate your own and do not use this example 'Secret' in your configuration!
+          "Secret": "{'keys':[{'kty':'EC','use':'sig','key_ops':['sign','verify'],'alg':'ES256','kid':'66e56ebf-a8de-4cfe-9710-3f2f44ec262f','crv':'P-256','x':'FO0bvAsRHC-wKMczT4xFPWQXI_fhFzqW2l9WxU29Hdc','y':'MHYht76KAnxHhatfB_BdyIuUtbpkK0g0Wuy5940oei4','d':'Nt1RXXNt6s5ytd88T7YhRePd7BqC4rh5WCOtJxdOzTs'}]}"
+      },
+      "AsyncProcessingRepeatPeriod" : 10000,
+      "InvalidAuditEventProcessingThreshold" : 100,
+      "AuditEventVerificationBatchSize": 20 
+    },
+
+with:
+
+``AuditEventSignatureEnabled`` must be set to ``true`` to enable the signature generation.
+
+``AuditEventSignatureSecret`` specifies the secret to be used when signing the AuditEvent. Currently, it can only contain a JSON Web Key Set ``Secret``. 
+ A JSON Web Key Set (JWKS) is a set of JSON Web Tokens (JWT) keys. The next section details how to generate a JWKS.
+
+.. note::
+
+   Currently only the first key in a JSON Web Key Set is used to create signature of an AuditEvent.
+
+``AsyncProcessingRepeatPeriod`` defines the period in milliseconds for the loop checking if a new integrity validation request is pending.
+
+``InvalidAuditEventProcessingThreshold`` specifies the threshold on the maximum number of invalid AuditEvent signatures. Once this threshold
+is reached, the operation is terminated and a specific issue is log in the operation outcome.
+
+``AuditEventVerificationBatchSize`` specifies the batch size when validating the AuditEvent signatures, 
+expressed as number of AuditEvent to verify in one step. We recommend to to set this value to 500 when using SqlServer or MongoDb as data backend, and 
+20 when using SQLite.
+        
+.. note::
+   
+   When using SQLite, setting ``AuditEventVerificationBatchSize`` will prevent the validation of AuditEvent signature as SQLite 
+   has a limitation on the query size it supports. Concretely, when the provided value is too large, the `$verify-signature`operation 
+   would fail, indicating the following error:
+   ``SqliteException (0x80004005): SQLite Error 1: 'parser stack overflow'``
+
+Finally, in order to enable the integrity verification, the corresponding custom operations must be listed as part of the
+``SupportedInteractions``. 
+For that, you have to add the type-level custom operations ``$verify-integrity`` and the system-level custom operation ``$verify-integrity-status``, as follows: 
+
+.. code-block:: JavaScript
+
+  "SupportedInteractions": {
+    "InstanceLevelInteractions": "...",
+    "TypeLevelInteractions": "..., $verify-integrity",
+    "WholeSystemInteractions": "..., $verify-integrity-status"
+  }
+
+JSON Web Key Set generation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The following code snippet in C# is an example how you can generate a JSON Web Key Set. 
+
+.. code-block:: CSharp
+
+   using CreativeCode.JWK.KeyParts;
+   using CreativeCode.JWK;
+   
+   ...
+    
+   private static string CreateJSONWebKeySet()
+   {
+       var algorithm = Algorithm.ES256;
+       var keyUse = PublicKeyUse.Signature;
+       var keyOperations = new HashSet<KeyOperation>(new[] 
+                                { 
+                                    KeyOperation.ComputeDigitalSignature, 
+                                    KeyOperation.VerifyDigitalSignature 
+                                });
+       var jwk = new JWK(algorithm, keyUse, keyOperations);
+       var jwks = new JWKS(new[]{ jwk });
+
+       return jwks.Export();
+   }
+
+Output of ``CreateJSONWebKeySet`` should look like this
+
+.. code-block:: CSharp
+
+  {"keys":[{"kty":"EC","use":"sig","key_ops":["sign","verify"],"alg":"ES256","kid":"66e56ebf-a8de-4cfe-9710-3f2f44ec262f","crv":"P-256","x":"FO0bvAsRHC-wKMczT4xFPWQXI_fhFzqW2l9WxU29Hdc","y":"MHYht76KAnxHhatfB_BdyIuUtbpkK0g0Wuy5940oei4","d":"Nt1RXXNt6s5ytd88T7YhRePd7BqC4rh5WCOtJxdOzTs"}]}
+
+
+If you are using Ubuntu linux, you can also install ``jose`` command to generate a JSON Web Key Set.
+
+Install Ubuntu package ``jose``
+
+.. code-block:: shell-session
+  
+  sudo apt install jose -y
+
+Generate JSON Web Key Set
+
+.. code-block:: shell-session
+
+  jose jwk gen -i '{"kty":"EC","crv":"P-256","use":"sig","key_ops":["sign","verify"],"alg":"ES256","kid":"yourkeyid"}' -s -o ec.jwk
+
+.. note::
+
+   Replace ``"`` with ``'`` in the output to use it as ``Secret`` of ``AuditEventSignatureSecret`` in Audit plugin configuration,
+
 
 
 .. _audit_event_customization:

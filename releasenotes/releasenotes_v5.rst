@@ -5,7 +5,7 @@ Current Firely Server release notes (v5.x)
 
 .. _vonk_releasenotes_5_0_0:
 
-Release 5.0.0, February 9th, 2023
+Release 5.0.0, March 9th, 2023
 ---------------------------------
 
 We are thrilled to announce the release of our new major version 5.0 of Firely Server. The team has worked hard to incorporate new features and improvements that we believe will enhance your experience greatly. We are excited to share this new release with our customers and look forward to their feedback.

@@ -9,12 +9,12 @@ Release 4.10.1, March 13th, 2023
 ---------------------------------
 
 .. attention::
-   This is a security related release which addresses a vulnerability in the MongoDB driver that Firely Server uses. This update is highly recommended for all customers that use MongoDB as a database or are planning to do so.
+   This is a security related release which addresses a vulnerability in the C# MongoDB driver that Firely Server uses. This update is highly recommended for all customers that use MongoDB as a database or are planning to do so.
 
 Security
 ^^^^^^^^
 
-#. We upgraded our MongoDB drivers to fix a recently discovered security vulnerability. According to `CVE-2022-48282 <https://www.cve.org/CVERecord?id=CVE-2022-48282>`_ Firely Server is not vulnerable.
+#. We upgraded our MongoDB drivers to fix a recently discovered security vulnerability. According to `CVE-2022-48282 <https://www.cve.org/CVERecord?id=CVE-2022-48282>`_ Firely Server is not vulnerable after the update.
 
 Fix
 ^^^

@@ -56,6 +56,8 @@ Additionally, any necessary configuration to re-produce these testing results wi
        * ✔️ v4.0.0
        * ✔️ v5.0.1
       
+     -
+     
      - * 🇺🇸
 
      - * `hl7.fhir.us.core|3.1.1 <https://registry.fhir.org/package/hl7.fhir.us.core|3.1.1>`_
@@ -79,3 +81,5 @@ Additionally, any necessary configuration to re-produce these testing results wi
 
    us_core
    nictiz
+   gdpr
+   hipaa

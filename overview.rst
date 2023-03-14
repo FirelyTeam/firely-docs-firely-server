@@ -10,6 +10,11 @@ Firely Server is a turn-key FHIR Server that you can :ref:`set up within minutes
 You can try out Firely server for free, either using the sandbox environment at https://server.fire.ly, or by downloading an evaluation or community license from `Simplifier.net <https://simplifier.net/firely-server>`_.
 The sandbox environment is mostly intended for testing and educational purposes, you can explore the sandbox using our Swagger-based `web UI <_static/swagger>`_. The evaluation license allows you to explore all the functionality of Firely Server during a week. After this period, it is possible to renew your license by contacting us at server@fire.ly.
 
+.. image:: ./images/FirelyServer_01.png
+  :align: right
+  :width: 250px
+  :alt: Illustration of Firely server
+
 You also have the option to use Firely Server for free with a community license, however you will have fewer options than with the evaluation license, and can only use SQLite as a repository database.
 
 If you are interested in Firely Server for commercial use within your organization, we provide professional licensing in different tiers: Startup or Scale.
@@ -23,6 +28,11 @@ Once you familiarized yourself with Firely Server, you can start exploring the c
 Firely Server makes use of a repository database to save resources in, as well as a smaller administration database. You have several options for these two :ref:`databases <configure_repository>`: :ref:`SQLite <configure_sqlite>` is configured by default, but for serious use you'd want to configure :ref:`MongoDB <configure_mongodb>` or :ref:`SQL Server <configure_sql>`.
 
 Next, you might want to think about the method of :ref:`deploying Firely Server <deployment>`. Again, you have several options here, either running :ref:`Firely Server on Docker<use_docker>`, deploying Firely Server with :ref:`kubernetes<deploy_helm>`, hosting Firely Server on :ref:`Azure<azure_webapp>` or using a :ref:`reverse proxy<deploy_reverseProxy>`.
+
+.. image:: ./images/FirelyDeployment.png
+  :align: right
+  :width: 250px
+  :alt: Illustration of Firely server
 
 With the database configuration and the deployment in place, it is time to tweak your configuration. Make sure Firely Server validates all incoming resources by configuring the :ref:`validation setting<feature_prevalidation>`.
 Configure :ref:`endpoints <feature_multiversion_endpoints>` for FHIR versions that you want to support, either FHIR STU3, FHIR R4, or FHIR R5. Next, configure the :ref:`processing pipeline<settings_pipeline>` to take along the :ref:`plugins<vonk_plugins_total>` that you would like to use. You also have the option to include :ref:`custom plugins<vonk_plugins>` of your own design.
@@ -38,6 +48,11 @@ You can also further configure the :ref:`administration database <administration
 
 Learning more
 -------------
+
+.. image:: ./images/FirelyTraining.png
+  :align: right
+  :width: 250px
+  :alt: Illustration of Firely server
 
 If you would like to get more familiar with Firely Server and the options it offers, Firely offers `courses <https://fire.ly/training/>`_ on Firely Server as well as the SDK on which it is based. These courses are tailored to the needs of you and your team. You can pick the timeslot for this training that fits your schedule. In addition to the Firely Server course there is also a wide range of other courses available to get acquainted or more experienced with FHIR and the FHIR tooling provided by Firely.
 Additional information can be found `on Firely's resource page <https://fire.ly/resources/>`_. Also, don't forget to take a look at `our interesting blogposts <https://fire.ly/blog/>`_.

@@ -197,6 +197,7 @@ See :ref:`firely_auth_deploy_sql` for details on setting up the database.
 
   "UserStore": {
       "Type": "InMemory", // InMemory | SqlServer
+      "PasswordHashIterations": 600000,
       "InMemory": {
           "AllowedUsers": [
               {
@@ -217,6 +218,7 @@ See :ref:`firely_auth_deploy_sql` for details on setting up the database.
   },
 
 - ``Type``: select the type of store to use
+- ``PasswordHashIterations``: number of password hash iterations to prevent brute force attacks. Default 600000. Sync this value when using Firely Auth Management App :ref:`firely_auth_mgmt`.
 - ``InMemory``: settings for the InMemory store
 
   - ``AllowedUsers``: list of users

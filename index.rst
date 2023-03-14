@@ -2,10 +2,7 @@ Welcome to the Firely Server's documentation!
 =============================================
 
 `Firely Server <https://fire.ly/products/vonk/>`_ is Firely's FHIR server. It was formerly named 'Vonk' and is the successor to our Spark server.
-
 Firely Server is the answer to the growing need for a stable server that can be used in a variety of production environments.
-A public sandbox is available at https://server.fire.ly, which is is free to use and intended for
-testing and educational purposes only. For convenience, the public server API can be explored using our Swagger-based `web UI <_static/swagger>`_.
 
 .. image:: ./images/firelyserver_home.png
   :align: center
@@ -26,17 +23,13 @@ or support contract.
    :caption: Firely Server Docs:
 
    Overview <overview>
-   Getting started <getting_started>
-   Releases & upgrade management <releasenotes/releasenotes>
+   Getting started <getting_started/getting_started>
+   Setting up Firely Server <setting_up_firely_server/setting_up_firely_server>
+   Maintenance and Management <maintenance/maintenance>
+   Features and Tools <features_and_tools/features>
+   Security and Tools <security/security>
+   Programming API Reference<reference/reference>
+   Compliance & Certification <compliance/compliance>
+   Releases <releasenotes/releasenotes>
    FAQ <faq>
-   Configuration <configuration/configuration>
-   Deployment <deployment/deployment>
-   Features <features/features>
-   Security & Compliance <security/security>
-   Administration API <administration_api>
-   Performance <performance/performance>
-   Certification <compliance/compliance>
-   Programming API Reference & Plugins<reference/reference>
-   Tools <tools/tools>
-   OpenAPI <openapi/openapi>
    contact

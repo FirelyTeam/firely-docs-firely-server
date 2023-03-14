@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Firely Server'
-copyright = '2021, Firely'
+copyright = '2023, Firely'
 author = 'Firely'
 
 
@@ -59,4 +59,4 @@ html_static_path = ['_static']
 
 master_doc = 'index'
 html_theme_options = {
-    'navigation_depth': 3}
+    'navigation_depth': 5}

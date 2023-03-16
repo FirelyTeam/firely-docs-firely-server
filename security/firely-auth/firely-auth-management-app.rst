@@ -24,8 +24,11 @@ Commands and parameters
 
 For brevity here is a full list of the available commands and their parameters.
 
-The parameter '--connectionString' or `-cs` is used multiple times. Use the same connectionstring as in :ref:`firely_auth_deploy_sql`.
-You can set the connectionstring in an environment variable ``FIRELY_IDENTITY_SERVER_USERS_CONNECTION_STRING`` so you don't need to repeat it all the time.
+The parameter `--connectionString` or `-cs` is used multiple times. Use the same connectionstring as in :ref:`firely_auth_deploy_sql`.
+You can set the connectionstring in an environment variable ``FIRELY_IDENTITY_SERVER_USERS_CONNECTION_STRING`` so it doesn't need repeating.
+
+The parameter `--passwordHashIterations` or `-hi` is also used multiple times. Use the same passwordHashIterations as in :ref:`firely_auth_settings`.
+You can set the passwordHashIterations in an environment variable ``FIRELY_IDENTITY_SERVER_USERS_PASSWORD_HASH_ITERATIONS`` so it doesn't need repeating.
 
 - ``./Firely.IdentityServer.ManagementApp.exe```
 
@@ -35,18 +38,28 @@ You can set the connectionstring in an environment variable ``FIRELY_IDENTITY_SE
     - ``list``: list all users
       
       ``-cs, --connectionString``
+      
+      ``-hi, --passwordHashIterations``
 
     - ``create``: create a new user, specifying username and password
       
-      ``-cs, --connectionString``
       ``-u, --username``: username
+      
       ``-p, --password``: password - enclose in double quotes if it contains spaces.
+      
       ``-cl`, --claim <name=value> [<name=value> ...]``: list of additional claims for this user, see 'AdditionalClaims' under :ref:`firely_auth_settings_userstore`
+      
+      ``-cs, --connectionString``
+      
+      ``-hi, --passwordHashIterations``
 
     - ``delete``: delete a user so the user no longer has access
       
       ``-u, --username``: username
+      
       ``-cs, --connectionString``
+      
+      ``-hi, --passwordHashIterations``
 
 .. _firely_auth_mgmt_password:
 

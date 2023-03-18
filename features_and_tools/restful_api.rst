@@ -91,6 +91,8 @@ Firely Server also supports ``_include:iterate`` and ``_revinclude:iterate``, as
 
 .. warning:: ``_include`` isn't supported for a versioned reference
 
+.. _navigational_links:
+
 Navigational links
 ^^^^^^^^^^^^^^^^^^
 The "next", "prev", and "last" link may contain privacy-sensitive information as part of a search parameter value. In order to not expose these values in logs, the :ref:`Vonk.Plugin.SearchAnonymization<vonk_plugins_searchAnonymization>` plugin can be used. It will replace the query parameter part of the navigational link with an opaque UUID. The plugin must be used starting with FHIR R5 as the specification mandates the removal of sensitive information.

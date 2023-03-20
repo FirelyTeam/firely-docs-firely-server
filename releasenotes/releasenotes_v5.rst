@@ -81,6 +81,7 @@ Feature
 #. Serilog CorrelationId support has been enabled in Firely Server. Please consult the `official documentation <https://github.com/ekmsystems/serilog-enrichers-correlation-id>`_ on how to configure it.
 #. We have added a public :ref:`Postman collection <postman_tutorial>` to test Firely Server's RESTful endpoints.
 #. Wildcard support for ``include`` is now declared in Firely Server's ``CapabilityStatement``.
+#. Navigational links (next, prev, last) in a searchset bundle are now anonymized by default. Privacy-sensitive information in search parameter values are hidden behind a UUID. Please note that this behaviour is required by FHIR R5 and can only be disabled in FHIR R4 and STU3. See :ref:`navigational_links` for more information.
 
 Fix
 ^^^
@@ -134,6 +135,7 @@ Plugin and Facade
        Due to the above changes, all of your plugins need to be recompiled against this FS release.
 
 #. Please note that the ``Vonk.Smart`` package will not be published on NuGet anymore.
+#. A new plugin is bundled together by default with Firely Server: Vonk.Plugin.SearchAnonymization. Please see the feature section above for a description. The plugin is enabled by default in the pipeline options.
 #. The ``appsettings`` in our `Vonk.Facade.Starter project <https://github.com/FirelyTeam/Vonk.Facade.Starter>`_ now reflect the namespace changes introduced with FS 5.0.0.
 
 API cleanup (relevant to plugin developers)

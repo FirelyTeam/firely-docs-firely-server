@@ -236,9 +236,20 @@ http and https
         //"CertificatePassword" : "<cert-pass>" // Relevant when HttpsPort is present
         //"PathBase": "<subpath-to-firely-server>",
         "ClientCertificateMode": "NoCertificate" // NoCertificate, AllowCertificate, RequireCertificate
+        "Limits": {
+            "MaxRequestBufferSize": 2097152 // Kestrel default: 1048576.
+        }   
     },
 
 Refer to :ref:`configure_hosting` for enabling https and adjusting port numbers. The `PathBase` enables the option to specify a path as part of root path (See `PathBase middleware <https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.usepathbaseextensions.usepathbase?view=aspnetcore-6.0>`_ for more information). The `ClientCertificateMode` will instruct Firely Server to request or require a TLS client certificate (See `ASP .NET Core - Client Certificates <https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?view=aspnetcore-6.0#client-certificates>`_ for more information).
+
+The :code:`Limits` is mapped to 
+`KestrelServerLimits <https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.server.kestrel.core.kestrelserverlimits?view=aspnetcore-6.0>`_
+and allows to modify the default Kestrel limits by adding the relevant property. 
+In the example above, the default value of 1048576 of the property :code:`MaxRequestBufferSize` is overriden by  2097152.
+You could similarly modify the default value for the maximum number of concurrent connections, 
+`MaxConcurrentConnections <https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.server.kestrel.core.kestrelserverlimits.maxconcurrentconnections?view=aspnetcore-6.0#microsoft-aspnetcore-server-kestrel-core-kestrelserverlimits-maxconcurrentconnections>`_, 
+however, we recommend using a reverse proxy in front of Firely server, see :ref:`reverse proxy<deploy_reverseProxy>`, and let the reverse proxy take care of those aspects.
 
 .. _validation_options:
 

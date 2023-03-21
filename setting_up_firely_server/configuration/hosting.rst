@@ -65,6 +65,3 @@ If you need your server to run on https instead of http, follow these steps:
 	  with the name :code:`VONK_Hosting:CertificatePassword` and the value set to your password
 
 *   You can choose to comment-out the ``HttpPort`` setting, so Firely Server will no longer be available through unsecured http.
-
-
-            

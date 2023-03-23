@@ -29,30 +29,49 @@ Firely Server makes use of a repository database to save resources in, as well a
 
 Next, you might want to think about the method of :ref:`deploying Firely Server <deployment>`. Again, you have several options here, either running :ref:`Firely Server on Docker<use_docker>`, deploying Firely Server with :ref:`kubernetes<deploy_helm>`, hosting Firely Server on :ref:`Azure<azure_webapp>` or using a :ref:`reverse proxy<deploy_reverseProxy>`.
 
+With the database configuration and the deployment in place, it is time to tweak your configuration. Make sure Firely Server validates all incoming resources by configuring the :ref:`validation setting<feature_prevalidation>`.
+Configure :ref:`endpoints <feature_multiversion_endpoints>` for FHIR versions that you want to support, either FHIR STU3, FHIR R4, or FHIR R5. Next, configure the :ref:`processing pipeline<settings_pipeline>` to take along the :ref:`plugins<vonk_plugins_total>` that you would like to use. You also have the option to include :ref:`custom plugins<vonk_plugins>` of your own design.
+
+You can also further configure the :ref:`administration database <administration_api>` that allows you to configure the so-called :ref:`conformance resources <conformance>` that drive parsing, serialization, validation and terminology. The administration database is pre-filled with conformance resources such as the StructureDefinitions, Searchparameters, CodeSystems and ValueSets that come with the FHIR Specification. Beyond that you can use the administration database to make Firely Server aware of:
+
 .. image:: ./images/FirelyDeployment.png
   :align: right
   :width: 250px
   :alt: Illustration of Firely server
-
-With the database configuration and the deployment in place, it is time to tweak your configuration. Make sure Firely Server validates all incoming resources by configuring the :ref:`validation setting<feature_prevalidation>`.
-Configure :ref:`endpoints <feature_multiversion_endpoints>` for FHIR versions that you want to support, either FHIR STU3, FHIR R4, or FHIR R5. Next, configure the :ref:`processing pipeline<settings_pipeline>` to take along the :ref:`plugins<vonk_plugins_total>` that you would like to use. You also have the option to include :ref:`custom plugins<vonk_plugins>` of your own design.
-
-
-You can also further configure the :ref:`administration database <administration_api>` that allows you to configure the so-called :ref:`conformance resources <conformance>` that drive parsing, serialization, validation and terminology. The administration database is pre-filled with conformance resources such as the StructureDefinitions, Searchparameters, CodeSystems and ValueSets that come with the FHIR Specification. Beyond that you can use the administration database to make Firely Server aware of:
 
 * Custom profiles, e.g. national or institutional restrictions on the standard FHIR resources.
 * :ref:`Custom resources <feature_customresources>`: you can even define resources beyond those in FHIR and they are treated as if they were standard FHIR resources.
 * CodeSystem and ValueSet resources for :ref:`terminology <feature_terminology>`.
 * :ref:`Custom Searchparameters <feature_customsp>`: have Firely Server index and search resources on properties that are not searchable with the searchparameters from the FHIR Specification itself.
 
+Extend Firely Server's functionality
+------------------------------------
+
+With all configuration in place, you may want to extend the functionality of Firely Server by making use of add-ons below:
+
+* Use :ref:`Firely Auth<firely_auth_index>` as your SMART on FHIR optimized authorization service
+* Easily export bulk data using the :ref:`Bulk Data Export plugin <feature_bulkdataexport>`
+* Allow mass ingestion of FHIR resources with :ref:`Firely Server Ingest<tool_fsi>`
+* Customize Firely Server with :ref:`plugins of your own design<vonk_plugins>`
 
 Learning more
 -------------
+
+If you would like to get more familiar with Firely Server and the options it offers, Firely offers `courses <https://fire.ly/training/>`_ on Firely Server as well as the SDK on which it is based. These courses are tailored to the needs of you and your team. You can pick the timeslot for this training that fits your schedule. In addition to the Firely Server course there is also a wide range of other courses available to get acquainted or more experienced with FHIR and the FHIR tooling provided by Firely.
+Additional information can be found `on Firely's resource page <https://fire.ly/resources/>`_. Also, don't forget to take a look at `our interesting blogposts <https://fire.ly/blog/>`_.
+
+Quick navigation
+----------------
 
 .. image:: ./images/FirelyTraining.png
   :align: right
   :width: 250px
   :alt: Illustration of Firely server
 
-If you would like to get more familiar with Firely Server and the options it offers, Firely offers `courses <https://fire.ly/training/>`_ on Firely Server as well as the SDK on which it is based. These courses are tailored to the needs of you and your team. You can pick the timeslot for this training that fits your schedule. In addition to the Firely Server course there is also a wide range of other courses available to get acquainted or more experienced with FHIR and the FHIR tooling provided by Firely.
-Additional information can be found `on Firely's resource page <https://fire.ly/resources/>`_. Also, don't forget to take a look at `our interesting blogposts <https://fire.ly/blog/>`_.
+Below you will find some links that help you navigate through the documentation:
+
+ *  :ref:`I want to run Firely Server as a standalone app <vonk_basic_installation>`
+ *  :ref:`I want to add a FHIR API to my database <vonk_facade>`
+ *  :ref:`I want to design my own plugins for Firely Server <vonk_plugins_total>`
+ *  :ref:`I want to learn more about Firely Server’s architecture <architecture>`
+ *  :ref:`I want to see the latest release notes <vonk_releasenotes>`

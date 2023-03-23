@@ -10,4 +10,4 @@ To ease the process we provide a helm chart to deploy Firely Server on the clust
 
 All the settings are described in the `Read.me <https://github.com/FirelyTeam/Helm.Charts/tree/main/firely-server>`_.
 
-The same repository also contains a helm chart to deploy :ref:`Identity Server <feature_accesscontrol_idprovider>`, but that is very early still. Documentation and settings will be added to that as well.
+The same repository also contains a helm chart to deploy :ref:`Firely Auth <feature_accesscontrol_idprovider>`, but that is very early still. Documentation and settings will be added to that as well.

@@ -3,6 +3,11 @@
 Firely Server Ingest (FSI)
 ==========================
 
+.. note::
+  This application is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
+  Your license already permits the usage of FSI if it contains ``http://fire.ly/vonk/plugins/bulk-data-import``.
+
+
 **Firely Server Ingest (FSI)** is a CLI application designed to optimize massive resource ingestion into a Firely Server instance. In contrast to resource ingestion by sending HTTP requests to a running Firely Server instance, this tool writes data directly to the underlying FS database which increases the throughput significantly.
 
 The tool supports ingestion into SQL Server and MongoDB databases.
@@ -269,12 +274,6 @@ Known issues
 * When importing data from large ``*.ndjson`` files, the memory consumption may be quite high.
 * When importing STU3 resources, the field ``Patient.deceased`` will always be set to ``true`` if it exists. This is caused by an error in the FHIR STU3 specification. In case you would like to use FSI with STU3 resources, please :ref:`contact us<vonk-contact>`.
 
-Licensing
----------
-
-The application is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
-
-Your license already permits the usage of FSI if it contains ``http://fire.ly/vonk/plugins/bulk-data-import``.
 
 Release notes
 -------------

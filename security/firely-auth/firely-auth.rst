@@ -4,9 +4,13 @@ Firely Auth
 ===========
 .. _feature_accesscontrol_idprovider:
 
+.. note::
+   Firely Auth is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
+   Your license already permits the usage of Firely Auth if it contains ``http://fire.ly/server/auth``. You can also try out the Firely Auth using the evaluation license.
+
 In order to use :ref:`feature_accesscontrol` you need an Identity Provider that can provide OAuth2 JWT Tokens with claims that conform to `SMART on FHIR`_. In a production scenario, you typically already have such a provider. It could be the EHR system, the Active Directory, or a provider set up specifically for let's say a Patient Portal. It is also very well possible that the provider handing the correct claims uses a federated OAuth2 provider to do the authentication.
 
-Firely offers Firely Auth, an external authorization service optimized for SMART on FHIR. Firely Auth is an add-on for Firely Server and licensed separately.
+Firely offers Firely Auth, an external authorization service optimized for SMART on FHIR. 
 To allow you to test :ref:`feature_accesscontrol`, we provide you with :ref:`instructions <firely_auth_introduction>` to build and run Firely Auth in which you can configure the necessary clients, claims and users yourself to test different scenarios.
 
 .. _SMART on FHIR: http://docs.smarthealthit.org/

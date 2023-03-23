@@ -109,26 +109,29 @@ Administration
 ::
 
     "Administration": {
-        "Repository": "SQLite", //Memory / SQL / MongoDb are other options, but SQLite is advised.
-        "MongoDbOptions": {
-            "ConnectionString": "mongodb://localhost/vonkadmin",
-            "EntryCollection": "vonkentries"
-        },
-        "SqlDbOptions": {
-            "ConnectionString": "connectionstring to your Firely Server Admin SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
-            "SchemaName": "vonkadmin",
-            "AutoUpdateDatabase": true,
-            "MigrationTimeout": 1800 // in seconds
-            //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
-        },
-       "SQLiteDbOptions": {
-            "ConnectionString": "Data Source=./data/vonkadmin.db",
-            "AutoUpdateDatabase": true
-        },
-        "Security": {
-        "AllowedNetworks": [ "::1" ], // i.e.: ["127.0.0.1", "::1" (ipv6 localhost), "10.1.50.0/24", "10.5.3.0/24", "31.161.91.98"]
-        "OperationsToBeSecured": [ "reindex", "reset", "preload" ]
-        }
+      "Repository": "SQLite", //Memory / SQL / MongoDb
+      "MongoDbOptions": {
+        "ConnectionString": "mongodb://localhost/vonkadmin",
+        "EntryCollection": "vonkentries"
+      },
+      "SqlDbOptions": {
+        "ConnectionString": "connectionstring to your Firely Server Admin SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
+        "AutoUpdateDatabase": true,
+        "MigrationTimeout": 1800, // in seconds
+        "LogSqlQueryParameterValues": false
+        //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'",
+      },
+      "SQLiteDbOptions": {
+        "ConnectionString": "Data Source=./data/vonkadmin.db;Cache=Shared", //"connectionstring to your Firely Server Admin SQLite database (version 3 or newer), e.g. Data Source=c:/sqlite/vonkadmin.db;Cache=Shared"
+        "AutoUpdateDatabase": true,
+        "MigrationTimeout": 1800, // in seconds
+        "LogSqlQueryParameterValues": false
+        //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
+      },
+      "Security": {
+        "AllowedNetworks": [ "127.0.0.1", "::1" ], // i.e.: ["127.0.0.1", "::1" (ipv6 localhost), "10.1.50.0/24", "10.5.3.0/24", "31.161.91.98"]
+        "OperationsToBeSecured": [ "reindex", "reset", "preload", "importResources" ]
+      }
     },
 
 The ``Administration`` section is part of the :ref:`administration_api` and its repository.
@@ -168,10 +171,10 @@ Repository
 
 #. ``Repository``: Choose which type of repository you want. Valid values are:
 
-  #. Memory
-  #. SQL, for Microsoft SQL Server
-  #. SQLite
-  #. MongoDb
+  #. :ref:`Memory<configure_memory>`
+  #. :ref:`SQL, for Microsoft SQL Server<configure_sql>`
+  #. :ref:`SQLite<configure_sqlite>`
+  #. :ref:`MongoDb<configure_mongodb>`
 
 
 Memory
@@ -189,10 +192,10 @@ MongoDB
 ::
 
     "MongoDbOptions": {
-        "ConnectionString": "mongodb://localhost/vonkdata",
-        "EntryCollection": "vonkentries"
+      "ConnectionString": "mongodb://localhost/vonkdata",
+      "EntryCollection": "vonkentries",
+      "MaxLogLine": 300
     },
-
 
 Refer to :ref:`configure_mongodb` for configuring the connection to your MongoDB databases.
 
@@ -201,13 +204,12 @@ SQL
 ::
 
     "SqlDbOptions": {
-        "ConnectionString": "connectionstring to your Firely Server SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
-        "SchemaName": "vonk",
-        "AutoUpdateDatabase": true,
-        "MigrationTimeout": 1800 // in seconds
-        //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
+      "ConnectionString": "connectionstring to your Firely Server SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
+      "AutoUpdateDatabase": true,
+      "MigrationTimeout": 1800, // in seconds
+      "LogSqlQueryParameterValues": false
+      //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
     },
-
 
 Refer to :ref:`configure_sql` for configuring access to your SQL Server databases.
 
@@ -216,10 +218,12 @@ SQLite
 ::
 
     "SQLiteDbOptions": {
-        "ConnectionString": "Data Source=./data/vonkdata.db",
-        "AutoUpdateDatabase": true
+      "ConnectionString": "Data Source=./data/vonkdata.db;Cache=Shared", //"connectionstring to your Firely Server SQLite database (version 3 or newer), e.g. Data Source=c:/sqlite/vonkdata.db",
+      "AutoUpdateDatabase": true,
+      "MigrationTimeout": 1800, // in seconds
+      "LogSqlQueryParameterValues": false
+      //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
     },
-
 
 Refer to :ref:`configure_sqlite` for configuring access to your SQLite Server databases.
 
@@ -230,17 +234,18 @@ http and https
 ::
 
     "Hosting": {
-        "HttpPort": 4080,
-        //"HttpsPort": 4081, // Enable this to use https
-        //"CertificateFile": "<your-certificate-file>.pfx", //Relevant when HttpsPort is present
-        //"CertificatePassword" : "<cert-pass>" // Relevant when HttpsPort is present
-        //"PathBase": "<subpath-to-firely-server>",
-        "ClientCertificateMode": "NoCertificate" // NoCertificate, AllowCertificate, RequireCertificate
-        "Limits": {
-            "MaxRequestBufferSize": 2097152 // Kestrel default: 1048576.
-        }   
+      "HttpPort": 4080,
+      //"HttpsPort": 4081, // Enable this to use https
+      //"CertificateFile": "<your-certificate-file>.pfx", //Relevant when HttpsPort is present
+      //"CertificatePassword" : "<cert-pass>", // Relevant when HttpsPort is present
+      //"SslProtocols": [ "Tls12", "Tls13" ], // Relevant when HttpsPort is present.
+      //"PathBase": "<subpath-to-firely-server>",
+      "ClientCertificateMode": "NoCertificate" // NoCertificate, AllowCertificate, RequireCertificate,
+      "Limits": {
+          "MaxRequestBufferSize": 2097152 // Kestrel default: 1048576.
+    }
     },
-
+    
 Refer to :ref:`configure_hosting` for enabling https and adjusting port numbers. The `PathBase` enables the option to specify a path as part of root path (See `PathBase middleware <https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.usepathbaseextensions.usepathbase?view=aspnetcore-6.0>`_ for more information). The `ClientCertificateMode` will instruct Firely Server to request or require a TLS client certificate (See `ASP .NET Core - Client Certificates <https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?view=aspnetcore-6.0#client-certificates>`_ for more information).
 
 The :code:`Limits` is mapped to 
@@ -257,14 +262,64 @@ Validation
 ----------
 ::
 
-  "Validation": {
-    "Parsing": "Permissive", // Permissive / Strict
-    "Level": "Off", // Off / Core / Full
-    "AllowedProfiles": []
-  },
+    "Validation": {
+      "Parsing": "Permissive", // Permissive / Strict
+      "Level": "Off", // Off / Core / Full
+      "AllowedProfiles": []
+    },
 
 
 Refer to :ref:`feature_prevalidation`.
+
+Terminology
+-----------
+::
+
+      "Terminology": {
+      "MaxExpansionSize": 650,
+      "LocalTerminologyService": {
+        "Order": 10,
+        "PreferredSystems": [ "http://hl7.org/fhir" ],
+        "SupportedInteractions": [ "ValueSetValidateCode", "Expand", "FindMatches", "Lookup" ], // ValueSetValidateCode, Expand, FindMatches, Lookup
+        "SupportedInformationModels": [ "Fhir3.0", "Fhir4.0", "Fhir5.0" ]
+      }
+      //Example settings for remote services:
+      //, 
+      //"RemoteTerminologyServices": [
+      //  {
+      //    "Order": 20,
+      //    "PreferredSystems": [ "http://snomed.info/sct" ],
+      //    "SupportedInteractions": [ "ValueSetValidateCode", "Expand", "Lookup", "Translate", "Subsumes", "Closure" ], // ValueSetValidateCode, Expand, Lookup, Translate, Subsumes, Closure
+      //    "SupportedInformationModels": [ "Fhir4.0" ],
+      //    "Endpoint": "https://r4.ontoserver.csiro.au/fhir/",
+      //    "MediaType": "application/fhir+xml"
+      //  },
+      //  {
+      //    "Order": 30,
+      //    "PreferredSystems": [ "http://loinc.org" ],
+      //    "SupportedInteractions": [ "ValueSetValidateCode", "Expand", "Translate" ],
+      //    "SupportedInformationModels": [ "Fhir3.0", "Fhir4.0" ],
+      //    "Endpoint": "https://fhir.loinc.org/",
+      //    "Username": "",
+      //    "Password": ""
+      //  }
+      //]
+    },
+
+Refer to :ref:`feature_terminology`.
+
+.. _configure_cache:
+
+Cache of Conformance Resources
+------------------------------
+::
+
+   "Cache": {
+      "MaxConformanceResources": 5000
+   }
+
+Firely Server caches StructureDefinitions and other conformance resources that are needed for (de)serialization and validation in memory. If more than ``MaxConformanceResources`` get cached, the ones that have not been used for the longest time are discarded. If you frequently encounter a delay when requesting less used resource types, a larger value may help. If you are very restricted on memory, you can lower the value.
+
 
 .. _bundle_options:
 
@@ -286,36 +341,15 @@ The Search interactions returns a bundle with results. Users can specify the num
 * ``DefaultCount`` should be less than or equal to ``MaxCount``
 * ``DefaultSort`` is what search results are sorted on if no sort order is specified in the request. If a sort order is specified, this is still added as the last sort clause.
 
-.. _batch_options:
-
-Batch and transaction
----------------------
+History size
+------------
 ::
 
-    "BatchOptions": {
-        "MaxNumberOfEntries": 100
-    },
+  "HistoryOptions": {
+    "MaxReturnedResults": 100
+  }
 
-This will limit the number of entries that are accepted in a single Batch or Transaction bundle.
-
-.. note::
-
-  This setting has been moved to the ``SizeLimits`` setting as of Firely Server (Vonk) version 0.7.1, and the logs will show a warning that it
-  is deprecated when you still have it in your appsettings file.
-
-.. _http_options:
-
-Response options
-----------------
-::
-
-    "HttpOptions": {
-      "DefaultResponseType": "application/fhir+json"
-    }
-
-* If no mediatype is specified in an ``Accept`` header, use the ``DefaultResponseType``.
-* Options are ``application/fhir+json`` or ``application/fhir+xml``
-* Firely Server will attach the mimetype parameter ``fhirVersion`` based on the FHIR version that is requested (see :ref:`feature_multiversion`).
+See :ref:`restful_history`.
 
 .. _sizelimits_options:
 
@@ -336,38 +370,10 @@ Protect against large input
 * The values for ``MaxResourceSize`` and ``MaxBatchSize`` can be expressed in b (bytes, the default), kB (kilobytes), KiB (kibibytes), MB (megabytes), or MiB (mebibytes).
   Do not put a space between the amount and the unit.
 
-.. _configure_admin_import:
+  .. note::
 
-SearchParameters and other Conformance Resources
-------------------------------------------------
-::
-
-    "AdministrationImportOptions": {
-        "ImportDirectory": "./vonk-import",
-        "ImportedDirectory": "./vonk-imported", //Do not place ImportedDirectory *under* ImportDirectory, since an import will recursively read all subdirectories.
-        "SimplifierProjects": [
-          {
-            "Uri": "https://stu3.simplifier.net/<your-project>",
-            "UserName": "Simplifier user name",
-            "Password": "Password for the above user name",
-            "BatchSize": 20
-          }
-        ]
-    }
-
-See :ref:`conformance` and :ref:`feature_customsp`.
-
-.. _configure_cache:
-
-Cache of Conformance Resources
-------------------------------
-::
-
-   "Cache": {
-      "MaxConformanceResources": 5000
-   }
-
-Firely Server caches StructureDefinitions and other conformance resources that are needed for (de)serialization and validation in memory. If more than ``MaxConformanceResources`` get cached, the ones that have not been used for the longest time are discarded. If you frequently encounter a delay when requesting less used resource types, a larger value may help. If you are very restricted on memory, you can lower the value.
+    Before Firely Server (Vonk) version 0.7.1, this setting was named ``BatchOptions`` and the logs will show a warning that it
+    is deprecated when you still have it in your appsettings file.
 
 .. _configure_reindex:
 
@@ -381,6 +387,46 @@ Reindexing for changes in SearchParameters
     },
 
 See :ref:`feature_customsp_reindex_configure`.
+
+.. _fhir_capabilities:
+
+FHIR Capabilities
+-----------------
+::
+
+  "FhirCapabilities": {
+    "ConditionalDeleteOptions": {
+      "ConditionalDeleteType": "Single", // Single or Multiple,
+      "ConditionalDeleteMaxItems": 1
+    },
+    "SearchOptions": {
+      "MaximumIncludeIterationDepth": 1,
+      "PagingCache": {
+        "MaxSize": 1100,
+        "ItemSize": 1,
+        "Duration": 10
+      }
+    }
+  },
+
+See :ref:`restful_crud`.
+
+.. _disable_interactions:
+
+Enable or disable interactions
+------------------------------
+
+By default, the value ``SupportedInteractions`` contains all the interactions that are implemented in Firely Server.
+But you can disable interactions by removing them from these lists.
+::
+
+    "SupportedInteractions": {
+        "InstanceLevelInteractions": "read, vread, update, delete, history, conditional_delete, conditional_update, $validate",
+        "TypeLevelInteractions": "create, search, history, $validate, $snapshot, conditional_create",
+        "WholeSystemInteractions": "capabilities, batch, transaction, history, search, $validate"
+    },
+
+If you implement a custom operation in a plugin, you should also add the name of that operation at the correct level. E.g. add ``$convert`` to ``TypeLevelInteractions`` to allow ``<base>/<resourcetype>/$convert``.
 
 .. _supportedmodel:
 
@@ -404,23 +450,6 @@ Be aware that:
 * this uses the search parameter names, not the path within the resource - so for example to specify `Patient.address.postalCode <http://hl7.org/fhir/R4/patient.html#search>`_ as a supported location, you'd use ``"Patient.address-postalcode"``
 * if the support of `AuditEvent` resources is disabled, the AuditEvents will not get generated (see :ref:`audit_event_logging`).
 
-.. _disable_interactions:
-
-Enable or disable interactions
-------------------------------
-
-By default, the value ``SupportedInteractions`` contains all the interactions that are implemented in Firely Server.
-But you can disable interactions by removing them from these lists.
-::
-
-    "SupportedInteractions": {
-        "InstanceLevelInteractions": "read, vread, update, delete, history, conditional_delete, conditional_update, $validate",
-        "TypeLevelInteractions": "create, search, history, $validate, $snapshot, conditional_create",
-        "WholeSystemInteractions": "capabilities, batch, transaction, history, search, $validate"
-    },
-
-If you implement a custom operation in a plugin, you should also add the name of that operation at the correct level. E.g. add ``$convert`` to ``TypeLevelInteractions`` to allow ``<base>/<resourcetype>/$convert``.
-
 .. _settings_subscriptions:
 
 Subscriptions
@@ -435,34 +464,96 @@ Subscriptions
 
 See :ref:`feature_subscription`.
 
+.. _configure_admin_import:
+
+SearchParameters and other Conformance Resources
+------------------------------------------------
+::
+
+    "AdministrationImportOptions": {
+        "ImportDirectory": "./vonk-import",
+        "ImportedDirectory": "./vonk-imported", //Do not place ImportedDirectory *under* ImportDirectory, since an import will recursively read all subdirectories.
+        "SimplifierProjects": [
+          {
+            "Uri": "https://stu3.simplifier.net/<your-project>",
+            "UserName": "Simplifier user name",
+            "Password": "Password for the above user name",
+            "BatchSize": 20
+          }
+        ]
+    }
+
+See :ref:`conformance` and :ref:`feature_customsp`.
+
+.. _settings_smart:
+
+SMART authorization
+-------------------
+
+The settings for authorization with SMART on FHIR are covered in :ref:`Firely Auth<feature_accesscontrol_config>`.
+
 .. _information_model:
 
 Information model
 -----------------
 
-Firely Server supports the use of multiple information models (currently FHIR STU3 and R4) simultaneously. The ``InformationModel`` section contains the related settings.
+Firely Server supports the use of multiple information models (currently FHIR STU3, R4, and R5) simultaneously. The ``InformationModel`` section contains the related settings.
 By default, Firely Server serves both versions from the root of your web service, defaulting to R4 when the client does not use Accept or _format to specify either one. Mapping a path or a subdomain to a specific version creates an additional URI serving only that particular version.
 ::
 
   "InformationModel": {
-    "Default": "Fhir4.0", // For STU3: "Fhir3.0". Information model to use when none is specified in either mapping, the _format parameter or the ACCEPT header.
+    "Default": "Fhir4.0", // information model to use when none is specified in either mapping, the _format parameter or the ACCEPT header
+    "IncludeFhirVersion": ["Fhir4.0", "Fhir5.0"],
     "Mapping": {
       "Mode": "Off"
       //"Mode": "Path", // yourserver.org/r3 => FHIR STU3; yourserver.org/r4 => FHIR R4
       //"Map": {
       //  "/R3": "Fhir3.0",
-      //  "/R4": "Fhir4.0"
+      //  "/R4": "Fhir4.0",
+      //  "/R5": "Fhir5.0"
       //}
       //"Mode": "Subdomain", // r3.yourserver.org => FHIR STU3; r4.yourserver.org => FHIR R4
-      //"Map":
+      //"Map": 
       //  {
       //    "r3": "Fhir3.0",
-      //    "r4": "Fhir4.0"
+      //    "r4": "Fhir4.0",
+      //    "r5": "Fhir5.0"
       //  }
     }
   },
 
 See :ref:`feature_multiversion`.
+
+.. _http_options:
+
+Response options
+----------------
+::
+
+    "HttpOptions": {
+      "DefaultResponseType": "application/fhir+json"
+    }
+
+* If no mediatype is specified in an ``Accept`` header, use the ``DefaultResponseType``.
+* Options are ``application/fhir+json`` or ``application/fhir+xml``
+* Firely Server will attach the mimetype parameter ``fhirVersion`` based on the FHIR version that is requested (see :ref:`feature_multiversion`).
+
+Task File Management and Bulk Data Export
+-----------------------------------------
+::
+
+    "TaskFileManagement": {
+    "StoragePath": "./taskfiles"
+  },
+
+::
+
+    "BulkDataExport": {
+    "RepeatPeriod": 60000, //ms
+    "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "Medication", "Practitioner" ] // included referenced resources, additional to the Patient compartment resources
+  },
+
+Refer to :ref:`feature_bulkdataexport`.
 
 .. _patient_everything_operation:
 
@@ -478,34 +569,33 @@ The Patient $everything operation returns all resources linked to a patient that
 
 See :ref:`feature_patienteverything`.
 
-.. _fhir_capabilities:
-
-FHIR Capabilities
------------------
+Binary Wrapper
+--------------
 ::
 
-  "FhirCapabilities": {
-    "ConditionalDeleteOptions": {
-      "ConditionalDeleteType": "Single", // Single or Multiple,
-      "ConditionalDeleteMaxItems": 1
-    }
+    "Vonk.Plugin.BinaryWrapper": {
+    "RestrictToMimeTypes": [ "application/pdf", "text/plain", "text/csv", "image/png", "image/jpeg" ]
   },
 
-See :ref:`restful_crud`.
+Refer to :ref:`plugin_binarywrapper`.
 
-History size
-------------
+Auditing
+--------
 ::
 
-  "HistoryOptions": {
-    "MaxReturnedResults": 100
-  }
+  "Audit": {
+    "AuditEventSignatureEnabled": false,
+    "AuditEventSignatureSecret": {
+      "SecretType": "JWKS",
+      "Secret": ""
+    },
+    "AsyncProcessingRepeatPeriod" : 10000,
+    "AuditEventVerificationBatchSize" : 20,
+    "ExcludedRequests": [],
+    "InvalidAuditEventProcessingThreshold" : 100
+  },
 
-See :ref:`restful_history`.
-
-.. _settings_smart:
-
-The settings for authorization with SMART on FHIR are covered in :ref:`feature_accesscontrol_config`.
+Refer to :ref:`feature_auditing`.
 
 .. _settings_pipeline:
 
@@ -525,6 +615,7 @@ are used for your Firely Server, by changing the ``PipelineOptions``.
           "Vonk.Core",
           "Vonk.Fhir.R3",
           "Vonk.Fhir.R4",
+          "Vonk.Fhir.R5",
           // etc.
         ],
         "Exclude": [
@@ -536,6 +627,7 @@ are used for your Firely Server, by changing the ``PipelineOptions``.
           "Vonk.Core",
           "Vonk.Fhir.R3",
           "Vonk.Fhir.R4",
+          "Vonk.Fhir.R5",
           // etc.
         ],
         "Exclude": [
@@ -545,7 +637,7 @@ are used for your Firely Server, by changing the ``PipelineOptions``.
     ]
   }
 
-It is possible to disable a specific information model by removing Vonk.Fhir.R3 or Vonk.Fhir.R4 from the pipeline
+It is possible to disable a specific information model by removing Vonk.Fhir.R3, Vonk.Fhir.R4, or Vonk.Fhir.R5 from the pipeline
 
 Please note the warning on merging arrays in :ref:`configure_levels`.
 

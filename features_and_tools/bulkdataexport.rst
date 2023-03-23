@@ -3,6 +3,11 @@
 Bulk Data Export
 ================
 
+.. note::
+  This application is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
+  Your license already permits the usage of BDE if it contains ``http://fire.ly/vonk/plugins/bulk-data-export``. You can also try out the BDE feature using the evaluation license.
+
+
 Firely Server provides the option to export resources with the Bulk Data Export Service. 
 The Bulk Data Export Service enables the $export operation from the Fhir specification. Read more about the `$export request flow <https://hl7.org/fhir/uv/bulkdata/export/index.html#request-flow>`_
 
@@ -80,8 +85,8 @@ Bulk Data Export Service works as an asynchronous operation. To store the all op
         ],
         "Exclude": [
           "Vonk.Core.Operations"
-        ], ...etc...
-    
+        ], ...etc... 
+
 BDE introduces two new parts to the appsettings, namely TaskFileManagement and BulkDataExport.
 
 .. code-block:: JavaScript

@@ -3,6 +3,13 @@
 Security notifications for Firely Server
 ========================================
 
+March 2023
+------------
+
+CVE issued a warning (`CVE-2022-48282 <https://www.cve.org/CVERecord?id=CVE-2022-48282>`_) affecting all MongoDB .NET/C# Driver versions prior to and including v2.18.0.
+
+  * Firely Server v4.10 and below as well as v5.0.0-beta1 might be vulnerable which is why we released Firely Server v4.10.1 with updated MongoDB drivers. Firely Server v5.0.0 (final) is not affected.
+
 January 2021
 ------------
 

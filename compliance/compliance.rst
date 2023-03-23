@@ -4,14 +4,15 @@ Compliance with national ImplementationGuides and certification programs
 ========================================================================
 
 The following section will highlight against which national ImplementationGuides and certification programs Firely Server has been successfully tested.
-Additionally, any necessary configuration to re-produce these testing results will be outlined. Moreover, we provide insights on how Firely Server can contribute to meet HIPAA and GDPR requirements. 
+Additionally, any necessary configuration to re-produce these testing results will be outlined.
 
 .. list-table:: Firely Server Compliance Overview
-   :widths: 10, 10, 10, 10
+   :widths: 10, 10, 10, 10, 10
    :header-rows: 1
    
    * - ImplementationGuide
      - Supported version
+     - Supporting documentation
      - Realm
      - Package Link
 
@@ -19,6 +20,8 @@ Additionally, any necessary configuration to re-produce these testing results wi
      
      - * ✔️ v1.0.0
        * ✔️ v2.0.0
+  
+     - * :ref:`Firely Auth <firely_auth_index>`
 
      - * 🌍
    
@@ -29,6 +32,8 @@ Additionally, any necessary configuration to re-produce these testing results wi
 
      - * ✔️ v1.0.1
        * ✔️ v2.0.0
+  
+     - * :ref:`Bulk Data Export <feature_bulkdataexport>`
 
      - * 🌍
 
@@ -39,6 +44,8 @@ Additionally, any necessary configuration to re-produce these testing results wi
 
      - * ✔️ v1.1.1
 
+     - * :ref:`Auditing<feature_auditing>`
+  
      - * 🌍
 
      - * `ihe.iti.balp|1.1.1 <https://registry.fhir.org/package/ihe.iti.balp|1.1.1>`_
@@ -49,6 +56,8 @@ Additionally, any necessary configuration to re-produce these testing results wi
        * ✔️ v4.0.0
        * ✔️ v5.0.1
       
+     -
+     
      - * 🇺🇸
 
      - * `hl7.fhir.us.core|3.1.1 <https://registry.fhir.org/package/hl7.fhir.us.core|3.1.1>`_
@@ -59,7 +68,9 @@ Additionally, any necessary configuration to re-produce these testing results wi
    * - * `ISiK - Basis (Stufe 1) <https://gematik.github.io/spec-ISiK-Basismodul/IG/1.0.7/ImplementationGuide-markdown-Einfuehrung.html>`_
 
      - * ✔️ v1.0.7
-      
+    
+     - 
+
      - * 🇩🇪
 
      - * `de.gematik.isik-basismodul-stufe1|1.0.7 <https://registry.fhir.org/package/de.gematik.isik-basismodul-stufe1|1.0.7>`_

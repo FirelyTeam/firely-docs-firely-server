@@ -4,6 +4,16 @@
 Architecture
 ============
 
+.. _vonk_overview_server:
+
+Framework
+---------
+
+Firely Server is not just a FHIR Server, it is a processing pipeline for handling standard and custom FHIR requests. :ref:`Firely Server <vonk_overview_server>` consists of this pipeline filled with processors to handle the interactions defined in the FHIR RESTful API. With :ref:`vonk_overview_plugins` you can add your own processors to the framework to perform custom operations, or fill in cross-cutting concerns for your business. A :ref:`Facade <vonk_overview_facades>` is a type of plugin that provides a data access layer for an existing data repository (e.g. a proprietary system). This image sums it all up:
+
+.. image:: ../images/vonk_framework.png
+  :align: center
+
 Pipeline and middleware components
 ----------------------------------
 
@@ -26,6 +36,48 @@ Using Firely Server Components you can add your own middleware anywhere in the p
 e.g. to implement a custom operation. Firely Server also provides convenience methods to register your middleware as one that handles a FHIR interaction, 
 including attributes to declare for which interaction and which resource types your middleware should be invoked. 
 This is explained in :ref:`vonk_plugins`.
+
+.. _vonk_overview_plugins:
+
+Plugins
+-------
+
+A plugin is a library of code that you can buy, clone or create yourself that implements additional or replacement functionality in Firely Server. Examples are:
+
+* Implementation of a custom operation. E.g. $document (generate a document Bundle based on a Composition resource), which is available on `GitHub <https://github.com/FirelyTeam/Vonk.Plugin.DocumentOperation>`_.
+* Implementation of a cross-cutting concern. Imagine that in your organization every resource that is created or updated must be logged to a very specific location. You may create a plugin that does exactly that.
+* Special handling of specific requests. E.g. requests for a Binary resource where you need to merge in binary data from one of your systems.
+* Provide custom authentication and authorization methods for compliancy with business or governmental rules.
+
+In all cases, a Plugin is technically a .NET Core assembly (or a set of them) containing well-defined configuration methods that allow Firely Server to:
+
+* add services
+* add a processor to the request processing pipeline
+
+Most plugins do both, registering (testable) services that do the actual work and a thin layer around it that adds it as a processor to the pipeline.
+
+Read more on :ref:`vonk_plugins`.
+
+View the `session on Plugins <https://www.youtube.com/watch?v=odYaOM19XXc>`_ from `DevDays 2018 <https://www.devdays.com/events/devdays-europe-2018/>`_.
+
+.. _vonk_overview_facades:
+
+Facades
+-------
+
+A Facade is a Firely Server processing pipeline working on an existing data repository. That repository could be the database of proprietary system, some API of an existing system or a whole Clinical Data Repository specifically created to open up data through a FHIR API.
+
+The implementation of a Facade is a special type of plugin that registers services to access the existing data repository. By building the data access layer you leverage all of the FHIR processing in Firely Server, connected to your repository - thus creating a FHIR RESTful API for that repository with the least amount of work.
+
+So a Facade is still a Plugin, and therefore technically a .NET Core assembly (or a set of them) having the same well-defined configuration methods. In the case of a Facade it usually only registers services (and no processor), specifically implementing the interfaces that define the data access layer in Firely Server:
+
+* ISearchRepository, for reading and searching
+* IResourceChangeRepository: for creating, updating, and deleting
+
+Read more on :ref:`vonk_facade`.
+
+View the `session on Facade <https://www.youtube.com/watch?v=6SFd1QJJXtA>`_ from `DevDays 2018 <https://www.devdays.com/events/devdays-europe-2018/>`_.
+
 
 Repository interfaces
 ---------------------

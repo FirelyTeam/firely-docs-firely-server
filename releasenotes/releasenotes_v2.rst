@@ -276,10 +276,10 @@ Release 1.0.0
 
 Yes! Vonk version 1.0 is out. It is also the first version that is released withouth the -beta postfix. It has been very stable from the very first version, and now we think it is time to make that formal. 
 
-Release 1.0.0 is functionally identical to 0.7.4.0. But we optimized the deployment process for :ref:`yellowbutton` and :ref:`Docker <use_docker>` in general. The contents of the core specification are now preloaded in the SQLite administration database, so your first startup experience is a lot faster.
+Release 1.0.0 is functionally identical to 0.7.4.0. But we optimized the deployment process for :ref:`Firely Server for your Simplifier Project <yellowbutton>` and :ref:`Docker <use_docker>` in general. The contents of the core specification are now preloaded in the SQLite administration database, so your first startup experience is a lot faster.
 
 .. _vonk_releasenotes_0740:
-
+ 
 Release 0.7.4.0
 ---------------
 

@@ -274,7 +274,7 @@ Database
       If you have questions about the migration, please :ref:`contact us<vonk-contact>`.
 
 
-   The required migrations for SQL Server will be applied automatically if ``AutoUpdateDatabase=true`` in the settings. Otherwise, or if automatic migration times out, you can run them manually. The scripts are located in the directory ``./sqlserver``. You can see the list of applied migrations in table ``[vonk].[schemainfo]``. The upgrade requires the following migrations:
+   The required migrations for SQL Server will be applied automatically if ``AutoUpdateDatabase=true`` in the settings. Otherwise, or if the automatic migrations time out, you can run them  :ref:`manually<migrations>`. The scripts are located in the directory ``./sqlserver``. You can see the list of applied migrations in table ``[vonk].[schemainfo]``. The upgrade requires the following migrations:
 
    * Admin database:
 
@@ -419,7 +419,7 @@ Database
 
    4. Improved performance of some SQL queries by avoiding excessive retrieval of the (large) ResourceJson column
 
-   The required migrations will be applied automatically if ``AutoUpdateDatabase=true`` in the settings. Otherwise, or if automatic migration times out, you can run them manually. The scripts are located in the directory ``./sqlserver``. You can see the list of applied migrations in table ``[vonk].[schemainfo]``. The upgrade requires the following migrations:
+   The required migrations will be applied automatically if ``AutoUpdateDatabase=true`` in the settings. Otherwise, or if the automatic migrations time out, you can run them :ref:`manually<migrations>`. The scripts are located in the directory ``./sqlserver``. You can see the list of applied migrations in table ``[vonk].[schemainfo]``. The upgrade requires the following migrations:
 
    * Admin database:
 

@@ -6,11 +6,16 @@ Firely Auth Introduction
 **Firely Auth** is an authentication and authorization server that implements the `SMART on FHIR`_ authentication flows. 
 It is an add-on to Firely Server. 
 
-Several implementation guides and scenarios require the use of SMART on FHIR:
+Several scenarios require the use of SMART on FHIR:
 
-- Bulk Data Export
-- (g)(10) certification
-- Inferno testing
+- Launching process for exporting a group of Patient records using Bulk Data Export from an EHR
+- Launching an app in the context of an EHR to provide the practitioner with more specialized insights
+- Launching an app from a patient portal granting the patient the right to their own data
+
+Additionally, SMART on FHIR is required by national ImplementationGuides and mandated in the following certification programs:
+
+- `21st Century Cures Act - §170.315(g)(10) <https://fire.ly/g10-certification/>`_
+- ISiK Stufe 2 - Sicherheit
 
 Firely Auth can be used to fulfill all of them.
 

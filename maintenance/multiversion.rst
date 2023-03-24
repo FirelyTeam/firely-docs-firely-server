@@ -14,6 +14,7 @@ Accepted values for the parameter are:
 
 * fhirVersion=3.0, for FHIR STU3
 * fhirVersion=4.0, for FHIR R4
+* fhirVersion=5.0, for FHIR R5
 
 You can add the fhirVersion to the Accept and/or the Content-Type header. If you specify it on both, the fhirVersion parameters have to be the same.
 
@@ -23,7 +24,7 @@ You can add the fhirVersion to the Accept and/or the Content-Type header. If you
 The examples below explain the behaviour with STU3, but if you replace fhirVersion with 4.0, it works exactly the same on R4. 
 
 .. note:: 
-   If you do not specify a fhirVersion parameter, Firely Server will use fhirVersion=3.0 (STU3) as a default. This way the behaviour is compatible with previous versions of Firely Server. If you like, you can change the ``Default`` in :ref:`information_model`
+   If you do not specify a fhirVersion parameter, Firely Server will use fhirVersion=4.0 (R4) as a default. If you like, you can change the ``Default`` in :ref:`information_model`
 
 .. note:: 
    If you use both an Accept header and a Content-Type header, the fhirVersion parameter for both must be the same. So this would be *invalid*:
@@ -117,7 +118,7 @@ Conformance resources like StructureDefinition and SearchParameter are registere
 Running a single version
 ------------------------
 
-To use only a single version you set the ``Default`` information model in :ref:`information_model` to the version you want to use. In addition, you can exclude the namespace of the version you don't need (``Vonk.Fhir.R3`` or ``Vonk.Fhir.R4``) from the :ref:`PipelineOptions <vonk_plugins_config>` to disable its use. If you exclude a namespace, make sure to exclude it from all branches.
+To use only a single version you set the ``Default`` information model in :ref:`information_model` to the version you want to use. In addition, you can exclude the namespace of the version you don't need (``Vonk.Fhir.R3``, ``Vonk.Fhir.R4``, or ``Vonk.Fhir.R5``) from the :ref:`PipelineOptions <vonk_plugins_config>` to disable its use. If you exclude a namespace, make sure to exclude it from all branches.
 
 .. _feature_multiversion_endpoints:
 
@@ -136,7 +137,8 @@ Assigning an endpoint to a FHIR version is exactly equivalent to adding that par
          "Mode": "Path",
          "Map": {
             "/R3": "Fhir3.0",
-            "/R4": "Fhir4.0"
+            "/R4": "Fhir4.0",
+            "/R5": "Fhir5.0"
          }
       }
    }
@@ -183,8 +185,8 @@ By default we set it to FHIR R4 and R5, as for STU3 the fhirVersion may be unexp
 
 .. _feature_multi_version_r5:
 
-Support for R5 (experimental!)
-------------------------------
+Support for R5
+--------------
 
 By default the binaries for supporting R5 are included in the Firely Server distribution (since Firely Server (Vonk) 3.3.0). By default these binaries are not loaded. See the PipelineOptions in appsettings.default, where ``Vonk.Fhir.R5`` is commented out. Re-enable these in your appsettings.instance.
 

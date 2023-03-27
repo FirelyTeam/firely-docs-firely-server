@@ -7,30 +7,15 @@ This page lists the features and changes we have planned for the foreseeable fut
 
 Disclaimer: No rights can be derived from this roadmap.
 
-2022
+2023
 ----
 
 Q2
 ^^
 
-* Addition of various performance improvements and features to our MongoDB implementation which are currently only available for SQL Server
-  
-  * Support for transactions 
-
-Q3
-^^
-
-* Check compliance with CMS ImplementationGuides
-
-* Bulk data export as a separate service - deploy and scale it independently of Firely Server
-
-* New Firely Validator as a separate service - deploy and scale it independently of Firely Server
-
-* Provide production-ready IdentityServer instance bundled with Firely Server
-
-
-Q4
-^^
-
-* Enhanced support for subscriptions
-* R4B Support
+* Support for release version of FHIR R5
+* Package-based import of FHIR conformance resources
+* Improved support for §170.315(b)(10) Electronic health information export
+* Improved support for EHR App Launch scenarios in Firely Auth
+* Azure Active Dirctory and Single Sign-on support in Firely Auth
+* Native support for ServiceBus-based messaging to improve EHR integration scenarios

@@ -21,6 +21,7 @@ To allow you to test :ref:`feature_accesscontrol`, we provide you with :ref:`ins
 
    firely-auth-releasenotes
    firely-auth-tutorial
+   firely-auth-endpoints
    firely-auth-settings
    firely-auth-mfa
    firely-auth-deploy

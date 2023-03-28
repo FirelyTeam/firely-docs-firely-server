@@ -17,5 +17,5 @@ Q2
 * Package-based import of FHIR conformance resources
 * Improved support for §170.315(b)(10) Electronic health information export
 * Improved support for EHR App Launch scenarios in Firely Auth
-* Azure Active Dirctory and Single Sign-on support in Firely Auth
+* Azure Active Directory and Single Sign-on support in Firely Auth
 * Native support for ServiceBus-based messaging to improve EHR integration scenarios

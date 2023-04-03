@@ -3,22 +3,10 @@
 Current Firely Server release notes (v5.x)
 ==========================================
 
-.. _vonk_releasenotes_5_1_0:
-
-Release 5.1.0, April xth, 2023
-------------------------------
-
-Fix
-^^^
-* Firely Server leniently accepted a literal unescaped "+" sign as part of the request url and didn't interpret it as a reserved character according to `RFC 3986 <https://www.rfc-editor.org/rfc/rfc3986#section-2.2>`_. Firely Server now correctly interprets it as a whitespace.
-
-.. warning::
-    In case that the "+" sign is used as part of a search parameter value it needs to be URL encoded as "%2B". An unescaped value will be interpreted as described above, which may lead to unexpected results.
-
 .. _vonk_releasenotes_5_0_0:
 
 Release 5.0.0, March 9th, 2023
-------------------------------
+---------------------------------
 
 We are thrilled to announce the release of our new major version 5.0 of Firely Server. The team has worked hard to incorporate new features and improvements that we believe will enhance your experience greatly. We are excited to share this new release with our customers and look forward to their feedback.
 

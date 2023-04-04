@@ -84,3 +84,10 @@ active:
     Reference tokens will be checked by Firely Server on every request for validity and activeness. JWT tokens on the other hand will be valid until they expire.   
     
 For more information, see `Duende Documentation - Introspection Endpoint <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/introspection/>`_.
+
+Backchannel Authentication Endpoint
+-----------------------------------
+
+In Firely Auth no Backchannel Authentication Endpoint is available, therefore Client Initiated Backchannel Authentication (CIBA) requests are not supported.
+
+For more information, see `Duende Documentation - Client Initiated Backchannel Authentication (CIBA) <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/ciba/>`_.

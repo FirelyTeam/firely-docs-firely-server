@@ -6,6 +6,22 @@ Firely Auth Endpoints
 Firely Auth provides a endpoints for a variety of different operations related to the management of OAuth clients and tokens.
 The following section describes the REST API for these endpoints and summaries the intention of these interactions. For more details please refer to the corresponding RFCs.
 
+OpenID Configuration
+--------------------
+
+Similar to a CapabilityStatement in Firely Server, Firely Auth offers an endpoint to inspect and verify the available capabilities.
+The OpenID configuration endpoints returns a JSON document containing:
+
+* URLs of all available endpoints of the service
+* A URL pointing to the key material used to sign the access and identity tokens from Firely Auth, wrapped in a Json Web Key Set
+* Additional flags to indentify enabled features (e.g. supported grant types, supported signing algorithms)
+
+.. note::
+    SMART on FHIR provides a compositional syntax for creating scopes, i.e. basic patient/user/system-scopes can be combined with search parameters to create more fine-granular scopes.
+    Therefore not all combinations of supported scopes can be exposed in the "scopes_supported" element of the OpenID configuration.
+
+For more information, see `Duende Documentation - Discovery Endpoint <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/discovery/>`_.
+
 Introspection endpoint
 ----------------------
 
@@ -68,3 +84,8 @@ active:
     Reference tokens will be checked by Firely Server on every request for validity and activeness. JWT tokens on the other hand will be valid until they expire.   
     
 For more information, see `Duende Documentation - Introspection Endpoint <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/introspection/>`_.
+
+Known Limitations
+-----------------
+
+* In Firely Auth no Backchannel Authentication Endpoint is available, therefore Client Initiated Backchannel Authentication (CIBA) requests are not supported. For more information, see `Duende Documentation - Client Initiated Backchannel Authentication (CIBA) <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/ciba/>`_.

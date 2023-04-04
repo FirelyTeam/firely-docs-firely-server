@@ -66,3 +66,5 @@ active:
 .. note::
     Uing the introspection endpoint with reference tokens is the only way enabling a reliable way of revoking access tokens.
     Reference tokens will be checked by Firely Server on every request for validity and activeness. JWT tokens on the other hand will be valid until they expire.   
+    
+For more information, see `Duende Documentation - Introspection Endpoint <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/introspection/>`_.

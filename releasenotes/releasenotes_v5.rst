@@ -14,6 +14,8 @@ Fix
 
 .. warning::
     In case that the "+" sign is used as part of a search parameter value it needs to be URL encoded as "%2B". An unescaped value will be interpreted as described above, which may lead to unexpected results.
+    
+* AuditEvents generated for interactions with Firely Server using FHIR R5 were missing a link to the Patient compartment in case a Patient resource was created/read/updated/deleted. Now the AuditEvent.patient element is populated in these cases and by this linked to the Patient compartment. Previously generated AuditEvents are therefore not exported as part of a Bulk Data Export request on a Patient level or when using $everything on Patient.
 
 .. _vonk_releasenotes_5_0_0:
 

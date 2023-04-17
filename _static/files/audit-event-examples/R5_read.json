@@ -218,5 +218,8 @@
         }
       ]
     }
-  ]
+  ],
+  "patient": {
+    "reference": "Patient/instance-id/_history/version-id"
+  }
 }

@@ -17,6 +17,10 @@ Fix
     
 * AuditEvents generated for interactions with Firely Server using FHIR R5 were missing a link to the Patient compartment in case a Patient resource was created/read/updated/deleted. Now the AuditEvent.patient element is populated in these cases and by this linked to the Patient compartment. Previously generated AuditEvents are therefore not exported as part of a Bulk Data Export request on a Patient level or when using $everything on Patient.
 
+Configuration
+
+* The ``HistoryOptions`` are removed as configuration option, so you can remove it from your configuration in ``appsettings.instance.json`` or environment variables as well.
+
 .. _vonk_releasenotes_5_0_0:
 
 Release 5.0.0, March 9th, 2023

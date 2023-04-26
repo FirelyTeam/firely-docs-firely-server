@@ -53,7 +53,6 @@ Limitations on CRUD
    * Two conditional creates may both succeed, although the result of one may be a match to the other.
    * A conditional create and a simultaneous conditional update may both result in a ``create``, although the result of one may be a match to the other.
 
-#. It is not possible to bring a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload. This operation will result in an ``HTTP 409 Conflict`` error. As a workaround, it is possible to create a new resource (with a new logical id) by omitting the ``id`` field in the payload.
 #. Parameter ``_pretty`` is not yet supported.
 #. XML Patch and JSON Patch are not supported.
 

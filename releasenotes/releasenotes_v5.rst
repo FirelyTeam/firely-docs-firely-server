@@ -10,6 +10,8 @@ Release 5.1.0, April xth, 2023
 
 Fix
 ^^^
+* Firely Server did not support to bring a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload.
+
 * Firely Server leniently accepted a literal unescaped "+" sign as part of the request url and didn't interpret it as a reserved character according to `RFC 3986 <https://www.rfc-editor.org/rfc/rfc3986#section-2.2>`_. Firely Server now correctly interprets it as a whitespace.
 
 .. warning::

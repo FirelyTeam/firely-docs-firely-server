@@ -1,3 +1,5 @@
+.. _uscore:
+
 US Core / 21th Century Cures Act
 ================================
 

@@ -19,9 +19,9 @@ Firely Server is optimized to support all mandatory requirements out-of-the-box.
    
    * - API
      - FHIR v4.0.1
-     - US Core
-     - SMART App Launch
-     - Bulk Data Access
+     - :ref:`US Core<uscore>`
+     - :ref:`SMART App Launch<feature_accesscontrol>`
+     - :ref:`Bulk Data Access<feature_bulkdataexport>`
 
    * - * Patient Access API
      

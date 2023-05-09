@@ -223,7 +223,6 @@ In addition, Firely Server does not support the search parameters whose field ``
 #. ``http://hl7.org/fhir/SearchParameter/Location-near`` (STU3, R4, R5), 
 #. ``http://hl7.org/fhir/SearchParameter/Location-near-distance`` (STU3), 
 #. ``http://hl7.org/fhir/SearchParameter/Organization-phonetic`` (STU3, R4, R5), 
-#. ``http://hl7.org/fhir/SearchParameter/Resource-has`` (R5), 
 #. ``http://hl7.org/fhir/SearchParameter/Resource-in`` (R5), 
 
 

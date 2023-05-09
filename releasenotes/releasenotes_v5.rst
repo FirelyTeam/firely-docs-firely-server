@@ -19,7 +19,7 @@ Fix
 
 Configuration
 
-* The ``HistoryOptions`` are removed as configuration option, so you can remove it from your configuration in ``appsettings.instance.json`` or environment variables as well.
+* The ``HistoryOptions`` are removed as configuration option, so you can remove it from your configuration in ``appsettings.instance.json`` or environment variables as well. The returned resources will be limited by the settings in the ``BundleOptions``, see :ref:`bundle_options`.
 
 .. _vonk_releasenotes_5_0_0:
 

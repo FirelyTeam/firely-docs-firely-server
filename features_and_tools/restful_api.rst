@@ -216,6 +216,17 @@ The following parameters and options are not yet supported:
 #. Search parameter arguments in exponential form (e.g. 1.8e2).
 #. ``_total=estimate``, only ``none`` and ``accurate`` are supported.
 
+In addition, Firely Server does not support the search parameters whose field ``xpathUsage`` (STU3, R4) or ``processingMode`` (R5) is not set to ``normal``. Concretely, this means that the following search parameters are not supported:
+
+#. ``http://hl7.org/fhir/SearchParameter/individual-phonetic`` (STU3, R4, R5).
+#. ``http://hl7.org/fhir/SearchParameter/InsurancePlan-phonetic`` (R4, R5)
+#. ``http://hl7.org/fhir/SearchParameter/Location-near`` (STU3, R4, R5), 
+#. ``http://hl7.org/fhir/SearchParameter/Location-near-distance`` (STU3), 
+#. ``http://hl7.org/fhir/SearchParameter/Organization-phonetic`` (STU3, R4, R5), 
+#. ``http://hl7.org/fhir/SearchParameter/Resource-has`` (R5), 
+#. ``http://hl7.org/fhir/SearchParameter/Resource-in`` (R5), 
+
+
 Furthermore:
 
 #. Paging is supported, but it is not isolated from intermediate changes to resources.

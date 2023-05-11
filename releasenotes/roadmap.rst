@@ -19,3 +19,23 @@ Q2
 * Improved support for EHR App Launch scenarios in Firely Auth
 * Azure Active Directory and Single Sign-on support in Firely Auth
 * Native support for ServiceBus-based messaging to improve EHR integration scenarios
+
+Q3
+^^
+
+* Support for QI Core / DaVinci DEQM Implementation Guide
+
+The following features are intended to support the CMS-0057-P regulation:
+
+* Improved support for Patient Access APIs:
+  * UI framework in Firely Auth to build webpages to select launch context during SMART app launch
+
+* Improved support for Provider Access APIs:
+  * Filtering patients based on Consent during Bulk Data Export requests
+  * Discovery of member-attribution lists for providers (Da Vinci - Member Attribution (ATR) List)
+
+* Improved support for Payor-to-Payor APIs:
+  * Request and apply patient/user level scopes during a Bulk Data Export request
+
+* Improved support for PARDD APIs:
+  * Validation of QuestionnaireResponses against Questionnaires

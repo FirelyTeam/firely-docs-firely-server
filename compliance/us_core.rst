@@ -67,9 +67,9 @@ Firely provides test data covering all US-Core profiles and all elements marked 
 
   <div class="postman-run-button"
   data-postman-action="collection/fork"
-  data-postman-var-1="6644549-bc7e4cdd-3065-4029-bcec-8dcb7c055746"
-  data-postman-collection-url="entityId=6644549-bc7e4cdd-3065-4029-bcec-8dcb7c055746&entityType=collection&workspaceId=822b68d8-7e7d-4b09-b8f1-68362070f0bd"
-  data-postman-param="env%5BFirely%20Server%20Public%5D=W3sia2V5IjoiQkFTRV9VUkwiLCJ2YWx1ZSI6Imh0dHBzOi8vc2VydmVyLmZpcmUubHkvIiwiZW5hYmxlZCI6dHJ1ZSwidHlwZSI6ImRlZmF1bHQiLCJzZXNzaW9uVmFsdWUiOiJodHRwczovL3NlcnZlci5maXJlLmx5LyIsInNlc3Npb25JbmRleCI6MH1d"></div>
+  data-postman-var-1="24489118-e7d6d401-f82e-4695-a434-3d40399e2d2c"
+  data-postman-collection-url="entityId=24489118-e7d6d401-f82e-4695-a434-3d40399e2d2c&entityType=collection&workspaceId=822b68d8-7e7d-4b09-b8f1-68362070f0bd"
+  data-postman-param="env%5BFirely%20Server%20Public%5D=W3sia2V5IjoiQkFTRV9VUkwiLCJ2YWx1ZSI6Imh0dHBzOi8vc2VydmVyLmZpcmUubHkvIiwiZW5hYmxlZCI6dHJ1ZSwidHlwZSI6ImRlZmF1bHQifV0="></div>
   <script type="text/javascript">
     (function (p,o,s,t,m,a,n) {
       !p[s] && (p[s] = function () { (p[t] || (p[t] = [])).push(arguments); });

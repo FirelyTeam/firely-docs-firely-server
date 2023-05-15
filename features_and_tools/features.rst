@@ -24,6 +24,7 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    subscription
    x-provenance
    openapi
+   sync
 
 
   

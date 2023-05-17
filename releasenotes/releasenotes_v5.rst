@@ -22,23 +22,22 @@ Configuration
 ^^^^^^^^^^^^^
 
 * The ``HistoryOptions`` are removed as configuration option, so you can remove it from your configuration in ``appsettings.instance.json`` or environment variables as well. The returned resources will be limited by the settings in the ``BundleOptions``, see :ref:`bundle_options`.
-* The Bulk Data Export upgrade (see below) come with a few extra configuration settings, see :ref:`feature_bulkdataexport`
+* The Bulk Data Export upgrades (see below) come with a few extra configuration settings, see :ref:`feature_bulkdataexport`
 
 Features
 ^^^^^^^^
 * Firely Server is upgraded to the release version (5.0.0) of FHIR R5. If you have your administration database in SQL Server or MongoDB, this means that the conformance resources will be :ref:`re-imported <conformance_import>`.
-* We included `errataR5.zip` with fixes to a few resources and search parameters that have errors in the specification. These are imported automatically at startup.
+* We included ``errataR5.zip`` with fixes to a few resources and search parameters that have errors in the specification. These are imported automatically at startup.
 * We upgraded Firely Server to the latest SDK 5.1.0, see its `releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.1.0>`_.
 * Support for §170.315(b)(10) - Electronic Health Information Export, as required by the end of 2023.
 * Bulk Data Export is upgraded to BDE 2.0, with support for: //TODO: Check further
   
   * patient Filter
   * _elements filter
-  * system level export
   * HTTP POST with a Parameters resource
   * export to Azure Blob or Azure Files //TODO: Add settings to bulkdateexport.rst (and maybe appsettings.rst) after merge of develop
 
-* Our public Postman collection is updated, see :ref:`compliance_uscore`
+* Our public Postman collection proving support for US-Core is updated, see :ref:`compliance_uscore`
 * Updated our vulnerability scanning, to further enhance your trust in our binaries and images.
 * Cross-origin requests (CORS) are restricted to requests from secure connections.
 * The following security headers were added:
@@ -47,43 +46,51 @@ Features
   * and to API response: ``cache-control:no-store``
 
 * You can configure limits on Kestrel, see :ref:`hosting_options`, although using a :ref:`reverse proxy<deploy_reverseProxy>` is still preferred.
-* Improved error handling of ``FhirOperationException`` when this is thrown from any (custom) plugin. It is now reported as an OperationOutcome to the client.
-* Added a configuration error in the log if the default informationmodel (aka FHIR version) is not loaded in the pipeline.
+* Added a configuration error to the log if the default informationmodel (aka FHIR version) is not loaded in the pipeline.
 
 Fix
 ^^^
-* Composite search parameters are more accurately supported on SQL Server. Previously a match could be made across components, but not anymore. This comes with a migration, see above.
-* Firely Server leniently accepted a literal unescaped "+" sign as part of the request url and didn't interpret it as a reserved character according to `RFC 3986 <https://www.rfc-editor.org/rfc/rfc3986#section-2.2>`_. Firely Server now correctly interprets it as a whitespace.
-* Custom search parameters may contain errors in their FHIRPath expression. These can manifest either when adding them to Firely Server, or when they are evaluated against a new or updated resource. In both cases we improved the error reporting.
-* Any markdown in the CapabilityStatement is properly escaped.
-* Firely Server does not support the search parameters whose field ``xpathUsage`` (STU3, R4) or ``processingMode`` (R5) is not set to ``normal``. They are now filtered at startup. See :ref:`restful_search_limitations`.
+* Composite search parameters are more accurately supported on SQL Server. Previously a match could be made across components, but not anymore. This comes with a database migration, see above.
 
-.. warning:: 
-    For new or updated resources, the changes take effect immediately.
-    To apply it to existing resources, you have to :ref:`feature_customsp_reindex` all resources that are affected by composite search parameters.
-    In general that is just Observation resources. You can :ref:`feature_customsp_reindex_specific` by including the composite parameters and their components:
-    .. code-block:: 
-        POST <base>/administration</R4 or R5>/reindex/searchparameters
-        BODY:
-        include=Observation.code-value-concept,Observation.code-value-date,Observation.code-value-quantity,Observation.code-value-string,Observation.combo-code-value-concept,Observation.combo-code-value-quantity,Observation.component-code-value-concept,Observation.component-code-value-quantity,Observation.code,Observation.value-concept,Observation.value-date,Observation.value-quantity,Observation.value-string,Observation.combo-code,Observation.combo-value-concept,Observation.combo-value-quantity,Observation.component-code,Observation.component-value-concept,Observation-component-value-quantity
+    .. warning:: 
+        For new or updated resources, the changes take effect immediately.
+        To apply it to existing resources, you have to :ref:`re-index <feature_customsp_reindex>` all resources that are affected by composite search parameters.
+        In general that is just Observation resources. You can :ref:`feature_customsp_reindex_specific` by including the composite parameters and their components::
+
+            POST <base>/administration</R4 or R5>/reindex/searchparameters
+            BODY:
+            include=Observation.code-value-concept,Observation.code-value-date,Observation.code-value-quantity,Observation.code-value-string,Observation.combo-code-value-concept,Observation.combo-code-value-quantity,Observation.component-code-value-concept,Observation.component-code-value-quantity,Observation.code,Observation.value-concept,Observation.value-date,Observation.value-quantity,Observation.value-string,Observation.combo-code,Observation.combo-value-concept,Observation.combo-value-quantity,Observation.component-code,Observation.component-value-concept,Observation-component-value-quantity
+
+    .. warning:: 
+        If you still use the old SQL Server implementation (see :ref:`vonk_releasenotes_460`), you do not benefit from this improvement.
+        Please upgrade to the new implementation.
 
 * All warnings about composite search parameters during startup (usually caused by remaining errors in the FHIR specification) are resolved.
-* CapabilityStatement.instantiates only lists the CapabilityStatements from the administration API that have their `status:active`.
+* Custom search parameters may contain errors in their FHIRPath expression. These can manifest either when adding them to Firely Server, or when they are evaluated against a new or updated resource. In both cases we improved the error reporting.
+* AuditEvents generated for interactions with Firely Server using FHIR R5 were missing a link to the Patient compartment in case a Patient resource was created/read/updated/deleted. Now the AuditEvent.patient element is populated in these cases and by this linked to the Patient compartment. Previously generated AuditEvents are therefore not exported as part of a Bulk Data Export request on a Patient level or when using $everything on Patient.
+* Any markdown in the CapabilityStatement is properly escaped.
+* Firely Server does not support the search parameters whose field ``xpathUsage`` (STU3, R4) or ``processingMode`` (R5) is not set to ``normal``. They are now filtered at startup. See :ref:`restful_search_limitations`.
+* ``CapabilityStatement.instantiates`` on the ``<url>/metadata`` endpoint only lists the CapabilityStatements from the administration API that have their ``status:active``.
 * Firely Server did not support to bring a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload.
-* Sensitive information in the settings that was logged before is now redacted: the SSL Certificate password and the MongoDB connectionstring. 
-* Regarding :ref:`feature_customsp_reindex`: if an erroreneous parameter is provided as ``include``, a proper error is returned. 
-* A url-encoded space in the form of a '+' is correctly decoded. This improves the cooperation with AWS API Gateway. Only the '+' in the ``_format=fhir+json`` parameter is retained.
-* URL query decoding was revamped. You should not see any differences, but blease contact us if you do.
+* Sensitive information in the settings that was logged before is now redacted: 
 
+  * the SSL Certificate password
+  * the MongoDB connectionstring
+ 
+* Regarding :ref:`feature_customsp_reindex`: if an erroreneous parameter is provided as ``include``, a proper error is returned. 
+* URL query decoding was revamped. You should not see any differences, but please contact us if you do.
+* Firely Server leniently accepted a literal unescaped "+" sign as part of the request url and didn't interpret it as a reserved character according to `RFC 3986 <https://www.rfc-editor.org/rfc/rfc3986#section-2.2>`_. Firely Server now correctly interprets it as a whitespace.
+  * This improves the cooperation with AWS API Gateway, that encodes spaces as ``+`` by default.
+  * Only the '+' in the ``_format=fhir+json`` parameter is retained.
+
+    .. warning::
+        In case that the ``+`` sign is used as part of a search parameter value it needs to be URL encoded as ``%2B``. An unescaped value will be interpreted as described above, which may lead to unexpected results.
+    
 Plugin and facade
 ^^^^^^^^^^^^^^^^^
 
 * Firely Server tried to load non .NET Core libraries (e.g. native dlls) from plugin folders. They are now ignored.
-
-.. warning::
-    In case that the "+" sign is used as part of a search parameter value it needs to be URL encoded as "%2B". An unescaped value will be interpreted as described above, which may lead to unexpected results.
-    
-* AuditEvents generated for interactions with Firely Server using FHIR R5 were missing a link to the Patient compartment in case a Patient resource was created/read/updated/deleted. Now the AuditEvent.patient element is populated in these cases and by this linked to the Patient compartment. Previously generated AuditEvents are therefore not exported as part of a Bulk Data Export request on a Patient level or when using $everything on Patient.
+* Improved error handling of ``FhirOperationException`` when this is thrown from any (custom) plugin. It is now reported as an OperationOutcome to the client.
 
 .. _vonk_releasenotes_5_0_0:
 

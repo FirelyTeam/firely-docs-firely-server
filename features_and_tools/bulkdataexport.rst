@@ -92,7 +92,17 @@ BDE introduces several new parts to the appsettings:
 .. code-block:: JavaScript
 
   "TaskFileManagement": {
-      "StoragePath": "./taskfiles"
+      "StorageService": {
+          "StorageType": "LocalFile", // LocalFile / AzureBlob / AzureFile
+          "StoragePath": "./taskfiles",
+          "ContainerName": "firelyserver" // For AzureBlob / AzureFile only
+      }
+  },
+  "AzureServices": {
+      "Storage": {
+          "AccountName": "<your Azure account name>",
+          "AccountKey": "API key for your Azure account"
+      }
   },
   "BulkDataExport": {
       "RepeatPeriod" : 60000, //ms
@@ -103,13 +113,26 @@ BDE introduces several new parts to the appsettings:
       "BulkDataExportTimeout": 300 // in seconds
   }
 
-In `StoragePath` you can configure the folder where the exported files will be saved to. Make sure the server has write access to this folder.
-
 In `RepeatPeriod` you can configure the polling interval (in milliseconds) for checking the Task queue for a new export task.
 
 A patient-based or group-based Bulk Data Export returns resources based on the Patient compartment definition (https://www.hl7.org/fhir/compartmentdefinition-patient.html). These resources may reference resources outside the compartment as well, such as a Practitioner who is the performer of a Procedure. Using the `AdditionalResources`-setting, you can determine which types of referenced resources are exported in addition to the compartment resources.
 
 Exporting a large number of resources from a SQL Server database can cause a timeout exception. You can adjust the timeout period in `BulkDataExportTimeout`. There is no timeout limitation when exporting data from MongoDB.
+
+Writing to a local disk
+^^^^^^^^^^^^^^^^^^^^^^^
+Set the ``StorageType`` to ``LocalDisk``.
+
+In ``StoragePath`` you can configure the folder where the exported files will be saved to. Make sure the server has write access to this folder.
+
+Writing to Azure Blob or Azure Files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Set:
+  - ``StorageType`` to ``AzureBlob`` or ``AzureFiles``
+  - ``StoragePath`` to the path within the container that you prefer
+  - ``ContainerName`` to the name of the container to use (see documentation on Azure Blob Storage or Azure Files for details)
+
+Also make sure you fill in the account details for Azure in ``AzureServices`` as above.
 
 $export
 -------

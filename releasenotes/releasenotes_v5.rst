@@ -86,11 +86,12 @@ Fix
     .. warning::
         In case that the ``+`` sign is used as part of a search parameter value it needs to be URL encoded as ``%2B``. An unescaped value will be interpreted as described above, which may lead to unexpected results.
     
-Plugin and facade
-^^^^^^^^^^^^^^^^^
-
-* Firely Server tried to load non .NET Core libraries (e.g. native dlls) from plugin folders. They are now ignored.
-* Improved error handling of ``FhirOperationException`` when this is thrown from any (custom) plugin. It is now reported as an OperationOutcome to the client.
+* ``Vonk.Core`` no longer references the deprecated package ``Microsoft.AspNetCore.Server.Kestrel.Core:2.2.0`` (see `related MSDN documentation <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/target-aspnetcore?view=aspnetcore-6.0&tabs=visual-studio#use-the-aspnet-core-shared-framework>`_).
+   
+.. warning:: 
+    For plugin developers, this could result in a compilation error when rebuilding  against the latest ``Vonk.Core`` nuget package:  
+    ``CS0104: 'BadHttpRequestException' is an ambiguous reference between 'Microsoft.AspNetCore.Server.Kestrel.Core.BadHttpRequestException' and 'Microsoft.AspNetCore.Http.BadHttpRequestException'``
+    In this case, make sure to reference ``Microsoft.AspNetCore.Http.BadHttpRequestException`` as ``Microsoft.AspNetCore.Server.Kestrel.BadHttpRequestException`` has been marked as obsolete.
 
 .. _vonk_releasenotes_5_0_0:
 

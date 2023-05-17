@@ -69,7 +69,7 @@ Fix
 
 * All warnings about composite search parameters during startup (usually caused by remaining errors in the FHIR specification) are resolved.
 * CapabilityStatement.instantiates only lists the CapabilityStatements from the administration API that have their `status:active`.
-* Fixed behaviour of conditional update that uses the same id as a previously deleted resource.
+* Firely Server did not support to bring a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload.
 * Sensitive information in the settings that was logged before is now redacted: the SSL Certificate password and the MongoDB connectionstring. 
 * Regarding :ref:`feature_customsp_reindex`: if an erroreneous parameter is provided as ``include``, a proper error is returned. 
 * A url-encoded space in the form of a '+' is correctly decoded. This improves the cooperation with AWS API Gateway. Only the '+' in the ``_format=fhir+json`` parameter is retained.

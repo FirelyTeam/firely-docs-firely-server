@@ -8,6 +8,8 @@
 Firely Server settings with Environment Variables
 =================================================
 
+.. warning:: It is recommended to use Environment Variables for all sensitive information you want to pass onto to Firely Server, such as connection strings and secrets.
+
 .. _configure_envvar_appsettings:
 
 Environment Variables for appsettings

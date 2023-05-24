@@ -8,9 +8,9 @@ Current Firely Server release notes (v5.x)
 Release 5.1.0, May xth, 2023
 ------------------------------
 
-Firely Server 5.1.0 brings support for Bulk Data Export 2.0, Electronic Health Information Export (b)(10) and several other features.
+Firely Server 5.1.0 brings support for Bulk Data Export 2.0, FHIR R5 (5.0.0) and several other features.
 
-Existing installations may be affected by the fixes on Composite search parameters for the SQL Server database repository.
+Existing installations may be affected by the fixes on composite search parameters for the SQL Server database repository.
 
 Database
 ^^^^^^^^
@@ -29,13 +29,12 @@ Features
 * Firely Server is upgraded to the release version (5.0.0) of FHIR R5. If you have your administration database in SQL Server or MongoDB, this means that the conformance resources will be :ref:`re-imported <conformance_import>`.
 * We included ``errataR5.zip`` with fixes to a few resources and search parameters that have errors in the specification. These are imported automatically at startup.
 * We upgraded Firely Server to the latest SDK 5.1.0, see its `releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.1.0>`_.
-* Support for §170.315(b)(10) - Electronic Health Information Export, as required by the end of 2023.
-* Bulk Data Export is upgraded to BDE 2.0, with support for: //TODO: Check further
+* Bulk Data Export is upgraded to BDE 2.0, with support for:
   
   * patient Filter
   * _elements filter
   * HTTP POST with a Parameters resource
-  * export to Azure Blob or Azure Files //TODO: Add settings to bulkdateexport.rst (and maybe appsettings.rst) after merge of develop
+  * export to Azure Blob or Azure Files, see :ref:`feature_bulkdataexport` for related settings
 
 * Our public Postman collection proving support for US-Core is updated, see :ref:`compliance_uscore`
 * Updated our vulnerability scanning, to further enhance your trust in our binaries and images.
@@ -50,7 +49,9 @@ Features
 
 Fix
 ^^^
-* Composite search parameters are more accurately supported on SQL Server. Previously a match could be made across components, but not anymore. This comes with a database migration, see above.
+* Composite search parameters are more accurately supported on SQL Server. Previously a match could be made across components (e.g. the code from one ``Observation.component`` and the value of another).
+  This was very efficient from a database perspective, but not entirely correct as it could yield more results than expected.
+  We corrected that behavior, so a resource must match all parts of the parameter in the same component. This comes with a database migration, see above.
 
     .. warning:: 
         For new or updated resources, the changes take effect immediately.
@@ -66,6 +67,20 @@ Fix
         Please upgrade to the new implementation.
 
 * All warnings about composite search parameters during startup (usually caused by remaining errors in the FHIR specification) are resolved.
+* Also several other errors in the FHIR specification were fixed in the various ``errata.zip`` files, so FS does not need to warn about them anymore:
+
+  * STU3, search parameters of type `reference` that lacked a target element:
+
+    *  - Linkage.item parameter
+    *  - Linkage.source parameter
+    *  - RequestGroup-instantiates-canonical
+
+  * R5, search parameters that lack a fhirpath expression:
+
+    * Medication.form
+    * MedicationKnowledge.packaging-cost
+    * MedicationKnowledge.packaging-cost-concept
+
 * Custom search parameters may contain errors in their FHIRPath expression. These can manifest either when adding them to Firely Server, or when they are evaluated against a new or updated resource. In both cases we improved the error reporting.
 * AuditEvents generated for interactions with Firely Server using FHIR R5 were missing a link to the Patient compartment in case a Patient resource was created/read/updated/deleted. Now the AuditEvent.patient element is populated in these cases and by this linked to the Patient compartment. Previously generated AuditEvents are therefore not exported as part of a Bulk Data Export request on a Patient level or when using $everything on Patient.
 * Any markdown in the CapabilityStatement is properly escaped.

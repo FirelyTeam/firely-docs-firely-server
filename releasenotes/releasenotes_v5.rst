@@ -84,7 +84,7 @@ Fix
   * Only the '+' in the ``_format=fhir+json`` parameter is retained.
 
     .. warning::
-        In case that the ``+`` sign is used as part of a search parameter value it needs to be URL encoded as ``%2B``. An unescaped value will be interpreted as described above, which may lead to unexpected results.
+        In case the ``+`` sign is used as part of a search parameter value it needs to be URL encoded as ``%2B``. An unescaped value will be interpreted as described above, which may lead to unexpected results.
     
 * ``Vonk.Core`` no longer references the deprecated package ``Microsoft.AspNetCore.Server.Kestrel.Core:2.2.0`` (see `related MSDN documentation <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/target-aspnetcore?view=aspnetcore-6.0&tabs=visual-studio#use-the-aspnet-core-shared-framework>`_).
    

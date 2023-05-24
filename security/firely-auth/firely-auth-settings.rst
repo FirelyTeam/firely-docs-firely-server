@@ -331,6 +331,10 @@ Necessary data:
 
 We have a full walkthrough of Inferno testing available as a whitepaper, see `our resources <https://fire.ly/resources/>`_.
 
+.. note::
+    Firely Auth 3.2.0 introduces a new end point ``launchContext``, which can be used to request a ``launch`` identifier dynamically. Therefore no need to configure the static ``LaunchIds`` in the Inferno client settings.
+    See more details in the :ref:`firely_auth_endpoints_launchcontext` for requesting ``launch`` identifier dynamically
+
 Firely Auth settings
 ^^^^^^^^^^^^^^^^^^^^^
 

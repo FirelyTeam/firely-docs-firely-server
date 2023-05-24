@@ -71,7 +71,7 @@ Fix
 * Any markdown in the CapabilityStatement is properly escaped.
 * Firely Server does not support the search parameters whose field ``xpathUsage`` (STU3, R4) or ``processingMode`` (R5) is not set to ``normal``. They are now filtered at startup. See :ref:`restful_search_limitations`.
 * ``CapabilityStatement.instantiates`` on the ``<url>/metadata`` endpoint only lists the CapabilityStatements from the administration API that have their ``status:active``.
-* Firely Server did not support to bring a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload.
+* Firely Server did not support bringing a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload.
 * Sensitive information in the settings that was logged before is now redacted: 
 
   * the SSL Certificate password

@@ -79,7 +79,7 @@ Fix
  
 * Regarding :ref:`feature_customsp_reindex`: if an erroneous parameter is provided as ``include``, a proper error is returned. 
 * URL query decoding was revamped. You should not see any differences, but please contact us if you do.
-* Firely Server leniently accepted a literal unescaped "+" sign as part of the request url and didn't interpret it as a reserved character according to `RFC 3986 <https://www.rfc-editor.org/rfc/rfc3986#section-2.2>`_. Firely Server now correctly interprets it as a whitespace.
+* Firely Server leniently accepted a literal unescaped "+" sign as part of the request url and didn't interpret it as a reserved character according to `RFC 3986 <https://www.rfc-editor.org/rfc/rfc3986#section-2.2>`_. Firely Server now correctly interprets it as whitespace.
   * This improves the cooperation with AWS API Gateway, that encodes spaces as ``+`` by default.
   * Only the '+' in the ``_format=fhir+json`` parameter is retained.
 

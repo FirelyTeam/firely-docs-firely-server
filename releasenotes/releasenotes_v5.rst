@@ -21,7 +21,7 @@ Database
 Configuration
 ^^^^^^^^^^^^^
 
-* The ``HistoryOptions`` are removed as configuration option, so you can remove it from your configuration in ``appsettings.instance.json`` or environment variables as well. The returned resources will be limited by the settings in the ``BundleOptions``, see :ref:`bundle_options`.
+* The ``HistoryOptions`` configuration option has been removed, so you can delete it from your configuration in ``appsettings.instance.json`` or environment variables as well. The returned resources will be limited by the settings in the ``BundleOptions``, see :ref:`bundle_options`.
 * The Bulk Data Export upgrades (see below) come with a few extra configuration settings, see :ref:`feature_bulkdataexport`
 
 Features

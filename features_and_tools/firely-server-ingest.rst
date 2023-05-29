@@ -280,12 +280,12 @@ Release notes
 
 .. _fsi_releasenotes_2.2.0:
 
-Release 2.2.0, May x-th, 2023
+Release 2.2.0, June x-th, 2023
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Fix: Composite parameters are more accurately indexed for SQL Server, to align with Firely Server 5.1.0. See :ref:`vonk_releasenotes_5_1_0` and the accompanying warnings.
 * Feature: FSI is now open to evaluation, just like Firely Server itself. It is limited though, to a maximum of 10.000 resources in the database, including history.
-* Feature: FSI is updated to .NET SDK 5.1.0, see `its releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.1.0>`_
+* Feature: FSI is updated to Firely .NET SDK 5.1.0, see `its releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.1.0>`_
 
 .. _fsi_releasenotes_2.1.0:
 

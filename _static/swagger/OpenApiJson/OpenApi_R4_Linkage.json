@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - Linkage",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - Linkage",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1727,7 +1727,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Who and/or what authored the composition",
+        "description": "Who and/or what authored the document",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1745,7 +1745,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Name of system",
+        "description": "Who or where the information in the statement came from",
         "style": "form",
         "schema": {
           "type": "string"

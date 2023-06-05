@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - Endpoint",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - Endpoint",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1774,7 +1774,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1783,7 +1783,7 @@
       "name": {
         "name": "name",
         "in": "query",
-        "description": "The full product name",
+        "description": "Computationally friendly name of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1792,7 +1792,7 @@
       "organization": {
         "name": "organization",
         "in": "query",
-        "description": "The organization that has assumed the specific responsibilities of this EpisodeOfCare",
+        "description": "The organization that provides this Healthcare Service",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1809,7 +1809,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"

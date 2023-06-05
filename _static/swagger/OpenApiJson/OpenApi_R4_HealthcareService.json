@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - HealthcareService",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - HealthcareService",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1844,7 +1844,7 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Whether this organization affiliation record is in active use",
+        "description": "Is the schedule in active use",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1853,8 +1853,7 @@
       "characteristic": {
         "name": "characteristic",
         "in": "query",
-        "description": "Kind of characteristic",
-        "style": "form",
+        "description": "One of the HealthcareService's characteristics",
         "schema": {
           "type": "string"
         }
@@ -1870,8 +1869,7 @@
       "endpoint": {
         "name": "endpoint",
         "in": "query",
-        "description": "The endpoint for the study or series",
-        "style": "form",
+        "description": "Technical endpoints providing access to electronic services operated for the healthcare service",
         "schema": {
           "type": "string"
         }
@@ -1879,7 +1877,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1888,7 +1886,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Where the procedure happened",
+        "description": "Uri where the data can be found",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1897,7 +1895,7 @@
       "name": {
         "name": "name",
         "in": "query",
-        "description": "The full product name",
+        "description": "Computationally friendly name of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1906,8 +1904,7 @@
       "organization": {
         "name": "organization",
         "in": "query",
-        "description": "The organization that has assumed the specific responsibilities of this EpisodeOfCare",
-        "style": "form",
+        "description": "The organization that provides this Healthcare Service",
         "schema": {
           "type": "string"
         }
@@ -1923,7 +1920,7 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "A broad categorization of the service that is to be performed during this appointment",
+        "description": "High-level category",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1932,7 +1929,7 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The type of appointments that can be booked into the slot",
+        "description": "The type of appointments that can be booked into associated slot(s)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1941,7 +1938,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Specific specialty of the participatingOrganization in the context of the role",
+        "description": "Type of specialty needed",
         "style": "form",
         "schema": {
           "type": "string"

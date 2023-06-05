@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - OrganizationAffiliation",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - OrganizationAffiliation",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1870,7 +1870,8 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Whether this organization affiliation record is in active use",
+        "description": "Is the schedule in active use",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1878,7 +1879,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Date first version of the resource instance was recorded\r\n* [CarePlan](careplan.html): Time period plan covers\r\n* [CareTeam](careteam.html): Time period team covers\r\n* [ClinicalImpression](clinicalimpression.html): When the assessment was documented\r\n* [Composition](composition.html): Composition editing time\r\n* [Consent](consent.html): When this Consent was created or indexed\r\n* [DiagnosticReport](diagnosticreport.html): The clinically relevant time of the report\r\n* [Encounter](encounter.html): A date within the period the Encounter lasted\r\n* [EpisodeOfCare](episodeofcare.html): The provided date search value falls within the episode of care's period\r\n* [FamilyMemberHistory](familymemberhistory.html): When history was recorded or last updated\r\n* [Flag](flag.html): Time period when flag is active\r\n* [Immunization](immunization.html): Vaccination  (non)-Administration Date\r\n* [List](list.html): When the list was prepared\r\n* [Observation](observation.html): Obtained date/time. If the obtained element is a period, a date that falls in the period\r\n* [Procedure](procedure.html): When the procedure was performed\r\n* [RiskAssessment](riskassessment.html): When was assessment made?\r\n* [SupplyRequest](supplyrequest.html): When the request was made\r\n",
+        "description": "The questionnaire publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1887,7 +1888,8 @@
       "email": {
         "name": "email",
         "in": "query",
-        "description": "A value in an email contact",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A value in an email contact\r\n* [Person](person.html): A value in an email contact\r\n* [Practitioner](practitioner.html): A value in an email contact\r\n* [PractitionerRole](practitionerrole.html): A value in an email contact\r\n* [RelatedPerson](relatedperson.html): A value in an email contact\r\n",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1895,7 +1897,7 @@
       "endpoint": {
         "name": "endpoint",
         "in": "query",
-        "description": "The endpoint for the study or series",
+        "description": "Technical endpoints providing access to electronic services operated for the healthcare service",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1904,7 +1906,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1913,7 +1915,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Where the procedure happened",
+        "description": "Uri where the data can be found",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1938,7 +1940,8 @@
       "phone": {
         "name": "phone",
         "in": "query",
-        "description": "A value in a phone contact",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A value in a phone contact\r\n* [Person](person.html): A value in a phone contact\r\n* [Practitioner](practitioner.html): A value in a phone contact\r\n* [PractitionerRole](practitionerrole.html): A value in a phone contact\r\n* [RelatedPerson](relatedperson.html): A value in a phone contact\r\n",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1954,7 +1957,8 @@
       "role": {
         "name": "role",
         "in": "query",
-        "description": "Definition of the role the participatingOrganization plays",
+        "description": "The practitioner can perform this role at for the organization",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1962,7 +1966,8 @@
       "service": {
         "name": "service",
         "in": "query",
-        "description": "Healthcare services provided through the role",
+        "description": "The list of healthcare services that this worker provides for this role's Organization/Location(s)",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1970,7 +1975,8 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Specific specialty of the participatingOrganization in the context of the role",
+        "description": "Type of specialty needed",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1978,7 +1984,8 @@
       "telecom": {
         "name": "telecom",
         "in": "query",
-        "description": "The value in any kind of contact",
+        "description": "Contact details for individual or organization",
+        "style": "form",
         "schema": {
           "type": "string"
         }

@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - MessageHeader",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - MessageHeader",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1870,7 +1870,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Who and/or what authored the composition",
+        "description": "Who and/or what authored the document",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1879,7 +1879,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Code that identifies the allergy or intolerance\r\n* [Condition](condition.html): Code for the condition\r\n* [DeviceRequest](devicerequest.html): Code for what is being requested/ordered\r\n* [DiagnosticReport](diagnosticreport.html): The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a condition code\r\n* [List](list.html): What the purpose of this list is\r\n* [Medication](medication.html): Returns medications for a specific code\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication code\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine code\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions of this medication code\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication code\r\n* [Observation](observation.html): The code of the observation type\r\n* [Procedure](procedure.html): A code to identify a  procedure\r\n* [ServiceRequest](servicerequest.html): What is being requested/ordered\r\n",
+        "description": "A code that corresponds to one of its items in the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1888,7 +1888,8 @@
       "destination": {
         "name": "destination",
         "in": "query",
-        "description": "Name of system",
+        "description": "Returns dispenses that should be sent to a specific destination",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1904,7 +1905,8 @@
       "enterer": {
         "name": "enterer",
         "in": "query",
-        "description": "The source of the data entry",
+        "description": "Individual who was entering",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1912,7 +1914,8 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "Code for the event this message represents or link to event definition",
+        "description": "Main clinical acts documented",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1920,7 +1923,8 @@
       "focus": {
         "name": "focus",
         "in": "query",
-        "description": "The actual content of the message",
+        "description": "The focus of an observation when the focus is not the patient of record.",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1928,7 +1932,8 @@
       "receiver": {
         "name": "receiver",
         "in": "query",
-        "description": "Intended \"real-world\" recipient for the data",
+        "description": "Who collected the Supply",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1944,7 +1949,8 @@
       "responsible": {
         "name": "responsible",
         "in": "query",
-        "description": "Final responsibility for event",
+        "description": "Who maintains system namespace?",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1961,7 +1967,8 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Name of system",
+        "description": "Who or where the information in the statement came from",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1977,7 +1984,8 @@
       "target": {
         "name": "target",
         "in": "query",
-        "description": "Particular delivery destination within the destination",
+        "description": "Types of resource (if a resource reference)",
+        "style": "form",
         "schema": {
           "type": "string"
         }

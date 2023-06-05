@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - Slot",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - Slot",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1800,7 +1800,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1817,7 +1817,8 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "A broad categorization of the service that is to be performed during this appointment",
+        "description": "High-level category",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1825,7 +1826,8 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The type of appointments that can be booked into the slot",
+        "description": "The type of appointments that can be booked into associated slot(s)",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1833,7 +1835,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Specific specialty of the participatingOrganization in the context of the role",
+        "description": "Type of specialty needed",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1850,7 +1852,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"

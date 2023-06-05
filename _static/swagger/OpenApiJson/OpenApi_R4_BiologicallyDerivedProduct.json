@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - BiologicallyDerivedProduct",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - BiologicallyDerivedProduct",
+    "version": "5.0.0"
   },
   "servers": [
     {

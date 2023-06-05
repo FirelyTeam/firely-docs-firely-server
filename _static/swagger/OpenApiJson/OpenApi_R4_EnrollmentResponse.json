@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - EnrollmentResponse",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - EnrollmentResponse",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1727,7 +1727,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1736,8 +1736,7 @@
       "request": {
         "name": "request",
         "in": "query",
-        "description": "The claim reference",
-        "style": "form",
+        "description": "The reference to the claim",
         "schema": {
           "type": "string"
         }
@@ -1745,7 +1744,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"

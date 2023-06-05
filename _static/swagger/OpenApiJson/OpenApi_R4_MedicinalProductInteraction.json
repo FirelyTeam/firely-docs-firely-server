@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - MedicinalProductInteraction",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - MedicinalProductInteraction",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1701,7 +1701,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document",
         "style": "form",
         "schema": {
           "type": "string"

@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - Bundle",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - Bundle",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -243,6 +243,12 @@
             "$ref": "#/components/parameters/composition"
           },
           {
+            "$ref": "#/components/parameters/datapharmepilastupdated"
+          },
+          {
+            "$ref": "#/components/parameters/datesp"
+          },
+          {
             "$ref": "#/components/parameters/identifier"
           },
           {
@@ -373,6 +379,12 @@
           },
           {
             "$ref": "#/components/parameters/composition"
+          },
+          {
+            "$ref": "#/components/parameters/datapharmepilastupdated"
+          },
+          {
+            "$ref": "#/components/parameters/datesp"
           },
           {
             "$ref": "#/components/parameters/identifier"
@@ -725,6 +737,12 @@
             "$ref": "#/components/parameters/composition"
           },
           {
+            "$ref": "#/components/parameters/datapharmepilastupdated"
+          },
+          {
+            "$ref": "#/components/parameters/datesp"
+          },
+          {
             "$ref": "#/components/parameters/identifier"
           },
           {
@@ -1001,6 +1019,14 @@
                   },
                   "composition": {
                     "title": "composition",
+                    "type": "string"
+                  },
+                  "datapharmepilastupdated": {
+                    "title": "datapharmepilastupdated",
+                    "type": "string"
+                  },
+                  "datesp": {
+                    "title": "datesp",
                     "type": "string"
                   },
                   "identifier": {
@@ -1754,10 +1780,26 @@
           "type": "string"
         }
       },
+      "datapharmepilastupdated": {
+        "name": "datapharmepilastupdated",
+        "in": "query",
+        "description": "Searching by ePI last updated date",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "datesp": {
+        "name": "datesp",
+        "in": "query",
+        "description": "Searching by date",
+        "schema": {
+          "type": "string"
+        }
+      },
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1782,7 +1824,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): allergy | intolerance - Underlying mechanism (if known)\r\n* [Composition](composition.html): Kind of composition (LOINC if possible)\r\n* [DocumentManifest](documentmanifest.html): Kind of document set\r\n* [DocumentReference](documentreference.html): Kind of document (LOINC if possible)\r\n* [Encounter](encounter.html): Specific type of encounter\r\n* [EpisodeOfCare](episodeofcare.html): Type/class  - e.g. specialist referral, disease management\r\n",
+        "description": "Kind of document (LOINC if possible)<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"

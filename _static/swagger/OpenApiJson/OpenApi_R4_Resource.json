@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - Resource",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - Resource",
+    "version": "5.0.0"
   },
   "servers": [
     {

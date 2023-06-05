@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - VerificationResult",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - VerificationResult",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1701,7 +1701,7 @@
       "target": {
         "name": "target",
         "in": "query",
-        "description": "Particular delivery destination within the destination",
+        "description": "Types of resource (if a resource reference)",
         "style": "form",
         "schema": {
           "type": "string"

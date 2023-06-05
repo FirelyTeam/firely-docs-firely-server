@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - ChargeItem",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - ChargeItem",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1909,7 +1909,7 @@
       "account": {
         "name": "account",
         "in": "query",
-        "description": "The set of accounts that may be used for billing for this Encounter",
+        "description": "Account that is being balanced",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1918,7 +1918,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Code that identifies the allergy or intolerance\r\n* [Condition](condition.html): Code for the condition\r\n* [DeviceRequest](devicerequest.html): Code for what is being requested/ordered\r\n* [DiagnosticReport](diagnosticreport.html): The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a condition code\r\n* [List](list.html): What the purpose of this list is\r\n* [Medication](medication.html): Returns medications for a specific code\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication code\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine code\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions of this medication code\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication code\r\n* [Observation](observation.html): The code of the observation type\r\n* [Procedure](procedure.html): A code to identify a  procedure\r\n* [ServiceRequest](servicerequest.html): What is being requested/ordered\r\n",
+        "description": "A code that corresponds to one of its items in the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1927,7 +1927,7 @@
       "context": {
         "name": "context",
         "in": "query",
-        "description": "A use context assigned to the research definition",
+        "description": "A use context assigned to the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1944,8 +1944,7 @@
       "enterer": {
         "name": "enterer",
         "in": "query",
-        "description": "The source of the data entry",
-        "style": "form",
+        "description": "Individual who was entering",
         "schema": {
           "type": "string"
         }
@@ -1961,7 +1960,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1970,7 +1969,7 @@
       "occurrence": {
         "name": "occurrence",
         "in": "query",
-        "description": "When scheduled",
+        "description": "When service should occur",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1979,7 +1978,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2020,8 +2019,7 @@
       "quantity": {
         "name": "quantity",
         "in": "query",
-        "description": "Amount of substance in the package",
-        "style": "form",
+        "description": "Quantity of which the charge item has been serviced",
         "schema": {
           "type": "string"
         }
@@ -2037,7 +2035,7 @@
       "service": {
         "name": "service",
         "in": "query",
-        "description": "Healthcare services provided through the role",
+        "description": "The list of healthcare services that this worker provides for this role's Organization/Location(s)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2046,7 +2044,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document",
         "style": "form",
         "schema": {
           "type": "string"

@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - SubstancePolymer",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - SubstancePolymer",
+    "version": "5.0.0"
   },
   "servers": [
     {

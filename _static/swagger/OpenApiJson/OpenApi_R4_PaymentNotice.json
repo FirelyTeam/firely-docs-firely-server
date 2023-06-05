@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - PaymentNotice",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - PaymentNotice",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1779,7 +1779,7 @@
       "created": {
         "name": "created",
         "in": "query",
-        "description": "The creation date",
+        "description": "When this document manifest created",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1788,7 +1788,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1805,7 +1805,7 @@
       "provider": {
         "name": "provider",
         "in": "query",
-        "description": "The reference to the provider",
+        "description": "The identity of the provider who placed the nutrition order",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1814,7 +1814,7 @@
       "request": {
         "name": "request",
         "in": "query",
-        "description": "The claim reference",
+        "description": "The reference to the claim",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1831,7 +1831,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"

@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - TestReport",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - TestReport",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1766,7 +1766,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1784,7 +1784,7 @@
       "participant": {
         "name": "participant",
         "in": "query",
-        "description": "Persons involved in the encounter other than the patient",
+        "description": "Individual who was involved",
         "style": "form",
         "schema": {
           "type": "string"

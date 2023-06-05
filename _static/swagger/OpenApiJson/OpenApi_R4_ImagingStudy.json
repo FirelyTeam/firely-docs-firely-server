@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - ImagingStudy",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - ImagingStudy",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1917,7 +1917,8 @@
       "bodysite": {
         "name": "bodysite",
         "in": "query",
-        "description": "The body site studied",
+        "description": "The code for the body site from where the specimen originated",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1933,7 +1934,7 @@
       "encounter": {
         "name": "encounter",
         "in": "query",
-        "description": "Encounter created as part of",
+        "description": "Multiple Resources: \r\n\r\n* [Composition](composition.html): Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter during which request was created\r\n* [DiagnosticReport](diagnosticreport.html): The Encounter when the order was made\r\n* [DocumentReference](documentreference.html): Context of the document  content\r\n* [Flag](flag.html): Alert relevant during encounter\r\n* [List](list.html): Context in which list created\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this encounter identifier\r\n* [Observation](observation.html): Encounter related to the observation\r\n* [Procedure](procedure.html): Encounter created as part of\r\n* [RiskAssessment](riskassessment.html): Where was assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter in which this request is made\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this encounter identifier\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1942,7 +1943,8 @@
       "endpoint": {
         "name": "endpoint",
         "in": "query",
-        "description": "The endpoint for the study or series",
+        "description": "Technical endpoints providing access to electronic services operated for the healthcare service",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1950,7 +1952,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1975,7 +1977,8 @@
       "modality": {
         "name": "modality",
         "in": "query",
-        "description": "The modality of the series",
+        "description": "The type of acquisition equipment/process",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1983,7 +1986,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1992,7 +1995,7 @@
       "performer": {
         "name": "performer",
         "in": "query",
-        "description": "Desired performer for service",
+        "description": "The reference to the practitioner",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2033,7 +2036,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2042,7 +2045,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document",
         "style": "form",
         "schema": {
           "type": "string"

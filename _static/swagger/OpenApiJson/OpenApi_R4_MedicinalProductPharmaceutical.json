@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - MedicinalProductPharmaceutical",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - MedicinalProductPharmaceutical",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1727,7 +1727,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"

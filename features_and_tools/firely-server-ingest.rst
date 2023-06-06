@@ -280,7 +280,7 @@ Release notes
 
 .. _fsi_releasenotes_2.2.0:
 
-Release 2.2.0, June x-th, 2023
+Release 2.2.0, June 13th, 2023
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Fix: Composite parameters are more accurately indexed for SQL Server, to align with Firely Server 5.1.0. See :ref:`vonk_releasenotes_5_1_0` and the accompanying warnings.

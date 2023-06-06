@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - CoverageEligibilityRequest",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - CoverageEligibilityRequest",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1191,7 +1191,7 @@
         "tags": [
           "CoverageEligibilityRequest"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "CoverageEligibilityRequestInstanceMetaAddPost",
         "parameters": [
           {
@@ -1276,7 +1276,7 @@
         "tags": [
           "CoverageEligibilityRequest"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "CoverageEligibilityRequestInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1361,7 +1361,7 @@
         "tags": [
           "CoverageEligibilityRequest"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "CoverageEligibilityRequestInstanceMetaPost",
         "parameters": [
           {
@@ -1446,7 +1446,7 @@
         "tags": [
           "CoverageEligibilityRequest"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "CoverageEligibilityRequestMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1779,7 +1779,7 @@
       "created": {
         "name": "created",
         "in": "query",
-        "description": "The creation date",
+        "description": "When this document manifest created",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1788,7 +1788,7 @@
       "enterer": {
         "name": "enterer",
         "in": "query",
-        "description": "The source of the data entry",
+        "description": "Individual who was entering",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1797,7 +1797,8 @@
       "facility": {
         "name": "facility",
         "in": "query",
-        "description": "Facility responsible for the goods and services",
+        "description": "Kind of facility where patient was seen",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1805,7 +1806,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1814,7 +1815,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1823,7 +1824,8 @@
       "provider": {
         "name": "provider",
         "in": "query",
-        "description": "The reference to the provider",
+        "description": "The identity of the provider who placed the nutrition order",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1831,7 +1833,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"

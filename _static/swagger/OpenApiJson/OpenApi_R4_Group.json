@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - Group",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - Group",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1230,7 +1230,7 @@
         "tags": [
           "Group"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "GroupInstanceMetaAddPost",
         "parameters": [
           {
@@ -1315,7 +1315,7 @@
         "tags": [
           "Group"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "GroupInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1400,7 +1400,7 @@
         "tags": [
           "Group"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "GroupInstanceMetaPost",
         "parameters": [
           {
@@ -1485,7 +1485,7 @@
         "tags": [
           "Group"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "GroupMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1826,7 +1826,8 @@
       "characteristic": {
         "name": "characteristic",
         "in": "query",
-        "description": "Kind of characteristic",
+        "description": "One of the HealthcareService's characteristics",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1842,7 +1843,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Code that identifies the allergy or intolerance\r\n* [Condition](condition.html): Code for the condition\r\n* [DeviceRequest](devicerequest.html): Code for what is being requested/ordered\r\n* [DiagnosticReport](diagnosticreport.html): The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a condition code\r\n* [List](list.html): What the purpose of this list is\r\n* [Medication](medication.html): Returns medications for a specific code\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication code\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine code\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions of this medication code\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication code\r\n* [Observation](observation.html): The code of the observation type\r\n* [Procedure](procedure.html): A code to identify a  procedure\r\n* [ServiceRequest](servicerequest.html): What is being requested/ordered\r\n",
+        "description": "A code that corresponds to one of its items in the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1859,7 +1860,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1884,7 +1885,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): allergy | intolerance - Underlying mechanism (if known)\r\n* [Composition](composition.html): Kind of composition (LOINC if possible)\r\n* [DocumentManifest](documentmanifest.html): Kind of document set\r\n* [DocumentReference](documentreference.html): Kind of document (LOINC if possible)\r\n* [Encounter](encounter.html): Specific type of encounter\r\n* [EpisodeOfCare](episodeofcare.html): Type/class  - e.g. specialist referral, disease management\r\n",
+        "description": "Kind of document (LOINC if possible)<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"

@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - Endpoint",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - Endpoint",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1178,7 +1178,7 @@
         "tags": [
           "Endpoint"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "EndpointInstanceMetaAddPost",
         "parameters": [
           {
@@ -1263,7 +1263,7 @@
         "tags": [
           "Endpoint"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "EndpointInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1348,7 +1348,7 @@
         "tags": [
           "Endpoint"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "EndpointInstanceMetaPost",
         "parameters": [
           {
@@ -1433,7 +1433,7 @@
         "tags": [
           "Endpoint"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "EndpointMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1774,7 +1774,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1783,7 +1783,7 @@
       "name": {
         "name": "name",
         "in": "query",
-        "description": "The full product name",
+        "description": "Computationally friendly name of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1792,7 +1792,7 @@
       "organization": {
         "name": "organization",
         "in": "query",
-        "description": "The organization that has assumed the specific responsibilities of this EpisodeOfCare",
+        "description": "The organization that provides this Healthcare Service",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1809,7 +1809,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"

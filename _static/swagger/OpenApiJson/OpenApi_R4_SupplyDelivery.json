@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - SupplyDelivery",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - SupplyDelivery",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1165,7 +1165,7 @@
         "tags": [
           "SupplyDelivery"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "SupplyDeliveryInstanceMetaAddPost",
         "parameters": [
           {
@@ -1250,7 +1250,7 @@
         "tags": [
           "SupplyDelivery"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "SupplyDeliveryInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1335,7 +1335,7 @@
         "tags": [
           "SupplyDelivery"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "SupplyDeliveryInstanceMetaPost",
         "parameters": [
           {
@@ -1420,7 +1420,7 @@
         "tags": [
           "SupplyDelivery"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "SupplyDeliveryMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1753,7 +1753,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1762,7 +1762,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1771,8 +1771,7 @@
       "receiver": {
         "name": "receiver",
         "in": "query",
-        "description": "Intended \"real-world\" recipient for the data",
-        "style": "form",
+        "description": "Who collected the Supply",
         "schema": {
           "type": "string"
         }
@@ -1780,7 +1779,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1789,8 +1788,7 @@
       "supplier": {
         "name": "supplier",
         "in": "query",
-        "description": "Who is intended to fulfill the request",
-        "style": "form",
+        "description": "Dispenser",
         "schema": {
           "type": "string"
         }

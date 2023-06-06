@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - MeasureReport",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - MeasureReport",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1217,7 +1217,7 @@
         "tags": [
           "MeasureReport"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "MeasureReportInstanceMetaAddPost",
         "parameters": [
           {
@@ -1302,7 +1302,7 @@
         "tags": [
           "MeasureReport"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "MeasureReportInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1387,7 +1387,7 @@
         "tags": [
           "MeasureReport"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "MeasureReportInstanceMetaPost",
         "parameters": [
           {
@@ -1472,7 +1472,7 @@
         "tags": [
           "MeasureReport"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "MeasureReportMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1805,7 +1805,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Date first version of the resource instance was recorded\r\n* [CarePlan](careplan.html): Time period plan covers\r\n* [CareTeam](careteam.html): Time period team covers\r\n* [ClinicalImpression](clinicalimpression.html): When the assessment was documented\r\n* [Composition](composition.html): Composition editing time\r\n* [Consent](consent.html): When this Consent was created or indexed\r\n* [DiagnosticReport](diagnosticreport.html): The clinically relevant time of the report\r\n* [Encounter](encounter.html): A date within the period the Encounter lasted\r\n* [EpisodeOfCare](episodeofcare.html): The provided date search value falls within the episode of care's period\r\n* [FamilyMemberHistory](familymemberhistory.html): When history was recorded or last updated\r\n* [Flag](flag.html): Time period when flag is active\r\n* [Immunization](immunization.html): Vaccination  (non)-Administration Date\r\n* [List](list.html): When the list was prepared\r\n* [Observation](observation.html): Obtained date/time. If the obtained element is a period, a date that falls in the period\r\n* [Procedure](procedure.html): When the procedure was performed\r\n* [RiskAssessment](riskassessment.html): When was assessment made?\r\n* [SupplyRequest](supplyrequest.html): When the request was made\r\n",
+        "description": "The questionnaire publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1822,7 +1822,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1839,7 +1839,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1848,7 +1848,7 @@
       "period": {
         "name": "period",
         "in": "query",
-        "description": "The period covered by the documentation",
+        "description": "Time of service that is being documented<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1865,7 +1865,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1874,7 +1874,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document",
         "style": "form",
         "schema": {
           "type": "string"

@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - RelatedPerson",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - RelatedPerson",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1321,7 +1321,7 @@
         "tags": [
           "RelatedPerson"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "RelatedPersonInstanceMetaAddPost",
         "parameters": [
           {
@@ -1406,7 +1406,7 @@
         "tags": [
           "RelatedPerson"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "RelatedPersonInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1491,7 +1491,7 @@
         "tags": [
           "RelatedPerson"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "RelatedPersonInstanceMetaPost",
         "parameters": [
           {
@@ -1576,7 +1576,7 @@
         "tags": [
           "RelatedPerson"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "RelatedPersonMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1909,7 +1909,7 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Whether this organization affiliation record is in active use",
+        "description": "Is the schedule in active use",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1918,7 +1918,7 @@
       "address": {
         "name": "address",
         "in": "query",
-        "description": "A (part of the) address of the location<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "A server defined search that may match any of the string fields in the Address, including line, city, district, state, country, postalCode, and/or text<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1927,7 +1927,7 @@
       "address-city": {
         "name": "address-city",
         "in": "query",
-        "description": "A city specified in an address<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "A city specified in an address",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1945,7 +1945,7 @@
       "address-postalcode": {
         "name": "address-postalcode",
         "in": "query",
-        "description": "A postal code specified in an address<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "A postal code specified in an address",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1954,7 +1954,7 @@
       "address-state": {
         "name": "address-state",
         "in": "query",
-        "description": "A state specified in an address<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "A state specified in an address",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1973,7 +1973,6 @@
         "name": "birthdate",
         "in": "query",
         "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): The patient's date of birth\r\n* [Person](person.html): The person's date of birth\r\n* [RelatedPerson](relatedperson.html): The Related Person's date of birth\r\n",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1981,7 +1980,7 @@
       "email": {
         "name": "email",
         "in": "query",
-        "description": "A value in an email contact",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A value in an email contact\r\n* [Person](person.html): A value in an email contact\r\n* [Practitioner](practitioner.html): A value in an email contact\r\n* [PractitionerRole](practitionerrole.html): A value in an email contact\r\n* [RelatedPerson](relatedperson.html): A value in an email contact\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1991,7 +1990,6 @@
         "name": "gender",
         "in": "query",
         "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): Gender of the patient\r\n* [Person](person.html): The gender of the person\r\n* [Practitioner](practitioner.html): Gender of the practitioner\r\n* [RelatedPerson](relatedperson.html): Gender of the related person\r\n",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1999,7 +1997,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2008,7 +2006,7 @@
       "name": {
         "name": "name",
         "in": "query",
-        "description": "The full product name",
+        "description": "Computationally friendly name of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2017,7 +2015,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2026,7 +2024,7 @@
       "phone": {
         "name": "phone",
         "in": "query",
-        "description": "A value in a phone contact",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A value in a phone contact\r\n* [Person](person.html): A value in a phone contact\r\n* [Practitioner](practitioner.html): A value in a phone contact\r\n* [PractitionerRole](practitionerrole.html): A value in a phone contact\r\n* [RelatedPerson](relatedperson.html): A value in a phone contact\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2035,7 +2033,7 @@
       "phonetic": {
         "name": "phonetic",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A portion of either family or given name using some kind of phonetic matching algorithm\r\n* [Person](person.html): A portion of name using some kind of phonetic matching algorithm\r\n* [Practitioner](practitioner.html): A portion of either family or given name using some kind of phonetic matching algorithm\r\n* [RelatedPerson](relatedperson.html): A portion of name using some kind of phonetic matching algorithm\r\n",
+        "description": "A portion of the organization's name using some kind of phonetic matching algorithm",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2044,7 +2042,7 @@
       "relationship": {
         "name": "relationship",
         "in": "query",
-        "description": "A search by a relationship type",
+        "description": "Combination of relation and relatesTo",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2053,7 +2051,7 @@
       "telecom": {
         "name": "telecom",
         "in": "query",
-        "description": "The value in any kind of contact",
+        "description": "Contact details for individual or organization",
         "style": "form",
         "schema": {
           "type": "string"

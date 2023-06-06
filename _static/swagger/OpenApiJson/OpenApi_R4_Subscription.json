@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - Subscription",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - Subscription",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1178,7 +1178,7 @@
         "tags": [
           "Subscription"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "SubscriptionInstanceMetaAddPost",
         "parameters": [
           {
@@ -1263,7 +1263,7 @@
         "tags": [
           "Subscription"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "SubscriptionInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1348,7 +1348,7 @@
         "tags": [
           "Subscription"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "SubscriptionInstanceMetaPost",
         "parameters": [
           {
@@ -1433,7 +1433,7 @@
         "tags": [
           "Subscription"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "SubscriptionMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1791,7 +1791,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1800,7 +1800,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): allergy | intolerance - Underlying mechanism (if known)\r\n* [Composition](composition.html): Kind of composition (LOINC if possible)\r\n* [DocumentManifest](documentmanifest.html): Kind of document set\r\n* [DocumentReference](documentreference.html): Kind of document (LOINC if possible)\r\n* [Encounter](encounter.html): Specific type of encounter\r\n* [EpisodeOfCare](episodeofcare.html): Type/class  - e.g. specialist referral, disease management\r\n",
+        "description": "Kind of document (LOINC if possible)<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1809,7 +1809,7 @@
       "url": {
         "name": "url",
         "in": "query",
-        "description": "The uri that identifies the research definition",
+        "description": "The uri that identifies the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"

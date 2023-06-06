@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - MedicinalProductContraindication",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - MedicinalProductContraindication",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1113,7 +1113,7 @@
         "tags": [
           "MedicinalProductContraindication"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "MedicinalProductContraindicationInstanceMetaAddPost",
         "parameters": [
           {
@@ -1198,7 +1198,7 @@
         "tags": [
           "MedicinalProductContraindication"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "MedicinalProductContraindicationInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1283,7 +1283,7 @@
         "tags": [
           "MedicinalProductContraindication"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "MedicinalProductContraindicationInstanceMetaPost",
         "parameters": [
           {
@@ -1368,7 +1368,7 @@
         "tags": [
           "MedicinalProductContraindication"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "MedicinalProductContraindicationMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1701,7 +1701,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document",
         "style": "form",
         "schema": {
           "type": "string"

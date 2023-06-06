@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - AppointmentResponse",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - AppointmentResponse",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1191,7 +1191,7 @@
         "tags": [
           "AppointmentResponse"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "AppointmentResponseInstanceMetaAddPost",
         "parameters": [
           {
@@ -1276,7 +1276,7 @@
         "tags": [
           "AppointmentResponse"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "AppointmentResponseInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1361,7 +1361,7 @@
         "tags": [
           "AppointmentResponse"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "AppointmentResponseInstanceMetaPost",
         "parameters": [
           {
@@ -1446,7 +1446,7 @@
         "tags": [
           "AppointmentResponse"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "AppointmentResponseMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1779,7 +1779,7 @@
       "actor": {
         "name": "actor",
         "in": "query",
-        "description": "Resource for the actor (or group, by role)",
+        "description": "The individual(HealthcareService, Practitioner, Location, ...) to find a Schedule for",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1788,8 +1788,7 @@
       "appointment": {
         "name": "appointment",
         "in": "query",
-        "description": "The appointment that scheduled this encounter",
-        "style": "form",
+        "description": "The appointment that the response is attached to",
         "schema": {
           "type": "string"
         }
@@ -1797,7 +1796,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1806,7 +1805,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Where the procedure happened",
+        "description": "Uri where the data can be found",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1823,7 +1822,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1832,8 +1831,7 @@
       "practitioner": {
         "name": "practitioner",
         "in": "query",
-        "description": "Persons involved in the encounter other than the patient",
-        "style": "form",
+        "description": "This Response is for this Practitioner",
         "schema": {
           "type": "string"
         }

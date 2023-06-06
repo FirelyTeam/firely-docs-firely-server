@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - System Operations",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - System Operations",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -43,7 +43,7 @@
         "tags": [
           "System"
         ],
-        "summary": "search-sytem: Search all resources",
+        "summary": "search-system: Search all resources",
         "operationId": "SearchSystemGet",
         "parameters": [
           {

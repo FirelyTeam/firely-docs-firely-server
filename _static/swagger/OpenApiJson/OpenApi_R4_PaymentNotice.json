@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Firely Server - PaymentNotice",
-    "version": "1.0.0"
+    "title": "Firely Server 5.0.0 CapabilityStatement - PaymentNotice",
+    "version": "5.0.0"
   },
   "servers": [
     {
@@ -1191,7 +1191,7 @@
         "tags": [
           "PaymentNotice"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "PaymentNoticeInstanceMetaAddPost",
         "parameters": [
           {
@@ -1276,7 +1276,7 @@
         "tags": [
           "PaymentNotice"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "PaymentNoticeInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1361,7 +1361,7 @@
         "tags": [
           "PaymentNotice"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "PaymentNoticeInstanceMetaPost",
         "parameters": [
           {
@@ -1446,7 +1446,7 @@
         "tags": [
           "PaymentNotice"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "PaymentNoticeMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1779,7 +1779,7 @@
       "created": {
         "name": "created",
         "in": "query",
-        "description": "The creation date",
+        "description": "When this document manifest created",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1788,7 +1788,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1805,7 +1805,7 @@
       "provider": {
         "name": "provider",
         "in": "query",
-        "description": "The reference to the provider",
+        "description": "The identity of the provider who placed the nutrition order",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1814,7 +1814,7 @@
       "request": {
         "name": "request",
         "in": "query",
-        "description": "The claim reference",
+        "description": "The reference to the claim",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1831,7 +1831,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"

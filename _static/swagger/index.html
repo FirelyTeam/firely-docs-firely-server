@@ -15,5 +15,24 @@
     <script src="./swagger-ui-bundle.js" charset="UTF-8"> </script>
     <script src="./swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
     <script src="./swagger-initializer.js" charset="UTF-8"> </script>
+    <script>
+
+        function setLogoLink(){
+          const headerImg = document.querySelector('.topbar img')
+
+          if (headerImg) {
+            var link = document.createElement('a');
+            link.innerHTML = headerImg.outerHTML;
+            link.setAttribute('href', 'https://fire.ly/');
+            
+            headerImg.parentNode.insertBefore(link, headerImg);
+            headerImg.remove();
+          } else {
+            setTimeout(setLogoLink, 200);
+          }
+        }
+
+        setLogoLink();
+    </script>
   </body>
 </html>

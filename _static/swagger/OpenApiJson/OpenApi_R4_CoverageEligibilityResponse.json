@@ -2,11 +2,15 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - CoverageEligibilityResponse",
-    "version": "1.0.0"
+    "version": "5.0.0"
   },
   "servers": [
     {
       "url": "https://server.fire.ly/",
+      "description": "Firely Server (non-secured)"
+    },
+    {
+      "url": "https://secure.server.fire.ly/",
       "description": "Firely Server"
     }
   ],
@@ -523,7 +527,7 @@
         ],
         "requestBody": {
           "description": "Patch to apply to a FHIR CoverageEligibilityResponse record",
-          "content": { },
+          "content": {},
           "required": true
         },
         "responses": {
@@ -1217,7 +1221,7 @@
         "tags": [
           "CoverageEligibilityResponse"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "CoverageEligibilityResponseInstanceMetaAddPost",
         "parameters": [
           {
@@ -1302,7 +1306,7 @@
         "tags": [
           "CoverageEligibilityResponse"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "CoverageEligibilityResponseInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1387,7 +1391,7 @@
         "tags": [
           "CoverageEligibilityResponse"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "CoverageEligibilityResponseInstanceMetaPost",
         "parameters": [
           {
@@ -1472,7 +1476,7 @@
         "tags": [
           "CoverageEligibilityResponse"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "CoverageEligibilityResponseMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1805,7 +1809,7 @@
       "created": {
         "name": "created",
         "in": "query",
-        "description": "The creation date",
+        "description": "When this document manifest created",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1823,7 +1827,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1832,7 +1836,7 @@
       "insurer": {
         "name": "insurer",
         "in": "query",
-        "description": "The organization which generated this resource",
+        "description": "The target payor/insurer for the Claim",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1850,7 +1854,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1859,7 +1863,7 @@
       "request": {
         "name": "request",
         "in": "query",
-        "description": "The claim reference",
+        "description": "The reference to the claim",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1868,7 +1872,7 @@
       "requestor": {
         "name": "requestor",
         "in": "query",
-        "description": "The Provider of the claim",
+        "description": "The reference to the provider who submitted the claim",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1877,7 +1881,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1903,8 +1907,24 @@
           "type": "string"
         }
       }
+    },
+    "securitySchemes": {
+      "openId": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "https://secure.server.fire.ly/.well-known/smart-configuration"
+      }
     }
   },
+  "security": [
+    {
+      "openId": [
+        "openid",
+        "profile",
+        "fhirUser",
+        "offline_access"
+      ]
+    }
+  ],
   "tags": [
     {
       "name": "CoverageEligibilityResponse",

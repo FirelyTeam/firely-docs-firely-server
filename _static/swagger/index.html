@@ -20,6 +20,8 @@
         function setLogoLink(){
           const headerImg = document.querySelector('.topbar img')
 
+          // The element might not be there yet because it gets rendered by React
+          // If so, we will just wait a bit and try again.
           if (headerImg) {
             var link = document.createElement('a');
             link.innerHTML = headerImg.outerHTML;

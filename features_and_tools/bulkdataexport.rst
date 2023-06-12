@@ -243,8 +243,8 @@ Used when performing a System level export. It should retrieve the snapshot, use
   
 IPatientBulkDataWithPatientsFilterExportRepository
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Optional addition. Used when performing a Patient level export with the 'patient' parameter in the request. It should filter the patients from the snapshot based on the references provided.
+Optional addition. Used when performing a Patient level export with the 'patient' parameter in the request. It should filter the patients from the snapshot based on the references provided as specified in https://build.fhir.org/ig/HL7/bulk-data/export.html#query-parameters.
 
 IGroupBulkDataWithPatientsFilterExportRepository
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Optional addition. Used when performing a Group level export with the 'patient' parameter in the request. It should filter the patients from the snapshot based on the references provided.
+Optional addition. Used when performing a Group level export with the 'patient' parameter in the request. It should filter the patients from the snapshot based on the references provided as specified in https://build.fhir.org/ig/HL7/bulk-data/export.html#query-parameters.

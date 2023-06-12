@@ -208,6 +208,10 @@ We support BDE for a facade. As always with a facade implementation, the parts d
 +--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
 | System       | Facade plugin                                   | ISystemBulkDataExportRepository                                    | Implement                                        |
 +--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| All          | Facade plugin                                   | IPatientBulkDataWithPatientsFilterExportRepository                 | Implement (optional, enables 'patient' filter)   |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| All          | Facade plugin                                   | IGroupBulkDataWithPatientsFilterExportRepository                   | Implement (optional, enables 'patient' filter)   |
++--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
 
 .. note::
 
@@ -233,5 +237,14 @@ ISystemBulkDataExportRepository
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Used when performing a System level export. It should retrieve the snapshot, use this to obtain the relevant data from the proprietary datastore and transform this to FHIR resources.
 
+.. note::
 
+  The interfaces below can be found in Vonk.Core version 5.1.0 and higher.
   
+IPatientBulkDataWithPatientsFilterExportRepository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Optional addition. Used when performing a Patient level export with the 'patient' parameter in the request. It should filter the patients from the snapshot based on the references provided.
+
+IGroupBulkDataWithPatientsFilterExportRepository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Optional addition. Used when performing a Group level export with the 'patient' parameter in the request. It should filter the patients from the snapshot based on the references provided.

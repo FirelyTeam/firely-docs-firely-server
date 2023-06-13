@@ -46,6 +46,12 @@ Features
 
 * You can configure limits on Kestrel, see :ref:`hosting_options`, although using a :ref:`reverse proxy<deploy_reverseProxy>` is still preferred.
 * Added a configuration error to the log if the default informationmodel (aka FHIR version) is not loaded in the pipeline.
+* SearchParameters should not be dependent upon the time of indexing. Therefore we disallow the functions below to be used in their expressions.
+  Firely Server will log an error if any of these are encountered, and the SearchParameter will not be used.
+
+    * ``now()``
+    * ``timeOfDay()``
+    * ``today()``
 
 Fix
 ^^^
@@ -95,18 +101,37 @@ Fix
 * Regarding :ref:`feature_customsp_reindex`: if an erroneous parameter is provided as ``include``, a proper error is returned. 
 * URL query decoding was revamped. You should not see any differences, but please contact us if you do.
 * Firely Server leniently accepted a literal unescaped "+" sign as part of the request url and didn't interpret it as a reserved character according to `RFC 3986 <https://www.rfc-editor.org/rfc/rfc3986#section-2.2>`_. Firely Server now correctly interprets it as whitespace.
+
   * This improves the cooperation with AWS API Gateway, that encodes spaces as ``+`` by default.
   * Only the '+' in the ``_format=fhir+json`` parameter is retained.
 
     .. warning::
         In case the ``+`` sign is used as part of a search parameter value it needs to be URL encoded as ``%2B``. An unescaped value will be interpreted as described above, which may lead to unexpected results.
     
+* When using the settings to :ref:`supportedmodel`, it was easy to forget two parameters that Firely Server depends on. These parameters are now always added silently:
+
+    * ``Resource._lastUpdated``
+    * ``StructureDefinition.url``
+
+
+Plugin and Facade
+^^^^^^^^^^^^^^^^^
+
 * ``Vonk.Core`` no longer references the deprecated package ``Microsoft.AspNetCore.Server.Kestrel.Core:2.2.0`` (see `related MSDN documentation <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/target-aspnetcore?view=aspnetcore-6.0&tabs=visual-studio#use-the-aspnet-core-shared-framework>`_).
    
 .. warning:: 
     For plugin developers, this could result in a compilation error when rebuilding  against the latest ``Vonk.Core`` nuget package:  
     ``CS0104: 'BadHttpRequestException' is an ambiguous reference between 'Microsoft.AspNetCore.Server.Kestrel.Core.BadHttpRequestException' and 'Microsoft.AspNetCore.Http.BadHttpRequestException'``
     In this case, make sure to reference ``Microsoft.AspNetCore.Http.BadHttpRequestException`` as ``Microsoft.AspNetCore.Server.Kestrel.BadHttpRequestException`` has been marked as obsolete.
+
+* The ONC 2014 Edition Cures Update paragraph 170.315(b)(10) Electronic Health Information Export requires the export of a single Patients' record. 
+  We made two interfaces public to allow Facade implementers to implement that export. They are very similar to their counterparts `IPatientBulkDataExportRepository` and `IGroupBulkDataExportRepository`, 
+  but add the ability to filter by a list of logical id's of Patients.
+
+  * IPatientBulkDataWithPatientsFilterExportRepository
+  * IGroupBulkDataWithPatientsFilterExportRepository
+
+* Loading dll's: In 5.0.0 we made the assembly loading resilient to duplicate dll's. That has led to a regression error with loading native (non .NET) dll's. We fixed that.
 
 .. _vonk_releasenotes_5_0_0:
 

@@ -77,9 +77,9 @@ Fix
 
   * STU3, search parameters of type `reference` that lacked a target element:
 
-    *  - Linkage.item parameter
-    *  - Linkage.source parameter
-    *  - RequestGroup-instantiates-canonical
+    *  Linkage.item parameter
+    *  Linkage.source parameter
+    *  RequestGroup-instantiates-canonical
 
   * R5, search parameters that lack a fhirpath expression:
 
@@ -120,16 +120,19 @@ Plugin and Facade
 * ``Vonk.Core`` no longer references the deprecated package ``Microsoft.AspNetCore.Server.Kestrel.Core:2.2.0`` (see `related MSDN documentation <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/target-aspnetcore?view=aspnetcore-6.0&tabs=visual-studio#use-the-aspnet-core-shared-framework>`_).
    
 .. warning:: 
-    For plugin developers, this could result in a compilation error when rebuilding  against the latest ``Vonk.Core`` nuget package:  
-    ``CS0104: 'BadHttpRequestException' is an ambiguous reference between 'Microsoft.AspNetCore.Server.Kestrel.Core.BadHttpRequestException' and 'Microsoft.AspNetCore.Http.BadHttpRequestException'``
-    In this case, make sure to reference ``Microsoft.AspNetCore.Http.BadHttpRequestException`` as ``Microsoft.AspNetCore.Server.Kestrel.BadHttpRequestException`` has been marked as obsolete.
+    For plugin developers, this could result in a compilation error when rebuilding  against the latest ``Vonk.Core`` nuget package::
 
-* The ONC 2014 Edition Cures Update paragraph 170.315(b)(10) Electronic Health Information Export requires the export of a single Patients' record. 
-  We made two interfaces public to allow Facade implementers to implement that export. They are very similar to their counterparts `IPatientBulkDataExportRepository` and `IGroupBulkDataExportRepository`, 
+        CS0104: 'BadHttpRequestException' is an ambiguous reference between 'Microsoft.AspNetCore.Server.Kestrel.Core.BadHttpRequestException' and 'Microsoft.AspNetCore.Http.BadHttpRequestException'
+
+    In this case, make sure to reference ``Microsoft.AspNetCore.Http.BadHttpRequestException``, as ``Microsoft.AspNetCore.Server.Kestrel.BadHttpRequestException`` has been marked as obsolete.
+
+* The ONC 2014 Edition Cures Update paragraph 170.315(b)(10) `Electronic Health Information Export <https://www.healthit.gov/test-method/electronic-health-information-export>`_ requires the export of a single Patients' record. 
+  We made two interfaces public to allow :ref:`feature_bulkdataexport_facade` implementers to implement that export, and facilitate the new filters in BDE 2.0. 
+  They are very similar to their counterparts ``IPatientBulkDataExportRepository`` and ``IGroupBulkDataExportRepository``, 
   but add the ability to filter by a list of logical id's of Patients.
 
-  * IPatientBulkDataWithPatientsFilterExportRepository
-  * IGroupBulkDataWithPatientsFilterExportRepository
+  * ``IPatientBulkDataWithPatientsFilterExportRepository``
+  * ``IGroupBulkDataWithPatientsFilterExportRepository``
 
 * Loading dll's: In 5.0.0 we made the assembly loading resilient to duplicate dll's. That has led to a regression error with loading native (non .NET) dll's. We fixed that.
 

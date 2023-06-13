@@ -426,7 +426,7 @@ Restrict supported resources and SearchParameters
 
    "SupportedModel": {
      "RestrictToResources": [ "Patient", "Observation" ],
-     "RestrictToSearchParameters": ["Patient.active", "Observation.patient", "Resource._id", "StructureDefinition.url"],
+     "RestrictToSearchParameters": ["Patient.active", "Observation.patient"],
      "RestrictToCompartments": ["Patient"]
    },
 
@@ -435,8 +435,8 @@ If you want to limit support, you can do so with the configuration above. This i
 
 Be aware that:
 
-* support for _type and _id must not be disabled
-* the Administration API requires support for the 'url' SearchParameter on the conformance resourcetypes
+* the '_type', '_id' and '_lastupdated' search parameters on the base Resource type must be supported and cannot be disabled
+* the Administration API requires support for the 'url' search parameter on the StructureDefinition type and this cannot be disabled
 * this uses the search parameter names, not the path within the resource - so for example to specify `Patient.address.postalCode <http://hl7.org/fhir/R4/patient.html#search>`_ as a supported location, you'd use ``"Patient.address-postalcode"``
 * if the support of `AuditEvent` resources is disabled, the AuditEvents will not get generated (see :ref:`audit_event_logging`).
 

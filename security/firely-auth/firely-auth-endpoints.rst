@@ -85,6 +85,33 @@ active:
     
 For more information, see `Duende Documentation - Introspection Endpoint <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/introspection/>`_.
 
+.. _firely_auth_endpoints_launchcontext:
+
+LaunchContext endpoint
+----------------------
+
+In SMART on FHIR's EHR launch flow, a ``launch`` URL parameter is required when the EHR initiates a launch sequence. It is an identifier for this specific launch and any EHR context associated with it. For more information, see `EHR Launch <https://hl7.org/fhir/smart-app-launch/app-launch.html#launch-app-ehr-launch>`_.
+Firely Auth offers an endpoint to request such identifier. 
+
+The ``launchContext`` endpoint can be accessed via an HTTP POST request and is protected with the secret provided in the :ref:`firely_auth_settings_tokenintro` setting. The EHR context to be associated with can be provided via the HTTP request body via x-www-urlencoded parameters. FHIR resource ids that are of interest for the EHR launch can be submitted by the EHR to Firely Auth in the form of ``<resourceType>=<id>``. Note that no "launch" prefix is used for the resourceType.
+Example below requests a ``launch`` identifier with ``patient`` context associated.
+
+.. code-block::
+
+    POST /connect/launchContext
+    Authorization: Basic xxxyyy
+    patient=<patient-id>
+
+A successful response will return a status code of 200 and a ``launch`` identifier:
+
+.. code-block:: json
+
+    {
+        "launchContextIdentifier": "b0599233-8548-4d56-ae4a-d31babc4ab82"
+    }
+
+An unauthorized request will return a 401.
+
 Known Limitations
 -----------------
 

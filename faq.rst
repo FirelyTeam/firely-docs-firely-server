@@ -28,7 +28,7 @@ When importing specification.zip for various FHIR versions, Firely Server will r
 
 A searchparameter of type 'composite' should define which components it consists of. Firely Server checks whether all the components of such a composite searchparameter are present. If no components are defined at all - that is, SearchParameter.component is empty - it will display this error. This indicates an error in the definition of the searchparameter and should be solved by the author of it.
 
-However, the implementation of this check seems to have an error so too many composite parameters are reported as faulty. We will address this issue in the next release.
+However, the implementation of this check seems to have an error so too many composite parameters are reported as faulty. This has been fixed in release 5.1.0.
 
 .NET SDK not found
 ------------------

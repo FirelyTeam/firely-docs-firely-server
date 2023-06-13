@@ -341,16 +341,6 @@ The Search interactions returns a bundle with results. Users can specify the num
 * ``DefaultCount`` should be less than or equal to ``MaxCount``
 * ``DefaultSort`` is what search results are sorted on if no sort order is specified in the request. If a sort order is specified, this is still added as the last sort clause.
 
-History size
-------------
-::
-
-  "HistoryOptions": {
-    "MaxReturnedResults": 100
-  }
-
-See :ref:`restful_history`.
-
 .. _sizelimits_options:
 
 Protect against large input

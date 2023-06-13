@@ -1,3 +1,5 @@
+.. _compliance_nictiz:
+
 Nictiz
 =======
 

@@ -3,10 +3,143 @@
 Current Firely Server release notes (v5.x)
 ==========================================
 
+.. _vonk_releasenotes_5_1_0:
+
+Release 5.1.0, May xth, 2023
+------------------------------
+
+Firely Server 5.1.0 brings support for Bulk Data Export 2.0, FHIR R5 (5.0.0) and several other features.
+
+Existing installations may be affected by the fixes on composite search parameters for the SQL Server database repository.
+
+Database
+^^^^^^^^
+
+* The SQL Server database schema is upgraded from version 26 to 27. The upgrade will be applied automatically, but if you have a very large database you may want to apply it manually using the script FS_SchemaUpgrade_Data_v26_v27.
+* This implies that you also need to upgrade Firely Server Ingest to version 2.2.0, to match the new database schema.
+
+Configuration
+^^^^^^^^^^^^^
+
+* The ``HistoryOptions`` configuration option has been removed, so you can delete it from your configuration in ``appsettings.instance.json`` or environment variables as well. The returned resources will be limited by the settings in the ``BundleOptions``, see :ref:`bundle_options`.
+* The Bulk Data Export upgrades (see below) come with a few extra configuration settings, see :ref:`feature_bulkdataexport`
+
+Features
+^^^^^^^^
+* Firely Server is upgraded to the release version (5.0.0) of FHIR R5. If you have your administration database in SQL Server or MongoDB, this means that the conformance resources will be :ref:`re-imported <conformance_import>`.
+* We included ``errataR5.zip`` with fixes to a few resources and search parameters that have errors in the specification. These are imported automatically at startup.
+* We upgraded Firely Server to the latest SDK 5.1.0, see its `releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.1.0>`_.
+* Bulk Data Export is upgraded to BDE 2.0, with support for:
+  
+  * patient Filter
+  * _elements filter
+  * HTTP POST with a Parameters resource
+  * export to Azure Blob or Azure Files, see :ref:`feature_bulkdataexport` for related settings
+
+* Our public Postman collection proving support for US-Core is updated, see :ref:`compliance_uscore`
+* Updated our vulnerability scanning, to further enhance your trust in our binaries and images.
+* Cross-origin requests (CORS) are restricted to requests from secure connections.
+* The following security headers were added:
+
+  * to the html output (the homepage): ``script nonce="..."``, ``cache-control``, ``content-security-policy``, ``referrer-policy``, ``x-content-type-options``
+  * and to API response: ``cache-control:no-store``
+
+* You can configure limits on Kestrel, see :ref:`hosting_options`, although using a :ref:`reverse proxy<deploy_reverseProxy>` is still preferred.
+* Added a configuration error to the log if the default informationmodel (aka FHIR version) is not loaded in the pipeline.
+* SearchParameters should not be dependent upon the time of indexing. Therefore we disallow the functions below to be used in their expressions.
+  Firely Server will log an error if any of these are encountered, and the SearchParameter will not be used.
+
+    * ``now()``
+    * ``timeOfDay()``
+    * ``today()``
+
+Fix
+^^^
+* Composite search parameters are more accurately supported on SQL Server. Previously a match could be made across components (e.g. the code from one ``Observation.component`` and the value of another).
+  This was very efficient from a database perspective, but not entirely correct as it could yield more results than expected.
+  We corrected that behavior, so a resource must match all parts of the parameter in the same component. This comes with a database migration, see above.
+
+    .. warning:: 
+        For new or updated resources, the changes take effect immediately.
+        To apply it to existing resources, you have to :ref:`re-index <feature_customsp_reindex>` all resources that are affected by composite search parameters.
+        In general that is just Observation resources. You can :ref:`feature_customsp_reindex_specific` by including the composite parameters and their components::
+
+            POST <base>/administration</R4 or R5>/reindex/searchparameters
+            BODY:
+            include=Observation.code-value-concept,Observation.code-value-date,Observation.code-value-quantity,Observation.code-value-string,Observation.combo-code-value-concept,Observation.combo-code-value-quantity,Observation.component-code-value-concept,Observation.component-code-value-quantity,Observation.code,Observation.value-concept,Observation.value-date,Observation.value-quantity,Observation.value-string,Observation.combo-code,Observation.combo-value-concept,Observation.combo-value-quantity,Observation.component-code,Observation.component-value-concept,Observation.component-value-quantity
+
+    .. warning:: 
+        If you still use the old SQL Server implementation (see :ref:`vonk_releasenotes_460`), you do not benefit from this improvement.
+        Please upgrade to the new implementation.
+
+* All warnings about composite search parameters during startup (usually caused by remaining errors in the FHIR specification) are resolved.
+* Also several other errors in the FHIR specification were fixed in the various ``errata.zip`` files, so FS does not need to warn about them anymore:
+
+  * STU3, search parameters of type `reference` that lacked a target element:
+
+    *  Linkage.item parameter
+    *  Linkage.source parameter
+    *  RequestGroup-instantiates-canonical
+
+  * R5, search parameters that lack a fhirpath expression:
+
+    * Medication.form
+    * MedicationKnowledge.packaging-cost
+    * MedicationKnowledge.packaging-cost-concept
+
+* Custom search parameters may contain errors in their FHIRPath expression. These can manifest either when adding them to Firely Server, or when they are evaluated against a new or updated resource. In both cases we improved the error reporting.
+* AuditEvents generated for interactions with Firely Server using FHIR R5 were missing a link to the Patient compartment in case a Patient resource was created/read/updated/deleted. Now the AuditEvent.patient element is populated in these cases and by this linked to the Patient compartment. Previously generated AuditEvents are therefore not exported as part of a Bulk Data Export request on a Patient level or when using $everything on Patient.
+* Any markdown in the CapabilityStatement is properly escaped.
+* Firely Server does not support the search parameters whose field ``xpathUsage`` (STU3, R4) or ``processingMode`` (R5) is not set to ``normal``. They are now filtered at startup. See :ref:`restful_search_limitations`.
+* ``CapabilityStatement.instantiates`` on the ``<url>/metadata`` endpoint only lists the CapabilityStatements from the administration API that have their ``status:active``.
+* Firely Server did not support bringing a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload.
+* Sensitive information in the settings that was logged before is now redacted: 
+
+  * the SSL Certificate password
+  * the MongoDB connectionstring
+ 
+* Regarding :ref:`feature_customsp_reindex`: if an erroneous parameter is provided as ``include``, a proper error is returned. 
+* URL query decoding was revamped. You should not see any differences, but please contact us if you do.
+* Firely Server leniently accepted a literal unescaped "+" sign as part of the request url and didn't interpret it as a reserved character according to `RFC 3986 <https://www.rfc-editor.org/rfc/rfc3986#section-2.2>`_. Firely Server now correctly interprets it as whitespace.
+
+  * This improves the cooperation with AWS API Gateway, that encodes spaces as ``+`` by default.
+  * Only the '+' in the ``_format=fhir+json`` parameter is retained.
+
+    .. warning::
+        In case the ``+`` sign is used as part of a search parameter value it needs to be URL encoded as ``%2B``. An unescaped value will be interpreted as described above, which may lead to unexpected results.
+    
+* When using the settings to :ref:`supportedmodel`, it was easy to forget two parameters that Firely Server depends on. These parameters are now always added silently:
+
+    * ``Resource._lastUpdated``
+    * ``StructureDefinition.url``
+
+
+Plugin and Facade
+^^^^^^^^^^^^^^^^^
+
+* ``Vonk.Core`` no longer references the deprecated package ``Microsoft.AspNetCore.Server.Kestrel.Core:2.2.0`` (see `related MSDN documentation <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/target-aspnetcore?view=aspnetcore-6.0&tabs=visual-studio#use-the-aspnet-core-shared-framework>`_).
+   
+.. warning:: 
+    For plugin developers, this could result in a compilation error when rebuilding  against the latest ``Vonk.Core`` nuget package::
+
+        CS0104: 'BadHttpRequestException' is an ambiguous reference between 'Microsoft.AspNetCore.Server.Kestrel.Core.BadHttpRequestException' and 'Microsoft.AspNetCore.Http.BadHttpRequestException'
+
+    In this case, make sure to reference ``Microsoft.AspNetCore.Http.BadHttpRequestException``, as ``Microsoft.AspNetCore.Server.Kestrel.BadHttpRequestException`` has been marked as obsolete.
+
+* The ONC 2014 Edition Cures Update paragraph 170.315(b)(10) `Electronic Health Information Export <https://www.healthit.gov/test-method/electronic-health-information-export>`_ requires the export of a single Patients' record. 
+  We made two interfaces public to allow :ref:`feature_bulkdataexport_facade` implementers to implement that export, and facilitate the new filters in BDE 2.0. 
+  They are very similar to their counterparts ``IPatientBulkDataExportRepository`` and ``IGroupBulkDataExportRepository``, 
+  but add the ability to filter by a list of logical id's of Patients.
+
+  * ``IPatientBulkDataWithPatientsFilterExportRepository``
+  * ``IGroupBulkDataWithPatientsFilterExportRepository``
+
+* Loading dll's: In 5.0.0 we made the assembly loading resilient to duplicate dll's. That has led to a regression error with loading native (non .NET) dll's. We fixed that.
+
 .. _vonk_releasenotes_5_0_0:
 
 Release 5.0.0, March 9th, 2023
----------------------------------
+------------------------------
 
 We are thrilled to announce the release of our new major version 5.0 of Firely Server. The team has worked hard to incorporate new features and improvements that we believe will enhance your experience greatly. We are excited to share this new release with our customers and look forward to their feedback.
 

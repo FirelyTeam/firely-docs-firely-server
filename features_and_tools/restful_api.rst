@@ -223,6 +223,16 @@ The following parameters and options are not yet supported:
 #. Search parameter arguments in exponential form (e.g. 1.8e2).
 #. ``_total=estimate``, only ``none`` and ``accurate`` are supported.
 
+In addition, Firely Server does not support the search parameters whose field ``xpathUsage`` (STU3, R4) or ``processingMode`` (R5) is not set to ``normal``. Concretely, this means that the following search parameters are not supported:
+
+#. ``http://hl7.org/fhir/SearchParameter/individual-phonetic`` (STU3, R4, R5).
+#. ``http://hl7.org/fhir/SearchParameter/InsurancePlan-phonetic`` (R4, R5)
+#. ``http://hl7.org/fhir/SearchParameter/Location-near`` (STU3, R4, R5), 
+#. ``http://hl7.org/fhir/SearchParameter/Location-near-distance`` (STU3), 
+#. ``http://hl7.org/fhir/SearchParameter/Organization-phonetic`` (STU3, R4, R5), 
+#. ``http://hl7.org/fhir/SearchParameter/Resource-in`` (R5), 
+
+
 Furthermore:
 
 #. Paging is supported, but it is not isolated from intermediate changes to resources.
@@ -233,18 +243,8 @@ History
 -------
 
 History is supported as described in the specification, on the system, type and instance level.
-The ``_since`` and ``_count`` parameters are also supported.
-
-Configuration
-^^^^^^^^^^^^^
-::
-
-  "HistoryOptions": {
-    "MaxReturnedResults": 100
-  }
-
-If a ``_history`` call would result in more than ``MaxReturnedResults``, Firely Server asks the user to be more specific.
-Use this to avoid overloading the server or the connection.
+The ``_since`` and ``_count`` parameters are also supported. 
+The response will be a ``Bundle`` which adheres to the ``BundleOptions`` configuration, see :ref:`bundle_options`.
 
 .. _restful_history_limitations:
 
@@ -259,7 +259,7 @@ Limitations on history
 Batch
 -----
 
-Batch is fully supported on the usual endpoint. You can limit the number of entries accepted in a single batch. See :ref:`batch_options`.
+Batch is fully supported on the usual endpoint. You can limit the number of entries accepted in a single batch. See :ref:`sizelimits_options`.
 
 Note that batches are not supported in the ``/administration`` endpoint.
 
@@ -272,7 +272,7 @@ Transactions are supported, but with the following limitation:
 
 #. The ``/administration`` endpoint does not support transactions.
 
-You can limit the number of entries accepted in a single transaction. See :ref:`batch_options`.
+You can limit the number of entries accepted in a single transaction. See :ref:`sizelimits_options`.
 
 .. _restful_capabilities:
 

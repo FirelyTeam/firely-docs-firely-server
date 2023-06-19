@@ -3,6 +3,11 @@
 Bulk Data Export
 ================
 
+.. note::
+  This application is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
+  Your license already permits the usage of BDE if it contains ``http://fire.ly/vonk/plugins/bulk-data-export``. You can also try out the BDE feature using the evaluation license.
+
+
 Firely Server provides the option to export resources with the Bulk Data Export Service. 
 The Bulk Data Export Service enables the $export operation from the Fhir specification. Read more about the `$export request flow <https://hl7.org/fhir/uv/bulkdata/export/index.html#request-flow>`_.
 
@@ -80,25 +85,54 @@ Bulk Data Export Service works as an asynchronous operation. To store the all op
         ],
         "Exclude": [
           "Vonk.Core.Operations"
-        ], ...etc...
-    
-BDE introduces two new parts to the appsettings, namely TaskFileManagement and BulkDataExport.
+        ], ...etc... 
+
+BDE introduces several new parts to the appsettings:
 
 .. code-block:: JavaScript
 
   "TaskFileManagement": {
-      "StoragePath": "./taskfiles"
-    },
+      "StorageService": {
+          "StorageType": "LocalFile", // LocalFile / AzureBlob / AzureFile
+          "StoragePath": "./taskfiles",
+          "ContainerName": "firelyserver" // For AzureBlob / AzureFile only
+      }
+  },
+  "AzureServices": {
+      "Storage": {
+          "AccountName": "<your Azure account name>",
+          "AccountKey": "API key for your Azure account"
+      }
+  },
   "BulkDataExport": {
       "RepeatPeriod" : 60000, //ms
       "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "BodyStructure", "Medication", "Coverage" ] 
-    },
-    
-In StoragePath you can configure the folder where the exported files will be saved to. Make sure the server has write access to this folder.
+  },
+  "SqlDbOptions": {
+      // ...
+      "BulkDataExportTimeout": 300 // in seconds
+  }
 
-In RepeatPeriod you can configure the polling interval (in milliseconds) for checking the Task queue for a new export task.
+In `RepeatPeriod` you can configure the polling interval (in milliseconds) for checking the Task queue for a new export task.
 
 A patient-based or group-based Bulk Data Export returns resources based on the Patient compartment definition (https://www.hl7.org/fhir/compartmentdefinition-patient.html). These resources may reference resources outside the compartment as well, such as a Practitioner who is the performer of a Procedure. Using the `AdditionalResources`-setting, you can determine which types of referenced resources are exported in addition to the compartment resources.
+
+Exporting a large number of resources from a SQL Server database can cause a timeout exception. You can adjust the timeout period in `BulkDataExportTimeout`. There is no timeout limitation when exporting data from MongoDB.
+
+Writing to a local disk
+^^^^^^^^^^^^^^^^^^^^^^^
+Set the ``StorageType`` to ``LocalDisk``.
+
+In ``StoragePath`` you can configure the folder where the exported files will be saved to. Make sure the server has write access to this folder.
+
+Writing to Azure Blob or Azure Files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Set:
+  - ``StorageType`` to ``AzureBlob`` or ``AzureFiles``
+  - ``StoragePath`` to the path within the container that you prefer
+  - ``ContainerName`` to the name of the container to use (see documentation on Azure Blob Storage or Azure Files for details)
+
+Also make sure you fill in the account details for Azure in ``AzureServices`` as above.
 
 $export
 -------
@@ -168,35 +202,39 @@ Facade
 
 We support BDE for a facade. As always with a facade implementation, the parts dealing with the underlying proprietary datastore need to be implemented by you. Below you find an overview of the relevant steps for implementing BDE for a facade.
 
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
-| Export level | Area                                            | Setting                                                            | Action                                           |
-+==============+=================================================+====================================================================+==================================================+
-| All          | PipelineOptions for the administration endpoint | "Vonk.Repository.[database-type].[database-type]TaskConfiguration" | Enable for relevant administration database type |
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
-| All          | SupportedInteractions.WholeSystemInteractions   | $exportstatus                                                      | Enable                                           |
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
-| All          | SupportedInteractions.WholeSystemInteractions   | $exportfilerequest                                                 | Enable                                           |
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
-| All          | Facade plugin                                   | IBulkDataExportSnapshotRepository                                  | Implement                                        |
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
-| Patient      | PipelineOptions for the \ (root) endpoint       | "Vonk.Plugin.BulkDataExport.PatientBulkDataExportConfiguration"    | Enable                                           |
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
-| Patient      | SupportedInteractions.TypeLevelInteractions     | $export                                                            | Enable                                           |
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
-| Patient      | Facade plugin                                   | IPatientBulkDataExportRepository                                   | Implement                                        |
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
-| Group        | PipelineOptions for the \ (root) endpoint       | "Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration"      | Enable                                           |
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
-| Group        | SupportedInteractions.InstanceLevelInteractions | $export                                                            | Enable                                           |
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
-| Group        | Facade plugin                                   | IGroupBulkDataExportRepository                                     | Implement                                        |
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
-| System       | PipelineOptions for the \ (root) endpoint       | "Vonk.Plugin.BulkDataExport.SystemBulkDataExportConfiguration"     | Enable                                           |
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
-| System       | SupportedInteractions.SystemLevelInteractions   | $export                                                            | Enable                                           |
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
-| System       | Facade plugin                                   | ISystemBulkDataExportRepository                                    | Implement                                        |
-+--------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Export level  | Area                                            | Setting                                                            | Action                                           |
++===============+=================================================+====================================================================+==================================================+
+| All           | PipelineOptions for the administration endpoint | "Vonk.Repository.[database-type].[database-type]TaskConfiguration" | Enable for relevant administration database type |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| All           | SupportedInteractions.WholeSystemInteractions   | $exportstatus                                                      | Enable                                           |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| All           | SupportedInteractions.WholeSystemInteractions   | $exportfilerequest                                                 | Enable                                           |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| All           | Facade plugin                                   | IBulkDataExportSnapshotRepository                                  | Implement                                        |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Patient       | PipelineOptions for the \ (root) endpoint       | "Vonk.Plugin.BulkDataExport.PatientBulkDataExportConfiguration"    | Enable                                           |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Patient       | SupportedInteractions.TypeLevelInteractions     | $export                                                            | Enable                                           |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Patient       | Facade plugin                                   | IPatientBulkDataExportRepository                                   | Implement                                        |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Group         | PipelineOptions for the \ (root) endpoint       | "Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration"      | Enable                                           |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Group         | SupportedInteractions.InstanceLevelInteractions | $export                                                            | Enable                                           |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Group         | Facade plugin                                   | IGroupBulkDataExportRepository                                     | Implement                                        |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| System        | PipelineOptions for the \ (root) endpoint       | "Vonk.Plugin.BulkDataExport.SystemBulkDataExportConfiguration"     | Enable                                           |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| System        | SupportedInteractions.SystemLevelInteractions   | $export                                                            | Enable                                           |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| System        | Facade plugin                                   | ISystemBulkDataExportRepository                                    | Implement                                        |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Patient/Group | Facade plugin                                   | IPatientBulkDataWithPatientsFilterExportRepository                 | Implement (optional, enables 'patient' filter)   |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
+| Patient/Group | Facade plugin                                   | IGroupBulkDataWithPatientsFilterExportRepository                   | Implement (optional, enables 'patient' filter)   |
++---------------+-------------------------------------------------+--------------------------------------------------------------------+--------------------------------------------------+
 
 .. note::
 
@@ -222,5 +260,14 @@ ISystemBulkDataExportRepository
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Used when performing a System level export. It should retrieve the snapshot, use this to obtain the relevant data from the proprietary datastore and transform this to FHIR resources.
 
+.. note::
 
+  The interfaces below can be found in Vonk.Core version 5.1.0 and higher.
   
+IPatientBulkDataWithPatientsFilterExportRepository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Optional addition. Used when performing a Patient level export with the 'patient' parameter in the request. It should filter the patients from the snapshot based on the references provided as specified in https://build.fhir.org/ig/HL7/bulk-data/export.html#query-parameters.
+
+IGroupBulkDataWithPatientsFilterExportRepository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Optional addition. Used when performing a Group level export with the 'patient' parameter in the request. It should filter the patients from the snapshot based on the references provided as specified in https://build.fhir.org/ig/HL7/bulk-data/export.html#query-parameters.

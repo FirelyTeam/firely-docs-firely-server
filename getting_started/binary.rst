@@ -4,9 +4,13 @@
 Basic installation
 ==================
 
-If you want to start using the standard Firely Server in your own Windows environment, follow the steps on this page to install
+.. note::
+	Firely Server can run on all operation systems that support .Net. If your OS does not support .Net or if you want to use Docker, 
+	please look at the :ref:`use_docker` section.
+
+If you want to start using the standard Firely Server in your local environment, follow the steps on this page to install
 and run the server. |br|
-For non Windows systems, or if you want to use Docker for Windows, please look at the :ref:`use_docker` section.
+
 
 1.	Download the Firely Server binaries and the license file from `Simplifier.net <https://simplifier.net/vonk>`_.
 	
@@ -27,7 +31,7 @@ For non Windows systems, or if you want to use Docker for Windows, please look a
 			"LicenseFile": "firelyserver-trial-license.json"
 		}
 
-6. You can further configure Firely Server by adjusting the ``appsettings.json``. The section :ref:`configure_vonk` explains possible configuration settings.
+1. You can further configure Firely Server by adjusting the ``appsettings.json``. The section :ref:`configure_vonk` explains possible configuration settings.
 
 .. _vonk_run:
 

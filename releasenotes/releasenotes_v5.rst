@@ -66,7 +66,7 @@ Fix
 
             POST <base>/administration</R4 or R5>/reindex/searchparameters
             BODY:
-            include=Observation.code-value-concept,Observation.code-value-date,Observation.code-value-quantity,Observation.code-value-string,Observation.combo-code-value-concept,Observation.combo-code-value-quantity,Observation.component-code-value-concept,Observation.component-code-value-quantity,Observation.code,Observation.value-concept,Observation.value-date,Observation.value-quantity,Observation.value-string,Observation.combo-code,Observation.combo-value-concept,Observation.combo-value-quantity,Observation.component-code,Observation.component-value-concept,Observation-component-value-quantity
+            include=Observation.code-value-concept,Observation.code-value-date,Observation.code-value-quantity,Observation.code-value-string,Observation.combo-code-value-concept,Observation.combo-code-value-quantity,Observation.component-code-value-concept,Observation.component-code-value-quantity,Observation.code,Observation.value-concept,Observation.value-date,Observation.value-quantity,Observation.value-string,Observation.combo-code,Observation.combo-value-concept,Observation.combo-value-quantity,Observation.component-code,Observation.component-value-concept,Observation.component-value-quantity
 
     .. warning:: 
         If you still use the old SQL Server implementation (see :ref:`vonk_releasenotes_460`), you do not benefit from this improvement.

@@ -1,0 +1,241 @@
+.. _compliance_b_10:
+
+====================================================
+170.315 (b)(10) Electronic Health Information Export
+====================================================
+
+`170.315 (b)(10) requires the implementation of Electronic Health Information (EHI) export functionality <https://www.healthit.gov/test-method/electronic-health-information-export>`_. 
+This encompasses the ability to generate export files for individual patients and entire patient populations in a computable format. 
+Firely Server provides comprehensive support for this requirement through its :ref:`Bulk Data Export feature <feature_bulkdataexport>`.
+For a deeper understanding and comprehensive utilization of this feature beyond the (b)(10) requirements, 
+please consult the provided documentation, which includes setup instructions, application settings, parameters, filtering options, and additional details.
+
+File Format
+===========
+
+Bulk Data Export files are formatted in NDJSON (New line delimited JSON), a modified version of the JSON format designed for efficient bulk data transfer. 
+NDJSON follows a simplified JSON structure where resources are serialized without whitespace and separated by a newline pair (characters 13 and 10). 
+This format aids in streamlining processing by ensuring that each NDJSON document contains only resources of a single type. 
+Each line within the document represents a resource of that specific type. 
+It is worth noting that while resources can include contained resources of various types, a single file can accommodate multiple resources for multiple patients with multiple records.
+
+.. note::
+       NDJSON is the default and only supported export format.
+
+Each NDJSON file will have a file naming convention of ``content{resource}.ndjson``, where ``{resource}`` represents a 
+`FHIR resource type <http://hl7.org/fhir/R4/resourcelist.html>`_, i.e. Patient, Observation.
+Within each NDJSON file, only the the resources of the named FHIR resource type will be included.
+
+.. _resourcesincluded:
+
+Resources Included (EHI Exported)
+=================================
+
+When exporting resources, all data from within the `Patient compartment, as defined by HL7 FHIR R4 <https://hl7.org/fhir/R4/compartmentdefinition-patient.html>`_, will be included. 
+This means that all relevant information related to the patient, such as demographics, observations, medications, and other healthcare data, will be part of the exported resources.
+
+Furthermore, Firely Server has extended the Patient compartment definition to encompass Binary Resources that are linked to a patient. 
+Binary Resources are used to represent binary data, such as images or documents, that are associated with a patient. 
+By including these Binary Resources within the Patient compartment during export, Firely Server ensures that all relevant data linked to a patient is included in the export files.
+
+.. _singlepatientexport:
+
+Authentication and Authorization
+================================
+To-do
+
+
+Single Patient EHI Export - 170.315(b)(10)(i)
+=============================================
+
+To meet the requirements of 170.315(b)(10)(i), Firely Server offers an export feature that allows for the extraction of data related to a single patient. 
+This is achieved by utilizing a Parameters Resource filter against the Patient endpoint.
+
+However, an alternative method is also provided using the Group endpoint. 
+This alternative approach caters to real-world scenarios and alternative workflows which may be more suitable to portals and UI that connect to Firely Server.
+
+Notice in the following Parameters Reource example; there is just a single patient reference.
+
+.. code-block:: json
+    :caption: **Parameters Resource Example**
+
+      {
+        "resourceType": "Parameters",
+        "parameter": [
+          {
+            "name": "patient",
+            "valueReference": {
+              "reference": "Patient/test"
+            }
+          }
+        ]
+      }
+
+Primary Method: Exporting a Single Patient using the Patient Endpoint
+---------------------------------------------------------------------
+
+Perform a POST request to the Patient endpoint, including a Parameters Resource filter in the request body. The filter specifies the patient to be exported.
+
+1. Create a POST request to the Patient endpoint:
+
+        ``POST {{BASE_URL}}/Patient/$export``
+
+2. Include the example Parameters Resource from above in the request body. 
+
+This method directly exports the specified patient using the Patient endpoint and applies the Parameters filter to limit the exported data.
+
+Alternative Method: Exporting a Single Patient using the Group Endpoint
+-----------------------------------------------------------------------
+
+Perform a POST request to the Group endpoint, including a Parameters filter in the request body. The filter is used to filter the patients within the specified group, and only the desired patient's data will be exported.
+
+1. Create a POST request to the Group endpoint:
+
+        ``POST {{BASE_URL}}/Group/[groupId]/$export``
+
+2. Include the example Parameters Resource from above in the request body. 
+
+By utilizing the Group endpoint and applying the Parameters filter, the export operation focuses on the patient within the specified group.
+
+.. _patientpopulationexport:
+
+Patient Population EHI Export - 170.315(b)(10)(ii)
+==================================================
+
+To meet the requirements of 170.315(b)(10)(ii), Firely Server exports all patients and their related data without applying any filtering parameters, as demonstrated in the Single Patient Export. 
+However, it is important to acknowledge that filtering is a common occurrence in real-world scenarios, particularly during the migration of patient populations between health IT systems. 
+
+In such cases, Firely Server provides the flexibility to apply filtering parameters and/or by using groups, allowing for the export of specific subsets of patients.
+This accommodates both adherence to the requirement of exporting all patients and data, as well as the practical need for targeted data exports in specific situations.
+
+In the following examples, the first method exports the entire patient population, while the subsequent methods allows for exporting a subset of the patient population.
+
+
+Method 1: Exporting an Entire Patient Population using the Patient Endpoint
+---------------------------------------------------------------------------
+
+Perform a POST or GET request to the Patient endpoint without any filters.
+
+1. Create a POST or GET request to the Patient endpoint:
+
+        ``POST/GET {{BASE_URL}}/Patient/$export``
+
+This method exports all patients and their related data without applying any filtering parameters.
+
+Method 2: Exporting a Subset Patient Population using the Patient Endpoint
+--------------------------------------------------------------------------
+Perform a POST request to the Patient endpoint without any filters.
+
+1. Create a POST request to the Patient endpoint:
+
+        ``POST {{BASE_URL}}/Patient/$export``
+
+2. Include the example Parameters Resource from below in the request body.
+
+    .. code-block:: json
+
+        {
+            "resourceType": "Parameters",
+            "parameter": [
+            {
+                "name": "patient",
+                "valueReference": {
+                "reference": "Patient/test"
+                }
+            },
+            {
+                "name": "patient",
+                "valueReference": {
+                "reference": "Patient/other"
+                }
+            }
+            ]
+        }
+
+This method allows you to specify the patients to be exported by including their references in the Parameters Resource.
+
+Method 3: Exporting a Subset Patient Population using the Group Endpoint
+------------------------------------------------------------------------
+
+To export a subset of the patient population using the Group endpoint, you have two options:
+
+3.1. Exporting without filtering parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        
+Perform a POST or GET request to the Group endpoint without any filters.
+
+1. Create a POST or GET request to the Group endpoint:
+
+        ``POST/GET {{BASE_URL}}/Group/[groupId]/$export``
+
+This option exports all of the patients within the specified ``[groupId]``.
+
+3.2. Exporting with filtering parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Perform a POST request to the Group endpoint, including a Parameters filter in the request body. 
+
+1. Create a POST request to the Group endpoint:
+
+        ``POST {{BASE_URL}}/Group/$export``
+
+2. Include the example Parameters Resource from below in the request body.
+
+    .. code-block:: json
+
+        {
+          "resourceType": "Parameters",
+          "parameter": [
+            {
+              "name": "patient",
+              "valueReference": {
+                "reference": "Patient/test"
+              }
+            },
+            {
+              "name": "patient",
+              "valueReference": {
+                "reference": "Patient/other"
+              }
+            }
+          ]
+        }
+
+This option exports only the patients within the specified ``[groupId]`` and based on the provided references.
+
+.. _understandingexportresults:
+
+Understanding the Export Results
+================================
+
+After successfully requesting a :ref:`Single Patient EHI Export <singlepatientexport>` or
+:ref:`Patient Population EHI Export <patientpopulationexport>` the response will be in the following format:
+
+.. include:: ../features_and_tools/bulkdataexport.rst
+   :start-after: .. START-BDE-QUEUED-BODY
+   :end-before: .. END-BDE-QUEUED-BODY
+
+Since the Bulk Data Export is asynchronous, it will need to be queried periodically to determine when it has completed compiling resources
+for the patients(s) is complete. To perform this, execute the **$exportstatus** operation.
+
+**Example:**
+::
+
+    GET https://localhost:4081/$exportstatus?_id=13d8ce0d-9f96-48d4-96a7-58d0b3dd4e75
+
+Refer to the :ref:`Bulk Data Export Status <bdeexportstatus>` documentation for more information on the **$exportstatus** operation and non-complete statuses.
+
+Once the **$exportstatus** returns a completed response, as shown below, the next step is to query and download the actual NDJSON files.
+
+.. include:: ../features_and_tools/bulkdataexport.rst
+   :start-after: .. START-BDE-COMPLETE-BODY
+   :end-before: .. END-BDE-COMPLETE-BODY
+
+Each ``output:url`` in the JSON above represents a downloadable NDJSON file. 
+To download each respective NDJSON file, a GET request can be used to query and retrieve the file.
+
+**Example:** 
+::
+
+    Accept:application/fhir+ndjson
+    GET https://localhost:4081/$exportfilerequest/?_id=13d8ce0d-9f96-48d4-96a7-58d0b3dd4e75&filename=contentPatient.ndjson

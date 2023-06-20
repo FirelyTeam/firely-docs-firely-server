@@ -40,7 +40,7 @@ For each resourcetype the base profile is listed in the CapabilityStatement unde
 .. note::
 
    The import process will retain any id that is already in the resource, or assign a new id if there is none in the resource.
-   For FHIR versions other than STU3, a postfix is appended to the id to avoid collissions between FHIR versions. See also :ref:`feature_multiversion_conformance`.
+   For FHIR versions other than STU3, a postfix is appended to the id to avoid collisions between FHIR versions. See also :ref:`feature_multiversion_conformance`.
 
 .. toctree::
    :maxdepth: 3

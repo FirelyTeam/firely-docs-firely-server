@@ -220,7 +220,7 @@ Fix
 
 #. When performing a Bulk Data Export request with a Firely Server instance running on a SQL database, it will return the Group resource even if it has no members. 
 #. FS now declares support for Bulk Data Export Group export operations in its CapabilityStatement. This features was available before, but missing from FS's CapabilityStatement. 
-#. Bulk Data Export now returns a succesful status code (``202``) instead of an erroneous status code if no resources were matched for an export. The resulting export will include an empty array as described in the `specification <https://hl7.org/fhir/uv/bulkdata/export/index.html#response---complete-status>`_.
+#. Bulk Data Export now returns a successful status code (``202``) instead of an erroneous status code if no resources were matched for an export. The resulting export will include an empty array as described in the `specification <https://hl7.org/fhir/uv/bulkdata/export/index.html#response---complete-status>`_.
 #. Upon commencing a Bulk Data Export, Firely Server now correctly handles ``Prefer`` headers as outlined `in the specification <https://hl7.org/fhir/uv/bulkdata/export/index.html#headers>`_.
 #. ``Device`` can now be added as an additional resource in a Bulk Data export.
 #. Search parameters without a value are now ignored by the server instead of resulting in an error response.
@@ -677,7 +677,7 @@ Fix
 
 #. When performing a Bulk Data Export request with a Firely Server instance running on a SQL database, it will return the Group resource even if it has no members. 
 #. FS now declares support for Bulk Data Export Group export operations in its CapabilityStatement. This features was available before, but missing from FS's CapabilityStatement. 
-#. Bulk Data Export now returns a succesful status code (``202``) instead of an erroneous status code if no resources were matched for an export. The resulting export will include an empty array as described in the `specification <https://hl7.org/fhir/uv/bulkdata/export/index.html#response---complete-status>`_.
+#. Bulk Data Export now returns a successful status code (``202``) instead of an erroneous status code if no resources were matched for an export. The resulting export will include an empty array as described in the `specification <https://hl7.org/fhir/uv/bulkdata/export/index.html#response---complete-status>`_.
 #. Upon commencing a Bulk Data Export, Firely Server now correctly handles ``Prefer`` headers as outlined `in the specification <https://hl7.org/fhir/uv/bulkdata/export/index.html#headers>`_.
 #. ``Device`` can now be added as an additional resource in a Bulk Data export.
 #. Search parameters without a value are now ignored by the server instead of resulting in an error response.

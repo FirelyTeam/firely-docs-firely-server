@@ -132,7 +132,7 @@ Fix
 Release 2.0.0-beta
 ------------------
 
-We have refactored Vonk internally to accomodate future changes. There are only minor functional changes to the FHIR Server.
+We have refactored Vonk internally to accommodate future changes. There are only minor functional changes to the FHIR Server.
 Facade and Plugin builders must be aware of a few interface changes, most notably to the IResource interface. 
 
 This release is a *beta* release because of the many internal changes, and because we expect to include a few more in the final release. 
@@ -274,7 +274,7 @@ Supported Plugins
 Release 1.0.0
 -------------
 
-Yes! Vonk version 1.0 is out. It is also the first version that is released withouth the -beta postfix. It has been very stable from the very first version, and now we think it is time to make that formal. 
+Yes! Vonk version 1.0 is out. It is also the first version that is released without the -beta postfix. It has been very stable from the very first version, and now we think it is time to make that formal. 
 
 Release 1.0.0 is functionally identical to 0.7.4.0. But we optimized the deployment process for :ref:`Firely Server for your Simplifier Project <yellowbutton>` and :ref:`Docker <use_docker>` in general. The contents of the core specification are now preloaded in the SQLite administration database, so your first startup experience is a lot faster.
 
@@ -500,7 +500,7 @@ Features and fixes
 #. Fix: indexing of Observation.combo-value-quantity failed for UCUM code for Celcius. This fix requires a :ref:`reindex/all <feature_customsp_reindex>` on this searchparameter.
 #. Fix: total count in history bundle.
 #. Fix: on vonk.fire.ly we disabled validating all input, so you can now create or update resources also if the relevant profiles are not loaded 
-   (this was neccessary for Crucible, since it references US Core profiles, that are not present by default).
+   (this was necessary  for Crucible, since it references US Core profiles, that are not present by default).
 #. Fix: timeout of Azure Web App on first startup of Vonk - Vonk's first startup takes some time due to import of the specification (see :ref:`conformance_specification_zip`). 
    Since Azure Web Apps are allowed a startup time of about 3 minutes, it failed if the web app was on a low level service plan.
    Vonk will now no longer await this import. It will finish startup quickly, but until the import is finished it will return a 423 'Locked' upon every request.
@@ -654,7 +654,7 @@ Features and fixes
 #. Fix: Vonk would search through inaccessible directories for the specification.zip.
 #. Fix: Subscription could not be posted if 'Database' was not one of the SearchParametersImportOptions.
 #. Fix: _(rev)include=* is not supported but was not reported as such.
-#. Fix: In a searchresult bundle, the references to other resources are now made absolute, refering to the Vonk server itself.
+#. Fix: In a searchresult bundle, the references to other resources are now made absolute, referring to the Vonk server itself.
 #. Fix: :ref:`BundleOptions <bundle_options>` (previously: SearchOptions) settings were not evaluated.
 #. Fix: Different responses for invalid resources when you change ValidateIncomingResources setting (400 vs. 501)
 #. Fix: Better reporting of errors when there are invalid modifiers in the search.

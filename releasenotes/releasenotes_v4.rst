@@ -96,7 +96,7 @@ Fix
 
       Please note that due to a mistake in the official STU3 specification, search parameters `ConceptMap-source-uri`, `ConceptMap-target-uri` still do not work as expected. The correct search parameter expressions would be `ConceptMap.source.as(uri)` and `ConceptMap.target.as(uri)` while the specification contains `ConceptMap.source.as(Uri)` and `ConceptMap.target.as(Uri)` respectively. The issue has been addressed in R4.
 
-#. SMART: With SMART on FHIR enabled, an update-on-create (creating a new resource with an update / PUT) was allways denied. This is now fixed.
+#. SMART: With SMART on FHIR enabled, an update-on-create (creating a new resource with an update / PUT) was always denied. This is now fixed.
 #. Subscription: if the resthook url in a Subscription did not end with a slash (``/``), it would get shortened to the last slash in the url. This is now fixed, the whole url is used.
 
 Plugin and Facade

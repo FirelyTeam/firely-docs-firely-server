@@ -53,7 +53,7 @@ Using ISearchRepository
    .. note::
 
       The Search implementation will in general update the arguments, especially their ``Status`` property and the ``Issue`` if something went wrong.
-      So be careful with reuse of arguments. Use ``IArgumentCollection.Clone()`` if neccessary.
+      So be careful with reuse of arguments. Use ``IArgumentCollection.Clone()`` if necessary .
 
 #. Prepare search options that guide the search. Usually you can use one of the predefined options on the ``SearchOptions`` class.
 

@@ -41,7 +41,7 @@ You can choose the level of validation:
 
 * Off: no validation is performed.
 * Core: the resource is validated against the core definition of the resourcetype.
-* Full: the resource is validated against the core definition of the resourcetype and against any profiles it its ``meta.profile`` element.
+* Full: the resource is validated against the core definition of the resourcetype and against any profiles in its ``meta.profile`` element.
   
 Allow for specific profiles
 ---------------------------

@@ -37,13 +37,13 @@ Firely Auth is licensed, like all plugins and add-ons of Firely Server. It uses 
 Firely Auth requires this token to be present in the license file: ``http://fire.ly/server/auth``.
 If you don't have this in your license file yet, you probably need to acquire Firely Auth first. Please :ref:`vonk-contact` for that.
 
-By default Firely Auth will look for a license file named ``firely-server-license.json``, adjacent to the ``Firely.IdentityServer.Core.exe`` 
+By default Firely Auth will look for a license file named ``firely-server-license.json``, adjacent to the ``Firely.Auth.Core.exe`` 
 You can adjust the location of the license file in the configuration settings, see :ref:`firely_auth_settings_license`.
-Additionally you will have to place a file called ``Duende_License.key`` also adjacent to the ``Firely.IdentityServer.Core.exe``. Please note that the path to this file cannot be configured. 
+Additionally you will have to place a file called ``Duende_License.key`` also adjacent to the ``Firely.Auth.Core.exe``. Please note that the path to this file cannot be configured. 
 
 With the license in place, you can start Firely Auth by running::
 
-    > ./Firely.IdentityServer.Core.exe
+    > ./Firely.Auth.Core.exe
 
 And you can access it with a browser on ``https://localhost:5001``. It will use a self-signed certificate by default, for which your browser will warn you.
 Accept the risk and proceed to the website.
@@ -91,7 +91,7 @@ We'll just provide the correct settings here. The settings are documented in det
 
 .. code-block:: json
 
-    "ClientRegistrationConfig": {
+    "ClientRegistration": {
         "AllowedClients": [
             {
                 "ClientId": "Jv3nZkaxN36ucP33",
@@ -111,8 +111,8 @@ We'll just provide the correct settings here. The settings are documented in det
                 "AllowOnlineAccess": false, 
                 "AllowFirelySpecialScopes": true, 
                 "RequireClientSecret": true, 
-                "LaunchIds": [],
-                "RequireMfa": false
+                "RequireMfa": false,
+                "AccessTokenType": "Jwt"
             }
         ]
     }
@@ -135,7 +135,7 @@ Note that we also set the Audience in the Advanced Settings to the default value
 
 
 .. note:: Encoding the secret
-    The client secret as set in the ``ClientRegistrationConfig`` contains characters that must be URI-encoded. 
+    The client secret as set in the ``ClientRegistration`` contains characters that must be URI-encoded. 
     For secure secrets this may happen. In Postman, select the client secret string, right-click and choose "EncodeURIComponent".
     For other clients you may use any other URI encoding tool, or encode it in your code before sending the access token request.
 
@@ -183,7 +183,7 @@ In **Firely Auth**:
 
 .. code-block:: json
 
-    "FhirServerConfig": {
+    "FhirServer": {
         "Name": "Firely Server", 
         "FHIR_BASE_URL": "http://localhost:4080"
     },
@@ -191,7 +191,7 @@ In **Firely Auth**:
 The ``Name`` in this section serves two purposes:
 
 - it acts as the username for accessing the token introspection point.
-- it is used for the `aud` (Audience) claim in the access token supplied to the requesting app.
+- it is used for translating `FHIR_BASE_URL` to the `aud` (Audience) claim in the access token supplied to the requesting app.
 
 The ``FHIR_BASE_URL`` is the url on which Firely Server can be reached by the requesting app. It is used to turn the ``fhirUser`` claim (e.g. ``Patient/123``) into a full url.
 
@@ -208,7 +208,7 @@ In **Firely Server**, all the settings are in the section :ref:`SmartAuthorizati
       }
     ],
     "Authority": "https://localhost:5001",
-    "Audience": "Firely Server", //Has to match the value the Authority provides in the audience claim.
+    "Audience": "http://localhost:4080", //Has to match the value the Authority provides in the audience claim.
     "RequireHttpsToProvider": true, //You want this set to true (the default) in a production environment!
     "Protected": {
       "InstanceLevelInteractions": "read, vread, update, patch, delete, history, conditional_delete, conditional_update, $validate, $meta, $meta-add, $meta-delete, $export, $everything, $erase",
@@ -216,7 +216,7 @@ In **Firely Server**, all the settings are in the section :ref:`SmartAuthorizati
       "WholeSystemInteractions": "batch, transaction, history, search, compartment_system_search, $export, $exportstatus, $exportfilerequest"
     },
     // "TokenIntrospection": {
-    //     "ClientId": "vonk",
+    //     "ClientId": "Firely Server",
     //     "ClientSecret": "secret"
     // },
     "ShowAuthorizationPII": false,
@@ -251,7 +251,7 @@ In **Firely Server**, all the settings are in the section :ref:`SmartAuthorizati
 All settings are discussed in detail in :ref:`firely_auth_settings_server`, and we'll focus on the connection with Firely Auth here:
 
 - Authority: the address where Firely Auth can be reached.
-- Audience: By default ``Firely Server``, should match the ``FhirServerConfig.Name`` setting in Firely Auth and the requested ``aud`` in Postman.
+- Audience: By default ``http://localhost:4080``, should match the ``FhirServer.FHIR_BASE_URL`` setting in Firely Auth. In Postman, the ``aud`` should match the ``FhirServer.Name``.
 
 Now we should be able to issue an authorized request to Firely Server with the token we requested on the collection in Step 4.
 

@@ -39,7 +39,7 @@ MongoDB:
 
 #. MongoDB.* - Apache 2.0
 
-For unittesting:
+For unit testing:
 
 #. XUnit - Apache 2.0
 #. Moq - BSD 3

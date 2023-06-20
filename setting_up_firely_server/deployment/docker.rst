@@ -15,7 +15,7 @@ Getting started
 
 Before you can run Firely Server, you will need to pull the Docker Firely Server container and request a license.
 
-1. Open your favourite command line tool and execute this command:
+1. Open your favorite command line tool and execute this command:
    ``> docker pull firely/server``
 
 2. Go to the `Simplifier website <https://simplifier.net>`_, login and download your evaluation license.

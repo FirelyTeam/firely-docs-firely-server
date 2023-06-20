@@ -83,7 +83,7 @@ All the methods below are in the namespace ``Vonk.Core.ElementModel.ISourceNodeE
 
 .. function:: ForceAdd(this ISourceNode original, string addAt, ISourceNode newChild) -> ISourceNode
 
-   Add the ``newChild`` at location ``addAt``. Create the intermediate nodes if neccessary.
+   Add the ``newChild`` at location ``addAt``. Create the intermediate nodes if necessary .
 
 .. function:: AddOrReplace(this ISourceNode original, Func<ISourceNode, bool> match, ISourceNode toAdd, Func<ISourceNode, ISourceNode> replace) -> ISourceNode
 

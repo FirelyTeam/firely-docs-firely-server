@@ -47,7 +47,7 @@ Glossary of terms in authorization
 
     authorization code
         A code (a string) returned by Firely Auth to a :term:`client` as part of an :term:`authorization code flow`.
-        The client can then exchange the authorizion code for an :term:`access token`. 
+        The client can then exchange the authorization code for an :term:`access token`. 
 
     authorization code flow
         A flow to authorize a :term:`client` to request an :term:`access token` from Firely Auth.

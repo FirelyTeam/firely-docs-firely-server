@@ -126,7 +126,7 @@ These methods are especially handy for implementers of a `facade <facade/facade>
 For example, you have implemented a Bulk Data Export plugin in your facade and you would like to make sure this is visible in the CapabilityStatement.instantiates of Firely Server.
 You can add a CapabilityStatementContributor class to your plugin code that implements the :code:`ICapabilityStatementContributor`. 
 Within this class you can implement the :code:`ICapabilityStatementBuilder` to add your plugin to the CapabilityStatement.instantiates. 
-See the folowing code snippet::
+See the following code snippet::
 
     internal class CapabilityStatementContributor: ICapabilityStatementContributor
     {

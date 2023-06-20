@@ -13,7 +13,7 @@ About Nginx
 
 NGINX is a popular open source web server. It can act as a reverse proxy server for TCP, UDP, HTTP, HTTPS, SMTP, POP3, 
 and IMAP protocols, as well as a load balancer and a HTTP cache.
-You can find the documention for the Nginx server at https://nginx.org/en/docs/.
+You can find the documentation for the Nginx server at https://nginx.org/en/docs/.
 
 Prerequisites
 -------------

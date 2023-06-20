@@ -14,7 +14,7 @@ The OpenID configuration endpoints returns a JSON document containing:
 
 * URLs of all available endpoints of the service
 * A URL pointing to the key material used to sign the access and identity tokens from Firely Auth, wrapped in a Json Web Key Set
-* Additional flags to indentify enabled features (e.g. supported grant types, supported signing algorithms)
+* Additional flags to identify enabled features (e.g. supported grant types, supported signing algorithms)
 
 .. note::
     SMART on FHIR provides a compositional syntax for creating scopes, i.e. basic patient/user/system-scopes can be combined with search parameters to create more fine-granular scopes.

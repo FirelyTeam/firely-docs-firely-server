@@ -5,7 +5,7 @@ Firely Auth release notes
 
 .. _firelyauth_releasenotes_3.2.0:
 
-Release 3.2.0, June 5th, 2023
+Release 3.2.0, June 20th, 2023
 ------------------------------
 
 Configuration

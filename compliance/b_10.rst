@@ -14,7 +14,7 @@ File Format
 ===========
 
 Bulk Data Export files are formatted in NDJSON (New line delimited JSON), a modified version of the JSON format designed for efficient bulk data transfer. 
-NDJSON follows a simplified JSON structure where resources are serialized without whitespace and separated by a newline pair (characters 13 and 10). 
+NDJSON follows a simplified JSON structure where resources are serialized without whitespace and separated by a newline pair (ASCII characters 13 and 10). 
 This format aids in streamlining processing by ensuring that each NDJSON document contains only resources of a single type. 
 Each line within the document represents a resource of that specific type. 
 It is worth noting that while resources can include contained resources of various types, a single file can accommodate multiple resources for multiple patients with multiple records.
@@ -54,7 +54,7 @@ This is achieved by utilizing a Parameters Resource filter against the Patient e
 However, an alternative method is also provided using the Group endpoint. 
 This alternative approach caters to real-world scenarios and alternative workflows which may be more suitable to portals and UI that connect to Firely Server.
 
-Notice in the following Parameters Reource example; there is just a single patient reference.
+Notice in the following Parameters Resource example; there is just a single patient reference.
 
 .. code-block:: json
     :caption: **Parameters Resource Example**
@@ -177,7 +177,7 @@ Perform a POST request to the Group endpoint, including a Parameters filter in t
 
 1. Create a POST request to the Group endpoint:
 
-        ``POST {{BASE_URL}}/Group/$export``
+        ``POST {{BASE_URL}}/Group/[groupId]/$export``
 
 2. Include the example Parameters Resource from below in the request body.
 

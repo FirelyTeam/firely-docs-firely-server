@@ -8,7 +8,7 @@ Current Firely Server release notes (v5.x)
 Release 5.1.0, June 20th, 2023
 ------------------------------
 
-Firely Server 5.1.0 brings support for Bulk Data Export 2.0, FHIR R5 (5.0.0) and several other features.
+Firely Server 5.1.0 brings complete support for Bulk Data Export 2.0, FHIR R5 (5.0.0) and several other features.
 
 Existing installations may be affected by the fixes on composite search parameters for the SQL Server database repository.
 
@@ -29,7 +29,7 @@ Features
 * Firely Server is upgraded to the release version (5.0.0) of FHIR R5. If you have your administration database in SQL Server or MongoDB, this means that the conformance resources will be :ref:`re-imported <conformance_import>`.
 * We included ``errataR5.zip`` with fixes to a few resources and search parameters that have errors in the specification. These are imported automatically at startup.
 * We upgraded Firely Server to the latest SDK 5.1.0, see its `releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.1.0>`_.
-* Bulk Data Export is upgraded to BDE 2.0, with support for:
+* Bulk Data Export is upgraded to fully support BDE 2.0, with new support for:
   
   * patient Filter
   * _elements filter

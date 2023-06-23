@@ -42,8 +42,20 @@ By including these Binary Resources within the Patient compartment during export
 
 Authentication and Authorization
 ================================
-To-do
 
+Firely Server and Firely Auth offer a robust set of access control methodologies that leverage the SMART on FHIR framework. 
+These mechanisms provide extensive options for controlling access to the 170.315(b)(10) EHI bulk data export functionality. 
+Detailed information on setting up access control can be found in the :ref:`access control documentation <feature_accesscontrol>` provided.
+
+To meet the requirements for 170.315(b)(10), the following basic recommendation is detailed below:
+
+1. Implement User Authentication: Require users to authenticate themselves before accessing the EHI bulk data export functionality. 
+This ensures that only authorized individuals can initiate data exports.
+
+2. Create a Firely Auth client registration specifically for EHI export.
+By creating a client registration in Firely Auth, you can define the necessary settings and permissions for EHI export. 
+Ensure that the client registration has system-level scopes, granting access to all patient compartment data during the export process. 
+This allows the limited group of users associated with this client to access the required data for EHI export.
 
 Single Patient EHI Export - 170.315(b)(10)(i)
 =============================================

@@ -8,7 +8,7 @@ Current Firely Server release notes (v5.x)
 Release 5.1.0, June 20th, 2023
 ------------------------------
 
-Firely Server 5.1.0 brings complete support for Bulk Data Export 2.0, FHIR R5 (5.0.0) and several other features.
+Firely Server 5.1.0 brings enhanced support for Bulk Data Export 2.0, FHIR R5 (5.0.0) and several other features.
 
 Existing installations may be affected by the fixes on composite search parameters for the SQL Server database repository.
 

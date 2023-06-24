@@ -29,7 +29,7 @@ Features
 * Firely Server is upgraded to the release version (5.0.0) of FHIR R5. If you have your administration database in SQL Server or MongoDB, this means that the conformance resources will be :ref:`re-imported <conformance_import>`.
 * We included ``errataR5.zip`` with fixes to a few resources and search parameters that have errors in the specification. These are imported automatically at startup.
 * We upgraded Firely Server to the latest SDK 5.1.0, see its `releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.1.0>`_.
-* Bulk Data Export is upgraded to fully support BDE 2.0, with new support for:
+* Bulk Data Export is enhanced with new support for:
   
   * patient Filter
   * _elements filter

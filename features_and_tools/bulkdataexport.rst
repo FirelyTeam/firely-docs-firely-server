@@ -1,7 +1,25 @@
 .. _feature_bulkdataexport:
 
+================
 Bulk Data Export
 ================
+
+Bulk Data Export (BDE) is the process for exporting a substantial amount of data from a system or database in a single operation. 
+This process entails extracting a significant volume of data, usually in a structured format, to support activities like analysis, reporting, backup, or data transfer between systems. 
+BDE is frequently utilized in various implementation guides to facilitate the bulk downloading or exchanging of patient data.
+
+
+170.315 (b)(10) Electronic Health Information (EHI) Export
+----------------------------------------------------------
+
+170.315 (b)(10) specifically addresses the Electronic Health Information (EHI) Export requirement. 
+To comply with this requirement, Firely Server offers full support through its Bulk Data Export feature. 
+Before using Bulk Data Export (BDE) to facilitate EHI Export for B.10, we recommend reviewing the technical documentation provided below for setting up BDE. 
+For comprehensive information on meeting the B.10 regulation, please visit our :ref:`dedicated 170.315 (b)(10) page <compliance_b_10>`.
+
+
+Introduction
+------------
 
 .. note::
   This application is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
@@ -16,6 +34,7 @@ The Bulk Data Export Service enables the $export operation from the Fhir specifi
   To use Bulk Data Export you have to configure either :ref:`SQL Server <configure_sql>` or :ref:`MongoDB <configure_mongodb>` for the data database. Or you can implement it as part of a :ref:`feature_bulkdataexport_facade`.
 
   The Administration database can be configured to any of the three supported databases.
+
 
 Appsettings
 -----------
@@ -141,26 +160,54 @@ There are three different levels for which the $export operation can be called:
 
 System
 ^^^^^^
-**url:** [firely-server-base]/$export
+**url:** ``[firely-server-base]/$export``
 
 This will create a system level export task, exporting all resources in the Firely Server database to a .ndjson file per resourcetype.
 
 Patient
 ^^^^^^^
 
-**url:** [firely-server-base]/Patient/$export
+**url:** ``[firely-server-base]/Patient/$export``
 
 This will create a type level export task, exporting all resources included in the Patient Compartment in the Firely Server database to an .ndjson file per resourcetype.
 
 Group
 ^^^^^
-**url:** [firely-server-base]/Group/<group-id>/$export
+**url:** ``[firely-server-base]/Group/<group-id>/$export``
 
 This will create an instance level export task. For each Patient in the Group, the task will export all resources included in the Patient Compartment in the Firely Server database to an .ndjson file per resourcetype.
 
 .. note:: For now we only support inclusion in a Group through Group.member.
 
-Making an $export request will create a new task in the database with status "Queued". The request should return an absolute **$exportstatus** URL in the Content-Location header and the OperationOutcome in the body.  
+$export Response
+^^^^^^^^^^^^^^^^
+
+Making an **$export** request will create a new task in the database with status "Queued". The request should return an absolute **$exportstatus** URL in the Content-Location header and the OperationOutcome in the response body.  
+
+.. START-BDE-QUEUED-BODY
+
+.. code-block:: json
+    :caption: **$Example export response body**
+    
+    {
+        "resourceType": "OperationOutcome",
+        "id": "ce82d245-ed15-4cf1-816f-784f8c937e72",
+        "meta": {
+            "versionId": "addcff4e-4bc1-4b68-a08c-e76409a0b5b0",
+            "lastUpdated": "2023-06-16T19:15:55.092273+00:00"
+        },
+        "issue": [
+            {
+                "severity": "information",
+                "code": "informational",
+                "diagnostics": "The $export task is successfully added to the queue. Status updates can be requested using https://localhost:4081/$exportstatus?_id=13d8ce0d-9f96-48d4-96a7-58d0b3dd4e75. This URL can also be found in the Content-Location header."
+            }
+        ]
+    }
+
+.. END-BDE-QUEUED-BODY
+
+.. _bdeexportstatus:
 
 $exportstatus
 -------------
@@ -181,6 +228,33 @@ There are six possible status options:
 * If a task is Failed, GET $exportstatus will return HTTP Statuscode 500 with an OperationOutcome.
 * If a task is on status CancellationRequested or Cancelled, GET $exportstatus will return HTTP Statuscode 410 (Gone).
 
+.. START-BDE-COMPLETE-BODY
+
+.. code-block:: json
+    :caption: **$Example exportstatus complete response body**
+
+    {
+        "transactionTime": "2023-06-16T17:01:04.6036373+00:00",
+        "request": "/Patient/$export",
+        "requiresAccessToken": false,
+        "output": [
+            {
+                "type": "Invoice",
+                "url": "https://localhost:4081/$exportfilerequest/?_id=6a8936d5-b1ab-46fb-a54b-0f69f8b4fda6&filename=contentInvoice.ndjson"
+            },
+            {
+                "type": "Patient",
+                "url": "https://localhost:4081/$exportfilerequest/?_id=6a8936d5-b1ab-46fb-a54b-0f69f8b4fda6&filename=contentPatient.ndjson"
+            }
+        ],
+        "error": [],
+        "extension": {
+            "http://server.fire.ly/context/informationModel": "Fhir4.0",
+            "ehiDocumentationUrl": "https://docs.fire.ly/projects/Firely-Server/en/latest/features_and_tools/bulkdataexport.html"
+        }
+    }
+
+.. END-BDE-COMPLETE-BODY
 
 $exportfilerequest
 ------------------
@@ -198,7 +272,7 @@ Performing a GET request on this $exportfilerequest url returns a body of FHIR r
 .. _feature_bulkdataexport_facade:
 
 Facade
--------
+------
 
 We support BDE for a facade. As always with a facade implementation, the parts dealing with the underlying proprietary datastore need to be implemented by you. Below you find an overview of the relevant steps for implementing BDE for a facade.
 
@@ -240,13 +314,13 @@ We support BDE for a facade. As always with a facade implementation, the parts d
 
   The interfaces below can be found in Vonk.Core version 4.7.0 and higher.
 
-ISystemBulkDataExportRepository
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IBulkDataExportSnapshotRepository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The class implementing this interface is responsible for creating (and eventually deleting) a snapshot of the relevant data. This snapshot will be used at a later time for retrieving the data, mapping it to FHIR and writing the resources to the output files. How you store this snapshot is up to you. 
 
 .. attention::
 
-  The current implementation of the Bulk Data Export plugin for facades does not trigger ISystemBulkDataExportRepository.DeleteSnapshot(string taskId). This will be resolved in the upcoming release of Firely Server.
+  The current implementation of the Bulk Data Export plugin for facades does not trigger IBulkDataExportSnapshotRepository.DeleteSnapshot(string taskId). This will be resolved in the upcoming release of Firely Server.
 
 IPatientBulkDataExportRepository
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -265,9 +339,9 @@ Used when performing a System level export. It should retrieve the snapshot, use
   The interfaces below can be found in Vonk.Core version 5.1.0 and higher.
   
 IPatientBulkDataWithPatientsFilterExportRepository
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Optional addition. Used when performing a Patient level export with the 'patient' parameter in the request. It should filter the patients from the snapshot based on the references provided as specified in https://build.fhir.org/ig/HL7/bulk-data/export.html#query-parameters.
 
 IGroupBulkDataWithPatientsFilterExportRepository
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Optional addition. Used when performing a Group level export with the 'patient' parameter in the request. It should filter the patients from the snapshot based on the references provided as specified in https://build.fhir.org/ig/HL7/bulk-data/export.html#query-parameters.

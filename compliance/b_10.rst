@@ -17,7 +17,7 @@ Bulk Data Export files are formatted in NDJSON (New line delimited JSON), a modi
 NDJSON follows a simplified JSON structure where resources are serialized without whitespace and separated by a newline pair (ASCII characters 13 and 10). 
 This format aids in streamlining processing by ensuring that each NDJSON document contains only resources of a single type. 
 Each line within the document represents a resource of that specific type. 
-It is worth noting that while resources can include contained resources of various types, a single file can accommodate multiple resources for multiple patients with multiple records.
+A single file can accommodate multiple resources for multiple patients with multiple records, although the resource type is the same across all entries per file.
 
 .. note::
        NDJSON is the default and only supported export format.

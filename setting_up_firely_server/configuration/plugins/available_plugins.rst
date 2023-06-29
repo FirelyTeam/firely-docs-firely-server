@@ -52,6 +52,14 @@ Infrastructural plugins
 :Order: 150
 :Description: Registers services to dynamically build the ``IModelService`` using registered ``IModelContributor`` implementations.
 
+.. _vonk_plugins_searchAnonymization:
+
+:Name: SearchAnonymization
+:Configuration: ``Vonk.Plugin.SearchAnonymization.SearchAnonymizationRequestHandlingConfiguration`` and ``Vonk.Plugin.SearchAnonymization.SearchAnonymizationResponseHandlingConfiguration``
+:License token: http://fire.ly/vonk/plugins/infra
+:Order: 1100 & 1238
+:Description: Removes privacy-sensitive information from the navigational links of a searchset bundle
+
 .. _vonk_plugins_httptovonk:
 
 :Name: Http to Vonk

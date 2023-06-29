@@ -53,6 +53,7 @@ Limitations on CRUD
    * Two conditional creates may both succeed, although the result of one may be a match to the other.
    * A conditional create and a simultaneous conditional update may both result in a ``create``, although the result of one may be a match to the other.
 
+#. It is not possible to bring a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload. This operation will result in an ``HTTP 409 Conflict`` error. As a workaround, it is possible to create a new resource (with a new logical id) by omitting the ``id`` field in the payload.
 #. Parameter ``_pretty`` is not yet supported.
 #. XML Patch and JSON Patch are not supported.
 
@@ -90,6 +91,12 @@ Firely Server also supports ``_include:iterate`` and ``_revinclude:iterate``, as
    },
 
 .. warning:: ``_include`` isn't supported for a versioned reference
+
+.. _navigational_links:
+
+Navigational links
+^^^^^^^^^^^^^^^^^^
+The "next", "prev", and "last" link may contain privacy-sensitive information as part of a search parameter value. In order to not expose these values in logs, the :ref:`Vonk.Plugin.SearchAnonymization<vonk_plugins_searchAnonymization>` plugin can be used. It will replace the query parameter part of the navigational link with an opaque UUID. The plugin must be used starting with FHIR R5 as the specification mandates the removal of sensitive information.
 
 Modifiers
 ^^^^^^^^^

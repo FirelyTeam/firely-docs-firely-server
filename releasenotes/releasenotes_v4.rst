@@ -3,6 +3,21 @@
 Old Firely Server release notes (v4.x)
 ======================================
 
+.. _vonk_releasenotes_4_10_2:
+
+Release 4.10.2, June 29th, 2023
+---------------------------------
+
+.. attention::
+  This is a security related release which addresses a vulnerability in Firely Server which may lead to unauthorized access using the $everything operation. This update is highly recommended for all customers.
+
+Security
+^^^^^^^^
+
+#. Fixed an issue where the $everything operation did not respect the patient launch parameter in the SMART on FHIR access token. This means that the user could have requested information belonging to a different patient than the one mentioned in the access token. This issue only happened when an access token used for $everything actually contained a patient launch context such as when allowing a patient to request its own record.
+
+#. Fixed an issue where $everything and $export operation would potentially return resources beloging to different users or patients when running the these operations on a MongoDB database. In case a Patient shared a common resources with annother Patient, e.g. a Group resource, all data would be returned even if it would be outside of the compartment of the Patient requesting the data.
+
 .. _vonk_releasenotes_4_10_1:
 
 Release 4.10.1, March 13th, 2023
@@ -274,6 +289,16 @@ Database
       If you have questions about the migration, please :ref:`contact us<vonk-contact>`.
 
 
+   The required migrations for SQL Server will be applied automatically if ``AutoUpdateDatabase=true`` in the settings. Otherwise, or if the automatic migrations time out, you can run them  :ref:`manually<migrations>`. The scripts are located in the directory ``./sqlserver``. You can see the list of applied migrations in table ``[vonk].[schemainfo]``. The upgrade requires the following migrations:
+
+   * Admin database:
+
+      * ``FS_SchemaUpgrade_Admin_v21_v22``
+      
+   * Data database:
+
+      * ``FS_SchemaUpgrade_Data_v21_v22``, ``FS_SchemaUpgrade_Data_v22_v23``
+
 Performance
 ^^^^^^^^^^^
 
@@ -408,6 +433,16 @@ Database
    3. Improved performance of some SQL queries by avoiding unnecessary SQL query parameter type conversion
 
    4. Improved performance of some SQL queries by avoiding excessive retrieval of the (large) ResourceJson column
+
+   The required migrations will be applied automatically if ``AutoUpdateDatabase=true`` in the settings. Otherwise, or if the automatic migrations time out, you can run them :ref:`manually<migrations>`. The scripts are located in the directory ``./sqlserver``. You can see the list of applied migrations in table ``[vonk].[schemainfo]``. The upgrade requires the following migrations:
+
+   * Admin database:
+
+      * ``FS_SchemaUpgrade_Admin_v19_v20``
+      
+   * Data database:
+
+      * ``FS_SchemaUpgrade_Data_v20_v21``
    
 #. MongoDB
 
@@ -858,3 +893,18 @@ Plugin and Facade
 
       # Vonk.Core.Configuration.CoreConfiguration: allows for integrating Vonk components in your own ASP.NET Web server, discouraged per 3.0 (see these releasenotes).
       # Vonk.Fhir.R3.FhirR3FacadeConfiguration: see above.
+
+Database
+^^^^^^^^
+
+This version contains database schema changes for SQL Server, therefore, the upgrade requires running migrations.
+
+* Admin database:
+
+   * ``20200924095035_CreateTasksTable``
+   
+* Data database:
+
+   * ``20201001101247_CreateExportTable``
+
+The migrations will be applied automatically when ``AutoUpdateDatabase=true`` in the settings. You can see the list of applied migrations in table ``[dbo].[__EFMigrationsHistory]``.

@@ -2,11 +2,15 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - ConceptMap",
-    "version": "1.0.0"
+    "version": "5.0.0"
   },
   "servers": [
     {
       "url": "https://server.fire.ly/",
+      "description": "Firely Server (non-secured)"
+    },
+    {
+      "url": "https://secure.server.fire.ly/",
       "description": "Firely Server"
     }
   ],
@@ -625,7 +629,7 @@
         ],
         "requestBody": {
           "description": "Patch to apply to a FHIR ConceptMap record",
-          "content": { },
+          "content": {},
           "required": true
         },
         "responses": {
@@ -1438,7 +1442,7 @@
         "tags": [
           "ConceptMap"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "ConceptMapInstanceMetaAddPost",
         "parameters": [
           {
@@ -1523,7 +1527,7 @@
         "tags": [
           "ConceptMap"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "ConceptMapInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1608,7 +1612,7 @@
         "tags": [
           "ConceptMap"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "ConceptMapInstanceMetaPost",
         "parameters": [
           {
@@ -1693,7 +1697,7 @@
         "tags": [
           "ConceptMap"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "ConceptMapMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1773,7 +1777,7 @@
         "tags": [
           "ConceptMap"
         ],
-        "summary": "operation: Translate a code from one value set to another, based on the existing value set and concept maps resources, and/or other additional knowledge available to the server. \r\n\r\n One (and only one) of the in parameters (code, coding, codeableConcept) must be provided, to identify the code that is to be translated.  \r\n\r\n The operation returns a set of parameters including a 'result' for whether there is an acceptable match, and a list of possible matches. Note that the list of matches may include notes of codes for which mapping is specifically excluded, so implementers have to check the match.equivalence for each match",
+        "summary": "operation: execute the Concept Translation operation",
         "operationId": "ConceptMapInstanceTranslatePost",
         "parameters": [
           {
@@ -1858,7 +1862,7 @@
         "tags": [
           "ConceptMap"
         ],
-        "summary": "operation: Translate a code from one value set to another, based on the existing value set and concept maps resources, and/or other additional knowledge available to the server. \r\n\r\n One (and only one) of the in parameters (code, coding, codeableConcept) must be provided, to identify the code that is to be translated.  \r\n\r\n The operation returns a set of parameters including a 'result' for whether there is an acceptable match, and a list of possible matches. Note that the list of matches may include notes of codes for which mapping is specifically excluded, so implementers have to check the match.equivalence for each match",
+        "summary": "operation: execute the Concept Translation operation",
         "operationId": "ConceptMapTranslatePost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -2191,7 +2195,7 @@
       "context": {
         "name": "context",
         "in": "query",
-        "description": "A use context assigned to the research definition",
+        "description": "A use context assigned to the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2200,7 +2204,7 @@
       "context-quantity": {
         "name": "context-quantity",
         "in": "query",
-        "description": "A quantity- or range-valued use context assigned to the research definition",
+        "description": "A quantity- or range-valued use context assigned to the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2209,7 +2213,7 @@
       "context-type": {
         "name": "context-type",
         "in": "query",
-        "description": "A type of use context assigned to the research definition",
+        "description": "A type of use context assigned to the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2218,7 +2222,7 @@
       "context-type-quantity": {
         "name": "context-type-quantity",
         "in": "query",
-        "description": "A use context type and quantity- or range-based value assigned to the research definition",
+        "description": "A use context type and quantity- or range-based value assigned to the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2227,7 +2231,7 @@
       "context-type-value": {
         "name": "context-type-value",
         "in": "query",
-        "description": "A use context type and value assigned to the research definition",
+        "description": "A use context type and value assigned to the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2236,7 +2240,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Date first version of the resource instance was recorded\r\n* [CarePlan](careplan.html): Time period plan covers\r\n* [CareTeam](careteam.html): Time period team covers\r\n* [ClinicalImpression](clinicalimpression.html): When the assessment was documented\r\n* [Composition](composition.html): Composition editing time\r\n* [Consent](consent.html): When this Consent was created or indexed\r\n* [DiagnosticReport](diagnosticreport.html): The clinically relevant time of the report\r\n* [Encounter](encounter.html): A date within the period the Encounter lasted\r\n* [EpisodeOfCare](episodeofcare.html): The provided date search value falls within the episode of care's period\r\n* [FamilyMemberHistory](familymemberhistory.html): When history was recorded or last updated\r\n* [Flag](flag.html): Time period when flag is active\r\n* [Immunization](immunization.html): Vaccination  (non)-Administration Date\r\n* [List](list.html): When the list was prepared\r\n* [Observation](observation.html): Obtained date/time. If the obtained element is a period, a date that falls in the period\r\n* [Procedure](procedure.html): When the procedure was performed\r\n* [RiskAssessment](riskassessment.html): When was assessment made?\r\n* [SupplyRequest](supplyrequest.html): When the request was made\r\n",
+        "description": "The questionnaire publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2253,7 +2257,7 @@
       "description": {
         "name": "description",
         "in": "query",
-        "description": "The description of the research definition",
+        "description": "The description of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2262,7 +2266,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2271,7 +2275,7 @@
       "jurisdiction": {
         "name": "jurisdiction",
         "in": "query",
-        "description": "Intended jurisdiction for the research definition",
+        "description": "Intended jurisdiction for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2280,7 +2284,7 @@
       "name": {
         "name": "name",
         "in": "query",
-        "description": "The full product name",
+        "description": "Computationally friendly name of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2305,7 +2309,7 @@
       "publisher": {
         "name": "publisher",
         "in": "query",
-        "description": "Name of the publisher of the research definition",
+        "description": "Name of the publisher of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2314,7 +2318,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Name of system",
+        "description": "Who or where the information in the statement came from",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2348,7 +2352,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2357,7 +2361,7 @@
       "target": {
         "name": "target",
         "in": "query",
-        "description": "Particular delivery destination within the destination",
+        "description": "Types of resource (if a resource reference)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2390,7 +2394,7 @@
       "title": {
         "name": "title",
         "in": "query",
-        "description": "The human-friendly name of the research definition",
+        "description": "The human-friendly name of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2399,7 +2403,7 @@
       "url": {
         "name": "url",
         "in": "query",
-        "description": "The uri that identifies the research definition",
+        "description": "The uri that identifies the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2408,7 +2412,7 @@
       "version": {
         "name": "version",
         "in": "query",
-        "description": "The business version of the research definition",
+        "description": "The business version of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2434,8 +2438,24 @@
           "type": "string"
         }
       }
+    },
+    "securitySchemes": {
+      "openId": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "https://secure.server.fire.ly/.well-known/smart-configuration"
+      }
     }
   },
+  "security": [
+    {
+      "openId": [
+        "openid",
+        "profile",
+        "fhirUser",
+        "offline_access"
+      ]
+    }
+  ],
   "tags": [
     {
       "name": "ConceptMap",

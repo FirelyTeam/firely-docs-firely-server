@@ -16,8 +16,6 @@ Security
 
 #. Fixed an issue where the $everything operation did not respect the patient launch parameter in the SMART on FHIR access token. This means that the user could have requested information belonging to a different patient than the one mentioned in the access token. This issue only happened when an access token used for $everything actually contained a patient launch context such as when allowing a patient to request its own record.
 
-#. Fixed an issue where the $everything operation did not take resource-specific SMART on FHIR scopes into consideration when returning the result bundle. This means that the user could have requested more types of resources than the access token would allow. This issue only happens when an access token used for $everything actually contains read scopes for specific resource types.
-
 #. Fixed an issue where $everything and $export operation would potentially return resources beloging to different users or patients when running the these operations on a MongoDB database. In case a Patient shared a common resources with annother Patient, e.g. a Group resource, all data would be returned even if it would be outside of the compartment of the Patient requesting the data.
 
 .. _vonk_releasenotes_4_10_1:

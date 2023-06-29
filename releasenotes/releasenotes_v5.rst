@@ -3,6 +3,21 @@
 Current Firely Server release notes (v5.x)
 ==========================================
 
+.. _vonk_releasenotes_5_1_1:
+
+Release 5.1.1, June 29th, 2023
+---------------------------------
+
+.. attention::
+  This is a security related release which addresses a vulnerability in Firely Server which may lead to unauthorized access using the $everything operation. This update is highly recommended for all customers.
+
+Security
+^^^^^^^^
+
+#. Fixed an issue where the $everything operation did not respect the patient launch parameter in the SMART on FHIR access token. This means that the user could have requested information belonging to a different patient than the one mentioned in the access token. This issue only happened when an access token used for $everything actually contained a patient launch context such as when allowing a patient to request its own record.
+
+#. Fixed an issue where $everything and $export operation would potentially return resources beloging to different users or patients when running the these operations on a MongoDB database. In case a Patient shared a common resources with annother Patient, e.g. a Group resource, all data would be returned even if it would be outside of the compartment of the Patient requesting the data.
+
 .. _vonk_releasenotes_5_1_0:
 
 Release 5.1.0, May xth, 2023

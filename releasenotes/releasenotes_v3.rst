@@ -268,7 +268,7 @@ Release 3.3.0
 .. attention::
 
    To use the new features for auditing and R5, you need a new license file including the tokens for those plugins.
-   For evaluation and community editions you can retrieve them from Simplifier.net.
+   For community editions you can retrieve this from Simplifier.net. For evaluation editions you can `sign up <https://fire.ly/firely-server-trial/>`_ after which you will receive an email with the license file.
    If you need these updates in your production license, please contact us.
 
 Feature

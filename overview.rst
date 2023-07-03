@@ -7,7 +7,7 @@ Exploring Firely Server
 -----------------------
 
 Firely Server is a turn-key FHIR Server that you can :ref:`set up within minutes<vonk_getting_started>`. 
-You can try out Firely server for free, either using the sandbox environment at https://server.fire.ly, or by downloading an evaluation or community license from `Simplifier.net <https://simplifier.net/firely-server>`_.
+You can try out Firely server for free, either using the sandbox environment at https://server.fire.ly, by downloading a community license from `Simplifier.net <https://simplifier.net/firely-server>`_, or by obtaining an evaluation license after `signing up <https://fire.ly/firely-server-trial/>`_.
 The sandbox environment is mostly intended for testing and educational purposes, you can explore the sandbox using our Swagger-based `web UI <_static/swagger>`_. The evaluation license allows you to explore all the functionality of Firely Server during a week. After this period, it is possible to renew your license by contacting us at server@fire.ly.
 
 .. image:: ./images/FirelyServer_01.png

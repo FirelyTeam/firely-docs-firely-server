@@ -1,3 +1,6 @@
+.. meta::
+    :keywords: b10
+
 .. _compliance_b_10:
 
 ====================================================
@@ -37,6 +40,7 @@ This means that all relevant information related to the patient, such as demogra
 Furthermore, Firely Server has extended the Patient compartment definition to encompass Binary Resources that are linked to a patient. 
 Binary Resources are used to represent binary data, such as images or documents, that are associated with a patient. 
 By including these Binary Resources within the Patient compartment during export, Firely Server ensures that all relevant data linked to a patient is included in the export files.
+See :ref:`Binary Wrapper <plugin_binarywrapper>` documentation for more information on storing Binary Resources in Firely Server.
 
 .. _singlepatientexport:
 

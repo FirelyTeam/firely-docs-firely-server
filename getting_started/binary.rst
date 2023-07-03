@@ -12,7 +12,7 @@ If you want to start using the standard Firely Server in your local environment,
 and run the server. |br|
 
 
-1.	Download the Firely Server binaries and the license file from `Simplifier.net <https://simplifier.net/vonk>`_.
+1.	Sign up for an `evaluation license <https://fire.ly/firely-server-trial/>`_. You will receive an email with the license file as well as a link to the download page were you can download the Firely Server binaries with the version of your choosing.
 	
 2.	Extract the downloaded files to a location on your system, for example: :code:`C:\FirelyServer`. We will call this the 
 	working directory.

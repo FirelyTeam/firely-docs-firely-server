@@ -296,7 +296,7 @@ Release 2.1.0, March 9th, 2023
 
 .. _fsi_releasenotes_2.0.1:
 
-Release 2.0.1, Feburary 12th, 2023
+Release 2.0.1, February 12th, 2023
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Fix: Add support for schema version 25 for MongoDb

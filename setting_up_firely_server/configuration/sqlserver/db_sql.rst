@@ -140,7 +140,7 @@ Create a database and users by script, and have Firely Server create the schema
 
 *   Run the script to create two users, one with access to the Firely Server database, the other with access to the Administration database.
     This script grants the database role db_ddladmin to both users, to enable the AutoUpdateDatabase feature.
-    Refer to `Overview of permissions`_ for an overview of neccessary authorization for different features.
+    Refer to `Overview of permissions`_ for an overview of necessary  authorization for different features.
 
 *   Set the ``SqlDbOptions`` for the Firely Server database as follows:
     ::

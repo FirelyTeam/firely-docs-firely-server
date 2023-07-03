@@ -8,7 +8,7 @@ Overview
 
    .. note::
 
-     Firely Server v5 has been offically certified against §170.315 g(10) 2015 Cures Edition Health IT. For more details, see our `CHPL listing <https://chpl.healthit.gov/#/organizations/developers/2144>`_.
+     Firely Server v5 has been officially certified against §170.315 g(10) 2015 Cures Edition Health IT. For more details, see our `CHPL listing <https://chpl.healthit.gov/#/organizations/developers/2144>`_.
      Mandatory disclosures can be found `here <https://fire.ly/g10-certification/>`_.
 
 Firely Server can be used out-of-the-box to comply with important criteria for the 21th Century Cures Act. 
@@ -19,7 +19,7 @@ See `How to Test Firely Server on Inferno <https://fire.ly/ebook-how-to-test-fir
 Supported versions
 ^^^^^^^^^^^^^^^^^^
 
-* Firely provides offical support for the following versions of the US Core ImplementationGuide:
+* Firely provides official support for the following versions of the US Core ImplementationGuide:
 
  ================== ========= ========================================
  US Core Version    Status    References                                                                 

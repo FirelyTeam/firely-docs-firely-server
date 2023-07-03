@@ -663,13 +663,13 @@ Repository implementations
 :Configuration: ``Vonk.Repository.MemoryConfiguration``
 :license token: http://fire.ly/vonk/plugins/repository/memory
 :Order: 210
-:Description: Implements a repository in working memory that fully supports all of the capabilities of Firely Server. This implementation is mainly used for unittesting.
+:Description: Implements a repository in working memory that fully supports all of the capabilities of Firely Server. This implementation is mainly used for unit testing.
 
 :Name: Memory Administration Repository
 :Configuration: ``Vonk.Repository.MemoryAdministrationConfiguration``
 :license token: http://fire.ly/vonk/plugins/repository/memory
 :Order: 211
-:Description: Implements a repository in working memory for the Administration API. This implementation is mainly used for unittesting.
+:Description: Implements a repository in working memory for the Administration API. This implementation is mainly used for unit testing.
 
 .. _vonk_plugins_repository_mongodb:
 

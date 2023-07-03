@@ -199,6 +199,6 @@ SQL Server
    #. All migration scripts are in the `/sqlserver` subdirectory of the Firely Server distribution.
    #. The release notes mention the script name for a specific upgrade.
 #. Run the script. Some migrations may take quite long.
-#. Check the messages. A succesful upgrade should end with ``Upgraded to Firely Server database schema <new database schema number> in <database name>``.
+#. Check the messages. A successful upgrade should end with ``Upgraded to Firely Server database schema <new database schema number> in <database name>``.
 #. Now you can start Firely Server again. 
 

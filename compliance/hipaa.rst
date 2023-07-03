@@ -5,7 +5,7 @@ HIPAA compliance
 
 Firely Server is a well-tested, secure HL7 FHIR® server that enables you to comply with the Technical Safeguards of the HIPAA Security Rule.
 
-On this page we will detail how you can achieve compliance for your Firely Server deployment. To ensure your organisation's specific usecase, environment, and deployment are compliant, feel free to :ref:`contact us <vonk-contact>`: we'd be happy to help.
+On this page we will detail how you can achieve compliance for your Firely Server deployment. To ensure your organization's specific use-case, environment, and deployment are compliant, feel free to :ref:`contact us <vonk-contact>`: we'd be happy to help.
 
 .. _hipaa_164.312.a.1:
 

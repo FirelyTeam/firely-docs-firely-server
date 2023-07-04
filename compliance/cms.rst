@@ -11,7 +11,7 @@ The CMS Interoperability Rule aims to promote greater interoperability, patient 
 * Payor-to-Payor API
 * Prior Authorization Requirements, Documentation and Decision (PARDD) 
 
-Firely Server is optimized to support all mandatory requirements out-of-the-box. The following ImplementationsGuides built the foundation of the APIs mentioned above.
+Firely Server aims to support all mandatory requirements out-of-the-box. The following ImplementationsGuides built the foundation of the APIs mentioned above.
 
 .. list-table:: Firely Server CMS Interoperability Mandatory IGs
    :widths: 10, 10, 10, 10, 10

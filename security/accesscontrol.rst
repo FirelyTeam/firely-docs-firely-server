@@ -68,7 +68,7 @@ SMART on FHIR also defines scopes starting with 'patient/' instead of 'user/'. I
 Firely Server will additionally handle user-level scopes by checking the syntax of the SMART on FHIR scopes within the access token. It enforces that only allowed resources types are accessed and only allowed actions are executed.
 
 .. attention::
-  Requests using a user-level scope are not limited a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly adviced to implement additional security measures using a custom plugin, e.g. by enforcing a certain Practitioner or Encounter context.
+  Requests using a user-level scope are not limited a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly advised to implement additional security measures using a custom plugin, e.g. by enforcing a certain Practitioner or Encounter context.
 
 SMART on FHIR scopes are used to:
 

@@ -1,3 +1,5 @@
+.. _compliance_nictiz:
+
 Nictiz
 =======
 
@@ -19,4 +21,4 @@ These issues do not influence the validation of instances against the erroneous 
 Test Data
 ^^^^^^^^^
 
-Offical test data can be found in the Simplifier project for `Nictiz STU3 Zib 2017 <https://simplifier.net/NictizSTU3-Zib2017/~introduction>`_.
+Official test data can be found in the Simplifier project for `Nictiz STU3 Zib 2017 <https://simplifier.net/NictizSTU3-Zib2017/~introduction>`_.

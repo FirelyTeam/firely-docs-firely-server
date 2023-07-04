@@ -1,4 +1,4 @@
-.. _uscore:
+.. _compliance_uscore:
 
 US Core / 21th Century Cures Act
 ================================
@@ -8,7 +8,7 @@ Overview
 
    .. note::
 
-     Firely Server v5 has been offically certified against §170.315 g(10) 2015 Cures Edition Health IT. For more details, see our `CHPL listing <https://chpl.healthit.gov/#/organizations/developers/2144>`_.
+     Firely Server v5 has been officially certified against §170.315 g(10) 2015 Cures Edition Health IT. For more details, see our `CHPL listing <https://chpl.healthit.gov/#/organizations/developers/2144>`_.
      Mandatory disclosures can be found `here <https://fire.ly/g10-certification/>`_.
 
 Firely Server can be used out-of-the-box to comply with important criteria for the 21th Century Cures Act. 
@@ -19,7 +19,7 @@ See `How to Test Firely Server on Inferno <https://fire.ly/ebook-how-to-test-fir
 Supported versions
 ^^^^^^^^^^^^^^^^^^
 
-* Firely provides offical support for the following versions of the US Core ImplementationGuide:
+* Firely provides official support for the following versions of the US Core ImplementationGuide:
 
  ================== ========= ========================================
  US Core Version    Status    References                                                                 
@@ -69,9 +69,9 @@ Firely provides test data covering all US-Core profiles and all elements marked 
 
   <div class="postman-run-button"
   data-postman-action="collection/fork"
-  data-postman-var-1="6644549-bc7e4cdd-3065-4029-bcec-8dcb7c055746"
-  data-postman-collection-url="entityId=6644549-bc7e4cdd-3065-4029-bcec-8dcb7c055746&entityType=collection&workspaceId=822b68d8-7e7d-4b09-b8f1-68362070f0bd"
-  data-postman-param="env%5BFirely%20Server%20Public%5D=W3sia2V5IjoiQkFTRV9VUkwiLCJ2YWx1ZSI6Imh0dHBzOi8vc2VydmVyLmZpcmUubHkvIiwiZW5hYmxlZCI6dHJ1ZSwidHlwZSI6ImRlZmF1bHQiLCJzZXNzaW9uVmFsdWUiOiJodHRwczovL3NlcnZlci5maXJlLmx5LyIsInNlc3Npb25JbmRleCI6MH1d"></div>
+  data-postman-var-1="24489118-e7d6d401-f82e-4695-a434-3d40399e2d2c"
+  data-postman-collection-url="entityId=24489118-e7d6d401-f82e-4695-a434-3d40399e2d2c&entityType=collection&workspaceId=822b68d8-7e7d-4b09-b8f1-68362070f0bd"
+  data-postman-param="env%5BFirely%20Server%20Public%5D=W3sia2V5IjoiQkFTRV9VUkwiLCJ2YWx1ZSI6Imh0dHBzOi8vc2VydmVyLmZpcmUubHkvIiwiZW5hYmxlZCI6dHJ1ZSwidHlwZSI6ImRlZmF1bHQifV0="></div>
   <script type="text/javascript">
     (function (p,o,s,t,m,a,n) {
       !p[s] && (p[s] = function () { (p[t] || (p[t] = [])).push(arguments); });

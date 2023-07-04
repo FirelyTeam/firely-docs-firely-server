@@ -2,11 +2,15 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Linkage",
-    "version": "1.0.0"
+    "version": "5.0.0"
   },
   "servers": [
     {
       "url": "https://server.fire.ly/",
+      "description": "Firely Server (non-secured)"
+    },
+    {
+      "url": "https://secure.server.fire.ly/",
       "description": "Firely Server"
     }
   ],
@@ -487,7 +491,7 @@
         ],
         "requestBody": {
           "description": "Patch to apply to a FHIR Linkage record",
-          "content": { },
+          "content": {},
           "required": true
         },
         "responses": {
@@ -1139,7 +1143,7 @@
         "tags": [
           "Linkage"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "LinkageInstanceMetaAddPost",
         "parameters": [
           {
@@ -1224,7 +1228,7 @@
         "tags": [
           "Linkage"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "LinkageInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1309,7 +1313,7 @@
         "tags": [
           "Linkage"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "LinkageInstanceMetaPost",
         "parameters": [
           {
@@ -1394,7 +1398,7 @@
         "tags": [
           "Linkage"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "LinkageMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1727,7 +1731,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Who and/or what authored the composition",
+        "description": "Who and/or what authored the document",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1745,7 +1749,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Name of system",
+        "description": "Who or where the information in the statement came from",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1771,8 +1775,24 @@
           "type": "string"
         }
       }
+    },
+    "securitySchemes": {
+      "openId": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "https://secure.server.fire.ly/.well-known/smart-configuration"
+      }
     }
   },
+  "security": [
+    {
+      "openId": [
+        "openid",
+        "profile",
+        "fhirUser",
+        "offline_access"
+      ]
+    }
+  ],
   "tags": [
     {
       "name": "Linkage",

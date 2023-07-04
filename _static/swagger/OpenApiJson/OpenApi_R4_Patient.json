@@ -2,11 +2,15 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Patient",
-    "version": "1.0.0"
+    "version": "5.0.0"
   },
   "servers": [
     {
       "url": "https://server.fire.ly/",
+      "description": "Firely Server (non-secured)"
+    },
+    {
+      "url": "https://secure.server.fire.ly/",
       "description": "Firely Server"
     }
   ],
@@ -619,7 +623,7 @@
         ],
         "requestBody": {
           "description": "Patch to apply to a FHIR Patient record",
-          "content": { },
+          "content": {},
           "required": true
         },
         "responses": {
@@ -1425,7 +1429,7 @@
         "tags": [
           "Patient"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "PatientInstanceMetaAddPost",
         "parameters": [
           {
@@ -1510,7 +1514,7 @@
         "tags": [
           "Patient"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "PatientInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1595,7 +1599,7 @@
         "tags": [
           "Patient"
         ],
-        "summary": "operation: This operation is used to return all the information related to one or more patients described in the resource or context on which this operation is invoked. The response is a bundle of type \"searchset\". At a minimum, the patient resource(s) itself is returned, along with any other resources that the server has that are related to the patient(s), and that are available for the given user. The server also returns whatever resources are needed to support the records - e.g. linked practitioners, medications, locations, organizations etc.   \n\nThe intended use for this operation is to provide a patient with access to their entire record (e.g. \"Blue Button\"), or for provider or other user to perform a bulk data download.  The server SHOULD return at least all resources that it has that are in the patient compartment for the identified patient(s), and any resource referenced from those, including binaries and attachments. In the US Realm, at a minimum, the resources returned SHALL include all the data covered by the meaningful use common data elements as defined in the US Core Implementation Guide. Other applicable implementation guides may make additional rules about how much information that is returned.",
+        "summary": "operation: execute the Fetch Patient Record operation",
         "operationId": "PatientInstanceEverythingPost",
         "parameters": [
           {
@@ -1680,7 +1684,7 @@
         "tags": [
           "Patient"
         ],
-        "summary": "operation: This operation is used to return all the information related to one or more patients described in the resource or context on which this operation is invoked. The response is a bundle of type \"searchset\". At a minimum, the patient resource(s) itself is returned, along with any other resources that the server has that are related to the patient(s), and that are available for the given user. The server also returns whatever resources are needed to support the records - e.g. linked practitioners, medications, locations, organizations etc.   \n\nThe intended use for this operation is to provide a patient with access to their entire record (e.g. \"Blue Button\"), or for provider or other user to perform a bulk data download.  The server SHOULD return at least all resources that it has that are in the patient compartment for the identified patient(s), and any resource referenced from those, including binaries and attachments. In the US Realm, at a minimum, the resources returned SHALL include all the data covered by the meaningful use common data elements as defined in the US Core Implementation Guide. Other applicable implementation guides may make additional rules about how much information that is returned.",
+        "summary": "operation: execute the Fetch Patient Record operation",
         "operationId": "PatientEverythingPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1760,7 +1764,7 @@
         "tags": [
           "Patient"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "PatientInstanceMetaPost",
         "parameters": [
           {
@@ -1845,7 +1849,7 @@
         "tags": [
           "Patient"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "PatientMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -2178,7 +2182,7 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Whether this organization affiliation record is in active use",
+        "description": "Is the schedule in active use",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2187,7 +2191,7 @@
       "address": {
         "name": "address",
         "in": "query",
-        "description": "A (part of the) address of the location<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "A server defined search that may match any of the string fields in the Address, including line, city, district, state, country, postalCode, and/or text<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2196,7 +2200,7 @@
       "address-city": {
         "name": "address-city",
         "in": "query",
-        "description": "A city specified in an address<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "A city specified in an address",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2214,7 +2218,7 @@
       "address-postalcode": {
         "name": "address-postalcode",
         "in": "query",
-        "description": "A postal code specified in an address<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "A postal code specified in an address",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2223,7 +2227,7 @@
       "address-state": {
         "name": "address-state",
         "in": "query",
-        "description": "A state specified in an address<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "A state specified in an address",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2266,7 +2270,7 @@
       "email": {
         "name": "email",
         "in": "query",
-        "description": "A value in an email contact",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A value in an email contact\r\n* [Person](person.html): A value in an email contact\r\n* [Practitioner](practitioner.html): A value in an email contact\r\n* [PractitionerRole](practitionerrole.html): A value in an email contact\r\n* [RelatedPerson](relatedperson.html): A value in an email contact\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2316,7 +2320,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2325,7 +2329,8 @@
       "language": {
         "name": "language",
         "in": "query",
-        "description": "Language code (irrespective of use value)",
+        "description": "Human language of the content (BCP-47)",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2342,7 +2347,7 @@
       "name": {
         "name": "name",
         "in": "query",
-        "description": "The full product name",
+        "description": "Computationally friendly name of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2351,7 +2356,7 @@
       "organization": {
         "name": "organization",
         "in": "query",
-        "description": "The organization that has assumed the specific responsibilities of this EpisodeOfCare",
+        "description": "The organization that provides this Healthcare Service",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2360,7 +2365,7 @@
       "phone": {
         "name": "phone",
         "in": "query",
-        "description": "A value in a phone contact",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A value in a phone contact\r\n* [Person](person.html): A value in a phone contact\r\n* [Practitioner](practitioner.html): A value in a phone contact\r\n* [PractitionerRole](practitionerrole.html): A value in a phone contact\r\n* [RelatedPerson](relatedperson.html): A value in a phone contact\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2369,7 +2374,7 @@
       "phonetic": {
         "name": "phonetic",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A portion of either family or given name using some kind of phonetic matching algorithm\r\n* [Person](person.html): A portion of name using some kind of phonetic matching algorithm\r\n* [Practitioner](practitioner.html): A portion of either family or given name using some kind of phonetic matching algorithm\r\n* [RelatedPerson](relatedperson.html): A portion of name using some kind of phonetic matching algorithm\r\n",
+        "description": "A portion of the organization's name using some kind of phonetic matching algorithm",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2386,7 +2391,7 @@
       "telecom": {
         "name": "telecom",
         "in": "query",
-        "description": "The value in any kind of contact",
+        "description": "Contact details for individual or organization",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2412,8 +2417,24 @@
           "type": "string"
         }
       }
+    },
+    "securitySchemes": {
+      "openId": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "https://secure.server.fire.ly/.well-known/smart-configuration"
+      }
     }
   },
+  "security": [
+    {
+      "openId": [
+        "openid",
+        "profile",
+        "fhirUser",
+        "offline_access"
+      ]
+    }
+  ],
   "tags": [
     {
       "name": "Patient",

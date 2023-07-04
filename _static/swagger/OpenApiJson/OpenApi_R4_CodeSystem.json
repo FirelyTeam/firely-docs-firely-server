@@ -2,11 +2,15 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - CodeSystem",
-    "version": "1.0.0"
+    "version": "5.0.0"
   },
   "servers": [
     {
       "url": "https://server.fire.ly/",
+      "description": "Firely Server (non-secured)"
+    },
+    {
+      "url": "https://secure.server.fire.ly/",
       "description": "Firely Server"
     }
   ],
@@ -589,7 +593,7 @@
         ],
         "requestBody": {
           "description": "Patch to apply to a FHIR CodeSystem record",
-          "content": { },
+          "content": {},
           "required": true
         },
         "responses": {
@@ -1360,7 +1364,7 @@
         "tags": [
           "CodeSystem"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "CodeSystemInstanceMetaAddPost",
         "parameters": [
           {
@@ -1445,7 +1449,7 @@
         "tags": [
           "CodeSystem"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "CodeSystemInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1530,7 +1534,7 @@
         "tags": [
           "CodeSystem"
         ],
-        "summary": "operation: Given a set of properties (and text), return one or more possible matching codes\n\nThis operation takes a set of properties, and examines the code system looking for codes in the code system that match a set of known properties. \n\nWhen looking for matches, there are 3 possible types of match:\n* a complete match - a code that represents all the provided properties correctly\n* a partial match - a code that represents some of the provided properties correctly, and not others \n* a possible match - a code that may represent the provided properties closely, but may capture less or more precise information for some of the properties\n\nThe $find-matches operation can be called in one of 2 modes:\n* By a human, looking for the best match for a set of properties. In this mode, the server returns a list of complete, possible or partial matches (possibly with comments), so that the user can choose (or not) the most appropriate code\n* By a machine (typically in a system interface performing a transformation). In this mode, the server returns only a list of complete and partial matches, but no possible matches. The machine can choose a code from the list (or not) based on what properties are not coded\n\nThese modes are differentiated by the 'exact' parameter, so the client can indicate whether it only wants exact matches (including partial matches) or whether potential matches based on text matching are desired\n \nThe find-matches operation is still preliminary. The interface can be expected to change as more experience is gained from implementations.",
+        "summary": "operation: execute the Finding codes based on supplied properties operation",
         "operationId": "CodeSystemInstanceFindMatchesPost",
         "parameters": [
           {
@@ -1615,7 +1619,7 @@
         "tags": [
           "CodeSystem"
         ],
-        "summary": "operation: Given a set of properties (and text), return one or more possible matching codes\n\nThis operation takes a set of properties, and examines the code system looking for codes in the code system that match a set of known properties. \n\nWhen looking for matches, there are 3 possible types of match:\n* a complete match - a code that represents all the provided properties correctly\n* a partial match - a code that represents some of the provided properties correctly, and not others \n* a possible match - a code that may represent the provided properties closely, but may capture less or more precise information for some of the properties\n\nThe $find-matches operation can be called in one of 2 modes:\n* By a human, looking for the best match for a set of properties. In this mode, the server returns a list of complete, possible or partial matches (possibly with comments), so that the user can choose (or not) the most appropriate code\n* By a machine (typically in a system interface performing a transformation). In this mode, the server returns only a list of complete and partial matches, but no possible matches. The machine can choose a code from the list (or not) based on what properties are not coded\n\nThese modes are differentiated by the 'exact' parameter, so the client can indicate whether it only wants exact matches (including partial matches) or whether potential matches based on text matching are desired\n \nThe find-matches operation is still preliminary. The interface can be expected to change as more experience is gained from implementations.",
+        "summary": "operation: execute the Finding codes based on supplied properties operation",
         "operationId": "CodeSystemFindMatchesPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1695,7 +1699,7 @@
         "tags": [
           "CodeSystem"
         ],
-        "summary": "operation: Given a code/system, or a Coding, get additional details about the concept, including definition, status, designations, and properties. One of the products of this operation is a full decomposition of a code from a structured terminology.\n\nWhen invoking this operation, a client SHALL provide both a system and a code, either using the system+code parameters, or in the coding parameter. Other parameters are optional",
+        "summary": "operation: execute the Concept Look Up & Decomposition operation",
         "operationId": "CodeSystemLookupPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1775,7 +1779,7 @@
         "tags": [
           "CodeSystem"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "CodeSystemInstanceMetaPost",
         "parameters": [
           {
@@ -1860,7 +1864,7 @@
         "tags": [
           "CodeSystem"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "CodeSystemMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1940,7 +1944,7 @@
         "tags": [
           "CodeSystem"
         ],
-        "summary": "operation: Test the subsumption relationship between code/Coding A and code/Coding B given the semantics of subsumption in the underlying code system (see [hierarchyMeaning](codesystem-definitions.html#CodeSystem.hierarchyMeaning)).\n\nWhen invoking this operation, a client SHALL provide both a and codes, either as code or Coding parameters. The system parameter is required unless the operation is invoked on an instance of a code system resource. Other parameters are optional",
+        "summary": "operation: execute the Subsumption Testing operation",
         "operationId": "CodeSystemInstanceSubsumesPost",
         "parameters": [
           {
@@ -2025,7 +2029,7 @@
         "tags": [
           "CodeSystem"
         ],
-        "summary": "operation: Test the subsumption relationship between code/Coding A and code/Coding B given the semantics of subsumption in the underlying code system (see [hierarchyMeaning](codesystem-definitions.html#CodeSystem.hierarchyMeaning)).\n\nWhen invoking this operation, a client SHALL provide both a and codes, either as code or Coding parameters. The system parameter is required unless the operation is invoked on an instance of a code system resource. Other parameters are optional",
+        "summary": "operation: execute the Subsumption Testing operation",
         "operationId": "CodeSystemSubsumesPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -2358,7 +2362,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Code that identifies the allergy or intolerance\r\n* [Condition](condition.html): Code for the condition\r\n* [DeviceRequest](devicerequest.html): Code for what is being requested/ordered\r\n* [DiagnosticReport](diagnosticreport.html): The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a condition code\r\n* [List](list.html): What the purpose of this list is\r\n* [Medication](medication.html): Returns medications for a specific code\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication code\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine code\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions of this medication code\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication code\r\n* [Observation](observation.html): The code of the observation type\r\n* [Procedure](procedure.html): A code to identify a  procedure\r\n* [ServiceRequest](servicerequest.html): What is being requested/ordered\r\n",
+        "description": "A code that corresponds to one of its items in the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2375,7 +2379,7 @@
       "context": {
         "name": "context",
         "in": "query",
-        "description": "A use context assigned to the research definition",
+        "description": "A use context assigned to the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2384,7 +2388,7 @@
       "context-quantity": {
         "name": "context-quantity",
         "in": "query",
-        "description": "A quantity- or range-valued use context assigned to the research definition",
+        "description": "A quantity- or range-valued use context assigned to the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2393,7 +2397,7 @@
       "context-type": {
         "name": "context-type",
         "in": "query",
-        "description": "A type of use context assigned to the research definition",
+        "description": "A type of use context assigned to the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2402,7 +2406,7 @@
       "context-type-quantity": {
         "name": "context-type-quantity",
         "in": "query",
-        "description": "A use context type and quantity- or range-based value assigned to the research definition",
+        "description": "A use context type and quantity- or range-based value assigned to the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2411,7 +2415,7 @@
       "context-type-value": {
         "name": "context-type-value",
         "in": "query",
-        "description": "A use context type and value assigned to the research definition",
+        "description": "A use context type and value assigned to the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2420,7 +2424,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Date first version of the resource instance was recorded\r\n* [CarePlan](careplan.html): Time period plan covers\r\n* [CareTeam](careteam.html): Time period team covers\r\n* [ClinicalImpression](clinicalimpression.html): When the assessment was documented\r\n* [Composition](composition.html): Composition editing time\r\n* [Consent](consent.html): When this Consent was created or indexed\r\n* [DiagnosticReport](diagnosticreport.html): The clinically relevant time of the report\r\n* [Encounter](encounter.html): A date within the period the Encounter lasted\r\n* [EpisodeOfCare](episodeofcare.html): The provided date search value falls within the episode of care's period\r\n* [FamilyMemberHistory](familymemberhistory.html): When history was recorded or last updated\r\n* [Flag](flag.html): Time period when flag is active\r\n* [Immunization](immunization.html): Vaccination  (non)-Administration Date\r\n* [List](list.html): When the list was prepared\r\n* [Observation](observation.html): Obtained date/time. If the obtained element is a period, a date that falls in the period\r\n* [Procedure](procedure.html): When the procedure was performed\r\n* [RiskAssessment](riskassessment.html): When was assessment made?\r\n* [SupplyRequest](supplyrequest.html): When the request was made\r\n",
+        "description": "The questionnaire publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2429,7 +2433,7 @@
       "description": {
         "name": "description",
         "in": "query",
-        "description": "The description of the research definition",
+        "description": "The description of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2438,7 +2442,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2447,7 +2451,7 @@
       "jurisdiction": {
         "name": "jurisdiction",
         "in": "query",
-        "description": "Intended jurisdiction for the research definition",
+        "description": "Intended jurisdiction for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2456,7 +2460,7 @@
       "language": {
         "name": "language",
         "in": "query",
-        "description": "Language code (irrespective of use value)",
+        "description": "Human language of the content (BCP-47)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2465,7 +2469,7 @@
       "name": {
         "name": "name",
         "in": "query",
-        "description": "The full product name",
+        "description": "Computationally friendly name of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2474,7 +2478,7 @@
       "publisher": {
         "name": "publisher",
         "in": "query",
-        "description": "Name of the publisher of the research definition",
+        "description": "Name of the publisher of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2483,7 +2487,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2509,7 +2513,7 @@
       "title": {
         "name": "title",
         "in": "query",
-        "description": "The human-friendly name of the research definition",
+        "description": "The human-friendly name of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2518,7 +2522,7 @@
       "url": {
         "name": "url",
         "in": "query",
-        "description": "The uri that identifies the research definition",
+        "description": "The uri that identifies the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2527,7 +2531,7 @@
       "version": {
         "name": "version",
         "in": "query",
-        "description": "The business version of the research definition",
+        "description": "The business version of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2553,8 +2557,24 @@
           "type": "string"
         }
       }
+    },
+    "securitySchemes": {
+      "openId": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "https://secure.server.fire.ly/.well-known/smart-configuration"
+      }
     }
   },
+  "security": [
+    {
+      "openId": [
+        "openid",
+        "profile",
+        "fhirUser",
+        "offline_access"
+      ]
+    }
+  ],
   "tags": [
     {
       "name": "CodeSystem",

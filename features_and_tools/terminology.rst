@@ -97,7 +97,7 @@ Pipeline
 ^^^^^^^^
 
 Make sure to add the ``Vonk.Plugins.Terminology`` plugin to the PipelineOptions in appsettings in order to make use of the ``TerminologyIntegration`` plugin.
-Additionally, to the "/administration" pipeline, ``Vonk.Plugins.Terminology`` can be used on the regular FHIR pipeline "/". Please note that in this case, CodeSystems and ValueSets are resolved from the Administration repository when executing a terminology operation and the correspoding resource is not provided as part of the request as a parameter.
+Additionally, to the "/administration" pipeline, ``Vonk.Plugins.Terminology`` can be used on the regular FHIR pipeline "/". Please note that in this case, CodeSystems and ValueSets are resolved from the Administration repository when executing a terminology operation and the corresponding resource is not provided as part of the request as a parameter.
 
 .. code-block:: JavaScript
 

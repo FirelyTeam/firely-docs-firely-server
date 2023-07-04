@@ -22,6 +22,7 @@ Optional parameters:
 
 * **max**: maximum number of Observations to return from each group;
 * other search parameters defined for the Observation resource.
+* Note: it is not allowed to pass in search response parameter such as _sort or _count.
 
 Appsettings
 -----------

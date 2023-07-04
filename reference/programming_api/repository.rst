@@ -53,7 +53,7 @@ Using ISearchRepository
    .. note::
 
       The Search implementation will in general update the arguments, especially their ``Status`` property and the ``Issue`` if something went wrong.
-      So be careful with reuse of arguments. Use ``IArgumentCollection.Clone()`` if neccessary.
+      So be careful with reuse of arguments. Use ``IArgumentCollection.Clone()`` if necessary .
 
 #. Prepare search options that guide the search. Usually you can use one of the predefined options on the ``SearchOptions`` class.
 
@@ -182,8 +182,8 @@ Should you need to use it, the methods are fairly straightforward.
       var options = SearchOptions.Latest(vonkContext.ServerBase, VonkInteraction.type_search, InformationModel: null); //search across informationmodels, we expect ids to be unique.
       var exists = (await searchRepository.Search(args, options)).TotalCount = 1; //Take care of < 1 or > 1 matches
       
-      var withMetaInfo = changeRepository.EnsureMeta(resource, KeepExisting.Id); //Will keep existing id and provide fresh version and lastUpdated.
-      var updatedResource = await changeRepository.Update(existingKey, withMetaInfo);
+      resource.EnsureMeta(KeepExisting.Id) //Will keep existing id and provide fresh version and lastUpdated.
+      var updatedResource = await changeRepository.Update(existingKey, resource); 
 
 :method: Delete
 :description: Delete the resource that matches the provided key and informationModel. Returns the resource that was deleted.

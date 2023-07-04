@@ -47,7 +47,7 @@ SQL Server user store
 
 Use of the SQL Server user store requires Microsoft SQL Server version 2016 or newer.
 
-Using your favourite database administration tool:
+Using your favorite database administration tool:
 
 - create a new database, e.g. 'firely_auth_store'
 - in this database, execute the script ``scripts/InitializeSchema.sql``, available in the binaries
@@ -66,3 +66,28 @@ Using your favourite database administration tool:
 In the connection string you can use a user that is only allowed to read and write from the existing tables, no further DDL is needed.
 
 To add users to the store, you can use the :ref:`firely_auth_mgmt`.
+
+
+Using Firely Auth behind a proxy or load balancer
+-------------------------------------------------
+
+Firely Auth issues a series of Cookies with the property ``samesite=none``, in particular 
+the cookie ``.AspNetCore.Identity.Application`` from ASP.NET Core Identity.
+
+When using a proxy, the TLS connection might end at the proxy level and hence, the last leg 
+of the request is over ``HTTP`` and not ``HTTPS``. If nothing is done, this means that the Cookies
+issues by Firely Auth will not have the propery ``secure`` set, and depending on the browser 
+setup, it might refuses a cookie with  but without the ``secure`` flag, issuing an error like:
+
+    .. code-block::
+    
+      The cookie '".AspNetCore.Identity.Application"' has set 'SameSite=None' and must also set 'Secure'.
+
+In order to avoid this issue, you need to ensure that the 
+`forwarded headers <https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-7.0#forwarded-headers>`_ 
+are properly set by the proxy/load balancer so that the 
+`ForwardedHeaders middleware <https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.httpoverrides.forwardedheadersmiddleware>`_ 
+can retrieved the values of the public endpoint, allowing other middlewares to return the appropriate values, including 
+the ``secure`` property of the cookies.
+
+

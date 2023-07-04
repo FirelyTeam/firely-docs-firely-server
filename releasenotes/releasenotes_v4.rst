@@ -3,6 +3,21 @@
 Old Firely Server release notes (v4.x)
 ======================================
 
+.. _vonk_releasenotes_4_10_2:
+
+Release 4.10.2, June 29th, 2023
+---------------------------------
+
+.. attention::
+  This is a security related release which addresses a vulnerability in Firely Server which may lead to unauthorized access using the $everything operation. This update is highly recommended for all customers.
+
+Security
+^^^^^^^^
+
+#. Fixed an issue where the $everything operation did not respect the patient launch parameter in the SMART on FHIR access token. This means that the user could have requested information belonging to a different patient than the one mentioned in the access token. This issue only happened when an access token used for $everything actually contained a patient launch context such as when allowing a patient to request its own record.
+
+#. Fixed an issue where $everything and $export operation would potentially return resources beloging to different users or patients when running the these operations on a MongoDB database. In case a Patient shared a common resources with annother Patient, e.g. a Group resource, all data would be returned even if it would be outside of the compartment of the Patient requesting the data.
+
 .. _vonk_releasenotes_4_10_1:
 
 Release 4.10.1, March 13th, 2023
@@ -96,7 +111,7 @@ Fix
 
       Please note that due to a mistake in the official STU3 specification, search parameters `ConceptMap-source-uri`, `ConceptMap-target-uri` still do not work as expected. The correct search parameter expressions would be `ConceptMap.source.as(uri)` and `ConceptMap.target.as(uri)` while the specification contains `ConceptMap.source.as(Uri)` and `ConceptMap.target.as(Uri)` respectively. The issue has been addressed in R4.
 
-#. SMART: With SMART on FHIR enabled, an update-on-create (creating a new resource with an update / PUT) was allways denied. This is now fixed.
+#. SMART: With SMART on FHIR enabled, an update-on-create (creating a new resource with an update / PUT) was always denied. This is now fixed.
 #. Subscription: if the resthook url in a Subscription did not end with a slash (``/``), it would get shortened to the last slash in the url. This is now fixed, the whole url is used.
 
 Plugin and Facade

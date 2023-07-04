@@ -148,5 +148,13 @@
         "display": "Patient"
       }
     }
+  ],
+  "extension": [
+    {
+        "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-AuditEvent.patient",
+        "valueReference": {
+            "reference": "Patient/instance-id/_history/version-id"
+        }
+    }
   ]
 }

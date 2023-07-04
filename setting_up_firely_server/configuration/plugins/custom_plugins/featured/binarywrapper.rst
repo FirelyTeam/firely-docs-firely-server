@@ -5,8 +5,17 @@ BinaryWrapper plugin
 
 Description
 -----------
+A Binary resource is a digital representation of a single raw artifact that can be accessed in its original format. 
+It can contain various types of content such as text, images, PDFs, zip archives, and more.
 
-Enables you to send binary content to Firely Server and have it stored as a Binary resource, as well as the reverse: get a Binary resource and have it returned in its original binary format. The contents are Base64 encoded and stored inside the resource in the Firely Server database. Therefore this plugin is only suitable for small binary files.
+The Binary Wrapper plugin facilitates the sending of binary content to Firely Server, where it is stored as a Binary resource. 
+Additionally, it enables retrieving a Binary resource and returning it in its original binary format. 
+Essentially, the Binary Wrapper plugin simplifies the process of converting raw artifacts to base64 and manually creating Binary resources.
+
+This plugin is particularly beneficial for workflows designed to support :ref:`170.315 (b)(10) Electronic Health Information Export <compliance_b_10>`.
+
+The contents of the Binary resource are Base64 encoded and stored within the Firely Server database. 
+Therefore, it is important to note that this plugin is suitable for handling small binary files.
 
 Sending binary content example request::
 

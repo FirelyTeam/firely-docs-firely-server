@@ -2,11 +2,15 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - DeviceRequest",
-    "version": "1.0.0"
+    "version": "5.0.0"
   },
   "servers": [
     {
       "url": "https://server.fire.ly/",
+      "description": "Firely Server (non-secured)"
+    },
+    {
+      "url": "https://secure.server.fire.ly/",
       "description": "Firely Server"
     }
   ],
@@ -577,7 +581,7 @@
         ],
         "requestBody": {
           "description": "Patch to apply to a FHIR DeviceRequest record",
-          "content": { },
+          "content": {},
           "required": true
         },
         "responses": {
@@ -1334,7 +1338,7 @@
         "tags": [
           "DeviceRequest"
         ],
-        "summary": "operation: This operation takes a meta, and adds the profiles, tags, and security labels found in it to the nominated resource",
+        "summary": "operation: execute the Add profiles, tags, and security labels to a resource operation",
         "operationId": "DeviceRequestInstanceMetaAddPost",
         "parameters": [
           {
@@ -1419,7 +1423,7 @@
         "tags": [
           "DeviceRequest"
         ],
-        "summary": "operation: This operation takes a meta, and deletes the profiles, tags, and security labels found in it from the nominated resource",
+        "summary": "operation: execute the Delete profiles, tags, and security labels for a resource operation",
         "operationId": "DeviceRequestInstanceMetaDeletePost",
         "parameters": [
           {
@@ -1504,7 +1508,7 @@
         "tags": [
           "DeviceRequest"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "DeviceRequestInstanceMetaPost",
         "parameters": [
           {
@@ -1589,7 +1593,7 @@
         "tags": [
           "DeviceRequest"
         ],
-        "summary": "operation: This operation retrieves a summary of the profiles, tags, and security labels for the given scope; e.g. for each scope:  \n\n* system-wide: a list of all profiles, tags and security labels in use by the system \n* resource-type level: A list of all profiles, tags, and security labels for the resource type \n* individual resource level: A list of all profiles, tags, and security labels for the current version of the resource.  Also, as a special case, this operation (and other meta operations) can be performed on a historical version of a resource)",
+        "summary": "operation: execute the Access a list of profiles, tags, and security labels operation",
         "operationId": "DeviceRequestMetaPost",
         "requestBody": {
           "description": "Input parameters to the operation",
@@ -1922,7 +1926,8 @@
       "authored-on": {
         "name": "authored-on",
         "in": "query",
-        "description": "When the request transitioned to being actionable",
+        "description": "Search by creation date",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1930,7 +1935,7 @@
       "based-on": {
         "name": "based-on",
         "in": "query",
-        "description": "Fulfills plan or proposal",
+        "description": "A request for this procedure",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1939,7 +1944,8 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Code that identifies the allergy or intolerance\r\n* [Condition](condition.html): Code for the condition\r\n* [DeviceRequest](devicerequest.html): Code for what is being requested/ordered\r\n* [DiagnosticReport](diagnosticreport.html): The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a condition code\r\n* [List](list.html): What the purpose of this list is\r\n* [Medication](medication.html): Returns medications for a specific code\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication code\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine code\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions of this medication code\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication code\r\n* [Observation](observation.html): The code of the observation type\r\n* [Procedure](procedure.html): A code to identify a  procedure\r\n* [ServiceRequest](servicerequest.html): What is being requested/ordered\r\n",
+        "description": "A code that corresponds to one of its items in the questionnaire",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1947,7 +1953,8 @@
       "device": {
         "name": "device",
         "in": "query",
-        "description": "Reference to resource that is being requested/ordered",
+        "description": "Observing Device",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1955,7 +1962,7 @@
       "encounter": {
         "name": "encounter",
         "in": "query",
-        "description": "Encounter created as part of",
+        "description": "Multiple Resources: \r\n\r\n* [Composition](composition.html): Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter during which request was created\r\n* [DiagnosticReport](diagnosticreport.html): The Encounter when the order was made\r\n* [DocumentReference](documentreference.html): Context of the document  content\r\n* [Flag](flag.html): Alert relevant during encounter\r\n* [List](list.html): Context in which list created\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this encounter identifier\r\n* [Observation](observation.html): Encounter related to the observation\r\n* [Procedure](procedure.html): Encounter created as part of\r\n* [RiskAssessment](riskassessment.html): Where was assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter in which this request is made\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this encounter identifier\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1972,7 +1979,7 @@
       "group-identifier": {
         "name": "group-identifier",
         "in": "query",
-        "description": "Composite request this is part of",
+        "description": "The group identifier for the request group",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1981,7 +1988,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Unique identifier",
+        "description": "External identifier for the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1991,6 +1998,7 @@
         "name": "instantiates-canonical",
         "in": "query",
         "description": "Instantiates FHIR protocol or definition",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1999,6 +2007,7 @@
         "name": "instantiates-uri",
         "in": "query",
         "description": "Instantiates external protocol or definition",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2014,7 +2023,8 @@
       "intent": {
         "name": "intent",
         "in": "query",
-        "description": "proposal | plan | original-order |reflex-order",
+        "description": "proposal | plan | directive | order | original-order | reflex-order | filler-order | instance-order | option",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2022,7 +2032,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2031,7 +2041,8 @@
       "performer": {
         "name": "performer",
         "in": "query",
-        "description": "Desired performer for service",
+        "description": "The reference to the practitioner",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2056,7 +2067,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
+        "description": "The current status of the questionnaire",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2065,7 +2076,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Focus of message",
+        "description": "Who/what is the subject of the document",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2091,8 +2102,24 @@
           "type": "string"
         }
       }
+    },
+    "securitySchemes": {
+      "openId": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "https://secure.server.fire.ly/.well-known/smart-configuration"
+      }
     }
   },
+  "security": [
+    {
+      "openId": [
+        "openid",
+        "profile",
+        "fhirUser",
+        "offline_access"
+      ]
+    }
+  ],
   "tags": [
     {
       "name": "DeviceRequest",

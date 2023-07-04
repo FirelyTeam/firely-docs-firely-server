@@ -47,7 +47,7 @@ Updates regarding previous Security Advisories:
      It is nevertheless advised to run a publicly exposed Vonk :ref:`behind a proxy <deploy_reverseProxy>` or on an Azure Web App. 
    * `#335 <https://github.com/aspnet/Announcements/issues/335>`_: no longer relevant to Vonk since it runs on ASP.NET Core 2.2
 
-Microsoft has published several newer Security Advisories regaring ASP.NET Core:
+Microsoft has published several newer Security Advisories regarding ASP.NET Core:
 
    * `#325 <https://github.com/aspnet/Announcements/issues/352>`_: This is not applicable yet to Vonk, since it affects AspNetCoreModuleV2 and Vonk still works on AspNetCoreModule (implicitly V1).
      We will upgrade to V2 shortly though, so we advise you to install the latest AspNetCoreModulev2 anyway.
@@ -63,7 +63,7 @@ Microsoft has published two Security Advisories regarding ASP.NET Core:
    * When using older versions of some of the ASP.NET Core packages you may be vulnerable to "Microsoft Security Advisory CVE-2019-0564: ASP.NET Core Denial of Service Vulnerability".
      Refer to the related `Github issue #334 <https://github.com/aspnet/Announcements/issues/334>`_ for details.
      Vonk FHIR Server up until version 1.1.0 uses versions of the packages involved that are not affected (older than the vulnerable versions). 
-     In a future version we will upgrade beyond the vulnerable version upto secure versions. No action is required by the administrator of Vonk.
+     In a future version we will upgrade beyond the vulnerable version up to secure versions. No action is required by the administrator of Vonk.
 
 April 2018
 ----------
@@ -72,6 +72,6 @@ Microsoft has published two Security Advisories regarding ASP.NET Core:
 
    * If you run Vonk behind Internet Information Server (IIS), you may be affected by "Microsoft Security Advisory CVE-2018-0808: ASP.NET Core Denial Of Service Vulnerability". 
      Refer to the related `GitHub issue #294 <https://github.com/aspnet/Announcements/issues/294>`_ for details and the fix.
-   * If you expose Vonk directly to the internet, or host it behind a proxy which does not validate or restict host headers to known good values, you may be affected by "Microsoft Security Advisory CVE-2018-0787: ASP.NET Core Elevation Of Privilege Vulnerability".
+   * If you expose Vonk directly to the internet, or host it behind a proxy which does not validate or restrict host headers to known good values, you may be affected by "Microsoft Security Advisory CVE-2018-0787: ASP.NET Core Elevation Of Privilege Vulnerability".
      Refer to the related `GitHub issue #295 <https://github.com/aspnet/Announcements/issues/295>`_ for details and the correct way of hosting Vonk.
      This 'host validating middleware' mentioned by this issue is not a part of Vonk. We advise you to run a publicly exposed Vonk :ref:`behind a proxy <deploy_reverseProxy>` or on an Azure Web App. 

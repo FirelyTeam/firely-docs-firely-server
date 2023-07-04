@@ -22,7 +22,6 @@ The following features are intended to support the CMS-0057-P regulation:
 
 * Improved support for Patient Access APIs:
   * Full support for the CARIN Blue Button ImplementationGuide
-  * UI framework in Firely Auth to build webpages to select launch context during SMART app launch
 
 * Improved support for Provider Access APIs:
   * Filtering patients based on Consent during Bulk Data Export requests

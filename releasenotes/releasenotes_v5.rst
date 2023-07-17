@@ -3,6 +3,35 @@
 Current Firely Server release notes (v5.x)
 ==========================================
 
+.. _vonk_releasenotes_5_2_0:
+
+
+Release 5.2.0, July XXth, 2023
+---------------------------------
+
+Configuration
+^^^^^^^^^^^^^
+#. Firely Server now raises a configuration error if the https port is bound to the same port as http
+
+Features
+^^^^^^^^
+
+#. An informational message is now logged for auditing pruposes if authorization for a request was successfull. Previously only authorization failures were logged.
+#. Improved compartments checks for writing resources to a Patient compartment with a patient-level access tokens. All compartment references need to refer to the same compartment. This is important for resources that have multiple compartment references which may refer to different Patients (e.g. AllergyIntolerance.recorder and AllergyIntolerance.patient).
+#. Added support for permanently deleting all resources within a Patient compartment using the $purge operation. See :ref:`erase` for more details.
+#. Enable FS to write logs to AWS CloudWatch
+#. We upgraded Firely Server to the latest SDK 5.2.0, see its `releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.2.0>`_. 
+
+### Fixes
+
+#. _count was not handled in case of a HTTP 401 - Unauthorized status code, leading to a superfluous warning message in the resulting OperationOutcome.
+#. modifierExtensions are no longer rejected in case the validation level is set to "Core".
+#. Improved transaction handling by making sure that accidentally providing a versionId in a resource within a transaction does not lead to versioned references.
+#. Fixed a bug in $everything running on SQL server that resulted in contained resources being returned as individual resources outside of their container.
+#. The SearchAnonymization plugin did not anonymize URLs in a history bundle.
+#. _history requests are now rejected in case unallowed search parameters are used in combination with such a request.
+#. Simplifier projects specified under the AdministrationImportOptions were not imported on start-up
+
 .. _vonk_releasenotes_5_1_1:
 
 Release 5.1.1, June 29th, 2023

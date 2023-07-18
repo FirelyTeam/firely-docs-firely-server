@@ -145,19 +145,16 @@ You should see a ``vonkdata.db`` appear in the ``./resourcedata`` folder, and a 
 Mounting a your custom plugins folder into the container
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In a similar way as described above, you can mount your custom plugins into the container. However, this will replace the default plugings; they need to be added manually.
+In a similar way as described above, you can mount your custom plugins into the container.
+In your working directory, create a folder 'plugins', copy your plugin files to this folder and mount this folder in the docker container. You can add a folder structure inside the plugin folder if you want.
 
-- Download the binaries of your server version from https://downloads.simplifier.net/firely-server/versions/
-- Create a plugin folder, including the default plugins (extracted from the downloaded archive)
-- Create ``appsettings.instance.json`` with the appropriate Pipeline section (see :ref:`vonk_plugins_config`)
-- Mount the files and folder as shown below
+.. warning:: Do not change the target folder to '/app/plugins' as it will overwrite the existing plugins folder in the docker image.
 
 .. code-block::
    
    docker run -d -p 8080:4080 --name firely.server `
    -v ${PWD}/firelyserver-license.json:/app/firelyserver-license.json `
-   -v ${PWD}/appsettings.instance.json:/app/appsettings.instance.json `
-   -v ${PWD}/plugins:/app/plugins `
+   -v ${PWD}/plugins:/app/plugins/custom `
    firely/server
 
 The server is now accessible on ``http://localhost:8080/``.

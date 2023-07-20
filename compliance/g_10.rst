@@ -1,4 +1,4 @@
-.. _compliance_uscore:
+.. _compliance_g_10:
 
 21th Century Cures Act, §170.315 g(10)
 ======================================

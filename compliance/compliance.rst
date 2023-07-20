@@ -79,7 +79,7 @@ Additionally, any necessary configuration to re-produce these testing results wi
    :maxdepth: 1
    :titlesonly:
 
-   g(10)
+   g_10
    b_10
    cms
    nictiz

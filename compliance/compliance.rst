@@ -79,9 +79,9 @@ Additionally, any necessary configuration to re-produce these testing results wi
    :maxdepth: 1
    :titlesonly:
 
-   us_core
-   cms
+   g(10)
    b_10
+   cms
    nictiz
    gdpr
    hipaa

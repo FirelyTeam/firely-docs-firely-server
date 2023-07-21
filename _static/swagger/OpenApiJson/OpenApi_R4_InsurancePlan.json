@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - InsurancePlan",
-    "version": "5.0.0"
+    "version": "5.2.0-alpha-build-20230721.6"
   },
   "servers": [
     {
@@ -10,7 +10,7 @@
       "description": "Firely Server (non-secured)"
     },
     {
-      "url": "https://secure.server.fire.ly/",
+      "url": "https://secure.server.fire.ly",
       "description": "Firely Server"
     }
   ],
@@ -277,9 +277,6 @@
             "$ref": "#/components/parameters/owned-by"
           },
           {
-            "$ref": "#/components/parameters/phonetic"
-          },
-          {
             "$ref": "#/components/parameters/status"
           },
           {
@@ -434,9 +431,6 @@
           },
           {
             "$ref": "#/components/parameters/owned-by"
-          },
-          {
-            "$ref": "#/components/parameters/phonetic"
           },
           {
             "$ref": "#/components/parameters/status"
@@ -813,9 +807,6 @@
             "$ref": "#/components/parameters/owned-by"
           },
           {
-            "$ref": "#/components/parameters/phonetic"
-          },
-          {
             "$ref": "#/components/parameters/status"
           },
           {
@@ -1126,10 +1117,6 @@
                   },
                   "owned-by": {
                     "title": "owned-by",
-                    "type": "string"
-                  },
-                  "phonetic": {
-                    "title": "phonetic",
                     "type": "string"
                   },
                   "status": {
@@ -1874,7 +1861,7 @@
       "address": {
         "name": "address",
         "in": "query",
-        "description": "A server defined search that may match any of the string fields in the Address, including line, city, district, state, country, postalCode, and/or text<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A server defined search that may match any of the string fields in the Address, including line, city, district, state, country, postalCode, and/or text\r\n* [Person](person.html): A server defined search that may match any of the string fields in the Address, including line, city, district, state, country, postalCode, and/or text\r\n* [Practitioner](practitioner.html): A server defined search that may match any of the string fields in the Address, including line, city, district, state, country, postalCode, and/or text\r\n* [RelatedPerson](relatedperson.html): A server defined search that may match any of the string fields in the Address, including line, city, district, state, country, postalCode, and/or text\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1883,7 +1870,7 @@
       "address-city": {
         "name": "address-city",
         "in": "query",
-        "description": "A city specified in an address",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A city specified in an address\r\n* [Person](person.html): A city specified in an address\r\n* [Practitioner](practitioner.html): A city specified in an address\r\n* [RelatedPerson](relatedperson.html): A city specified in an address\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1892,7 +1879,7 @@
       "address-country": {
         "name": "address-country",
         "in": "query",
-        "description": "A country specified in an address",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A country specified in an address\r\n* [Person](person.html): A country specified in an address\r\n* [Practitioner](practitioner.html): A country specified in an address\r\n* [RelatedPerson](relatedperson.html): A country specified in an address\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1901,7 +1888,7 @@
       "address-postalcode": {
         "name": "address-postalcode",
         "in": "query",
-        "description": "A postal code specified in an address",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A postalCode specified in an address\r\n* [Person](person.html): A postal code specified in an address\r\n* [Practitioner](practitioner.html): A postalCode specified in an address\r\n* [RelatedPerson](relatedperson.html): A postal code specified in an address\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1910,7 +1897,7 @@
       "address-state": {
         "name": "address-state",
         "in": "query",
-        "description": "A state specified in an address",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A state specified in an address\r\n* [Person](person.html): A state specified in an address\r\n* [Practitioner](practitioner.html): A state specified in an address\r\n* [RelatedPerson](relatedperson.html): A state specified in an address\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1919,7 +1906,7 @@
       "address-use": {
         "name": "address-use",
         "in": "query",
-        "description": "A use code specified in an address",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A use code specified in an address\r\n* [Person](person.html): A use code specified in an address\r\n* [Practitioner](practitioner.html): A use code specified in an address\r\n* [RelatedPerson](relatedperson.html): A use code specified in an address\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1936,7 +1923,7 @@
       "endpoint": {
         "name": "endpoint",
         "in": "query",
-        "description": "Technical endpoints providing access to electronic services operated for the healthcare service",
+        "description": "Technical endpoints providing access to services operated for this role",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1945,7 +1932,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): External ids for this item\r\n* [CarePlan](careplan.html): External Ids for this plan\r\n* [CareTeam](careteam.html): External Ids for this team\r\n* [Composition](composition.html): Version-independent identifier for the Composition\r\n* [Condition](condition.html): A unique identifier of the condition record\r\n* [Consent](consent.html): Identifier for this record (external references)\r\n* [DetectedIssue](detectedissue.html): Unique id for the detected issue\r\n* [DeviceRequest](devicerequest.html): Business identifier for request/order\r\n* [DiagnosticReport](diagnosticreport.html): An identifier for the report\r\n* [DocumentManifest](documentmanifest.html): Unique Identifier for the set of documents\r\n* [DocumentReference](documentreference.html): Master Version Specific Identifier\r\n* [Encounter](encounter.html): Identifier(s) by which this encounter is known\r\n* [EpisodeOfCare](episodeofcare.html): Business Identifier(s) relevant for this EpisodeOfCare\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a record identifier\r\n* [Goal](goal.html): External Ids for this goal\r\n* [ImagingStudy](imagingstudy.html): Identifiers for the Study, such as DICOM Study Instance UID and Accession number\r\n* [Immunization](immunization.html): Business identifier\r\n* [List](list.html): Business identifier\r\n* [MedicationAdministration](medicationadministration.html): Return administrations with this external identifier\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses with this external identifier\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions with this external identifier\r\n* [MedicationStatement](medicationstatement.html): Return statements with this external identifier\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this external identifier\r\n* [Observation](observation.html): The unique id for a particular observation\r\n* [Procedure](procedure.html): A unique identifier for a procedure\r\n* [RiskAssessment](riskassessment.html): Unique identifier for the assessment\r\n* [ServiceRequest](servicerequest.html): Identifiers assigned to this order\r\n* [SupplyDelivery](supplydelivery.html): External identifier\r\n* [SupplyRequest](supplyrequest.html): Business Identifier for SupplyRequest\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this external identifier\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1968,19 +1955,10 @@
           "type": "string"
         }
       },
-      "phonetic": {
-        "name": "phonetic",
-        "in": "query",
-        "description": "A portion of the organization's name using some kind of phonetic matching algorithm",
-        "style": "form",
-        "schema": {
-          "type": "string"
-        }
-      },
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the questionnaire",
+        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1989,7 +1967,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Kind of document (LOINC if possible)<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Invoke at the type level?",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2025,12 +2003,7 @@
   },
   "security": [
     {
-      "openId": [
-        "openid",
-        "profile",
-        "fhirUser",
-        "offline_access"
-      ]
+      "openId": []
     }
   ],
   "tags": [

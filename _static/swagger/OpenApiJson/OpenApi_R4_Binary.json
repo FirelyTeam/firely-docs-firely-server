@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Binary",
-    "version": "5.0.0"
+    "version": "5.2.0-alpha-build-20230721.6"
   },
   "servers": [
     {
@@ -10,7 +10,7 @@
       "description": "Firely Server (non-secured)"
     },
     {
-      "url": "https://secure.server.fire.ly/",
+      "url": "$(SecuredFhirServerUrl)",
       "description": "Firely Server"
     }
   ],
@@ -1734,18 +1734,13 @@
     "securitySchemes": {
       "openId": {
         "type": "openIdConnect",
-        "openIdConnectUrl": "https://secure.server.fire.ly/.well-known/smart-configuration"
+        "openIdConnectUrl": "http://localhost:4080/.well-known/smart-configuration"
       }
     }
   },
   "security": [
     {
-      "openId": [
-        "openid",
-        "profile",
-        "fhirUser",
-        "offline_access"
-      ]
+      "openId": []
     }
   ],
   "tags": [

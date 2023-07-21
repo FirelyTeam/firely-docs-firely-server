@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - BiologicallyDerivedProduct",
-    "version": "5.0.0"
+    "version": "5.2.0-alpha-build-20230721.6"
   },
   "servers": [
     {

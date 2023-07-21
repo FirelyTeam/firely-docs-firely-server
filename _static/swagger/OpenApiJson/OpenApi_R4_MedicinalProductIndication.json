@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MedicinalProductIndication",
-    "version": "5.0.0"
+    "version": "5.2.0-alpha-build-20230721.6"
   },
   "servers": [
     {
@@ -1705,7 +1705,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Who/what is the subject of the document",
+        "description": "Search by subject",
         "style": "form",
         "schema": {
           "type": "string"

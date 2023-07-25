@@ -30,7 +30,7 @@ Use the following request to erase the specified version ``xyz`` and all the old
 
   POST <base-url>/Observation/example/_history/xyz/$erase
 
-Use the following request to erase resources within the patient compartment of the Patient with id 'example'. Note that AuditEvent and Provenance resources won't get erased by default. Additionally, resources that have been soft deleted before are not being purged. See the configuration details in the :ref:`Appsettings` section.
+Use the following request to erase resources within the patient compartment of the Patient with id 'example'. Note that AuditEvent and Provenance resources won't get erased by default. Additionally, resources that have been soft deleted before are not being purged. See the configuration details in the :ref:`Appsettings` section, more specifically the ExcludeFromPatientPurge option, on how to exclude more resources from being purged.
 
 ::
 
@@ -58,8 +58,7 @@ To enable the $erase and $purge operations you will first have to make sure the 
     ]
   },
   "EraseOperation": {
-      "ExcludeFromPatientPurge": [ "AuditEvent", "Provenance" ],
-      "IncludeIntoPatientPurge": []
+      "ExcludeFromPatientPurge": [ ] // AuditEvents and Provenances will never be deleted 
   }
 
 

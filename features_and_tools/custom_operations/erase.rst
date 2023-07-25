@@ -9,7 +9,7 @@ When Firely Server receives a DELETE request for a resource, it marks it as dele
 
 The `$erase` operation permanently deletes a single resource or one or more historical revisions of a resource from the database. It can be executed on a resource instance level and a resource version level.
 
-The `$purge` operation permanently deletes resources from a patient compartment. The operation can be executed at a Patient instance level.
+The `$purge` operation permanently deletes all resources within a patient compartment. The operation can be executed at a Patient instance level.
 
 .. note::
 
@@ -30,7 +30,7 @@ Use the following request to erase the specified version ``xyz`` and all the old
 
   POST <base-url>/Observation/example/_history/xyz/$erase
 
-Use the following request to erase resources from the patient compartment. Note that AuditEvent and Provenance resources won't get erased by default. See the configuration details in the :ref:`Appsettings` section.
+Use the following request to erase resources within the patient compartment of the Patient with id 'example'. Note that AuditEvent and Provenance resources won't get erased by default. Additionally, resources that have been soft deleted before are not being purged. See the configuration details in the :ref:`Appsettings` section.
 
 ::
 

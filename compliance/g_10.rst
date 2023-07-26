@@ -30,7 +30,7 @@ Together these ImplementationGuides form a coherient set of APIs allowing to bui
 Patient API
 -----------
 
-SMART App Launch allows Patients to launch an App as a standalone application to request data from a FHIR server in their name. Using US Core-conformant resources different data categories can be exposed as an EHR in this case. US Core defines diverse SearchParameters that can be used to find data in the EHR.
+SMART App Launch allows Patients to launch an app as a standalone application to request data from a FHIR server in their name. Using US Core-conformant resources different data categories can be exposed as an EHR in this case. US Core defines diverse SearchParameters that can be used to find data in the EHR.
 To implement a Patient API it is necessary to:
 
   #. Enable SMART on FHIR and point Firely Server to an authorization server managging the accounts of the patients - See :ref:`feature_accesscontrol`

@@ -42,10 +42,13 @@ Resources Included (EHI Exported)
 When exporting resources, all data from within the `Patient compartment, as defined by HL7 FHIR R4 <https://hl7.org/fhir/R4/compartmentdefinition-patient.html>`_, will be included. 
 This means that all relevant information related to the patient, such as demographics, observations, medications, and other healthcare data, will be part of the exported resources.
 
-Furthermore, Firely Server has extended the Patient compartment definition to encompass Binary Resources that are linked to a patient. 
-Binary Resources are used to represent binary data, such as images or documents, that are associated with a patient. 
+Handling unstructured data
+==========================
+
+By definition, EHI covers also unstructured documents that are associated with a patient as well, such as images, documents, or medical notes.
+Binary Resources are used to represent these kind of unstructured data. Firely Server has extended the Patient compartment definition to encompass Binary Resources that are linked to a patient. 
 By including these Binary Resources within the Patient compartment during export, Firely Server ensures that all relevant data linked to a patient is included in the export files.
-See :ref:`Binary Wrapper <plugin_binarywrapper>` documentation for more information on storing Binary Resources in Firely Server.
+See :ref:`Binary Wrapper <plugin_binarywrapper>` documentation for more information on storing Binary Resources in Firely Server. Metadata associated with a Binary resource can be stored in a `DocumentReference <https://hl7.org/fhir/documentreference.html>`_ resource.
 
 .. _singlepatientexport:
 

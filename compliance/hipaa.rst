@@ -1,7 +1,7 @@
 .. _hipaa:
 
-HIPAA compliance
-================
+HIPAA compliance - 🇺🇸
+=====================
 
 Firely Server is a well-tested, secure HL7 FHIR® server that enables you to comply with the Technical Safeguards of the HIPAA Security Rule.
 

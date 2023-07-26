@@ -51,7 +51,7 @@ Features
   * HTTP POST with a Parameters resource
   * export to Azure Blob or Azure Files, see :ref:`feature_bulkdataexport` for related settings
 
-* Our public Postman collection proving support for US-Core is updated, see :ref:`compliance_uscore`
+* Our public Postman collection proving support for US-Core is updated, see :ref:`compliance_g_10`
 * Updated our vulnerability scanning, to further enhance your trust in our binaries and images.
 * Cross-origin requests (CORS) are restricted to requests from secure connections.
 * The following security headers were added:

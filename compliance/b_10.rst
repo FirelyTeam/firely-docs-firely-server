@@ -3,9 +3,14 @@
 
 .. _compliance_b_10:
 
-====================================================
-170.315 (b)(10) Electronic Health Information Export
-====================================================
+=================================================================================
+21th Century Cures Act, 170.315 (b)(10) Electronic Health Information Export - 🇺🇸
+=================================================================================
+
+   .. note::
+
+     Firely Server v5 has been officially certified against §170.315 b(10) 2015 Cures Edition Health IT. For more details, see our `CHPL listing <https://chpl.healthit.gov/#/organizations/developers/2144>`_.
+     Mandatory disclosures can be found `here <https://fire.ly/g10-certification/>`_.
 
 `170.315 (b)(10) requires the implementation of Electronic Health Information (EHI) export functionality <https://www.healthit.gov/test-method/electronic-health-information-export>`_. 
 This encompasses the ability to generate export files for individual patients and entire patient populations in a computable format. 

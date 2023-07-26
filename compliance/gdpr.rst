@@ -1,7 +1,7 @@
 .. _gdpr:
 
-GDPR compliance
-===============
+GDPR compliance - 🇪🇺
+====================
 
 Firely Server is a well-tested, secure HL7 FHIR® server that enables you to comply with the technical and organizational measures of the EU General Data Protection Regulation (GDPR).
 

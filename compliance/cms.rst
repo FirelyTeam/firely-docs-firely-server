@@ -1,7 +1,7 @@
 .. _cms:
 
-Compliance with CMS Advancing Interoperability and Improving Prior Authorization Processes
-==========================================================================================
+Compliance with CMS Advancing Interoperability and Improving Prior Authorization Processes - 🇺🇸
+===============================================================================================
 
 The CMS Interoperability Rule aims to promote greater interoperability, patient access, and innovation in the healthcare industry, while also improving the quality and cost-effectiveness of care. Technically these goals are supported by multiple APIs that are required to be provided:
 
@@ -19,7 +19,7 @@ Firely Server aims to support all mandatory requirements out-of-the-box. The fol
    
    * - API
      - FHIR v4.0.1
-     - :ref:`US Core<uscore>`
+     - :ref:`US Core<compliance_g_10>`
      - :ref:`SMART App Launch<feature_accesscontrol>`
      - :ref:`Bulk Data Access<feature_bulkdataexport>`
 

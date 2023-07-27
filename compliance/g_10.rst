@@ -1,7 +1,7 @@
-.. _compliance_uscore:
+.. _compliance_g_10:
 
-US Core / 21th Century Cures Act
-================================
+21th Century Cures Act, §170.315 g(10)
+======================================
 
 Overview
 ^^^^^^^^
@@ -14,12 +14,34 @@ Overview
 Firely Server can be used out-of-the-box to comply with important criteria for the 21th Century Cures Act. 
 See the `Standard referenced <https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#test_procedure>`_ section provided by the ONC for a full list of standards working in combination to provide an API conforming to §170.315 g(10) 2015 Cures Edition Health IT.
 
-See `How to Test Firely Server on Inferno <https://fire.ly/ebook-how-to-test-firely-server-on-inferno/>`_ for more information on how to pass the official 21st Century Cures Act test. See :ref:`firely_auth_introduction` for details on how to configure a client to interact with Firely Server and Firely Auth.
+See `How to Test Firely Server on Inferno <https://fire.ly/ebook-how-to-test-firely-server-on-inferno/>`_ for more information on how to pass the official 21st Century Cures Act test. 
+
+See :ref:`firely_auth_introduction` for details on how to configure a client to interact with Firely Server and Firely Auth.
+
+§170.315 g(10) APIs
+^^^^^^^^^^^^^^^^^^^
+
+The g(10) criteria describes the interaction of multiple ImplementationGuides, namely:
+
+* SMART App Launch
+* Bulk Data Access
+* US Core
+
+Together these ImplementationGuides form a coherient set of APIs allowing to build different APIs:
+
+* Patient APIs
+SMART App Launch allows Patients to launch an App as a standalone application to request data from a FHIR server in their name. Using US Core-conformant resources different data categories can be exposed as an EHR in this case. US Core defines diverse SearchParameters that can be used to find data in the EHR.
+
+* Practitioner APIs
+SMART App Launch allows Practitioners to start a new workflow outside of the EHR by using additional apps that interact with the FHIR server. Practitioners can launch the app within the EHR and interact with data for a single Patient or a group of Patients, if authorization is granted.
+
+* Multi-Patient APIs
+For system-to-system interactions a Multi-Patient API allows clients to export Patient records in bulk.
 
 Supported versions
 ^^^^^^^^^^^^^^^^^^
 
-* Firely provides official support for the following versions of the US Core ImplementationGuide:
+Firely provides official support for the following versions of the ImplementationGuides described above to implement these APIs:
 
  ================== ========= ========================================
  US Core Version    Status    References                                                                 

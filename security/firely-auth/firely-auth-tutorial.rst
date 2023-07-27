@@ -40,8 +40,7 @@ Step 2 - License
 
 Firely Auth is licensed, like all plugins and add-ons of Firely Server. It uses the same license file as the Firely Server instance it works with.
 Firely Auth requires this token to be present in the license file: ``http://fire.ly/server/auth``.
-If you don't have this in your license file yet, you probably need to acquire Firely Auth first. Please :ref:`vonk-contact` for that.
-
+If you don't have this in your license file yet, you probably need to acquire Firely Auth first. Please :ref:`vonk-contact` for that. You can also test Fiely Auth with an evaluation license. To acquire this license you can `sign up <https://fire.ly/firely-server-trial/>`_ after which you will receive an email with the license file.
 By default Firely Auth will look for a license file named ``firely-server-license.json``, adjacent to the ``Firely.Auth.Core.exe`` 
 You can adjust the location of the license file in the configuration settings, see :ref:`firely_auth_settings_license`.
 Additionally you will have to place a file called ``Duende_License.key`` also adjacent to the ``Firely.Auth.Core.exe``. Please note that the path to this file cannot be configured. 

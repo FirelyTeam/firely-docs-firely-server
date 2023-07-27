@@ -57,7 +57,3 @@ Now use your favorite editor to create a resource that conforms to the Foo Struc
 All the operations on specification-defined resourcetypes are also available for custom resources. You can also use them in a batch or transaction bundle. 
 Custom Resources can also be validated. This also means that :ref:`feature_prevalidation` can be used in conjunction with Custom Resources.
 
-Search parameters on a custom resource
---------------------------------------
-
-In Firely Server you can define your own custom search parameters on any type of resource (see :ref:`feature_customsp`). This includes Custom Resources. Just use the type name of the Custom Resource in the SearchParameter.base.

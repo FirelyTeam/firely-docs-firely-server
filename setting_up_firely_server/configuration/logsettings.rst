@@ -221,6 +221,26 @@ Seq server::
 * Change ``serverUrl`` to the URL of your Seq server
 * ``restrictedToMinimumLevel``: as described for `Console`_.
 
+AWS Cloudwatch
+^^^^^^^^^^^^^^
+Firely Server can also log to AWS Cloudwatch. What you need to do:
+
+#. Create a user with restricted privilages in AWS that can write to Cloudwatch
+#. Configure the machine with the Firely Server instance with the credentials of this AWS account 
+#. These 2 steps are described `here <https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/creds-assign.html>`_
+#. Add the correct sink to the logsettings.json::
+
+		"WriteTo": [
+			{
+				"Name": "AmazonCloudWatch",
+				"Args": {
+					"logGroup": "<the name of your log group>",
+					"logStreamPrefix": "<the description to prefix your log stream>", 
+					"restrictedToMinimumLevel": "Verbose" //Or a higher level
+				}
+			},
+		],
+
 .. _configure_log_database:
 
 Database details

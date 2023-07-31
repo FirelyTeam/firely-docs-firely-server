@@ -205,8 +205,8 @@ The following steps are necessary in order to execute the test collection agains
 
 .. _carin_ig:
 
-CARIN Blue Button
-^^^^^^^^^^^^^^^^^
+CPCDS & CARIN Blue Button
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The `CARIN Blue Button FHIR Implementation Guide <https://hl7.org/fhir/us/carin-bb/>`_ is designed to facilitate the exchange of healthcare data between healthcare providers, payers, and patients.
 It enables a payor to provide secure access to a Common Payer Consumer Data Set (CPCDS) for a patient. API clients can hereby access, interpret and display the content of the data set.

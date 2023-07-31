@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MedicationKnowledge",
-    "version": "5.0.0"
+    "version": "5.2.0-alpha-build-20230731.11"
   },
   "servers": [
     {
@@ -1877,7 +1877,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "A code that corresponds to one of its items in the questionnaire",
+        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Code that identifies the allergy or intolerance\r\n* [Condition](condition.html): Code for the condition\r\n* [DeviceRequest](devicerequest.html): Code for what is being requested/ordered\r\n* [DiagnosticReport](diagnosticreport.html): The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a condition code\r\n* [List](list.html): What the purpose of this list is\r\n* [Medication](medication.html): Returns medications for a specific code\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication code\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine code\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions of this medication code\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication code\r\n* [Observation](observation.html): The code of the observation type\r\n* [Procedure](procedure.html): A code to identify a  procedure\r\n* [ServiceRequest](servicerequest.html): What is being requested/ordered\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1894,8 +1894,7 @@
       "ingredient": {
         "name": "ingredient",
         "in": "query",
-        "description": "Returns medications for this ingredient reference",
-        "style": "form",
+        "description": "Medication(s) or substance(s) contained in the medication",
         "schema": {
           "type": "string"
         }
@@ -1903,8 +1902,7 @@
       "ingredient-code": {
         "name": "ingredient-code",
         "in": "query",
-        "description": "Returns medications for this ingredient code",
-        "style": "form",
+        "description": "Medication(s) or substance(s) contained in the medication",
         "schema": {
           "type": "string"
         }
@@ -1912,8 +1910,7 @@
       "manufacturer": {
         "name": "manufacturer",
         "in": "query",
-        "description": "Returns medications made or sold for this manufacturer",
-        "style": "form",
+        "description": "Manufacturer of the item",
         "schema": {
           "type": "string"
         }
@@ -1961,7 +1958,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the questionnaire",
+        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1987,24 +1984,8 @@
           "type": "string"
         }
       }
-    },
-    "securitySchemes": {
-      "openId": {
-        "type": "openIdConnect",
-        "openIdConnectUrl": "https://secure.server.fire.ly/.well-known/smart-configuration"
-      }
     }
   },
-  "security": [
-    {
-      "openId": [
-        "openid",
-        "profile",
-        "fhirUser",
-        "offline_access"
-      ]
-    }
-  ],
   "tags": [
     {
       "name": "MedicationKnowledge",

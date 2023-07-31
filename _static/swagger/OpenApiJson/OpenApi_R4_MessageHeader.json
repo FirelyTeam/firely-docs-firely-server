@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MessageHeader",
-    "version": "5.0.0"
+    "version": "5.2.0-alpha-build-20230731.11"
   },
   "servers": [
     {
@@ -1874,7 +1874,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Who and/or what authored the document",
+        "description": "The author of the questionnaire response",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1883,7 +1883,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "A code that corresponds to one of its items in the questionnaire",
+        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Code that identifies the allergy or intolerance\r\n* [Condition](condition.html): Code for the condition\r\n* [DeviceRequest](devicerequest.html): Code for what is being requested/ordered\r\n* [DiagnosticReport](diagnosticreport.html): The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a condition code\r\n* [List](list.html): What the purpose of this list is\r\n* [Medication](medication.html): Returns medications for a specific code\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication code\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine code\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions of this medication code\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication code\r\n* [Observation](observation.html): The code of the observation type\r\n* [Procedure](procedure.html): A code to identify a  procedure\r\n* [ServiceRequest](servicerequest.html): What is being requested/ordered\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1909,7 +1909,7 @@
       "enterer": {
         "name": "enterer",
         "in": "query",
-        "description": "Individual who was entering",
+        "description": "The party who is responsible for the request",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1918,7 +1918,7 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "Main clinical acts documented",
+        "description": "Type of the event itself in relation to the subject",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1927,7 +1927,7 @@
       "focus": {
         "name": "focus",
         "in": "query",
-        "description": "The focus of an observation when the focus is not the patient of record.",
+        "description": "Search by task focus",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1936,7 +1936,7 @@
       "receiver": {
         "name": "receiver",
         "in": "query",
-        "description": "Who collected the Supply",
+        "description": "The identity of a receiver to list dispenses for",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1971,7 +1971,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Who or where the information in the statement came from",
+        "description": "Who and/or what defined the list contents (aka Author)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1980,7 +1980,8 @@
       "source-uri": {
         "name": "source-uri",
         "in": "query",
-        "description": "Actual message source address or id",
+        "description": "The source value set that contains the concepts that are being mapped",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2014,24 +2015,8 @@
           "type": "string"
         }
       }
-    },
-    "securitySchemes": {
-      "openId": {
-        "type": "openIdConnect",
-        "openIdConnectUrl": "https://secure.server.fire.ly/.well-known/smart-configuration"
-      }
     }
   },
-  "security": [
-    {
-      "openId": [
-        "openid",
-        "profile",
-        "fhirUser",
-        "offline_access"
-      ]
-    }
-  ],
   "tags": [
     {
       "name": "MessageHeader",

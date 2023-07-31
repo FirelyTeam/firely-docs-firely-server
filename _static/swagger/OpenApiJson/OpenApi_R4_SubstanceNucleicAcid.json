@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - SubstanceNucleicAcid",
-    "version": "5.0.0"
+    "version": "5.2.0-alpha-build-20230731.11"
   },
   "servers": [
     {
@@ -1709,24 +1709,8 @@
           "type": "string"
         }
       }
-    },
-    "securitySchemes": {
-      "openId": {
-        "type": "openIdConnect",
-        "openIdConnectUrl": "https://secure.server.fire.ly/.well-known/smart-configuration"
-      }
     }
   },
-  "security": [
-    {
-      "openId": [
-        "openid",
-        "profile",
-        "fhirUser",
-        "offline_access"
-      ]
-    }
-  ],
   "tags": [
     {
       "name": "SubstanceNucleicAcid",

@@ -25,6 +25,7 @@ Deployment
 
    .. image:: ../../images/Azure_02_ChooseName.png
       :align: center
+      :width: 760px
 
 #. Add the trial license file (firelyserver-trial-license.json) to the firely-server-latest.zip by dragging the license file into the zipfile.
 #. Open a webbrowser, navigate to ``https://<webapp>.scm.azurewebsites.net/ZipDeployUI`` and drag vonk_distribution.zip into the browser window. 
@@ -35,6 +36,7 @@ Deployment
    
    .. image:: ../../images/Azure_05_WebRoot.png
       :align: center
+      :width: 900px
    
 #. Open a browser and go to the site ``https://<webapp>.azurewebsites.net/`` . This will show the Firely Server home page.
 
@@ -46,6 +48,7 @@ with the settings for either :ref:`SQL Server<configure_sql>` or :ref:`MongoDB<c
 
 .. image:: ../../images/Azure_04_Settings.png
    :align: center
+   :width: 900px
 
 More information
 ----------------

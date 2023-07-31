@@ -211,6 +211,9 @@ CPCDS & CARIN Blue Button
 The `CARIN Blue Button FHIR Implementation Guide <https://hl7.org/fhir/us/carin-bb/>`_ is designed to facilitate the exchange of healthcare data between healthcare providers, payers, and patients.
 It enables a payor to provide secure access to a Common Payer Consumer Data Set (CPCDS) for a patient. API clients can hereby access, interpret and display the content of the data set.
 
+The CPCDS includes a comprehensive set of health care data elements, such as claims and encounter data, enrollment and eligibility information, pharmacy data, and clinical data. 
+By creating a common data format, the CPCDS facilitates the seamless sharing of health information across different payers and health systems, promoting interoperability and data-driven decision-making.
+
 .. list-table:: CARIN Blue Button Overview
    :widths: 10, 10, 10, 10
    :header-rows: 1

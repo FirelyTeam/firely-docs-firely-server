@@ -63,6 +63,8 @@ The goal is to to make as much data available to patients as possible through th
 * Plan Coverage and Formularies (US Drug Formulary)
 * Prior Authorization Decisions (Da Vinci Prior Authorization Support)
 
+.. image:: ../images/CMS-0057-P_PatientAccessAPI.pdf
+
 .. note::
   The Da Vinci Payer Data Exchange Implementation Guide and the CARIN Blue Button Implementation Guide both use the ExplanationOfBenefits. 
   The main difference in usage is that for the CARIN profiles make information available about a final claim, whereas PDex aims for sharing prior authorization information.
@@ -73,3 +75,4 @@ To implement a Patient Access API it is necessary to:
   #. Enable SMART on FHIR and point Firely Server to an authorization server managging the accounts of the patients - See :ref:`feature_accesscontrol`
   #. Expose the Patient reorcd with all its USCDI, CPCDS, and prior authorization data elements
   #. Configure the API clients to be allowed to be granted access (ready-only) to resources on behalf of the patient - See :ref:`Configuration of API clients in Firely Auth <firely_auth_settings_clients>`
+

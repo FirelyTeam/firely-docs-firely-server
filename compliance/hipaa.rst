@@ -61,7 +61,7 @@ For Firely Server to be able to log the identity of the user, this identity must
 
    Implement hardware, software, and/or procedural mechanisms that record and examine activity in information systems that contain or use electronic protected health information.
 
-With the use of the :ref:`Audit Event log <vonk_plugins_audit>` plugin, Firely Server will thoroughly log every interaction as a note in a log file and/or in an AuditEvent resource. Logged information will be a trace record of all system activity: viewing, modification, deletion and creation of all Eletronic Protected Health Information (ePHI).
+With the use of the :ref:`Audit Event log <vonk_plugins_audit>` plugin, Firely Server will thoroughly log every interaction as a note in a log file and/or in an AuditEvent resource. Logged information will be a trace record of all system activity: viewing, modification, deletion and creation of all Electronic Protected Health Information (ePHI).
 
 The audit trail can track the source IP, event type, date/time, and more. If a JWT token is provided (for SMART on FHIR), the user/patient identity can be logged as well.
 
@@ -85,7 +85,7 @@ Firely Server is regularly updated with the latest versions of ASP.NET to ensure
 
     Implement a mechanism to encrypt electronic protected health information whenever deemed appropriate.
 
-The recommended way to ensure that e-PHI is encrypted as necessary is to use disk encryption, and there are several solutions for this depending on your deployment environment. If you're deploying in the cloud - see your vendors options for disk encryption, as most have options for encrypted disks already. If you're deploying locally, look into BitLocker on Windows or dm-crypt/LUKS for Linux.
+The recommended way to ensure that e-PHI is encrypted as necessary is to use disk encryption, and there are several solutions for this depending on your deployment environment. If you're deploying in the cloud - see your vendor's options for disk encryption, as most have options for encrypted disks already. If you're deploying locally, look into BitLocker on Windows or dm-crypt/LUKS for Linux.
 
 Disk encryption is preferred over individual database field encryption as the latter would severely impact the search performance.
 
@@ -111,4 +111,4 @@ If you went with a custom authentication scheme, add a special measure to handle
 
 Firely Server does not allow you to delete resources through its RESTful API. Old versions of resources are retained by default. The only way to alter or destroy resources is through direct database access.
 
-Therefore database-level safety mechanisms must ensure that information is not altered or destroyed unless it's desired.
+Therefore, database-level safety mechanisms must ensure that information is not altered or destroyed unless it's desired.

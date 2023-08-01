@@ -5,12 +5,12 @@ GDPR compliance - 🇪🇺
 
 Firely Server is a well-tested, secure HL7 FHIR® server that enables you to comply with the technical and organizational measures of the EU General Data Protection Regulation (GDPR).
 
-On this page we will detail how you can achieve compliance for your Firely Server deployment. To ensure your organization's specific use case, environment, and deployment are compliant, feel free to :ref:`contact us <vonk-contact>`: we'd be happy to help.
-We also recommend checking `<https://gdprchecklist.io/>`_ for information. The following sections only focus on technical requirements, organizational requirements are out-of-scope for this document.
+On this page, we will detail how you can achieve compliance for your Firely Server deployment. To ensure your organization's specific use case, environment, and deployment are compliant, feel free to :ref:`contact us <vonk-contact>`: we'd be happy to help.
+We also recommend checking `<https://gdprchecklist.io/>`_ for information. The following sections only focus on technical requirements; organizational requirements are out-of-scope for this document.
 
 .. attention::
 
-    Firely is not a Data Processor as defined in by the GDPR, as Firely does not process any data stored in Firely Server.
+    Firely is not a Data Processor as defined in the GDPR, as Firely does not process any data stored in Firely Server.
 
 Within the GDPR, chapter three defines a list of granted rights for a data subject. For some of these rights, Firely Server offers functionality to support the execution of these rights.
 
@@ -24,7 +24,7 @@ Right to erasure
 ----------------
 
 Please note that the Restful "DELETE" operation is not GDPR compliant by default. After a DELETE, a resource is only marked in the database as deleted.
-This behaviour might be needed to comply with other (regulatory) obligations to retain records. In case it is allowed to permanently delete a resource, Firely Server offers the :ref:`$erase operation <erase>` to delete a resource without retaining history.
+This behavior might be needed to comply with other (regulatory) obligations to retain records. In case it is allowed to permanently delete a resource, Firely Server offers the :ref:`$erase operation <erase>` to delete a resource without retaining history.
 
 Conditions for consent
 ----------------------

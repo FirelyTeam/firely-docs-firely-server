@@ -4,7 +4,7 @@
 .. _compliance_b_10:
 
 =================================================================================
-21th Century Cures Act, 170.315 (b)(10) Electronic Health Information Export - 🇺🇸
+21st Century Cures Act, 170.315 (b)(10) Electronic Health Information Export - 🇺🇸
 =================================================================================
 
    .. note::
@@ -32,7 +32,7 @@ A single file can accommodate multiple resources for multiple patients with mult
 
 Each NDJSON file will have a file naming convention of ``content{resource}.ndjson``, where ``{resource}`` represents a 
 `FHIR resource type <http://hl7.org/fhir/R4/resourcelist.html>`_, i.e. Patient, Observation.
-Within each NDJSON file, only the the resources of the named FHIR resource type will be included.
+Within each NDJSON file, only the resources of the named FHIR resource type will be included.
 
 .. _resourcesincluded:
 
@@ -46,7 +46,7 @@ Handling unstructured data
 ==========================
 
 By definition, EHI covers also unstructured documents that are associated with a patient as well, such as images, documents, or medical notes.
-Binary Resources are used to represent these kind of unstructured data. Firely Server has extended the Patient compartment definition to encompass Binary Resources that are linked to a patient. 
+Binary Resources are used to represent these kinds of unstructured data. Firely Server has extended the Patient compartment definition to encompass Binary Resources that are linked to a patient. 
 By including these Binary Resources within the Patient compartment during export, Firely Server ensures that all relevant data linked to a patient is included in the export files.
 See :ref:`Binary Wrapper <plugin_binarywrapper>` documentation for more information on storing Binary Resources in Firely Server. Metadata associated with a Binary resource can be stored in a `DocumentReference <https://hl7.org/fhir/documentreference.html>`_ resource.
 
@@ -65,7 +65,7 @@ To meet the requirements for 170.315(b)(10), the following basic recommendation 
 This ensures that only authorized individuals can initiate data exports.
 
 2. Create a Firely Auth client registration specifically for EHI export.
-By creating a client registration in Firely Auth, you can define the necessary settings and permissions for EHI export. 
+Creating a client registration in Firely Auth allows you to define the necessary settings and permissions for EHI export. 
 Ensure that the client registration has system-level scopes, granting access to all patient compartment data during the export process. 
 This allows the limited group of users associated with this client to access the required data for EHI export.
 
@@ -76,7 +76,7 @@ To meet the requirements of 170.315(b)(10)(i), Firely Server offers an export fe
 This is achieved by utilizing a Parameters Resource filter against the Patient endpoint.
 
 However, an alternative method is also provided using the Group endpoint. 
-This alternative approach caters to real-world scenarios and alternative workflows which may be more suitable to portals and UI that connect to Firely Server.
+This alternative approach caters to real-world scenarios and alternative workflows that may be more suitable for portals and UI that connect to Firely Server.
 
 Notice in the following Parameters Resource example; there is just a single patient reference.
 
@@ -233,7 +233,7 @@ Understanding the Export Results
 ================================
 
 After successfully requesting a :ref:`Single Patient EHI Export <singlepatientexport>` or
-:ref:`Patient Population EHI Export <patientpopulationexport>` the response will be in the following format:
+:ref:`Patient Population EHI Export <patientpopulationexport>`, the response will be in the following format:
 
 .. include:: ../features_and_tools/bulkdataexport.rst
    :start-after: .. START-BDE-QUEUED-BODY

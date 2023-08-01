@@ -1,6 +1,6 @@
 .. _compliance_g_10:
 
-21th Century Cures Act, §170.315 g(10) Standardized API for patient and population services - 🇺🇸
+21st Century Cures Act, §170.315 g(10) Standardized API for patient and population services - 🇺🇸
 ================================================================================================
 
 Overview
@@ -11,7 +11,7 @@ Overview
      Firely Server v5 has been officially certified against §170.315 g(10) 2015 Cures Edition Health IT. For more details, see our `CHPL listing <https://chpl.healthit.gov/#/organizations/developers/2144>`_.
      Mandatory disclosures can be found `here <https://fire.ly/g10-certification/>`_.
 
-Firely Server is ready to comply with important criteria for the 21th Century Cures Act without any additional configuration. 
+Firely Server is ready to comply with important criteria for the 21st Century Cures Act without any additional configuration. 
 See the `Standard referenced <https://www.healthit.gov/test-method/standardized-api-patient-and-population-services#test_procedure>`_ section provided by the ONC for a full list of standards working in combination to provide an API conforming to §170.315 g(10) 2015 Cures Edition Health IT.
 
 See `How to Test Firely Server on Inferno <https://fire.ly/ebook-how-to-test-firely-server-on-inferno/>`_ for more information on how to pass the official 21st Century Cures Act test.
@@ -25,16 +25,16 @@ The g(10) criteria describes the interaction of multiple ImplementationGuides, n
 * :ref:`bulk_data_access_ig`
 * :ref:`us_core_ig`
 
-Together these ImplementationGuides form a coherient set of APIs allowing to build different APIs hosted on the provider side to enable a secure exchange of information:
+Together these ImplementationGuides form a coherent set of APIs allowing to build different APIs hosted on the provider side to enable a secure exchange of information:
 
 Patient API
 -----------
 
-SMART App Launch allows Patients to launch an app as a standalone application to request data from a FHIR server in their name. Using US Core-conformant resources different data categories can be exposed as an EHR in this case. US Core defines diverse SearchParameters that can be used to find data in the EHR.
+SMART App Launch allows Patients to launch an app as a standalone application to request data from a FHIR server in their name. Using US Core conformant resources, different data categories can be exposed as an EHR in this case. US Core defines diverse SearchParameters that can be used to find data in the EHR.
 To implement a Patient API it is necessary to:
 
-  #. Enable SMART on FHIR and point Firely Server to an authorization server managging the accounts of the patients - See :ref:`feature_accesscontrol`
-  #. Expose the Patient reorcd with all its USCDI data elements
+  #. Enable SMART on FHIR and point Firely Server to an authorization server managing the accounts of the patients - See :ref:`feature_accesscontrol`
+  #. Expose the Patient records with all their USCDI data elements
   #. Configure the API clients to be allowed to be granted access (ready-only) to resources on behalf of the patient - See :ref:`Configuration of API clients in Firely Auth <firely_auth_settings_clients>`
 
 Practitioner API
@@ -43,20 +43,20 @@ Practitioner API
 SMART App Launch allows Practitioners to start a new workflow outside of the EHR by using additional apps that interact with the FHIR server. Practitioners can launch the app within the EHR and interact with data for a single Patient or a group of Patients, if authorization is granted.
 To implement a Practitioner API it is necessary to:
 
-  #. Enable SMART on FHIR and point Firely Server to an authorization server managging the accounts of the practitioners - See :ref:`feature_accesscontrol`
-  #. Expose the Patient reorcds with all their USCDI data elements
+  #. Enable SMART on FHIR and point Firely Server to an authorization server managing the accounts of the practitioners - See :ref:`feature_accesscontrol`
+  #. Expose the Patient records with all their USCDI data elements
   #. Configure the API clients to be allowed to be granted access (ready-only) to resources on behalf of the practitioner - See :ref:`Configuration of API clients in Firely Auth <firely_auth_settings_clients>`
-  #. In case Firely Server acts as a backend of an EHR, forward the launch context information from the EHR to authorization server to open the API client in the correct context - See :ref:`firely_auth_endpoints_launchcontext`
+  #. In case Firely Server acts as a backend of an EHR, forward the launch context information from the EHR to the authorization server to open the API client in the correct context - See :ref:`firely_auth_endpoints_launchcontext`
 
 Multi-Patient API
 -----------------
 
-For system-to-system interactions a Multi-Patient API allows clients to export Patient records in bulk.
+For system-to-system interactions, a Multi-Patient API allows clients to export Patient records in bulk.
 To implement a  Multi-Patient API it is necessary to:
 
   #. Enable SMART on FHIR and point Firely Server to an authorization server configured with pre-authorized backend API clients - See :ref:`feature_accesscontrol`
-  #. Expose the Patient reorcds with all their USCDI data elements
-  #. Configure the API clients to be allowed to be granted access (ready-only) to resources to necessary for their specific use case - See :ref:`Configuration of API clients in Firely Auth <firely_auth_settings_clients>`
+  #. Expose the Patient records with all their USCDI data elements
+  #. Configure the API clients to be allowed to be granted access (ready-only) to resources necessary for their specific use case - See :ref:`Configuration of API clients in Firely Auth <firely_auth_settings_clients>`
 
 Supported versions
 ^^^^^^^^^^^^^^^^^^
@@ -92,7 +92,7 @@ Conformance & Configuration
   * All references between FHIR resources defined as must-support by the implementation guide are supported
   * All search and CRUD interactions defined by US Core are supported, including optional search parameters
 
-* All StructureDefinitions for profiles and extensions (v3.1.1) are loaded by default in the standard SQLite administration database of Firely Server. No additional configuration needed in order to validate against these conformance resources.
+* All StructureDefinitions for profiles and extensions (v3.1.1) are loaded by default in the standard SQLite administration database of Firely Server. No additional configuration is needed to validate against these conformance resources.
 
 * A mapping between USCDI and the US Core profiles can be found in the `US Core ImplementationGuide <http://build.fhir.org/ig/HL7/US-Core/uscdi.html>`_.
 

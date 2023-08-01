@@ -4,7 +4,7 @@ Supported Implementation Guides
 ===============================
 
 All of the following FHIR Implementation Guides have been verified by Firely to work out-of-the-box with Firely Server.
-Conformance to these ImplementationGuides, more specifically their corresponding CapabilityStatements, is usually listed in `CapabilityStatement.instantiates <https://www.hl7.org/fhir/r4/capabilitystatement-definitions.html#CapabilityStatement.instantiates>`_.
+Conformance to these Implementation Guides, more specifically their corresponding Capability Statements, is usually listed in `CapabilityStatement.instantiates <https://www.hl7.org/fhir/r4/capabilitystatement-definitions.html#CapabilityStatement.instantiates>`_.
 
 .. _smart_app_launch_ig:
 
@@ -237,7 +237,7 @@ Known Limitations
 * _include does not work with versioned references
 * FHIR ExplanationOfBenefits instances are not rejected if the claim conformance to the `abstract "C4BB Explanation Of Benefit" <https://hl7.org/fhir/us/carin-bb/StructureDefinition-C4BB-ExplanationOfBenefit.html>`_ profile
 * In order to validate resources claiming to conform to CARIN Blue Button, it is necessary to configure Firely Server to use an external terminology server incl. support for expanding SNOMED CT, LOINC, NUBC, CPT, ICD-10, NCPDP, X12 ValueSets. See :ref:`feature_terminology`.
-* By default invalid values for a search parameter are not rejected by Firely Server with an HTTP 400 - Bad Request status code. To enable this behaviour required by CARIN, include a "Prefer: handling=strict" HTTP header in the search request.
+* By default invalid values for a search parameter are not rejected by Firely Server with an HTTP 400 - Bad Request status code. To enable this behavior required by CARIN, include a "Prefer: handling=strict" HTTP header in the search request.
 * FHIRPath constraints using the "memberOf" function are not evaluated by Firely Server
 
 ------------

@@ -1,10 +1,10 @@
 .. _compliance:
 
-Compliance with national ImplementationGuides and certification programs
+Compliance with National Implementation Guides and Certification Programs
 ========================================================================
 
-The following section will highlight against which national ImplementationGuides and certification programs Firely Server has been successfully tested.
-Additionally, any necessary configuration to re-produce these certification results will be outlined.
+The following section will highlight against which national implementation guides and certification programs Firely Server has been successfully tested.
+Additionally, any necessary configuration to reproduce these certification results will be outlined.
 
 
 .. toctree::

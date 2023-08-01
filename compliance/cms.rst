@@ -52,6 +52,9 @@ Firely Server aims to support all mandatory requirements out-of-the-box. The fol
      - ✅ 
      - Not needed
 
+.. note::
+  There are more optional Implementation Guides strongly recommendended by CMS. Not all of them are currently supported by Firely Server. 
+
 Patient Access API
 ------------------
 

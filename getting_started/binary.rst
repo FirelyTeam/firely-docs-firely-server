@@ -27,8 +27,9 @@ and run the server. |br|
 	::
 
 		{
-		"License": {
+		  "License": {
 			"LicenseFile": "firelyserver-trial-license.json"
+		  }
 		}
 
 1. You can further configure Firely Server by adjusting the ``appsettings.json``. The section :ref:`configure_vonk` explains possible configuration settings.

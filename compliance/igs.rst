@@ -203,6 +203,45 @@ The following steps are necessary in order to execute the test collection agains
 
 ------------
 
+.. _carin_ig:
+
+CPCDS & CARIN Blue Button
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The `CARIN Blue Button FHIR Implementation Guide <https://hl7.org/fhir/us/carin-bb/>`_ is designed to facilitate the exchange of healthcare data between healthcare providers, payers, and patients.
+It enables a payor to provide secure access to a Common Payer Consumer Data Set (CPCDS) for a patient. API clients can hereby access, interpret and display the content of the data set.
+
+The CPCDS includes a comprehensive set of health care data elements, such as claims and encounter data, enrollment and eligibility information, pharmacy data, and clinical data. 
+By creating a common data format, the CPCDS facilitates the seamless sharing of health information across different payers and health systems, promoting interoperability and data-driven decision-making.
+
+.. list-table:: CARIN Blue Button Overview
+   :widths: 10, 10, 10, 10
+   :header-rows: 1
+   
+   * - Supported version
+     - Supporting documentation
+     - Realm
+     - Specification Link
+
+   * - * ✔️ v2.0.0
+  
+     - n/A
+
+     - * 🇺🇸
+
+     - * `hl7.fhir.us.carin-bb|2.0.0 <https://registry.fhir.org/package/hl7.fhir.us.carin-bb|2.0.0>`_
+
+Known Limitations
+-----------------
+
+* _include does not work with versioned references
+* FHIR ExplanationOfBenefits instances are not rejected if the claim conformance to the `abstract "C4BB Explanation Of Benefit" <https://hl7.org/fhir/us/carin-bb/StructureDefinition-C4BB-ExplanationOfBenefit.html>`_ profile
+* In order to validate resources claiming to conform to CARIN Blue Button, it is necessary to configure Firely Server to use an external terminology server incl. support for expanding SNOMED CT, LOINC, NUBC, CPT, ICD-10, NCPDP, X12 ValueSets. See :ref:`feature_terminology`.
+* By default invalid values for a search parameter are not rejected by Firely Server with an HTTP 400 - Bad Request status code. To enable this behaviour required by CARIN, include a "Prefer: handling=strict" HTTP header in the search request.
+* FHIRPath constraints using the "memberOf" function are not evaluated by Firely Server
+
+------------
+
 .. _isik_ig:
 
 ISiK - Basis (Stufe 1)

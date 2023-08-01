@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Linkage",
-    "version": "5.0.0"
+    "version": "5.2.0-alpha-build-20230731.11"
   },
   "servers": [
     {
@@ -1731,7 +1731,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Who and/or what authored the document",
+        "description": "The author of the questionnaire response",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1740,7 +1740,7 @@
       "item": {
         "name": "item",
         "in": "query",
-        "description": "Items in manifest",
+        "description": "Actual entry",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1749,7 +1749,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Who or where the information in the statement came from",
+        "description": "Who and/or what defined the list contents (aka Author)",
         "style": "form",
         "schema": {
           "type": "string"

@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Subscription",
-    "version": "5.0.0"
+    "version": "5.2.0-alpha-build-20230731.11"
   },
   "servers": [
     {
@@ -1770,8 +1770,7 @@
       "contact": {
         "name": "contact",
         "in": "query",
-        "description": "Name of an individual to contact",
-        "style": "form",
+        "description": "Contact details for the subscription",
         "schema": {
           "type": "string"
         }
@@ -1795,7 +1794,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the questionnaire",
+        "description": "draft | active | on-hold | revoked | completed | entered-in-error | unknown",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1804,7 +1803,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Kind of document (LOINC if possible)<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Invoke at the type level?",
         "style": "form",
         "schema": {
           "type": "string"

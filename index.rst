@@ -1,7 +1,7 @@
 Welcome to the Firely Server's documentation!
 =============================================
 
-`Firely Server <https://fire.ly/products/vonk/>`_ is Firely's FHIR server. It was formerly named 'Vonk' and is the successor to our Spark server.
+`Firely Server <https://fire.ly/products/firely-server/>`_ is Firely's FHIR server. It was formerly named 'Vonk' and is the successor to our Spark server.
 Firely Server is the answer to the growing need for a stable server that can be used in a variety of production environments.
 
 .. image:: ./images/firelyserver_home.png

@@ -48,11 +48,13 @@ Using Postman
     .. image:: ../images/postman_tutorial_variables.png
        :align: center
 
-#. Test the first request, metadata, as seen below by clicking "Send". This will return the server Capability Statement.
+#. Test the first request, metadata, as seen below by clicking "Send".
 
     .. image:: ../images/postman_tutorial_metadata.png
        :align: center    
 
+#.  This will return the server Capability Statement:
+   
     ::
 
         {

@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Parameters",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {

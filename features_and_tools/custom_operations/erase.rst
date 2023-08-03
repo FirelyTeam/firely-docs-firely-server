@@ -1,11 +1,11 @@
 .. _erase:
 
-Permanently delete resources - $erase and $purge
-================================================
+Permanently delete resources - $erase
+=====================================
 
 Description
 -----------
-When Firely Server receives a DELETE request for a resource, it marks it as deleted in the database, which makes it hidden from search results. However, the data is still present in the database. This approach is known as *soft deletion*. It is handy for scenarios when you might want to recover accidentally deleted data. However, there are also scenarios when you *actually* want the data to get erased from the database. Firely Server provides the `$erase` and `$purge` operations to accomplish this.
+When Firely Server receives a DELETE request for a resource, it marks it as deleted in the database which makes it hidden from search results. However, the data is still present in the database. This approach is known as *soft deletion*. This comes in handy in scenarios when you want to recover accidentally deleted data. However, there are also scenarios when you *actually* want the data to be erased from the database. For that purpose, Firely Server provides the $erase operation.
 
 The `$erase` operation permanently deletes a single resource or one or more historical revisions of a resource from the database. It can be executed on a resource instance level and a resource version level.
 
@@ -18,13 +18,13 @@ The `$purge` operation permanently deletes all resources within a patient compar
 Examples
 ^^^^^^^^
 
-Use the following request to erase all versions (including the historical versions) of the ``Observation/example`` resource from the database.
+Use the following request to erase all versions (including the historical versions) of the ``Patient/example`` resource from the database.
 
 ::
 
-  POST <base-url>/Observation/example/$erase
+  POST <base-url>/Patient/example/$erase
 
-Use the following request to erase the specified version ``xyz`` and all the older versions (based on meta.lastUpdated) of the ``Observation/example`` resource from the database.
+Use the following request to erase the specified version ``xyz`` and all the older versions (based on meta.lastUpdated) of the ``Patient/example`` resource from the database.
 
 ::
 
@@ -38,7 +38,7 @@ Use the following request to erase resources within the patient compartment of t
 
 Appsettings
 -----------
-To enable the $erase and $purge operations you will first have to make sure the plugin ``Vonk.Plugin.EraseOperation.EraseOperationConfiguration`` is added to the PipelineOptions in the appsettings.
+To enable the $erase operation you will first have to make sure the plugin ``Vonk.Plugin.EraseOperation.EraseOperationConfiguration`` is added to the PipelineOptions in the appsettings.
 
 .. code-block:: JavaScript
 
@@ -82,6 +82,11 @@ To work with SMART on FHIR plugin of Firely Server, you need following custom sc
 .. note::
 
   When the above custom scopes are used, the other SMART on FHIR scopes will be ignored by Firely Server. Due to this limitation, scopes for `$erase` and `$purge` should only be granted to admin users.
+
+AuditEvents
+-----------
+- It is not allowed to erase AuditEvents
+- AuditEvents for the $erase operation will contain the list of deleted items
 
 License
 -------

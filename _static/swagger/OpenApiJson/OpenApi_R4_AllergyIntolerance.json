@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - AllergyIntolerance",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1908,8 +1908,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Categorization of document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
-        "style": "form",
+        "description": "food | medication | environment | biologic",
         "schema": {
           "type": "string"
         }
@@ -1917,7 +1916,7 @@
       "clinical-status": {
         "name": "clinical-status",
         "in": "query",
-        "description": "active | inactive | resolved<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "active | inactive | resolved\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
         "schema": {
           "type": "string"
         }
@@ -1925,7 +1924,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "A code that corresponds to one of its items in the questionnaire",
+        "description": "The specific code",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1942,7 +1941,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The questionnaire publication date",
+        "description": "Start and end of participation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1951,7 +1950,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1984,7 +1983,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Who is part of study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1993,8 +1992,7 @@
       "recorder": {
         "name": "recorder",
         "in": "query",
-        "description": "Who recorded the adverse event",
-        "style": "form",
+        "description": "Who recorded the sensitivity",
         "schema": {
           "type": "string"
         }
@@ -2011,8 +2009,7 @@
       "severity": {
         "name": "severity",
         "in": "query",
-        "description": "mild | moderate | severe",
-        "style": "form",
+        "description": "mild | moderate | severe (of event as a whole)",
         "schema": {
           "type": "string"
         }
@@ -2020,7 +2017,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Kind of document (LOINC if possible)<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "The kind of coverage (health plan, auto, Workers Compensation)",
         "style": "form",
         "schema": {
           "type": "string"

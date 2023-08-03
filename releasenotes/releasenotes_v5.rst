@@ -39,14 +39,14 @@ Release 5.1.1, June 29th, 2023
 ---------------------------------
 
 .. attention::
-  This is a security related release which addresses a vulnerability in Firely Server which may lead to unauthorized access using the $everything operation. This update is highly recommended for all customers.
+  This is a security related release that addresses a vulnerability in Firely Server which may lead to unauthorized access using the $everything operation. This update is highly recommended for all customers.
 
 Security
 ^^^^^^^^
 
 #. Fixed an issue where the $everything operation did not respect the patient launch parameter in the SMART on FHIR access token. This means that the user could have requested information belonging to a different patient than the one mentioned in the access token. This issue only happened when an access token used for $everything actually contained a patient launch context such as when allowing a patient to request its own record.
 
-#. Fixed an issue where $everything and $export operation would potentially return resources beloging to different users or patients when running the these operations on a MongoDB database. In case a Patient shared a common resources with annother Patient, e.g. a Group resource, all data would be returned even if it would be outside of the compartment of the Patient requesting the data.
+#. Fixed an issue where the $everything and $export operation would potentially return resources belonging to different users or patients when running the these operations on a MongoDB database. In case a Patient shared a common resources with another Patient, e.g. a Group resource, all data would be returned even if it would be outside of the compartment of the Patient requesting the data.
 
 .. _vonk_releasenotes_5_1_0:
 
@@ -72,7 +72,7 @@ Configuration
 Features
 ^^^^^^^^
 * Firely Server is upgraded to the release version (5.0.0) of FHIR R5. If you have your administration database in SQL Server or MongoDB, this means that the conformance resources will be :ref:`re-imported <conformance_import>`.
-* We included ``errataR5.zip`` with fixes to a few resources and search parameters that have errors in the specification. These are imported automatically at startup.
+* We included ``errataR5.zip`` with fixes for a few resources and search parameters that have errors in the specification. These are imported automatically at startup.
 * We upgraded Firely Server to the latest SDK 5.1.0, see its `releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.1.0>`_.
 * Bulk Data Export is enhanced with new support for:
   
@@ -81,7 +81,7 @@ Features
   * HTTP POST with a Parameters resource
   * export to Azure Blob or Azure Files, see :ref:`feature_bulkdataexport` for related settings
 
-* Our public Postman collection proving support for US-Core is updated, see :ref:`compliance_uscore`
+* Our public Postman collection proving support for US-Core is updated, see :ref:`compliance_g_10`
 * Updated our vulnerability scanning, to further enhance your trust in our binaries and images.
 * Cross-origin requests (CORS) are restricted to requests from secure connections.
 * The following security headers were added:
@@ -90,7 +90,7 @@ Features
   * and to API response: ``cache-control:no-store``
 
 * You can configure limits on Kestrel, see :ref:`hosting_options`, although using a :ref:`reverse proxy<deploy_reverseProxy>` is still preferred.
-* Added a configuration error to the log if the default informationmodel (aka FHIR version) is not loaded in the pipeline.
+* Added a configuration error to the log if the default information model (aka FHIR version) is not loaded in the pipeline.
 * SearchParameters should not be dependent upon the time of indexing. Therefore we disallow the functions below to be used in their expressions.
   Firely Server will log an error if any of these are encountered, and the SearchParameter will not be used.
 
@@ -100,13 +100,13 @@ Features
 
 Fix
 ^^^
-* Composite search parameters are more accurately supported on SQL Server. Previously a match could be made across components (e.g. the code from one ``Observation.component`` and the value of another).
+* Composite search parameters are more accurately supported on SQL Server. Previously, a match could be made across components (e.g. the code from one ``Observation.component`` and the value of another).
   This was very efficient from a database perspective, but not entirely correct as it could yield more results than expected.
   We corrected that behavior, so a resource must match all parts of the parameter in the same component. This comes with a database migration, see above.
 
     .. warning:: 
         For new or updated resources, the changes take effect immediately.
-        To apply it to existing resources, you have to :ref:`re-index <feature_customsp_reindex>` all resources that are affected by composite search parameters.
+        To apply it to existing resources, you will need to :ref:`re-index <feature_customsp_reindex>` all resources affected by composite search parameters.
         In general that is just Observation resources. You can :ref:`feature_customsp_reindex_specific` by including the composite parameters and their components::
 
             POST <base>/administration</R4 or R5>/reindex/searchparameters
@@ -284,7 +284,7 @@ Fix
 #. When overwriting Search Parameters, the new Search Parameters will now be included in the CapabilityStatement instead of the overwritten ones. This feature was introduced with Firely Server ``4.7.0`` but broke in between the last releases.
 #. The two SearchParameters ``ConceptMap-target-uri`` and ``ConceptMap-source-uri`` for ``ConceptMap`` have been fixed.
 #. For FHIR STU3 and R4, ``Contract``, ``GuidanceResponse`` and ``Task`` have been added to the ``Patient`` compartment. This fix is backported from the FHIR R5 release.
-#. Firely Server now returns a ``404`` and ``OperationOutcome`` when the status of a cancelled export is requested.
+#. Firely Server now returns a ``404`` and ``OperationOutcome`` when the status of a canceled export is requested.
 #. When preloading resources via Firely Server's import feature, no more errors will be logged if subfolders are present.
 #. Warnings and errors with regards to ``AuditEvent`` indexing problems have been fixed and will no longer appear in the log.
 #. Searches on ``period`` elements that have equal start/end times either at the start or beginning of the year will now return the correct results. Previously, these searches did not return any results.

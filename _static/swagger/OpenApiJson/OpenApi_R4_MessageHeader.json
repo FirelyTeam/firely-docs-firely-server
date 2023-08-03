@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MessageHeader",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1874,7 +1874,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Who and/or what authored the document",
+        "description": "The provider or device that identified the issue",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1883,7 +1883,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "A code that corresponds to one of its items in the questionnaire",
+        "description": "The specific code",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1892,8 +1892,7 @@
       "destination": {
         "name": "destination",
         "in": "query",
-        "description": "Returns dispenses that should be sent to a specific destination",
-        "style": "form",
+        "description": "Name of system",
         "schema": {
           "type": "string"
         }
@@ -1909,7 +1908,7 @@
       "enterer": {
         "name": "enterer",
         "in": "query",
-        "description": "Individual who was entering",
+        "description": "The party responsible for the entry of the Claim",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1918,7 +1917,7 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "Main clinical acts documented",
+        "description": "Type of the event itself in relation to the subject",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1927,8 +1926,7 @@
       "focus": {
         "name": "focus",
         "in": "query",
-        "description": "The focus of an observation when the focus is not the patient of record.",
-        "style": "form",
+        "description": "The actual content of the message",
         "schema": {
           "type": "string"
         }
@@ -1962,8 +1960,7 @@
       "sender": {
         "name": "sender",
         "in": "query",
-        "description": "Message sender",
-        "style": "form",
+        "description": "Real world sender of the message",
         "schema": {
           "type": "string"
         }
@@ -1971,7 +1968,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Who or where the information in the statement came from",
+        "description": "The source value set that contains the concepts that are being mapped",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1980,7 +1977,8 @@
       "source-uri": {
         "name": "source-uri",
         "in": "query",
-        "description": "Actual message source address or id",
+        "description": "The source value set that contains the concepts that are being mapped",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1988,7 +1986,7 @@
       "target": {
         "name": "target",
         "in": "query",
-        "description": "Types of resource (if a resource reference)",
+        "description": "The target value set which provides context for the mappings",
         "style": "form",
         "schema": {
           "type": "string"

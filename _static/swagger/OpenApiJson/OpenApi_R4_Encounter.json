@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Encounter",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -2000,8 +2000,7 @@
       "appointment": {
         "name": "appointment",
         "in": "query",
-        "description": "The appointment that the response is attached to",
-        "style": "form",
+        "description": "The appointment that scheduled this encounter",
         "schema": {
           "type": "string"
         }
@@ -2009,7 +2008,7 @@
       "based-on": {
         "name": "based-on",
         "in": "query",
-        "description": "A request for this procedure",
+        "description": "Fulfills CarePlan",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2018,7 +2017,7 @@
       "class": {
         "name": "class",
         "in": "query",
-        "description": "Classification of patient encounter<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Classification of patient encounter\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
         "schema": {
           "type": "string"
         }
@@ -2026,7 +2025,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The questionnaire publication date",
+        "description": "Start and end of participation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2051,7 +2050,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2068,7 +2067,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Uri where the data can be found",
+        "description": "A location, where the resource is found",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2085,7 +2084,7 @@
       "part-of": {
         "name": "part-of",
         "in": "query",
-        "description": "Part of referenced event",
+        "description": "Part of referenced CarePlan",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2111,7 +2110,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Who is part of study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2120,7 +2119,7 @@
       "practitioner": {
         "name": "practitioner",
         "in": "query",
-        "description": "This Response is for this Practitioner",
+        "description": "One of the individuals of the appointment is this practitioner",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2129,7 +2128,7 @@
       "reason-code": {
         "name": "reason-code",
         "in": "query",
-        "description": "Coded reason procedure performed",
+        "description": "Coded reason this appointment is scheduled",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2138,7 +2137,7 @@
       "reason-reference": {
         "name": "reason-reference",
         "in": "query",
-        "description": "The justification that the procedure was performed",
+        "description": "Reason the appointment is to take place (resource)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2163,7 +2162,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the questionnaire",
+        "description": "candidate | eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2172,7 +2171,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Who/what is the subject of the document",
+        "description": "The identity of the subject of the contract",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2181,7 +2180,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Kind of document (LOINC if possible)<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "The kind of coverage (health plan, auto, Workers Compensation)",
         "style": "form",
         "schema": {
           "type": "string"

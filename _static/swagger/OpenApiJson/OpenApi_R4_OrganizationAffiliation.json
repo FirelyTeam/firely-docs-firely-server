@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - OrganizationAffiliation",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1874,7 +1874,7 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Is the schedule in active use",
+        "description": "Whether the patient record is active",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1883,7 +1883,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The questionnaire publication date",
+        "description": "Start and end of participation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1901,7 +1901,7 @@
       "endpoint": {
         "name": "endpoint",
         "in": "query",
-        "description": "Technical endpoints providing access to electronic services operated for the healthcare service",
+        "description": "Technical endpoints providing access to services operated for the location",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1910,7 +1910,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1919,7 +1919,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Uri where the data can be found",
+        "description": "A location, where the resource is found",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1961,8 +1961,7 @@
       "role": {
         "name": "role",
         "in": "query",
-        "description": "The practitioner can perform this role at for the organization",
-        "style": "form",
+        "description": "Definition of the role the participatingOrganization plays",
         "schema": {
           "type": "string"
         }
@@ -1970,7 +1969,7 @@
       "service": {
         "name": "service",
         "in": "query",
-        "description": "The list of healthcare services that this worker provides for this role's Organization/Location(s)",
+        "description": "Which rendered service is being charged?",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1979,7 +1978,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Type of specialty needed",
+        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1988,7 +1987,7 @@
       "telecom": {
         "name": "telecom",
         "in": "query",
-        "description": "Contact details for individual or organization",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): The value in any kind of telecom details of the patient\r\n* [Person](person.html): The value in any kind of contact\r\n* [Practitioner](practitioner.html): The value in any kind of contact\r\n* [PractitionerRole](practitionerrole.html): The value in any kind of contact\r\n* [RelatedPerson](relatedperson.html): The value in any kind of contact\r\n",
         "style": "form",
         "schema": {
           "type": "string"

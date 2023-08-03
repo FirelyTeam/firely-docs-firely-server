@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - AdverseEvent",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1856,7 +1856,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Categorization of document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "food | medication | environment | biologic",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1865,7 +1865,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The questionnaire publication date",
+        "description": "Start and end of participation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1874,8 +1874,7 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "Main clinical acts documented",
-        "style": "form",
+        "description": "Type of the event itself in relation to the subject",
         "schema": {
           "type": "string"
         }
@@ -1883,7 +1882,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Uri where the data can be found",
+        "description": "A location, where the resource is found",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1892,7 +1891,8 @@
       "recorder": {
         "name": "recorder",
         "in": "query",
-        "description": "Who recorded the adverse event",
+        "description": "Who recorded the sensitivity",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1916,7 +1916,8 @@
       "severity": {
         "name": "severity",
         "in": "query",
-        "description": "mild | moderate | severe",
+        "description": "mild | moderate | severe (of event as a whole)",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1933,7 +1934,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Who/what is the subject of the document",
+        "description": "The identity of the subject of the contract",
         "style": "form",
         "schema": {
           "type": "string"

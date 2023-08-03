@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Schedule",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1783,7 +1783,8 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Is the schedule in active use",
+        "description": "Whether the patient record is active",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1791,7 +1792,8 @@
       "actor": {
         "name": "actor",
         "in": "query",
-        "description": "The individual(HealthcareService, Practitioner, Location, ...) to find a Schedule for",
+        "description": "Any one of the individuals participating in the appointment",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1799,7 +1801,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The questionnaire publication date",
+        "description": "Start and end of participation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1808,7 +1810,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1817,7 +1819,8 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "High-level category",
+        "description": "A broad categorization of the service that is to be performed during this appointment",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1825,7 +1828,8 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The type of appointments that can be booked into associated slot(s)",
+        "description": "The specific service that is to be performed during this appointment",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1833,7 +1837,8 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Type of specialty needed",
+        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
+        "style": "form",
         "schema": {
           "type": "string"
         }

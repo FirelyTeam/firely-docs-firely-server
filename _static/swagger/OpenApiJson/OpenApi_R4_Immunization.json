@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Immunization",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1900,7 +1900,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The questionnaire publication date",
+        "description": "Start and end of participation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1909,7 +1909,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1918,7 +1918,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Uri where the data can be found",
+        "description": "A location, where the resource is found",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1936,7 +1936,7 @@
       "manufacturer": {
         "name": "manufacturer",
         "in": "query",
-        "description": "Returns medications made or sold for this manufacturer",
+        "description": "The manufacturer of the device",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1945,7 +1945,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Who is part of study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1954,7 +1954,7 @@
       "performer": {
         "name": "performer",
         "in": "query",
-        "description": "The reference to the practitioner",
+        "description": "Matches if the practitioner is listed as a performer in any of the \"simple\" activities.  (For performers of the detailed activities, chain through the activitydetail search parameter.)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1979,7 +1979,7 @@
       "reason-code": {
         "name": "reason-code",
         "in": "query",
-        "description": "Coded reason procedure performed",
+        "description": "Coded reason this appointment is scheduled",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1988,7 +1988,7 @@
       "reason-reference": {
         "name": "reason-reference",
         "in": "query",
-        "description": "The justification that the procedure was performed",
+        "description": "Reason the appointment is to take place (resource)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1997,8 +1997,7 @@
       "series": {
         "name": "series",
         "in": "query",
-        "description": "DICOM Series Instance UID for a series",
-        "style": "form",
+        "description": "The series being followed by the provider",
         "schema": {
           "type": "string"
         }
@@ -2006,7 +2005,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the questionnaire",
+        "description": "candidate | eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2023,8 +2022,7 @@
       "target-disease": {
         "name": "target-disease",
         "in": "query",
-        "description": "Disease to be immunized against",
-        "style": "form",
+        "description": "The target disease the dose is being administered against",
         "schema": {
           "type": "string"
         }

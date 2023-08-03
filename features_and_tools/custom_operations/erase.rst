@@ -69,7 +69,7 @@ Many resources in the Patient compartment reference resources outside the compar
 AuditEvent & Provenance resources
 ---------------------------------
 - It is not allowed to erase AuditEvents using `$erase`
-- By default, it is not allowed to permanentely delete AuditEvent and Provenance resources using `$purge`
+- It is not allowed to permanentely delete AuditEvent and Provenance resources using `$purge`
 - AuditEvents that are created for the `$erase` and `$purge` operations will contain the list of deleted items
 
 SMART on FHIR

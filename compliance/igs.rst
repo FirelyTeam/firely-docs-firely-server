@@ -244,8 +244,8 @@ Known Limitations
 
 .. _isik_ig:
 
-ISiK - Basis (Stufe 1)
-^^^^^^^^^^^^^^^^^^^^^^
+ISiK - Supported versions
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The `"ISiK" FHIR implementation guide <https://fachportal.gematik.de/informationen-fuer/isik>`_ was developed by gematik (national agency for digital health in Germany). The specification defines specific implementation guidelines for the use of FHIR in the German healthcare system.
 The ISiK FHIR implementation guide aims to improve interoperability and the exchange of health data in Germany. It specifies which FHIR resources, profiles, and terminologies should be implemented to ensure a uniform and secure communication between different IT systems in the stationary healthcare sector. 

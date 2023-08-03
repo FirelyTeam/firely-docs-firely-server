@@ -15,6 +15,7 @@ Additionally, any necessary configuration to reproduce these certification resul
    g_10
    b_10
    cms
+   isik
    nictiz
    gdpr
    hipaa

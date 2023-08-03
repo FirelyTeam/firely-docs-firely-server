@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MedicationKnowledge",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1877,7 +1877,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "A code that corresponds to one of its items in the questionnaire",
+        "description": "The specific code",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1912,7 +1912,7 @@
       "manufacturer": {
         "name": "manufacturer",
         "in": "query",
-        "description": "Returns medications made or sold for this manufacturer",
+        "description": "The manufacturer of the device",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1961,7 +1961,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the questionnaire",
+        "description": "candidate | eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn",
         "style": "form",
         "schema": {
           "type": "string"

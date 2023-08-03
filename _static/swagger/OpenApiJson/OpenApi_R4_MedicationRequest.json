@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MedicationRequest",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1900,7 +1900,7 @@
       "authoredon": {
         "name": "authoredon",
         "in": "query",
-        "description": "Return prescriptions written on this date<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Return prescriptions written on this date\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
         "schema": {
           "type": "string"
         }
@@ -1908,7 +1908,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Categorization of document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "food | medication | environment | biologic",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1917,7 +1917,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "A code that corresponds to one of its items in the questionnaire",
+        "description": "The specific code",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1926,7 +1926,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The questionnaire publication date",
+        "description": "Start and end of participation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1935,7 +1935,7 @@
       "encounter": {
         "name": "encounter",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [Composition](composition.html): Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter during which request was created\r\n* [DiagnosticReport](diagnosticreport.html): The Encounter when the order was made\r\n* [DocumentReference](documentreference.html): Context of the document  content\r\n* [Flag](flag.html): Alert relevant during encounter\r\n* [List](list.html): Context in which list created\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this encounter identifier\r\n* [Observation](observation.html): Encounter related to the observation\r\n* [Procedure](procedure.html): Encounter created as part of\r\n* [RiskAssessment](riskassessment.html): Where was assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter in which this request is made\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this encounter identifier\r\n",
+        "description": "Encounter created as part of",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1944,7 +1944,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1977,7 +1977,7 @@
       "intent": {
         "name": "intent",
         "in": "query",
-        "description": "proposal | plan | directive | order | original-order | reflex-order | filler-order | instance-order | option",
+        "description": "proposal | plan | order | option",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1987,7 +1987,6 @@
         "name": "medication",
         "in": "query",
         "description": "Multiple Resources: \r\n\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication resource\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine resource\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions for this medication reference\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication reference\r\n",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1995,7 +1994,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Who is part of study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2004,7 +2003,7 @@
       "priority": {
         "name": "priority",
         "in": "query",
-        "description": "routine | urgent | asap | stat",
+        "description": "Processing priority requested",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2013,8 +2012,7 @@
       "requester": {
         "name": "requester",
         "in": "query",
-        "description": "Who/what is requesting service",
-        "style": "form",
+        "description": "Returns prescriptions prescribed by this prescriber",
         "schema": {
           "type": "string"
         }
@@ -2022,7 +2020,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the questionnaire",
+        "description": "candidate | eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2031,7 +2029,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Who/what is the subject of the document",
+        "description": "The identity of the subject of the contract",
         "style": "form",
         "schema": {
           "type": "string"

@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Linkage",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1731,7 +1731,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Who and/or what authored the document",
+        "description": "The provider or device that identified the issue",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1740,8 +1740,7 @@
       "item": {
         "name": "item",
         "in": "query",
-        "description": "Items in manifest",
-        "style": "form",
+        "description": "Matches on any item in the Linkage",
         "schema": {
           "type": "string"
         }
@@ -1749,7 +1748,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Who or where the information in the statement came from",
+        "description": "The source value set that contains the concepts that are being mapped",
         "style": "form",
         "schema": {
           "type": "string"

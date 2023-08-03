@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Appointment",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1913,8 +1913,7 @@
       "actor": {
         "name": "actor",
         "in": "query",
-        "description": "The individual(HealthcareService, Practitioner, Location, ...) to find a Schedule for",
-        "style": "form",
+        "description": "Any one of the individuals participating in the appointment",
         "schema": {
           "type": "string"
         }
@@ -1922,8 +1921,7 @@
       "appointment-type": {
         "name": "appointment-type",
         "in": "query",
-        "description": "The style of appointment or patient that may be booked in the slot (not service type)",
-        "style": "form",
+        "description": "The style of appointment or patient that has been booked in the slot (not service type)",
         "schema": {
           "type": "string"
         }
@@ -1931,7 +1929,7 @@
       "based-on": {
         "name": "based-on",
         "in": "query",
-        "description": "A request for this procedure",
+        "description": "Fulfills CarePlan",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1940,7 +1938,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The questionnaire publication date",
+        "description": "Start and end of participation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1949,7 +1947,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1958,7 +1956,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Uri where the data can be found",
+        "description": "A location, where the resource is found",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1967,8 +1965,7 @@
       "part-status": {
         "name": "part-status",
         "in": "query",
-        "description": "The participants acceptance status for this appointment",
-        "style": "form",
+        "description": "The Participation status of the subject, or other participant on the appointment. Can be used to locate participants that have not responded to meeting requests.",
         "schema": {
           "type": "string"
         }
@@ -1976,7 +1973,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Who is part of study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1985,8 +1982,7 @@
       "practitioner": {
         "name": "practitioner",
         "in": "query",
-        "description": "This Response is for this Practitioner",
-        "style": "form",
+        "description": "One of the individuals of the appointment is this practitioner",
         "schema": {
           "type": "string"
         }
@@ -1994,8 +1990,7 @@
       "reason-code": {
         "name": "reason-code",
         "in": "query",
-        "description": "Coded reason procedure performed",
-        "style": "form",
+        "description": "Coded reason this appointment is scheduled",
         "schema": {
           "type": "string"
         }
@@ -2003,8 +1998,7 @@
       "reason-reference": {
         "name": "reason-reference",
         "in": "query",
-        "description": "The justification that the procedure was performed",
-        "style": "form",
+        "description": "Reason the appointment is to take place (resource)",
         "schema": {
           "type": "string"
         }
@@ -2012,8 +2006,7 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "High-level category",
-        "style": "form",
+        "description": "A broad categorization of the service that is to be performed during this appointment",
         "schema": {
           "type": "string"
         }
@@ -2021,8 +2014,7 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The type of appointments that can be booked into associated slot(s)",
-        "style": "form",
+        "description": "The specific service that is to be performed during this appointment",
         "schema": {
           "type": "string"
         }
@@ -2038,8 +2030,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Type of specialty needed",
-        "style": "form",
+        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
         "schema": {
           "type": "string"
         }
@@ -2047,7 +2038,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the questionnaire",
+        "description": "candidate | eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2056,7 +2047,8 @@
       "supporting-info": {
         "name": "supporting-info",
         "in": "query",
-        "description": "Additional information to support the appointment",
+        "description": "Information supporting the clinical impression",
+        "style": "form",
         "schema": {
           "type": "string"
         }

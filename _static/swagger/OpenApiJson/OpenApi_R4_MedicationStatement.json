@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MedicationStatement",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1835,7 +1835,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Categorization of document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "food | medication | environment | biologic",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1844,7 +1844,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "A code that corresponds to one of its items in the questionnaire",
+        "description": "The specific code",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1853,7 +1853,7 @@
       "context": {
         "name": "context",
         "in": "query",
-        "description": "A use context assigned to the questionnaire",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): A use context assigned to the capability statement\r\n* [CodeSystem](codesystem.html): A use context assigned to the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): A use context assigned to the compartment definition\r\n* [ConceptMap](conceptmap.html): A use context assigned to the concept map\r\n* [GraphDefinition](graphdefinition.html): A use context assigned to the graph definition\r\n* [ImplementationGuide](implementationguide.html): A use context assigned to the implementation guide\r\n* [MessageDefinition](messagedefinition.html): A use context assigned to the message definition\r\n* [NamingSystem](namingsystem.html): A use context assigned to the naming system\r\n* [OperationDefinition](operationdefinition.html): A use context assigned to the operation definition\r\n* [SearchParameter](searchparameter.html): A use context assigned to the search parameter\r\n* [StructureDefinition](structuredefinition.html): A use context assigned to the structure definition\r\n* [StructureMap](structuremap.html): A use context assigned to the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): A use context assigned to the terminology capabilities\r\n* [ValueSet](valueset.html): A use context assigned to the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1862,7 +1862,7 @@
       "effective": {
         "name": "effective",
         "in": "query",
-        "description": "The time during which the questionnaire is intended to be in use",
+        "description": "The time during which the charge item definition is intended to be in use",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1871,7 +1871,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1881,6 +1881,7 @@
         "name": "medication",
         "in": "query",
         "description": "Multiple Resources: \r\n\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication resource\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine resource\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions for this medication reference\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication reference\r\n",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1888,7 +1889,7 @@
       "part-of": {
         "name": "part-of",
         "in": "query",
-        "description": "Part of referenced event",
+        "description": "Part of referenced CarePlan",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1897,7 +1898,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Who is part of study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1906,7 +1907,8 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Who or where the information in the statement came from",
+        "description": "The source value set that contains the concepts that are being mapped",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1914,7 +1916,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the questionnaire",
+        "description": "candidate | eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1923,7 +1925,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Who/what is the subject of the document",
+        "description": "The identity of the subject of the contract",
         "style": "form",
         "schema": {
           "type": "string"

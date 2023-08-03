@@ -64,7 +64,7 @@ To enable the $erase operation you will first have to make sure the plugin ``Von
 
 Use `ExcludeFromPatientPurge` to list resource types that are included in the Patient compartment but should not get deleted on patient `$purge` operation. By default, it contains only `AuditEvent` and `Provenance`.
 
-Many resources in the Patient compartment reference resources outside the compartment. For example, a DeviceRequest might reference a Device. As Device itself is not in the Patient compartment, the resource would normally not be erased on `$purge`. But using the `IncludeIntoPatientPurge` setting, you can control which additional resource types get deleted if referenced by any of the resources from within the compartment. By default, no additional resources are specified.
+Many resources in the Patient compartment reference resources outside the compartment. For example, a DeviceRequest might reference a Device. As Device itself is not in the Patient compartment, the resource would normally not be erased on `$purge`.
 
 AuditEvent & Provenance resources
 ---------------------------------

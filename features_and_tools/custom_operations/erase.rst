@@ -72,6 +72,17 @@ AuditEvent & Provenance resources
 - By default, it is not allowed to permanentely delete AuditEvent and Provenance resources using `$purge`
 - AuditEvents that are created for the `$erase` and `$purge` operations will contain the list of deleted items
 
+SMART on FHIR
+-------------
+To work with SMART on FHIR plugin of Firely Server, you need following custom scopes when requesting an access token
+
+- Scope ``http://server.fire.ly/auth/scope/erase-operation`` for `$erase`
+- Scope ``http://server.fire.ly/auth/scope/purge-operation`` for `$purge`
+
+.. note::
+
+  When the above custom scopes are used, the other SMART on FHIR scopes will be ignored by Firely Server. Due to this limitation, scopes for `$erase` and `$purge` should only be granted to admin users.
+
 License
 -------
 The `$erase` and `$purge` operations are part of the core Firely Server functionality. However, to use it, you may need to request an updated license from Firely. You can use your current license file if it contains ``http://fire.ly/vonk/plugins/erase``.

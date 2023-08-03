@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - ClaimResponse",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1835,7 +1835,7 @@
       "created": {
         "name": "created",
         "in": "query",
-        "description": "When this document manifest created",
+        "description": "The creation date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1853,7 +1853,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1862,7 +1862,7 @@
       "insurer": {
         "name": "insurer",
         "in": "query",
-        "description": "The target payor/insurer for the Claim",
+        "description": "The organization which generated this resource",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1880,7 +1880,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Who is part of study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1897,7 +1897,7 @@
       "request": {
         "name": "request",
         "in": "query",
-        "description": "The reference to the claim",
+        "description": "The EligibilityRequest reference",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1906,7 +1906,7 @@
       "requestor": {
         "name": "requestor",
         "in": "query",
-        "description": "The reference to the provider who submitted the claim",
+        "description": "The EligibilityRequest provider",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1915,7 +1915,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the questionnaire",
+        "description": "candidate | eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn",
         "style": "form",
         "schema": {
           "type": "string"

@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Device",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1856,7 +1856,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1865,8 +1865,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Uri where the data can be found",
-        "style": "form",
+        "description": "A location, where the resource is found",
         "schema": {
           "type": "string"
         }
@@ -1874,8 +1873,7 @@
       "manufacturer": {
         "name": "manufacturer",
         "in": "query",
-        "description": "Returns medications made or sold for this manufacturer",
-        "style": "form",
+        "description": "The manufacturer of the device",
         "schema": {
           "type": "string"
         }
@@ -1891,8 +1889,7 @@
       "organization": {
         "name": "organization",
         "in": "query",
-        "description": "The organization that provides this Healthcare Service",
-        "style": "form",
+        "description": "The organization responsible for the device",
         "schema": {
           "type": "string"
         }
@@ -1900,7 +1897,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Who is part of study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1909,7 +1906,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the questionnaire",
+        "description": "candidate | eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1918,7 +1915,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Kind of document (LOINC if possible)<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "The kind of coverage (health plan, auto, Workers Compensation)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1943,7 +1940,7 @@
       "url": {
         "name": "url",
         "in": "query",
-        "description": "The uri that identifies the questionnaire",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The uri that identifies the capability statement\r\n* [CodeSystem](codesystem.html): The uri that identifies the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The uri that identifies the compartment definition\r\n* [ConceptMap](conceptmap.html): The uri that identifies the concept map\r\n* [GraphDefinition](graphdefinition.html): The uri that identifies the graph definition\r\n* [ImplementationGuide](implementationguide.html): The uri that identifies the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The uri that identifies the message definition\r\n* [OperationDefinition](operationdefinition.html): The uri that identifies the operation definition\r\n* [SearchParameter](searchparameter.html): The uri that identifies the search parameter\r\n* [StructureDefinition](structuredefinition.html): The uri that identifies the structure definition\r\n* [StructureMap](structuremap.html): The uri that identifies the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The uri that identifies the terminology capabilities\r\n* [ValueSet](valueset.html): The uri that identifies the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"

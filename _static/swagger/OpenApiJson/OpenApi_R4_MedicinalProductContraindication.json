@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MedicinalProductContraindication",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1705,7 +1705,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Who/what is the subject of the document",
+        "description": "The identity of the subject of the contract",
         "style": "form",
         "schema": {
           "type": "string"

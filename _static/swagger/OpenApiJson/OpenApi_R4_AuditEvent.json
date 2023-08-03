@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - AuditEvent",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1926,7 +1926,8 @@
       "action": {
         "name": "action",
         "in": "query",
-        "description": "Type of action performed during the event",
+        "description": "Actions controlled by this rule",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1934,7 +1935,7 @@
       "address": {
         "name": "address",
         "in": "query",
-        "description": "A server defined search that may match any of the string fields in the Address, including line, city, district, state, country, postalCode, and/or text<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "A (part of the) address of the location\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1975,7 +1976,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The questionnaire publication date",
+        "description": "Start and end of participation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2025,7 +2026,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Who is part of study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2042,7 +2043,7 @@
       "site": {
         "name": "site",
         "in": "query",
-        "description": "Observed body part",
+        "description": "Facility where study activities are conducted",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2051,7 +2052,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Who or where the information in the statement came from",
+        "description": "The source value set that contains the concepts that are being mapped",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2068,7 +2069,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Kind of document (LOINC if possible)<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "The kind of coverage (health plan, auto, Workers Compensation)",
         "style": "form",
         "schema": {
           "type": "string"

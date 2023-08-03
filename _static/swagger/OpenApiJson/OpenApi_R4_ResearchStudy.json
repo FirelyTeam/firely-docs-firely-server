@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - ResearchStudy",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1861,7 +1861,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Categorization of document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "food | medication | environment | biologic",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1870,7 +1870,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The questionnaire publication date",
+        "description": "Start and end of participation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1879,7 +1879,7 @@
       "focus": {
         "name": "focus",
         "in": "query",
-        "description": "The focus of an observation when the focus is not the patient of record.",
+        "description": "The actual content of the message",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1888,7 +1888,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1906,7 +1906,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Uri where the data can be found",
+        "description": "A location, where the resource is found",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1915,7 +1915,7 @@
       "partof": {
         "name": "partof",
         "in": "query",
-        "description": "An organization of which this organization forms a part",
+        "description": "A location of which this location is a part",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1940,8 +1940,7 @@
       "site": {
         "name": "site",
         "in": "query",
-        "description": "Observed body part",
-        "style": "form",
+        "description": "Facility where study activities are conducted",
         "schema": {
           "type": "string"
         }
@@ -1957,7 +1956,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the questionnaire",
+        "description": "candidate | eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1966,7 +1965,7 @@
       "title": {
         "name": "title",
         "in": "query",
-        "description": "The human-friendly name of the questionnaire",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The human-friendly name of the capability statement\r\n* [CodeSystem](codesystem.html): The human-friendly name of the code system\r\n* [ConceptMap](conceptmap.html): The human-friendly name of the concept map\r\n* [ImplementationGuide](implementationguide.html): The human-friendly name of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The human-friendly name of the message definition\r\n* [OperationDefinition](operationdefinition.html): The human-friendly name of the operation definition\r\n* [StructureDefinition](structuredefinition.html): The human-friendly name of the structure definition\r\n* [StructureMap](structuremap.html): The human-friendly name of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The human-friendly name of the terminology capabilities\r\n* [ValueSet](valueset.html): The human-friendly name of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"

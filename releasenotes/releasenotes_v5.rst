@@ -79,7 +79,7 @@ Fix
         To apply it to existing resources, you have to :ref:`re-index <feature_customsp_reindex>` all resources that are affected by composite search parameters.
         In general that is just Observation resources. You can :ref:`feature_customsp_reindex_specific` by including the composite parameters and their components::
 
-            POST <base>/administration</R4 or R5>/reindex/searchparameters
+            POST <base>/administration/<R4 or R5>/reindex/searchparameters
             BODY:
             include=Observation.code-value-concept,Observation.code-value-date,Observation.code-value-quantity,Observation.code-value-string,Observation.combo-code-value-concept,Observation.combo-code-value-quantity,Observation.component-code-value-concept,Observation.component-code-value-quantity,Observation.code,Observation.value-concept,Observation.value-date,Observation.value-quantity,Observation.value-string,Observation.combo-code,Observation.combo-value-concept,Observation.combo-value-quantity,Observation.component-code,Observation.component-value-concept,Observation.component-value-quantity
 

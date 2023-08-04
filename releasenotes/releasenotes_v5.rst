@@ -3,6 +3,29 @@
 Current Firely Server release notes (v5.x)
 ==========================================
 
+.. _vonk_releasenotes_5_3_0:
+
+Release 5.2.0, July XXth, 2023
+---------------------------------
+
+Configuration
+^^^^^^^^^^^^^
+
+Features
+^^^^^^^^
+
+
+Fixes
+^^^^^
+
+Vonk.Core and Plugins
+^^^^^^^^^^^^^^^^^^^^^
+#. `SupportsCustomOperation` method was deprecated. Should use `SupportsOperation` to ensure interaction was configure properly in appsettings on the right interaction level.
+
+Deprecation
+^^^^^^^^^^^
+
+
 .. _vonk_releasenotes_5_2_0:
 
 

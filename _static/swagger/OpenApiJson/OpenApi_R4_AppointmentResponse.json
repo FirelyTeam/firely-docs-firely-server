@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - AppointmentResponse",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1783,7 +1783,7 @@
       "actor": {
         "name": "actor",
         "in": "query",
-        "description": "The individual(HealthcareService, Practitioner, Location, ...) to find a Schedule for",
+        "description": "Any one of the individuals participating in the appointment",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1792,7 +1792,8 @@
       "appointment": {
         "name": "appointment",
         "in": "query",
-        "description": "The appointment that the response is attached to",
+        "description": "The appointment that scheduled this encounter",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1800,7 +1801,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1809,7 +1810,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Uri where the data can be found",
+        "description": "A location, where the resource is found",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1818,7 +1819,8 @@
       "part-status": {
         "name": "part-status",
         "in": "query",
-        "description": "The participants acceptance status for this appointment",
+        "description": "The Participation status of the subject, or other participant on the appointment. Can be used to locate participants that have not responded to meeting requests.",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1826,7 +1828,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Who/what is the subject of the document<br />\n<em>NOTE</em>: This US Core SearchParameter definition extends the usage context of\n<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\">capabilitystatement-expectation</a>\n extension to formally express implementer conformance expectations for these elements:<br />\n - multipleAnd<br />\n - multipleOr<br />\n - comparator<br />\n - modifier<br />\n - chain<br />",
+        "description": "Who is part of study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1835,7 +1837,8 @@
       "practitioner": {
         "name": "practitioner",
         "in": "query",
-        "description": "This Response is for this Practitioner",
+        "description": "One of the individuals of the appointment is this practitioner",
+        "style": "form",
         "schema": {
           "type": "string"
         }

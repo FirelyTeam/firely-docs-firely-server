@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - SubstanceSpecification",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1697,7 +1697,6 @@
         "name": "_has",
         "in": "query",
         "description": "Enables querying a reverse chain",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1705,8 +1704,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "A code that corresponds to one of its items in the questionnaire",
-        "style": "form",
+        "description": "The specific code",
         "schema": {
           "type": "string"
         }
@@ -1716,7 +1714,6 @@
         "in": "path",
         "description": "Resource Logical ID",
         "required": true,
-        "style": "simple",
         "schema": {
           "type": "string"
         }
@@ -1726,7 +1723,6 @@
         "in": "path",
         "description": "Resource Version Number",
         "required": true,
-        "style": "simple",
         "schema": {
           "type": "string"
         }

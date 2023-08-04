@@ -1,7 +1,7 @@
 .. _compliance_nictiz:
 
-Nictiz
-=======
+Nictiz - 🇳🇱
+===========
 
 * Tested Version: Firely Server has been tested against `nictiz.fhir.nl.stu3.zib2017 version 2.1.12 <https://simplifier.net/nictizstu3-zib2017>`_
 * The conformance resources are **NOT** loaded by default in the standard SQLite Administration Database of Firely Server. Please see :ref:`conformance_import` on how to load the profiles, extensions and ValueSets into Firely Server.

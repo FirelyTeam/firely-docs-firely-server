@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - HealthcareService",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1848,7 +1848,7 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Is the schedule in active use",
+        "description": "Whether the patient record is active",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1873,7 +1873,8 @@
       "endpoint": {
         "name": "endpoint",
         "in": "query",
-        "description": "Technical endpoints providing access to electronic services operated for the healthcare service",
+        "description": "Technical endpoints providing access to services operated for the location",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1881,7 +1882,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1890,7 +1891,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Uri where the data can be found",
+        "description": "A location, where the resource is found",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1899,7 +1900,7 @@
       "name": {
         "name": "name",
         "in": "query",
-        "description": "Computationally friendly name of the questionnaire",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): Computationally friendly name of the capability statement\r\n* [CodeSystem](codesystem.html): Computationally friendly name of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): Computationally friendly name of the compartment definition\r\n* [ConceptMap](conceptmap.html): Computationally friendly name of the concept map\r\n* [GraphDefinition](graphdefinition.html): Computationally friendly name of the graph definition\r\n* [ImplementationGuide](implementationguide.html): Computationally friendly name of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): Computationally friendly name of the message definition\r\n* [NamingSystem](namingsystem.html): Computationally friendly name of the naming system\r\n* [OperationDefinition](operationdefinition.html): Computationally friendly name of the operation definition\r\n* [SearchParameter](searchparameter.html): Computationally friendly name of the search parameter\r\n* [StructureDefinition](structuredefinition.html): Computationally friendly name of the structure definition\r\n* [StructureMap](structuremap.html): Computationally friendly name of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): Computationally friendly name of the terminology capabilities\r\n* [ValueSet](valueset.html): Computationally friendly name of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1908,7 +1909,8 @@
       "organization": {
         "name": "organization",
         "in": "query",
-        "description": "The organization that provides this Healthcare Service",
+        "description": "The organization responsible for the device",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1924,7 +1926,7 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "High-level category",
+        "description": "A broad categorization of the service that is to be performed during this appointment",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1933,7 +1935,7 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The type of appointments that can be booked into associated slot(s)",
+        "description": "The specific service that is to be performed during this appointment",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1942,7 +1944,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Type of specialty needed",
+        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
         "style": "form",
         "schema": {
           "type": "string"

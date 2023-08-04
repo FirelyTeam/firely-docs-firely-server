@@ -12,7 +12,7 @@ If you want to start using the standard Firely Server in your local environment,
 and run the server. |br|
 
 
-1.	Download the Firely Server binaries and the license file from `Simplifier.net <https://simplifier.net/vonk>`_.
+1.	Sign up for an `evaluation license <https://fire.ly/firely-server-trial/>`_. You will receive an email with the license file as well as a link to the download page were you can download the Firely Server binaries with the version of your choosing.
 	
 2.	Extract the downloaded files to a location on your system, for example: :code:`C:\FirelyServer`. We will call this the 
 	working directory.
@@ -27,8 +27,9 @@ and run the server. |br|
 	::
 
 		{
-		"License": {
+		  "License": {
 			"LicenseFile": "firelyserver-trial-license.json"
+		  }
 		}
 
 1. You can further configure Firely Server by adjusting the ``appsettings.json``. The section :ref:`configure_vonk` explains possible configuration settings.
@@ -64,5 +65,6 @@ You will see the following homepage:
    
 .. image:: ../images/localhost_home.png
   :align: center
+  :width: 760px
 
 The next step is to explore Firely Server functionality using Postman. The section :ref:`postman_tutorial` will guide you through this.

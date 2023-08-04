@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - PaymentNotice",
-    "version": "5.0.0"
+    "version": "5.1.1"
   },
   "servers": [
     {
@@ -1783,7 +1783,7 @@
       "created": {
         "name": "created",
         "in": "query",
-        "description": "When this document manifest created",
+        "description": "The creation date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1792,7 +1792,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the questionnaire",
+        "description": "Business Identifier for research subject in a study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1809,7 +1809,7 @@
       "provider": {
         "name": "provider",
         "in": "query",
-        "description": "The identity of the provider who placed the nutrition order",
+        "description": "Provider responsible for the Claim",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1818,7 +1818,7 @@
       "request": {
         "name": "request",
         "in": "query",
-        "description": "The reference to the claim",
+        "description": "The EligibilityRequest reference",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1835,7 +1835,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the questionnaire",
+        "description": "candidate | eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn",
         "style": "form",
         "schema": {
           "type": "string"

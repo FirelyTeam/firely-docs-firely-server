@@ -20,7 +20,7 @@ Fixes
 
 Vonk.Core and Plugins
 ^^^^^^^^^^^^^^^^^^^^^
-#. `SupportsCustomOperation` method was deprecated. Should use `SupportsOperation` to ensure interaction was configure properly in appsettings on the right interaction level.
+#. The `SupportsCustomOperation` method has been deprecated. Please use `SupportsOperation` instead as that method takes the interaction level into account which is more aligned with the configuration options described in :ref:`disable_interactions`.
 
 Deprecation
 ^^^^^^^^^^^

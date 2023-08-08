@@ -6,6 +6,7 @@ Firely Server is the answer to the growing need for a stable server that can be 
 
 .. image:: ./images/firelyserver_home.png
   :align: center
+  :width: 760px
 
 On these pages we provide you with the documentation you need to get up and running with your own standard Firely Server
 installation, as well as information on how to contact us when you have additional needs, such as a custom implementation

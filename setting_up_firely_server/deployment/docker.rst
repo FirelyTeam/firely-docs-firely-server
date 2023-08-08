@@ -143,22 +143,56 @@ Powershell
 
 You should see a ``vonkdata.db`` appear in the ``./resourcedata`` folder, and a log file in the ``./log`` folder. From here you can experiment with other settings. You can also easily keep different settings files side-by-side, mapping the one you want to test into the container, e.g. ``-v ${PWD}/some-weird-settings.json:/app/appsettings.instance.json``.
 
-Mounting a your custom plugins folder into the container
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In a similar way as described above, you can mount your custom plugins into the container. However, this will replace the default plugings; they need to be added manually.
+Loading additional conformance resources in Firely Server on Docker
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-- Download the binaries of your server version from https://downloads.simplifier.net/firely-server/versions/
-- Create a plugin folder, including the default plugins (extracted from the downloaded archive)
-- Create ``appsettings.instance.json`` with the appropriate Pipeline section (see :ref:`vonk_plugins_config`)
-- Mount the files and folder as shown below
+If you want to load custom conformance resources in Firely Server, you can use the ``vonk-import`` folder, as is described in the section `Managing Conformance Resources <../maintenance/conformanceresources.html>`_.
+When running Firely Server on Docker, it is necessary to create this folder in your working directory, copy the conformance resources into this folder and mount a volume. 
+Be sure to also mount a volume for the ``vonk-imported`` folder, otherwise your conformance resources will be reloaded upon each startup of Firely Server and this can take up some time:
+
+.. code-block::
+   
+   docker run -d -p 8080:4080 --name firely.server `
+   -v ${PWD}/appsettings.instance.json:/app/appsettings.instance.json `
+   -v ${PWD}/vonk-import:/app/vonk-import `
+   -v ${PWD}/vonk-imported:/app/vonk-imported `
+   firely/server
+
+Be sure to mount your appsettings.instance.json as well, and make sure to point the ``AdministrationImportOptions`` to the ``vonk-import`` and ``vonk-imported`` folder:
+
+.. code-block::
+
+  "AdministrationImportOptions": {
+		"ImportDirectory": "./vonk-import",
+    "ImportedDirectory": "./vonk-imported"
+  }
+
+By default, Firely server will assume the resources placed in the vonk-import folder are R3 resources. If you want to load R4 or R5 resources, you need to alter the name of your import folder and volume accordingly:
+
+.. code-block::
+   
+   docker run -d -p 8080:4080 --name firely.server `
+   -v ${PWD}/appsettings.instance.json:/app/appsettings.instance.json `
+   -v ${PWD}/vonk-import.R4:/app/vonk-import.R4 `
+   -v ${PWD}/vonk-imported:/app/vonk-imported `
+   firely/server
+
+You can leave the ``AdministrationImportOptions`` in the appsettings.instance.json as is, there is no need to point these settings to a separate vonk-import.R4 or vonk-import.R5 folder.
+
+Mounting your custom plugins folder into the container
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In a similar way as described above, you can mount your custom plugins into the container.
+In your working directory, create a folder 'plugins', copy your plugin files to this folder and mount this folder in the docker container. You can add a folder structure inside the plugin folder if you want.
+
+.. warning:: Do not change the target folder to '/app/plugins' as it will overwrite the existing plugins folder in the docker image.
 
 .. code-block::
    
    docker run -d -p 8080:4080 --name firely.server `
    -v ${PWD}/firelyserver-license.json:/app/firelyserver-license.json `
-   -v ${PWD}/appsettings.instance.json:/app/appsettings.instance.json `
-   -v ${PWD}/plugins:/app/plugins `
+   -v ${PWD}/plugins:/app/plugins/custom `
    firely/server
 
 The server is now accessible on ``http://localhost:8080/``.

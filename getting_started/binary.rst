@@ -65,5 +65,6 @@ You will see the following homepage:
    
 .. image:: ../images/localhost_home.png
   :align: center
+  :width: 760px
 
 The next step is to explore Firely Server functionality using Postman. The section :ref:`postman_tutorial` will guide you through this.

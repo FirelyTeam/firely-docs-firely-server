@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Endpoint",
-    "version": "5.1.1"
+    "version": "5.2.0-build-20230808"
   },
   "servers": [
     {

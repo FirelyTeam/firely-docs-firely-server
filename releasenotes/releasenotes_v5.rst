@@ -22,6 +22,7 @@ Features
 
 Fixes
 ^^^^^
+#. Fixed incorrect transaction handling when both SQL and NoSQL databases are used. `IAdministrationRepoTransactionService` in addition to `IRepoTransactionService` is introduced. Clients, consuming `IRepoTransactionService` for interaction with Administration resources are advised to use `IAdministrationRepoTransactionService`.
 
 Vonk.Core and Plugins
 ^^^^^^^^^^^^^^^^^^^^^

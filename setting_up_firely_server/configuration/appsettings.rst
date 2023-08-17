@@ -532,13 +532,13 @@ Task File Management and Bulk Data Export
 -----------------------------------------
 ::
 
-    "TaskFileManagement": {
+  "TaskFileManagement": {
     "StoragePath": "./taskfiles"
   },
 
 ::
 
-    "BulkDataExport": {
+  "BulkDataExport": {
     "RepeatPeriod": 60000, //ms
     "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "Medication", "Practitioner" ] // included referenced resources, additional to the Patient compartment resources
   },
@@ -558,6 +558,27 @@ Patient Everything Operation
 The Patient $everything operation returns all resources linked to a patient that are listed in the Compartment Patient. This section allows you to define additional resources that will be included in the resulting searchset bundle.
 
 See :ref:`feature_patienteverything`.
+
+Uri conversion on import and export
+-----------------------------------
+Upon importing, Firely Server converts all references expresssed as absolute URIs with the root corresponding to the server URL.
+For example, `` "reference": "https://someHost/fhir/Patient/someId" `` will be stored as   `` "reference": "Patient/someId" `` .
+Similarly,  upon exporting, the references stored as relative URIs will be converted back to an absolute URI by adding the 
+root server location to the relative URI.
+
+In addition, any element of type `` url `` or `` uri `` can also be converted upon import or export, as long as the FHIR path 
+corresponding to the element in the FHIR resource are listed in the setting `` UrlMapping `` :
+
+::
+
+  "UrlMapping": {
+     "AdditionalPathsToMap": [
+       "DocumentReference.content.attachment.url",
+       "Bundle.entry.resource.content.attachment.url"
+     ]
+   },
+
+Note that the setting is still in beta and is subject to change in future release of Firely Server.
 
 Binary Wrapper
 --------------

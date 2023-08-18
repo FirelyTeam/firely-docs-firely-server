@@ -18,7 +18,7 @@ You can install Firely Server locally in a matter of minutes and test its functi
    :maxdepth: 1
    :titlesonly:   
    
-   Basic installation <binary>
+   Basic installation <basic_installation>
    Access Firely Server with Postman <postman_tutorial>
    Tutorials <tutorials>
 

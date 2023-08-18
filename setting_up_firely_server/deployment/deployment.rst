@@ -24,6 +24,7 @@ If you are not sure what would be the best option for your use case, or if you h
    :titlesonly:
    :hidden:
 
+   Binaries <binaries>
    Docker <docker>
    Helm <helm>
    Azure <azureWebApp>

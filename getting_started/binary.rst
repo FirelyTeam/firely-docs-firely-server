@@ -5,7 +5,7 @@ Basic installation
 ==================
 
 .. note::
-	Firely Server can run on all operation systems that support .Net. If your OS does not support .Net or if you want to use Docker, 
+	Firely Server can run on all operation systems that support .NET Core. If your OS does not support .NET Core or if you want to use Docker, 
 	please look at the :ref:`use_docker` section.
 
 If you want to start using the standard Firely Server in your local environment, follow the steps on this page to install

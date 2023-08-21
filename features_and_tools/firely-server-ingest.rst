@@ -1,7 +1,7 @@
 .. _tool_fsi:
 
-Firely Server Ingest (FSI)
-==========================
+Bulk Import via Firely Server Ingest
+====================================
 
 .. note::
   This application is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 

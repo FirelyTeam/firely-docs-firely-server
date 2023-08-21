@@ -290,6 +290,11 @@ Known issues
 Release notes
 -------------
 
+.. note::
+    You can pull the latest version of Firely Server Ingest using the following instructions::
+        
+        dotnet tool update --global Firely.Server.Ingest
+
 .. _fsi_releasenotes_2.2.0:
 
 Release 2.2.0, June 20th, 2023

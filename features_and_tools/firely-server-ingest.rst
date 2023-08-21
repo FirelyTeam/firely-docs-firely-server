@@ -45,6 +45,30 @@ Prerequisites
 ^^^^^^^^^^^^^
 The tool requires that the target database already exists and contains all required indexes and tables (for SQL Server). If you don't have a database with the schema yet, you first need to run the Firely Server at least once as described in the articles :ref:`configure_sql` and :ref:`configure_mongodb`.
 
+.. important::
+
+  Each version of Firely Server Ingest is bound to a specific version of Firely Server. The following table shows which combinations of Firely Server (its database schema version respectively) and Firely Server Ingest can be used in combination.
+
+
++-----------------------+------------------------------+
+| Firely Server Version | Firely Server Ingest Version |
++=======================+==============================+
+| v5.1.0 and later      | v2.2.0                       |
++-----------------------+------------------------------+
+| v5.0.0                | v2.1.0                       |
++-----------------------+------------------------------+
+| v5.0.0-beta1          | v2.0.0                       |
++-----------------------+------------------------------+
+| v4.10.0 and later     | v1.4.0                       |
++-----------------------+------------------------------+
+| v4.9.0                | v1.3.0                       |
++-----------------------+------------------------------+
+| v4.8.0                | v1.2.0                       |
++-----------------------+------------------------------+
+| v4.2.0 and later      | v1.1.0                       |
++-----------------------+------------------------------+
+| v4.2.0                | v1.0.0                       |
++-----------------------+------------------------------+
 
 Input files formats
 ^^^^^^^^^^^^^^^^^^^

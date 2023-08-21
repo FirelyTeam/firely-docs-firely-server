@@ -26,7 +26,7 @@ or support contract.
    Getting started <getting_started/getting_started>
    Setting up Firely Server <setting_up_firely_server/setting_up_firely_server>
    Maintenance and Management <maintenance/maintenance>
-   Features <features/features>
+   Features and Tools <features_and_tools/features>
    Security and Tools <security/security>
    Programming API Reference<reference/reference>
    Compliance & Certification <compliance/compliance>

@@ -8,7 +8,7 @@ In order to use :ref:`feature_accesscontrol` you need an Identity Provider that 
 
 Creating SMART on FHIR conformant tokens and handling all protocol details related to a SMART app launch requires dedicated support which generic authorization servers do not offer. Firely provides Firely Auth, an external authorization service optimized for SMART on FHIR.
 
-.. note::
+.. important::
    Firely Auth is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
    Your license already permits the usage of Firely Auth if it contains ``http://fire.ly/server/auth``. You can also `try out Firely Auth <https://fire.ly/firely-auth-trial/>`_ using an evaluation license with a limited uptime.
 

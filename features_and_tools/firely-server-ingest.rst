@@ -3,7 +3,7 @@
 Bulk Import via Firely Server Ingest
 ====================================
 
-.. note::
+.. important::
   This application is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
   Your license already permits the usage of FSI if it contains ``http://fire.ly/vonk/plugins/bulk-data-import``. You can also try out Firely Server Ingest. It is limited to a maximum of 10000 resources in total in the connected Firely Server database.
 

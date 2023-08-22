@@ -10,7 +10,7 @@ Creating SMART on FHIR conformant tokens and handling all protocol details relat
 
 .. note::
    Firely Auth is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
-   Your license already permits the usage of Firely Auth if it contains ``http://fire.ly/server/auth``. You can also try out the Firely Auth using the evaluation license.
+   Your license already permits the usage of Firely Auth if it contains ``http://fire.ly/server/auth``. You can also `try out the Firely Auth <https://fire.ly/firely-auth-trial/>`_ using an evaluation license with a limited uptime.
 
 To allow you to test :ref:`feature_accesscontrol`, we provide you with :ref:`instructions <firely_auth_introduction>` to build and run Firely Auth in which you can configure the necessary clients, claims and users yourself to test different scenarios.
 

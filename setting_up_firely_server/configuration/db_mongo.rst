@@ -114,6 +114,7 @@ With MongoDb transactions, there are a few things to consider:
 
     #. When uploading a transaction bundle.
     #. When performing a conditional delete that targets more than one resource.
+    #. When using the X-Provenance header.
 
 #. MongoDb transactions in Firely Server always use Read Concern `"snapshot"` and Write Concern `"majority"`.
 #. MongoDb imposes a transaction runtime limit of `60s`. For self-hosted MongoDb instances you can modify this limit using `"transactionLifetimeLimitSeconds"`. However, for MongoDb Atlas deployments this limit cannot be changed. 

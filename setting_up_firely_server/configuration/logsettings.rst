@@ -266,6 +266,26 @@ Firely Server can also log to AWS Cloudwatch. What you need to do:
 			},
 		],
 
+Splunk
+^^^^^^
+Firely Server can also log to Splunk. What you need to do:
+
+#. Setup a Splunk environment as described by the Splunk documentation
+#. Create a ``HTTP Event Collector`` for the application, save the ``Token Value`` for later use
+#. Check in the ``Global Settings`` in the ``HTTP Event Collector`` screen which port is used
+#. Add the correct sink to the logsettings.json::
+
+		"WriteTo": [
+			{
+                "Name": "EventCollector",
+                "Args": {
+                    "splunkHost": "<splunk endpoint>", // e.g. https://splunk:8088
+                    "eventCollectorToken": "<token value>"
+                }
+            }
+		],
+
+
 .. _configure_log_database:
 
 Database details

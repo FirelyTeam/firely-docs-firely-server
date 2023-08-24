@@ -262,6 +262,19 @@ Same as above but targeting a MongoDB database.
   --license /path/to/your/license/fsi-license.json \
   --mongoConnectionstring 'mongodb://username:password@localhost:27017/vonkdata'
 
+.. _tool_fsi_packages_cache:
+
+Packages cache
+--------------
+Upon its first execution, FSI requires internet access to download and cache packages with core FHIR conformance resources (such as StructureDefinitions and SearchParameters, etc.) The internet connection is not required for the subsequent runs. 
+
+It is possible to copy cached files from one computer to another. It is also possible to mount the cached files to a Docker container if you run FSI in Docker.
+
+The cached files can be found in the following locations:
+
+* Windows: ``%APPDATA%\.fhir_packages``
+* Linux/MacOS: ``$XDG_CONFIG_HOME/.fhir_packages`` if available, otherwise ``$HOME/.config/.fhir_packages``
+
 Monitoring
 ----------
 
@@ -306,6 +319,21 @@ Release notes
     You can pull the latest version of Firely Server Ingest using the following instructions::
         
         dotnet tool update --global Firely.Server.Ingest
+
+.. _fsi_releasenotes_1.4.1:
+
+Release 2.2.1, [TBD]
+^^^^^^^^^^^^^^^^^^^^
+
+* Improved log messages for scenarios when FSI runs without the internet connection (see :ref:`tool_fsi_packages_cache`)
+
+Release 1.4.1, [TBD]
+^^^^^^^^^^^^^^^^^^^^
+
+.. note::
+  It is a hotfix release for the latest FSI that supports Firely Server v.4
+
+* Added support for running FSI without the internet connection (see :ref:`tool_fsi_packages_cache`)
 
 .. _fsi_releasenotes_2.2.0:
 

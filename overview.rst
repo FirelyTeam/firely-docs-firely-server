@@ -25,7 +25,7 @@ Below you will find some links that help you quickly navigate through the docume
 
  *  :ref:`I want to run Firely Server as a standalone app or in the cloud <deployment>`
  *  :ref:`I want to see the latest release notes <vonk_releasenotes>`
- *  :ref:`I want to manage the conformance resource is my Firely Server to comply with an ImplementationGuide <conformance>`
+ *  :ref:`I want to manage the conformance resource in my Firely Server to comply with an implementation guide <conformance>`
  *  :ref:`I want to grant clients secure access to Firely Server <feature_accesscontrol>`
  *  :ref:`I want to add a FHIR API to my database <vonk_facade>`
 

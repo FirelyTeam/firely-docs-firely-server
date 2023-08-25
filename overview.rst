@@ -18,6 +18,21 @@ The sandbox environment is mostly intended for testing and educational purposes,
 If you are interested in Firely Server for commercial use within your organization, we provide professional licensing in different tiers: Starter or Premium.
 For more information and pricing you can also visit the `product site <https://fire.ly/products/firely-server/>`_.
 
+Quick navigation
+----------------
+
+.. image:: ./images/FirelyTraining.png
+  :align: right
+  :width: 250px
+  :alt: Illustration of Firely server
+
+Below you will find some links that help you navigate through the documentation:
+
+ *  :ref:`I want to run Firely Server as a standalone app <vonk_basic_installation>`
+ *  :ref:`I want to add a FHIR API to my database <vonk_facade>`
+ *  :ref:`I want to design my own plugins for Firely Server <vonk_plugins_total>`
+ *  :ref:`I want to learn more about Firely Server’s architecture <architecture>`
+ *  :ref:`I want to see the latest release notes <vonk_releasenotes>`
 
 Adjust Firely Server to your needs
 ----------------------------------
@@ -57,19 +72,3 @@ Learning more
 
 If you would like to get more familiar with Firely Server and the options it offers, Firely offers `courses <https://fire.ly/training/>`_ on Firely Server as well as the SDK on which it is based. These courses are tailored to the needs of you and your team. You can pick the timeslot for this training that fits your schedule. In addition to the Firely Server course there is also a wide range of other courses available to get acquainted or more experienced with FHIR and the FHIR tooling provided by Firely.
 Additional information can be found `on Firely's resource page <https://fire.ly/resources/>`_. Also, don't forget to take a look at `our interesting blogposts <https://fire.ly/blog/>`_.
-
-Quick navigation
-----------------
-
-.. image:: ./images/FirelyTraining.png
-  :align: right
-  :width: 250px
-  :alt: Illustration of Firely server
-
-Below you will find some links that help you navigate through the documentation:
-
- *  :ref:`I want to run Firely Server as a standalone app <vonk_basic_installation>`
- *  :ref:`I want to add a FHIR API to my database <vonk_facade>`
- *  :ref:`I want to design my own plugins for Firely Server <vonk_plugins_total>`
- *  :ref:`I want to learn more about Firely Server’s architecture <architecture>`
- *  :ref:`I want to see the latest release notes <vonk_releasenotes>`

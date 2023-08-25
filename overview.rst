@@ -21,7 +21,7 @@ For more information and pricing you can also visit the `product site <https://f
 Quick navigation
 ----------------
 
-Below you will find some links that help you navigate through the documentation:
+Below you will find some links that help you qucickly navigate through the documentation if you want to jump-start your implementation:
 
  *  :ref:`I want to run Firely Server as a standalone app <vonk_basic_installation>`
  *  :ref:`I want to add a FHIR API to my database <vonk_facade>`

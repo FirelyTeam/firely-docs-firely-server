@@ -7,17 +7,12 @@ Access control and SMART on FHIR
 
 Concepts
 --------
-This explanation of access control and SMART on FHIR in Firely Server requires basic understanding of the :ref:`architecture <architecture>` of Firely Server, so you know what is meant by middleware components and repository interfaces.
-It also presumes general knowledge about authentication and OAuth2.
-
 Access control generally consists of the following parts, which will be addressed one by one:
 
 - Identification: Who are you? -- usually a user name, login, or some identifier.
 - Authentication: Prove your identification -- usually with a password, a certificate or some other (combination of) secret(s) owned by you.
 - Authorization: What are you allowed to read or change based on your identification?
 - Access Control Engine: Enforce the authorization in the context of a specific request.
-
-Note that Firely offers :ref:`feature_accesscontrol_firely_auth` as an OAuth2 provider that is optimized to use in the context of SMART on FHIR. 
 
 Identification and Authentication
 ---------------------------------

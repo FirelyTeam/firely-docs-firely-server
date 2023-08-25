@@ -21,11 +21,6 @@ For more information and pricing you can also visit the `product site <https://f
 Quick navigation
 ----------------
 
-.. image:: ./images/FirelyTraining.png
-  :align: right
-  :width: 250px
-  :alt: Illustration of Firely server
-
 Below you will find some links that help you navigate through the documentation:
 
  *  :ref:`I want to run Firely Server as a standalone app <vonk_basic_installation>`

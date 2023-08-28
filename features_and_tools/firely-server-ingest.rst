@@ -273,7 +273,7 @@ It is possible to copy cached files from one computer to another. It is also pos
 The cached files can be found in the following locations:
 
 * Windows: ``%APPDATA%\.fhir_packages``
-* Linux/MacOS: ``$XDG_CONFIG_HOME/.fhir_packages`` if available, otherwise ``$HOME/.config/.fhir_packages``
+* Linux/MacOS: ``$XDG_CONFIG_HOME/.fhir_packages`` if the environment variable ``XDG_CONFIG_HOME`` is defined  otherwise ``$HOME/.config/.fhir_packages``
 
 Monitoring
 ----------

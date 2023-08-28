@@ -320,15 +320,9 @@ Release notes
         
         dotnet tool update --global Firely.Server.Ingest
 
-.. _fsi_releasenotes_1.4.1:
 
-Release 2.2.1, [TBD]
-^^^^^^^^^^^^^^^^^^^^
-
-* Improved log messages for scenarios when FSI runs without the internet connection (see :ref:`tool_fsi_packages_cache`)
-
-Release 1.4.1, [TBD]
-^^^^^^^^^^^^^^^^^^^^
+Release 1.4.1, August 28th, 2023
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note::
   It is a hotfix release for the latest FSI that supports Firely Server v.4

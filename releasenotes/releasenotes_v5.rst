@@ -22,7 +22,7 @@ Features
 
 Fixes
 ^^^^^
-#. Fixed incorrect transaction handling when SQlite (for administration) and MongoDB are used in combination. This resulted in an internal server error when creating a resources in an empty database. 
+#. Fixed incorrect transaction handling when SQlite (for administration) and MongoDB are used in combination. This resulted in an internal server error when creating resources in an empty database. 
 
 Vonk.Core and Plugins
 ^^^^^^^^^^^^^^^^^^^^^

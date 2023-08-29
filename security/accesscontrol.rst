@@ -73,8 +73,8 @@ All the standard plugins of Firely Server can then use that implementation to en
 
 .. _feature_accesscontrol_auth_server:
 
-Authorization and Authentication Server
-=======================================
+Authorization Server and User Management
+========================================
 
 Firely Server is not bound to any specific authorization server, as long as the access token contains a set of minimal information. See :ref:`feature_token_compartments`.
 

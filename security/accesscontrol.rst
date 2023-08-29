@@ -76,7 +76,7 @@ All the standard plugins of Firely Server can then use that implementation to en
 Authorization Server and User Management
 ========================================
 
-Firely Server is not bound to any specific authorization server, as long as the access token contains a set of minimal information. See :ref:`feature_token_compartments`.
+Firely Server is not bound to any specific authorization server, as long as the access token contains a set of minimal information. See :ref:`feature_accesscontrol_compartment`.
 
 .. _feature_accesscontrol_firely_auth:
 

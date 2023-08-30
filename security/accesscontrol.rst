@@ -20,8 +20,8 @@ For secure access to information in Firely Server through its REST API an author
 Firely Server is meant to be used in an `OAuth2`_ environment in which an `OAuth2 provider`_ is responsible for providing authorization information. 
 Typically, a user first enters a web application, e.g. a patient portal, or a mobile app. That application interactively redirects the user to the OAuth2 provider.
 For every client a user gives their consent to delegate certain access rights to the application. The authorization server and may or may not handle authentication. This might be done by a sperate service or by checking against a user account database in the background.
-On successful authorization the application receives an OAuth2 token back. Then, the application can do an REST API request to Firely Server to send or receive resource(s), and provide the OAuth2 token in the http Authentication header, thereby acting on behalf of the user.
-Firely Server can then read the OAuth2 token and validate it with the OAuth2 authorization server. This functionality is not FHIR specific. Firely Server can apply more restrictive access control based on the authenticated user using access policies, furthermore limiting the resources that can be requested by the user.
+On successful authorization the application receives an OAuth2 token back. Then, the application can do a REST API request to Firely Server to send or receive resource(s), and provide the OAuth2 token in the HTTP Authentication header, thereby acting on behalf of the user.
+Firely Server can then read the OAuth2 token and validate it with the OAuth2 authorization server. This functionality is not FHIR specific. Firely Server can apply more restrictive access control based on the authenticated user using access policies, further limiting the resources that can be requested by the user.
 
 .. _feature_accesscontrol_authorization:
 
@@ -61,7 +61,7 @@ In summary SMART on FHIR is used to:
 - access token: Firely Server can read from the access token which scopes the client is granted (an intersection of the three above)
 
 Firely Server provides a plugin to interpret SMART on FHIR scopes by default, however it needs to be enabled and configured. For its configuration see :ref:`feature_accesscontrol_config`.
-For the configuration of additional access policies, to restrict access based on the authenticated user see :ref:`feature_access_policies`.
+For the configuration of additional access policies, to restrict access based on the authenticated user see :ref:`feature_accesscontrol_permissions`.
 
 Other forms of Authorization
 ============================

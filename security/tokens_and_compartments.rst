@@ -110,37 +110,37 @@ In this paragraph we will explain how access control decisions are made for the 
    a. Direct search on compartment type
 
       :Request: ``GET [base]/Patient?name=fred``
-      :Type-Access: User must have read access to Patient, otherwise a 401 is returned. 
+      :Type-Access: User must have read access to Patient, otherwise HTTP Status Code 403 is returned. 
       :Compartment: If a Patient Compartment is active, the Filter from it will be added to the search, e.g. ``GET [base]/Patient?name=fred&identifier=123``
 
    #. Search on type related to compartment
 
       :Request: ``GET [base]/Observation?code=x89``
-      :Type-Access: User must have read access to Observation, otherwise a 401 is returned. 
+      :Type-Access: User must have read access to Observation, otherwise HTTP Status Code 403 is returned. 
       :Compartment: If a Patient Compartment is active, the links from Observation to Patient will be added to the search. In pseudo code: ``GET [base]/Observation?code=x89& (subject:Patient.identifier=123 OR performer:Patient.identifier=123)``
 
    #. Search on type not related to compartment
 
       :Request: ``GET [base]/Organization``
-      :Type-Access: User must have read access to Organization, otherwise a 401 is returned. 
+      :Type-Access: User must have read access to Organization, otherwise HTTP Status Code 403 is returned. 
       :Compartment: No compartment is applicable to Organization, so no further filters are applied.
 
    #. Search with include outside the compartment
 
       :Request: ``GET [base]/Patient?_include=Patient:organization``
-      :Type-Access: User must have read access to Patient, otherwise a 401 is returned. If the user has read access to Organization, the _include is evaluated. Otherwise it is ignored.
+      :Type-Access: User must have read access to Patient, otherwise HTTP Status Code 403 is returned. If the user has read access to Organization, the _include is evaluated. Otherwise it is ignored.
       :Compartment: Is applied as in case 1.a.
 
    #. Search with chaining
 
       :Request: ``GET [base]/Patient?general-practitioner.identifier=123``
-      :Type-Access: User must have read access to Patient, otherwise a 401 is returned. If the user has read access to Practitioner, the search argument is evaluated. Otherwise it is ignored as if the argument was not supported. If the chain has more than one link, read access is evaluated for every link in the chain. 
+      :Type-Access: User must have read access to Patient, otherwise HTTP Status Code 403 is returned. If the user has read access to Practitioner, the search argument is evaluated. Otherwise it is ignored as if the argument was not supported. If the chain has more than one link, read access is evaluated for every link in the chain. 
       :Compartment: Is applied as in case 1.a.
 
    #. Search with chaining into the compartment
 
       :Request: ``GET [base]/Patient?link:Patient.identifier=456``
-      :Type-Access: User must have read access to Patient, otherwise a 401 is returned.
+      :Type-Access: User must have read access to Patient, otherwise HTTP Status Code 403 is returned.
       :Compartment: Is applied to both Patient and link. In pseudo code: ``GET [base]/Patient?link:(Patient.identifier=456&Patient.identifier=123)&identifier=123`` In this case there will probably be no results.
 
 #. Read: Is evaluated as a Search, but implicitly you only specify the _type and _id search parameters.
@@ -150,19 +150,19 @@ In this paragraph we will explain how access control decisions are made for the 
    a. Create on the compartment type
 
       :Request: ``POST [base]/Patient``
-      :Type-Access: User must have write access to Patient. Otherwise a 401 is returned.
-      :Compartment: A Search is performed as if the new Patient were in the database, like in case 1.a. If it matches the compartment filter, the create is allowed. Otherwise a 401 is returned.
+      :Type-Access: User must have write access to Patient. Otherwise HTTP Status Code 403 is returned.
+      :Compartment: A Search is performed as if the new Patient were in the database, like in case 1.a. If it matches the compartment filter, the create is allowed. Otherwise HTTP Status Code 403 is returned.
 
    #. Create on a type related to compartment
 
       :Request: ``POST [base]/Observation``
-      :Type-Access: User must have write access to Observation. Otherwise a 401 is returned. User must also have read access to Patient, in order to evaluate the Compartment.
-      :Compartment: A Search is performed as if the new Observation were in the database, like in case 1.b. If it matches the compartment filter, the create is allowed. Otherwise a 401 is returned.
+      :Type-Access: User must have write access to Observation. Otherwise HTTP Status Code 403 is returned. User must also have read access to Patient, in order to evaluate the Compartment.
+      :Compartment: A Search is performed as if the new Observation were in the database, like in case 1.b. If it matches the compartment filter, the create is allowed. Otherwise HTTP Status Code 403 is returned.
 
    #. Create on a type not related to compartment
 
       :Request: ``POST [base]/Organization``
-      :Type-Access: User must have write access to Organization. Otherwise a 401 is returned.
+      :Type-Access: User must have write access to Organization. Otherwise HTTP Status Code 403 is returned.
       :Compartment: Is not evaluated.
 
 #. Update
@@ -170,7 +170,7 @@ In this paragraph we will explain how access control decisions are made for the 
    a. Update on the compartment type
 
       :Request: ``PUT [base]/Patient/123``
-      :Type-Access: User must have write access *and* read access to Patient, otherwise a 401 is returned.
+      :Type-Access: User must have write access *and* read access to Patient, otherwise HTTP Status Code 403 is returned.
       :Compartment: User should be allowed to Read Patient/123 and Create the Patient provided in the body. Then Update is allowed.
 
    #. Update on a type related to compartment

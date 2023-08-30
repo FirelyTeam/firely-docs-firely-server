@@ -247,7 +247,6 @@ Feature
 #. The plugin folder (:ref:`settings_pipeline`) may now contain subfolders. Plugins will be read from all underlying folders.
 #. Vonk supports If-Match on update. See `Managing Resource Contention <http://hl7.org/fhir/http.html#concurrency>`_ in the specification for details.
 #. Plugins may return non-FHIR content. See :ref:`vonk_plugins_directhttp`.
-#. This feature may also be used for :ref:`accesscontrol_custom_authentication`.
 #. A :ref:`vonk_plugins_template` is added to the documentation.
 #. A documentation page on performance is added.
 #. Upgrade of the Hl7.Fhir.API library to 1.1. See the `Older SDK release notes`_.

@@ -242,6 +242,40 @@ Known Limitations
 
 ------------
 
+.. _davinci_atr_ig:
+
+Da Vinci - Member Attribution (ATR) List
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The goal of `Da Vinci - Member Attribution (ATR) List <https://hl7.org/fhir/us/davinci-atr/2023Jan/>`_ implementation guide is to enable providers to gain access to managed lists of all members (Patients) attibuted to their organization.
+Payors are responsible of managing these lists. Based on ATR lists, providers can retreive administrative information in bulk about all members. Additionally, ATR lists can serve as the basis to allow providers to access claims and encounter data.
+
+.. list-table:: Da Vinci - Member Attribution (ATR) List Overview
+   :widths: 10, 10, 10, 10
+   :header-rows: 1
+   
+   * - Supported version
+     - Supporting documentation
+     - Realm
+     - Specification Link
+
+   * - * ✔️ v2.0.0-ballot
+  
+     - n/A
+
+     - * 🇺🇸
+
+     - * `hl7.fhir.us.davinci-atr|2.0.0-ballot <https://registry.fhir.org/package/hl7.fhir.us.davinci-atr|2.0.0-ballot>`_
+
+Known Limitations
+-----------------
+
+* The custom operations ``$member-add`` and ``$member-remove`` are not supported. Therefore for all member updates, a new version of a Group resources is created.
+* The ``_until`` parameter is not supported as part of the Bulk Date Export operations.
+* Firely Server does not reject $export requests that do include at least "Group,Patient,Coverage,Practitioner,Organization" in the ``_type`` parameter.
+
+------------
+
 .. _isik_ig:
 
 ISiK

@@ -44,7 +44,7 @@ Firely Server is not bound to any specific authorization server, as long as the 
 * the ``scope`` field with the scopes granted by this access token
 * optionally, the compartment claim, if you'd like to limit this token to a certain compartment. For example, in case of Patient data access where the ``launch/patient`` scope is used, include the ``patient`` claim. Such a claim should be included by the authorization server if requested by using a context scope or launching a part of an EHR launch. 
 
-.. warning:: Firely Server will not enforce any access control for resource types that are not listed in the applicable compartment definition. Some compartment definitions do not include crucial resource types like 'Patient', i.e. all resources of this type regardless of any claims in the access token will be returned if requested. Please use compartments other than Patient with caution! Additional custom access control is highly recommended.
+.. warning:: Firely Server will not enforce any access control for resource types that are not listed in the applicable compartment definition. Some compartment definitions do not include crucial resource types like 'Patient', i.e. all resources of this type regardless of any claims in the access token will be returned if requested. Please use compartments other than Patient with caution! Additional custom access control, like :ref:`feature_accesscontrol_permissions` is highly recommended.
 
 Patient-level scopes
 --------------------

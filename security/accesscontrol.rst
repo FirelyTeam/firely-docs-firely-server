@@ -19,7 +19,7 @@ For secure access to information in Firely Server through its REST API an author
 
 Firely Server is meant to be used in an `OAuth2`_ environment in which an `OAuth2 provider`_ is responsible for providing authorization information. 
 Typically, a user first enters a web application, e.g. a patient portal, or a mobile app. That application interactively redirects the user to the OAuth2 provider.
-For every client, a user gives their consent to delegate certain access rights to the application. The authorization server may or may not handle authentication. This might be done by a separate service or by checking against a user account database in the background.
+A user gives their consent to delegate certain access rights to the requesting application. The authorization server may or may not handle authentication. This might be done by a separate service or by checking against a user account database in the background.
 On successful authorization the application receives an OAuth2 token back. Then, the application can do a REST API request to Firely Server to send or receive resource(s), and provide the OAuth2 token in the HTTP Authentication header, thereby acting on behalf of the user.
 Firely Server can then read the OAuth2 token and validate it with the OAuth2 authorization server. This functionality is not FHIR specific. Firely Server can apply more restrictive access control based on the authenticated user using access policies, further limiting the resources that can be requested by the user.
 

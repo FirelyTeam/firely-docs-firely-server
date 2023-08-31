@@ -134,7 +134,7 @@ In this paragraph we will explain how access control decisions are made for the 
    #. Search with chaining
 
       :Request: ``GET [base]/Patient?general-practitioner.identifier=123``
-      :Type-Access: User must have read access to Patient, otherwise HTTP Status Code 403 is returned. If the user has read access to Practitioner, the search argument is evaluated. Otherwise it is ignored as if the argument was not supported. If the chain has more than one link, read access is evaluated for every link in the chain. 
+      :Type-Access: User must have read access to Patient, otherwise HTTP Status Code 403 is returned. If the user has read access to Practitioner, the search argument is evaluated. Otherwise a HTTP Status Code 403 is returned as well. If the chain has more than one link, read access is evaluated for every link in the chain. 
       :Compartment: Is applied as in case 1.a.
 
    #. Search with chaining into the compartment

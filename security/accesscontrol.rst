@@ -19,7 +19,7 @@ For secure access to information in Firely Server through its REST API an author
 
 Firely Server is meant to be used in an `OAuth2`_ environment in which an `OAuth2 provider`_ is responsible for providing authorization information. 
 Typically, a user first enters a web application, e.g. a patient portal, or a mobile app. That application interactively redirects the user to the OAuth2 provider.
-For every client a user gives their consent to delegate certain access rights to the application. The authorization server and may or may not handle authentication. This might be done by a sperate service or by checking against a user account database in the background.
+For every client, a user gives their consent to delegate certain access rights to the application. The authorization server may or may not handle authentication. This might be done by a separate service or by checking against a user account database in the background.
 On successful authorization the application receives an OAuth2 token back. Then, the application can do a REST API request to Firely Server to send or receive resource(s), and provide the OAuth2 token in the HTTP Authentication header, thereby acting on behalf of the user.
 Firely Server can then read the OAuth2 token and validate it with the OAuth2 authorization server. This functionality is not FHIR specific. Firely Server can apply more restrictive access control based on the authenticated user using access policies, further limiting the resources that can be requested by the user.
 
@@ -51,7 +51,7 @@ All scopes using SMART v1 can also be expressed in SMART v2:
 When a client application wants to access data in Firely Server on behalf of its user, it requests a token from the authorization server that is bound to the specific instance of Firely Server. 
 The configuration of the authorization server determines which claims are *available* for a certain application. The client app configuration determines which claims it *needs*.
 During the token request, the user is usually redirected to the authorization server, which might or might not be the authentication server as well, logs in and is then asked whether the client app is allowed to receive the requested claims.
-The client app cannot request any claims that are not available to that application. For details on how to retreive an access token as an application, please refer to `SMART App Launch <http://www.hl7.org/fhir/smart-app-launch/app-launch.html>`_.
+The client app cannot request any claims that are not available to that application. For details on how to retrieve an access token as an application, please refer to `SMART App Launch <http://www.hl7.org/fhir/smart-app-launch/app-launch.html>`_.
 
 In summary SMART on FHIR is used to:
 
@@ -83,7 +83,7 @@ Firely Server is not bound to any specific authorization server, as long as the 
 Firely Auth
 -----------
 
-Firely provides an optimized OAuth2 provider that understands SMART on FHIR scopes and the FHIR resource types they apply to out of the box. Additional it can be used for user account mangement or integrated using OAuth2 federation into existing infrastructures. This product is called Firely Auth and can be acquired as part of Firely Server. You can also evaluate it using a Firely Server evaluation license. See :ref:`firely_auth_index` for all details.
+Firely provides an optimized OAuth2 provider that understands SMART on FHIR scopes and the FHIR resource types they apply to out of the box. Additionally it can be used for user account management or integrated using OAuth2 federation into existing infrastructures. This product is called Firely Auth and can be acquired as part of Firely Server. You can also evaluate it using a Firely Server evaluation license. See :ref:`firely_auth_index` for all details.
 
 .. _feature_accesscontrol_aad:
 

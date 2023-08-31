@@ -34,10 +34,10 @@ SMART defines a syntax for rules, using so called "scope"-claims, to specify the
 
 These are examples of scopes that are recognized by Firely Server (SMART v1):
 
-* scope=user/Observation.r: the user allows to read Observation resources
-* scope=user/Encounter.crud: the user allows to read, create, update and delete Encounter resources
-* scope=user/\*.rs: the user allows to read and search any type of resource
-* scope=user/\*.cud: the user allows to create, update and delete any type of resource
+* scope=user/Observation.read: the user is allowed to read Observation resources
+* scope=user/Encounter.write: the user is allowed to write Encounter resources
+* scope=user/*.read: the user is allowed to read any type of resource
+* scope=user/*.write: the user is allowed to write any type of resource
 * scope=[array of individual scopes]
 
 All scopes using SMART v1 can also be expressed in SMART v2:

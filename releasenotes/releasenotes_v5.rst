@@ -15,18 +15,18 @@ Release 5.3.0, XXXX XXth, 2023
 
 Features
 ^^^^^^^^
-#. Improved performance when evaluating access policies
-#. Improved transaction support for handling invalid X-Provenance headers. Resources will not be created in case the corresponding X-Provenance is invalid, similar to the behaviour using SQL server.
-#. Improved SQL error message in case the schemainfo is empty in the database
-#. Improved the BinaryWrapper plugin to return a Location header after a successful read
-#. Add support for logging to Splunk. See :ref:`configure_log_insights` for more details.
-#. Improved support the CARIN BlueButton implementation guide by differentiating between HTTP Status Code 403 - Forbidden (insufficient scopes) and HTTP 401 - Unauthorized (no token provided).
+#. Improved performance when evaluating access policies.
+#. Improved transaction support for handling invalid X-Provenance headers. Resources will not be created in case the corresponding X-Provenance is invalid, similar to the behavior using SQL server.
+#. Improved SQL error message in case the schema info is empty in the database.
+#. Improved the BinaryWrapper plugin to return a Location header after a successful read.
+#. Added support for logging to Splunk. See :ref:configure_log_insights for more details.
+#. Improved support for the CARIN BlueButton implementation guide by differentiating between HTTP Status Code 403 - Forbidden (insufficient scopes) and HTTP 401 - Unauthorized (no token provided).
 
 Fixes
 ^^^^^
-#. Fixed an internal server error when passing empty values to required elements in case the setting PermissiveParsing to Strict and ValidationLevel to Full
-#. Fixed an internal server when posting a bundle resource to the bundle or transaction endpoint in case not all resources contained a pre-assigned id
-#. Fixed incorrect transaction handling when SQlite (for administration) and MongoDB are used in combination. This resulted in an internal server error when creating resources in an empty database. 
+#. Fixed an internal server error when passing empty values to required elements in case the setting PermissiveParsing is set to Strict and ValidationLevel is set to Full.
+#. Fixed an internal server error when posting a bundle resource to the bundle or transaction endpoint in case not all resources contained a pre-assigned ID.
+#. Fixed incorrect transaction handling when SQLite (for administration) and MongoDB are used in combination. This resulted in an internal server error when creating resources in an empty database.
 
 Vonk.Core and Plugins
 ^^^^^^^^^^^^^^^^^^^^^

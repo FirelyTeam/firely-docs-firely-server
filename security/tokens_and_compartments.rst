@@ -141,7 +141,7 @@ In this paragraph we will explain how access control decisions are made for the 
    #. Search with include outside the compartment
 
       :Request: ``GET [base]/Patient?_include=Patient:organization``
-      :Type-Access: User must have read access to Patient, otherwise HTTP Status Code 403 is returned. If the user has read access to Organization, the _include is evaluated. Otherwise it is ignored.
+      :Type-Access: User must have read access to Patient and Organization, otherwise HTTP Status Code 403 is returned. If the user has read access to Organization, the _include is evaluated. Otherwise it is ignored.
       :Compartment: Is applied as in case 1.a.
 
    #. Search with chaining

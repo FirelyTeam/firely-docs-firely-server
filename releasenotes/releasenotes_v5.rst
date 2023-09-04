@@ -15,6 +15,7 @@ Release 5.3.0, XXXX XXth, 2023
 
 Features
 ^^^^^^^^
+#. The Da Vinci Member Attribution List implementation guide (ATR) is now officially supported by Firely Server. See :ref:`davinci_atr_ig` for more details.
 #. Improved performance when evaluating access policies.
 #. Improved access policies to evaluate permissions on a user-level based on a tenant id. See :ref:`feature_accesscontrol_permissions` for more details.
 #. Improved transaction support for handling invalid X-Provenance headers. Resources will not be created in case the corresponding X-Provenance is invalid, similar to the behavior using SQL server.

@@ -55,10 +55,10 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
         //  "FilterArgument": "identifier=#device#" //... for the Device that has an identifier matching the value of that 'device' launch scope
         //}
       ],
-      "Authority": "url-to-your-identity-provider",
+      "Authority": "https://example.org/base-url-to-your-identity-provider",
     //"AdditionalBaseEndpointsInDiscoveryDocument": ["additional-url-to-your-identity-provider"],
     //"AdditionalIssuersInToken": ["additional-url-to-your-identity-provider"],   
-      "Audience": "name-of-your-fhir-server" //Default this is empty
+    //"Audience": "https://example.org/base-url-of-firely-server", //Has to match the value the Authority provides in the audience claim.
     //"ClaimsNamespace": "http://smarthealthit.org",
       "RequireHttpsToProvider": false, //You want this set to true (the default) in a production environment!
       "Protected": {

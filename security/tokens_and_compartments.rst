@@ -89,7 +89,7 @@ There may be cases where the logical id of the focus resource is not known to th
    "Filters": [
       {
         "FilterType": "Patient", //Filter on a Patient compartment if a 'patient' launch scope is in the auth token
-        "FilterArgument": "identifier=#patient#" //... for the Patient that has an id matching the value of that 'patient' launch scope
+        "FilterArgument": "identifier=#patient#" //... for the Patient that has an identifier matching the value of that 'patient' launch scope
       },
       ...
    ]
@@ -100,7 +100,7 @@ However you can also take advantage of it and allow access only to the patients 
    "Filters": [
       {
         "FilterType": "Patient", //Filter on a Patient compartment if a 'patient' launch scope is in the auth token
-        "FilterArgument": "general-practitioner.identifier=#patient#" //... for the Patient that has an identifier matching the value of that 'patient' launch scope
+        "FilterArgument": "general-practitioner.identifier=#patient#" //... for the Patient that contains a reference to a matching Practitioner with an identifier containing the value of the 'patient' launch scope
       },
       ...
    ]

@@ -209,4 +209,4 @@ Firely Server will additionally handle user-level scopes by checking the syntax 
 System-level scopes
 -------------------
 
-System-level scopes are evaluated equally to user-level scopes. The same restriction and suugestions for additional access control apply in this case.
+System-level scopes are evaluated equally to user-level scopes. The same restriction and suggestions for additional access control apply in this case.

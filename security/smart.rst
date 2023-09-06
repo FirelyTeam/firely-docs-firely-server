@@ -11,7 +11,7 @@ All search capabilities supported by Firely Server can also be evaluated as part
 
 * scope=user/Observation.r?category=laboratory: the user is allowed to read Observation resources with a category element containing the code "laboratory"
 * scope=user/\*.rs?_tag=http://example.org/fhir/sid/codes|some-tag: the user is allowed to read and search all resource containing a tag in Meta.tag with system "http://example.org/fhir/sid/codes" and code "some-tag"
-* scope=user/Observation.rs?encounter.id=Encounter/test: the user is allowed to see all Observation resources linked to the Encounter with id "123".
+* scope=user/Observation.rs?encounter.id=Encounter/test: the user is allowed to see all Observation resources linked to the Encounter with id "test".
 
 You will need to add the Smart plugin to the Firely Server pipeline. See :ref:`vonk_plugins` for more information. In ``appsettings[.instance].json``, locate the pipeline
 configuration in the ``PipelineOptions`` section, or copy that section from ``appsettings.default.json`` (see also :ref:`configure_change_settings`)::

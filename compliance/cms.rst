@@ -75,7 +75,22 @@ The goal is to make as much data available to patients as possible through the A
 
 To implement a Patient Access API it is necessary to:
 
-  #. Enable SMART on FHIR and point Firely Server to an authorization server managing the accounts of the patients - See :ref:`feature_accesscontrol`
+  #. Enable SMART on FHIR and point Firely Server to an authorization server managing the accounts of the patients. See :ref:`feature_accesscontrol`.
   #. Expose the Patient record with all its USCDI, CPCDS, and prior authorization data elements
-  #. Configure the API clients to be allowed to be granted access (read-only) to resources on behalf of the patient - See :ref:`Configuration of API clients in Firely Auth <firely_auth_settings_clients>`
+  #. Configure the API clients to be allowed to be granted access (read-only) to resources on behalf of the patient. See :ref:`Configuration of API clients in Firely Auth <firely_auth_settings_clients>`.
 
+Provider Access API
+-------------------
+
+Impacted payers (see `CMS definition <https://www.cms.gov/about-cms/obrhi/interoperability/faqs/patient-access-api#footnote-01>`_) are required to information exposed via a Patient Access API additionally available to providers who have a contractual relationship with the payer and a treatment relationship with the patient.
+Providers could access information for an individual paient as well as a group of information, providing further insight into the patient's care activity at the point of care.
+
+.. image:: ../images/CMS-0057-P_ProviderAccessAPI.pdf
+
+To implement a Provider Access API (Bulk) it is necessary to:
+
+  #. Enable SMART on FHIR and point Firely Server to an authorization server managing the accounts of the providers. See :ref:`feature_accesscontrol`.
+  #. Expose the Patient records with all its USCDI, CPCDS, and prior authorization data elements
+  #. Mantain a member attribution lists for providers. It is necessary to account for patients who opted out of the information sharing process. See :ref:`davinci_atr_ig`.
+  #. Configure the provider API clients to be allowed to be granted access (read-only) on behalf of the provider. See :ref:`Configuration of API clients in Firely Auth <firely_auth_settings_clients>`.
+  #. Create access policies to restrict access to a member attribution group based on their Taxpayer Identification Numbers (TINs) and National Provider Identifiers (NPIs). See :ref:`feature_accesscontrol_permissions`.

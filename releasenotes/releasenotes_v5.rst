@@ -47,7 +47,7 @@ Configuration
 Features
 ^^^^^^^^
 
-#. An informational message is now logged for auditing pruposes if authorization for a request was successful. Previously only authorization failures were logged.
+#. An informational message is now logged for auditing purposes if authorization for a request was successful. Previously only authorization failures were logged.
 #. Improved compartment checks for writing resources to a Patient compartment with a patient-level access token. All compartment references need to refer to the same compartment. This is important for resources that have multiple compartment references which may refer to different Patients (e.g. AllergyIntolerance.recorder and AllergyIntolerance.patient).
 #. Added support for permanently deleting all resources within a Patient compartment using the $purge operation. See :ref:`erase` for more details.
 #. Enable FS to write logs to AWS CloudWatch, see :ref:`configure_log_sinks`.

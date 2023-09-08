@@ -83,7 +83,7 @@ Provider Access API
 -------------------
 
 Impacted payers (see `CMS definition <https://www.cms.gov/about-cms/obrhi/interoperability/faqs/patient-access-api#footnote-01>`_) are required to information exposed via a Patient Access API additionally available to providers who have a contractual relationship with the payer and a treatment relationship with the patient.
-Providers could access information for an individual paient as well as a group of information, providing further insight into the patient's care activity at the point of care.
+Providers could access information for an individual patient as well as a group of information, providing further insight into the patient's care activity at the point of care.
 
 .. image:: ../images/CMS-0057-P_ProviderAccessAPI.pdf
 

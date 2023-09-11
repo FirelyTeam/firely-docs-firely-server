@@ -58,7 +58,7 @@ Firely Server aims to support all mandatory requirements out-of-the-box. The fol
 Patient Access API
 ------------------
 
-Impacted payers (see `CMS definition <https://www.cms.gov/about-cms/obrhi/interoperability/faqs/patient-access-api#footnote-01>`_) are required to make claims, encounter and clinical data, including laboratory results available through the Patient Access API.
+Impacted payers (see `CMS definition <https://www.cms.gov/priorities/key-initiatives/burden-reduction/interoperability/faqs>`_) are required to make claims, encounter and clinical data, including laboratory results available through the Patient Access API.
 The goal is to make as much data available to patients as possible through the API to ensure patients have access to their data in a way that will be most valuable and meaningful to them. The following information should be provided via Patient Access API using the corresponding implementation guides:
 
 * Claim details and encounters (see :ref:`carin_ig`)
@@ -82,7 +82,7 @@ To implement a Patient Access API it is necessary to:
 Provider Access API
 -------------------
 
-Impacted payers (see `CMS definition <https://www.cms.gov/about-cms/obrhi/interoperability/faqs/patient-access-api#footnote-01>`_) are required to provide information exposed via a Patient Access API to providers who have a contractual relationship with the payer and a treatment relationship with the patient.
+Impacted payers (see `CMS definition <https://www.cms.gov/priorities/key-initiatives/burden-reduction/interoperability/faqs>`_) are required to provide information exposed via a Patient Access API to providers who have a contractual relationship with the payer and a treatment relationship with the patient.
 Providers could access information for an individual patient as well as a group of information, providing further insight into the patient's care activity at the point of care.
 
 .. image:: ../images/CMS-0057-P_ProviderAccessAPI.pdf

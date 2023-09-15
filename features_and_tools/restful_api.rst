@@ -197,6 +197,8 @@ How is sort evaluated?
 * Token parameters are sorted only on their code element. The system element is ignored in the sorting.
 
 * Firely Server uses the default collation as configured on the database server. This collation defines the ordering of characters.
+ 
+* All ``dates`` and ``Periods`` are treated as being a ``Period`` for sorting. When sorting ascending, the ``start`` of the period will be used so sort on, when sorting descending the ``end`` of the period will be used. When sorting on a search parameter that references multiple ``date`` and/or ``Period`` values, the minimum (for ascending) or maximum (for descending) of the combined values will be used.
 
 * Sorting on ``_score`` is not supported.
 

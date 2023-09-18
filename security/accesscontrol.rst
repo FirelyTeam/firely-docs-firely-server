@@ -3,7 +3,6 @@
 ===========================
 Introduction Access control
 ===========================
-
 Access control generally consists of multiple interconnected components. This section will provide an overview how each of them can be implemented in Firely Server.
 
 - Identification: Who are you? -- usually a user name, login, or some identifier.
@@ -13,7 +12,6 @@ Access control generally consists of multiple interconnected components. This se
 
 Overview Authentication and Authorization workflow in Firely Server
 ===================================================================
-
 The whole security architecture for Firely Server is split into three parts to seperate out different responsibilities and to provide flexibility regarding the choice of technology for each component. 
 For secure access to information in Firely Server through its REST API an authorization server, a system for managing user accounts, and an access control plugin in Firely Server is needed.
 

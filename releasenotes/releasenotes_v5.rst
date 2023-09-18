@@ -8,6 +8,7 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+
 .. _vonk_releasenotes_5_3_0:
 
 Release 5.3.0, September 18th, 2023

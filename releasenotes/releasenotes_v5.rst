@@ -10,8 +10,8 @@ Current Firely Server release notes (v5.x)
 
 .. _vonk_releasenotes_5_3_0:
 
-Release 5.3.0, XXXX XXth, 2023
-------------------------------
+Release 5.3.0, September 18th, 2023
+-----------------------------------
 
 Features
 ^^^^^^^^
@@ -21,7 +21,7 @@ Features
 #. Improved transaction support for handling invalid X-Provenance headers. Resources will not be created in case the corresponding X-Provenance is invalid, similar to the behavior using SQL server.
 #. Improved SQL error message in case the schema info is empty in the database.
 #. Improved the BinaryWrapper plugin to return a Location header after a successful read.
-#. Added support for logging to Splunk. See :ref:configure_log_insights for more details.
+#. Added support for logging to Splunk. See :ref:`configure_log_insights` for more details.
 #. Improved support for the CARIN BlueButton implementation guide by differentiating between HTTP Status Code 403 - Forbidden (insufficient scopes) and HTTP 401 - Unauthorized (no token provided).
 #. _include can now be used in combination with versioned references.
 

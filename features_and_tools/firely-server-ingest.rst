@@ -347,7 +347,10 @@ Release notes
         
         dotnet tool update --global Firely.Server.Ingest
 
+
 .. _fsi_releasenotes_2.2.1:
+
+
 
 Release 2.2.1, September 19th, 2023
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

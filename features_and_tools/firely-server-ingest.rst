@@ -328,8 +328,8 @@ Release notes
 
 .. _fsi_releasenotes_1.4.1:
 
-Release 2.2.1, September 4th, 2023
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Release 2.2.1, September 19th, 2023
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Added support for running FSI without the internet connection (see :ref:`tool_fsi_packages_cache`)
 

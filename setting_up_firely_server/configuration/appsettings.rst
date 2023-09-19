@@ -559,6 +559,7 @@ The Patient $everything operation returns all resources linked to a patient that
 
 See :ref:`feature_patienteverything`.
 
+.. _uri_conversion:
 Uri conversion on import and export
 -----------------------------------
 Upon importing, Firely Server converts all references expresssed as absolute URIs with the root corresponding to the server URL.

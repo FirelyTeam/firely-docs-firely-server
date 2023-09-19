@@ -53,7 +53,7 @@ The tool requires that the target database already exists and contains all requi
 +-----------------------+------------------------------+
 | Firely Server Version | Firely Server Ingest Version |
 +=======================+==============================+
-| v5.1.0 and later      | v2.2.0                       |
+| v5.1.0 and later      | v2.2.0 and v2.2.1            |
 +-----------------------+------------------------------+
 | v5.0.0                | v2.1.0                       |
 +-----------------------+------------------------------+

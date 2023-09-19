@@ -25,6 +25,7 @@ Features
 #. Added support for logging to Splunk. See :ref:`configure_log_insights` for more details.
 #. Improved support for the CARIN BlueButton implementation guide by differentiating between HTTP Status Code 403 - Forbidden (insufficient scopes) and HTTP 401 - Unauthorized (no token provided).
 #. _include can now be used in combination with versioned references.
+#. Firely Server will now convert references with absolute URIs to references with relative paths upon import. Upon exporting, the references stored as relative URIs will be converted back to an absolute URI. See :ref:`uri_conversion` for more details.
 
 Fixes
 ^^^^^

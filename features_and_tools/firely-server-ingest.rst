@@ -338,7 +338,7 @@ Release notes
         
         dotnet tool update --global Firely.Server.Ingest
 
-.. _fsi_releasenotes_1.4.1:
+.. _fsi_releasenotes_2.2.1:
 
 Release 2.2.1, September 19th, 2023
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -346,6 +346,7 @@ Release 2.2.1, September 19th, 2023
 * Added support for running FSI without the internet connection (see :ref:`tool_fsi_packages_cache`)
 * FSI will now convert references with absolute URIs to references with relative paths upon import. See :ref:`uri_conversion` for more details.
 
+.. _fsi_releasenotes_1.4.1:
 
 Release 1.4.1, August 28th, 2023
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

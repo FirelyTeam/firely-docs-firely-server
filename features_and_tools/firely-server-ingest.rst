@@ -101,14 +101,22 @@ If you want to specify input parameters in the file, you can use the snippet bel
     "updateExistingResources": true,
     "databaseType": "SQL",
     "haltOnError": false,
-    "convertAbsoluteUrlsToRelative":[]
-
+    
+    "absoluteUrlConversion": {
+      "baseEndpoints": [
+        // "http://localhost:4080/R4"
+      ],
+      "elements": [
+        "DocumentReference.content.attachment.url"
+      ]
+    },
+    
     "sqlserver": {
       "connectionString": "<connectionstring to the Firely Server SQL Server database>",
       "saveParallel": 2,
       "queryExistenceParallel": 4,
       "batchSize": 500,
-      "commandTimeOut": 60, //seconds
+      "commandTimeOut": 60 //seconds
     },
 
     "mongodb": {
@@ -118,10 +126,10 @@ If you want to specify input parameters in the file, you can use the snippet bel
       "queryExistenceParallel": 4,
       "batchSize": 500
     },
-    
+
     "workflow": { //-1 = unbounded
       "readParallel": 3,
-      "readBufferSize": 200,
+      "readBufferSize": 750,
       "metaParallel": 1,
       "metaBufferSize": 50,
       "typeParallel": 4,
@@ -129,10 +137,11 @@ If you want to specify input parameters in the file, you can use the snippet bel
       "absoluteToRelativeParallel": 1,
       "absoluteToRelativeBufferSize": 50,
       "indexParallel": -1, //this is usually the most time consuming process - give it as much CPU time as possible.
-      "indexBufferSize": 50,
-      "maxActiveResources": 15000
+      "indexBufferSize": 50
     }
   }
+
+.. _FSI_supported_arguments:
 
 Supported arguments
 ^^^^^^^^^^^^^^^^^^^
@@ -344,7 +353,17 @@ Release 2.2.1, September 19th, 2023
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Added support for running FSI without the internet connection (see :ref:`tool_fsi_packages_cache`)
-* FSI will now convert references with absolute URIs to references with relative paths upon import. See :ref:`uri_conversion` for more details.
+* This release includes a new setting for handling the conversion of absolute to relative references: ``absoluteUrlConversion``. This setting replaces the old ``convertAbsoluteUrlsToRelative`` setting. With this setting you can specify the FHIR Path of the elements that you would like to see converted. See also the ``urlConvBases:index url`` and ``urlConvElems:index FHIRPath`` arguments in the :ref:`FSI_supported_arguments` section for more information.
+::
+
+  "absoluteUrlConversion": {
+    "baseEndpoints": [
+      // "http://localhost:4080/R4"
+    ],
+    "elements": [
+      "DocumentReference.content.attachment.url"
+    ]
+  }
 
 .. _fsi_releasenotes_1.4.1:
 

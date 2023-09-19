@@ -53,7 +53,7 @@ The tool requires that the target database already exists and contains all requi
 +-----------------------+------------------------------+
 | Firely Server Version | Firely Server Ingest Version |
 +=======================+==============================+
-| v5.1.0 and later      | v2.2.0                       |
+| v5.1.0 and later      | v2.2.0 and v2.2.1            |
 +-----------------------+------------------------------+
 | v5.0.0                | v2.1.0                       |
 +-----------------------+------------------------------+
@@ -280,12 +280,18 @@ Packages cache
 --------------
 Upon its first execution, FSI requires internet access to download and cache packages with core FHIR conformance resources (such as StructureDefinitions and SearchParameters, etc.) The internet connection is not required for the subsequent runs. 
 
-It is possible to copy cached files from one computer to another. It is also possible to mount the cached files to a Docker container if you run FSI in Docker.
+It is possible to copy the cached files from one computer to another. It is also possible to mount the cached files to a Docker container if you run FSI in Docker.
 
 The cached files can be found in the following locations:
 
-* Windows: ``%APPDATA%\.fhir_packages``
-* Linux/MacOS: ``$XDG_CONFIG_HOME/.fhir_packages`` if the environment variable ``XDG_CONFIG_HOME`` is defined  otherwise ``$HOME/.config/.fhir_packages``
+* for v. ≥ v2.2.1
+
+  * Windows: ``%USERPROFILE%\.fhir\packages``
+  * Linux/MacOS: ``$HOME/.fhir/packages``
+* for v. ≥ v1.4.1
+  
+  * Windows: ``%APPDATA%\.fhir_packages``
+  * Linux/MacOS: ``$XDG_CONFIG_HOME/.fhir_packages`` if the environment variable ``XDG_CONFIG_HOME`` is defined  otherwise ``$HOME/.config/.fhir_packages``
 
 Monitoring
 ----------
@@ -331,6 +337,13 @@ Release notes
     You can pull the latest version of Firely Server Ingest using the following instructions::
         
         dotnet tool update --global Firely.Server.Ingest
+
+.. _fsi_releasenotes_1.4.1:
+
+Release 2.2.1, September 19th, 2023
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Added support for running FSI without the internet connection (see :ref:`tool_fsi_packages_cache`)
 
 
 Release 1.4.1, August 28th, 2023

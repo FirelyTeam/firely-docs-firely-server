@@ -278,6 +278,16 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``RequireMfa``: true / false, default is false. A user granting access to this client has to enable and use Multi Factor Authentication. See :ref:`firely_auth_mfa`
 - ``AccessTokenType``: ``Jwt`` or ``Reference``. ``Jwt`` means that this client will get self-contained Json Web Tokens. ``Reference`` means that this client will get reference tokens, that refer to the actual token kept in memory by Firely Auth. For more background see :term:`reference token`.
 
+External identity providers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- ``LogoutMethod``: Allows the user to automatically logout of the federated identity provider if the user logs out of Firely Auth. By default the user will only be logged out locally.
+- ``Scheme``: Name of the federated identity provider. Each identity provider must have a unique scheme.
+- ``Authority``: Url of the external identity provider.
+- ``DisplayName``: Name that will be displayed in the UI of Firely Auth for users to select which identity provider to use if multiple are configured or if a local login is enabled as well.
+- ``ClientId``: ClientId of Firely Auth that will be used in the implicit token flow in order to retreive an id token from the external identity provider.
+- ``ClientSecret``: ClientSecret of Firely Auth that will be used in the implicit token flow in order to retreive an id token from the external identity provider.
+
 .. _firely_auth_settings_allowedorigins:
 
 AllowedOrigins
@@ -312,7 +322,7 @@ We have a full walkthrough of Inferno testing available as a whitepaper, see `ou
     See more details in the :ref:`firely_auth_endpoints_launchcontext` for requesting ``launch`` identifier dynamically
 
 Firely Auth settings
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^
 
 Put these settings in ``appsettings.instance.json`` next to the executable. 
 

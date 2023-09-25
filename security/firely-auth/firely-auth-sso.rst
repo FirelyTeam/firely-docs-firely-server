@@ -11,11 +11,11 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
 #. Configure Firely Auth as a client in the remote SSO system 
 
     Technically Firely Auth uses an implicit token workflow to access an ID token from the external system. 
-    Make sure to generate a OAuth 2 client id and client secret for Firely Auth. Additionally, ensure that the client is allowed to access ID tokens.
+    Make sure to generate an OAuth 2 client id and client secret for Firely Auth. Additionally, ensure that the client is allowed to access ID tokens.
 
 #. Configure user accounts in the remote SSO system and in the local Firely Auth instance.. 
     
-    Each user account must be assoicated with a unique claim inside the ID token. 
+    Each user account must be associated with a unique claim inside the ID token. 
     After a successful SSO login, authenticated users are matched against password-less local user accounts to see if the accounts are provisioned to use the local Firely Auth instance. 
     Admins must create an empty local user account assoicated with a matching claim. However it is not necessary to assign these accounts a password.
     Automated provisioning of local user accounts based on a SSO login is not yet supported by Firely Auth.
@@ -56,7 +56,7 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
     - Select "Token configuration"
     - Select "+ Add optional claim"
     - Select "ID token"
-    - Chose a claim based on which the remote SSO account should be matched against a password-less local account. This could be for example the "email" claim. Please make sure to add this claim to the locally provisioned user account.
+    - Choose a claim based on which the remote SSO account should be matched against a password-less local account. This could be for example the "email" claim. Please make sure to add this claim to the locally provisioned user account.
 
 #. Configure the ``ExternalIdentityProviders`` section
 

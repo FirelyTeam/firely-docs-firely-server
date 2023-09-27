@@ -562,13 +562,14 @@ See :ref:`feature_patienteverything`.
 .. _uri_conversion:
 Uri conversion on import and export
 -----------------------------------
+
 Upon importing, Firely Server converts all references expresssed as absolute URIs with the root corresponding to the server URL.
-For example, `` "reference": "https://someHost/fhir/Patient/someId" `` will be stored as   `` "reference": "Patient/someId" `` .
+For example, ``"reference": "https://someHost/fhir/Patient/someId"`` will be stored as   ``"reference": "Patient/someId"``.
 Similarly,  upon exporting, the references stored as relative URIs will be converted back to an absolute URI by adding the 
 root server location to the relative URI.
 
-In addition, any element of type `` url `` or `` uri `` can also be converted upon import or export, as long as the FHIR path 
-corresponding to the element in the FHIR resource are listed in the setting `` UrlMapping `` :
+In addition, any element of type ``url`` or ``uri`` can also be converted upon import or export, as long as the FHIR path 
+corresponding to the element in the FHIR resource are listed in the setting ``UrlMapping`` :
 
 ::
 

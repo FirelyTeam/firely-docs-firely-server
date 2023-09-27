@@ -163,3 +163,14 @@ If fragmentation gets too high, you can `compact <https://www.mongodb.com/docs/m
 On top of the requirements for storing the resources and indexes, we allow MongoDB to use the disk as an overflow buffer for larger-than-memory operations (like sorting a very large resultset). Please reserve about 20% extra disk space for that.
 
 We recommend to monitor the health of your MongoDB cluster actively to avoid disk space issues.
+
+MongoDB Guidelines
+---------------------
+
+In this section we offer general guidelines on how to configure and maintain your MongoDB database. This topic only covers the most common options and should by no means be regarded as exhaustive.
+
+.. toctree::
+   :maxdepth: 1
+   :titlesonly:
+
+   database_security

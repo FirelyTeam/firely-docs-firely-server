@@ -17,8 +17,7 @@ Create, read, update, patch, delete
 -----------------------------------
 
 These five operations to manage the contents of the Firely Server, commonly referenced by the acronym CRUD, are implemented as per the specification. Patch is implemented as `FHIR Patch <http://hl7.org/fhir/fhirpatch.html>`_, as this is the most versatile one.
-This includes version-read and the conditional variations. 
-Only a few limitations apply.
+A few limitations apply.
 
 Firely Server enables create-on-update: If you request an update and no resource exists for the given id, the provided resource will be created under the provided id.
 
@@ -55,7 +54,7 @@ Limitations on CRUD
 
 #. It is not possible to bring a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload. This operation will result in an ``HTTP 409 Conflict`` error. As a workaround, it is possible to create a new resource (with a new logical id) by omitting the ``id`` field in the payload.
 #. Parameter ``_pretty`` is not yet supported.
-#. XML Patch and JSON Patch are not supported.
+#. XML Patch and JSON Patch, as well as version-read and conditional variations of FHIR Patch are not yet supported.
 
 .. _restful_versioning:
 

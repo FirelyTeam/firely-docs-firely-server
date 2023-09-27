@@ -58,3 +58,17 @@ When you add canonical urls of StructureDefinitions to this list, Firely Server 
 So in the example above, Firely Server will only allow resources that conform to either the DAF Patient profile or the DAF AllergyIntolerance profile.
 
 Note that the resource has to declare conformance to the profile in its ``meta.profile`` element. Firely Server will *not* try to validate a resource against all the ``Validation.AllowedProfiles`` to see whether the resource conforms to any of them, only those that the resource claims conformance to.
+
+Also note that if you have enabled AuditEvent logging and/or generate AuditEvent Signatures, an AuditEvent and/or Provenance resource will be generated when you enter resources in Firely Server.
+These AuditEvent and Provenance resources will also be checked against the AllowedProfiles section. It is therefore necessary to add the hl7 core profiles of these resources to the AllowedProfiles section, otherwise they will fail to be saved in the database.
+::
+  {
+    "Validation": {
+      ...
+      "AllowedProfiles": [
+        "http://hl7.org/fhir/StructureDefinition/AuditEvent",
+        "http://hl7.org/fhir/StructureDefinition/Provenance"
+        ...
+      ]
+    }
+  }

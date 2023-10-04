@@ -6,6 +6,7 @@ The following explores some of the various security measures that exist in Mongo
 Access Control
 --------------
 Access control should be enabled on the MongdDB environment. With this enabled, you will have to make an application user with the appropriate role and use this user to connect Firely Server to the MongoDB environment.
+The `readWrite` user role on the administration database and data database should be enough.
 This prevents unauthorized access to the database.
 
 `More information <https://www.mongodb.com/docs/manual/tutorial/enable-authentication/>`_

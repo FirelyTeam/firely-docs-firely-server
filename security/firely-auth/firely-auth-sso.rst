@@ -62,6 +62,6 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
 
     - Select "Overview".
     - Select "Endpoints"
-    - Use the base url of any of the displayed OAuth 2.0 endpoints as the authority in the settings. It should end in "oauth2/v2.0/".
+    - Use the base url of any of the displayed OAuth 2.0 endpoints as the authority in the settings. It should start with "https://login.microsoftonline.com/" followed by the tenant id within Microsoft Entra ID, ending in "/v2.0/".
 
 #. If configured successfully the login page of Firely Auth should show a button with a label identical to the chosen display name

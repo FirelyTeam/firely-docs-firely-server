@@ -37,7 +37,7 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
     - Select "App registrations".
     - Click on "+ New registration".
     - Fill in the basic application information, including the name (e.g. "Firely Auth SSO") and supported account types (e.g., accounts in this organizational directory only, any organizational directory, or any identity provider).
-    - Under the "Redirect URI" section, specify the URI where Azure AD will send the authentication response. For Implicit Flow, this should typically be the URI where the Firely Auth instance is hosted combined with "/signin-oidc" (e.g., https://auth.example.com/signin-oidc).
+    - Under the "Redirect URI" section, specify the URI where Azure AD will send the authentication response. As the type of the redirect URL select "Web". For Implicit Flow, this should typically be the URI where the Firely Auth instance is hosted combined with "/signin-oidc" (e.g., https://auth.example.com/signin-oidc).
     - Complete the registration process and note down the "Application (client) ID" for your newly created application.
 
 #. Enable support for implicit flow for ID tokens

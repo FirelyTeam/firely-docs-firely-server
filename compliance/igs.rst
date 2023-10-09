@@ -272,7 +272,6 @@ Known Limitations
 
 * The custom operations ``$member-add`` and ``$member-remove`` are not supported. Therefore for all member updates, a new version of a Group resources is created.
 * The ``_until`` parameter is not supported as part of the Bulk Date Export operations.
-* Firely Server does not reject $export requests that do include at least "Group,Patient,Coverage,Practitioner,Organization" in the ``_type`` parameter.
 * The ``$davinci-data-export`` wrapper around ``$export`` is not supported.
 
 ------------

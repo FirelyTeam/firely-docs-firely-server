@@ -1,20 +1,21 @@
 .. _firely_auth_introduction:
 
-Firely Auth Introduction
-========================
+Tutorial
+========
 
 **Firely Auth** is an authentication and authorization server that implements the `SMART on FHIR`_ authentication flows. 
-It is an add-on to Firely Server. 
+It is an additional tool to Firely Server. 
 
 Several scenarios require the use of SMART on FHIR:
 
-- Launching process for exporting a group of Patient records using Bulk Data Export from an EHR
-- Launching an app in the context of an EHR to provide the practitioner with more specialized insights
-- Launching an app from a patient portal granting the patient the right to their own data
+- Protecting system-level APIs by defining which admin clients can export all resources from a Firely Server instance (e.g. using Bulk data export)
+- Protecting user-level APIs by enabling only authorized clients to provide practitioners information about Patients that are within their care
+- Protecting patient-level APIs by allowing authorized clients (e.g. a Patient portal) to provide Patients access to to their own information
 
-Additionally, SMART on FHIR is required by national ImplementationGuides and mandated in the following certification programs:
+Additionally, SMART on FHIR is required by national implementation guides and mandated in the following certification programs:
 
-- `21st Century Cures Act - §170.315(g)(10) <https://fire.ly/g10-certification/>`_
+- :ref:`compliance_g_10`
+- :ref:`cms`
 - ISiK Stufe 2 - Sicherheit
 
 Firely Auth can be used to fulfill all of them.
@@ -38,7 +39,7 @@ Firely Auth is distributed as .NET Core 6 binaries and in a Docker image. For th
 Step 2 - License
 ^^^^^^^^^^^^^^^^
 
-Firely Auth is licensed, like all plugins and add-ons of Firely Server. It uses the same license file as the Firely Server instance it works with.
+Firely Auth is licensed, like all plugins and additional tools of Firely Server. It uses the same license file as the Firely Server instance it works with.
 Firely Auth requires this token to be present in the license file: ``http://fire.ly/server/auth``.
 If you don't have this in your license file yet, you probably need to acquire Firely Auth first. Please :ref:`vonk-contact` for that. You can also test Fiely Auth with an evaluation license. To acquire this license you can `sign up <https://fire.ly/firely-server-trial/>`_ after which you will receive an email with the license file.
 By default Firely Auth will look for a license file named ``firely-server-license.json``, adjacent to the ``Firely.Auth.Core.exe`` 

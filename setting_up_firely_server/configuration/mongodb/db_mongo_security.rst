@@ -8,9 +8,8 @@ The following explores some of the various security measures that exist in Mongo
 Access Control
 --------------
 Access control should be enabled on the MongoDB environment. With this enabled, you will have to make an application user with the appropriate role and use this user to connect Firely Server to the MongoDB environment.
-The page on :ref:`configure_mongodb_auth` provides detailed guidance on the minimum set of privileges needed to run Firely Server.
 
-`More information <https://www.mongodb.com/docs/manual/tutorial/enable-authentication/>`_
+The page on :ref:`configure_mongodb_auth` provides detailed guidance on the minimum set of privileges needed to run Firely Server.
 
 Queryable Encryption
 --------------------

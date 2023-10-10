@@ -164,8 +164,8 @@ On top of the requirements for storing the resources and indexes, we allow Mongo
 
 We recommend to monitor the health of your MongoDB cluster actively to avoid disk space issues.
 
-MongoDB Guidelines
----------------------
+MongoDB Security
+----------------
 
 In this section we offer general guidelines on how to configure and maintain your MongoDB database. This topic only covers the most common options and should by no means be regarded as exhaustive.
 
@@ -173,4 +173,5 @@ In this section we offer general guidelines on how to configure and maintain you
    :maxdepth: 1
    :titlesonly:
 
-   database_security
+   db_mongo_security
+   db_mongo_auth

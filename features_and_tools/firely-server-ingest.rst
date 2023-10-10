@@ -53,7 +53,7 @@ The tool requires that the target database already exists and contains all requi
 +-----------------------+------------------------------+
 | Firely Server Version | Firely Server Ingest Version |
 +=======================+==============================+
-| v5.1.0 and later      | v2.2.0                       |
+| v5.1.0 and later      | v2.2.0 and v2.2.1            |
 +-----------------------+------------------------------+
 | v5.0.0                | v2.1.0                       |
 +-----------------------+------------------------------+
@@ -101,14 +101,22 @@ If you want to specify input parameters in the file, you can use the snippet bel
     "updateExistingResources": true,
     "databaseType": "SQL",
     "haltOnError": false,
-    "convertAbsoluteUrlsToRelative":[]
-
+    
+    "absoluteUrlConversion": {
+      "baseEndpoints": [
+        // "http://localhost:4080/R4"
+      ],
+      "elements": [
+        "DocumentReference.content.attachment.url"
+      ]
+    },
+    
     "sqlserver": {
       "connectionString": "<connectionstring to the Firely Server SQL Server database>",
       "saveParallel": 2,
       "queryExistenceParallel": 4,
       "batchSize": 500,
-      "commandTimeOut": 60, //seconds
+      "commandTimeOut": 60 //seconds
     },
 
     "mongodb": {
@@ -118,10 +126,10 @@ If you want to specify input parameters in the file, you can use the snippet bel
       "queryExistenceParallel": 4,
       "batchSize": 500
     },
-    
+
     "workflow": { //-1 = unbounded
       "readParallel": 3,
-      "readBufferSize": 200,
+      "readBufferSize": 750,
       "metaParallel": 1,
       "metaBufferSize": 50,
       "typeParallel": 4,
@@ -129,10 +137,11 @@ If you want to specify input parameters in the file, you can use the snippet bel
       "absoluteToRelativeParallel": 1,
       "absoluteToRelativeBufferSize": 50,
       "indexParallel": -1, //this is usually the most time consuming process - give it as much CPU time as possible.
-      "indexBufferSize": 50,
-      "maxActiveResources": 15000
+      "indexBufferSize": 50
     }
   }
+
+.. _FSI_supported_arguments:
 
 Supported arguments
 ^^^^^^^^^^^^^^^^^^^
@@ -280,12 +289,18 @@ Packages cache
 --------------
 Upon its first execution, FSI requires internet access to download and cache packages with core FHIR conformance resources (such as StructureDefinitions and SearchParameters, etc.) The internet connection is not required for the subsequent runs. 
 
-It is possible to copy cached files from one computer to another. It is also possible to mount the cached files to a Docker container if you run FSI in Docker.
+It is possible to copy the cached files from one computer to another. It is also possible to mount the cached files to a Docker container if you run FSI in Docker.
 
 The cached files can be found in the following locations:
 
-* Windows: ``%APPDATA%\.fhir_packages``
-* Linux/MacOS: ``$XDG_CONFIG_HOME/.fhir_packages`` if the environment variable ``XDG_CONFIG_HOME`` is defined  otherwise ``$HOME/.config/.fhir_packages``
+* for v. ≥ v2.2.1
+
+  * Windows: ``%USERPROFILE%\.fhir\packages``
+  * Linux/MacOS: ``$HOME/.fhir/packages``
+* for v. ≥ v1.4.1
+  
+  * Windows: ``%APPDATA%\.fhir_packages``
+  * Linux/MacOS: ``$XDG_CONFIG_HOME/.fhir_packages`` if the environment variable ``XDG_CONFIG_HOME`` is defined  otherwise ``$HOME/.config/.fhir_packages``
 
 Monitoring
 ----------
@@ -332,6 +347,28 @@ Release notes
         
         dotnet tool update --global Firely.Server.Ingest
 
+
+.. _fsi_releasenotes_2.2.1:
+
+
+
+Release 2.2.1, September 19th, 2023
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Added support for running FSI without the internet connection (see :ref:`tool_fsi_packages_cache`)
+* This release includes a new setting for handling the conversion of absolute to relative references: ``absoluteUrlConversion``. This setting replaces the old ``convertAbsoluteUrlsToRelative`` setting. With this setting you can specify the FHIR Path of the elements that you would like to see converted. See also the ``urlConvBases:index url`` and ``urlConvElems:index FHIRPath`` arguments in the :ref:`FSI_supported_arguments` section for more information.
+::
+
+  "absoluteUrlConversion": {
+    "baseEndpoints": [
+      // "http://localhost:4080/R4"
+    ],
+    "elements": [
+      "DocumentReference.content.attachment.url"
+    ]
+  }
+
+.. _fsi_releasenotes_1.4.1:
 
 Release 1.4.1, August 28th, 2023
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

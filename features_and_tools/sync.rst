@@ -1,17 +1,155 @@
-.. _sync:
+.. _PubSub:
 
-Firely Sync
-===========
+Firely PubSub
+=============
 
-Firely offers Firely Sync to enable other services to asynchronically communicate with Firely Server on data updates. These updates are communicated via messages with a message broker such as RabbitMQ or Azure Service Bus. 
+Firely offers the PubSub plugin to enable other services to asynchronically communicate with Firely Server on data updates. These updates are communicated via messages with a message broker such as RabbitMQ or Azure Service Bus. 
 This set-up enables easy integration with other frameworks outside .NET; as long as these frameworks correctly implement the library of the message broker, they will be able to communicate with Firely Server. 
 Another benefit is that if the outside service or Firely Server is down, the messages containing information on data updates will be retained by the message broker. These messages will be processed again after the services are back up.
 
 .. attention::
     Correct configuration and maintenance of the message broker is not part of the service provided by Firely. We strongly advice to consider this set-up carefully in order to prevent data loss.
 
+.. note::
+  PubSub currently supports two kinds of messagebrokers: AzureServiceBus and RabbitMQ
 
-Firely Sync has two parts: Sync-Out and Sync-In.
+You can enable PubSub by including the plugin into the pipeline options:
+
+.. code-block:: json
+
+        "PipelineOptions": {
+        "PluginDirectory": "./plugins",
+        "Branches": [
+            {
+                "Path": "/",
+                "Include": [
+                    ...
+                    "Vonk.Plugins.PubSub"
+
+You can further adjust PubSub in the PubSub section of your appsettings.json file:
+
+.. code-block:: json
+
+        "PubSub": {
+            "MessageBroker": {
+                "Host": "localhost",
+                "Username": "<your RabbitMQ username>",
+                "Password": "<your RabbitMQ password>",
+                "ApplicationQueueName": "FirelyServer",
+                "VirtualHost": "/",
+                "BrokerType": "RabbitMq" //  RabbitMq, AzureServiceBus
+            },
+            "ResourceChangeNotifications": {
+                "Enabled": false, // set to true to enable this functionality
+                "PollingIntervalSeconds": 5,
+                "MaxPublishBatchSize": 1000
+            }
+        }
+
+* ``MessageBroker`` - This section is for syncing Firely Server with incoming messages in the message broker
+* ``Host`` - The URL where the messagebroker can be found. If you use AzureServiceBus, this URL will already contain the credentials necessary to make the connection, so that you do not have to fill the username and password sections here.
+* ``Username`` - Your RabbitMQ username
+* ``Password`` - Your RabbitMQ password
+* ``ApplicationQueueName`` - The name of the message queue in the message broker that you would like to sync with Firely Server
+* ``VirtualHost`` - Any additional paths to virtual hosts to connect to the message broker
+* ``BrokerType`` - The message broker that you want to use, either AzureServiceBus or RabbitMQ
+* ``ResourceChangeNotifications`` - This section can be enabled to let Firely Server send out information on updates to the message broker, so that other services can sync with Firely Server. Note that this is only available for Firely Server instances that use SQL server (2016 and newer) as a repository database. As of yet it cannot work in combination with MongoDB or SQLite.
+* ``Enabled`` - Either set to true or false
+* ``PollingIntervalSeconds`` - 
+* ``MaxPublishBatchSize`` - 
+
+
+Message types and formats
+-------------------------
+
+PubSub expects standard message formats for a set of different messages that can be communicated to RabbitMQ. When other services want to receive of updates they can expect messages also to take on a certain format. 
+
+
+MassTransit
+^^^^^^^^^^^
+
+MassTransit envelopes these messages using specific headers, for documentation on these headers we refer to the `MassTransit documentation page <https://masstransit.io/documentation/concepts/messages#message-headers>`_.
+
+ExecuteTransactionBatchCommand
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This message can be sent to RabbitMQ by your client to let Firely Server execute a batch of instructions to store or delete resources that should be processed as a transaction, so either
+all of the instructions are performed, or none. The instructions are CRUD-type operation that operate on a store of resources, each with its own id. These ids are unique per type of resource.
+Note that this message should only contain one operation per resource (so per resource type + id) as the operations in the message are supposed to bring each resource involved to its desired final state, rather than reflect a set of operations that would present a history of operations on a resource.
+
+
+.. code-block::
+
+      "message": {
+        "instructions": [
+            {
+            "itemId": "Patient/testid",
+            "resource": "{\"resourceType\":\"Patient\",\"id\":\"testid\",\"meta\":{\"versionId\":\"versionId=test\",\"lastUpdated\":\"2023-10-09T12:00:22.8990506+02:00\"},\"name\":[{\"family\":\"id=test\"}]}",
+            "resourceType": null,
+            "resourceId": null,
+            "currentVersion": null,
+            "operation": 1
+        }
+        ]
+    }
+
+Operations are coded as follows:
+* 0 - None
+* 1 - Create
+* 2 - Update
+* 3 - Upsert
+* 4 - Delete
+
+it is the client's responsibility to provide the id, versionId, and lastUpdated fields. If Firely Server is not able to store (parts) of the data, it returns a 422 (Unprocessable Entity). If the client fails to provide any of the necessary metadata, it returns 400 (Bad Request).
+
+ExecuteBatchCommand
+^^^^^^^^^^^^^^^^^^^
+A command message to execute a batch of instructions to store or delete resources that should be processed without a transaction, so all, some, or none of the instructions in the message will be performed. These instructions have the same format as is ishown in the example for the ``ExecuteTransactionBatchCommand``.
+
+ExecuteBatchResponse
+^^^^^^^^^^^^^^^^^^^^
+After processing an ExecuteBatchCommand or ExecuteTransactionBatchCommand message Firely Server can respond with the result of this processing by sending an ExecuteBatchResponse message. This message will contain
+
+RetrievePlanCommand
+
+
+ResourceChangedLightEvent
+
+ResourceChangedEvent
+
+Sync-In
+-------
+
+Sync-In comes into play when services outside of Firely Server are performing changes on the data that Firely Server is using.
+Sync-In is quicker than communicating these changes via the Firely Server REST API as it does not involve authorization/authentication. 
+It assumes that all services communicating with Firely Server are internal and secure.
+You can configure Sync-In in the appsettings:
+
+.. code-block:: json
+    
+    "SyncIn": {
+        "Host": "localhost",
+        "Username": "guest",
+        "Password": "guest",
+        "QueueName": "sync-in",
+        "VirtualHost": "/",
+        "BrokerType": "RabbitMq" //  RabbitMq, AzureServiceBus
+    },
+
+
+Sync-In works with a store plan, which is a batch of instructions to store or delete resources that should be processed as a transaction, so either
+all of the instructions in the plan are performed, or none. The instructions in the plan are CRUD-type operations that operate on a store of resources, each with its own ``id``. 
+These ids are unique per type of resource. Conceptually, the store holds one "current" version of each resource, for which it tracks a ``versionId`` and a ``lastUpdated``. 
+The store is expected to store the resource payloads in the plan as-is, including the metadata. As a consequence, it is the client's responsibility to provide the ``id``, ``versionId`` and ``lastUpdated``. 
+
+
+If the store is not able to store (parts) of the data, it should return a 422 (Unprocessable Entity). If the client fails to provide any of the necessary metadata, it should return a
+400 (Bad Request). 
+A store plan should only contain one operation per resource (so per resource type + id) as the operations in the plan are supposed to bring each resource involved to its desired final state, 
+rather than reflect a set of operations that would present a history of operations on a resource.
+
+Upon receiving a store plan, Firely Server will send out a store plan result containing for each of the items in the original received store plan an ``ItemId``, ``Status``, and a ``Message`` with additional information.
+
 
 Sync-Out
 --------
@@ -52,35 +190,3 @@ The following response statuses will be shown by Firely Server for the outcome o
 * ``http status: 500`` - Server error.
 
 
-Sync-In
--------
-
-Sync-In comes into play when services outside of Firely Server are performing changes on the data that Firely Server is using.
-Sync-In is quicker than communicating these changes via the Firely Server REST API as it does not involve authorization/authentication. 
-It assumes that all services communicating with Firely Server are internal and secure.
-You can configure Sync-In in the appsettings:
-
-.. code-block:: json
-    
-    "SyncIn": {
-        "Host": "localhost",
-        "Username": "guest",
-        "Password": "guest",
-        "QueueName": "sync-in",
-        "VirtualHost": "/",
-        "BrokerType": "RabbitMq" //  RabbitMq, AzureServiceBus
-    },
-
-
-Sync-In works with a store plan, which is a batch of instructions to store or delete resources that should be processed as a transaction, so either
-all of the instructions in the plan are performed, or none. The instructions in the plan are CRUD-type operations that operate on a store of resources, each with its own ``id``. 
-These ids are unique per type of resource. Conceptually, the store holds one "current" version of each resource, for which it tracks a ``versionId`` and a ``lastUpdated``. 
-The store is expected to store the resource payloads in the plan as-is, including the metadata. As a consequence, it is the client's responsibility to provide the ``id``, ``versionId`` and ``lastUpdated``. 
-
-
-If the store is not able to store (parts) of the data, it should return a 422 (Unprocessable Entity). If the client fails to provide any of the necessary metadata, it should return a
-400 (Bad Request). 
-A store plan should only contain one operation per resource (so per resource type + id) as the operations in the plan are supposed to bring each resource involved to its desired final state, 
-rather than reflect a set of operations that would present a history of operations on a resource.
-
-Upon receiving a store plan, Firely Server will send out a store plan result containing for each of the items in the original received store plan an ``ItemId``, ``Status``, and a ``Message`` with additional information.

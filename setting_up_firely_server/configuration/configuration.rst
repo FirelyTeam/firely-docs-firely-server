@@ -26,7 +26,7 @@ If you want to change the way Firely Server logs its information, you can adjust
    environment_variables
    prevalidation
    db_memory
-   db_mongo
+   Using MongoDB <mongodb/db_mongo>
    Using SQL server <sqlserver/db_sql>
    db_sqlite
    Plugins <plugins/plugins>

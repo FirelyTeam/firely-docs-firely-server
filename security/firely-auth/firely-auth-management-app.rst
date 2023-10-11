@@ -113,14 +113,23 @@ Change a user's password
 There is no function to change a user's password directly. Instead delete the user and recreate it with the new password and any claims.
 
 .. _firely_auth_mgmt_sso_user:
+
 Creating password-less users in the UI for SSO
 ----------------------------------------------
+
 For SSO implementations you need password-less users in order to authenticate with a remote service. These can be created with a few extra steps in the UI of Firely Auth.
 First, it is necessary to log into Firely Auth as an administrator. For this you need to log in with ``FirelyAuthAdmin`` as a username and use a password that you specify in the root of the Firely Auth appsettings.json file, you will need to add the following line:
 
 .. code-block::
 
   "setadminpassword": "<admin password>",
+
+
+Alternatively, you can set the admin password during startup of Firely Auth:
+
+.. code-block::
+
+  dotnet Firely.Auth.Core.dll --setadminpassword=<admin password>
 
 
 Next, you can navigate to the admin portal and create a password-less user there:

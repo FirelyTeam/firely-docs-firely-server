@@ -36,7 +36,8 @@
         "identifier": {
           "system": "%TOKEN_ISSUER%",
           "value": "%USER_ID%"
-        }
+        },
+        "reference": "%fhirUser%"
       },
       "type": {
         "coding": [
@@ -49,8 +50,24 @@
       },
       "requestor": true,
       "policy": [
-        "%TOKEN_JWT_ID%"
+        "urn:ietf:params:oauth:jti:%TOKEN_JWT_ID%"
       ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://dicom.nema.org/resources/ontology/DCM",
+            "code": "110150"
+          }
+        ]
+      },
+      "who": {
+        "identifier": {
+          "value": "%Application_ID%"
+        }
+      },
+      "requestor": false
     },
     {
       "type": {
@@ -192,5 +209,11 @@
         }
       ]
     }
-  ]
+  ],
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/AuditEvent",
+      "https://profiles.ihe.net/ITI/BALP/StructureDefinition/IHE.BasicAudit.Query"
+    ]
+  }
 }

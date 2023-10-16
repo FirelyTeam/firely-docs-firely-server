@@ -234,11 +234,44 @@ By creating a common data format, the CPCDS facilitates the seamless sharing of 
 Known Limitations
 -----------------
 
-* _include does not work with versioned references
 * FHIR ExplanationOfBenefits instances are not rejected if the claim conformance to the `abstract "C4BB Explanation Of Benefit" <https://hl7.org/fhir/us/carin-bb/StructureDefinition-C4BB-ExplanationOfBenefit.html>`_ profile
 * In order to validate resources claiming to conform to CARIN Blue Button, it is necessary to configure Firely Server to use an external terminology server incl. support for expanding SNOMED CT, LOINC, NUBC, CPT, ICD-10, NCPDP, X12 ValueSets. See :ref:`feature_terminology`.
 * By default invalid values for a search parameter are not rejected by Firely Server with an HTTP 400 - Bad Request status code. To enable this behavior required by CARIN, include a "Prefer: handling=strict" HTTP header in the search request.
 * FHIRPath constraints using the "memberOf" function are not evaluated by Firely Server
+
+------------
+
+.. _davinci_atr_ig:
+
+Da Vinci - Member Attribution (ATR) List
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The goal of `Da Vinci - Member Attribution (ATR) List <https://hl7.org/fhir/us/davinci-atr/2023Jan/>`_ implementation guide is to enable providers to gain access to managed lists of all members (Patients) attibuted to their organization.
+Payors are responsible of managing these lists. Based on ATR lists, providers can retreive administrative information in bulk about all members. Additionally, ATR lists can serve as the basis to allow providers to access claims and encounter data.
+
+.. list-table:: Da Vinci - Member Attribution (ATR) List Overview
+   :widths: 10, 10, 10, 10
+   :header-rows: 1
+   
+   * - Supported version
+     - Supporting documentation
+     - Realm
+     - Specification Link
+
+   * - * ✔️ v2.0.0-ballot
+  
+     - n/A
+
+     - * 🇺🇸
+
+     - * `hl7.fhir.us.davinci-atr|2.0.0-ballot <https://registry.fhir.org/package/hl7.fhir.us.davinci-atr|2.0.0-ballot>`_
+
+Known Limitations
+-----------------
+
+* The custom operations ``$member-add`` and ``$member-remove`` are not supported. Therefore for all member updates, a new version of a Group resources is created.
+* The ``_until`` parameter is not supported as part of the Bulk Date Export operations.
+* The ``$davinci-data-export`` wrapper around ``$export`` is not supported.
 
 ------------
 

@@ -3,34 +3,44 @@
 Current Firely Server release notes (v5.x)
 ==========================================
 
+.. note::
+    For information on how to upgrade, please have a look at our documentation on :ref:`upgrade`. You can download the binaries of the latest version from `this site <https://downloads.fire.ly/firely-server/versions/>`_, or pull the latest docker image::
+        
+        docker pull firely/server:latest
+
+
 .. _vonk_releasenotes_5_3_0:
 
-Release 5.3.0, XXXX XXth, 202X
----------------------------------
-
-Configuration
-^^^^^^^^^^^^^
+Release 5.3.0, September 18th, 2023
+-----------------------------------
 
 Features
 ^^^^^^^^
-
+#. The Da Vinci Member Attribution List implementation guide (ATR) is now officially supported by Firely Server. See :ref:`davinci_atr_ig` for more details.
+#. Improved performance when evaluating access policies.
+#. Improved access policies to evaluate permissions on a user-level based on a tenant id. See :ref:`feature_accesscontrol_permissions` for more details.
+#. Improved transaction support for handling invalid X-Provenance headers. Resources will not be created in case the corresponding X-Provenance is invalid, similar to the behavior using SQL server.
+#. Improved SQL error message in case the schema info is empty in the database.
+#. Improved the BinaryWrapper plugin to return a Location header after a successful read.
+#. Added support for logging to Splunk. See :ref:`configure_log_insights` for more details.
+#. Improved support for the CARIN BlueButton implementation guide by differentiating between HTTP Status Code 403 - Forbidden (insufficient scopes) and HTTP 401 - Unauthorized (no token provided).
+#. _include can now be used in combination with versioned references.
+#. This release includes a new setting for handling the conversion of absolute to relative references: ``UrlMapping``. With this setting you can specify the FHIR Path of the elements that you would like to see converted. See :ref:`uri_conversion` for more details.
 
 Fixes
 ^^^^^
+#. Fixed an internal server error when passing empty values to required elements in case the setting PermissiveParsing is set to Strict and ValidationLevel is set to Full.
+#. Fixed an internal server error when posting a bundle resource to the bundle or transaction endpoint in case not all resources contained a pre-assigned ID.
+#. Fixed incorrect transaction handling when SQLite (for administration) and MongoDB are used in combination. This resulted in an internal server error when creating resources in an empty database.
 
 Vonk.Core and Plugins
 ^^^^^^^^^^^^^^^^^^^^^
 #. The `SupportsCustomOperation` method has been deprecated. Please use `SupportsOperation` instead as that method takes the interaction level into account which is more aligned with the configuration options described in :ref:`disable_interactions`.
 
-Deprecation
-^^^^^^^^^^^
-
-
 .. _vonk_releasenotes_5_2_0:
 
-
-Release 5.2.0, July XXth, 2023
----------------------------------
+Release 5.2.0, August 8th, 2023
+-------------------------------
 
 Configuration
 ^^^^^^^^^^^^^
@@ -39,7 +49,7 @@ Configuration
 Features
 ^^^^^^^^
 
-#. An informational message is now logged for auditing pruposes if authorization for a request was successful. Previously only authorization failures were logged.
+#. An informational message is now logged for auditing purposes if authorization for a request was successful. Previously only authorization failures were logged.
 #. Improved compartment checks for writing resources to a Patient compartment with a patient-level access token. All compartment references need to refer to the same compartment. This is important for resources that have multiple compartment references which may refer to different Patients (e.g. AllergyIntolerance.recorder and AllergyIntolerance.patient).
 #. Added support for permanently deleting all resources within a Patient compartment using the $purge operation. See :ref:`erase` for more details.
 #. Enable FS to write logs to AWS CloudWatch, see :ref:`configure_log_sinks`.

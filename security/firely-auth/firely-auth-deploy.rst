@@ -1,7 +1,7 @@
 .. _firely_auth_deploy:
 
-Deployment of Firely Auth
-=========================
+Deployment
+==========
 
 License
 -------
@@ -25,10 +25,120 @@ You can request a copy of the binaries from Firely through our :ref:`contact pag
 Docker image
 ------------
 
-A docker image is available on the Docker hub, under `firely/auth`.
+A Docker image is available on the Docker hub, under `firely/auth`. You can spin up a Docker container for Firely Auth using the following command::
+
+  docker run -d -p5100:5100 --name firely.auth -v %CD%/firely-auth-license.json:/app/firely-auth-license.json -v %CD%/appsettings.instance.json:/app/appsettings.instance.json firely/auth:latest
+
+Make sure to include the ``firely-auth-license.json`` and ``appsettings.instance.json`` in your working directory. 
+
+The Docker container has a network of its own. This means that localhost within a Docker container resolves to a different network than localhost on your local computer.
+To make sure Firely Auth is communicating correctly with Firely Server, some adjustments need to be made to support the use cases described below.
+
+Running Firely Auth in Docker with Firely Server running locally
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When running Firely Auth in Docker and Firely Server locally, the communication between these services will run from the local system to the Docker container. 
+To make sure Firely Auth is listening to your local network for communication from Firely Server it is necessary to adjust the ``Kestrel`` settings to point to your local network.
+You can do so by pointing Kestrel in the Firely Auth ``appsettings.instance.json`` to ``host.docker.internal``, rather than ``localhost``::
+
+  "Kestrel": {
+    "Endpoints": {
+      "Http": {
+        "Url": "http://host.docker.internal:5100"
+        }
+      }
+    }
+
+In the Firely Auth ``appsettings.instance.json`` you need to point the ``FHIR_BASE_URL`` to your local Firely Server at ``localhost:4080``::
+
+    "FhirServer": {
+    "Name": "Firely Server",
+    "FHIR_BASE_URL": "http://localhost:4080",
+  },
+
+In the Firely Server ``appsettings.instance.json`` you can set the ``Authority`` setting as shown below::
+
+  "Authority": "http://localhost:5100",
+
+Running Firely Auth locally with Firely Server running in Docker
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you want to run Firely Auth locally with Firely Server in Docker you need to make the following changes. 
+First in your Firely Auth ``appsettings.instance.json`` point Kestrel to your localhost::
+
+    "Kestrel": {
+    "Endpoints": {
+      "Http": {
+        "Url": "http://localhost:5100"
+      }
+    }
+  },
+
+Next point the ``FHIR_BASE_URL`` in your Firely Auth ``appsettings.instance.json`` to Firely Server running in Docker::
+
+    "FhirServer": {
+    "Name": "Firely Server",
+    "FHIR_BASE_URL": "http://localhost:8080",
+
+Lastly, in the Firely Server ``appsettings.instance.json`` point the ``Authority`` setting to the Firely Auth service running on your local system, and point the ``AdditionalIssuersInToken`` to localhost::
+
+        "Authority": "http://host.docker.internal:5100",
+        "AdditionalIssuersInToken": ["http://localhost:5100"],
+
+
+Running Firely Auth in Docker together with Firely Server 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In case you want to run both Firely Auth and Firely Server in Docker, you need to make sure both services are able to communicate via the same network in Docker.
+For this, you can create a Docker network::
+
+  docker network create internal-container-network 
+  
+  
+In the Firely Auth ``appsettings.instance.json`` adjust the ``FHIR_BASE_URL`` to point to the Firely Server service running in Docker. As all communication from the Firely Server service to the Firely Auth service goes via the Docker network, you can also use localhost here::
+
+    "FhirServer": {
+    "Name": "Firely Server", 
+    "FHIR_BASE_URL": "http://localhost:8080",
+
+Alternatively, you can adjust this as follows::
+
+    "FhirServer": {
+    "Name": "Firely Server",
+    "FHIR_BASE_URL": "http://firely.server:8080",
+
+Adjust the ``Kestrel`` settings in the Firely Auth ``appsettings.instance.json`` as follows::
+
+   "Kestrel": {
+   "Endpoints": {
+     "Http": {
+       "Url": "http://firely.auth:5100"
+     } 
+
+In the Firely Server ``appsettings.instance.json`` point the ``Authority`` setting to the Firely Auth service in Docker::
+
+  "Authority": "http://firely.auth:5100",
+
+Next, spin up both services to use the dDcker network you created earlier::
+
+  docker run -d -p5100:5100 --name firely.auth -v %CD%/firely-auth-license.json:/app/firely-auth-license.json -v %CD%/appsettings.instance.json:/app/appsettings.instance.json --network internal-container-network firely/auth:latest
+  
+  docker run -d -p8080:4080 --name firely.server -v %CD%/firelyserver-license.json:/app/firelyserver-license.json -v %CD%/appsettings.instance.json:/app/appsettings.instance.json --network internal-container-network firely/server:latest
+
+If you want to check with your local postman if this setup works, you need to add the following to the ``AdditionalIssuersInToken`` setting in the Firely Server ``appsettings.instance.json``::
+
+   "AdditionalIssuersInToken": ["http://localhost:5100"],
+
+
+
+
+
+
 
 See the instructions on :ref:`running Firely Server in Docker <use_docker>` to learn about adjusting settings and providing the license file.
 Firely Auth is configured in the same way.
+
+
 
 .. _firely_auth_deploy_inmemory:
 

@@ -17,7 +17,10 @@ You will also find a section describing the steps to be taken for auditing in Fi
    :titlesonly:
 
    accesscontrol
+   smart
+   tokens_and_compartments
    firely-auth/firely-auth
+   permissions
    auditing
 
 .. add files here

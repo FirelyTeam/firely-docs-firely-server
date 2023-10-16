@@ -50,6 +50,7 @@ Some additional namespaces you might want to log are:
 - ``Vonk.Core.Repository.EntryIndexerContext``, set it to ``"Error"`` if you have excessive warnings about indexing (mostly when importing `Synthea <https://synthea.mitre.org/downloads>` data)
 - ``Microsoft`` to log events from the Microsoft libraries
 - ``Microsoft.AspNetCore.Diagnostics`` to report request handling times
+- ``Microsoft.AspNetCore.Hosting.Diagnostics`` to log individual requests
 - ``System`` to log events from the System libraries
 
 Please note that the namespaces are evaluated in order from top to bottom, so more generic 'catch all' namespaces should be at the bottom of the list. 
@@ -72,6 +73,29 @@ But in this (purposefully incorrect) example the ``Warning`` level on the ``Vonk
 			"Vonk.Repository.Sql.Raw": "Information"
 		}
 	},
+
+.. _logging_individual_requests:
+
+Logging individual requests 
+---------------------------
+
+If you want to log individual requests, you can do so by adjusting the "Override" section to include ``Microsoft.AspNetCore.Hosting.Diagnostics``::
+
+	"MinimumLevel": {
+		"Default": "Error",
+		"Override": {
+			"Microsoft.AspNetCore.Hosting.Diagnostics": "Information"
+		}
+	},
+
+
+Here is an example of the logs when you post a Patient resource with these logsettings::
+
+	2023-08-09 10:25:55.028 +02:00 [UserId: ] [Username: ] [Information] [ReqId: 0HMSOM901IS1A:00000002] Request starting HTTP/1.1 POST http://localhost:4080/Patient application/fhir+json 164
+ 	2023-08-09 10:25:57.225 +02:00 [UserId: ] [Username: ] [Information] [ReqId: 0HMSOM901IS1A:00000002] Request finished HTTP/1.1 POST http://localhost:4080/Patient application/fhir+json 164 - 201 340 application/fhir+json;+fhirVersion=4.0;+charset=utf-8 2199.2748ms
+
+The first log line includes on the request that was made, the second line contains information on the response of Firely Server.
+As you can see, the logs include information on the request type, any headers that are included, and the time it took to make this request.
 
 .. _configure_log_sinks:
  
@@ -122,7 +146,8 @@ Settings for the Console sink:
 		* ``{Message}}``: Actual message being logged
 		* ``{Exception}``: If an error is logged, Firely Server may include the original exception. That is then formatted here.
 		* ``{SourceContext}``: The class from which the log statement originated (this is usually not needed by end users).
-		* ``{NewLine``}: Well, ehh, continue on the next line
+		* ``{NewLine}``: Well, ehh, continue on the next line,
+		* ``{CorrelationId}``: In case you want to follow requests across multiple containers, you can set the ``CorrelationId`` to be included in the logs. See below.
 
 	* ``restrictedToMinimumLevel``: Only log messages from this level up are sent to this sink.
 
@@ -264,6 +289,26 @@ Firely Server can also log to AWS Cloudwatch. What you need to do:
 			},
 		],
 
+Splunk
+^^^^^^
+Firely Server can also log to Splunk. What you need to do:
+
+#. Setup a Splunk environment as described by the Splunk documentation
+#. Create a ``HTTP Event Collector`` for the application, save the ``Token Value`` for later use
+#. Check in the ``Global Settings`` in the ``HTTP Event Collector`` screen which port is used
+#. Add the correct sink to the logsettings.json::
+
+		"WriteTo": [
+			{
+                "Name": "EventCollector",
+                "Args": {
+                    "splunkHost": "<splunk endpoint>", // e.g. https://splunk:8088
+                    "eventCollectorToken": "<token value>"
+                }
+            }
+		],
+
+
 .. _configure_log_database:
 
 Database details
@@ -321,3 +366,31 @@ You can enable SQL query parameter values logging by setting the ``LogSqlQueryPa
 			}
 		}
 	}
+
+.. _setting_correlation_id:
+
+Setting CorrelationId for tracing requests across multiple services
+-------------------------------------------------------------------
+
+Firely Server can log a ``RequestId`` to identify individual requests, but this is an auto-generated GUID and cannot be adjusted. This is tricky if you want to log requests across multiple services/containers, how to recognize a particular request from EHR to Firely Server if the ``RequestId`` is set automatically?
+As an answer to this, it is possible to set a ``CorrelationId`` for requests. The ``CorrelationId`` can be set manually by adding a header to the request that needs to be traced. Note that you can give any name to this header, as long as it matches the ``headerKey`` in the "Enrich" section of your logsettings.
+This section needs to be adjusted to include the ``WithCorrelationIdHeader`` setting::
+
+	"Enrich": [
+		"FromLogContext",
+		"WithMachineName",
+		{
+		"Name": "WithCorrelationIdHeader",
+		"Args": {
+			"headerKey": "custom-correlation-id"
+			}
+		}
+	],
+
+Be sure to add ``[CorrId: {CorrelationId}]`` to your "outputTemplate" settings to view the ``CorrelationId`` in the logs. Below is an example of the resulting loglines when the ``custom-correlation-id`` header is set to "My custom correlation Id"::
+
+	2023-08-09 11:22:15.901 +02:00 [UserId: ] [Username: ] [Information] [ReqId: 0HMSON8FK36UF:00000002] [CorrId: My custom correlation Id] Request starting HTTP/1.1 GET http://localhost:4080/Patient - -
+	2023-08-09 11:22:17.884 +02:00 [UserId: ] [Username: ] [Information] [ReqId: 0HMSON8FK36UF:00000002] [CorrId: My custom correlation Id] Request finished HTTP/1.1 GET http://localhost:4080/Patient - - - 200 6642 application/fhir+json;+fhirVersion=4.0;+charset=utf-8 1986.1211ms
+
+Note that if this header is not included in the request, Firely Server will automatically assign a GUID to ``CorrelationId``.
+ 

@@ -1,7 +1,7 @@
 .. _firely_auth_mfa:
 
-Using Multi Factor Authentication in Firely Auth
-================================================
+Using Multi Factor Authentication
+=================================
 
 .. attention:: 
 

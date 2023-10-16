@@ -114,6 +114,7 @@ With MongoDb transactions, there are a few things to consider:
 
     #. When uploading a transaction bundle.
     #. When performing a conditional delete that targets more than one resource.
+    #. When using the X-Provenance header.
 
 #. MongoDb transactions in Firely Server always use Read Concern `"snapshot"` and Write Concern `"majority"`.
 #. MongoDb imposes a transaction runtime limit of `60s`. For self-hosted MongoDb instances you can modify this limit using `"transactionLifetimeLimitSeconds"`. However, for MongoDb Atlas deployments this limit cannot be changed. 
@@ -162,3 +163,15 @@ If fragmentation gets too high, you can `compact <https://www.mongodb.com/docs/m
 On top of the requirements for storing the resources and indexes, we allow MongoDB to use the disk as an overflow buffer for larger-than-memory operations (like sorting a very large resultset). Please reserve about 20% extra disk space for that.
 
 We recommend to monitor the health of your MongoDB cluster actively to avoid disk space issues.
+
+MongoDB Security
+----------------
+
+In this section we offer general guidelines on how to configure and maintain your MongoDB database. This topic only covers the most common options and should by no means be regarded as exhaustive.
+
+.. toctree::
+   :maxdepth: 1
+   :titlesonly:
+
+   db_mongo_security
+   db_mongo_auth

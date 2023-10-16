@@ -6,6 +6,7 @@ Subscriptions
 Subscriptions can be managed in the :ref:`administration_api`, on the ``/administration/Subscription`` endpoint. If you post a Subscription
 to the regular FHIR endpoint, it will be stored but not evaluated. Subscriptions posted to the
 ``/administration`` endpoint will be processed and evaluated for each POST/PUT to the server.
+If the a POST/PUT matches the criteria specified in the subscription. A POST or PUT (default) call is sent to the specifies channel endpoint.
 
 Firely Server currently only supports STU3/R4-style Subscriptions.
 
@@ -51,7 +52,7 @@ Below is an example of a Subscription resource that uses this channel type.
     }
   }
 
-Once this Subscription resource is posted to Firely Server, the server will be sending notifications to the specified *endpoint* whenever a resource matching the search *criteria* gets created or updated. It is possible to provide *headers* that will be copied over to the notification requests. It may come in handy if the notifications endpoint is secured and the Authorization header must be used. The *payload* option defines the format of the notification payload. The following values can be used:
+Once this Subscription resource is posted to Firely Server, the server will be sending notifications (PUT by default) to the specified *endpoint* whenever a resource matching the search *criteria* gets created or updated. It is possible to provide *headers* that will be copied over to the notification requests. It may come in handy if the notifications endpoint is secured and the Authorization header must be used. The *payload* option defines the format of the notification payload. The following values can be used:
 
 - *application/fhir+json* and *application/json*
 - *application/fhir+xml* and *application/xml*
@@ -81,4 +82,6 @@ You can control the period and the batchsize. If an evaluation of a Subscription
 * ``SubscriptionBatchSize`` is expressed in number of Subscriptions that is retrieved and evaluated at once. Default is 1, but you can set it higher if you have a lot of Subscriptions.
 * ``RetryPeriod`` is expressed in milliseconds. In the example above the period is set to 60 seconds, meaning that Firely Server will retry to send the resources after a minimum of 60 seconds. Retry is included in the normal evaluation process, so the RetryPeriod cannot be smaller than RepeatPeriod.
 * ``MaximumRetries`` is the maximum amount of times Firely Server will retry to send the resources.
-* ``SendRestHookAsCreate``: in versions < 3.9.3, Vonk sent RestHook notifications as a create operation using a POST. That was not compliant with the specification that requires an update operation using a PUT. The default value of ``false`` provides compliant behaviour. Only set it to ``true`` if you need Firely Servder to keep sending create operations as it did previously. 
+* ``SendRestHookAsCreate``: in versions < 3.9.3, Vonk sent RestHook notifications as a create operation using a PUT. This was not compliant with the specification that requires POST. The default value of ``false`` provides the old behaviour and sends a PUT. If set to ``true``, the rest hook call is compliant with the FHIR spec and a POST call is made. 
+
+Note that the logs for subscriptions can be turned on by including ``"Vonk.Subscriptions.Evaluation.SubscriptionEvaluatorService": "Verbose"`` in the :ref:`configure_log`. 

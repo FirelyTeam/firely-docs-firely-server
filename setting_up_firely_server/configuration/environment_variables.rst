@@ -139,6 +139,19 @@ When the 'ASPNETCORE_ENVIRONMENT' variable is set to development the call stack 
    
    ASPNETCORE_ENVIRONMENT=Development
 
+.. _customize_config_location:
+
+Customizing location of configuration files
+-------------------------------------------
+
+It is possible to change a default location of configuration files by setting a reserved environment variable - ``VONK_PATH_TO_SETTINGS``:
+::
+
+    VONK_PATH_TO_SETTINGS=./config
+
+In the example above Firely Server will try to locate and read configuration from one of the following files inside ``config`` directory that is relative to a location of Firely Server binaries: ``appsettings.instance.json``, ``logsettings.instance.json`` and ``audit.logsettings.instance.json``.
+Note that if the directory does not exist, if there are no files from the list, or they are unable to be read - an exception is to be thrown on application startup.
+
 .. _configure_envvar_windows:
 
 Changing Environment Variables on Windows

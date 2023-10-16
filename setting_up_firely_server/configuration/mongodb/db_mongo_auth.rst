@@ -1,13 +1,13 @@
 .. _configure_mongodb_auth:
 
-MongoDB authorization
-=====================
+MongoDB access control
+======================
 
-In a production setting, MongoDB should run with authorization enabled. This page helps you to:
+In a production setting, MongoDB should run with access control enabled. This page helps you to:
 
 #. Set up an administrative user
 #. Set up user accounts to use with Firely Server
-#. Enable the authorization
+#. Enable the access control
 #. Configure the connectionstring
 
 All of the script snippets in this page are combined in :download:`this script file </_static/files/MongoDB_roles_users.js>`. It can be run with `Mongo Shell <https://www.mongodb.com/try/download/shell>`_ (``mongosh``).
@@ -40,10 +40,12 @@ The scripts use these two functions for convenience.
     }
 
 
+.. _configure_mongodb_auth_rootuser:
+
 Set up an administrative user
 -----------------------------
 
-It is important to set up this user before you enable authorization, otherwise you might lock yourself out of any actions on the database. 
+It is important to set up this user before you enable access control, otherwise you might lock yourself out of any actions on the database. 
 The script below will create a user name ``admin`` and password ``admin_secret``, authorized to do anything on any database.
 
 .. code-block:: javascript
@@ -75,6 +77,10 @@ The script below will create a user name ``admin`` and password ``admin_secret``
     {
         print("MongoDB admin user already existed and was not altered");
     }
+
+Alternatively, you can also set up an admin user as part of composing the Docker container (see :ref:`below <configure_mongodb_auth_enable>`). This is explained in the `documentation on the mongo container image <https://hub.docker.com/_/mongo>`_. This however gives less control over the priviliges assigned to the admin user.
+
+.. _configure_mongodb_auth_useraccounts:
 
 Set up user accounts to use with Firely Server
 ----------------------------------------------
@@ -264,12 +270,14 @@ We assume ``fs_admin`` as the name of the database.
         }
     );
 
-Enable authentication on MongoDB
+.. _configure_mongodb_auth_enable:
+
+Enable access control on MongoDB
 --------------------------------
 
-Authorization is enabled in different ways depending on the hosting platform. See the MongoDB documentation on this.
+Access control is enabled in different ways depending on the hosting platform. See the `MongoDB documentation <https://www.mongodb.com/docs/manual/tutorial/enable-authentication/>`_` on this.
 
-In short, for MongoDB Atlas authorization is mandatory and cannot be disabled. For MongoDB Enterprise or Community it can be enabled by the paramater ``--auth`` to the ``mongod`` command.
+In short, for MongoDB Atlas access control is mandatory and cannot be disabled. For MongoDB Enterprise or Community it can be enabled by the paramater ``--auth`` to the ``mongod`` command.
 
 When running it in a Docker container, you can add this parameter by changing the ``command``:
 
@@ -293,7 +301,7 @@ When running it in a Docker container, you can add this parameter by changing th
 ConnectionStrings
 -----------------
 
-Once authorization is enabled, you have to configure the user and password in the connectionstring. The connectionstrings below serve as a template, using ``localhost`` as the host. Replace this with the correct hostname for your environment.
+Once access control is enabled, you have to configure the user and password in the connectionstring. The connectionstrings below serve as a template, using ``localhost`` as the host. Replace this with the correct hostname for your environment.
 
 .. note:: 
 

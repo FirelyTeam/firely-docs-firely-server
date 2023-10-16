@@ -246,6 +246,29 @@ Seq server::
 * Change ``serverUrl`` to the URL of your Seq server
 * ``restrictedToMinimumLevel``: as described for `Console`_.
 
+MongoDb
+^^^^^^^
+
+Firely Server can also log to MongoDb. 
+
+* Add the correct sink to the logsettings.json::
+
+		"WriteTo": [
+			{
+  				"Name": "MongoDBBson",
+  				"Args": {
+    				"databaseUrl": "mongodb://username:password@localhost:27017/<db name>",
+    				"collectionName": "vonklogs",
+    				"cappedMaxSizeMb": "1024",
+    				"cappedMaxDocuments": "50000",
+    				"rollingInterval": "Month"
+  				}
+			}
+
+* Change ``databaseUrl`` to match your MongoDb server.
+* Change ``collection name`` where you want to store logs
+* ``restrictedToMinimumLevel``: as described for `Console`_.
+
 AWS Cloudwatch
 ^^^^^^^^^^^^^^
 Firely Server can also log to AWS Cloudwatch. What you need to do:

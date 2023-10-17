@@ -31,7 +31,8 @@
         "identifier": {
           "system": "%TOKEN_ISSUER%",
           "value": "%USER_ID%"
-        }
+        },
+        "reference": "%fhirUser%"
       },
       "role": [
         {
@@ -46,7 +47,7 @@
       ],
       "requestor": true,
       "policy": [
-        "%TOKEN_JWT_ID%"
+        "urn:ietf:params:oauth:jti:%TOKEN_JWT_ID%"
       ]
     },
     {
@@ -96,6 +97,21 @@
     ]
   },
   "entity": [
+    {
+      "reference": {
+        "reference": "Patient/instance-id"
+      },
+      "type": {
+        "system": "http://terminology.hl7.org/CodeSystem/audit-entity-type",
+        "code": "1",
+        "display": "Person"
+      },
+      "role": {
+        "system": "http://terminology.hl7.org/CodeSystem/object-role",
+        "code": "1",
+        "display": "Patient"
+      }
+    },
     {
       "reference": {
         "identifier": {
@@ -168,5 +184,10 @@
             "reference": "Patient/instance-id/_history/version-id"
         }
     }
-  ]
+  ],
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/AuditEvent"
+    ]
+  }
 }

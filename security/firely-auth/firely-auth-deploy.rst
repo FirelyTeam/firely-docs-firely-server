@@ -1,7 +1,7 @@
 .. _firely_auth_deploy:
 
-Deployment of Firely Auth
-=========================
+Deployment
+==========
 
 License
 -------

@@ -39,7 +39,8 @@
         "identifier": {
           "system": "%TOKEN_ISSUER%",
           "value": "%USER_ID%"
-        }
+        },
+        "reference": "%fhirUser%"
       },
       "role": [
         {
@@ -54,7 +55,7 @@
       ],
       "requestor": true,
       "policy": [
-        "%TOKEN_JWT_ID%"
+        "urn:ietf:params:oauth:jti:%TOKEN_JWT_ID%"
       ]
     },
     {
@@ -204,5 +205,10 @@
         }
       ]
     }
-  ]
+  ],
+  "meta": {
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/AuditEvent"
+    ]
+  }
 }

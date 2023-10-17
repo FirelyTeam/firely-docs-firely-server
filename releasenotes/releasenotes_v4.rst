@@ -3,6 +3,21 @@
 Old Firely Server release notes (v4.x)
 ======================================
 
+.. _vonk_releasenotes_4_11_0:
+
+Release 4.11.0, October 17th, 2023
+----------------------------------
+
+Security
+^^^^^^^^
+
+#. Updated the version of the base docker image from Alpine 3.14 to Alpine 3.18.
+#. Introduced a setting ``SendServerHeader`` in the ``Hosting`` section to suppress the network service banner. By default, it is set to ``false``, so the Kestrel ``Server`` header will be removed in the response of a request.
+
+   .. note::
+
+     The setting ``SendServerHeader`` is applied only for Kestrel. If Firely Server is hosted differently, in IIS for example, and you want to remove the ``Server`` header, you need to handle it by yourself.
+
 .. _vonk_releasenotes_4_10_2:
 
 Release 4.10.2, June 29th, 2023

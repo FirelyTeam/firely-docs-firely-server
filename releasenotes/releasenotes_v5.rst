@@ -21,7 +21,7 @@ Fixes
 
 Configuration
 ^^^^^^^^^^^^^
-#. Firely Server now allows for a custom location of configuration files to be set (see :ref:`customize_config_location`)
+#. Firely Server now allows for a custom location of configuration files to be set (see :ref:`configure_settings_path`)
 
 .. _vonk_releasenotes_5_3_0:
 

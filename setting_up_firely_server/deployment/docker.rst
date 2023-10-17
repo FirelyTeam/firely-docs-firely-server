@@ -143,6 +143,10 @@ Powershell
 
 You should see a ``vonkdata.db`` appear in the ``./resourcedata`` folder, and a log file in the ``./log`` folder. From here you can experiment with other settings. You can also easily keep different settings files side-by-side, mapping the one you want to test into the container, e.g. ``-v ${PWD}/some-weird-settings.json:/app/appsettings.instance.json``.
 
+Mounting a folder instead of a file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In some environments, e.g. Azure Webapps, it is not possible to mount an individual file into the Firely Server folder. Instead, you can only mount a whole folder. In that case, refer to :ref:`configure_settings_path` to see how you can provide an alternative folder to read the ``*.instance.json`` files from.
 
 Loading additional conformance resources in Firely Server on Docker
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

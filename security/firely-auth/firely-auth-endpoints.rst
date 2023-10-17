@@ -93,7 +93,7 @@ LaunchContext endpoint
 In SMART on FHIR's EHR launch flow, a ``launch`` URL parameter is required when the EHR initiates a launch sequence. It is an identifier for this specific launch and any EHR context associated with it. For more information, see `EHR Launch <https://hl7.org/fhir/smart-app-launch/app-launch.html#launch-app-ehr-launch>`_.
 Firely Auth offers an endpoint to request such identifier. 
 
-The ``launchContext`` endpoint can be accessed via an HTTP POST request and is protected with the secret provided in the :ref:`firely_auth_settings_tokenintro` setting. The EHR context to be associated with can be provided via the HTTP request body via x-www-urlencoded parameters. FHIR resource ids that are of interest for the EHR launch can be submitted by the EHR to Firely Auth in the form of ``<resourceType>=<id>``. Note that no "launch" prefix is used for the resourceType.
+The ``launchContext`` endpoint can be accessed via an HTTP POST request and is protected with the secret provided in the :ref:`firely_auth_settings_tokenintro` setting. The username used for basic auth is the same as the name of the FHIR Server. The password used for basic auth is the same as the introspection secret. The EHR context to be associated with can be provided via the HTTP request body via x-www-urlencoded parameters. FHIR resource ids that are of interest for the EHR launch can be submitted by the EHR to Firely Auth in the form of ``<resourceType>=<id>``. Note that no "launch" prefix is used for the resourceType.
 Example below requests a ``launch`` identifier with ``patient`` context associated.
 
 .. code-block::

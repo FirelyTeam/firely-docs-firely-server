@@ -8,6 +8,20 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_5_4_0:
+
+Release 5.4.0, Paste The Date, 2023
+-----------------------------------
+
+Features
+^^^^^^^^
+
+Fixes
+^^^^^
+
+Configuration
+^^^^^^^^^^^^^
+#. Firely Server now allows for a custom location of configuration files to be set (see :ref:`configure_settings_path`)
 
 .. _vonk_releasenotes_5_3_0:
 

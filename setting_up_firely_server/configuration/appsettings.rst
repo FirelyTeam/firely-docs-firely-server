@@ -95,6 +95,43 @@ JSON formally has no notion of comments. But the configuration system of ASP.Net
 
 This will ignore the AutoUpdateConnectionString.
 
+.. _configure_settings_path:
+
+Providing settings in a different folder
+----------------------------------------
+
+It can be useful or even necessary to provide settings outside of the Firely Server folder itself, e.g. when mounting the settings to a Docker container. That is possible. 
+
+1. Provide an environment variable named ``VONK_PATH_TO_SETTINGS``, set to the folder where the settings are to be read from. This path can be absolute or relative to the Firely Server directory.
+2. In this folder you must provide at least one of the following files:
+
+   1. ``appsettings.instance.json``
+   2. ``logsettings.instance.json``
+   3. ``auditlogsettings.instance.json``
+
+3. These files will be read with the same :ref:`priority <configure_levels>` as they would have if they were in the Firely Server directory. 
+
+Note that if you provide this environment variable, then:
+
+#. The designated folder must exist.
+#. At least one of the three files must be present.
+#. The account that runs Firely Server must have read access to each of the files.
+#. The Firely Server directory itself will no longer be scanned for any of the three files. So if you want to use any of the three ``*.instance.json`` files, you must provide all of them in the designated directory.
+
+Examples: 
+
+::
+
+    VONK_PATH_TO_SETTINGS=./config
+
+This relative path would read e.g. ``<Firely Server directory>/config/appsettings.instance.json``.
+
+::
+
+    VONK_PATH_TO_SETTINGS=/usr/config
+
+This absolute path would read e.g. ``/usr/config/appsettings.instance.json``.
+
 .. _log_configuration:
 
 Log of your configuration

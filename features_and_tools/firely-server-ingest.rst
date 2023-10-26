@@ -485,3 +485,30 @@ Release 1.0.0
 .. |br| raw:: html
 
    <br />
+
+.. _tool_fsi_bill_of_materials:
+
+Bill of Materials
+-----------------
+
+Firely Server Ingest is mainly built using libraries from Microsoft .Net Core and ASP.NET Core, along with a limited list of other libraries. This is the full list of direct dependencies that Firely Server Ingest has on other libraries, along with their licenses.
+
+This list uses the NuGet package names (or prefixes of them) so you can easily lookup further details of those packages on `NuGet.org <https://www.nuget.org>`_ if needed.
+
+#. Microsoft.Extensions.* - MIT
+#. Serilog(.*) - Apache-2.0
+#. System.CommandLine.Hosting - MIT
+#. System.ComponentModel.Annotations - MIT
+#. System.Threading.Tasks.Dataflow - MIT
+#. Hl7.Fhir.* - Firely OSS license
+#. Firely.Fhir.* - Firely OSS license
+#. Simplifier.Licensing - as Hl7.Fhir
+
+For MongoDB:
+
+#. MongoDB.* - Apache 2.0
+
+For SQL Server:
+
+#. Microsoft.Data.SqlClient - MIT
+#. Microsoft.SqlServer.SqlManagementObjects - MIT

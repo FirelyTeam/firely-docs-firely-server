@@ -491,7 +491,7 @@ Release 1.0.0
 Bill of Materials
 -----------------
 
-Firely Server Ingest is mainly built using libraries from Microsoft .Net Core and ASP.NET Core, along with a limited list of other libraries. This is the full list of direct depencies that Firely Server Ingest has on other libraries, along with their licenses.
+Firely Server Ingest is mainly built using libraries from Microsoft .Net Core and ASP.NET Core, along with a limited list of other libraries. This is the full list of direct dependencies that Firely Server Ingest has on other libraries, along with their licenses.
 
 This list uses the NuGet package names (or prefixes of them) so you can easily lookup further details of those packages on `NuGet.org <https://www.nuget.org>`_ if needed.
 

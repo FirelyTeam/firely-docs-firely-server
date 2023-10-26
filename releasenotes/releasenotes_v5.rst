@@ -41,6 +41,7 @@ Configuration
 ^^^^^^^^^^^^^
 #. Firely Server now allows for a custom location of configuration files to be set. See :ref:`configure_settings_path`.
 #. When the `AllowedProfiles` setting is enabled, Firely Server will not allow non-profiled resources to be created or updated. This affects internally created AuditEvent and Provenance resources. For FHIR R4, Firely Server now uses for all AuditEvents IHE BALP meta.profile annotations. See :ref:`feature_prevalidation` for more information.
+#. The "Vonk.Smart" plugin and the "Vonk.Plugin.SoFv2" plugin can now be used interchangeably in the pipeline options. Both plugins now share the same functionality.
 
 .. _vonk_releasenotes_5_3_0:
 

@@ -67,6 +67,9 @@ You can further adjust PubSub in the PubSub section of the `appsettings.instance
         }
     },
 
+.. note::
+  Enabling ResourceChangeNotifications requires one-time DB configuration to enable changes tracking. See :ref:`SQL Server Tracking Initialization<pubsub_sql_tracking_init>` for the instructions.
+
 Message types and formats
 -------------------------
 
@@ -487,6 +490,57 @@ If enabled, Firely Server can also publish ``ResourcesChangedLightEvent`` messag
 
   * ``reference`` - A reference to the resource for which the change is communicated
   * ``changeType`` - The kind of change that was made, either a ``create``, ``update``, or ``delete``
+
+
+Database Tracking Initialization
+--------------------------------
+
+.. _pubsub_sql_tracking_init:
+
+SQL Server
+^^^^^^^^^^
+
+If you want to enable publishing notifications whenever resources get changed in Firely Server and you use SQL Server, some initial configuration is required to enable tracking of changes in the DB. This can be done automatically by Firely Server or manually.
+
+**Automatic initialization**
+
+If you want Firely Server to do that configuration for you, based on your settings:
+
+.. code-block::
+
+  {
+    "SqlDbOptions": {
+        "ConnectionString": "...",
+        "AutoUpdateDatabase": true,
+        "AutoUpdateConnectionString" : "..."
+    },
+    ...
+  }
+
+* The user mentioned in ``ConnectionString`` needs to have enough permissions to ``ALTER DATABASE``, or
+* ``AutoUpdateDatabase`` is set to ``true`` and ``AutoUpdateConnectionString`` user can ``ALTER DATABASE``.
+
+**Manual initialization**
+
+Alternatively, you can initialize the tracking manually using the following script:
+
+.. code-block::
+
+  USE %YOUR_DB_NAME%
+
+  ALTER DATABASE %YOUR_DB_NAME%
+  SET CHANGE_TRACKING = ON  
+  (CHANGE_RETENTION = 2 DAYS, AUTO_CLEANUP = ON)
+
+  ALTER TABLE vonk.entry 
+  ENABLE CHANGE_TRACKING
+
+  CREATE TABLE vonk.ctdata
+  (
+    syncversion bigint
+  )
+
+
 
 Logging
 -------

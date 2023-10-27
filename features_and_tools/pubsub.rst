@@ -37,7 +37,7 @@ You can enable PubSub by including the plugin into the pipeline options of the F
             "Path": "/",
             "Include": [
                 ...
-                "Vonk.Plugins.PubSub"
+                "Vonk.Plugin.PubSub"
                 ]
             }
         ]

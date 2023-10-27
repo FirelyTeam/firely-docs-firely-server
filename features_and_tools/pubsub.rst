@@ -13,20 +13,20 @@ Using PubSub might provide several advantages:
 * If Firely Server or any of the other applications communicating with it is down, the messages will aggregate in the message broker and get processed as soon as the service is up again.
 
 .. attention::
-  Correct configuration and maintenance of the message broker is not part of the service provided by Firely. We strongly advice to consider this set-up carefully in order to prevent data loss.
+  Correct configuration and maintenance of the message broker is not part of the service provided by Firely. We strongly advise you to consider this setup carefully in order to prevent data loss.
 
 .. note::
   PubSub currently supports only RabbitMQ. AzureServiceBus support is coming later.
 
 .. note::
-  PubSub can be tested using the evaluation license for Firely Server. It is also included in the enterprise license for Firely Server.
+  PubSub can be tested using the evaluation license for Firely Server. It is also included in the enterprise license for Firely Server. Your license allows the use of PubSub if "http://fire.ly/vonk/plugins/pubsub" is included in the plugins list of the license file.
 
 .. _pubsub_configuration:
 
 Configuration
 -------------
 
-You can enable PubSub by including the plugin into the pipeline options of the Firely Server `appsettings.instance.json` file:
+You can enable PubSub by including the plugin in the pipeline options of the Firely Server `appsettings.instance.json` file:
 
 .. code-block::
 
@@ -63,21 +63,21 @@ You can further adjust PubSub in the PubSub section of the `appsettings.instance
             "SendLightEvents": false, // If enabled, FS will send out events on changes. These events will not contain the complete resource
             "SendFullEvents": false, // If enabled, FS will send out events on changes. These events will contain the complete resource
             "PollingIntervalSeconds": 5, // How often Firely Server will be polling the DB for changes
-            "MaxPublishBatchSize": 1000 // The maximum amount of resources changes that can be sent in a single message
+            "MaxPublishBatchSize": 1000 // The maximum amount of resource changes that can be sent in a single message
         }
     },
 
 Message types and formats
 -------------------------
 
-To establish communication between Firely Server and other applications the parties must share the same contract. Every message in PubSub contains data which can logically be split into two groups: an envelope and the actual payload. This section describes both parts.
+To establish communication between Firely Server and other applications the parties must share the same contract. Every message in PubSub contains data that can logically be split into two groups: an envelope and the actual payload. This section describes both parts.
 
-Message envelope
+Message Envelope
 ^^^^^^^^^^^^^^^^
 
 Firely Server uses a framework called MassTransit to interact with a message broker. If you want to integrate with Firely Server using PubSub, it is important that your messages are compatible with MassTransit. You can achieve this either by using a MassTransit library for your programming language (available for .NET) or by making sure the messages your application sends and consumes use the same schema as messages created by MassTransit.
 
-MassTransit envelops original domain-specific message payload and adds extra service information required for proper routing of messages and some other helpful features.
+MassTransit envelops the original domain-specific message payload and adds extra service information required for the proper routing of messages and some other helpful features.
 
 For additional documentation on enveloping, please refer to the `MassTransit documentation page <https://masstransit.io/documentation/concepts/messages#message-headers>`_.
 
@@ -226,7 +226,7 @@ Note that this message should only contain one operation per resource (so per re
 
 
 
-  If Firely Server encountered errors when processing an ``ExecuteStorePlan`` message, it will respond with the result of this processing by sending an ``ExecuteStorePlanResponse`` message. This message will contain a list of ``StorePlanResultItems``, each containing the following fields:
+  If Firely Server encounters errors when processing an ``ExecuteStorePlan`` message, it will respond with the result of this processing by sending an ``ExecuteStorePlanResponse`` message. This message will contain a list of ``StorePlanResultItems``, each containing the following fields:
 
   **Metadata**
 

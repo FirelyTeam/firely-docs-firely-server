@@ -492,15 +492,15 @@ If enabled, Firely Server can also publish ``ResourcesChangedLightEvent`` messag
   * ``changeType`` - The kind of change that was made, either a ``create``, ``update``, or ``delete``
 
 
-Database tracking initialization
------------------------
+Database Tracking Initialization
+--------------------------------
 
 .. _pubsub_sql_tracking_init:
 
 SQL Server
 ^^^^^^^^^^
 
-If you want to enable publishing notifications whenever resources get changed in Firely Server and you use SQL Server, some initial configuration is required. This can be done automatically by Firely Server or manually.
+If you want to enable publishing notifications whenever resources get changed in Firely Server and you use SQL Server, some initial configuration is required to enable tracking of changes in the DB. This can be done automatically by Firely Server or manually.
 
 **Automatic initialization**
 
@@ -517,7 +517,7 @@ If you want Firely Server to do that configuration for you, based on your settin
     ...
   }
 
-* The user mentioned in ``ConnectionString`` has enough permissions to ``ALTER DATABASE``, or
+* The user mentioned in ``ConnectionString`` needs to have enough permissions to ``ALTER DATABASE``, or
 * ``AutoUpdateDatabase`` is set to ``true`` and ``AutoUpdateConnectionString`` user can ``ALTER DATABASE``.
 
 **Manual initialization**

@@ -571,6 +571,8 @@ Alternatively, you can initialize the tracking manually using the following scri
     syncversion bigint
   )
 
+  INSERT INTO vonk.ctdata (SYNCVERSION) VALUES (NULL)
+
 
 
 Logging

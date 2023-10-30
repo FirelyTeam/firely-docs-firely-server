@@ -1,9 +1,9 @@
 .. _firely_auth_endpoints:
 
-Firely Auth Endpoints
-=====================
+Available endpoints
+===================
 
-Firely Auth provides a endpoints for a variety of different operations related to the management of OAuth clients and tokens.
+Firely Auth provides endpoints for a variety of different operations related to the management of OAuth clients and tokens.
 The following section describes the REST API for these endpoints and summaries the intention of these interactions. For more details please refer to the corresponding RFCs.
 
 OpenID Configuration
@@ -26,7 +26,7 @@ Introspection endpoint
 ----------------------
 
 It is not uncommon that OAuth 2.0 clients do not contain functionality for checking the validity of a provided token, especially if the client is a webclient with reduced support for cryptographic libraries.
-Firely Auth provides an token introspection endpoint conforming to `RFC7662 <https://www.rfc-editor.org/rfc/rfc7662>`_ enabling to  to determine the active state token and the meta-information about a token.
+Firely Auth provides an token introspection endpoint conforming to `RFC7662 <https://www.rfc-editor.org/rfc/rfc7662>`_ enabling clients to determine the validity and metadata of the token.
 This endpoint is actively used by Firely Server in case reference tokens are being provided by a FHIR REST API client.
 
 The introspection endpoint can be access via an HTTP POST request and is protected with the secret provided in the :ref:`firely_auth_settings_tokenintro` setting. The token to be inspected can be provided via the HTTP request body via x-www-urlencoded parameters.
@@ -116,3 +116,4 @@ Known Limitations
 -----------------
 
 * In Firely Auth no Backchannel Authentication Endpoint is available, therefore Client Initiated Backchannel Authentication (CIBA) requests are not supported. For more information, see `Duende Documentation - Client Initiated Backchannel Authentication (CIBA) <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/ciba/>`_.
+* A Device Authorization Flow is not supported by SMART on FHIR. Therefore it is not available in Firely Auth. For more information, see `Duende Documentation - Device Authorization Endpoint <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/device_authorization/>`_.

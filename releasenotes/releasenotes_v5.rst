@@ -8,6 +8,40 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_5_4_0:
+
+Release 5.4.0, October 26th, 2023
+---------------------------------
+
+Features
+^^^^^^^^
+#. Firely Server can now interact asynchronously with a message broker (like RabbitMq or Azure Service Bus) using PubSub plugin. Resources can be ingested into Firely Server using a Firely Server-specific message. Additionally, all changes within the Firely Server database are broadcasted to the message bus. For more details, see :ref:`PubSub`.
+#. Improved handling of $lastN where multiple Observations result in a tie based on their respective effective times.
+#. $lastN now uses a case-sensitive comparison for text-only Observations.
+#. $lastN now includes multi-codes in its grouping.
+#. Added documentation regarding MongoDB security best-practices. See :ref:`configure_mongodb_security`.
+#. Added support for MongoDB as a Serilog sink. See :ref:`configure_log_sinks`.
+#. Compartment-wide searches can now be executed on a system level.
+
+Fixes
+^^^^^
+#. Fixed an internal server where when trying to use an invalid target within a patch operation.
+
+Security
+^^^^^^^^
+
+#. Updated the version of the base docker image from Alpine 3.14 to Alpine 3.18.
+#. Introduced a setting ``SendServerHeader`` in the ``Hosting`` section to suppress the network service banner. By default, it is set to ``false``, so the Kestrel ``Server`` header will be removed in the response of a request.
+
+   .. note::
+
+     The setting ``SendServerHeader`` is applied only for Kestrel. If Firely Server is hosted differently, in IIS for example, and you want to remove the ``Server`` header, you need to handle it by yourself.
+
+Configuration
+^^^^^^^^^^^^^
+#. Firely Server now allows for a custom location of configuration files to be set. See :ref:`configure_settings_path`.
+#. When the `AllowedProfiles` setting is enabled, Firely Server will not allow non-profiled resources to be created or updated. This affects internally created AuditEvent and Provenance resources. For FHIR R4, Firely Server now uses for all AuditEvents IHE BALP meta.profile annotations. See :ref:`feature_prevalidation` for more information.
+#. The "Vonk.Smart" plugin and the "Vonk.Plugin.SoFv2" plugin can now be used interchangeably in the pipeline options. Both plugins now share the same functionality.
 
 .. _vonk_releasenotes_5_3_0:
 

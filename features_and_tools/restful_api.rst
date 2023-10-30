@@ -17,8 +17,7 @@ Create, read, update, patch, delete
 -----------------------------------
 
 These five operations to manage the contents of the Firely Server, commonly referenced by the acronym CRUD, are implemented as per the specification. Patch is implemented as `FHIR Patch <http://hl7.org/fhir/fhirpatch.html>`_, as this is the most versatile one.
-This includes version-read and the conditional variations. 
-Only a few limitations apply.
+A few limitations apply.
 
 Firely Server enables create-on-update: If you request an update and no resource exists for the given id, the provided resource will be created under the provided id.
 
@@ -55,7 +54,7 @@ Limitations on CRUD
 
 #. It is not possible to bring a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload. This operation will result in an ``HTTP 409 Conflict`` error. As a workaround, it is possible to create a new resource (with a new logical id) by omitting the ``id`` field in the payload.
 #. Parameter ``_pretty`` is not yet supported.
-#. XML Patch and JSON Patch are not supported.
+#. XML Patch and JSON Patch, as well as version-read and conditional variations of FHIR Patch are not yet supported.
 
 .. _restful_versioning:
 
@@ -197,6 +196,8 @@ How is sort evaluated?
 * Token parameters are sorted only on their code element. The system element is ignored in the sorting.
 
 * Firely Server uses the default collation as configured on the database server. This collation defines the ordering of characters.
+ 
+* All elements of type ``date`` and ``Period`` are treated as being a ``Period`` for sorting. When sorting ascending, the ``start`` of the period will be used. Similarly, when sorting descending the ``end`` of the period will be used. When sorting on a search parameter that references multiple ``date`` and/or ``Period`` values, the minimum (for ascending) or maximum (for descending) of the combined values will be used.
 
 * Sorting on ``_score`` is not supported.
 

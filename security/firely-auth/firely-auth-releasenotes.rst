@@ -1,7 +1,7 @@
 .. _firely_auth_releasenotes:
 
-Firely Auth release notes
-=========================
+Release notes
+=============
 
 .. _firelyauth_releasenotes_3.2.0:
 

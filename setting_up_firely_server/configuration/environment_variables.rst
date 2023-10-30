@@ -139,6 +139,13 @@ When the 'ASPNETCORE_ENVIRONMENT' variable is set to development the call stack 
    
    ASPNETCORE_ENVIRONMENT=Development
 
+.. _customize_config_location:
+
+Customize the location of configuration files
+---------------------------------------------
+
+It is possible to change the default location of the ``*.instance.json`` configuration files by setting a reserved environment variable. See :ref:`configure_settings_path` for details.
+
 .. _configure_envvar_windows:
 
 Changing Environment Variables on Windows

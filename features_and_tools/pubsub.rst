@@ -157,7 +157,7 @@ Note that this message should only contain one operation per resource (so per re
       "headers": {
         "fhir-release": "R4"
       },
-      "responseAddress": "rabbitmq://rabbitmq-host/response2?temporary=true",
+      "responseAddress": "rabbitmq://rabbitmq-host/response-exchange?temporary=true",
       "message": {
         "instructions": [
             {
@@ -290,7 +290,7 @@ As opposed to the ``ExecuteStorePlanCommand``, which can only be used for create
       "headers": {
         "fhir-release": "R4"
       },
-      "responseAddress": "rabbitmq://rabbitmq-host/response2?temporary=true",
+      "responseAddress": "rabbitmq://rabbitmq-host/response-exchange?temporary=true",
       "message": {
         "instructions": [
           {
@@ -492,6 +492,37 @@ If enabled, Firely Server can also publish ``ResourcesChangedLightEvent`` messag
   * ``changeType`` - The kind of change that was made, either a ``create``, ``update``, or ``delete``
 
 
+Message Routing
+---------------
+
+RabbitMQ
+^^^^^^^^
+
+All applications involved in message exchange are connected to the same message broker. Hypothetically, every party can publish and consume messages of any type. However, in practice, it is far more common that applications are only interested in consuming specific types of messages. Scenarios covered by PubSub are no exception. RabbitMQ allows for flexible configuration of message routing by decoupling message producers from message consumers using primitives such as `exchanges` and `queues`. You can read more about them in the `RabbitMQ documentation <https://www.rabbitmq.com/tutorials/amqp-concepts.html#amqp-model>`_.
+
+**Events**
+
+If you want to subscribe to events from Firely Server, your application will need to create a queue bound to either or both of these exchanges:
+
+* ``Firely.Server.Contracts.Messages.V1:ResourcesChangedEvent``
+* ``Firely.Server.Contracts.Messages.V1:ResourcesChangedLightEvent``
+
+**Commands**
+
+Likewise, to send a command to Firely Server, your application needs to publish it to the corresponding exchange:
+
+* ``Firely.Server.Contracts.Messages.V1:ExecuteStorePlanCommand``
+* ``Firely.Server.Contracts.Messages.V1:RetrievePlanCommand``
+
+If you are interested in the result of a command execution, your application should:
+
+1. Create an exchange for capturing the response
+2. Bind the exchange to the incoming queue of your application
+3. Specify the exchange name in the ``responseAddress`` header of the command message (e.g. ``rabbitmq://rabbitmq-host/response-exchange-name?temporary=true`` where ``response-exchange-name`` is a name of your exchange)
+4. Send the command
+5. Listen for the response published by Firey Server
+
+
 Database Tracking Initialization
 --------------------------------
 
@@ -539,6 +570,8 @@ Alternatively, you can initialize the tracking manually using the following scri
   (
     syncversion bigint
   )
+
+  INSERT INTO vonk.ctdata (SYNCVERSION) VALUES (NULL)
 
 
 

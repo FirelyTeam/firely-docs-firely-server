@@ -226,8 +226,6 @@ Supported arguments
 +----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--indexBuffer <indexBuffer>``                          | workflow/indexBufferSize            |          | Number of resources to buffer for indexing the search parameters                                                                                    |
 +----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--maxActiveRes <maxActiveRes>``                        | workflow/maxActiveResources         |          | Maximum number of actively processed resources. Reduce the value to reduce memory consumption                                                       |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--version``                                            |                                     |          | Show version information                                                                                                                            |
 +----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``-?``, ``-h``, ``--help``                               |                                     |          | Show help and usage information                                                                                                                     |
@@ -392,7 +390,8 @@ Release 2.2.0, June 20th, 2023
 Release 2.1.0, March 9th, 2023
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* Fix: Eliminated deadlocks in FSI when writing data in parallel
+* Fix: Eliminated deadlocks in FSI when writing data in parallel.
+* Settings: The setting ``maxActiveResources`` and the related CLI argument ``--maxActiveRes`` are no longer needed and have been removed.
 
 .. _fsi_releasenotes_2.0.1:
 

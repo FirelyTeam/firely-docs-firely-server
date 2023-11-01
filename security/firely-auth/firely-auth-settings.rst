@@ -13,7 +13,7 @@ Just like Firely Server itself, Firely Auth features a hierarchy of settings fil
 - ``appsettings.default.json`` - This comes with the binaries (and in the Docker container) and contains sensible defaults for most settings. 
   You can change this file, but it might accidentally be overwritten upon a new release. Instead, put your settings in one of the following places.
 - ``appsettings.instance.json`` - This file is meant to override settings for this instance of Firely Auth. You can create this file yourself by copying (parts of) ``appsettings.default.json``.
-- Environment variables with the prefix ``FirelyAuth_`` - Use environment variables to more easily configure settings from CI/CD pipelines, secure vaults etc.
+- Environment variables with the prefix ``FIRELY_AUTH_`` - Use environment variables to more easily configure settings from CI/CD pipelines, secure vaults etc.
 
 Unsure how to name your variables? This works the same as with :ref:`configure_envvar`.
 

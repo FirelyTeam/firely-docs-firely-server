@@ -3,6 +3,16 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_3.3.0-rc2:
+
+Release 3.3.0-rc2, November XY, 2023
+------------------------------------
+
+Feature
+^^^^^^^
+
+#. You can restrict a :term:`client` to specific FHIR resource types, using the setting ``AllowedResourceTypes`` in the :ref:`firely_auth_settings_clients`. If the client requests SMART scopes for other resource types, the request will be denied.
+
 .. _firelyauth_releasenotes_3.2.0:
 
 Release 3.2.0, June 20th, 2023

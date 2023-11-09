@@ -155,7 +155,8 @@ For more background on JSON Web Keys see `RFC 7517 <see https://tools.ietf.org/h
 Token introspection
 ^^^^^^^^^^^^^^^^^^^
 
-When using a :term:`reference token`, Firely Server must verify the token with Firely Auth. See :ref:`firely_auth_settings_server`.
+When using a :term:`reference token`, Firely Server must verify the token with Firely Auth. See :ref:`firely_auth_settings_server`. 
+Whether to use reference token or JWT's is configured per client in :ref:`firely_auth_settings_clients`, with the ``AccessTokenType`` setting.
 
 .. _firely_auth_settings_userstore:
 
@@ -235,6 +236,7 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               "AllowedSmartLegacyActions": [],
               "AllowedSmartActions": ["c", "r", "u", "d", "s"],
               "AllowedSmartSubjects": [ "patient", "user", "system"],
+              "AllowedResourceTypes": ["Patient", "Observation", "Claim"],
               "AlwaysIncludeUserClaimsInIdToken": true,
               "RequirePkce": false,
               "AllowOfflineAccess": false,
@@ -268,6 +270,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``AllowedSmartLegacyActions``: Firely Auth can also still support SMART on FHIR v1, where the actions are ``read`` and ``write``.
 - ``AllowedSmartActions``: Actions on resources that can be granted in SMART on FHIR v2: ``c``, ``r``, ``u``, ``d`` and/or ``s``, see `SMART on FHIR V2 scopes`_
 - ``AllowedSmartSubjects``: Categories of 'subjects' to which resource actions can be granted. Can be ``system``, ``user`` and/or ``patient``
+- ``AllowedResourceTypes``: The client can only request SMART scopes for these resource types. To allow all resource types, do not use ``["*"]"`` but just leave the array empty.
 - ``AlwaysIncludeUserClaimsInIdToken``: true / false: When requesting both an id token and access token, should the user claims always be added to the id token instead of requiring the client to use the userinfo endpoint. Default is false
 - ``Require PKCE``: true / false - see :term:`PKCE`. true is recommended for a :term:`public client` and can offer an extra layer of security for :term:`confidential client`.
 - ``AllowOfflineAccess``: true / false - Whether app can request refresh tokens while the user is online, see `SMART on FHIR refresh tokens`_

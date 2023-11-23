@@ -347,6 +347,20 @@ Release notes
         dotnet tool update --global Firely.Server.Ingest
 
 
+.. _fsi_releasenotes_2.3.0:
+
+
+Release 2.3.0, November 23rd, 2023 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* Feature: the mode ``--update-existing-resources onlyIfNewer`` is now supported for MongoDB.
+* Feature: ``Serilog.Sinks.MongoDB`` was added to the list of supported log sinks.
+* Fix: the ``SqlClient`` dependency package has been updated to version v5.1.1 to address the vulnerability: CVE-2022-41064.
+* Fix: the rare exception ``System.InvalidOperationException: Cannot change state from Skipped to Error`` does not get thrown anymore.
+* Internal: the way of handling command line arguments has been refactored.
+
+
+
 .. _fsi_releasenotes_2.2.1:
 
 

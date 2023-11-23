@@ -350,8 +350,8 @@ Release notes
 .. _fsi_releasenotes_2.3.0:
 
 
-Release 2.3.0, <TBD>, 2023 <TBD> <TBD> <TBD> <TBD> <TBD> <TBD> <TBD> <TBD> <TBD>
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Release 2.3.0, November 23rd, 2023 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 * Feature: the mode ``--update-existing-resources onlyIfNewer`` is now supported for MongoDB.
 * Feature: ``Serilog.Sinks.MongoDB`` was added to the list of supported log sinks.

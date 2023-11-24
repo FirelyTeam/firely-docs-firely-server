@@ -594,3 +594,27 @@ To enable logging for PubSub, you can add the PubSub plugin to the override sect
     },
     ...
   }
+
+
+Clients
+-------
+
+The recommended way for accessing the PubSub API from Firely Server is to use the `Firely Server Contract nuget package <https://www.nuget.org/packages/Firely.Server.Contracts>`_. 
+This package contains the class definitions for all messages and as well as a client (``Firely.Server.Contracts.MassTransit.PubSubClient``).
+
+Alternatively, you can use other platforms. In that case, you need to make sure that the messages you send and receive are compatible with the messages sent by Firely Server. 
+See the `MassTransit documentation page <https://masstransit.io/documentation/concepts/messages#message-headers>`_ for more information on how to achieve that.
+
+We provide sample code to connect to the pubsub API in the `firely-pubsub-sample Github Repository <https://github.com/FirelyTeam/firely-pubsub-sample>`_:
+
+* A C# client using the `Firely Server Contract nuget package <https://www.nuget.org/packages/Firely.Server.Contracts>`_ in a ``.Net`` app, 
+* A typescript client using the `masstransit-rabbitmq npm package <https://www.npmjs.com/package/masstransit-rabbitmq>`_  in a ``Node.js`` app,
+* A postman collection displaying the raw queries to setup the infrastrcuture and send commands and receive events.
+
+.. note::
+  Before a client start consuming ``ResourceChangedEvent`` or ``ResourceLightChangedEvent``, it needs to create a queue and bind it the RabbitMq Exchange corresponding to the message type,
+  ``Firely.Server.Contracts.Messages.V1:ResourcesChangedEvent`` and ``Firely.Server.Contracts.Messages.V1:ResourcesChangedLightEvent`` respectively. 
+  Currently, Firely Server will setup those exchanges only once the first change in the database was detected.
+  If using the `MassTransit RabbitMq nuget package <https://www.nuget.org/packages/MassTransit.RabbitMQ>`_, it will take care of setting up the exchange if not yet present.
+  However, if not using this package, the client has to either take the responsibility of creating the correct exchange or wait until the exchanges are created, resulting in the loss of the first message.
+  

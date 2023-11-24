@@ -355,16 +355,16 @@ Release 2.2.1, September 19th, 2023
 
 * Added support for running FSI without the internet connection (see :ref:`tool_fsi_packages_cache`)
 * This release includes a new setting for handling the conversion of absolute to relative references: ``absoluteUrlConversion``. This setting replaces the old ``convertAbsoluteUrlsToRelative`` setting. With this setting you can specify the FHIR Path of the elements that you would like to see converted. See also the ``urlConvBases:index url`` and ``urlConvElems:index FHIRPath`` arguments in the :ref:`FSI_supported_arguments` section for more information.
-::
-
-  "absoluteUrlConversion": {
-    "baseEndpoints": [
-      // "http://localhost:4080/R4"
-    ],
-    "elements": [
-      "DocumentReference.content.attachment.url"
-    ]
-  }
+  ::
+  
+    "absoluteUrlConversion": {
+      "baseEndpoints": [
+        // "http://localhost:4080/R4"
+      ],
+      "elements": [
+        "DocumentReference.content.attachment.url"
+      ]
+    }
 
 .. _fsi_releasenotes_1.4.1:
 

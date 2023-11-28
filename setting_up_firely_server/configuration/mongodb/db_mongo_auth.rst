@@ -305,8 +305,10 @@ Once access control is enabled, you have to configure the user and password in t
 
 .. note:: 
 
-    Currently, only a single connectionstring can be configured for MongoDB. The roles and users above differentiate between the authorization needed to perform an automatic upgrade, and the authorization needed for regular operation.
-    You may choose to use a connectionstring with the ``fs_data_upgrade_user`` only when performing an upgrade, and afterwards reset it to the ``fs_data_user``.
+    Currently, there is an option to configure two connectionstring for MongoDB both Data database and Administration database. 
+    The roles and users above differentiate between the authorization needed to perform an automatic upgrade, and the authorization needed for regular operation.
+    You may use a connectionstring with the ``fs_data_upgrade_user`` in `AutoUpdateConnectionString` property that will be used only when performing an upgrade, and `ConnectionString` with the ``fs_data_user`` for normal use.
+    If `AutoUpdateConnectionString` is not set, the `ConnectionString` will be used for both.
 
 #. Data database: ``mongodb://fs_data_upgrade_user:fs_data_upgrade_secret@localhost/fs_data?authSource=fs_data``
 #. Administration database: ``mongodb://fs_admin_upgrade_user:fs_admin_upgrade_secret@localhost/fs_admin?authSource=fs_admin``

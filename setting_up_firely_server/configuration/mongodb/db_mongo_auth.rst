@@ -304,11 +304,16 @@ ConnectionStrings
 Once access control is enabled, you have to configure the user and password in the connectionstring. The connectionstrings below serve as a template, using ``localhost`` as the host. Replace this with the correct hostname for your environment.
 
 .. note:: 
-
-    Currently, there is an option to configure two connectionstring for MongoDB both Data database and Administration database. 
-    The roles and users above differentiate between the authorization needed to perform an automatic upgrade, and the authorization needed for regular operation.
-    You may use a connectionstring with the ``fs_data_upgrade_user`` in `AutoUpdateConnectionString` property that will be used only when performing an upgrade, and `ConnectionString` with the ``fs_data_user`` for normal use.
-    If `AutoUpdateConnectionString` is not set, the `ConnectionString` will be used for both.
+    The roles and users above differentiate between the authorization needed to perform an automatic upgrade, and the authorization needed for regular operation of Firely Server. It is possible to configure separate connection strings for these two roles and this can be done for both the administration database and the regular repository database.
+    You may use the `fs_data_upgrade_user` in the `AutoUpdateConnectionString` field that will be used only when performing an upgrade of the MongoDb schemas, and the `fs_data_user` in the regular `ConnectionString` field for normal use. If `AutoUpdateConnectionString` is not set, the `ConnectionString` will be used in both cases.
+    .. code-block::json
+    "MongoDbOptions": {  
+        "ConnectionString": "mongodb://fs_data_user:fs_data_secret@localhost:27017/vonkdata?authSource=fs_data",  
+        "EntryCollection": "vonkentries",  
+        "MaxLogLine": 300,  
+        "AutoUpdateConnectionString" : "mongodb://fs_data_upgrade_user:fs_data_upgrade_secret@localhost:27017/vonkdata?authSource=fs_data"
+    }
+    // same for administration database
 
 #. Data database: ``mongodb://fs_data_upgrade_user:fs_data_upgrade_secret@localhost/fs_data?authSource=fs_data``
 #. Administration database: ``mongodb://fs_admin_upgrade_user:fs_admin_upgrade_secret@localhost/fs_admin?authSource=fs_admin``

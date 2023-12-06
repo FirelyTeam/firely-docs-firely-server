@@ -8,6 +8,15 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_5_5_0:
+
+Release 5.5.0, <TBD>
+--------------------
+
+Miscellaneous
+^^^^^^^^^^^^^
+* :ref:`Firely Server Ingest <tool_fsi>` release cycle has been synchronized with the Firely Server release cycle. As of this version, the FSI changes will be captured on this page.
+
 .. _vonk_releasenotes_5_4_0:
 
 Release 5.4.0, October 26th, 2023

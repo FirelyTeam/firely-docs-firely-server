@@ -276,9 +276,7 @@ Enable access control on MongoDB
 --------------------------------
 
 Access control is enabled in different ways depending on the hosting platform. See the `MongoDB documentation <https://www.mongodb.com/docs/manual/tutorial/enable-authentication/>`_ on this.
-
 In short, for MongoDB Atlas access control is mandatory and cannot be disabled. For MongoDB Enterprise or Community it can be enabled by the paramater ``--auth`` to the ``mongod`` command.
-
 When running it in a Docker container, you can add this parameter by changing the ``command`` in your compose.yaml::
 
     services:

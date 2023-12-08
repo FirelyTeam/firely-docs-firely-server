@@ -17,7 +17,7 @@ Just like Firely Server itself, Firely Auth features a hierarchy of settings fil
 
 Unsure how to name your variables? This works the same as with :ref:`configure_envvar`.
 
-Providing a folder for your settings files also works the same as with :ref:`configure_settings_path`, but then using the environment variable ``FIRELY_AUTH_PATH_TO_SETTINGS``.
+If you are working with deployments on Azure or AWS, it is necessary to load any configuration in a separate folder in the root of Firely Auth. Providing a folder for your settings files also works the same as with :ref:`configure_settings_path`, but then using the environment variable ``FIRELY_AUTH_PATH_TO_SETTINGS``.
 
 Sections
 --------

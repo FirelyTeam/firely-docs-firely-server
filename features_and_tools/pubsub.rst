@@ -559,7 +559,10 @@ Upon startup of Firely Server, it will connect with Azure Service Bus and automa
 
 Again, notice the ``~`` as opposed to the colon in the RabbitMQ exchanges. These topics wil already have a ``FirelyServer`` subscription, which is bound to the ``firelyserver`` queue mentioned earlier.
 
-To send a command to Firely Server, your application would need to send it to the corresponding topics mentioned above.
+To send a command to Firely Server, your application would need to send it to the corresponding topics mentioned above, however rather than using the ``~`` in the topic, you can use a forward slash for making the connection:
+
+* ``Firely.Server.Contracts.Messages.V1/ExecuteStorePlanCommand``
+* ``Firely.Server.Contracts.Messages.V1/RetrievePlanCommand``
 
 **Results**
 

@@ -548,7 +548,13 @@ If you enabled ``ResourceChangeNotifications``, the following topics will automa
 * ``Firely.Server.Contracts.Messages.V1~ResourcesChangedEvent``
 * ``Firely.Server.Contracts.Messages.V1~ResourcesChangedLightEvent``
 
-Notice the ``~`` as opposed to the colon in the RabbitMQ exchanges. These topics will not have any subscriptions yet, so your application would need to create subscriptions for these topics. You then have the option to bind this subscription to a queue and connect your application to this queue, or you can retrieve the message directly from the subscription. With the latter option, it is possible to create multiple subscriptions to which multiple clients can connect for retrieving the message. If the subscription is bound to a queue, only one client would be able to retrieve the message via this queue.
+Notice the ``~`` as opposed to the colon in the RabbitMQ exchanges. These topics will not have any subscriptions yet, so your application would need to create subscriptions for these topics. You then have the option to bind this subscription to a queue and connect your application to this queue, or you can retrieve the message directly from the subscription. 
+With the latter option, it is possible to create multiple subscriptions to which multiple clients can connect for retrieving the message. If the subscription is bound to a queue, only one client would be able to retrieve the message via this queue.
+
+Note that for retrieving these events it is best to replace the ``~`` in the topic with a forward slash, so when specifying the topic in your request you can use:
+
+* ``Firely.Server.Contracts.Messages.V1/ResourcesChangedEvent``
+* ``Firely.Server.Contracts.Messages.V1/ResourcesChangedLightEvent``
 
 **Commands**
 

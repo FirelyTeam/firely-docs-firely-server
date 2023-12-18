@@ -7,6 +7,26 @@ Current Firely Server release notes (v5.x)
     For information on how to upgrade, please have a look at our documentation on :ref:`upgrade`. You can download the binaries of the latest version from `this site <https://downloads.fire.ly/firely-server/versions/>`_, or pull the latest docker image::
         
         docker pull firely/server:latest
+.. _vonk_releasenotes_5_5_0:
+
+Release 5.5.0, <put  date>, 2024
+---------------------------------
+
+Features
+^^^^^^^^
+#. Firely Server can now produce No-Op Outcome on resource update. 
+
+Fixes
+^^^^^
+#. ---
+
+Security
+^^^^^^^^
+#. ---
+
+Configuration
+^^^^^^^^^^^^^
+#. UpdateNoOp plugin have it's own configuration section. See :ref:`restful_api` for more details.
 
 .. _vonk_releasenotes_5_4_0:
 

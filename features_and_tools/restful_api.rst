@@ -23,6 +23,10 @@ Firely Server enables create-on-update: If you request an update and no resource
 
 Firely Server can reject a resource based on :ref:`feature_prevalidation`.
 
+Update with no changes
+Updating a resource with the same content that is already present on a server will produce a "No-Op" outcome. The server will respond successfully, but no changes will actually be stored.
+If you want to know whether your operation was a No-Op or not, you can examine the OperationOutcome resource that is returned by the server. You may need to set the Prefer Header in order to instruct the server to return an outcome.
+
 .. _restful_crud_configuration:
 
 Configuration
@@ -40,6 +44,32 @@ If you allow for multiple deletes, you have to specify a maximum number of resou
             "ConditionalDeleteMaxItems": 1
         }
     }
+
+Update with no changes requires `UpdateNoOp` plugin to be enabled. 
+The plugin can be configured to ignore additional meta elements in the resource. 
+By default, when plugin is enabled the following meta elements are ignored during resource comparison: ``versionId``, ``lastUpdated`` and ``source`` You can add additional meta elements to be ignored
+We also recommended to add ``security``, ``tag`` and ``profile`` to be ignored, but it depends on specific usage of meta.
+::
+   "PipelineOptions": {
+   "PluginDirectory": "./plugins",
+   "Branches": [
+   {
+      "Path": "/",
+      "Include": [
+         "Vonk.Plugin.UpdateNoOp.UpdateNoOpConfiguration",
+         "Vonk.Plugin.UpdateNoOp.PatchNoOpConfiguration",
+         "Vonk.Plugin.UpdateNoOp.ConditionalUpdateNoOpConfiguration",
+      ]
+   }
+  ]
+
+   "UpdateNoOp": {
+      "AdditionalMetaToBeIgnored": [
+         "security",
+         "tag",
+         "profile"
+      ]
+   }
 
 .. _restful_crud_limitations:
 

@@ -8,6 +8,15 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_5_5_0:
+
+Release 5.5.0, <TBD>
+--------------------
+
+Database
+^^^^^^^^
+#. For **MongoDB** we added an index, ``ix_cnt_id``. The migration adding the index is executed automatically on startup.
+
 .. _vonk_releasenotes_5_4_0:
 
 Release 5.4.0, October 26th, 2023

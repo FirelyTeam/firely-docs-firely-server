@@ -23,10 +23,16 @@ Firely Server enables create-on-update: If you request an update and no resource
 
 Firely Server can reject a resource based on :ref:`feature_prevalidation`.
 
+.. _restful_noop:
 Update with no changes
 Updating a resource with the same content that is already present on a server will produce a "No-Op" outcome. The server will respond successfully, but no changes will actually be stored.
-If you want to know whether your operation was a No-Op or not, you can examine the OperationOutcome resource that is returned by the server. You may need to set the Prefer Header in order to instruct the server to return an outcome.
+If you want to know whether your operation was a No-Op or not, you can examine the OperationOutcome resource that is returned by the server. You may need to set the Prefer Header in order to instruct the server to return an outcome. As in the example:
 
++---------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Prefer: return=minimal          | Do not include a response payload. This option minimizes the amount of data that is transferred and makes sense if you do not intent to inspect the response body. You can still tell whether an operation succeeded or not by examining the HTTP Status Code. |
+| Prefer: return=representation   | Include the stored FHIR resource as it was stored. This is the default.                                                                                                                                                                                        |
+| Prefer: return=OperationOutcome | Return an OperationOutcome resource containing information about what was performed. The OperationOutcome will generally contain a Storage Outcome Status Code.                                                                                                |
++---------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 .. _restful_crud_configuration:
 
 Configuration
@@ -48,7 +54,7 @@ If you allow for multiple deletes, you have to specify a maximum number of resou
 Update with no changes requires `UpdateNoOp` plugin to be enabled. 
 The plugin can be configured to ignore additional meta elements in the resource. 
 By default, when plugin is enabled the following meta elements are ignored during resource comparison: ``versionId``, ``lastUpdated`` and ``source`` You can add additional meta elements to be ignored
-We also recommended to add ``security``, ``tag`` and ``profile`` to be ignored, but it depends on specific usage of meta.
+You can also add ``security``, ``tag`` and ``profile`` or any other to be ignored, but it depends on specific usage of meta. See more on `FHIR article <https://www.hl7.org/fhir/resource.html#tag-updates>`_.
 ::
    "PipelineOptions": {
    "PluginDirectory": "./plugins",

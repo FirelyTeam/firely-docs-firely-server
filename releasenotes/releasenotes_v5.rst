@@ -26,7 +26,7 @@ Security
 
 Configuration
 ^^^^^^^^^^^^^
-#. UpdateNoOp plugin have it's own configuration section. See :ref:`restful_api` for more details.
+#. UpdateNoOp plugin have it's own configuration section. See :ref:`_restful_noop` for more details.
 
 .. _vonk_releasenotes_5_4_0:
 

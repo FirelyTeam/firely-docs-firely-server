@@ -28,9 +28,12 @@ Update with no changes
 Updating a resource with the same content that is already present on a server will produce a "No-Op" outcome. The server will respond successfully, but no changes will actually be stored.
 If you want to know whether your operation was a No-Op or not, you can examine the OperationOutcome resource that is returned by the server. You may need to set the Prefer Header in order to instruct the server to return an outcome. As in the example:
 
+.. _restful_prefer:
 +---------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Prefer: return=minimal          | Do not include a response payload. This option minimizes the amount of data that is transferred and makes sense if you do not intent to inspect the response body. You can still tell whether an operation succeeded or not by examining the HTTP Status Code. |
++---------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Prefer: return=representation   | Include the stored FHIR resource as it was stored. This is the default.                                                                                                                                                                                        |
++---------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Prefer: return=OperationOutcome | Return an OperationOutcome resource containing information about what was performed. The OperationOutcome will generally contain a Storage Outcome Status Code.                                                                                                |
 +---------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 .. _restful_crud_configuration:

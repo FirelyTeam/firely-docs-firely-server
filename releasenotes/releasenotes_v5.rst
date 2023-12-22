@@ -19,6 +19,11 @@ Database
 
 .. _vonk_releasenotes_5_4_0:
 
+Features
+^^^^^^^^
+
+#. Firely Server supports multi-tenancy by virtually separating resources for each tenant. See :ref:`feature_multitenancy` for details.
+
 Release 5.4.0, October 26th, 2023
 ---------------------------------
 

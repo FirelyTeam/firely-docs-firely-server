@@ -13,6 +13,10 @@ Current Firely Server release notes (v5.x)
 Release 5.5.0, <TBD>
 --------------------
 
+Miscellaneous
+^^^^^^^^^^^^^
+* :ref:`Firely Server Ingest <tool_fsi>` release cycle has been synchronized with the Firely Server release cycle. As of this version, the FSI changes will be captured on this page.
+
 Database
 ^^^^^^^^
 #. For **MongoDB** we added an index, ``ix_cnt_id``. The migration adding the index is executed automatically on startup.

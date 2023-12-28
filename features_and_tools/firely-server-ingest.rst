@@ -347,6 +347,15 @@ Release notes
         dotnet tool update --global Firely.Server.Ingest
 
 
+
+
+Release 5.5.0+
+^^^^^^^^^^^^^^
+
+The FSI release cycle has been synchronized with the Firely Server release cycle.
+Please refer to the :ref:`Firely Server release notes <vonk_releasenotes>` for the FSI change log.
+
+
 .. _fsi_releasenotes_2.3.0:
 
 

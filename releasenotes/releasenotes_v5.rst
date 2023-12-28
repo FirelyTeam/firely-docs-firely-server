@@ -17,7 +17,16 @@ Miscellaneous
 ^^^^^^^^^^^^^
 * :ref:`Firely Server Ingest <tool_fsi>` release cycle has been synchronized with the Firely Server release cycle. As of this version, the FSI changes will be captured on this page.
 
+Database
+^^^^^^^^
+#. For **MongoDB** we added an index, ``ix_cnt_id``. The migration adding the index is executed automatically on startup.
+
 .. _vonk_releasenotes_5_4_0:
+
+Features
+^^^^^^^^
+
+#. Firely Server supports multi-tenancy by virtually separating resources for each tenant. See :ref:`feature_multitenancy` for details.
 
 Release 5.4.0, October 26th, 2023
 ---------------------------------

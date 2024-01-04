@@ -246,6 +246,26 @@ Seq server::
 * Change ``serverUrl`` to the URL of your Seq server
 * ``restrictedToMinimumLevel``: as described for `Console`_.
 
+Elasticsearch
+^^^
+
+`Elasticsearch <https://www.elastic.co/elasticsearch>`_ is a search engine based on the Lucene library. It provides a distributed, multitenant-capable full-text search engine with an HTTP web interface and schema-free JSON documents.
+
+For the ``Elasticsearch`` sink, you can also specify arguments. One of them is the nodeUris for your
+Seq server::
+
+		"WriteTo": [
+			{
+  				"Name": "Elasticsearch",
+				"Args": {
+				"nodeUris": "http://localhost:9200"
+				}
+			}
+
+* Change ``nodeUris`` to the URL of your Elasticsearch node
+* ``restrictedToMinimumLevel``: as described for `Console`_.
+* More details can be found in sinks `Github repo <https://github.com/serilog-contrib/serilog-sinks-elasticsearch>`_.
+
 MongoDb
 ^^^^^^^
 

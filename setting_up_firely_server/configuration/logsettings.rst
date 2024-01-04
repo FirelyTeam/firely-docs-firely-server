@@ -258,7 +258,7 @@ Seq server::
 			{
   				"Name": "Elasticsearch",
 				"Args": {
-				"nodeUris": "http://localhost:9200"
+					"nodeUris": "http://localhost:9200"
 				}
 			}
 

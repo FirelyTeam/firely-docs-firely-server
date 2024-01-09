@@ -252,7 +252,7 @@ Elasticsearch
 `Elasticsearch <https://www.elastic.co/elasticsearch>`_ is a search engine based on the Lucene library. It provides a distributed, multitenant-capable full-text search engine with an HTTP web interface and schema-free JSON documents.
 
 For the ``Elasticsearch`` sink, you can also specify arguments. One of them is the nodeUris for your
-Seq server::
+Elasticsearch server::
 
 		"WriteTo": [
 			{

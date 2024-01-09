@@ -23,19 +23,6 @@ Firely Server enables create-on-update: If you request an update and no resource
 
 Firely Server can reject a resource based on :ref:`feature_prevalidation`.
 
-.. _restful_noop:
-Update with no changes
-Updating a resource with the same content that is already present on a server will produce a "No-Op" outcome. The server will respond successfully, but no changes will actually be stored.
-If you want to know whether your operation was a No-Op or not, you can examine the OperationOutcome resource that is returned by the server. You may need to set the Prefer Header in order to instruct the server to return an outcome. As in the example:
-
-.. _restful_prefer:
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Prefer: return=minimal          | Do not include a response payload. This option minimizes the amount of data that is transferred and makes sense if you do not intent to inspect the response body. You can still tell whether an operation succeeded or not by examining the HTTP Status Code. |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Prefer: return=representation   | Include the stored FHIR resource as it was stored. This is the default.                                                                                                                                                                                        |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Prefer: return=OperationOutcome | Return an OperationOutcome resource containing information about what was performed. The OperationOutcome will generally contain a Storage Outcome Status Code.                                                                                                |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 .. _restful_crud_configuration:
 
 Configuration
@@ -53,6 +40,33 @@ If you allow for multiple deletes, you have to specify a maximum number of resou
             "ConditionalDeleteMaxItems": 1
         }
     }
+
+.. _restful_crud_limitations:
+
+Limitations on CRUD
+^^^^^^^^^^^^^^^^^^^
+
+#. Simultaneous conditional creates and updates are not entirely transactional safe:
+   
+   * Two conditional updates may both result in a ``create``, although the result of one may be a match to the other.
+   * Two conditional creates may both succeed, although the result of one may be a match to the other.
+   * A conditional create and a simultaneous conditional update may both result in a ``create``, although the result of one may be a match to the other.
+
+#. It is not possible to bring a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload. This operation will result in an ``HTTP 409 Conflict`` error. As a workaround, it is possible to create a new resource (with a new logical id) by omitting the ``id`` field in the payload.
+#. Parameter ``_pretty`` is not yet supported.
+#. XML Patch and JSON Patch, as well as version-read and conditional variations of FHIR Patch are not yet supported.
+
+.. _restful_noop:
+Update with no changes 
+----------------------
+
+Updating a server resource with identical content to what it currently holds results in a "No-Op" (no operation) scenario. The server acknowledges the request without making any actual modifications. To determine if your action resulted in a No-Op, you can check the OperationOutcome resource provided by the server. To prompt the server for this outcome, you might have to configure the Prefer Header. Following the FHIR specification, the server does not automatically provide an outcome response by default. For more details, see the `FHIR documentation <https://build.fhir.org/http.html#ops>`_.
+When the Update No-Op plugin is enabled:
+- It reduces server load and data processing by avoiding redundant updates.
+- It helps in controlling database growth by preventing the creation of unnecessary new versions of resources.
+
+Configuration for No-Op
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Update with no changes requires `UpdateNoOp` plugin to be enabled. 
 The plugin can be configured to ignore additional meta elements in the resource. 
@@ -80,20 +94,6 @@ You can also add ``security``, ``tag`` and ``profile`` or any other to be ignore
       ]
    }
 
-.. _restful_crud_limitations:
-
-Limitations on CRUD
-^^^^^^^^^^^^^^^^^^^
-
-#. Simultaneous conditional creates and updates are not entirely transactional safe:
-   
-   * Two conditional updates may both result in a ``create``, although the result of one may be a match to the other.
-   * Two conditional creates may both succeed, although the result of one may be a match to the other.
-   * A conditional create and a simultaneous conditional update may both result in a ``create``, although the result of one may be a match to the other.
-
-#. It is not possible to bring a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload. This operation will result in an ``HTTP 409 Conflict`` error. As a workaround, it is possible to create a new resource (with a new logical id) by omitting the ``id`` field in the payload.
-#. Parameter ``_pretty`` is not yet supported.
-#. XML Patch and JSON Patch, as well as version-read and conditional variations of FHIR Patch are not yet supported.
 
 .. _restful_versioning:
 

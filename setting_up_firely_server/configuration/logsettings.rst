@@ -264,7 +264,7 @@ Elasticsearch server::
 
 * Change ``nodeUris`` to the URL of your Elasticsearch node
 * ``restrictedToMinimumLevel``: as described for `Console`_.
-* More details can be found in sinks `Github repo <https://github.com/serilog-contrib/serilog-sinks-elasticsearch>`_.
+* More details can be found in sinks `Github repo <https://github.com/serilog-contrib/serilog-sinks-elasticsearch>`_ and `Elasticsearch docs <https://www.elastic.co/guide/en/ecs-logging/dotnet/current/serilog-data-shipper.html>`_.
 
 MongoDb
 ^^^^^^^

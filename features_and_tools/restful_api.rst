@@ -56,6 +56,45 @@ Limitations on CRUD
 #. Parameter ``_pretty`` is not yet supported.
 #. XML Patch and JSON Patch, as well as version-read and conditional variations of FHIR Patch are not yet supported.
 
+.. _restful_noop:
+Update with no changes 
+----------------------
+
+Updating a server resource with identical content to what it currently holds results in a "No-Op" (no operation) scenario. The server acknowledges the request without making any actual modifications. To determine if your action resulted in a No-Op, you can check the OperationOutcome resource provided by the server. To prompt the server for this outcome, you might have to configure the Prefer Header. Following the FHIR specification, the server does not automatically provide an outcome response by default. For more details, see the `FHIR documentation <https://build.fhir.org/http.html#ops>`_.
+When the Update No-Op plugin is enabled:
+- It reduces server load and data processing by avoiding redundant updates.
+- It helps in controlling database growth by preventing the creation of unnecessary new versions of resources.
+
+Configuration for No-Op
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Update with no changes requires `UpdateNoOp` plugin to be enabled. 
+The plugin can be configured to ignore additional meta elements in the resource. 
+By default, when plugin is enabled the following meta elements are ignored during resource comparison: ``versionId``, ``lastUpdated`` and ``source`` You can add additional meta elements to be ignored
+You can also add ``security``, ``tag`` and ``profile`` or any other to be ignored, but it depends on specific usage of meta. See more on `FHIR article <https://www.hl7.org/fhir/resource.html#tag-updates>`_.
+::
+   "PipelineOptions": {
+   "PluginDirectory": "./plugins",
+   "Branches": [
+   {
+      "Path": "/",
+      "Include": [
+         "Vonk.Plugin.UpdateNoOp.UpdateNoOpConfiguration",
+         "Vonk.Plugin.UpdateNoOp.PatchNoOpConfiguration",
+         "Vonk.Plugin.UpdateNoOp.ConditionalUpdateNoOpConfiguration",
+      ]
+   }
+  ]
+
+   "UpdateNoOp": {
+      "AdditionalMetaToBeIgnored": [
+         "security",
+         "tag",
+         "profile"
+      ]
+   }
+
+
 .. _restful_versioning:
 
 Versioning

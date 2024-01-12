@@ -31,7 +31,7 @@ Legend:
      - ❌
      - ✅
      - \*
-   * - Everything
+   * - $everything
      - ✅
      - ❌
      - ✅
@@ -51,7 +51,7 @@ Legend:
      - ✅
      - ✅
      - ❌
-   * - Reset database
+   * - Reset Database
      - ✅
      - ✅
      - ✅
@@ -66,17 +66,17 @@ Legend:
      - ✅
      - ✅
      - \*
-   * - Audit log file
+   * - Audit Log File
      - ✅
      - ✅
      - ✅
      - ✅
-   * - Binary (wrapper)
+   * - Binary Wrapper
      - ✅
      - ✅
      - ✅
      - \*
-   * - Subscriptions (v1)
+   * - Subscriptions
      - ✅
      - ✅
      - ✅
@@ -91,7 +91,7 @@ Legend:
      - ✅
      - ✅
      - \*
-   * - DocumentHandling
+   * - FHIR document bundles
      - ✅
      - ✅
      - ✅

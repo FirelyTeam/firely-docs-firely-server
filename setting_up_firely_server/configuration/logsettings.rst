@@ -258,11 +258,13 @@ Elasticsearch server::
 			{
   				"Name": "Elasticsearch",
 				"Args": {
-					"nodeUris": "http://localhost:9200"
+					"nodeUris": "http://localhost:9200",
+					"connectionGlobalHeaders": "Authorization=..."
 				}
 			}
 
 * Change ``nodeUris`` to the URL of your Elasticsearch node
+* Change ``connectionGlobalHeaders``: if you need to add headers to the request. For example, if you need to authenticate to your Elasticsearch server, you can add the ``Authorization`` header here.
 * ``restrictedToMinimumLevel``: as described for `Console`_.
 * More details can be found in sinks `Github repo <https://github.com/serilog-contrib/serilog-sinks-elasticsearch>`_ and `Elasticsearch docs <https://www.elastic.co/guide/en/ecs-logging/dotnet/current/serilog-data-shipper.html>`_.
 

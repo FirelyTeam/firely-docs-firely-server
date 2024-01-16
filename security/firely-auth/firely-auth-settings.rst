@@ -232,7 +232,7 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               "Description": "Postman API testing tool",
               "Enabled": true,
               "RequireConsent": true,
-              "RedirectUris": ["https://www.getpostman.com/oauth2/callback", "https://oauth.pstmn.io/v1/callback"],
+              "RedirectUris": ["https://www.getpostman.com/oauth2/callback", "https://oauth.pstmn.io/v1/callback", "https://oauth.pstmn.io/v1/browser-callback"],
               "ClientSecrets": [{"SecretType": "SharedSecret", "Secret": "re4&ih)+HQu~w"}], // SharedSecret, JWK
               "AllowedGrantTypes": ["client_credentials", "authorization_code"],
               "AllowedSmartLegacyActions": [],

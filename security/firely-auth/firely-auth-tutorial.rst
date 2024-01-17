@@ -63,7 +63,7 @@ You need to add at least one user to Firely Auth. Firely Auth supports two types
 For this introduction we will configure a user in the In memory store.
 
 #. Go to the bin-directory
-#. Open appsettings.default.json for Firely Auth (or use appsettings.instance.json, see :ref:`_firely_auth_settings`)
+#. Open appsettings.default.json for Firely Auth (see :ref:`firely_auth_settings`)
 #. Look for the section ``UserStore``
 #. By default the ``Type`` is already set to ``InMemory``.
 #. Now add to the ``InMemory:AllowedUsers`` array:
@@ -185,7 +185,7 @@ It contains two Patient resources and an Observation related to each of them.
 
 Now we will connect Firely Server and Firely Auth. This requires mutual settings.
 
-In **Firely Auth**, the following :ref:`settings <_firely_auth_settings_server>` are used:
+In **Firely Auth**, the following :ref:`settings <firely_auth_settings_server>` are used:
 
 .. code-block:: json
 

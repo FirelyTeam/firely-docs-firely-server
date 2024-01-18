@@ -213,14 +213,15 @@ Application Insights
 Firely Server can also log to Azure Application Insights ("Application Insights Telemetry"). What you need to do:
 
 #. Create an Application Insights instance on Azure.
-#. Get the InstrumentationKey from the Properties blade of this instance.
+#. Get the ConnectionString from the Properties blade of this instance.
 #. Add the correct sink to the logsettings.json::
 
 		"WriteTo": [
 			{
-				"Name": "ApplicationInsightsTraces",
+				"Name": "ApplicationInsights",
 				"Args": {
-					"instrumentationKey": "<the key you copied in step 2>", 
+					"connectionString": "[your connection string here]", 
+					"telemetryConverter": "Serilog.Sinks.ApplicationInsights.TelemetryConverters.TraceTelemetryConverter, Serilog.Sinks.ApplicationInsights" 
 					"restrictedToMinimumLevel": "Verbose" //Or a higher level
 				}
 			},

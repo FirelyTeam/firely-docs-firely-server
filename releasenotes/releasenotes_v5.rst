@@ -15,6 +15,7 @@ Release 5.5.0, <put  date>, 2024
 Features
 ^^^^^^^^
 #. Firely Server can now produce No-Op Outcome on resource update. 
+#. Firely Server supports multi-tenancy by virtually separating resources for each tenant. See :ref:`feature_multitenancy` for details.
 
 Fixes
 ^^^^^
@@ -30,12 +31,10 @@ Configuration
 
 .. _vonk_releasenotes_5_5_0:
 
-Release 5.5.0, <TBD>
---------------------
-
 Miscellaneous
 ^^^^^^^^^^^^^
 * :ref:`Firely Server Ingest <tool_fsi>` release cycle has been synchronized with the Firely Server release cycle. As of this version, the FSI changes will be captured on this page.
+* Any plugin using ``ITypedElement`` should be recompiled using the the Vonk.Core package version 5.5.*.  See :ref:`plugin_development` for more details. 
 
 Database
 ^^^^^^^^
@@ -43,10 +42,6 @@ Database
 
 .. _vonk_releasenotes_5_4_0:
 
-Features
-^^^^^^^^
-
-#. Firely Server supports multi-tenancy by virtually separating resources for each tenant. See :ref:`feature_multitenancy` for details.
 
 Release 5.4.0, October 26th, 2023
 ---------------------------------

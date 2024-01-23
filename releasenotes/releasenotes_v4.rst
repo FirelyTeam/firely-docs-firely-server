@@ -3,6 +3,16 @@
 Old Firely Server release notes (v4.x)
 ======================================
 
+.. _vonk_releasenotes_4_12_0:
+
+Release 4.12.0, January 23nd, 2024
+----------------------------------
+
+Security
+^^^^^^^^
+
+#. Updated the version of Microsoft.Data.SqlClient from 3.0.1 to 3.1.5 to include the vulnerability patch. See `CVE-2024-0056 <https://github.com/advisories/GHSA-98g6-xh36-x2p7>`_ for more details.
+
 .. _vonk_releasenotes_4_11_0:
 
 Release 4.11.0, October 17th, 2023

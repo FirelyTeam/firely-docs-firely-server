@@ -239,6 +239,7 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               "AllowedSmartActions": ["c", "r", "u", "d", "s"],
               "AllowedSmartSubjects": [ "patient", "user", "system"],
               "AllowedResourceTypes": ["Patient", "Observation", "Claim"],
+              "EnableLegacyFhirContext": false,
               "AlwaysIncludeUserClaimsInIdToken": true,
               "RequirePkce": false,
               "AllowOfflineAccess": false,
@@ -247,7 +248,14 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               "RequireClientSecret": true,
               "RefreshTokenLifetime": "30",
               "RequireMfa": true,
-              "AccessTokenType": "Jwt"
+              "AccessTokenType": "Jwt",
+              "ClientClaims": [
+                {
+                  "Name": "ClaimName",
+                  "Value": "ClaimValue"
+                }
+              ],
+              "ClientClaimPrefix": ""
           }
       ]
   }
@@ -273,6 +281,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``AllowedSmartActions``: Actions on resources that can be granted in SMART on FHIR v2: ``c``, ``r``, ``u``, ``d`` and/or ``s``, see `SMART on FHIR V2 scopes`_
 - ``AllowedSmartSubjects``: Categories of 'subjects' to which resource actions can be granted. Can be ``system``, ``user`` and/or ``patient``
 - ``AllowedResourceTypes``: The client can only request SMART scopes for these resource types. To allow all resource types, do not use ``["*"]"`` but just leave the array empty.
+- ``EnableLegacyFhirContext``: true / false - Whether use the new syntax of ``fhirContext`` defined in `SMART on FHIR v2.1.0 <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#fhir-context>`_. Default is false, then the old syntax of ``fhirContext`` defined in `SMART on FHIR v2.0.0 <https://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html#fhircontext>`_ is used.
 - ``AlwaysIncludeUserClaimsInIdToken``: true / false: When requesting both an id token and access token, should the user claims always be added to the id token instead of requiring the client to use the userinfo endpoint. Default is false
 - ``Require PKCE``: true / false - see :term:`PKCE`. true is recommended for a :term:`public client` and can offer an extra layer of security for :term:`confidential client`.
 - ``AllowOfflineAccess``: true / false - Whether app can request refresh tokens while the user is online, see `SMART on FHIR refresh tokens`_
@@ -282,6 +291,12 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``RefreshTokenLifetime``: If the client is allowed to use a :term:`refresh token`, how long should it be valid? The value is in days. You can also use HH:mm:ss for lower values.
 - ``RequireMfa``: true / false, default is false. A user granting access to this client has to enable and use Multi Factor Authentication. See :ref:`firely_auth_mfa`
 - ``AccessTokenType``: ``Jwt`` or ``Reference``. ``Jwt`` means that this client will get self-contained Json Web Tokens. ``Reference`` means that this client will get reference tokens, that refer to the actual token kept in memory by Firely Auth. For more background see :term:`reference token`.
+- ``ClientClaims``: Enable a client to add static custom claims which can be used in the client credential flow. 
+
+  - ``Name``: name of the claim
+  - ``Value``: the value of the claim
+
+- ``ClientClaimPrefix``: Add custom defined prefix to the client claims. Work together with the setting ``ClientClaims``. 
 
 External identity providers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

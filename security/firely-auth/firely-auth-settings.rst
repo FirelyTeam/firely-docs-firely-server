@@ -281,7 +281,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``AllowedSmartActions``: Actions on resources that can be granted in SMART on FHIR v2: ``c``, ``r``, ``u``, ``d`` and/or ``s``, see `SMART on FHIR V2 scopes`_
 - ``AllowedSmartSubjects``: Categories of 'subjects' to which resource actions can be granted. Can be ``system``, ``user`` and/or ``patient``
 - ``AllowedResourceTypes``: The client can only request SMART scopes for these resource types. To allow all resource types, do not use ``["*"]"`` but just leave the array empty.
-- ``EnableLegacyFhirContext``: true / false - Whether use the new syntax of ``fhirContext`` defined in `SMART on FHIR v2.1.0 <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#fhir-context>`_. Default is false, then the old syntax of ``fhirContext`` defined in `SMART on FHIR v2.0.0 <https://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html#fhircontext>`_ is used.
+- ``EnableLegacyFhirContext``: true / false - Whether to use the new syntax of ``fhirContext`` defined in `SMART on FHIR v2.1.0 <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#fhir-context>`_. Default is false, when set to true the old syntax of ``fhirContext`` defined in `SMART on FHIR v2.0.0 <https://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html#fhircontext>`_ is used.
 - ``AlwaysIncludeUserClaimsInIdToken``: true / false: When requesting both an id token and access token, should the user claims always be added to the id token instead of requiring the client to use the userinfo endpoint. Default is false
 - ``Require PKCE``: true / false - see :term:`PKCE`. true is recommended for a :term:`public client` and can offer an extra layer of security for :term:`confidential client`.
 - ``AllowOfflineAccess``: true / false - Whether app can request refresh tokens while the user is online, see `SMART on FHIR refresh tokens`_
@@ -296,11 +296,11 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
   - ``Name``: name of the claim
   - ``Value``: the value of the claim
 
-- ``ClientClaimPrefix``: Add custom defined prefix to the name of all custom client claims. Work together with the setting ``ClientClaims``. 
+- ``ClientClaimPrefix``: Add custom defined prefix to the name of all custom client claims. Works together with the setting ``ClientClaims``. 
 
   .. note::
 
-    Please follow the principle of least privilege to register a SMART Backend Service client, especially when settings ``ClientClaims`` and ``ClientClaimPrefix`` are used.
+    Please follow the principle of least privilege to register a SMART Backend Service client, especially when the settings ``ClientClaims`` and ``ClientClaimPrefix`` are used.
 
 External identity providers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

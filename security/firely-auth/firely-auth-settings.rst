@@ -273,7 +273,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
   - SharedSecret: ``{"SecretType": "SharedSecret", "Secret": "<a secret string shared with the client>"}`` - this can be used for either :term:`client credentials` or :term:`authorization code flow`, but only with a :term:`confidential client`.
   - JWK: ``{"SecretType": "JWK", "SecretUrl": "<JWKS url>"}`` - where the JWKS url hosts a JSON Web Key Set that can be retrieved by Firely Auth, see also :term:`JWK`.
   - JWK: ``{"SecretType": "JWK", "Secret": "<JWK>"}`` - where JWK is the contents of a :term:`JWK`. Use this if the client cannot host a url with a JWKS. 
-    Use one entry for each key in the keyset. Note that the JWK json structure is enbedded in a string, so you need to escape the quotes within the JWK.
+    Use one entry for each key in the keyset. Note that the JWK json structure is embedded in a string, so you need to escape the quotes within the JWK.
     The url option above is recommended. 
 
 - ``AllowedGrantTypes``: array of either or both ``"client_credentials"`` and ``"authorization_code"``, referring to :term:`client credentials` and :term:`authorization code flow`. Use ``client credentials`` only for a :term:`confidential client`.
@@ -291,12 +291,16 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``RefreshTokenLifetime``: If the client is allowed to use a :term:`refresh token`, how long should it be valid? The value is in days. You can also use HH:mm:ss for lower values.
 - ``RequireMfa``: true / false, default is false. A user granting access to this client has to enable and use Multi Factor Authentication. See :ref:`firely_auth_mfa`
 - ``AccessTokenType``: ``Jwt`` or ``Reference``. ``Jwt`` means that this client will get self-contained Json Web Tokens. ``Reference`` means that this client will get reference tokens, that refer to the actual token kept in memory by Firely Auth. For more background see :term:`reference token`.
-- ``ClientClaims``: Enable a client to add static custom claims which can be used in the client credential flow. 
+- ``ClientClaims``: Enable a client to add static custom claims in the client credential flow. 
 
   - ``Name``: name of the claim
   - ``Value``: the value of the claim
 
-- ``ClientClaimPrefix``: Add custom defined prefix to the client claims. Work together with the setting ``ClientClaims``. 
+- ``ClientClaimPrefix``: Add custom defined prefix to the name of all custom client claims. Work together with the setting ``ClientClaims``. 
+
+  .. note::
+
+    Please follow the principle of least privilege to register a SMART Backend Service client, especially when settings ``ClientClaims`` and ``ClientClaimPrefix`` are used.
 
 External identity providers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^

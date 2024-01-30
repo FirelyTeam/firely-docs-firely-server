@@ -5,20 +5,20 @@ Release notes
 
 .. _firelyauth_releasenotes_3.3.0-rc3:
 
-Release 3.3.0-rc3, January 31st, 2024
+Release 3.3.0-rc3, February 1st, 2024
 -------------------------------------
 
 Configuration
 ^^^^^^^^^^^^^
 
 #. ``EnableLegacyFhirContext`` is added to switch the syntax of ``fhirContext`` between SoF v2.1 and v2.0. See :ref:`firely_auth_settings` for details.
-#. ``ClientClaims`` and ``ClientClaimPrefix`` are added to help a client to define custom claims. See :ref:`firely_auth_settings` for details.
+#. ``ClientClaims`` and ``ClientClaimPrefix`` are added to help a client to define custom claims in the client credential flow. See :ref:`firely_auth_settings` for details.
 
 Feature
 ^^^^^^^
 
 #. Harmonized Serilog sinks with Firely Server. See :ref:`configure_log_sinks` for details of all supported sinks.
-#. Enabled clients to add static custom claims which can be used in the client credential flow. See :ref:`firely_auth_settings` for details.
+#. Enabled clients to add static custom claims in the client credential flow. See :ref:`firely_auth_settings` for details.
 
 Fix
 ^^^

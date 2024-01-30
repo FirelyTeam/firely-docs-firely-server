@@ -23,10 +23,10 @@ Feature
 Fix
 ^^^
 
-#. Fixed the EHR launch context in case of users login via an external identity provider.
+#. Fixed the EHR launch context in case of a user login via an external identity provider.
 #. Improved the validation of setting ``AllowedResourceTypes``. Any invalid FHIR resource types will be rejected now.
 #. Improved the validation of setting ``AllowFirelySpecialScopes``. Firely special scopes can now only be requested if an registered client has the setting set to ``true``.
-#. In case of the EHR launch, no ``System.ArgumentException`` is thrown if both ``launch`` and ``launch/patient`` scopes are requests.
+#. In case of the EHR launch, no ``System.ArgumentException`` is thrown if both ``launch`` and ``launch/patient`` scopes are present in the request for the access token.
 
 .. _firelyauth_releasenotes_3.3.0-rc2:
 

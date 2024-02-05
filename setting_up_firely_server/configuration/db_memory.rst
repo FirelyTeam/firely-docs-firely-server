@@ -27,7 +27,7 @@ Using the In-Memory storage for the Administration API database
 
 
 .. warning::
-    The current version of Firely Server (v5.5.0) does not support the use of In-Memory storage as administration database for STU3 resources. This will be fixed in future versions of Firely Server. For now, it is adviced to use the SQLite backend instead.
+    The current version of Firely Server (v5.5.0) does not support the use of In-Memory storage as administration database. This will be fixed in future versions of Firely Server. For now, it is adviced to use the SQLite backend instead.
 
 This works the same as with the normal Firely Server database, except that you put the settings within the ``Administration`` section
 

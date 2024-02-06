@@ -29,7 +29,11 @@ A Docker image is available on the Docker hub, under `firely/auth`. You can spin
 
   docker run -d -p5100:5100 --name firely.auth -v %CD%/firely-auth-license.json:/app/firely-auth-license.json -v %CD%/appsettings.instance.json:/app/appsettings.instance.json firely/auth:latest
 
-Make sure to include the ``firely-auth-license.json`` and ``appsettings.instance.json`` in your working directory. 
+Make sure to include the ``firely-auth-license.json`` and ``appsettings.instance.json`` in your working directory. For deployments in Azure or AWS, it is necessary to provide the ``*.instance.json`` files in a separate folder.
+This works the same as with :ref:`configure_settings_path` for Firely Server, but here you use the environment variable ``FIRELY_AUTH_PATH_TO_SETTINGS``.
+If you want to spin up a docker image with this environment variable, you can for instance use the following command::
+
+  docker run -d -p5100:5100 --name firely.auth -v %CD%/firely-auth-license.json:/app/firely-auth-license.json -v %CD%/config:/app/config -e FIRELY_AUTH_PATH_TO_SETTINGS=/app/config firely/auth:latest
 
 The Docker container has a network of its own. This means that localhost within a Docker container resolves to a different network than localhost on your local computer.
 To make sure Firely Auth is communicating correctly with Firely Server, some adjustments need to be made to support the use cases described below.
@@ -129,14 +133,9 @@ If you want to check with your local postman if this setup works, you need to ad
 
    "AdditionalIssuersInToken": ["http://localhost:5100"],
 
-
-
-
-
-
-
 See the instructions on :ref:`running Firely Server in Docker <use_docker>` to learn about adjusting settings and providing the license file.
 Firely Auth is configured in the same way.
+
 
 
 

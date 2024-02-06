@@ -3,6 +3,41 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_3.3.0-rc3:
+
+Release 3.3.0-rc3, February 1st, 2024
+-------------------------------------
+
+Configuration
+^^^^^^^^^^^^^
+
+#. ``EnableLegacyFhirContext`` is added to switch the syntax of ``fhirContext`` between SoF v2.1 and v2.0. See :ref:`firely_auth_settings` for details.
+#. ``ClientClaims`` and ``ClientClaimPrefix`` are added to help a client to define custom claims in the client credential flow. See :ref:`firely_auth_settings` for details.
+
+Feature
+^^^^^^^
+
+#. Harmonized Serilog sinks with Firely Server. See :ref:`configure_log_sinks` for details of all supported sinks.
+#. Enabled clients to add static custom claims in the client credential flow. See :ref:`firely_auth_settings` for details.
+
+Fix
+^^^
+
+#. Fixed the EHR launch context in case of a user login via an external identity provider.
+#. Improved the validation of setting ``AllowedResourceTypes``. Any invalid FHIR resource types will be rejected now.
+#. Improved the validation of setting ``AllowFirelySpecialScopes``. Firely special scopes can now only be requested if an registered client has the setting set to ``true``.
+#. In case of the EHR launch, no ``System.ArgumentException`` is thrown if both ``launch`` and ``launch/patient`` scopes are present in the request for the access token.
+
+.. _firelyauth_releasenotes_3.3.0-rc2:
+
+Release 3.3.0-rc2, November 23nd, 2023
+--------------------------------------
+
+Feature
+^^^^^^^
+
+#. You can restrict a :term:`client` to specific FHIR resource types, using the setting ``AllowedResourceTypes`` in the :ref:`firely_auth_settings_clients`. If the client requests SMART scopes for other resource types, the request will be denied.
+
 .. _firelyauth_releasenotes_3.2.0:
 
 Release 3.2.0, June 20th, 2023

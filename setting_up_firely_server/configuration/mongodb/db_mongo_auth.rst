@@ -275,18 +275,11 @@ We assume ``fs_admin`` as the name of the database.
 Enable access control on MongoDB
 --------------------------------
 
-Access control is enabled in different ways depending on the hosting platform. See the `MongoDB documentation <https://www.mongodb.com/docs/manual/tutorial/enable-authentication/>`_` on this.
-
+Access control is enabled in different ways depending on the hosting platform. See the `MongoDB documentation <https://www.mongodb.com/docs/manual/tutorial/enable-authentication/>`_ on this.
 In short, for MongoDB Atlas access control is mandatory and cannot be disabled. For MongoDB Enterprise or Community it can be enabled by the paramater ``--auth`` to the ``mongod`` command.
-
-When running it in a Docker container, you can add this parameter by changing the ``command``:
-
-.. code-block::yaml
-    :linenos:
-    :emphasize-lines: 11
+When running it in a Docker container, you can add this parameter by changing the ``command`` in your compose.yaml::
 
     services:
-
       mongodb_latest:
         image:  mongo:latest
         container_name: mongodb
@@ -304,9 +297,16 @@ ConnectionStrings
 Once access control is enabled, you have to configure the user and password in the connectionstring. The connectionstrings below serve as a template, using ``localhost`` as the host. Replace this with the correct hostname for your environment.
 
 .. note:: 
-
-    Currently, only a single connectionstring can be configured for MongoDB. The roles and users above differentiate between the authorization needed to perform an automatic upgrade, and the authorization needed for regular operation.
-    You may choose to use a connectionstring with the ``fs_data_upgrade_user`` only when performing an upgrade, and afterwards reset it to the ``fs_data_user``.
+    The roles and users above differentiate between the authorization needed to perform an automatic upgrade, and the authorization needed for regular operation of Firely Server. It is possible to configure separate connection strings for these two roles and this can be done for both the administration database and the regular repository database.
+    You may use the `fs_data_upgrade_user` in the `AutoUpdateConnectionString` field that will be used only when performing an upgrade of the MongoDb schemas, and the `fs_data_user` in the regular `ConnectionString` field for normal use. If `AutoUpdateConnectionString` is not set, the `ConnectionString` will be used in both cases.
+    .. code-block::json
+    "MongoDbOptions": {  
+        "ConnectionString": "mongodb://fs_data_user:fs_data_secret@localhost:27017/vonkdata?authSource=fs_data",  
+        "EntryCollection": "vonkentries",  
+        "MaxLogLine": 300,  
+        "AutoUpdateConnectionString" : "mongodb://fs_data_upgrade_user:fs_data_upgrade_secret@localhost:27017/vonkdata?authSource=fs_data"
+    }
+    // same for administration database
 
 #. Data database: ``mongodb://fs_data_upgrade_user:fs_data_upgrade_secret@localhost/fs_data?authSource=fs_data``
 #. Administration database: ``mongodb://fs_admin_upgrade_user:fs_admin_upgrade_secret@localhost/fs_admin?authSource=fs_admin``

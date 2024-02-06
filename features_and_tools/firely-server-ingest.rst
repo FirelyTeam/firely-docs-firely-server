@@ -291,11 +291,11 @@ It is possible to copy the cached files from one computer to another. It is also
 
 The cached files can be found in the following locations:
 
-* for v. â‰¥ v2.2.1
+* for v. â‰v2.2.1
 
   * Windows: ``%USERPROFILE%\.fhir\packages``
   * Linux/MacOS: ``$HOME/.fhir/packages``
-* for v. â‰¥ v1.4.1
+* for v. â‰v1.4.1
   
   * Windows: ``%APPDATA%\.fhir_packages``
   * Linux/MacOS: ``$XDG_CONFIG_HOME/.fhir_packages`` if the environment variable ``XDG_CONFIG_HOME`` is defined  otherwise ``$HOME/.config/.fhir_packages``
@@ -347,6 +347,15 @@ Release notes
         dotnet tool update --global Firely.Server.Ingest
 
 
+
+
+Release 5.5.0+
+^^^^^^^^^^^^^^
+
+The FSI release cycle has been synchronized with the Firely Server release cycle.
+Please refer to the :ref:`Firely Server release notes <vonk_releasenotes>` for the FSI change log.
+
+
 .. _fsi_releasenotes_2.3.0:
 
 
@@ -370,16 +379,16 @@ Release 2.2.1, September 19th, 2023
 
 * Added support for running FSI without the internet connection (see :ref:`tool_fsi_packages_cache`)
 * This release includes a new setting for handling the conversion of absolute to relative references: ``absoluteUrlConversion``. This setting replaces the old ``convertAbsoluteUrlsToRelative`` setting. With this setting you can specify the FHIR Path of the elements that you would like to see converted. See also the ``urlConvBases:index url`` and ``urlConvElems:index FHIRPath`` arguments in the :ref:`FSI_supported_arguments` section for more information.
-::
-
-  "absoluteUrlConversion": {
-    "baseEndpoints": [
-      // "http://localhost:4080/R4"
-    ],
-    "elements": [
-      "DocumentReference.content.attachment.url"
-    ]
-  }
+  ::
+  
+    "absoluteUrlConversion": {
+      "baseEndpoints": [
+        // "http://localhost:4080/R4"
+      ],
+      "elements": [
+        "DocumentReference.content.attachment.url"
+      ]
+    }
 
 .. _fsi_releasenotes_1.4.1:
 

@@ -58,7 +58,7 @@ In the example below we have enabled all three levels: Patient, Group and System
           "Vonk.Repository.MongoDb.MongoDbVonkConfiguration",
           "Vonk.Repository.Memory.MemoryVonkConfiguration",
           "Vonk.Subscriptions",
-          "Vonk.Smart",
+          "Vonk.Plugin.Smart",
           "Vonk.UI.Demo",
           "Vonk.Plugin.DocumentOperation.DocumentOperationConfiguration",
           "Vonk.Plugin.ConvertOperation.ConvertOperationConfiguration",
@@ -268,6 +268,25 @@ Performing a GET request on this $exportfilerequest url returns a body of FHIR r
   ::    
   
     application/fhir+ndjson
+
+Filtering export results with SMART scopes
+------------------------------------------
+
+BDE can be combined with SMART on FHIR (SoF), for more information on SoF please also have a look at our :ref:`SoF documentation <feature_accesscontrol>`. Note that when you enable SoF in Firely Server, an access token will be required to make the ``$export``, ``$exportstatus``, and ``$exportfilerequest`` requests.
+Also note that when requesting the access token for these requests, only system level scopes such as ``system/*.read`` or ``system/Patient.read`` are supported, user level scopes or patient level scopes such as ``user/*.*`` or ``patient/*.read`` will not work.
+With SoF enabled, you will be able to filter the export results on a resource level using the aforementioned system level scopes. For instance the following request::
+  
+  GET {{BASE_URL}}/Patient/$export
+
+will only retrieve the Patient resource if the access token contains the ``system/Patient.read`` scope, as opposed to all resources of the Patient compartment. Using this same scope, the following request::
+
+  GET {{BASE_URL}}/Patient/$export?_type=Patient,Observation
+
+will result in a ``403 Forbidden`` http error code, as it is not allowed to retrieve Observation resources with this scope. For more information on SoF scopes, please refer to our documentation on :ref:`Tokens and Compartments <feature_accesscontrol_compartment>`.
+
+
+.. warning::
+  BDE currently only works in combination with SMART v1, the extended functionality that is offered by SMART v2 is not supported. This means that even though you could use v2 like scopes such as ``system/*.rs``, extended scopes including search modifiers and filters will not work.
 
 .. _feature_bulkdataexport_facade:
 

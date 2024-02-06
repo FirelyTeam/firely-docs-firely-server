@@ -23,7 +23,7 @@ On the ``Information`` level, Firely Server will tell you which assemblies are l
       C:\data\dd18\vonk_preview\Vonk.Repository.Sql.dll
       C:\data\dd18\vonk_preview\vonk.server.dll
       C:\data\dd18\vonk_preview\Vonk.Server.PrecompiledViews.dll
-      C:\data\dd18\vonk_preview\Vonk.Smart.dll
+      C:\data\dd18\vonk_preview\Vonk.Plugin.Smart.dll
       C:\data\dd18\vonk_preview\Vonk.Subscriptions.dll
       C:\data\dd18\vonk_preview\Vonk.UI.Demo.dll
       C:\data\dd18\vonk_preview\plugins\Visi.Repository.dll

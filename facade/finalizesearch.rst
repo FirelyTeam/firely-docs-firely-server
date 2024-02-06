@@ -101,7 +101,7 @@ the order of inclusion, and adds to the services. For background information, se
           "Vonk.Core",
           "Vonk.Fhir.R3",
           "Vonk.Subscriptions",
-          "Vonk.Smart",
+          "Vonk.Plugin.Smart",
           "Vonk.UI.Demo",
           "ViSiProject"  // fill in (a prefix of) the namespace of your project here
         ]

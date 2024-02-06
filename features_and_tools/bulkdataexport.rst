@@ -58,7 +58,7 @@ In the example below we have enabled all three levels: Patient, Group and System
           "Vonk.Repository.MongoDb.MongoDbVonkConfiguration",
           "Vonk.Repository.Memory.MemoryVonkConfiguration",
           "Vonk.Subscriptions",
-          "Vonk.Smart",
+          "Vonk.Plugin.Smart",
           "Vonk.UI.Demo",
           "Vonk.Plugin.DocumentOperation.DocumentOperationConfiguration",
           "Vonk.Plugin.ConvertOperation.ConvertOperationConfiguration",

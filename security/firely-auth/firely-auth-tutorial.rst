@@ -250,8 +250,8 @@ In **Firely Server**, all the settings are in the section :ref:`SmartAuthorizati
   },
 
 .. note::
-    For the scope that is setup in postman to work, you need to have the ``Vonk.Plugin.SoFv2`` plugin enabled and the ``Vonk.Smart`` plugin disabled in your PipelineOptions
-    If you cannot change this, then adjust the scope in the authorization configuration in postman to: ``openid fhirUser user/*.read``
+    You need to have the ``Vonk.Plugin.Smart`` plugin enabled in your PipelineOptions.
+  
 
 All settings are discussed in detail in :ref:`firely_auth_settings_server`, and we'll focus on the connection with Firely Auth here:
 

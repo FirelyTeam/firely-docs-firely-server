@@ -69,7 +69,7 @@ You can control the period and the batchsize. If an evaluation of a Subscription
 ::
 
     "SubscriptionEvaluatorOptions": {
-        "Enabled" : true
+        "Enabled" : true,
         "RepeatPeriod": 20000,
         "SubscriptionBatchSize" : 1,
         "RetryPeriod": 60000,

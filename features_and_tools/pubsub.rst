@@ -656,8 +656,8 @@ To enable logging for PubSub, you can add the PubSub plugin to the override sect
 
 .. _pubsub_clients:
 
-Clients
--------
+PubSub Clients
+--------------
 
 The recommended way for accessing the PubSub API from Firely Server is to use the `Firely Server Contract nuget package <https://www.nuget.org/packages/Firely.Server.Contracts>`_. 
 This package contains the class definitions for all messages and as well as a client (``Firely.Server.Contracts.MassTransit.PubSubClient``).

@@ -551,7 +551,7 @@ For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need
       "ContextBanner"
     ]
   },
-  //PipelineOptions: make sure that Vonk.Plugin.SoFv2 is enabled
+  //PipelineOptions: make sure that Vonk.Plugin.Smart is enabled
   "PipelineOptions": { 
     "PluginDirectory": "./plugins",
     "Branches": [
@@ -559,7 +559,7 @@ For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need
         "Path": "/",
         "Include": [
           //all other default plugins...
-          "Vonk.Plugin.SoFv2",
+          "Vonk.Plugin.Smart",
         ],
         "Exclude": [
           //...

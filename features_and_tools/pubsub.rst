@@ -521,6 +521,7 @@ If you are interested in the result of a command execution, your application sho
 4. Send the command
 5. Listen for the response published by Firey Server
 
+.. _azure_service_bus:
 
 Azure Service Bus
 ^^^^^^^^^^^^^^^^^
@@ -653,6 +654,7 @@ To enable logging for PubSub, you can add the PubSub plugin to the override sect
     ...
   }
 
+.. _pubsub_clients:
 
 Clients
 -------

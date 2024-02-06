@@ -57,6 +57,7 @@ Limitations on CRUD
 #. XML Patch and JSON Patch, as well as version-read and conditional variations of FHIR Patch are not yet supported.
 
 .. _restful_noop:
+
 Update with no changes 
 ----------------------
 

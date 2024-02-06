@@ -7,38 +7,46 @@ Current Firely Server release notes (v5.x)
     For information on how to upgrade, please have a look at our documentation on :ref:`upgrade`. You can download the binaries of the latest version from `this site <https://downloads.fire.ly/firely-server/versions/>`_, or pull the latest docker image::
         
         docker pull firely/server:latest
+
 .. _vonk_releasenotes_5_5_0:
 
-Release 5.5.0, <put  date>, 2024
+Release 5.5.0, Feburary 6th, 2024
 ---------------------------------
 
 Features
 ^^^^^^^^
-#. Firely Server can now produce No-Op Outcome on resource update. 
-#. Firely Server supports multi-tenancy by virtually separating resources for each tenant. See :ref:`feature_multitenancy` for details.
+#. Upgraded Firely Server to the latest Firely SDK v5.5.1, see its `releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.5.1>`_. Any plugin using the ``ITypedElement`` interface must be recompiled using the Vonk.Core package version 5.5.* due to changes in the SDK.
+#. Added new documentation on how to interact as a client with the PubSub API of Firely Server. See :ref:`_pubsub_clients`.
+#. Added new documentation on how to configure PubSub messaging on Azure Service Bus. See :ref:`_azure_service_bus`.
+#. Added a new configuration in the namespace ``Vonk.Plugin.Smart`` which enables the usage of SMART on FHIR v1 and v2 combined. The plugins ``Vonk.Smart`` and ``Vonk.Plugin.SoFv2`` are now deprecated. The deprecated plugins will continue to work in the current major version of Firely Server. See :ref:`_feature_accesscontrol_config` for more details.
+#. Added a new setting to the MongoDb configuration to provide a different connection string for the auto-update of the database. See ``MongoDbOptions.AutoUpdateConnectionString``.
+#. Added support for AccessPolicies in FHIR STU3.
+#. Added support for a No-Op check on Restful Update interactions. Firely Server can now check if a provided resource exactly matches the resource stored in the database and skip the update. See :ref:`_restful_noop` for more information.
 
 Fixes
 ^^^^^
-#. ---
+#. The HTTP headers ``ETag``, ``Last-Modified`` and ``Content-Type`` were missing in a response from Firely Server in case a client included a request header with ``Prefer: return=minimal``. 
+#. The HTTP headers ``ETag`` and ``Last-Modified`` were incorrect in case a client included ``Prefer: return=OperationOutcome`` as a request header.
+#. Fixed the SearchParameter expression for AuditEvent.patient in FHIR STU3.
 
 Security
 ^^^^^^^^
-#. ---
+#. Updated the version of Microsoft.Data.SqlClient from 5.1.0 to 5.1.4 to include a vulnerability patch. See `CVE-2024-0056 <https://github.com/advisories/GHSA-98g6-xh36-x2p7>`_ for more details.
 
 Configuration
 ^^^^^^^^^^^^^
-#. UpdateNoOp plugin have it's own configuration section. See :ref:`_restful_noop` for more details.
+.. warning::
+    The current version of Firely Server (v5.5.0) does not support the use of In-Memory storage as administration database. This will be fixed in future versions of Firely Server. For now, it is advised to use the SQLite backend instead.
 
-.. _vonk_releasenotes_5_5_0:
+#. Improved validation of Administration.Security.AllowedNetworks settings. Invalid IP addresses or IP address ranges are now rejected.
 
 Miscellaneous
 ^^^^^^^^^^^^^
 * :ref:`Firely Server Ingest <tool_fsi>` release cycle has been synchronized with the Firely Server release cycle. As of this version, the FSI changes will be captured on this page.
-* Any plugin using ``ITypedElement`` should be recompiled using the the Vonk.Core package version 5.5.*.  See :ref:`plugin_development` for more details. 
 
 Database
 ^^^^^^^^
-#. For **MongoDB** we added an index, ``ix_cnt_id``. The migration adding the index is executed automatically on startup.
+#. For **MongoDB** we added an index to improve the performance for Update and Create requests, ``ix_cnt_id``. The migration adding the index is executed automatically on startup.
 
 .. _vonk_releasenotes_5_4_0:
 

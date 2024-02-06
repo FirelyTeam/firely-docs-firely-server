@@ -25,9 +25,7 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    x-provenance
    openapi
    pubsub
-   multi-tenancy
    features-availability
-   
 
 
   

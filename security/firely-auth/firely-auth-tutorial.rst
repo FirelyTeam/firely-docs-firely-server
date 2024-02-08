@@ -81,8 +81,6 @@ We won't add any claims yet - see :ref:`firely_auth_settings_userstore` to read 
 If you did this, you can stop Firely Auth again in the command window you started it in (``Ctrl+C``), and start it again. 
 You should be able to login as ``alice`` with the password as configured above.
 
-This time, Firely Auth will tell you that there are no clients configured that can access data on your behalf.
-
 Step 4 - Clients
 ^^^^^^^^^^^^^^^^
 

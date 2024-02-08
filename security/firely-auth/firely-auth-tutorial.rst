@@ -63,8 +63,8 @@ You need to add at least one user to Firely Auth. Firely Auth supports two types
 For this introduction we will configure a user in the In memory store.
 
 #. Go to the bin-directory
-#. Open appsettings.default.json for Firely Auth (see :ref:`firely_auth_settings`)
-#. Look for the section ``UserStore``
+#. Copy ``appsettings.default.json`` to a new file, named ``appsettings.instance.json``. This allows you to change settings while keeping the defaults for reference. See :ref:`firely_auth_settings`.
+#. Open ``appsettings.instance.json`` and look for the section ``UserStore``
 #. By default the ``Type`` is already set to ``InMemory``.
 #. Now add to the ``InMemory:AllowedUsers`` array:
 
@@ -79,7 +79,7 @@ For this introduction we will configure a user in the In memory store.
 We won't add any claims yet - see :ref:`firely_auth_settings_userstore` to read up on how they work.
 
 If you did this, you can stop Firely Auth again in the command window you started it in (``Ctrl+C``), and start it again. 
-You will now be able to login as ``alice`` with the password as configured above after completing the remaining steps.
+You will should be able to login as ``alice`` with the password as configured above.
 
 This time, Firely Auth will tell you that there are no clients configured that can access data on your behalf.
 
@@ -191,7 +191,8 @@ In **Firely Auth**, the following :ref:`settings <firely_auth_settings_server>` 
 
     "FhirServer": {
         "Name": "Firely Server", 
-        "FHIR_BASE_URL": "http://localhost:4080"
+        "FHIR_BASE_URL": "http://localhost:4080",
+        // "IntrospectionSecret": "<secret>"
     },
 
 The ``Name`` in this section serves two purposes:
@@ -200,6 +201,8 @@ The ``Name`` in this section serves two purposes:
 - it is used for translating `FHIR_BASE_URL` to the `aud` (Audience) claim in the access token supplied to the requesting app.
 
 The ``FHIR_BASE_URL`` is the url on which Firely Server can be reached by the requesting app. It is used to turn the ``fhirUser`` claim (e.g. ``Patient/123``) into a full url.
+
+The ```IntrospectionSecret`` is used to authenticate the introspection request. It is only used for clients with ``AccessTokenType`` set to ``Reference``, but you will need to set this for now.
 
 In **Firely Server**, all the settings are in the section :ref:`SmartAuthorizationOptions <feature_accesscontrol_config>`
 

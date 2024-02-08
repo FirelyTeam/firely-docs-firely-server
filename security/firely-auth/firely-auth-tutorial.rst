@@ -47,7 +47,7 @@ You can adjust the location of the license file in the configuration settings, s
 
 Additionally you will have to place a file called ``Duende_License.key`` also adjacent to the ``Firely.Auth.Core.exe``. This is required for production use but not testing or development. Firely will provide this key with purchase of Firely Auth. Please note that the path to this file cannot be configured. 
 
-With the license in place, you can start Firely Auth by running::
+With the license in place, you can start Firely Auth in PowerShell by running::
 
     > ./Firely.Auth.Core.exe
 

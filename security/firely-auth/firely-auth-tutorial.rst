@@ -126,7 +126,7 @@ We'll just provide the correct settings here. The settings are documented in det
 
 The values for ``ClientId`` and ``ClientSecrets.Secret`` are randomly generated. You are recommended to generate your own values.
 
-We will use Postman to issue a request for an Access Token. For this we created a collection 'Firely Auth docs', 
+We will use Postman to issue a request for an Access Token. For this we created a collection `Firely Auth <https://www.postman.com/firelyteam/workspace/firely-server-public-test-collections/collection/32290591-07a6307c-4779-41a7-a5e5-c0a29d82894d>`_, 
 and we will set the Authorization for the collection as a whole. That way the authorization can be reused for all requests in the collection.
 Click 'Get New Access Token' and you'll be taken to the login page of Firely Auth. If you are still logged in since step 3, you will be authorized immediately.
 
@@ -202,7 +202,7 @@ The ``Name`` in this section serves two purposes:
 
 The ``FHIR_BASE_URL`` is the url on which Firely Server can be reached by the requesting app. It is used to turn the ``fhirUser`` claim (e.g. ``Patient/123``) into a full url.
 
-The ```IntrospectionSecret`` is used to authenticate the introspection request. It is only used for clients with ``AccessTokenType`` set to ``Reference``, but you will need to set this for now.
+The ``IntrospectionSecret`` is used to authenticate the introspection request. It is only used for clients with ``AccessTokenType`` set to ``Reference``, but you will need to set this for now.
 
 In **Firely Server**, all the settings are in the section :ref:`SmartAuthorizationOptions <feature_accesscontrol_config>`
 

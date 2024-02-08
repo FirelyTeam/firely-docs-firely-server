@@ -79,7 +79,7 @@ For this introduction we will configure a user in the In memory store.
 We won't add any claims yet - see :ref:`firely_auth_settings_userstore` to read up on how they work.
 
 If you did this, you can stop Firely Auth again in the command window you started it in (``Ctrl+C``), and start it again. 
-You will should be able to login as ``alice`` with the password as configured above.
+You should be able to login as ``alice`` with the password as configured above.
 
 This time, Firely Auth will tell you that there are no clients configured that can access data on your behalf.
 

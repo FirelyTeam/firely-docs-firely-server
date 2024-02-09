@@ -18,10 +18,10 @@ Features
 #. Upgraded Firely Server to the latest Firely SDK v5.5.1, see its `releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.5.1>`_. Any plugin using the ``ITypedElement`` interface must be recompiled using the Vonk.Core package version 5.5.* due to changes in the SDK.
 #. Added new documentation on how to interact as a client with the PubSub API of Firely Server. See :ref:`pubsub_clients`.
 #. Added new documentation on how to configure PubSub messaging on Azure Service Bus. See :ref:`azure_service_bus`.
-#. Added a new configuration in the namespace ``Vonk.Plugin.Smart`` which enables the usage of SMART on FHIR v1 and v2 combined. The plugins ``Vonk.Smart`` and ``Vonk.Plugin.SoFv2`` are now deprecated. The deprecated plugins will continue to work in the current major version of Firely Server. See :ref:`_feature_accesscontrol_config` for more details.
+#. Added a new configuration in the namespace ``Vonk.Plugin.Smart`` which enables the usage of SMART on FHIR v1 and v2 combined. The plugins ``Vonk.Smart`` and ``Vonk.Plugin.SoFv2`` are now deprecated. The deprecated plugins will continue to work in the current major version of Firely Server. See :ref:`feature_accesscontrol_config` for more details.
 #. Added a new setting to the MongoDb configuration to provide a different connection string for the auto-update of the database. See ``MongoDbOptions.AutoUpdateConnectionString``.
 #. Added support for AccessPolicies in FHIR STU3.
-#. Added support for a No-Op check on Restful Update interactions. Firely Server can now check if a provided resource exactly matches the resource stored in the database and skip the update. See :ref:`_restful_noop` for more information.
+#. Added support for a No-Op check on Restful Update interactions. Firely Server can now check if a provided resource exactly matches the resource stored in the database and skip the update. See :ref:`restful_noop` for more information.
 
 Fixes
 ^^^^^

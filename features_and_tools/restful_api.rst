@@ -61,18 +61,14 @@ Limitations on CRUD
 Update with no changes 
 ----------------------
 
-Updating a server resource with identical content to what it currently holds results in a "No-Op" (no operation) scenario. The server acknowledges the request without making any actual modifications. To determine if your action resulted in a No-Op, you can check the OperationOutcome resource provided by the server. To prompt the server for this outcome, you might have to configure the Prefer Header. Following the FHIR specification, the server does not automatically provide an outcome response by default. For more details, see the `FHIR documentation <https://build.fhir.org/http.html#ops>`_.
-When the Update No-Op plugin is enabled:
-- It reduces server load and data processing by avoiding redundant updates.
-- It helps in controlling database growth by preventing the creation of unnecessary new versions of resources.
+Updating Firely Server with a resource that is identical to an existing resource in the database will normally create a new version of that resource, along with new AuditEvent and Provenance resources if auditing is enabled.
+This can put extra load on the server where this is not entirely necessary. To avoid these updates that can unnecessarily increase server load and database growth, the No-Op (No Operation) plugins can be enabled.
+By enabling these plugins, the server acknowledges the request without making any actual modifications to the database. If an update resulted in a No-Op scenario, this can be observed in the OperationOutcome that is returned by Firely Server.
 
 Configuration for No-Op
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Update with no changes requires `UpdateNoOp` plugin to be enabled. 
-The plugin can be configured to ignore additional meta elements in the resource. 
-By default, when plugin is enabled the following meta elements are ignored during resource comparison: ``versionId``, ``lastUpdated`` and ``source`` You can add additional meta elements to be ignored
-You can also add ``security``, ``tag`` and ``profile`` or any other to be ignored, but it depends on specific usage of meta. See more on `FHIR article <https://www.hl7.org/fhir/resource.html#tag-updates>`_.
+To make sure Firely server uses the No-Op scenario, the `UpdateNoOp` plugins need to be enabled in the `PipelineOptions`. 
 ::
    "PipelineOptions": {
    "PluginDirectory": "./plugins",
@@ -95,6 +91,51 @@ You can also add ``security``, ``tag`` and ``profile`` or any other to be ignore
       ]
    }
 
+There are three No-Op plugins available:
+
+* ``Vonk.Plugin.UpdateNoOp.UpdateNoOpConfiguration`` - For regular updates
+* ``Vonk.Plugin.UpdateNoOp.PatchNoOpConfiguration`` - For Patch operations
+* ``Vonk.Plugin.UpdateNoOp.ConditionalUpdateNoOpConfiguration`` - For conditional updates
+
+By default the following meta elements are ignored during resource comparison: ``versionId``, ``lastUpdated`` and ``source``. You can also add ``security``, ``tag`` and ``profile`` or any other meta element to be ignored, but it depends on your specific usage of meta. For more information see `the hl7 specification <https://www.hl7.org/fhir/resource.html#tag-updates>`_.
+
+To determine if your action resulted in a No-Op scenario, you can configure Firely Server to return an OperationOutcome. For this it is necessary to configure the Prefer Header as Firely Server does not return this response by default.
+The Prefer Header can be set in three ways, as per `the hl7 specification <https://build.fhir.org/http.html#ops>`_:
+
+* ``return=minimal``- Nothing is returned by the server
+* ``return=representation`` - The resource is returned as present in the database
+* ``return=OperationOutcome`` - Return an OperationOutcome
+
+In the example below an OperationOutcome for a No-Op scenario is returned when the Prefer Header is set to ``return=OperationOutcome``:
+::
+   {
+    "resourceType": "OperationOutcome",
+    "id": "26a724d9-10e4-4a71-819e-15d52f6f821c",
+    "meta": {
+        "versionId": "b6063533-a93e-4cd1-bb0b-5f37381d0f20",
+        "lastUpdated": "2024-02-12T11:12:40.6172822+00:00"
+    },
+    "issue": [
+        {
+            "severity": "information",
+            "code": "informational",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/dotnet-api-operation-outcome",
+                        "code": "5025"
+                    }
+                ],
+                "text": "No changes were performed as the provided resource contains no changes to the existing resource"
+            }
+        },
+        {
+            "severity": "information",
+            "code": "informational",
+            "diagnostics": "The operation was successful"
+        }
+    ]
+   }
 
 .. _restful_versioning:
 

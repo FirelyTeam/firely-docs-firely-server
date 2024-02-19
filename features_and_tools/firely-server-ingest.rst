@@ -333,6 +333,9 @@ Known issues
 ------------
 
 * FSI does not support scenarios where resources of different FHIR versions are stored in the same database;
+  
+  * Please note that FSI will not check or warn you if the database already contains resources of a FHIR version different from that specified via the CLI options ``-f``, ``--fhir-version <R3|R4>`` or ``fhirVersion`` in the config file.
+
 * When importing data from large ``*.ndjson`` files, the memory consumption may be quite high.
 * When importing STU3 resources, the field ``Patient.deceased`` will always be set to ``true`` if it exists. This is caused by an error in the FHIR STU3 specification. In case you would like to use FSI with STU3 resources, please :ref:`contact us<vonk-contact>`.
 * If a resource is present in a workload more than once, the entries may get processed in parallel and a version that is different from the latest may be set as current.

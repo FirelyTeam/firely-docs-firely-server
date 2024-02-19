@@ -8,6 +8,16 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_5_5_1:
+
+Release 5.5.1, February 19th, 2024
+---------------------------------
+
+
+Fixes
+^^^^^
+#. (:ref:`FSI<tool_fsi>`) Fixed an error in indexing of contained resources when the target database is SQL Server. The issue causes an exception to be thrown when performing a search in Firely Server that filters resources based on a filed value from a contained resource. For example, an error would happen if the following search is performed ``GET {{BASE_URL}}/Observation?subject.gender=male`` if an Observation with the contained Patient subject had been ingested using FSI.
+
 .. _vonk_releasenotes_5_5_0:
 
 Release 5.5.0, February 6th, 2024

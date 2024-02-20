@@ -242,6 +242,7 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               "EnableLegacyFhirContext": false,
               "AlwaysIncludeUserClaimsInIdToken": true,
               "RequirePkce": false,
+              "Require2fa": false,
               "AllowOfflineAccess": false,
               "AllowOnlineAccess": false,
               "AllowFirelySpecialScopes": true,
@@ -284,6 +285,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``EnableLegacyFhirContext``: true / false - Whether to use the new syntax of ``fhirContext`` defined in `SMART on FHIR v2.1.0 <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#fhir-context>`_. Default is false, when set to true the old syntax of ``fhirContext`` defined in `SMART on FHIR v2.0.0 <https://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html#fhircontext>`_ is used.
 - ``AlwaysIncludeUserClaimsInIdToken``: true / false: When requesting both an id token and access token, should the user claims always be added to the id token instead of requiring the client to use the userinfo endpoint. Default is false
 - ``Require PKCE``: true / false - see :term:`PKCE`. true is recommended for a :term:`public client` and can offer an extra layer of security for :term:`confidential client`.
+- ``Require2fa``: true / false - Whether users are obliged to set up Multi Factor Authentication before they can use their account to get a token.
 - ``AllowOfflineAccess``: true / false - Whether app can request refresh tokens while the user is online, see `SMART on FHIR refresh tokens`_
 - ``AllowOnlineAccess``: true / false - Whether app can request refresh tokens while the user is offline, see `SMART on FHIR refresh tokens`_. A user is offline if he is logged out of Firely Auth, either manually or by expiration
 - ``AllowFirelySpecialScopes``: true / false - Allow app to request scopes for Firely Server specific operations. Currently just 'http://server.fire.ly/auth/scope/erase-operation'

@@ -71,7 +71,7 @@ You can further adjust PubSub in the PubSub section of the `appsettings.instance
   Enabling ResourceChangeNotifications requires one-time DB configuration to enable changes tracking for SQL server backends. See :ref:`SQL Server Tracking Initialization<pubsub_sql_tracking_init>` for the instructions.
 
 .. note::
-  If you have configured MongoDb as your Firely Server repository database, note that the publication plugin ``Vonk.Plugin.PubSub.Pub.MongoDb`` can only be used in combination with MongoDb :ref: `replica sets <https://www.mongodb.com/docs/manual/replication/>` or :ref:`sharded clusters <https://www.mongodb.com/docs/manual/sharding>`, as the plugin utilizes the :ref:`Change Stream <https://www.mongodb.com/docs/manual/changeStreams/>` functionality of MongoDb and is thus restricted.
+  If you have configured MongoDb as your Firely Server repository database, note that the publication plugin ``Vonk.Plugin.PubSub.Pub.MongoDb`` can only be used in combination with MongoDb `replica sets <https://www.mongodb.com/docs/manual/replication/>`_ or `sharded clusters <https://www.mongodb.com/docs/manual/sharding>`_, as the plugin utilizes the :ref:`Change Stream <https://www.mongodb.com/docs/manual/changeStreams/>` functionality of MongoDb and is thus restricted.
 
 Message types and formats
 -------------------------

@@ -62,6 +62,7 @@ You can further adjust PubSub in the PubSub section of the `appsettings.instance
         "ResourceChangeNotifications": { 
             "SendLightEvents": false, // If enabled, FS will send out events on changes. These events will not contain the complete resource
             "SendFullEvents": false, // If enabled, FS will send out events on changes. These events will contain the complete resource
+            "ExcludeAuditEvents": false, // If enabled, FS will send out events on changes of resources, except Audit Events
             "PollingIntervalSeconds": 5, // How often Firely Server will be polling the DB for changes
             "MaxPublishBatchSize": 1000 // The maximum amount of resource changes that can be sent in a single message
         }

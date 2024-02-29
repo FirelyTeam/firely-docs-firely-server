@@ -58,7 +58,7 @@ You can further adjust PubSub in the PubSub section of the `appsettings.instance
         // so that other services can sync with Firely Server. Note that this is only available for Firely Server 
         // instances that use SQL server (2016 and newer) or MongoDb as a repository database. 
         // It does not work in combination with SQLite. 
-        // If you have configured MongoDB as backend, note that only replica sets and sharded cluster scenarios are supported in combination with PubSub.
+        // If you have configured MongoDB as a backend, note that only replica sets and sharded cluster scenarios are supported in combination with PubSub.
         "ResourceChangeNotifications": { 
             "SendLightEvents": false, // If enabled, FS will send out events on changes. These events will not contain the complete resource
             "SendFullEvents": false, // If enabled, FS will send out events on changes. These events will contain the complete resource

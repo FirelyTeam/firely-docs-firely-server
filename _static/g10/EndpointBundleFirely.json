@@ -1,55 +1,96 @@
 {
   "resourceType": "Bundle",
   "type": "collection",
+  "id": "Endpoint-Bundle-Firely",
   "entry": [
     {
+      "fullUrl": "https://fire.ly/Organization/org-firely",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "org-firely",
+        "name": "Firely USA Inc",
+        "type": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+                "code": "bus",
+                "display": "Non-Healthcare Business or Corporation"
+              }
+            ]
+          }
+        ],
+        "address": [
+          {
+            "use": "work",
+            "type": "postal",
+            "line": [
+              "228 East 45th Street",
+              "Suite 9E"
+            ],
+            "city": "New York",
+            "state": "NY",
+            "postalCode": "10017",
+            "country": "USA"
+          }
+        ],
+        "endpoint": [
+          {
+            "reference": "https://fire.ly/Endpoint/ep-firely-secure"
+          },
+          {
+            "reference": "https://fire.ly/Endpoint/ep-firely-nonsecure"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://fire.ly/Endpoint/ep-firely-secure",
       "resource": {
         "resourceType": "Endpoint",
-        "id": "ep-firely-production",
-        "meta": {
-          "profile": [
-            "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-endpoint"
-          ]
-        },
-        "contained": [
-          {
-            "resourceType": "Organization",
-            "id": "org-firely",
-            "meta": {
-              "profile": [
-                "http://hl7.org/fhir/uv/vhdir/StructureDefinition/vhdir-organization"
-              ]
-            },
-            "type": [
-              {
-                "coding": [
-                  {
-                    "system": "http://terminology.hl7.org/CodeSystem/organization-type",
-                    "code": "bus",
-                    "display": "Non-Healthcare Business or Corporation"
-                  }
-                ]
-              }
-            ],
-            "name": "Firely B.V."
-          }
-        ],
-        "status": "active",
+        "id": "ep-firely-secure",
         "connectionType": {
           "system": "http://terminology.hl7.org/CodeSystem/endpoint-connection-type",
-          "code": "hl7-fhir-rest"
+          "code": "hl7-fhir-rest",
+          "display": "HL7 FHIR"
         },
-        "name": "Firely B.V FHIR Endpoint - Production",
-        "managingOrganization": {
-          "reference": "#org-firely",
-          "display": "Firely B.V."
+        "name": "Firely Secure Example REST Endpoint",
+        "status": "active",
+        "organization": {
+          "reference": "https://fire.ly/Organization/org-firely"
         },
-        "contact": [
+        "payloadType": [
           {
-            "system": "url",
-            "value": "https://fire.ly"
+            "coding": [
+              {
+                "system": "http://ihe.net/fhir/ihe.formatcode.fhir/CodeSystem/formatcode",
+                "code": "urn:ihe:iti:xds:2017:mimeTypeSufficient",
+                "display": "mimeType Sufficient"
+              }
+            ]
           }
         ],
+        "payloadMimeType": [
+          "application/fhir+json"
+        ],
+        "address": "https://secure.server.fire.ly/r4"
+      }
+    },
+    {
+      "fullUrl": "https://fire.ly/Endpoint/ep-firely-nonsecure",
+      "resource": {
+        "resourceType": "Endpoint",
+        "id": "ep-firely-nonsecure",
+        "connectionType": {
+          "system": "http://terminology.hl7.org/CodeSystem/endpoint-connection-type",
+          "code": "hl7-fhir-rest",
+          "display": "HL7 FHIR"
+        },
+        "name": "Firely Non-secure Example REST Endpoint",
+        "status": "active",
+        "organization": {
+          "reference": "https://fire.ly/Organization/org-firely"
+        },
         "payloadType": [
           {
             "coding": [

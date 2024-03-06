@@ -8,10 +8,23 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_5_5_2:
+
+Release 5.5.2, March 6th, 2024
+------------------------------
+
+Security
+^^^^^^^^
+
+#. Fixed a security vulnerability where the connection string to a MongoDB database acting as a Serilog sink was not redacted in the log on startup.
+#. Fixed a security vulnerability where the connection string set in the AutoUpdateConnectionString setting for any database was not redacted in the log on startup.
+
+Please note that both settings are disabled by default. We recommend to change passwords configured as part of any of the connection strings mentioned above.
+
 .. _vonk_releasenotes_5_5_1:
 
 Release 5.5.1, February 19th, 2024
----------------------------------
+----------------------------------
 
 
 Fixes

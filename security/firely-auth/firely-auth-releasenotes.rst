@@ -11,7 +11,7 @@ Release 3.3.0, March xx, 2024
 Security
 ^^^^^^^^
 #. Disabling 2FA authentication for a client will now require a 2FA token from the user as an additional security step
-#. Added 'Require2fa' to the default appsettings. This replaces the 'RequireMfa' setting.
+#. Added 'Require2fa' to the default appsettings. This replaces the current 'RequireMfa' setting.
 
 Feature
 ^^^^^^^

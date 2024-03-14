@@ -233,20 +233,48 @@ Using Postman
 CQL Plugin in Firely Server uses the ``$evaluate-measure`` operation to execute a CQL measure on a resource.
 To verify the result of our CQL measure, we use Postman tool
 
-* Set up Postman with environment variable : baseUrl and point to http://localhost:4080
+Fork an existing collection:
+    #. Click the following "Fork postman collection into your workspace" link:
 
-    .. note::
-        Make sure that the capability statement contains a Library operation ``https:/fire.ly/fhir/OperationDefinition/Library-evaluate-measure``. 
-        This confirms that the CQL Plugin is enabled for the Firely Server.
+        .. raw:: html
 
-        Request :    
-            .. code-block::
+            <div class="postman-run-button"
+            data-postman-action="collection/fork"
+            data-postman-visibility="public"
+            data-postman-var-1="30387478-0705673a-2737-4ebd-9c59-3b53aeb1878d"
+            data-postman-collection-url="entityId=30387478-0705673a-2737-4ebd-9c59-3b53aeb1878d&entityType=collection&workspaceId=822b68d8-7e7d-4b09-b8f1-68362070f0bd"></div>
+            <script type="text/javascript">
+            (function (p,o,s,t,m,a,n) {
+                !p[s] && (p[s] = function () { (p[t] || (p[t] = [])).push(arguments); });
+                !o.getElementById(s+t) && o.getElementsByTagName("head")[0].appendChild((
+                (n = o.createElement("script")),
+                (n.id = s+t), (n.async = 1), (n.src = m), n
+                ));
+            }(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
+            </script>
 
-                GET {{baseUrl}}/metadata
+    #. Click "Fork Collection"
 
-* Create a Postman Collection with the following inputs : 
+        .. image:: ../images/Compliance_ForkTestCollectionPostman.png
+            :align: center
+            :width: 500
 
-    1.  Create a Library resource with the Library resource json file ``AgeFHIR4-0.0.1.json``.
+    #. Sign-In with your Postman account and click "Fork Collection". Change the label and workspace names as desired.
+    #. Run the Postman collection
+
+Create a postman collection
+    #. Set up Postman with variable : baseUrl and point to http://localhost:4080
+
+        .. note::
+            Make sure that the capability statement contains a Library operation ``https:/fire.ly/fhir/OperationDefinition/Library-evaluate-measure``. 
+            This confirms that the CQL Plugin is enabled for the Firely Server.
+
+            Request :    
+                .. code-block::
+
+                    GET {{baseUrl}}/metadata
+
+    #.  Create a Library resource with the Library resource json file ``AgeFHIR4-0.0.1.json``.
 
         Request :    
             .. code-block:: 
@@ -254,8 +282,8 @@ To verify the result of our CQL measure, we use Postman tool
                 POST {{baseUrl}}/administration/Library
 
         Store the ``url``
-    2.  Create a Support File with a binary file (todo : Explain this)
-    3.  Create a Patient resource with age over 18 years
+    #.  Create a Support File with a binary file (todo : Explain this)
+    #.  Create a Patient resource with age over 18 years
 
         Request :
             .. code-block:: 
@@ -283,7 +311,7 @@ To verify the result of our CQL measure, we use Postman tool
 
         Store the ``id`` of the patient resource created.
         
-    4.  Create a POST request for $evaluate-measure operation on the Library resource created
+    #.  Create a POST request for $evaluate-measure operation on the Library resource created
 
         Request :
             .. code-block:: 
@@ -331,16 +359,16 @@ To verify the result of our CQL measure, we use Postman tool
                     "data": "eyJQYXRpZW50Ijp7InJlc291cmNlVHlwZSI6IlBhdGllbnQiLCJpZCI6IjFjMjI1NzVmLWE5Y2QtNGI4OS05YTI3LTk2M2VmNmU3Y2QwNyIsIm1ldGEiOnsidmVyc2lvbklkIjoiN2VjMzkzYjItOTE1ZS00MTYyLTk1YzEtYjc4Y2M4YjE5MjhlIiwibGFzdFVwZGF0ZWQiOiIyMDI0LTAzLTEzVDEyOjQyOjAyLjU4MiswMDowMCJ9LCJhY3RpdmUiOnRydWUsIm5hbWUiOlt7InVzZSI6Im9mZmljaWFsIiwiZmFtaWx5IjoiU21pdGgiLCJnaXZlbiI6WyJKb2huIl19XSwiZ2VuZGVyIjoibWFsZSIsImJpcnRoRGF0ZSI6IjIwMTgtMTEtMDYifSwiaXMxOE9yQWJvdmUiOmZhbHNlfQ=="
                 }
 
-    5.  Get the result of the $evaluate-measure by passing the parameters.
+    #.  Get the result of the $evaluate-measure by passing the parameters.
         
         Request :
             .. code-block:: 
 
                 GET {{baseUrl}}/Library/$evaluate-measure
 
-        .. image:: ../images/postman_cql_evaluatemeasure_parameters.png
+        .. image:: ../images/postman_cql_evaluate_measure_parameters.png
             :width: 1000px
-            :alt: Illustration of paramters 
+            :alt: Illustration of parameters 
 
         Response :
             .. code-block:: 
@@ -370,14 +398,3 @@ To verify the result of our CQL measure, we use Postman tool
                     }
 
         The result displays if the Patient is evaluated as ``true`` or ``false`` for the CQL measure, in this case 18 years or above.
-
-
-
-
-
-
-
-
-
-
- 

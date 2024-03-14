@@ -9,11 +9,10 @@ Introduction
 Firely Server CQL Plugin is a means to use the Firely Server to run the CQL engine. 
 
 This document demonstrates :
-
-* Creation of a simple CQL file
-* Transformation of the CQL file to a library resource using the CQL Packager Tool
-* Setting up Firely Server CQL Plugin
-* Getting the result of your CQL measure on a resource using Postman tool
+    * Creation of a simple CQL file
+    * Transformation of the CQL file to a library resource using the CQL Packager Tool
+    * Setting up Firely Server CQL Plugin
+    * Getting the result of your CQL measure on a resource using Postman tool
 
 
 Create a CQL File
@@ -37,9 +36,9 @@ Generate a Library resource
 
 CQL File is translated to a library resource using the `CQL Packager tool <https://docs.fire.ly/projects/Firely-NET-SDK/en/latest/cql.html>`_
 
-    1. Follow the step by step `Installation of the CQL Packager tool and use the Demo solution <https://github.com/FirelyTeam/firely-cql-sdk/blob/develop/README.md>`_ to generate a resource file:
-    2. Place the CQL file ``Age.cql`` in the folder ..\firely-cql-sdk\Demo\Cql\input 
-    3. Clean and Build CQL project 
+    1. Follow the step by step `Installation of the CQL Packager tool and use the Demo solution <https://github.com/FirelyTeam/firely-cql-sdk/blob/develop/README.md>`_ to generate a resource file.
+    2. Place the CQL file ``Age.cql`` in the folder ``..\firely-cql-sdk\Demo\Cql\input``
+    3. From the Demo Solution, Clean and Build CQL folder 
 
         .. note::
             Running the build for this project turns these CQL files into ELM and puts the files into the source directory of the next step. 
@@ -135,7 +134,7 @@ CQL File is translated to a library resource using the `CQL Packager tool <https
                     }
                 }
 
-    4. Clean and Build ELM project. 
+    4. From the Demo Solution, Clean and Build Elm folder 
 
         .. note::
     
@@ -203,8 +202,7 @@ CQL File is translated to a library resource using the `CQL Packager tool <https
 Firely Server CQL Plugin 
 ------------------------
 
-This chapter details setting up Firely ServerCQL Plugin and provides you with an example to get some hands-on experience with CQL library with Postman tool. 
-
+This chapter details setting up Firely Server CQL Plugin and provides you with an example to get some hands-on experience with CQL library with Postman tool. 
  
 * Getting Started 
 * CQL Plugin Configuration 
@@ -238,14 +236,13 @@ To verify the result of our CQL measure, we use Postman tool
 * Set up Postman with environment variable : baseUrl and point to http://localhost:4080
 
     .. note::
-        Make sure that the capability statement contains a Library operation "https:/fire.ly/fhir/OperationDefinition/Library-evaluate-measure"
+        Make sure that the capability statement contains a Library operation ``https:/fire.ly/fhir/OperationDefinition/Library-evaluate-measure``. 
+        This confirms that the CQL Plugin is enabled for the Firely Server.
 
         Request :    
             .. code-block::
 
                 GET {{baseUrl}}/metadata
-
-        This confirms that the CQL Plugin is enabled for the Firely Server
 
 * Create a Postman Collection with the following inputs : 
 
@@ -323,6 +320,17 @@ To verify the result of our CQL measure, we use Postman tool
                 }
 
         ``valueCanonical`` of the url comes from the ``url`` of the library resource in Step 1 and the ``patient-id`` comes from the ``id`` of the patient created in Step 3
+
+        Response :
+            .. code-block:: jsonc
+
+                {
+                    "resourceType": "Binary",
+                    "contentType": "application/json",
+                    "id": "1aa7aa74-73cd-40a5-b1e9-30aaa370cb19",
+                    "data": "eyJQYXRpZW50Ijp7InJlc291cmNlVHlwZSI6IlBhdGllbnQiLCJpZCI6IjFjMjI1NzVmLWE5Y2QtNGI4OS05YTI3LTk2M2VmNmU3Y2QwNyIsIm1ldGEiOnsidmVyc2lvbklkIjoiN2VjMzkzYjItOTE1ZS00MTYyLTk1YzEtYjc4Y2M4YjE5MjhlIiwibGFzdFVwZGF0ZWQiOiIyMDI0LTAzLTEzVDEyOjQyOjAyLjU4MiswMDowMCJ9LCJhY3RpdmUiOnRydWUsIm5hbWUiOlt7InVzZSI6Im9mZmljaWFsIiwiZmFtaWx5IjoiU21pdGgiLCJnaXZlbiI6WyJKb2huIl19XSwiZ2VuZGVyIjoibWFsZSIsImJpcnRoRGF0ZSI6IjIwMTgtMTEtMDYifSwiaXMxOE9yQWJvdmUiOmZhbHNlfQ=="
+                }
+
     5.  Get the result of the $evaluate-measure by passing the parameters.
         
         Request :
@@ -334,12 +342,34 @@ To verify the result of our CQL measure, we use Postman tool
             :width: 1000px
             :alt: Illustration of paramters 
 
-    6. Results
+        Response :
+            .. code-block:: 
 
-       .. code-block:: 
+                    {
+                        "Patient": {
+                            "resourceType": "Patient",
+                            "id": "1c22575f-a9cd-4b89-9a27-963ef6e7cd07",
+                            "meta": {
+                                "versionId": "7ec393b2-915e-4162-95c1-b78cc8b1928e",
+                                "lastUpdated": "2024-03-13T12:42:02.582+00:00"
+                            },
+                            "active": true,
+                            "name": [
+                                {
+                                    "use": "official",
+                                    "family": "Smith",
+                                    "given": [
+                                        "John"
+                                    ]
+                                }
+                            ],
+                            "gender": "male",
+                            "birthDate": "1967-11-06"
+                        },
+                        "is18OrAbove": true
+                    }
 
-            Results here #todo API response and Decoded results
-            The result displays if the Patient is evaluated as true or false for Age over 18 years
+        The result displays if the Patient is evaluated as ``true`` or ``false`` for the CQL measure, in this case 18 years or above.
 
 
 

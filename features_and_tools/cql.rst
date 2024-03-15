@@ -233,35 +233,6 @@ Using Postman
 CQL Plugin in Firely Server uses the ``$evaluate-measure`` operation to execute a CQL measure on a resource.
 To verify the result of our CQL measure, we use Postman tool
 
-Fork an existing collection:
-    #. Click the following "Fork postman collection into your workspace" link:
-
-        .. raw:: html
-
-            <div class="postman-run-button"
-            data-postman-action="collection/fork"
-            data-postman-visibility="public"
-            data-postman-var-1="30387478-0705673a-2737-4ebd-9c59-3b53aeb1878d"
-            data-postman-collection-url="entityId=30387478-0705673a-2737-4ebd-9c59-3b53aeb1878d&entityType=collection&workspaceId=822b68d8-7e7d-4b09-b8f1-68362070f0bd"></div>
-            <script type="text/javascript">
-            (function (p,o,s,t,m,a,n) {
-                !p[s] && (p[s] = function () { (p[t] || (p[t] = [])).push(arguments); });
-                !o.getElementById(s+t) && o.getElementsByTagName("head")[0].appendChild((
-                (n = o.createElement("script")),
-                (n.id = s+t), (n.async = 1), (n.src = m), n
-                ));
-            }(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
-            </script>
-
-    #. Click "Fork Collection"
-
-        .. image:: ../images/Compliance_ForkTestCollectionPostman.png
-            :align: center
-            :width: 500
-
-    #. Sign-In with your Postman account and click "Fork Collection". Change the label and workspace names as desired.
-    #. Run the Postman collection
-
 Create a postman collection
     #. Set up Postman with variable : baseUrl and point to http://localhost:4080
 
@@ -398,3 +369,32 @@ Create a postman collection
                     }
 
         The result displays if the Patient is evaluated as ``true`` or ``false`` for the CQL measure, in this case 18 years or above.
+
+Fork an existing collection:
+    #. Click the following "Fork postman collection into your workspace" link:
+
+        .. raw:: html
+
+            <div class="postman-run-button"
+            data-postman-action="collection/fork"
+            data-postman-visibility="public"
+            data-postman-var-1="30387478-0705673a-2737-4ebd-9c59-3b53aeb1878d"
+            data-postman-collection-url="entityId=30387478-0705673a-2737-4ebd-9c59-3b53aeb1878d&entityType=collection&workspaceId=822b68d8-7e7d-4b09-b8f1-68362070f0bd"></div>
+            <script type="text/javascript">
+            (function (p,o,s,t,m,a,n) {
+                !p[s] && (p[s] = function () { (p[t] || (p[t] = [])).push(arguments); });
+                !o.getElementById(s+t) && o.getElementsByTagName("head")[0].appendChild((
+                (n = o.createElement("script")),
+                (n.id = s+t), (n.async = 1), (n.src = m), n
+                ));
+            }(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
+            </script>
+
+    #. Click "Fork Collection"
+
+        .. image:: ../images/Compliance_ForkTestCollectionPostman.png
+            :align: center
+            :width: 500
+
+    #. Sign-In with your Postman account and click "Fork Collection". Change the label and workspace names as desired.
+    #. Run the requests in the collection

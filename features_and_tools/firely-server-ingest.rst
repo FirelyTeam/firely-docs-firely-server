@@ -40,6 +40,7 @@ General usage
 
   * Firely Server instances targeting the same database will be impacted severely by the workload that FSI puts on the database. We advise to stop the Firely Server instances while the import is performed.
   * Only one instance of FSI per database should be run at a time. FSI can utilize all the cores on the machine it is run on, and insert data over several connections to the database in parallel. Multiple instances would probably cause congestion in the database.
+  * FSI does not add tenant security labels, see :ref:`feature_multitenancy`.
 
 Prerequisites
 ^^^^^^^^^^^^^

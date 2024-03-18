@@ -3,11 +3,11 @@
 Firely PubSub
 =============
 
-Firely offers the PubSub plugin to enable other services to communicate with Firely Server on data changes asynchronously. Specifically, other applications can send *commands* to update FHIR resources in the database and subscribe to *events* published by the server whenever resources change. Both commands and events get communicated as messages via a message broker (RabbitMQ).
+Firely offers the PubSub feature to enable other services to communicate with Firely Server on data changes asynchronously. Specifically, other applications can send *commands* to update FHIR resources in the database and subscribe to *events* published by the server whenever resources change. Both commands and events get communicated as messages via a message broker (RabbitMQ).
 
 Using PubSub might provide several advantages:
 
-* It is quicker than communicating via the REST API as it does not involve authorization/authentication, and resource validation. PubSub assumes that all services communicating with Firely Server are internal and secure and the resources posted using `ExecuteStorePlanCommand` are correct FHIR resources, so they do not get validated.
+* It is quicker than communicating via the REST API as it does not involve authorization/authentication and resource validation. PubSub assumes that all services communicating with Firely Server are internal and secure and that resources posted using `ExecuteStorePlanCommand` are correct FHIR resources, so they do not get validated.
 * This set-up also enables easy integration with other applications which can be written using technologies other than .NET. As long as these applications correctly implement communication via the message broker, they are able to communicate with Firely Server.
 * Having a message broker in the middle allows for building topologies where multiple applications can send commands and/or subscribe to events. 
 * If Firely Server or any of the other applications communicating with it is down, the messages will aggregate in the message broker and get processed as soon as the service is up again.
@@ -23,7 +23,7 @@ Using PubSub might provide several advantages:
 Configuration
 -------------
 
-You can enable PubSub by including the plugin in the pipeline options of the Firely Server `appsettings.instance.json` file:
+You can enable PubSub by including the plugins in the pipeline options of the Firely Server `appsettings.instance.json` file:
 
 .. code-block::
 
@@ -34,12 +34,14 @@ You can enable PubSub by including the plugin in the pipeline options of the Fir
             "Path": "/",
             "Include": [
                 ...
-                "Vonk.Plugin.PubSub"
+                "Vonk.Plugin.PubSub.Pub.MongoDb",
+                "Vonk.Plugin.PubSub.Pub.Sql",
+                "Vonk.Plugin.PubSub.Sub",
                 ]
             }
         ]
     },
-
+The ``Vonk.Plugin.PubSub.Sub`` plugin allows Firely Server to subscribe to messages published to a message broker by other clients. The ``Vonk.Plugin.PubSub.Pub.Sql`` and ``Vonk.Plugin.PubSub.Pub.MongoDb`` plugins allow Firely Server to publish changes of the respective database (either SQL or MongoDb) to the message broker. 
 You can further adjust PubSub in the PubSub section of the `appsettings.instance.json` file:
 
 .. code-block::
@@ -54,18 +56,23 @@ You can further adjust PubSub in the PubSub section of the `appsettings.instance
         },
         // The section below contains configuration related to publishing events when data gets changed in Firely Server 
         // so that other services can sync with Firely Server. Note that this is only available for Firely Server 
-        // instances that use SQL server (2016 and newer) as a repository database. 
-        // As of yet, it cannot work in combination with MongoDB or SQLite.
+        // instances that use SQL server (2016 and newer) or MongoDb as a repository database. 
+        // It does not work in combination with SQLite. 
+        // If you have configured MongoDB as a backend, note that only replica sets and sharded cluster scenarios are supported in combination with PubSub.
         "ResourceChangeNotifications": { 
             "SendLightEvents": false, // If enabled, FS will send out events on changes. These events will not contain the complete resource
             "SendFullEvents": false, // If enabled, FS will send out events on changes. These events will contain the complete resource
+            "ExcludeAuditEvents": false, // If enabled, FS will send out events on changes of resources, except Audit Events
             "PollingIntervalSeconds": 5, // How often Firely Server will be polling the DB for changes
             "MaxPublishBatchSize": 1000 // The maximum amount of resource changes that can be sent in a single message
         }
     },
 
 .. note::
-  Enabling ResourceChangeNotifications requires one-time DB configuration to enable changes tracking. See :ref:`SQL Server Tracking Initialization<pubsub_sql_tracking_init>` for the instructions.
+  Enabling ResourceChangeNotifications requires one-time DB configuration to enable changes tracking for SQL server backends. See :ref:`SQL Server Tracking Initialization<pubsub_sql_tracking_init>` for the instructions.
+
+.. note::
+  If you have configured MongoDb as your Firely Server repository database, note that the publication plugin ``Vonk.Plugin.PubSub.Pub.MongoDb`` can only be used in combination with MongoDb `replica sets <https://www.mongodb.com/docs/manual/replication/>`_ or `sharded clusters <https://www.mongodb.com/docs/manual/sharding>`_, as the plugin utilizes the :ref:`Change Stream <https://www.mongodb.com/docs/manual/changeStreams/>` functionality of MongoDb and is thus restricted.
 
 Message types and formats
 -------------------------

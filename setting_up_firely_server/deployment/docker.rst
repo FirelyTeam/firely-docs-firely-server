@@ -242,6 +242,14 @@ To stop the container, run: |br|
 .. note::
 
     If you want to use a healthcheck in your docker-compose file, see :ref:`feature_healthcheck`.
+    
+    When using the healthchecks in a docker-compose file, the $ in $liveliness or $readiness must be escaped with another $.
+    
+    .. code-block:: yaml
+      :linenos:
+      
+      healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:4080/$$readiness"]
 
 Running Docker with a SQL Server container
 ------------------------------------------

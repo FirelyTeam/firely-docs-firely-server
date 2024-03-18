@@ -6,19 +6,19 @@ CQL Plugin
 Introduction
 ------------
 
-Firely Server CQL Plugin is a means to use the Firely Server to run the CQL engine. 
+Firely Server CQL Plugin is a means to use the Firely Server to run the `CQL engine <https://cql.hl7.org/>`_.
 
 This document demonstrates :
     * Creation of a simple CQL file
-    * Transformation of the CQL file to a library resource using the CQL Packager Tool
-    * Setting up Firely Server CQL Plugin
-    * Getting the result of your CQL measure on a resource using Postman tool
+    * Transformation of the CQL file to a `library resource <https://www.hl7.org/fhir/library.html>`_ using the CQL Packager Tool
+    * Setting up Firely Server with CQL Plugin
+    * Getting the result of your CQL measure on the library resource in Firely Server using Postman tool
 
 
 Create a CQL File
 -----------------
 
-To start working with Firely Server CQL Plugin, you would need a CQL File.
+To start working with Firely Server CQL Plugin, you would need a CQL File. Some examples can be found `here <https://cql.hl7.org/examples.html>`_.
 An example of a CQL file ``AgeFHIR4.cql`` is displayed below: 
 
     .. code-block:: jsonc
@@ -34,7 +34,8 @@ An example of a CQL file ``AgeFHIR4.cql`` is displayed below:
 Generate a Library resource
 ---------------------------
 
-CQL File is translated to a library resource using the `CQL Packager tool <https://docs.fire.ly/projects/Firely-NET-SDK/en/latest/cql.html>`_
+CQL File created in the previous step is translated to a `library resource <https://www.hl7.org/fhir/library.html>`_ using the `CQL Packager tool <https://docs.fire.ly/projects/Firely-NET-SDK/en/latest/cql.html>`_.
+Firely Server CQL plugin uses this library resource to evaluate the CMS measure on other resources.
 
     1. Follow the step by step `Installation of the CQL Packager tool and use the Demo solution <https://github.com/FirelyTeam/firely-cql-sdk/blob/develop/README.md>`_ to generate a resource file.
     2. Place the CQL file ``Age.cql`` in the folder ``..\firely-cql-sdk\Demo\Cql\input``
@@ -140,7 +141,8 @@ CQL File is translated to a library resource using the `CQL Packager tool <https
     
             PackagerCLI takes the original CQL (from the input folder in step 1) and the ELM (from Json folder from this project from step 2) as input.   
             The generated C# is exported to the root directory of the Measures project and built into a Measures.dll.  
-            The generated Library resource ``AgeFHIR4-0.0.1.json`` is stored in the Resources folder in the Test project. 
+            The generated Library resource ``AgeFHIR4-0.0.1.json`` is stored in the Resources folder in the Test project.
+            We use the content of this generated Library resource to create a Library resource in Firely Server.
         
         .. container:: toggle
 

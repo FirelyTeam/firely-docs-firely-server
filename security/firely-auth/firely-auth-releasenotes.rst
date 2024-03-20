@@ -5,8 +5,8 @@ Release notes
 
 .. _firelyauth_releasenotes_3.3.0:
 
-Release 3.3.0, March xx, 2024
------------------------------
+Release 3.3.0, March 20th, 2024
+-------------------------------
 
 Security
 ^^^^^^^^
@@ -19,8 +19,6 @@ Feature
 #. Firely Auth will now warn about invalid key/value pairs submitted to the launchContext API
 #. Values in the form of '<resourceType>/<id>' submitted to the launchContext API will now be automatically translate to id-only values
 
-Release 3.3.0-rc3, February 1st, 2024
--------------------------------------
 
 .. _firelyauth_releasenotes_3.3.0-rc3:
 

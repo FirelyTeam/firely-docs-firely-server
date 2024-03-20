@@ -10,8 +10,8 @@ When using the SQL Server user store, you can manage the users therein with a co
 Executable
 ----------
 
-The app is included in the :ref:`binaries <firely_auth_deploy_exe>` of Firely Auth.
-You can invoke it with:
+Please contact us if you would like to receive the executable, either via mail at server@fire.ly or via the `Support Desk in Jira <https://firely.atlassian.net/servicedesk/customer/user/login?destination=portals>`_. 
+You can invoke the executable with:
 
 .. code:: Powershell
 
@@ -118,18 +118,21 @@ Creating password-less users in the UI for SSO
 ----------------------------------------------
 
 For SSO implementations you need password-less users in order to authenticate with a remote service. These can be created with a few extra steps in the UI of Firely Auth.
-First, it is necessary to log into Firely Auth as an administrator. For this you need to log in with ``FirelyAuthAdmin`` as a username and use a password that you specify in the root of the Firely Auth appsettings.json file, you will need to add the following line:
+First, it is necessary to log into Firely Auth as an administrator. For this, you can log in with the user ``FA_ADMIN`` and a password that you can configure in several ways.
 
-.. code-block::
+- The password can be set with the environment variable ``FIRELY_AUTH_ADMIN_PASSWORD``
+- It can be specified in the appsettings:
 
-  "setadminpassword": "<admin password>",
+    .. code-block::
+
+      "ADMIN_PASSWORD": "<admin password>",
 
 
-Alternatively, you can set the admin password during startup of Firely Auth:
+- It is also possible to set the admin password in the commandline during startup of Firely Auth:
 
-.. code-block::
+    .. code-block::
 
-  dotnet Firely.Auth.Core.dll --setadminpassword=<admin password>
+      dotnet Firely.Auth.Core.dll --ADMIN_PASSWORD=<admin password>
 
 
 Next, you can navigate to the admin portal and create a password-less user there:

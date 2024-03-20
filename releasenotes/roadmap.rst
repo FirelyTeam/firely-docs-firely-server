@@ -7,24 +7,17 @@ This page lists the features and changes we have planned for the foreseeable fut
 
 Disclaimer: No rights can be derived from this roadmap.
 
-2023
+2024
 ----
 
-Q3
+Q2
 ^^
 
-* Native support for ServiceBus-based messaging to improve EHR integration scenarios
-* Azure Active Directory and Single Sign-on support in Firely Auth
-* Package-based import of FHIR conformance resources
-* Support for QI Core / DaVinci DEQM Implementation Guide
+* Integration of the v2.x Firely validation API into Firely Server
+* Support for executing FHIR-based CMS Electronic Clinical Quality Measures
+* Support for executing FHIR-based HEDIS Quality Measures
 
-The following features are intended to support the CMS-0057-P regulation:
-
-* Improved support for Patient Access APIs:
-  * Full support for the CARIN Blue Button ImplementationGuide
-
-* Improved support for Provider Access APIs:
-  * Filtering patients based on Consent during Bulk Data Export requests
+The following features are intended to support the CMS-0057-F regulation:
 
 * Improved support for Payor-to-Payor APIs:
-  * Request and apply patient/user level scopes during a Bulk Data Export request
+  * Implement the HRex $member-match operation

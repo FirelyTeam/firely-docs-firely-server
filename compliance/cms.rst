@@ -1,9 +1,9 @@
 .. _cms:
 
-CMS Advancing Interoperability and Improving Prior Authorization Processes (CMS-0057-P) - 🇺🇸
-============================================================================================
+CMS Interoperability and Prior Authorization Final Rule (CMS-0057-F) - 🇺🇸
+=========================================================================
 
-The proposed `CMS Interoperability Rule (CMS-0057-P) <https://www.federalregister.gov/documents/2022/12/13/2022-26479/medicare-and-medicaid-programs-patient-protection-and-affordable-care-act-advancing-interoperability>`_ aims to promote greater interoperability, patient access, and innovation in the healthcare industry while also improving the quality and cost-effectiveness of care. Technically these goals are supported by multiple APIs that are required to be provided:
+The proposed `CMS Interoperability Rule (CMS-0057-F) <https://www.federalregister.gov/documents/2024/02/08/2024-00895/medicare-and-medicaid-programs-patient-protection-and-affordable-care-act-advancing-interoperability>`_ aims to promote greater interoperability, patient access, and innovation in the healthcare industry while also improving the quality and cost-effectiveness of care. Technically these goals are supported by multiple APIs that are required to be provided:
 
 Firely Server aims to support all mandatory requirements out-of-the-box. The following implementation guides build the foundation of the APIs mentioned above.
 

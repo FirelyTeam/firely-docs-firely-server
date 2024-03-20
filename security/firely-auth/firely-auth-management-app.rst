@@ -10,8 +10,8 @@ When using the SQL Server user store, you can manage the users therein with a co
 Executable
 ----------
 
-The app is included in the :ref:`binaries <firely_auth_deploy_exe>` of Firely Auth.
-You can invoke it with:
+Please contact us if you would like to receive the executable, either via mail at server@fire.ly or via the `Support Desk in Jira <https://firely.atlassian.net/servicedesk/customer/user/login?destination=portals>`_. 
+You can invoke the executable with:
 
 .. code:: Powershell
 

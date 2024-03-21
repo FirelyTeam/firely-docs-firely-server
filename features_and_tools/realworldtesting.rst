@@ -39,7 +39,6 @@ In the example below we have enabled all three levels: Patient, Group and System
           "Vonk.Fhir.R4",
           //"Vonk.Fhir.R5",
           "Vonk.Repository.Sqlite.SqliteVonkConfiguration",
-          "Vonk.Plugin.BulkDataExport.RealWorldTesting"
           ...
         ],
         "Exclude": [
@@ -51,6 +50,7 @@ In the example below we have enabled all three levels: Patient, Group and System
         "Include": [
           "Vonk.Core",
           "Vonk.Fhir.R4",
+          "Vonk.Plugin.BulkDataExport.RealWorldTesting"
           "Vonk.Repository.Sqlite.SqliteTaskConfiguration",
           "Vonk.Repository.Sqlite.SqliteAdministrationConfiguration",
           "Vonk.Subscriptions.Administration",

@@ -24,7 +24,49 @@ Read more about the `async request flow <https://build.fhir.org/async-bundle.htm
 Configuration
 -------------
 
-To configure RWT one needs to have configuration values set to successfully connect to InfluxDB.
+To start using Real World Testing you will first have to add the relevant plugins (Vonk.Plugin.RealWorldTesting) to the PipelineOptions in the appsettings. 
+In the example below we have enabled all three levels: Patient, Group and System.
+
+.. code-block:: JavaScript
+
+ "PipelineOptions": {
+    "PluginDirectory": "./plugins",
+    "Branches": [
+      {
+        "Path": "/",
+        "Include": [
+          "Vonk.Core",
+          "Vonk.Fhir.R4",
+          //"Vonk.Fhir.R5",
+          "Vonk.Repository.Sqlite.SqliteVonkConfiguration",
+          "Vonk.Plugin.BulkDataExport.RealWorldTesting"
+          ...
+        ],
+        "Exclude": [
+          "Vonk.Subscriptions.Administration"
+        ]
+      }, 
+      {
+        "Path": "/administration",
+        "Include": [
+          "Vonk.Core",
+          "Vonk.Fhir.R4",
+          "Vonk.Repository.Sqlite.SqliteTaskConfiguration",
+          "Vonk.Repository.Sqlite.SqliteAdministrationConfiguration",
+          "Vonk.Subscriptions.Administration",
+          "Vonk.Plugins.Terminology",
+          "Vonk.Administration",
+          "Vonk.Plugin.BinaryWrapper"
+        ],
+        "Exclude": [
+          "Vonk.Core.Operations"
+        ]
+        ... etc
+
+.. note::
+   RealWorldTesting works as an asynchronous operation. To store the all operation-related information, it is necessary to enable a "Task Repository" on the admin database. Please enable the relevant "Vonk.Repository.[database-type].[database-type]TaskConfiguration" in the administration pipeline options, depending on the database type you use for the admin database. All supported databases can be used as a task repository. In the example above we have enabled the task repository for SQLite: "Vonk.Repository.Sqlite.SqliteTaskConfiguration".
+
+To configure RWT one needs to also have values for connecting to InfluxDB configured.
 
 .. code-block:: json
 
@@ -38,7 +80,7 @@ To configure RWT one needs to have configuration values set to successfully conn
 InfluxDb has a concept of buckets and organizations, so one would need to use the same bucket for writing and reading data to the backend. 
 However it is advised to use tokens with different access rights, since querying data while executing RWT operation only requires read access enabled.
 
-In addition, there the following configuration section:
+In addition, there is the following configuration section:
 
 .. code-block:: json
     
@@ -48,6 +90,8 @@ In addition, there the following configuration section:
 
 In `RepeatPeriod` you can configure the polling interval (in milliseconds) for checking the Task queue for a new operation task.
 
+
+
 Using Real World Testing
 ------------------------
 
@@ -55,7 +99,7 @@ To initiate a Real World Testing operation, construct a request to the administr
 
 .. code-block:: HTTP
 
-   GET {{BASE_URL}}/administration/$realworldtesting?url=https://fire.ly/fhir/Library/rwt-all-requests&from=2024-03-14T09:33:16.776Z&to=2024-03-14T09:33:50.326Z
+   GET {{BASE_URL}}/administration/$realworldtesting?url=https://fire.ly/fhir/Library/rwt-all-requests&from=2024-03-18T14:34:16.772Z&to=2024-03-18T14:34:52.453Z
 
 This request triggers the execution of the specified Flux query against the InfluxDB dataset, with the provided parameters dynamically injected into the query.
 
@@ -193,7 +237,7 @@ There are six possible status options:
             {
                 "response": {
                     "status": "200 OK",
-                    "location": "{{BASE_URL}}/administration/$realworldtesting?url=https%3A%2F%2Ffire.ly%2Ffhir%2FLibrary%2Frwt-all-requests&from=2024-03-14T09%3A33%3A16.776Z&to=2024-03-14T09%3A33%3A50.326Z"
+                    "location": "{{BASE_URL}}/administration/$realworldtesting?url=https://fire.ly/fhir/Library/rwt-all-requests&from=2024-03-18T14:34:16.772Z&to=2024-03-18T14:34:52.453Z"
                 },
                 "resource": {
                     "resourceType": "Parameters",

@@ -24,8 +24,7 @@ Read more about the `async request flow <https://build.fhir.org/async-bundle.htm
 Configuration
 -------------
 
-To start using Real World Testing you will first have to add the relevant plugins (Vonk.Plugin.RealWorldTesting) to the PipelineOptions in the appsettings. 
-In the example below we have enabled all three levels: Patient, Group and System.
+To start using Real World Testing you will first have to add the relevant plugins (Vonk.Plugin.RealWorldTesting) to the PipelineOptions in the appsettings.
 
 .. code-block:: JavaScript
 

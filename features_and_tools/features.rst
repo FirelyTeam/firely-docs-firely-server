@@ -3,7 +3,7 @@
 Features and Tools
 ==================
 
-Firely Server offers many features as defined in the FHIR Specification and beyond. Below pages provide you with an overview of these features and tools. Note that for some tools, such as Firely Server Ingest and Bulk Data Export, separate licensing applies. You can always reach out to us at server@fire.ly if you have questions.
+Firely Server offers many features as defined in the FHIR Specification and beyond. Below pages provide you with an overview of these features and tools. Note that for some tools, such as Firely Server Ingest, Bulk Data Export and CQL, separate licensing applies. You can always reach out to us at server@fire.ly if you have questions.
 
 .. image:: ../images/FirelyPlugins.png
   :align: right
@@ -27,6 +27,7 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    pubsub
    multi-tenancy
    features-availability
+   cql
    
 
 

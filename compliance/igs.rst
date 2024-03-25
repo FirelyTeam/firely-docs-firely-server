@@ -138,6 +138,7 @@ In summary, the USCDI defines the core health data elements for nationwide inter
    * - * ✔️ v3.1.1
        * ✔️ v4.0.0
        * ✔️ v5.0.1
+       * ✔️ v6.1.0
   
      - n/A
 
@@ -146,6 +147,7 @@ In summary, the USCDI defines the core health data elements for nationwide inter
      - * `hl7.fhir.us.core|3.1.1 <https://registry.fhir.org/package/hl7.fhir.us.core|3.1.1>`_
        * `hl7.fhir.us.core|4.0.0 <https://registry.fhir.org/package/hl7.fhir.us.core|4.0.0>`_
        * `hl7.fhir.us.core|5.0.1 <https://registry.fhir.org/package/hl7.fhir.us.core|5.0.1>`_
+       * `hl7.fhir.us.core|6.1.0 <https://registry.fhir.org/package/hl7.fhir.us.core|6.1.0>`_
 
 Known Limitations
 -----------------

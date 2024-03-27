@@ -49,7 +49,7 @@ To start using Real World Testing you will first have to add the relevant plugin
         "Include": [
           "Vonk.Core",
           "Vonk.Fhir.R4",
-          "Vonk.Plugin.BulkDataExport.RealWorldTesting"
+          "Vonk.Plugin.RealWorldTesting"
           "Vonk.Repository.Sqlite.SqliteTaskConfiguration",
           "Vonk.Repository.Sqlite.SqliteAdministrationConfiguration",
           "Vonk.Subscriptions.Administration",

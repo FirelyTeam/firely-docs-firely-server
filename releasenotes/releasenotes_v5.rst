@@ -8,6 +8,21 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_5_6_0:
+
+Release 5.6.0, [???]
+------------------------------
+
+Features
+^^^^^^^^
+
+#. (:ref:`FSI<tool_fsi>`) Ingestion recovery feature has been added. For details, see :ref:`tool_fsi_recovery`.
+
+Configuration
+^^^^^^^^^^^^^
+
+#. (:ref:`FSI<tool_fsi>`) The ``--readPar`` CLI option (``workflow/readParallel`` appsettings option) has been removed.
+
 .. _vonk_releasenotes_5_5_2:
 
 Release 5.5.2, March 6th, 2024

@@ -16,12 +16,24 @@ Release 5.6.0, [???]
 Features
 ^^^^^^^^
 
-#. (:ref:`FSI<tool_fsi>`) Ingestion recovery feature has been added. For details, see :ref:`tool_fsi_recovery`.
+#. (**IMPORTANT**) Implemented a check that all plugins specified in the pipeline options are available. If not, Firely Server won't start.
+#. (**IMPORTANT**) BDE: Group members that are marked as inactive (``Group.member.inactive = true``) or not active currently (based on ``Group.member.period``) do not get exported via the group-based Bulk Data Export.
+#. (:ref:`FSI<tool_fsi>`) An ingestion recovery feature has been added. For details, see :ref:`tool_fsi_recovery`.
+#. Added a config setting ``BundleOptions.DefaultTotal`` that sets the default `_total` argument value for search requests if not specified in the request itself. Setting it to `none` can improve query search performance. See :ref:`Bundle Options<bundle_options>`.
+#. Pubsub notifications are now supported when MongoDB is used as a repository.
+#. Added ability to disable sending of AuditEvent-related notifications in PubSub. See :ref:`Pub Sub Configuration<pubsub_configuration>`.
 
 Configuration
 ^^^^^^^^^^^^^
 
 #. (:ref:`FSI<tool_fsi>`) The ``--readPar`` CLI option (``workflow/readParallel`` appsettings option) has been removed.
+
+Fixes
+^^^^^
+
+#. Fixed a NullReferenceException if one or more PubSub plugins are enabled but the config section is missing
+#. Other minor fixes
+
 
 .. _vonk_releasenotes_5_5_2:
 

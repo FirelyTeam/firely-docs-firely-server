@@ -23,6 +23,11 @@ Features
 #. Pubsub notifications are now supported when MongoDB is used as a repository.
 #. Added ability to disable sending of AuditEvent-related notifications in PubSub. See :ref:`Pub Sub Configuration<pubsub_configuration>`.
 
+Improvements
+^^^^^^^^^^^^
+
+#. Firely SDK has been updated to v5.7.0 - https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.7.0
+
 Configuration
 ^^^^^^^^^^^^^
 

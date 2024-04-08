@@ -16,7 +16,7 @@ Release 5.6.0, [???]
 Features
 ^^^^^^^^
 
-#. (**IMPORTANT**) Implemented a check that all plugins specified in the pipeline options are available. If not, Firely Server won't start.
+#. (**IMPORTANT**) Implemented a check that all plugins specified in the pipeline options are available. If not, Firely Server won't start. Please remove any missing configuration namespace from the appsettings if Firely Server encounters any error in the pipeline options during startup.
 #. (**IMPORTANT**) BDE: Group members that are marked as inactive (``Group.member.inactive = true``) or not active currently (based on ``Group.member.period``) do not get exported via the group-based Bulk Data Export.
 #. (:ref:`FSI<tool_fsi>`) An ingestion recovery feature has been added. For details, see :ref:`tool_fsi_recovery`.
 #. Added a config setting ``BundleOptions.DefaultTotal`` that sets the default `_total` argument value for search requests if not specified in the request itself. Setting it to `none` can improve query search performance. See :ref:`Bundle Options<bundle_options>`.

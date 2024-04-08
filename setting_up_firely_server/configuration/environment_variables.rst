@@ -49,7 +49,7 @@ appsettings.json:
 
 environment variable::
 
-	VONK_Repository:SqlDbOptions:ConnectionString=<some connectionstring>
+	VONK_Administration:SqlDbOptions:ConnectionString=<some connectionstring>
 
 To access an array item, use 0-based indexing::
 

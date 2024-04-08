@@ -27,12 +27,13 @@ Configuration
 ^^^^^^^^^^^^^
 
 #. (:ref:`FSI<tool_fsi>`) The ``--readPar`` CLI option (``workflow/readParallel`` appsettings option) has been removed.
+#. Quartz has been removed from Firely Server. If you have a custom plugin that depends on Quartz, please make sure you install and initialize Quartz in the plugin itself.
 
 Fixes
 ^^^^^
 
-#. Fixed a NullReferenceException if one or more PubSub plugins are enabled but the config section is missing
-#. Other minor fixes
+#. Fixed a NullReferenceException if one or more PubSub plugins are enabled but the config section is missing.
+#. Fixed an endless loop of loading conformance resources with invalid search parameters.
 
 
 .. _vonk_releasenotes_5_5_2:

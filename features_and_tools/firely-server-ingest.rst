@@ -320,6 +320,10 @@ If the ingestion procedure gets interrupted at any point, or some of the resourc
   - Note that the recovery journal directory must be empty before performing the initial ingestion attempt for a given set of files. 
   - Furthermore, the source files must not be changed between ingestion attempts. If any changes are detected, the FSI will throw an error.
 
+.. note::
+  
+  Please do not use the source directory or any subdirectories within the source directory as the recovery journal directory.
+
 Monitoring
 ----------
 

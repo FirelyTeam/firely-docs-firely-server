@@ -365,6 +365,7 @@ Search size
 ::
 
     "BundleOptions": {
+        "DefaultTotal": "accurate", // Allowed values: none, estimate, accurate
         "DefaultCount": 10,
         "MaxCount": 50,
         "DefaultSort": "-_lastUpdated"
@@ -377,6 +378,7 @@ The Search interactions returns a bundle with results. Users can specify the num
 * ``MaxCount`` sets the number of results in case the user specifies a ``_count`` value higher than this maximum. This is to protect Firely Server from being overloaded.
 * ``DefaultCount`` should be less than or equal to ``MaxCount``
 * ``DefaultSort`` is what search results are sorted on if no sort order is specified in the request. If a sort order is specified, this is still added as the last sort clause.
+* ``DefaultTotal`` sets default total behaviour for search requests if not specified in the request itself.
 
 .. _sizelimits_options:
 

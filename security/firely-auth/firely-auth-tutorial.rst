@@ -41,12 +41,13 @@ Step 2 - License
 
 Firely Auth is licensed, like all plugins and additional tools of Firely Server. It uses the same license file as the Firely Server instance it works with.
 Firely Auth requires this token to be present in the license file: ``http://fire.ly/server/auth``.
-If you don't have this in your license file yet, you probably need to acquire Firely Auth first. Please :ref:`vonk-contact` for that. You can also test Fiely Auth with an evaluation license. To acquire this license you can `sign up <https://fire.ly/firely-server-trial/>`_ after which you will receive an email with the license file.
-By default Firely Auth will look for a license file named ``firely-server-license.json``, adjacent to the ``Firely.Auth.Core.exe`` 
+If you don't have this in your license file yet, you probably need to acquire Firely Auth first. Please :ref:`vonk-contact` for that. You can also test Firely Auth with an evaluation license. To acquire this license you can `sign up <https://fire.ly/firely-server-trial/>`_ after which you will receive an email with the license file.
+By default Firely Auth will look for a license file named ``firely-auth-license.json``, adjacent to the ``Firely.Auth.Core.exe`` 
 You can adjust the location of the license file in the configuration settings, see :ref:`firely_auth_settings_license`.
-Additionally you will have to place a file called ``Duende_License.key`` also adjacent to the ``Firely.Auth.Core.exe``. Please note that the path to this file cannot be configured. 
 
-With the license in place, you can start Firely Auth by running::
+Additionally you will have to place a file called ``Duende_License.key`` also adjacent to the ``Firely.Auth.Core.exe``. This is required for production use but not testing or development. Firely will provide this key with purchase of Firely Auth. Please note that the path to this file cannot be configured. 
+
+With the license in place, you can start Firely Auth in PowerShell by running::
 
     > ./Firely.Auth.Core.exe
 
@@ -62,8 +63,8 @@ You need to add at least one user to Firely Auth. Firely Auth supports two types
 For this introduction we will configure a user in the In memory store.
 
 #. Go to the bin-directory
-#. Open appsettings.default.json
-#. Look for the section ``UserStore``
+#. Copy ``appsettings.default.json`` to a new file, named ``appsettings.instance.json``. This allows you to change settings while keeping the defaults for reference. See :ref:`firely_auth_settings`.
+#. Open ``appsettings.instance.json`` and look for the section ``UserStore``
 #. By default the ``Type`` is already set to ``InMemory``.
 #. Now add to the ``InMemory:AllowedUsers`` array:
 
@@ -78,9 +79,7 @@ For this introduction we will configure a user in the In memory store.
 We won't add any claims yet - see :ref:`firely_auth_settings_userstore` to read up on how they work.
 
 If you did this, you can stop Firely Auth again in the command window you started it in (``Ctrl+C``), and start it again. 
-You should now be able to login as ``alice`` with the password as configured above.
-
-This time, Firely Auth will tell you that there are no clients configured that can access data on your behalf.
+You should be able to login as ``alice`` with the password as configured above.
 
 Step 4 - Clients
 ^^^^^^^^^^^^^^^^
@@ -104,7 +103,7 @@ We'll just provide the correct settings here. The settings are documented in det
                 "Description": "Postman API testing tool",
                 "Enabled": true,
                 "RequireConsent": true,
-                "RedirectUris": ["https://www.getpostman.com/oauth2/callback", "https://oauth.pstmn.io/v1/callback"],
+                "RedirectUris": ["https://www.getpostman.com/oauth2/callback", "https://oauth.pstmn.io/v1/callback", "https://oauth.pstmn.io/v1/browser-callback"],
                 "ClientSecrets": [{"SecretType": "SharedSecret", "Secret": "re4&ih)+HQu~w"}], 
                 "AllowedGrantTypes": ["client_credentials", "authorization_code"],
                 "AllowedSmartLegacyActions": [],
@@ -184,13 +183,14 @@ It contains two Patient resources and an Observation related to each of them.
 
 Now we will connect Firely Server and Firely Auth. This requires mutual settings.
 
-In **Firely Auth**:
+In **Firely Auth**, the following :ref:`settings <firely_auth_settings_server>` are used:
 
 .. code-block:: json
 
     "FhirServer": {
         "Name": "Firely Server", 
-        "FHIR_BASE_URL": "http://localhost:4080"
+        "FHIR_BASE_URL": "http://localhost:4080",
+        // "IntrospectionSecret": "<secret>"
     },
 
 The ``Name`` in this section serves two purposes:
@@ -199,6 +199,8 @@ The ``Name`` in this section serves two purposes:
 - it is used for translating `FHIR_BASE_URL` to the `aud` (Audience) claim in the access token supplied to the requesting app.
 
 The ``FHIR_BASE_URL`` is the url on which Firely Server can be reached by the requesting app. It is used to turn the ``fhirUser`` claim (e.g. ``Patient/123``) into a full url.
+
+The ```IntrospectionSecret`` is used to authenticate the introspection request. It is only used for clients with ``AccessTokenType`` set to ``Reference``, but you will need to set this for now.
 
 In **Firely Server**, all the settings are in the section :ref:`SmartAuthorizationOptions <feature_accesscontrol_config>`
 

@@ -183,6 +183,8 @@ Supported arguments
 |                                                          |                                     |          | When using the command line argument, the entries of the array must be provided one by one by suffixing with the relevant index. For example:       |
 |                                                          |                                     |          | ``--urlConvElems:0 some.path  --urlConvElems:1 some.other.path``                                                                                    |
 +----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+| ``--useRecoveryJournal <recoveryJournalDirectory>``      | recoveryJournalDirectory            |          | A directory containing the recovery journal                                                                                                         |
++----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--mongoCollection <mongoCollection>``                  | mongodb/entryCollection             |          | Collection name for entries                                                                                                                         |
 +----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--mongoConnectionstring <connectionstring>``           | mongodb/connectionString            | yes      | Connection string to Firely Server MongoDb database                                                                                                 |
@@ -203,8 +205,6 @@ Supported arguments
 | ``--sqlTimeout <sqlTimeout>``                            | sqlServer/commandTimeOut            |          | The time SQL Server is allowed to process a batch of resources                                                                                      |
 +----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--sqlExistQryPar <sqlExistQryPar>``                    | sqlserver/queryExistenceParallel    |          | The number of parallel threads querying the DB to check whether a resource exists (only when ``--update-existing-resources`` is set to false).      |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--readPar <readPar>``                                  | workflow/readParallel               |          | Number of threads to read from the source. Reading is quite fast so it need not be high                                                             |
 +----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--readBuffer <readBuffer>``                            | workflow/readBufferSize             |          | Number of resources to buffer after reading                                                                                                         |
 +----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -299,6 +299,29 @@ The cached files can be found in the following locations:
   
   * Windows: ``%APPDATA%\.fhir_packages``
   * Linux/MacOS: ``$XDG_CONFIG_HOME/.fhir_packages`` if the environment variable ``XDG_CONFIG_HOME`` is defined  otherwise ``$HOME/.config/.fhir_packages``
+
+.. _tool_fsi_recovery:
+
+Recovery Journal
+----------------
+
+If a transient error occurs while ingestion is running or the FSI instance gets interrupted, the *recovery journal* feature allows recovery from such a situation. To enable it, use the ``--useRecoveryJournal <recoveryJournalDirectory>`` option in the CLI or set field ``recoveryJournalDirectory`` in the ``appsettings.instance.config``. 
+
+When enabled, the process runs as follows:
+
+#. Upon the first ingestion attempt, FSI will take a snapshot of all the files in the specified source directory and save that snapshot to the ``<recoveryJournalDirectory>``.
+#. Then the data ingestion will start. Information about every successfully ingested resource also gets added to the journal.
+
+If the ingestion procedure gets interrupted at any point, or some of the resources do not get ingested because of a transient error (e.g. network connection to the target DB is temporarily down), the ingestion process can be restarted by running the application with the same parameters. The application will skip all the previously ingested resources based on the journal.
+
+.. note::
+  
+  - Note that the recovery journal directory must be empty before performing the initial ingestion attempt for a given set of files. 
+  - Furthermore, the source files must not be changed between ingestion attempts. If any changes are detected, the FSI will throw an error.
+
+.. note::
+  
+  Please do not use the source directory or any subdirectories within the source directory as the recovery journal directory.
 
 Monitoring
 ----------

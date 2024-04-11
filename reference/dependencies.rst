@@ -25,7 +25,6 @@ This list uses the NuGet package names (or prefixes of them) so you can easily l
 #. IdentityModel.* - Apache 2.0
 #. IdentityServer4.AccessTokenValidation - Apache 2.0
 #. IPNetwork2 - BSD 2-Clause "Simplified" License
-#. Quartz - Apache 2.0
 #. Serilog(.*) - Apache-2.0
 #. LinqKit.Microsoft.EntityFrameworkCore - MIT
 #. Hl7.Fhir.* - Firely OSS license (see below)

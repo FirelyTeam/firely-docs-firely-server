@@ -148,8 +148,11 @@ Infrastructural plugins
 :Configuration: ``Vonk.Core.Context.Guards.DefaultShapesConfiguration``
 :License token: http://fire.ly/vonk/plugins/infra
 :Order: 4110
-:Description: If no sort order is given for a search, ``_lastUpdated:asc`` is added. If no count is given for a search, ``_count=<default count>`` is added.
-:Options: ``BundleOptions.DefaultCount``, see :ref:`bundle_options`.
+:Description: Defines search behaviour if not specified by request. By default: sort order is set to, ``_lastUpdated:asc``, count is set to ``_count=<default count>``, total is set to ``_total=<default total>``.
+:Options: 
+   * ``BundleOptions.DefaultCount``, see :ref:`bundle_options`
+   * ``BundleOptions.DefaultTotal``, see :ref:`bundle_options`
+   * ``BundleOptions.DefaultSort``, see :ref:`bundle_options`
 
 .. _vonk_plugins_fhir_versions:
 

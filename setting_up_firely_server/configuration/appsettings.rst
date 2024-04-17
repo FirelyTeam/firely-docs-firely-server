@@ -683,7 +683,7 @@ are used for your Firely Server, by changing the ``PipelineOptions``.
           // etc.
         ],
         "Exclude": [
-          "Vonk.Core.Operations"
+          "Vonk.Plugin.Operations"
         ]
       }
     ]

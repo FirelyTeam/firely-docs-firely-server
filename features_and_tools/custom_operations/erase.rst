@@ -36,6 +36,8 @@ Use the following request to erase resources within the patient compartment of t
 
   POST <base-url>/Patient/example/$purge
 
+.. _Appsettings:
+
 Appsettings
 -----------
 To enable the $erase operation you will first have to make sure the plugin ``Vonk.Plugin.EraseOperation.EraseOperationConfiguration`` is added to the PipelineOptions in the appsettings.
@@ -69,7 +71,7 @@ Many resources in the Patient compartment reference resources outside the compar
 AuditEvent & Provenance resources
 ---------------------------------
 - It is not allowed to erase AuditEvents using `$erase`
-- It is not allowed to permanentely delete AuditEvent and Provenance resources using `$purge`
+- It is not allowed to permanently delete AuditEvent and Provenance resources using `$purge`
 - AuditEvents that are created for the `$erase` and `$purge` operations will contain the list of deleted items
 
 SMART on FHIR

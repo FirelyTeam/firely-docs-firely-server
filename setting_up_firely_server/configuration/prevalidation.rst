@@ -40,8 +40,8 @@ Validation
 You can choose the level of validation:
 
 * Off: no validation is performed.
-* Core: the resource is validated against the core definition of the resourcetype.
-* Full: the resource is validated against the core definition of the resourcetype and against any profiles in its ``meta.profile`` element.
+* Core: the resource is validated against the core definition of the resource type.
+* Full: the resource is validated against the core definition of the resource type and against any profiles in its ``meta.profile`` element.
   
 Allow for specific profiles
 ---------------------------
@@ -62,6 +62,7 @@ Note that the resource has to declare conformance to the profile in its ``meta.p
 Also note that if you have enabled AuditEvent logging and/or generate AuditEvent Signatures, an AuditEvent and/or Provenance resource will be generated when you enter resources in Firely Server.
 These AuditEvent and Provenance resources will also be checked against the AllowedProfiles section. It is therefore necessary to add the HL7 core canonicals of these resources to the AllowedProfiles section, otherwise they will fail to be saved in the database.
 ::
+
   {
     "Validation": {
       ...

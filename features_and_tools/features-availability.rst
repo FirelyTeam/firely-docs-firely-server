@@ -1,7 +1,7 @@
 .. _FeatureAvailability:
 
 Feature Availability per Database
-================================
+=================================
 
 This page provides an overview of the features supported by Firely Server when using different database backends. The compatibility table below lists the features and indicates their support status across SQL Server, SQLite, MongoDB, and the Facade.
 

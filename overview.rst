@@ -15,7 +15,21 @@ The sandbox environment is mostly intended for testing and educational purposes,
   :width: 250px
   :alt: Illustration of Firely server
 
-If you are interested in Firely Server for commercial use within your organization, we provide professional licensing in different tiers: Starter or Premium.
+If you are interested in Firely Server for commercial use within your organization, we provide professional licensing in different tiers: 
+
+.. list-table:: Firely Server Editions
+   :widths: 25 25 25
+   :header-rows: 1
+
+   * - Firely Server US 🇺🇸
+     - Firely Server International 🌍
+   * - Firely Server Essentials
+     - Firely Solution for Healthcare Technology
+     - Firely Solution for CMS Interoperability & Prior Authorization Final Rule
+   * - Firely Server Essentials
+     - Firely Server Premium
+
+Starter or Premium.
 For more information and pricing you can also visit the `product site <https://fire.ly/products/firely-server/>`_.
 
 Quick navigation

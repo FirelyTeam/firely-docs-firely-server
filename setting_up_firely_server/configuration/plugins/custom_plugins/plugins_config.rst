@@ -48,8 +48,7 @@ Configuration of the pipeline in Firely Server is done with ``PipelineOptions`` 
           "Vonk.Administration"
         ],
         "Exclude": [
-          "Vonk.Core.Operations",
-          "Vonk.Core.Licensing.LicenseRequestJobConfiguration"
+          "Vonk.Plugin.Operations"
         ]
       }
     ]

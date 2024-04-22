@@ -103,7 +103,7 @@ Bulk Data Export Service works as an asynchronous operation. To store the all op
           "Vonk.Plugin.BinaryWrapper"
         ],
         "Exclude": [
-          "Vonk.Core.Operations"
+          "Vonk.Plugin.Operations"
         ], ...etc... 
 
 BDE introduces several new parts to the appsettings:

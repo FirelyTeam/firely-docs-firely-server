@@ -28,8 +28,8 @@ Features
 Fix
 ^^^
 
-#. On errors in a transaction, Vonk would not point out the entry if it had no fullUrl. Improved this message by using the resourcetype and id (if present) instead.
-#. _include gave a 500 responsecode if a resource contains absolute references.
+#. On errors in a transaction, Vonk would not point out the entry if it had no fullUrl. Improved this message by using the resource type and id (if present) instead.
+#. _include gave a 500 response code if a resource contains absolute references.
 
 .. _vonk_releasenotes_210:
 
@@ -91,7 +91,7 @@ No changes have been made to any of the database implementations.
 Fix
 ^^^
 
-#. When you created a StructureDefinition for a new resourcetype on /administration, the corresponding endpoint was not enabled. 
+#. When you created a StructureDefinition for a new resource type on /administration, the corresponding endpoint was not enabled. 
 #. Vonk does not update references in a transaction when a conditional create is used for an existing resource.
 #. Paths in PipelineOptions would interfere if one was the prefix of the other.
 #. Indexing a HumanName with no values but just extensions failed.
@@ -153,7 +153,7 @@ Fix
 ^^^
 
 #. The :ref:`$validate <feature_validation>` operation processes the profile parameter.
-#. If an update brings a resource 'back to life', Vonk returns statuscode 201 (previously it returned 200). 
+#. If an update brings a resource 'back to life', Vonk returns status code 201 (previously it returned 200). 
 #. On an initial Administration Import of specification.zip, Vonk found an error in valueset.xml. This file was fixed in the specification.zip that comes with Fhir.NET API 1.1.2.
 #. Transaction: references within the transaction are automatically changed to the id's the referenced resources get from Vonk when processing the transaction. This did not happen for references inside extensions. It does now. 
 #. Administration Import: an Internal Server Error could be triggered with a zip file with nested directories in it.
@@ -201,7 +201,7 @@ Plugin and Facade API
 
    * Because the IChangeRepository is responsible for creating new id's and versions, we also included extensions methods on it to update all three fields at once::
 
-      var updatedeResource = changeRepository.EnsureMeta(resource, KeepExisting.Id / Version / LastUpdated);
+      var updatedResource = changeRepository.EnsureMeta(resource, KeepExisting.Id / Version / LastUpdated);
       var updatedResource = changeRepository.FreshMeta(resource); //replaces all three
 
 #. The PocoResource class is obsolete. To go from a POCO (like an instance of the Patient class) to an IResource, use the ToIResource() extension method found in Vonk.Fhir.R3.
@@ -425,7 +425,7 @@ Facade
 
 #. Release 0.7.0.0 is compatible again with Facade solutions built on the packages with versions 0.6.2, with a few minor changes. 
    Please review the Vonk.Facade.Starter project for an example of the necessary adjustments. All the differences can be seen in `this file comparison <https://github.com/FirelyTeam/Vonk.Facade.Starter/commit/ea4734da117e7add0d7155b225f5f320db86919c#diff-c7ac183ffadb9c835e21f6853864bad0>`_.
-#. Fix: The SMART authorization failed when you don't support all the resourcetypes. It will now take into account the limited set of supported resourcetypes.
+#. Fix: The SMART authorization failed when you don't support all the resource types. It will now take into account the limited set of supported resource types.
 #. Fix: Vonk.Facade.Relational.RelationalQueryFactory would lose a _count argument. 
 #. Documentation: We added documentation on how to implement Create, Update and Delete in a facade on a relational database. See :ref:`enablechange`. This is also added to the `example Facade solution <https://github.com/FirelyTeam/Vonk.Facade.Starter/tree/exercise/cud>`_ on GitHub.
 
@@ -433,9 +433,9 @@ Features and fixes
 ^^^^^^^^^^^^^^^^^^
 
 #. Feature: :ref:`Vonk FHIR Plugins<vonk_plugins>` has been released. You can now add libraries with your own plugins through configuration. 
-#. Feature: Through :ref:`Vonk FHIR Pluginss<vonk_plugins>` you can replace the landing page with one in your own style.
+#. Feature: Through :ref:`Vonk FHIR Plugins<vonk_plugins>` you can replace the landing page with one in your own style.
 #. Feature: You can now start Vonk from within another directory than the Vonk binaries directory, e.g. ``c:\programs>dotnet .\vonk\vonk.server.dll``.
-#. Feature: You can configure the maximum number of entries allowed in a Batch or Transaction, to avoid overloading Vonk. See :ref:`batch_options`.
+#. Feature: You can configure the maximum number of entries allowed in a Batch or Transaction, to avoid overloading Vonk. See :ref:`restful_batch`.
 #. Upgrade: We upgraded the FHIR .NET API to version 0.96.0, see the `Older SDK release notes`_ for details.
    Mainly #599 affects Vonk, since it provides the next...
 #. Fix: Under very high load the FhirPath engine would have concurrency errors. The FhirPath engine is used to extract the search parameters from the resources. This has been fixed.
@@ -495,8 +495,8 @@ Features and fixes
 #. Fix: handling of the :not modifier in searches with choice arguments
 #. Fix: fullUrl in return bundles cannot be version specific.
 #. Fix: evaluate _count=0 correctly (it was ignored).
-#. Fix: correct error message on an invalid _include (now Vonk tells you which resourcetypes are considered for evaluating the used searchparameter).
-#. Fix: indexing of Observation.combo-value-quantity failed for UCUM code for Celcius. This fix requires a :ref:`reindex/all <feature_customsp_reindex>` on this searchparameter.
+#. Fix: correct error message on an invalid _include (now Vonk tells you which resource types are considered for evaluating the used searchparameter).
+#. Fix: indexing of Observation.combo-value-quantity failed for UCUM code for Celsius. This fix requires a :ref:`reindex/all <feature_customsp_reindex>` on this searchparameter.
 #. Fix: total count in history bundle.
 #. Fix: on vonk.fire.ly we disabled validating all input, so you can now create or update resources also if the relevant profiles are not loaded 
    (this was necessary  for Crucible, since it references US Core profiles, that are not present by default).
@@ -537,7 +537,7 @@ Features and fixes
    
    Now:
 
-   * The same set of (conformance) resourcetypes can be read from all sources (ZIP, directory, Simplifier);
+   * The same set of (conformance) resource types can be read from all sources (ZIP, directory, Simplifier);
    * They are all loaded into the Administration database and can be read and updated through the Administration API.
 
    Refer to :ref:`conformance` for details.
@@ -628,7 +628,7 @@ Features and fixes
 #. Fix: Clearer error message if the Content-Type is missing.
 #. Fix: GET on [base]/ would return the UI regardless of the Accept header. Now if you specify a FHIR mimetype in the Accept header, it will return the result of a system wide search.
 #. Fix: In rare circumstances a duplicate logical id could be created.
-#. Fix: GET [base]/metadat would return status code 200 (OK). But it should return a 400 and an OperationOutcome stating that 'metadat' is not a supported resourcetype.
+#. Fix: GET [base]/metadata would return status code 200 (OK). But it should return a 400 and an OperationOutcome stating that 'metadata' is not a supported resource type.
 
 Documentation
 ^^^^^^^^^^^^^
@@ -688,10 +688,10 @@ Database
 Features and fixes
 ^^^^^^^^^^^^^^^^^^
 #. Feature: POST on _search is now supported
-#. Fix: Statuscode of ``<vonk-endpoint>/administration/preload`` has changed when zero resources are added. The statuscode is now 200 instead of 201.
-#. Fix: OPTIONS operation returns now the capability statement with statuscode 200.
-#. Fix: A search operation with a wrong syntax will now respond with statuscode 400 and an OperationOutcome. For example ``GET <vonk-endpoint>/Patient?birthdate<1974`` will respond with statuscode 400.
-#. Fix: A statuscode 501 could occur together with an OperationOutcome stating that the operation was successful. Not anymore.
+#. Fix: Status code of ``<vonk-endpoint>/administration/preload`` has changed when zero resources are added. The status code is now 200 instead of 201.
+#. Fix: OPTIONS operation returns now the capability statement with status code 200.
+#. Fix: A search operation with a wrong syntax will now respond with status code 400 and an OperationOutcome. For example ``GET <vonk-endpoint>/Patient?birthdate<1974`` will respond with status code 400.
+#. Fix: A status code 501 could occur together with an OperationOutcome stating that the operation was successful. Not anymore.
 #. Fix: An OperationOutcome stating success did not contain any issue element, which is nog valid. Solved. 
 #. Improvement: In the configuration on :ref:`conformance_fromsimplifier` the section ``ArtifactResolutionOptions`` has changed to ``ResourceLoaderOptions`` and a new option has been introduced under that section named ``LoadAtStartup`` which, if set to true, will attempt to load the specified resource sets when you start Vonk
 #. Improvement: the Memory implementation now also supports ``SimulateTransactions``

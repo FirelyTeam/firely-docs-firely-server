@@ -45,7 +45,7 @@ Firely Server PubSub:
 For in-house telemetry:
 
 #. OpenTelemetry.* - Apache 2.0
-#. MongoDB.Driver.Core.Extensions.OpenTelemetry - Apache 2.0
+#. MongoDB.Driver.Core.Extensions.DiagnosticSources - Apache 2.0
 #. InfluxDB.Client - MIT
 
 For unit testing:

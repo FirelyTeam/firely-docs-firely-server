@@ -599,11 +599,12 @@ The Patient $everything operation returns all resources linked to a patient that
 See :ref:`feature_patienteverything`.
 
 .. _uri_conversion:
+
 Uri conversion on import and export
 -----------------------------------
 
-Upon importing, Firely Server converts all references expresssed as absolute URIs with the root corresponding to the server URL.
-For example, ``"reference": "https://someHost/fhir/Patient/someId"`` will be stored as   ``"reference": "Patient/someId"``.
+Upon importing, Firely Server converts all references expressed as absolute URIs with the root corresponding to the server URL.
+For example, ``"reference": "https://someHost/fhir/Patient/someId"`` will be stored as ``"reference": "Patient/someId"`` .
 Similarly,  upon exporting, the references stored as relative URIs will be converted back to an absolute URI by adding the 
 root server location to the relative URI.
 

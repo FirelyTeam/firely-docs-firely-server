@@ -3,6 +3,16 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_3.3.1:
+
+Release 3.3.1, April 22nd, 2024
+-------------------------------
+
+Fix
+^^^
+#. Fixed an issue were Firely Auth running in docker was unable to connect to a SQL server user store.
+
+
 .. _firelyauth_releasenotes_3.3.0:
 
 Release 3.3.0, March 20th, 2024

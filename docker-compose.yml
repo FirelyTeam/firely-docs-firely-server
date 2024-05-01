@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  firely-server-docs:
+    image: firely.azurecr.io/firely/docs-sphinx:latest   
+    ports:
+      - "7000:7000"    
+    volumes:
+      - .:/docs   

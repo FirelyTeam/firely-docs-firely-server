@@ -1,20 +1,8 @@
 {
-	"folders": [
-		{
-			"path": ".."
-		},
-		{
-			"path": "../../firely-docs-simplifier"
-		},
-		{
-			"path": "../../firely-docs-firely-terminal"
-		},
-		{
-			"path": "../../firely-docs"
-		},
+	"folders": [		
 		{
 			"name": "firely-docs-firely-server",
-			"path": "../firely-docs-firely-server5.0/firely-docs-firely-server"
+			"path": "../firely-docs-firely-server"
 		}
 	],
 	"settings": {

@@ -1,0 +1,321 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\Source\\Repos\\firely-docs-firely-server\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\security\\firely-auth\\firely-auth-tutorial.rst||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:security\\firely-auth\\firely-auth-tutorial.rst||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\cms.rst||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:compliance\\cms.rst||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\g_10.rst||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:compliance\\g_10.rst||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\compliance.rst||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:compliance\\compliance.rst||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\_static\\g10\\G10EndpointsFirely.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:_static\\g10\\G10EndpointsFirely.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\_static\\g10\\EndpointBundleFirely.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:_static\\g10\\EndpointBundleFirely.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\conf.py||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:conf.py||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\build-in-docker.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:build-in-docker.ps1||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\releasenotes\\releasenotes_v5.rst||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:releasenotes\\releasenotes_v5.rst||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\hipaa.rst||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:compliance\\hipaa.rst||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\b_10.rst||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:compliance\\b_10.rst||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\_static\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:_static\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\security\\accesscontrol.rst||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:security\\accesscontrol.rst||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\releasenotes\\security_notes.rst||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:releasenotes\\security_notes.rst||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\releasenotes\\releasenotes_v2.rst||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:releasenotes\\releasenotes_v2.rst||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\reference\\architecture.rst||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:reference\\architecture.rst||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\Source\\Repos\\firely-docs-firely-server\\releasenotes\\releasenotes_v4.rst||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:releasenotes\\releasenotes_v4.rst||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 267,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "firely-auth-tutorial.rst",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\security\\firely-auth\\firely-auth-tutorial.rst",
+              "RelativeDocumentMoniker": "security\\firely-auth\\firely-auth-tutorial.rst",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\security\\firely-auth\\firely-auth-tutorial.rst",
+              "RelativeToolTip": "security\\firely-auth\\firely-auth-tutorial.rst",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAALAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-04-23T18:17:03.705Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "cms.rst",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\cms.rst",
+              "RelativeDocumentMoniker": "compliance\\cms.rst",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\cms.rst",
+              "RelativeToolTip": "compliance\\cms.rst",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAHAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-04-23T17:06:31.79Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "G10EndpointsFirely.html",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\_static\\g10\\G10EndpointsFirely.html",
+              "RelativeDocumentMoniker": "_static\\g10\\G10EndpointsFirely.html",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\_static\\g10\\G10EndpointsFirely.html",
+              "RelativeToolTip": "_static\\g10\\G10EndpointsFirely.html",
+              "ViewState": "AQIAACUAAAAAAAAAAAAAADwAAACQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2024-02-29T23:52:12.165Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "EndpointBundleFirely.json",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\_static\\g10\\EndpointBundleFirely.json",
+              "RelativeDocumentMoniker": "_static\\g10\\EndpointBundleFirely.json",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\_static\\g10\\EndpointBundleFirely.json",
+              "RelativeToolTip": "_static\\g10\\EndpointBundleFirely.json",
+              "ViewState": "AQIAAEsAAAAAAAAAAAAAADgAAAAfAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-02-29T23:37:11.373Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": ".gitignore",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\.gitignore",
+              "RelativeDocumentMoniker": ".gitignore",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\.gitignore",
+              "RelativeToolTip": ".gitignore",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAHAAAA",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAF8SURBVDhPjVNLTgJBEG1lwpoFB3GNK9fieA48hD8iwT/ihwgSDAIHgAGXXsEV18CNzL/LquqZdsYM6kteXqcy3fWqpmpNRBgOhyABBEgpAFVKPIMUcYzUyOU\u002BXM/b2qtU3vkSfRjjZTCAMAw1A2LwzdFoBPP5HNqdzuL27n4juibWI\u002BUshBA1DIkhEx9iEorFotgslQqGYbxxAGFEqt1MxmPWJLbLZdZ\u002Bv89q5PMFPiTR6z2zdaxR0fXA0XTBcVywkb4fwHXjRteecIDNQ7UmExVYAdPcxYaqclN46na5WenMKjtlVnTYwcXlVYaDqImW9beD5N/TeGy32QHXm6hZ03ZgiSQHp2fnWQ4oBmJqWSqwAqZpZjt4aLXAD4J0VqyZsmoubfB8H2r1eoaD6NXZ9HcHO\u002BSA3f4AjifXl8rItOETM8ckB9WTWpYD9RdeZ1PWVWAHWXPQaDb59f/w8LiqHeh1pvGkCaP6qB8yXusoxmuNZ7XmII4O9vGuEF86osuDYRkpYQAAAABJRU5ErkJggg==",
+              "WhenOpened": "2023-08-02T13:04:54.026Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "releasenotes_v5.rst",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\releasenotes\\releasenotes_v5.rst",
+              "RelativeDocumentMoniker": "releasenotes\\releasenotes_v5.rst",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\releasenotes\\releasenotes_v5.rst",
+              "RelativeToolTip": "releasenotes\\releasenotes_v5.rst",
+              "ViewState": "AQIAABIAAAAAAAAAAAAAADMAAABJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2023-08-01T15:02:43.829Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "hipaa.rst",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\hipaa.rst",
+              "RelativeDocumentMoniker": "compliance\\hipaa.rst",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\hipaa.rst",
+              "RelativeToolTip": "compliance\\hipaa.rst",
+              "ViewState": "AQIAAFQAAAAAAAAAAAAAAHEAAAAKAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2023-08-01T14:55:01.991Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "g_10.rst",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\g_10.rst",
+              "RelativeDocumentMoniker": "compliance\\g_10.rst",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\g_10.rst",
+              "RelativeToolTip": "compliance\\g_10.rst",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAF4AAAC9AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2023-08-01T14:50:28.447Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "b_10.rst",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\b_10.rst",
+              "RelativeDocumentMoniker": "compliance\\b_10.rst",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\b_10.rst",
+              "RelativeToolTip": "compliance\\b_10.rst",
+              "ViewState": "AQIAAMwAAAAAAAAAAAAAAOsAAAA/AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2023-08-01T14:47:54.559Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "build-in-docker.ps1",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\build-in-docker.ps1",
+              "RelativeDocumentMoniker": "build-in-docker.ps1",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\build-in-docker.ps1",
+              "RelativeToolTip": "build-in-docker.ps1",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAAAAAA",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKISURBVDhPlVLdS1RBFP/dux/JrppKUVoISrRSbVGEBq4Z5ZPRk39A9FYPUQ89CUEv2WOC\u002BFRB9QcUPoQkBItUkAa\u002BpNZ\u002BGO2u3nbdVe/evevuzsydZmY/shehM/fMuefMnN/8zuFoEBIOh7m0\u002BwnnnPX39z/0\u002B/1PaiEVVFYCUEI4pYQzRpU6DlMqY9IuLCzwubk5llhP3lFJNdHlJoHkUl8NtG51XV0BIQShUEj/vrw6GY/Hb6qgEHXqOM6\u002BIFJs28b8/Ly86xUAL2vhvwzEVgXZ8984EzIycg1ng0H0BQLKr4tqoqiND18egqYJV\u002BjMu/fo7OpSvk0YvG4dLvFUhXI44j7hGtKGwW\u002BN3agW2ChB6PqGAV9bB1oCQUxveIHOHkwl3VjxdyN3vA/rh0/A1X0ShTJRjysAxphkrQAi0Rjgb8VyWUfcpoDLg/uXevDoQwTPI9t4Y5QQyxZgJBOkAbCXQc4uw\u002BQexPJlME3H7dkVdDV78HbsHJZWk1jL5pHezCG9kdr8B0BSkCzyxTLSjgcRqwKnrRWZHRuO7sLH1DZ2ShTRtAlqbsHKGJ8bAJTSBoMCZfhB3JiJb2EzmkDs7jBGX33Bs8VfOAgGZzsPapnIb\u002BVmGwD1ZEnhN/Xia7YEtruLIy1NuPJ6UXV\u002B6voZPBjshVe0Lp/NwNfanpK5brmZpinnRwEcE0n3Ojk8onkmaUGlVEKxQhBeXILf58Pj0258\u002B2TgQPuhhExRDCzLqvZArN5mDReabARdBYSaihjylzCgZREs/MRoB8HRbAzcyiGTSkRlrmJQLBZVCZpYVwcHlJUDVZ0r6dV9DafOX8Sa8RQvpieZzFXDMD4\u002BXp3X/5CJiQmRC/wBUOeA8MehIQsAAAAASUVORK5CYII=",
+              "WhenOpened": "2023-06-26T12:43:40.749Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "style.css",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\_static\\css\\style.css",
+              "RelativeDocumentMoniker": "_static\\css\\style.css",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\_static\\css\\style.css",
+              "RelativeToolTip": "_static\\css\\style.css",
+              "ViewState": "AQIAADAAAAAAAAAAAAAAAEgAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2023-06-26T12:40:19.666Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "conf.py",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\conf.py",
+              "RelativeDocumentMoniker": "conf.py",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\conf.py",
+              "RelativeToolTip": "conf.py",
+              "ViewState": "AQIAACwAAAAAAAAAAAAAAEAAAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2023-06-22T17:46:59.376Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "accesscontrol.rst",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\security\\accesscontrol.rst",
+              "RelativeDocumentMoniker": "security\\accesscontrol.rst",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\security\\accesscontrol.rst",
+              "RelativeToolTip": "security\\accesscontrol.rst",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2023-06-20T20:45:48.714Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "architecture.rst",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\reference\\architecture.rst",
+              "RelativeDocumentMoniker": "reference\\architecture.rst",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\reference\\architecture.rst",
+              "RelativeToolTip": "reference\\architecture.rst",
+              "ViewState": "AQIAAHIAAAAAAAAAAAAlwHgAAABzAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2023-06-20T18:57:25.531Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "releasenotes_v2.rst",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\releasenotes\\releasenotes_v2.rst",
+              "RelativeDocumentMoniker": "releasenotes\\releasenotes_v2.rst",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\releasenotes\\releasenotes_v2.rst",
+              "RelativeToolTip": "releasenotes\\releasenotes_v2.rst",
+              "ViewState": "AQIAAAwBAAAAAAAAAAAlwBQBAABUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2023-06-20T18:55:46.541Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "releasenotes_v4.rst",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\releasenotes\\releasenotes_v4.rst",
+              "RelativeDocumentMoniker": "releasenotes\\releasenotes_v4.rst",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\releasenotes\\releasenotes_v4.rst",
+              "RelativeToolTip": "releasenotes\\releasenotes_v4.rst",
+              "ViewState": "AQIAAFQAAAAAAAAAAAAlwGIAAAB0AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2023-06-20T18:54:41.029Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "security_notes.rst",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\releasenotes\\security_notes.rst",
+              "RelativeDocumentMoniker": "releasenotes\\security_notes.rst",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\releasenotes\\security_notes.rst",
+              "RelativeToolTip": "releasenotes\\security_notes.rst",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAEYAAABHAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2023-06-20T18:40:34.57Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "compliance.rst",
+              "DocumentMoniker": "E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\compliance.rst",
+              "RelativeDocumentMoniker": "compliance\\compliance.rst",
+              "ToolTip": "E:\\Source\\Repos\\firely-docs-firely-server\\compliance\\compliance.rst",
+              "RelativeToolTip": "compliance\\compliance.rst",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAvAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2023-06-15T13:44:23.44Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

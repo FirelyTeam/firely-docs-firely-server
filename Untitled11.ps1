@@ -1,4 +1,4 @@
-$docsroot = Resolve-Path $PSScriptRoot
+﻿$docsroot = Resolve-Path $PSScriptRoot
 Write-Information -Message "Building documentation in folder ${docsroot}" -InformationAction Continue
 docker run --rm -v ${docsroot}:/docs firely.azurecr.io/firely/docs-sphinx:latest 
 if ($LASTEXITCODE -ne 0) {

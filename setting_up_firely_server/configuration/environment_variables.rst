@@ -25,7 +25,7 @@ The format for the environment variables is:
 
     VONK_<setting_level_1>[:<setting_level_n>]*
 
-So you start the variable name with the prefix 'VONK\_', and then follow the properties in the json settings, separating each level with a colon ':'. Some examples:
+So you start the variable name with the prefix ``VONK_``, and then follow the properties in the json settings, separating each level with a colon ``:``. Some examples:
 
 appsettings.json::
 
@@ -51,11 +51,6 @@ environment variable::
 
 	VONK_Administration:SqlDbOptions:ConnectionString=<some connectionstring>
 
-To access an array item, use 0-based indexing::
-
-	VONK_PipelineOptions:Branches:0:Exclude:0=Vonk.Repository.Memory
-	VONK_PipelineOptions:Branches:0:Exclude:1=Vonk.Repository.Sql
-
 Arrays in Environment Variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -74,7 +69,7 @@ appsettings.json:
       ]
    }
 
-environment variables:
+environment variables::
 
 	VONK_Validation:ValidateIncomingResources=true
 	VONK_Validation:AllowedProfiles:0=http://hl7.org/fhir/StructureDefinition/daf-patient
@@ -98,7 +93,7 @@ logsettings.json
             "Override": {
                 "Vonk.Configuration": "Information",
 
-environment variable:
+environment variable::
 
    VONKLOG_Serilog:MinimumLevel:Override:Vonk.Configuration=Information
 

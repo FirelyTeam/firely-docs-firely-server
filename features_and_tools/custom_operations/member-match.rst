@@ -19,6 +19,8 @@ This means that the more elements are included in these resources, the less like
 If too little elements are included, multiple members may match, which will result in a ``422 Unprocessable Entity`` response.
 For the matching the default behavior of FHIR Search is used. Most importantly strings are matched on a case-insensitive left-match ('starts-with').
 
+If the setting ``IsDemographicOnlyMatchAllowed`` is set to ``false`` (the default), the operation requires an identifier element to be present on either the Patient or Coverage resource, so it can match on that.
+
 Deviations
 ----------
 
@@ -63,6 +65,26 @@ In the ``PipelineOptions`` section of the :ref:`appsettings <configure_appsettin
               ...
             ]
           }, ...etc...
+
+Check that the operation is listed as supported
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``$member-match`` should be listed in the ``SupportedInteractions:TypeLevelInteractions`` section of the :ref:`appsettings <configure_appsettings>`.
+That is by default the case, but if you have previously overridden this section, you need to make sure that the operation is listed there.
+
+Set the options for the operation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The operation has a single option that can be set in the :ref:`appsettings <configure_appsettings>`:
+
+.. code-block:: jsonc
+
+    "MemberMatch": {
+        "IsDemographicOnlyMatchAllowed": false // true/false, default is false
+    }
+
+If this setting is set to ``true``, the operation will allow for a match based on demographic information only.
+Otherwise (by default) the operation requires an identifier element in either the Patient or Coverage resource parameter.
 
 Assure that the profiles are available
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

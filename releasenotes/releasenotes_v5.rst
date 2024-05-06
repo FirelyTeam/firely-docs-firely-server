@@ -8,6 +8,16 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_5_7_0:
+
+Release 5.7.0, May Xth, 2024
+-------------------------------
+
+Fix
+^^^
+#. On SQL Server, permanent deletions of resources by the ``$erase`` and ``$purge`` operations are now processed asynchronously, so they do not block regular operations. See also :ref:`erase`.
+
+
 .. _vonk_releasenotes_5_6_0:
 
 Release 5.6.0, April 11th, 2024

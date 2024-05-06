@@ -93,3 +93,7 @@ AuditEvents
 License
 -------
 The `$erase` and `$purge` operations are part of the core Firely Server functionality. However, to use it, you may need to request an updated license from Firely. You can use your current license file if it contains ``http://fire.ly/vonk/plugins/erase``.
+
+Note on erase and purge on SQL Server
+-------------------------------------
+When using the SQL Server repository, deletions are not processed immediately. Instead, they are marked as deleted and are processed in the background. This is done to prevent blocking the database for other operations. This means that the data is not immediately erased from the database. The actual deletion will be done in the background. The background process is nominally triggered every 20 seconds. But the time it takes to process the deletion depends on the number of resources that are being deleted and how busy the server is with other tasks. 

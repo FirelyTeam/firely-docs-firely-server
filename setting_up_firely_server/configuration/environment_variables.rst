@@ -23,9 +23,9 @@ Or if you don't want  a database password in the ``appsettings.json`` file.
 The format for the environment variables is:
 ::
 
-    VONK_<setting_level_1>[:<setting_level_n>]*
+    VONK_<setting_level_1>[__<setting_level_n>]*
 
-So you start the variable name with the prefix ``VONK_``, and then follow the properties in the json settings, separating each level with a colon ``:``. Some examples:
+So you start the variable name with the prefix ``VONK_``, and then follow the properties in the json settings, separating each level with a double underscore ``__``. Some examples:
 
 appsettings.json::
 
@@ -35,7 +35,7 @@ environment variable::
 
 	VONK_Repository=SQL
 
-To access an embedded value, using the ':' separator:
+To access an embedded value, using the '__' separator:
 
 appsettings.json:
 
@@ -49,12 +49,16 @@ appsettings.json:
 
 environment variable::
 
-	VONK_Administration:SqlDbOptions:ConnectionString=<some connectionstring>
+	VONK_Administration__SqlDbOptions__ConnectionString=<some connectionstring>
+	
+.. note:: 
+    A colon ``:`` is also valid as a separator in some environments, but not all. For its wider support we recommend to use ``__``.
+    See `this article <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-8.0#non-prefixed-environment-variables>`_ for more information.
 
 Arrays in Environment Variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Sometimes the appsettings allow for an array of values, e.g. in the setting for ``AllowedProfiles`` in :ref:`feature_prevalidation`. You can address them by appending an extra colon and an index number.
+Sometimes the appsettings allow for an array of values, e.g. in the setting for ``AllowedProfiles`` in :ref:`feature_prevalidation`. You can address them by appending an extra ``__`` and an index number.
 
 appsettings.json:
 
@@ -71,10 +75,29 @@ appsettings.json:
 
 environment variables::
 
-	VONK_Validation:ValidateIncomingResources=true
-	VONK_Validation:AllowedProfiles:0=http://hl7.org/fhir/StructureDefinition/daf-patient
-	VONK_Validation:AllowedProfiles:1=http://hl7.org/fhir/StructureDefinition/daf-allergyintolerance
+	VONK_Validation__ValidateIncomingResources=true
+	VONK_Validation__AllowedProfiles__0=http://hl7.org/fhir/StructureDefinition/daf-patient
+	VONK_Validation__AllowedProfiles__1=http://hl7.org/fhir/StructureDefinition/daf-allergyintolerance
 
+Another example for excluding namespaces in the ``PipelineOptions``:
+
+.. code-block:: json
+
+   "PipelineOptions": {
+   "Branches": [
+      {
+         "Path": "/",
+         "Exclude": [
+            "Vonk.Repository.Memory",
+            "Vonk.Repository.Sql"
+         ]
+      }
+   } 
+
+environment variables::
+    
+        VONK_PipelineOptions__Branches__0__Exclude__0=Vonk.Repository.Memory
+        VONK_PipelineOptions__Branches__0__Exclude__1=Vonk.Repository.Sql
 
 .. _configure_envvar_log:
 
@@ -95,7 +118,9 @@ logsettings.json
 
 environment variable::
 
-   VONKLOG_Serilog:MinimumLevel:Override:Vonk.Configuration=Information
+   VONKLOG_Serilog__MinimumLevel__Override__Vonk.Configuration=Information
+   
+Note that the ``.`` in ``Vonk.Configuration`` is part of a namespace and should not be replaced by a double underscore.
 
 .. _configure_envvar_audit_log:
 
@@ -118,7 +143,7 @@ audit.logsettings.json
 
 environment variable::
 
-   VONKAUDITLOG_AuditLog:WriteTo:0:Args:path=./other/directory/AuditLog.log
+   VONKAUDITLOG_AuditLog__WriteTo__0__Args__path=./other/directory/AuditLog.log
 
 .. _configure_envvar_call_stack:
 
@@ -151,4 +176,4 @@ In Windows you can change the Environment Variables with Powershell or through t
 	+ In Powershell run:|br| 
 	  ``> $env:VONK_Repository="SQL"``
 	+ or go to your `System`, open the `Advanced system settings` --> `Environment variables` and create a new variable
-	  with the name :code:`VONK_Repository` and set the value to "SQL" (you don't need to enter the quotes here).
+	  with the name :code:`VONK_Repository` and set the value to ``SQL``.

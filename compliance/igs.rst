@@ -66,6 +66,11 @@ This implementation guide does not specify any FHIR conformance resources and pr
      - * `hl7.fhir.uv.bulkdata|1.0.0 <https://registry.fhir.org/package/hl7.fhir.uv.bulkdata|1.0.0>`_
        * `hl7.fhir.uv.bulkdata|2.0.0 <https://registry.fhir.org/package/hl7.fhir.uv.bulkdata|2.0.0>`_
 
+Known Limitations
+-----------------
+
+* The _elements, patient, includeAssociatedData, and _typeFilter parameters are not supported during the BDE kickoff request on system-, group-, and patient-level.
+
 ------------
 
 .. _bulp_ig:       

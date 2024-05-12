@@ -48,7 +48,7 @@ Legend:
      - ❌
    * - $purge
      - ✅
-     - ✅
+     - ❌
      - ✅
      - ❌
    * - Reset Database

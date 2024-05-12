@@ -124,7 +124,7 @@ In this paragraph we will explain how access control decisions are made for the 
 
       :Request: ``GET [base]/Patient?name=fred``
       :Type-Access: User must have read access to Patient, otherwise HTTP Status Code 403 is returned. 
-      :Compartment: If a Patient Compartment is active, the Filter from it will be added to the search, e.g. ``GET [base]/Patient?name=fred&identifier=123``
+      :Compartment: If a Patient Compartment is active, the filter from it will be added to the search, e.g. ``GET [base]/Patient?name=fred&identifier=123``
 
    #. Search on type related to compartment
 

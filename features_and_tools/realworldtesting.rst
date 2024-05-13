@@ -4,27 +4,28 @@
 Real World Testing
 ==================
 
-Real World Testing (RWT) is a process for executing specified queries against a dataset containing statistical data (InfluxDB), using a predefined Library resource that contains a Flux query. 
-This feature is designed to facilitate advanced data analysis and monitoring by allowing users to run complex, parameterized queries directly from the FHIR server.
+The Real World Testing functionality of Firely Server is designed to fulfill the requirements of the ONC Health IT Certification Program defined by the 21st Century Cures Act. See `ONC Health IT Certification Program - Real World Testing Resource Guide <https://www.healthit.gov/sites/default/files/page/2021-08/ONC-Real%20World%20Testing%20Resource%20Guide_Aug%202021.pdf>`_ for background.
 
+Real World Testing (RWT) is a process for recording and analyzing statistical data about the REST API behaviour of Firely Server. It allows for retrospectively gathering insights into the response codes of FHIR CRUD requests, as well as custom operations. The functionality enables the collection of all statistics needed for the `Firely Server Real World Testing Plans <https://fire.ly/g10-certification/>`_.
+
+Technically, Firely Server allows to execute pre-defined queries against a dataset containing statistical data, stored in an external InfluxDB. The queries, defined as Flux queries, are distributed using a Library resource as part of the Firely Server admin db.
 
 Introduction
 ------------
 
-Firely Server provides an API for receiving statistical data using a script in Flux query language that is executed against InfluxDB backend. 
-This API allows users with access to administration endpoint to query PII-free data to get insights about Firely Server usage.
+Firely Server provides an API for executing the mentioned Flux queries remotely against the metrics collected in the InfluxDB backend. The response contains aggregations using a denominator/numerator style as outlined by the Firely real world testing plan. This API allows users with access to administration endpoint to query PII-free data to get insights about Firely Server usage.
 
 The operation is based on the ``Library`` resource, which must contain a base64 encoded Flux query. This query can include placeholders for parameters that are dynamically replaced when the operation is executed. 
-RWT operation follows FHIR Asynchronous Interaction Request Pattern, similar to Bulk Data Export, providing a robust mechanism for handling intensive data processing tasks.
+The RWT operation follows the FHIR Asynchronous Interaction Request Pattern, similar to Bulk Data Export, providing a robust mechanism for handling intensive data processing tasks.
 Read more about the `async request flow <https://build.fhir.org/async-bundle.html>`_.
 
 .. note::
-   Real World Testing operation requires specific setup and configuration, including the use of OpenTelemetry Collector and InfluxDB for capturing and storing statistical data. Additionally, the operation is executed against an administration endpoint, and the results are accessible through an asynchronous request pattern.
+   The Real World Testing operation requires the use and maintenance of an externally provided InfluxDB. Firely Server does not provide these capabilities out-of-the-box. See `InfluxDB OSS <https://www.influxdata.com/products/influxdb/>`_ for more details.
 
 Configuration
 -------------
 
-To start using Real World Testing you will first have to add the relevant plugins (Vonk.Plugin.RealWorldTesting) to the PipelineOptions in the appsettings.
+To start using Real World Testing you will first have to add the relevant plugins (`Vonk.Plugin.RealWorldTesting`) to the PipelineOptions in the appsettings.
 
 .. code-block:: JavaScript
 
@@ -79,7 +80,7 @@ To configure RWT one needs to also have values for connecting to InfluxDB config
 InfluxDb has a concept of buckets and organizations, so one would need to use the same bucket for writing and reading data to the backend. 
 However it is advised to use tokens with different access rights, since querying data while executing RWT operation only requires read access enabled.
 
-In addition, there is the following configuration section:
+In addition, there is the following configuration section for the Real World Testing operation itself:
 
 .. code-block:: json
     
@@ -89,7 +90,8 @@ In addition, there is the following configuration section:
 
 In `RepeatPeriod` you can configure the polling interval (in milliseconds) for checking the Task queue for a new operation task.
 
-
+.. note::
+   Real World Testing is a powerful feature that requires careful configuration and setup. It is recommended to test your queries and configurations in a staging environment before deploying to production.
 
 Using Real World Testing
 ------------------------
@@ -250,11 +252,3 @@ There are six possible status options:
             }
         ]
     }
-
-Configuration
--------------
-
-Before using the Real World Testing feature, ensure your server is properly configured with the necessary plugins and settings to support OpenTelemetry Collector and InfluxDB integration. Refer to the specific configuration documentation for details on setting up these components.
-
-.. note::
-   Real World Testing is a powerful feature that requires careful configuration and setup. It is recommended to test your queries and configurations in a staging environment before deploying to production.

@@ -90,6 +90,78 @@ In addition, there is the following configuration section for the Real World Tes
 
 In `RepeatPeriod` you can configure the polling interval (in milliseconds) for checking the Task queue for a new operation task.
 
+Next to the configuration for reading statistics from InfluxDB, it is required to setup an `OpenTelemetry collector <https://opentelemetry.io/docs/collector/>`_ which is connected to a Telegraf instance for processing OpenTelemetry traces.
+
+.. code-block:: json
+
+   "OpenTelemetryOptions": {
+    "EnableTracing": true,
+    "Endpoint": "http://localhost:4317"
+   }
+
+In Firely Server, the OpenTelemetry endpoint should point to the GRPC endpoint of the OpenTelemetry collector.
+
+.. code-block: yaml
+
+  processors:
+     batch: {}
+     filter/health: #https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/filterprocessor
+       error_mode: ignore
+       traces:
+         span:
+           - 'attributes["url.path"] == "/$$liveness"'
+           - 'attributes["url.path"] == "/$$readiness"'
+     filter/requestmeter:
+       error_mode: ignore
+       traces:
+         span:
+           - 'attributes["scope"] != "request"'
+
+As part of the OpenTelemetry configuration, please make sure to exclude the liveness and readiness check from the statistics.
+
+The OpenTelemetry collector will forward the metrics to Telegraf for post-processing. Firely Server requires certain processing steps to be present.
+
+.. code-block:
+
+   [[processors.starlark]]
+     script = "/etc/telegraf/scripts/starlark.star"
+
+The `starlark` file needs to contain the following content.
+
+.. code-block:
+
+   load("json.star", "json")
+
+def apply(metric):
+    if "attributes" in metric.fields:
+        attrs_json = metric.fields["attributes"]
+        attrs = json.decode(attrs_json)
+
+        # if it is a request move measurment to requests collection
+        if "scope" in attrs and attrs["scope"] == "request":
+            metric.name = "requests"
+            attrs.pop("scope") # remove scope from attributes
+        else:
+            return metric #if it is not a request, return the metric as is
+            
+        # copy attributes to tags and drop
+        for k, v in attrs.items():
+            metric.tags[k] = str(v)
+        metric.fields.pop("attributes")
+
+        # Collect only duration field and drop the rest
+        fields_to_remove = [field for field in metric.fields if field != "duration_nano"]
+    
+        # Drop unwanted fields
+        for field in fields_to_remove:
+          metric.fields.pop(field)
+    else: 
+        return None #if there are no attributes, drop this trace
+    
+    return metric
+
+Please ensure that Telegraf is afterwards forwarding all metrics to InfluxDb to the same bucket as configured under the InfluxDbOptions.
+
 .. note::
    Real World Testing is a powerful feature that requires careful configuration and setup. It is recommended to test your queries and configurations in a staging environment before deploying to production.
 

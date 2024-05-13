@@ -86,7 +86,7 @@ In addition, there is the following configuration section for the Real World Tes
     
     "RealWorldTesting": {
         "RepeatPeriod": 60000 //ms
-    },
+    }
 
 In `RepeatPeriod` you can configure the polling interval (in milliseconds) for checking the Task queue for a new operation task.
 
@@ -95,8 +95,8 @@ Next to the configuration for reading statistics from InfluxDB, it is required t
 .. code-block:: json
 
    "OpenTelemetryOptions": {
-    "EnableTracing": true,
-    "Endpoint": "http://localhost:4317"
+       "EnableTracing": true,
+       "Endpoint": "http://localhost:4317"
    }
 
 In Firely Server, the OpenTelemetry endpoint should point to the GRPC endpoint of the OpenTelemetry collector.

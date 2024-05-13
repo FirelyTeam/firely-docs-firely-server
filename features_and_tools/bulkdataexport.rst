@@ -8,6 +8,8 @@ Bulk Data Export (BDE) is the process for exporting a substantial amount of data
 This process entails extracting a significant volume of data, usually in a structured format, to support activities like analysis, reporting, backup, or data transfer between systems. 
 BDE is frequently utilized in various implementation guides to facilitate the bulk downloading or exchanging of patient data.
 
+For the supported versions of BDE see :ref:`Compliance & Certification - Bulk Data Access <bulk_data_access_ig>`.
+
 
 170.315 (b)(10) Electronic Health Information (EHI) Export
 ----------------------------------------------------------

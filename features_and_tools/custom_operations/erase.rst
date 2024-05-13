@@ -1,7 +1,7 @@
 .. _erase:
 
-Permanently delete resources - $erase
-=====================================
+Permanently delete resources - $erase / $purge
+==============================================
 
 Description
 -----------

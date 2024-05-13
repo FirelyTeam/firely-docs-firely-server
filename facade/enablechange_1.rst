@@ -201,7 +201,7 @@ Also, you will need to indicate support for the CRUD interactions in your Firely
       "WholeSystemInteractions": "capabilities, search"
     },
     
-* Adjust ``PipelineOptions.Branches.Include`` from ``Vonk.Core.Operations.Crud.ReadConfiguration`` to ````Vonk.Core.Operations`` include all operations, including ``Create``.
+* Adjust ``PipelineOptions.Branches.Include`` from ``Vonk.Plugin.Operations.Crud.ReadConfiguration`` to ````Vonk.Plugin.Operations`` include all operations, including ``Create``.
 
 You can now build your project, copy the dll to the Firely Server plugins folder and run Firely Server to test the new interactions
 on your Facade.
@@ -210,5 +210,3 @@ The end?
 --------
 
 This concludes the second exercise. Please feel free to try out more options, and :ref:`ask for help <vonk-contact>` if you get stuck!
-
-The next topic will show you how to integrate :ref:`Access Control<feature_accesscontrol>`.

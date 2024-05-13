@@ -25,24 +25,27 @@ This list uses the NuGet package names (or prefixes of them) so you can easily l
 #. IdentityModel.* - Apache 2.0
 #. IdentityServer4.AccessTokenValidation - Apache 2.0
 #. IPNetwork2 - BSD 2-Clause "Simplified" License
-#. Quartz - Apache 2.0
 #. Serilog(.*) - Apache-2.0
 #. LinqKit.Microsoft.EntityFrameworkCore - MIT
 #. Hl7.Fhir.* - Firely OSS license (see below)
+#. Hl7.Cql.* - BSD 3-Clause License
 #. Fhir.Metrics - as Hl7.Fhir
 #. Simplifier.Licensing - as Hl7.Fhir
 #. Dapper - Apache 2.0
 #. SQLitePCLRaw.lib.e_sqlite3 - Apache 2.0
 #. SqlKata.* - MIT
-
-MongoDB: 
-
+#. CreativeCode.JWS - MIT
+#. Azure.Storage.* - MIT
 #. MongoDB.* - Apache 2.0
 
-For telemetry and statistics:
+Firely Server PubSub:
+
+#. MassTransit - Apache 2.0
+
+For in-house telemetry and statistics:
 
 #. OpenTelemetry.* - Apache 2.0
-#. MongoDB.Driver.Core.Extensions.OpenTelemetry - Apache 2.0
+#. MongoDB.Driver.Core.Extensions.DiagnosticSources - Apache 2.0
 #. InfluxDB.Client - MIT
 
 For unit testing:

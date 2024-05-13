@@ -9,9 +9,9 @@ Firely Server can log access through the RESTful API for auditing purposes. It h
 #. Include user id and name from the JWT token (if present) in the audit log lines.
 #. Write the audit information as FHIR AuditEvent resources in the Firely Server Data database.
 
-These features can be enabled by including ``Vonk.Plugin.Audit`` in the pipeline.
+These features can be enabled by including ``Vonk.Plugin.Audit`` in the pipeline and by changing configuration values in the ``Audit`` section.
 
-.. code-block:: JavaScript
+.. code-block:: json
 
    "PipelineOptions": {
       "PluginDirectory": "./plugins",
@@ -37,6 +37,15 @@ In addition, you can choose to log every call or only transaction batches.
 When you include a specific configuration class and want to enable username logging, you have to include Vonk.Plugin.Audit.UsernameLoggingConfiguration.
 Please see :ref:`vonk_plugins_audit` for the available options.
 
+Additionally there are configuration values for enabling/disabling audit features. 
+Keep in mind that those are disregarded if the pipeline is not configured to enable logging.
+.. code-block:: json
+   "Audit": {
+      "EnableAuditEventLogging": true, // enables database logging
+      "EnableAuditFileLogging": true, // enables file logging
+      ...
+   }
+
 Filtering configuration
 -----------------------
 
@@ -44,7 +53,7 @@ You can exclude requests from generating audit logs (both audit log file and aud
 This is helpful to reduce clutter in the logs. For example, you could exclude logging for an endpoint that is used for health monitoring of the server.
 The example below disables audit logging for all GET requests to /Patient and sub resources or operations.
 
-.. code-block:: JavaScript
+.. code-block:: json
 
    "Audit": {
       "ExcludedRequests": [
@@ -80,7 +89,7 @@ File
 Configure where to put the audit log file and the format of its lines in a separate file named audit.logsettings.json. Just like the Firely Server application logging, the audit log also uses Serilog for logging audit events. The audit log settings are controlled in json configuration files called ``audit.logsettings(.*).json``. The files are read in a hierarchy, exactly like the :ref:`appsettings files <configure_levels>` are.
 Firely Server comes with default settings in ``audit.logsettings.default.json``. You can adjust the way Firely Server logs its information by overriding these settings by either adding an additional file called ``audit.logsettings.json`` or ``audit.logsettings.instance.json``, or in ``audit.logsettings.default.json`` directly. Alternatively you can control :ref:`configure_envvar_audit_log`.
 
-.. code-block:: JavaScript
+.. code-block:: json
 
    {
       "AuditLog": {
@@ -155,7 +164,7 @@ The default Serilog log sink in ``audit.logsettings.default.json`` is a asynchro
 
 In normal circumstances the buffer will regularly be flushed to the underlying sink. However, when the buffer limit does get reached the reliability of writing messages is compromised and some messages will get lost while the async wrapper tries to recover. If reliability of the auditing is very important, you might want to consider using a synchronous file sink instead. See the ``audit.logsettings.default.json`` for an example of a synchronous File sink configuration.
 
-.. code-block:: JavaScript
+.. code-block:: json
 
    {
       "AuditLog": {
@@ -290,7 +299,7 @@ In case of failure during the operation, the status endpoint should return a 4xx
 Finally, once the operation is terminated, the status code of the reply should be 200 and the body should contain an operation outcome.
 If all AuditEvents had a valid signatures, the body should be:
 
-.. code-block:: JavaScript
+.. code-block:: json
 
   {
     "resourceType": "OperationOutcome",
@@ -327,7 +336,7 @@ If all AuditEvents had a valid signatures, the body should be:
 If some AuditEvents  were not valid, in addition to the informational issues listed above, there should be one processing issue
 (see https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-processing) per validation error:
  
-.. code-block:: JavaScript
+.. code-block:: json
    
   {
       "severity": "error",
@@ -341,7 +350,7 @@ If some AuditEvents  were not valid, in addition to the informational issues lis
 
 Finally, if the number of validation failures is higher than the pre-configured threshold, an additional error should be reported:
 
-.. code-block:: JavaScript
+.. code-block:: json
 
   {
       "severity": "error",
@@ -360,7 +369,7 @@ By default, the signature of the AuditEvent and their verification is disabled. 
 First of all, in the `PipelineOptions`, you need to have `"Vonk.Plugin.Audit.Integrity"` (or a prefix of it) as part of the plugin pipelines. 
 As it is listed in the ``Exclude`` section by default, you have to remove it from this section:
 
-.. code-block:: JavaScript
+.. code-block:: json
 
    "PipelineOptions": {
       "PluginDirectory": "./plugins",
@@ -378,7 +387,7 @@ Also, as part of the ``Administration`` pipeline, you need to enable the support
 for the asynchronous processing of the integrity verification operation. This is done by having the Task configuration corresponding
 to the database type used for the administration:
 
-.. code-block:: JavaScript
+.. code-block:: json
   
   {
         "Path": "/administration",
@@ -396,7 +405,7 @@ to the database type used for the administration:
 
 In addition to the pipelines setup, you need to configure properly the ``Audit`` section of the settings:
 
-.. code-block:: JavaScript
+.. code-block:: json
 
    "Audit": {
       "AuditEventSignatureEnabled": true, // Default is false
@@ -442,7 +451,7 @@ Finally, in order to enable the integrity verification, the corresponding custom
 ``SupportedInteractions``. 
 For that, you have to add the type-level custom operations ``$verify-integrity`` and the system-level custom operation ``$verify-integrity-status``, as follows: 
 
-.. code-block:: JavaScript
+.. code-block:: json
 
   "SupportedInteractions": {
     "InstanceLevelInteractions": "...",

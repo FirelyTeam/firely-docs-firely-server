@@ -35,7 +35,7 @@ When a resource is sent to Firely Server for storage, Firely Server indexes the 
 
 Additionally, these search parameters can have an impact on the search performance:
 
-#. ``_total``: Searchbundles contain the element ``total`` which indicates the total number of resources that match the query's search parameters. Setting this parameter to ``_total = none`` results in faster searches as it saves the query that would generate the result of the aforementioned element.
+#. ``_total``: Searchbundles contain the element ``total`` which indicates the total number of resources that match the query's search parameters. Setting this parameter to ``_total = none`` results in faster searches as it saves the query that would generate the result of the aforementioned element. Default value can be changed for `_total` in the configuration, see :ref:`bundle_options`.
 
 
 Pipeline

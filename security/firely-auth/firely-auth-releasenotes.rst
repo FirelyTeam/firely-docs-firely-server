@@ -3,6 +3,33 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_3.3.1:
+
+Release 3.3.1, April 22nd, 2024
+-------------------------------
+
+Fix
+^^^
+#. Fixed an issue were Firely Auth running in docker was unable to connect to a SQL server user store.
+
+
+.. _firelyauth_releasenotes_3.3.0:
+
+Release 3.3.0, March 20th, 2024
+-------------------------------
+
+Security
+^^^^^^^^
+#. Disabling 2FA authentication for a client will now require a 2FA token from the user as an additional security step
+#. Added 'Require2fa' to the default appsettings. This replaces the current 'RequireMfa' setting.
+
+Feature
+^^^^^^^
+
+#. Firely Auth will now warn about invalid key/value pairs submitted to the launchContext API
+#. Values in the form of '<resourceType>/<id>' submitted to the launchContext API will now be automatically translate to id-only values
+
+
 .. _firelyauth_releasenotes_3.3.0-rc3:
 
 Release 3.3.0-rc3, February 1st, 2024

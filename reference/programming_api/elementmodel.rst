@@ -50,7 +50,7 @@ All the methods below are in the namespace ``Vonk.Core.ElementModel.ISourceNodeE
 
 .. function:: AddIfNotExists(this ISourceNode original, string location, ISourceNode newChild) -> ISourceNode
 
-   Navigate to ``lcoation``. Then add the ``newChild`` as a child node to the ``original`` if there is no child with the same name yet.
+   Navigate to ``location``. Then add the ``newChild`` as a child node to the ``original`` if there is no child with the same name yet.
 
 .. function:: AddIfNotExists(this ISourceNode original, ISourceNode newChild, string location, Func<ISourceNode, bool> exists) -> ISourceNode
 

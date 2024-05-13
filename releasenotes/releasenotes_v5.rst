@@ -8,6 +8,49 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_5_7_0:
+
+Release 5.7.0, May Xth, 2024
+-------------------------------
+
+Fix
+^^^
+#. On SQL Server, permanent deletions of resources by the ``$erase`` and ``$purge`` operations are now processed asynchronously, so they do not block regular operations. See also :ref:`erase`.
+
+
+.. _vonk_releasenotes_5_6_0:
+
+Release 5.6.0, April 11th, 2024
+-------------------------------
+
+Features
+^^^^^^^^
+
+#. (**IMPORTANT**) Implemented a check that all plugins specified in the pipeline options are available. If not, Firely Server won't start. Please remove any missing configuration namespace from the appsettings if Firely Server encounters any error in the pipeline options during startup.
+#. (**IMPORTANT**) BDE: Group members that are marked as inactive (``Group.member.inactive = true``) or not active currently (based on ``Group.member.period``) do not get exported via the group-based Bulk Data Export.
+#. (:ref:`FSI<tool_fsi>`) An ingestion recovery feature has been added. For details, see :ref:`tool_fsi_recovery`.
+#. Added a config setting ``BundleOptions.DefaultTotal`` that sets the default `_total` argument value for search requests if not specified in the request itself. Setting it to `none` can improve query search performance. See :ref:`Bundle Options<bundle_options>`.
+#. Pubsub notifications are now supported when MongoDB is used as a repository.
+#. Added ability to disable sending of AuditEvent-related notifications in PubSub. See :ref:`Pub Sub Configuration<pubsub_configuration>`.
+
+Improvements
+^^^^^^^^^^^^
+
+#. Firely SDK has been updated to v5.7.0 - https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.7.0
+
+Configuration
+^^^^^^^^^^^^^
+
+#. (:ref:`FSI<tool_fsi>`) The ``--readPar`` CLI option (``workflow/readParallel`` appsettings option) has been removed.
+#. Quartz has been removed from Firely Server. If you have a custom plugin that depends on Quartz, please make sure you install and initialize Quartz in the plugin itself.
+
+Fixes
+^^^^^
+
+#. Fixed a NullReferenceException if one or more PubSub plugins are enabled but the config section is missing.
+#. Fixed an endless loop of loading conformance resources with invalid search parameters.
+
+
 .. _vonk_releasenotes_5_5_2:
 
 Release 5.5.2, March 6th, 2024

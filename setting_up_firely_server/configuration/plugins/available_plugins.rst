@@ -148,8 +148,11 @@ Infrastructural plugins
 :Configuration: ``Vonk.Core.Context.Guards.DefaultShapesConfiguration``
 :License token: http://fire.ly/vonk/plugins/infra
 :Order: 4110
-:Description: If no sort order is given for a search, ``_lastUpdated:asc`` is added. If no count is given for a search, ``_count=<default count>`` is added.
-:Options: ``BundleOptions.DefaultCount``, see :ref:`bundle_options`.
+:Description: Defines search behaviour if not specified by request. By default: sort order is set to, ``_lastUpdated:asc``, count is set to ``_count=<default count>``, total is set to ``_total=<default total>``.
+:Options: 
+   * ``BundleOptions.DefaultCount``, see :ref:`bundle_options`
+   * ``BundleOptions.DefaultTotal``, see :ref:`bundle_options`
+   * ``BundleOptions.DefaultSort``, see :ref:`bundle_options`
 
 .. _vonk_plugins_fhir_versions:
 
@@ -164,11 +167,15 @@ Support for different FHIR versions
 :Order: 100
 :Description: Registers services to support FHIR STU3 (or R3).
 
+.. _vonk_plugins_fhir_r3_specification:
+
 :Name: FHIR R3 Specification
 :Configuration: ``Vonk.Fhir.R3.FhirR3SpecificationConfiguration``
 :License token: http://fire.ly/vonk/plugins/fhirr3
 :Order: 112
 :Description: Registers an ``Hl7.Fhir.Specification.IStructureDefinitionSummaryProvider`` for FHIR STU3 (or R3).
+
+.. _vonk_plugins_fhir_r3_validation:
 
 :Name: FHIR R3 Validation
 :Configuration: ``Vonk.Fhir.R3.Validation.ValidationConfigurationR3``
@@ -184,11 +191,15 @@ Support for different FHIR versions
 :Order: 101
 :Description: Registers services to support FHIR R4.
 
+.. _vonk_plugins_fhir_r4_specification:
+
 :Name: FHIR R4 Specification
 :Configuration: ``Vonk.Fhir.R4.FhirR4SpecificationConfiguration``
 :License token: http://fire.ly/vonk/plugins/fhirr4
 :Order: 112
 :Description: Registers an ``Hl7.Fhir.Specification.IStructureDefinitionSummaryProvider`` for FHIR R4.
+
+.. _vonk_plugins_fhir_r4_validation:
 
 :Name: FHIR R4 Validation
 :Configuration: ``Vonk.Fhir.R4.Validation.ValidationConfigurationR4``
@@ -254,6 +265,8 @@ FHIR RESTful interactions
    * ``BundleOptions``, see :ref:`bundle_options`, for number of returned results
    
    See :ref:`vonk_reference_api_isearchrepository` and :ref:`vonk_facade`.
+
+.. _vonk_plugins_search_repository:
 
 :Name: Search support
 :Configuration: ``Vonk.Core.Repository.RepositorySearchSupportConfiguration``
@@ -393,11 +406,15 @@ FHIR RESTful interactions
 :Order: 5180
 :Description: Implements FHIR $meta on instance level.
 
+.. _vonk_plugins_meta_add_configuration:
+
 :Name: Meta Add
 :Configuration: ``Vonk.Core.Operations.MetaOperation.MetaAddConfiguration``
 :License token: http://fire.ly/vonk/plugins/meta
 :Order: 5190
 :Description: Implements FHIR $meta-add on instance level.
+
+.. _vonk_plugins_meta_delete_configuration:
 
 :Name: Meta Delete
 :Configuration: ``Vonk.Core.Operations.MetaOperation.MetaDeleteConfiguration``
@@ -543,11 +560,15 @@ Auditing
 :Order: 2010
 :Description: Makes the user id and name from the JWT token (if present) available for logging. See :ref:`feature_auditing` for more info.
 
+.. _vonk_plugins_audit_transaction_configuration:
+
 :Name: Audit logging for transactions
 :Configuration: ``Vonk.Plugin.Audit.AuditTransactionConfiguration``
 :License token: http://fire.ly/vonk/plugins/audit
 :Order: 3100
 :Description: Logs requests and responses for transactions to a file. See :ref:`feature_auditing` for more info.
+
+.. _vonk_plugins_audit_configuration:
 
 :Name: Audit log
 :Configuration: ``Vonk.Plugin.Audit.AuditConfiguration``
@@ -555,11 +576,15 @@ Auditing
 :Order: 3150
 :Description: Logs requests and responses to a file. See :ref:`feature_auditing` for more info.
 
+.. _vonk_plugins_audit_event_transaction_configuration:
+
 :Name: AuditEvent logging for transactions
 :Configuration: ``Vonk.Plugin.Audit.AuditEventTransactionConfiguration``
 :License token: http://fire.ly/vonk/plugins/audit
 :Order: 3105
 :Description: Logs requests and responses for transactions to the database. See :ref:`feature_auditing` for more info.
+
+.. _vonk_plugins_audit_event_configuration:
 
 :Name: AuditEvent logging
 :Configuration: ``Vonk.Plugin.Audit.AuditEventConfiguration``
@@ -724,11 +749,15 @@ Administration API
 :Order: 1160
 :Description: Sets up a sequence of plugins for the Administration API. Administration API is different from general plugins since it branches off of the regular processing pipeline and sets up a second pipeline for the /administration endpoint.
 
+.. _vonk_plugins_administration_stu3_services:
+
 :Name: Fhir STU3 Administration services
 :Configuration: ``Vonk.Administration.FhirR3.RepositoryConfigurationR3``
 :license token: http://fire.ly/vonk/plugins/administration/fhirr3
 :Order: 4310
 :Description: Implements support services to work with FHIR STU3 conformance resources in the Administration API.
+
+.. _vonk_plugins_administration_r4_services:
 
 :Name: Fhir R4 Administration services
 :Configuration: ``Vonk.Administration.FhirR4.RepositoryConfigurationR4``
@@ -745,17 +774,23 @@ Bulk Data
 :Order: 5003
 :Description: Support for system-level ``$export`` operation. See :ref:`feature_bulkdataexport`.
 
+.. _vonk_plugins_group_bulk_data_export:
+
 :Name: Group Bulk Data Export
 :Configuration: ``Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration``
 :license token: ``http://fire.ly/vonk/plugins/bulk-data-export``
 :Order: 5004
 :Description: Support for instance-level ``$export`` operation. See :ref:`feature_bulkdataexport`.
 
+.. _vonk_plugins_patient_bulk_data_export:
+
 :Name: Patient Bulk Data Export
 :Configuration: ``Vonk.Plugin.BulkDataExport.PatientBulkDataExportConfiguration``
 :license token: ``http://fire.ly/vonk/plugins/bulk-data-export``
 :Order: 5005
 :Description: Support for type-level ``$export`` operation. See :ref:`feature_bulkdataexport`.
+
+.. _vonk_plugins_patient_everything_data_export:
 
 :Name: Patient everything
 :Configuration: ``Vonk.Plugin.PatientEverything``

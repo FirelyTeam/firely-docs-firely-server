@@ -85,7 +85,7 @@ Create your first mapping
 -------------------------
 
 #. Add a new ``public`` class ``ResourceMapper`` to the project
-#. Add usings for ``Vonk.Core.Common``, for ``Hl7.Fhir.Model``, for ``Hl7.Fhir.Support`` and for ``<your project>.Models``
+#. Add usings for ``Vonk.Core.Common``, for ``Hl7.Fhir.Model``, for ``Hl7.Fhir.Support``, for ``Vonk.Fhir.R4`` and for ``<your project>.Models``
 #. Add a method to the class ``public IResource MapPatient(ViSiPatient source)``
 #. In this method, put code to create a FHIR Patient object, and fill its elements with data from the ViSiPatient:
 
@@ -100,7 +100,7 @@ Create your first mapping
                                            source.PatientNumber));
      // etc.
 
-  For more examples of filling the elements, see the FHIR API documentation: `FHIR-model <https://docs.fire.ly/projects/Firely-NET-SDK/model.html>`_.
+  For more examples of filling the elements, see the FHIR API documentation: `FHIR-model <https://docs.fire.ly/projects/Firely-NET-SDK/en/latest/model.html>`_.
 
 5. Then return the created Patient object as an IResource with ``patient.ToIResource()``.
 

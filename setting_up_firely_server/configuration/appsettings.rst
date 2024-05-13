@@ -365,6 +365,7 @@ Search size
 ::
 
     "BundleOptions": {
+        "DefaultTotal": "accurate", // Allowed values: none, estimate, accurate
         "DefaultCount": 10,
         "MaxCount": 50,
         "DefaultSort": "-_lastUpdated"
@@ -377,6 +378,7 @@ The Search interactions returns a bundle with results. Users can specify the num
 * ``MaxCount`` sets the number of results in case the user specifies a ``_count`` value higher than this maximum. This is to protect Firely Server from being overloaded.
 * ``DefaultCount`` should be less than or equal to ``MaxCount``
 * ``DefaultSort`` is what search results are sorted on if no sort order is specified in the request. If a sort order is specified, this is still added as the last sort clause.
+* ``DefaultTotal`` sets default total behaviour for search requests if not specified in the request itself.
 
 .. _sizelimits_options:
 
@@ -597,11 +599,12 @@ The Patient $everything operation returns all resources linked to a patient that
 See :ref:`feature_patienteverything`.
 
 .. _uri_conversion:
+
 Uri conversion on import and export
 -----------------------------------
 
-Upon importing, Firely Server converts all references expresssed as absolute URIs with the root corresponding to the server URL.
-For example, ``"reference": "https://someHost/fhir/Patient/someId"`` will be stored as   ``"reference": "Patient/someId"``.
+Upon importing, Firely Server converts all references expressed as absolute URIs with the root corresponding to the server URL.
+For example, ``"reference": "https://someHost/fhir/Patient/someId"`` will be stored as ``"reference": "Patient/someId"`` .
 Similarly,  upon exporting, the references stored as relative URIs will be converted back to an absolute URI by adding the 
 root server location to the relative URI.
 
@@ -681,7 +684,7 @@ are used for your Firely Server, by changing the ``PipelineOptions``.
           // etc.
         ],
         "Exclude": [
-          "Vonk.Core.Operations"
+          "Vonk.Plugin.Operations"
         ]
       }
     ]

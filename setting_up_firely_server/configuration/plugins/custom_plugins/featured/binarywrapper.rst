@@ -80,6 +80,32 @@ Configuration
 Release notes
 -------------
 
+Version 0.6.0
+^^^^^^^^^^^^^
+
+* Built against Firely Server (Vonk) 5.7.0.
+* Compatible with Firely Server (Vonk) v5.0.0+.
+* After a successful read a `Location` header is now returned as well.
+* Updated BinaryWrapper plugin to better align with the `FHIR specification <https://hl7.org/fhir/r4/binary.html#rest>`_ when reading a Binary resource in its native form:
+
+   * Implemented `Last-Modified` header to be able to return `Binary.meta.lastUpdated`.
+   * Implemented `ETag` header to be able to return `Binary.meta.versionId`.
+   * Implemented `X-Security-Header` to allow the security context for a Binary resource to be specified when it is posted or read in native form.
+
+Version 0.5.0
+^^^^^^^^^^^^^
+
+* Built against Firely Server (Vonk) 4.1.0
+* Compatible with Firely Server (Vonk) v4.1.0
+* Functionally equivalent to version 0.4.0
+
+Version 0.4.0
+^^^^^^^^^^^^^
+
+* Built against Firely Server (Vonk) 4.0.0
+* Compatible with Firely Server (Vonk) v4.0.0
+* Functionally equivalent to version 0.3.0
+
 Version 0.3.0
 ^^^^^^^^^^^^^
 
@@ -95,7 +121,7 @@ Version 0.2.0
 * Functionally equivalent to version 0.1.0
 
 Version 0.1.0
-^^^^^^^^^^^^^ 
+^^^^^^^^^^^^^
 
 * Build against Firely Server (Vonk) 2.1.0
 * Compatible with Firely Server (Vonk) 2.1.0

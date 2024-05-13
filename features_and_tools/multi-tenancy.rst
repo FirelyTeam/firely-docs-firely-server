@@ -38,7 +38,7 @@ To enable the feature, include ``Vonk.Plugin.VirtualTenants`` in the pipeline fo
 
 You can control the working of the feature with the settings:
 
-    .. code-block:: jsonc
+    .. code-block:: json
 
         "VirtualTenants": { 
             "TenantHeader": "x-firely-tenant",

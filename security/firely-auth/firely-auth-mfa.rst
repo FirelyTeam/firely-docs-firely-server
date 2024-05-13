@@ -1,17 +1,12 @@
 .. _firely_auth_mfa:
 
-Using Multi Factor Authentication
-=================================
-
-.. attention:: 
-
-    Multi Factor Authentication is currently only supported for the InMemory store.
-    Support for the SQL Server store will follow shortly.
+Using Multi Factor Authentication / Two Factor Authentication
+=============================================================
 
 Firely Auth authorizes a client app to access resources on behalf of a user.
 If these resources are especially sensitive - as is often the case for Patient Health Information - it is more secure to require the user to use more than just a password to prove its identity.
 This is called multi factor authentication. Since a client is restricted to certain scopes (see ``AllowedSmartSubjects`` in :ref:`firely_auth_settings_clients`), it makes sense to require MFA for clients that potentially have access to sensible resources.
-Therefore the ``RequireMfa`` setting is part of the ``AllowedClients`` settings.
+Therefore the ``Require2fa`` setting is part of the ``AllowedClients`` settings.
 
 Multi factor authentication in Firely Auth is based on using a time-based one-time password. The user can use one of the many available Authenticator apps available for either Android or iOS to generate such a password. 
 

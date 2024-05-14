@@ -8,10 +8,7 @@ In this section we explain how you can deploy Firely Server in the Azure cloud.
 Getting started
 ---------------
 
-Before you can run Firely Server, you will need to download the Firely Server binaries and request a license:
-
-	1. Go to the Simplifier website, login and download the Firely Server binaries from https://simplifier.net/vonk/download
-	2. Download the trial license file from the same location.
+Before you can run Firely Server, you need to request a license and download Firely Server. See step 1 of :ref:`vonk_basic_installation`.
  
 Deployment
 ----------

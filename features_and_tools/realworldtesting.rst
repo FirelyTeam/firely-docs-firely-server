@@ -225,7 +225,7 @@ There are six possible status options:
         ]
     }
 
-Defautl RWT metrics
+Default RWT metrics
 -------------------
 
 By default the admin db of Firely Server contains the following Library resource with Flux queries:

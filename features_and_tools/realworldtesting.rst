@@ -251,6 +251,8 @@ For evaluating statistics it is possible to create custom Flux queries stored wi
    The Library resource's Flux query must be designed to return a single numeric value. Ensure that your query properly aggregates or processes the data to meet this requirement.
    Keep in mind that the Library needs to added to the administration database.
 
+An example Library can be found below:
+
 .. code-block:: json
 
     {

@@ -66,6 +66,8 @@ To start using Real World Testing you will first have to add the relevant plugin
 .. note::
    RealWorldTesting works as an asynchronous operation. To store the all operation-related information, it is necessary to enable a "Task Repository" on the admin database. Please enable the relevant "Vonk.Repository.[database-type].[database-type]TaskConfiguration" in the administration pipeline options, depending on the database type you use for the admin database. All supported databases can be used as a task repository. In the example above we have enabled the task repository for SQLite: "Vonk.Repository.Sqlite.SqliteTaskConfiguration".
 
+Please make sure that `$realworldtesting` and `realworldtestingstatus` are listed as supported WholeSystemInteractions.
+
 To configure RWT one needs to also have values for connecting to InfluxDB configured.
 
 .. code-block:: json
@@ -73,9 +75,9 @@ To configure RWT one needs to also have values for connecting to InfluxDB config
     "InfluxDbOptions": {
         "Host": "https://influxdb-host-url",
         "Bucket": "bucket-name",
-        "Token": "bucket-connection-token", // requires read permissions
+        "Token": "bucket-connection-token",
         "Organization": "organization-name"
-    },
+    }
 
 InfluxDb has a concept of buckets and organizations, so one would need to use the same bucket for writing and reading data to the backend. 
 However it is advised to use tokens with different access rights, since querying data while executing RWT operation only requires read access enabled.
@@ -85,7 +87,7 @@ In addition, there is the following configuration section for the Real World Tes
 .. code-block:: json
     
     "RealWorldTesting": {
-        "RepeatPeriod": 60000 //ms
+        "RepeatPeriod": 60000
     }
 
 In `RepeatPeriod` you can configure the polling interval (in milliseconds) for checking the Task queue for a new operation task.
@@ -101,7 +103,9 @@ Next to the configuration for reading statistics from InfluxDB, it is required t
 
 In Firely Server, the OpenTelemetry endpoint should point to the GRPC endpoint of the OpenTelemetry collector.
 
-.. code-block: yaml
+As part of the OpenTelemetry configuration, please make sure to exclude the liveness and readiness check from the statistics.
+
+.. code-block:: yaml
 
   processors:
      batch: {}
@@ -117,50 +121,48 @@ In Firely Server, the OpenTelemetry endpoint should point to the GRPC endpoint o
          span:
            - 'attributes["scope"] != "request"'
 
-As part of the OpenTelemetry configuration, please make sure to exclude the liveness and readiness check from the statistics.
+The OpenTelemetry collector will forward the metrics to Telegraf for post-processing. Firely Server requires certain processing steps to be present in the Telegraf config.
 
-The OpenTelemetry collector will forward the metrics to Telegraf for post-processing. Firely Server requires certain processing steps to be present.
-
-.. code-block:
+.. code-block:: RST
 
    [[processors.starlark]]
      script = "/etc/telegraf/scripts/starlark.star"
 
-The `starlark` file needs to contain the following content.
+The `starlark` file needs to contain the following content:
 
-.. code-block:
+.. code-block:: RST
 
-   load("json.star", "json")
+    load("json.star", "json")
 
-def apply(metric):
-    if "attributes" in metric.fields:
-        attrs_json = metric.fields["attributes"]
-        attrs = json.decode(attrs_json)
+    def apply(metric):
+        if "attributes" in metric.fields:
+            attrs_json = metric.fields["attributes"]
+            attrs = json.decode(attrs_json)
 
-        # if it is a request move measurment to requests collection
-        if "scope" in attrs and attrs["scope"] == "request":
-            metric.name = "requests"
-            attrs.pop("scope") # remove scope from attributes
-        else:
-            return metric #if it is not a request, return the metric as is
-            
-        # copy attributes to tags and drop
-        for k, v in attrs.items():
-            metric.tags[k] = str(v)
-        metric.fields.pop("attributes")
+            # if it is a request move measurment to requests collection
+            if "scope" in attrs and attrs["scope"] == "request":
+                metric.name = "requests"
+                attrs.pop("scope") # remove scope from attributes
+            else:
+                return metric #if it is not a request, return the metric as is
+                
+            # copy attributes to tags and drop
+            for k, v in attrs.items():
+                metric.tags[k] = str(v)
+            metric.fields.pop("attributes")
 
-        # Collect only duration field and drop the rest
-        fields_to_remove = [field for field in metric.fields if field != "duration_nano"]
-    
-        # Drop unwanted fields
-        for field in fields_to_remove:
-          metric.fields.pop(field)
-    else: 
-        return None #if there are no attributes, drop this trace
-    
-    return metric
+            # Collect only duration field and drop the rest
+            fields_to_remove = [field for field in metric.fields if field != "duration_nano"]
+        
+            # Drop unwanted fields
+            for field in fields_to_remove:
+            metric.fields.pop(field)
+        else: 
+            return None #if there are no attributes, drop this trace
+        
+        return metric
 
-Please ensure that Telegraf is afterwards forwarding all metrics to InfluxDb to the same bucket as configured under the InfluxDbOptions.
+Please ensure that Telegraf is afterwards forwarding all metrics to InfluxDb to the same bucket as configured under the InfluxDbOptions. When executing any REST API request against Firely Server, corresponding traces should be visible in InfluxDB afterwards.
 
 .. note::
    Real World Testing is a powerful feature that requires careful configuration and setup. It is recommended to test your queries and configurations in a staging environment before deploying to production.
@@ -176,12 +178,67 @@ To initiate a Real World Testing operation, construct a request to the administr
 
 This request triggers the execution of the specified Flux query against the InfluxDB dataset, with the provided parameters dynamically injected into the query.
 
-.. note::
-   The Library resource's Flux query must be base64 encoded and should be designed to return a single numeric value. Ensure that your query properly aggregates or processes the data to meet this requirement.
-   Keep in mind that the resource needs to be in administration database.
+Operation Response
+------------------
+
+Upon successful initiation, the operation returns a 202 status code with a ``Content-Location`` header pointing to a status endpoint where the operation's progress and results can be monitored:
+
+.. code-block:: HTTP
+
+   {{BASE_URL}}/administration/$realworldtestingstatus?_id=7e700b18-d8b0-40da-8deb-f6d1d6a51b23
+
+There are six possible status options:
+
+1. Queued
+2. Active
+3. Complete
+4. Failed
+5. CancellationRequested
+6. Cancelled
+
+* If a task is Queued or Active, GET $realworldtestingstatus will return the status in the X-Progress header
+* If a task is Complete, GET $realworldtestingstatus will return the results with a result bundle (see example below).
+* If a task is Failed, GET $realworldtestingstatus will return HTTP Statuscode 500 with an OperationOutcome.
+* If a task is on status CancellationRequested or Cancelled, GET $realworldtestingstatus will return HTTP Statuscode 410 (Gone).
+
+.. code-block:: json
+
+    {
+        "resourceType": "Bundle",
+        "type": "batch-response",
+        "entry": [
+            {
+                "response": {
+                    "status": "200 OK",
+                    "location": "{{BASE_URL}}/administration/$realworldtesting?url=https://fire.ly/fhir/Library/rwt-all-requests&from=2024-03-18T14:34:16.772Z&to=2024-03-18T14:34:52.453Z"
+                },
+                "resource": {
+                    "resourceType": "Parameters",
+                    "parameter": [
+                        {
+                            "name": "value",
+                            "valueInteger": 42
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+
+Defautl RWT metrics
+-------------------
+
+By default the admin db of Firely Server contains the following Library resource with Flux queries:
+
+* https://fire.ly/fhir/Library/rwt-all-requests-custom-operation
+* https://fire.ly/fhir/Library/rwt-all-requests
 
 Library Resource Requirements
 -----------------------------
+
+.. note::
+   The Library resource's Flux query must be base64 encoded and should be designed to return a single numeric value. Ensure that your query properly aggregates or processes the data to meet this requirement.
+   Keep in mind that the resource needs to be in administration database.
 
 Resource should be a valid FHIR Library resource according to specification.
 Its `content.data` element is expected to contain base64 encoded Flux query to be executed against InfluxDB.
@@ -276,51 +333,3 @@ All the placeholder parameters are replaced if:
    There are some restrictions for the parameter values that can be injected. 
    Currently `'`, `"`, `|`,  `>`,  `(`,  `)`, are not allowed symbols, and the $realworldtesting operation request will return 400(BadRequest) if any of those symbols are present. 
 
-
-Operation Response
-------------------
-
-Upon successful initiation, the operation returns a 202 status code with a ``Content-Location`` header pointing to a status endpoint where the operation's progress and results can be monitored:
-
-.. code-block:: HTTP
-
-   {{BASE_URL}}/administration/$realworldtestingstatus?_id=7e700b18-d8b0-40da-8deb-f6d1d6a51b23
-
-There are six possible status options:
-
-1. Queued
-2. Active
-3. Complete
-4. Failed
-5. CancellationRequested
-6. Cancelled
-
-
-* If a task is Queued or Active, GET $realworldtestingstatus will return the status in the X-Progress header
-* If a task is Complete, GET $realworldtestingstatus will return the results with a result bundle(see example below).
-* If a task is Failed, GET $realworldtestingstatus will return HTTP Statuscode 500 with an OperationOutcome.
-* If a task is on status CancellationRequested or Cancelled, GET $realworldtestingstatus will return HTTP Statuscode 410 (Gone).
-
-.. code-block:: json
-
-    {
-        "resourceType": "Bundle",
-        "type": "batch-response",
-        "entry": [
-            {
-                "response": {
-                    "status": "200 OK",
-                    "location": "{{BASE_URL}}/administration/$realworldtesting?url=https://fire.ly/fhir/Library/rwt-all-requests&from=2024-03-18T14:34:16.772Z&to=2024-03-18T14:34:52.453Z"
-                },
-                "resource": {
-                    "resourceType": "Parameters",
-                    "parameter": [
-                        {
-                            "name": "value",
-                            "valueInteger": 42
-                        }
-                    ]
-                }
-            }
-        ]
-    }

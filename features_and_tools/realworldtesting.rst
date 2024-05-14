@@ -231,19 +231,25 @@ Defautl RWT metrics
 By default the admin db of Firely Server contains the following Library resource with Flux queries:
 
 * https://fire.ly/fhir/Library/rwt-all-requests-custom-operation
+
+This metrics reports the total number of requests per custom operation
+
 * https://fire.ly/fhir/Library/rwt-all-requests
+
+This metrics reports the total number of requests over all REST API interactions
 
 Library Resource Requirements
 -----------------------------
 
-.. note::
-   The Library resource's Flux query must be base64 encoded and should be designed to return a single numeric value. Ensure that your query properly aggregates or processes the data to meet this requirement.
-   Keep in mind that the resource needs to be in administration database.
+For evaluating statistics it is possible to create custom Flux queries stored within Library resources. The following requirements need to be meet:
 
-Resource should be a valid FHIR Library resource according to specification.
-Its `content.data` element is expected to contain base64 encoded Flux query to be executed against InfluxDB.
-In addition to the content - `parameter` element may be filled with one or more ParameterDefinition values. The following ParameterDefinition types are allowed: string, integer, decimal, date, dateTime.
-Those would define query parameters that are expected to be defined in the Flux query, as well as required for $realworldtesting operation request.
+*  The Library resource should be a valid FHIR Library resource according to specification
+* The `content.data` element is expected to contain base64 encoded Flux query to be executed against InfluxDB.
+* The `parameter` element may be filled with one or more ParameterDefinition values. The following ParameterDefinition types are allowed: string, integer, decimal, date, dateTime. These parameters define query parameters that are expected to be defined in the Flux query, as well as required for $realworldtesting operation request.
+
+.. note::
+   The Library resource's Flux query must be designed to return a single numeric value. Ensure that your query properly aggregates or processes the data to meet this requirement.
+   Keep in mind that the Library needs to added to the administration database.
 
 .. code-block:: json
 
@@ -308,12 +314,12 @@ Those would define query parameters that are expected to be defined in the Flux 
 Inserting Request Data Into Flux Query
 --------------------------------------
 
-Along with the `general guidelines on Flux <https://docs.influxdata.com/flux/v0/get-started>`_ there is a syntax rule for injecting $realworldtesting operation parameters into the queries.
-The following syntax is treated as a placeholder for a parameter value.
+Along with the `general guidelines on Flux <https://docs.influxdata.com/flux/v0/get-started>`_, there is a syntax rule for injecting $realworldtesting operation parameters into the queries.
+The following syntax is treated as a placeholder for a parameter values.
 
 Curly braces are treated as a placeholder for a value to be replaced with a query parameter from $realworldtesting request.
 
-Here is an example of a complete flux query containing placeholder parameters (`{bucket}`,`{to}` and `{from}`):
+Here is an example of a complete flux query containing placeholder parameters (`{bucket}`, `{to}` and `{from}`):
 
 .. code-block:: Flux
 
@@ -324,12 +330,13 @@ Here is an example of a complete flux query containing placeholder parameters (`
     |> group()
     |> sum()
 
-The `{bucket}` placeholder is special, since it is used to inject bucket value from configuration. So it is advised to use it with that in mind.
+The `{bucket}` placeholder is special, since it is used to inject the bucket value from the appsettings. So it is advised to use it with that in mind.
 All the placeholder parameters are replaced if:
-1. Library resource defines parameters with the same names as a placeholder name(text in between opening and closing curly braces).
-2. $realworldtesting request supplies those parameters.
+
+#. The Library resource defines parameters with the same names as a placeholder name (text in between opening and closing curly braces)
+#. $realworldtesting request supplies those parameters
 
 .. note::
    There are some restrictions for the parameter values that can be injected. 
-   Currently `'`, `"`, `|`,  `>`,  `(`,  `)`, are not allowed symbols, and the $realworldtesting operation request will return 400(BadRequest) if any of those symbols are present. 
+   Currently `'`, `"`, `|`,  `>`,  `(`,  `)`, are not allowed symbols, and the $realworldtesting operation request will return HTTP 400 (BadRequest) if any of those symbols are present. 
 

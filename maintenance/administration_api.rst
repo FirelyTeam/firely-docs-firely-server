@@ -99,6 +99,12 @@ Limited access
         * ``192.168.0.18/32`` (IPv4 single host)
         * ``10.0.0.1/24`` (IPv4 network ranging from ``10.0.0.0`` to ``10.0.0.255``, not recommended)
 
+.. warning::
+
+    If you run Firely Server **version 5.6.0 or older**, you MUST provide the subnet prefix length explicitly. 
+    If you do not, the subnet will be based on the class of the IP address, which usually leads to ``/24`` for IPv4. 
+    This may allow for more IP addressess than you intended to be able to access the restricted operations.
+
 .. note::
 
    If these operations are not used on the Administration API, it is recommended to remove them from the API altogether:

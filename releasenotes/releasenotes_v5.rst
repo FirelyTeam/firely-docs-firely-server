@@ -23,6 +23,7 @@ Feature
 Fix
 ^^^
 #. On SQL Server, permanent deletions of resources by the ``$erase`` and ``$purge`` operations are now processed asynchronously, so they do not block regular operations. See also :ref:`erase`.
+#. The Administration API can be restricted by IP Network. We have fixed an issue where an IP address without a subnet prefix length was interpreted with a length of ``/24``, allowing IP addresses with a different last segment to pass. See :ref:`configure_administration_access` for more information.
 
 
 .. _vonk_releasenotes_5_6_0:

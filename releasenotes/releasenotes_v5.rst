@@ -10,20 +10,28 @@ Current Firely Server release notes (v5.x)
 
 .. _vonk_releasenotes_5_7_0:
 
-Release 5.7.0, May Xth, 2024
--------------------------------
+Release 5.7.0, May 21th, 2024
+-----------------------------
 
 .. note::
-    Support for .NET 6 ends in November 2024. See `.NET Support Policy <https://dotnet.microsoft.com/en-us/platform/support/policy>`_. This version of Firely Server supports .NET 8. So we recommend that you upgrade to Firely Server 5.7.0 and hence .NET 8 before November 2024.
+    Support for .NET 6 ends in November 2024. See `.NET Support Policy <https://dotnet.microsoft.com/en-us/platform/support/policy>`_. This version of Firely Server supports .NET 8. Therefore, we recommend upgrading to Firely Server 5.7.0 and .NET 8 before November 2024.
 
-Feature
-^^^^^^^
-#. Firely Server is upgraded to .NET 8. This means that you need the .NET 8 runtime to run FS. The docker image has been updated for you. We recommend that you update your plugins to .NET 8 as well. 
-
-Fix
-^^^
+Features
+^^^^^^^^
+#. (**IMPORTANT**) Firely Server is upgraded to .NET 8. This means that you need the .NET 8 runtime to run FS. The docker image has been updated for you. We recommend that you update your plugins to .NET 8 as well.
 #. On SQL Server, permanent deletions of resources by the ``$erase`` and ``$purge`` operations are now processed asynchronously, so they do not block regular operations. See also :ref:`erase`.
+
+Improvements
+^^^^^^^^^^^^
+#. Loading of conformance resources from our ``errata`` zip files has been reworked.
+#. Indexing implementation has been refactored and aligned between FS and FSI as well as between different database backends.
+
+Fixes
+^^^^^
 #. The Administration API can be restricted by IP Network. We have fixed an issue where an IP address without a subnet prefix length was interpreted with a length of ``/24``, allowing IP addresses with a different last segment to pass. See :ref:`configure_administration_access` for more information.
+#. Resolved an issue where certain element values like ``HumanName.prefix`` or ``HumanName.suffix`` were not indexed correctly for SQL/SQLite databases.
+#. SoFv2 ``OR`` scope combination for a single resource type could behave as an ``AND``, causing certain resources to be unauthorized.
+#. Addressed an issue that led to the generation of extra AuditEvent resources.
 
 
 .. _vonk_releasenotes_5_6_0:

@@ -296,9 +296,8 @@ AWS Cloudwatch
 ^^^^^^^^^^^^^^
 Firely Server can also log to AWS Cloudwatch. What you need to do:
 
-#. Create a user with restricted privilages in AWS that can write to Cloudwatch
-#. Configure the machine with the Firely Server instance with the credentials of this AWS account 
-#. These 2 steps are described `here <https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/creds-assign.html>`_
+#. Create a user with restricted privilages in AWS that can write to Cloudwatch as described `here <https://docs.aws.amazon.com/sdkref/latest/guide/access-iam-users.html>`_
+#. Specify the credentials and the region in configuration files or through environment variables as described `here <https://docs.aws.amazon.com/sdkref/latest/guide/creds-config-files.html >`_. 
 #. Add the correct sink to the logsettings.json::
 
 		"WriteTo": [

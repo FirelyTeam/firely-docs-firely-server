@@ -210,5 +210,3 @@ The end?
 --------
 
 This concludes the second exercise. Please feel free to try out more options, and :ref:`ask for help <vonk-contact>` if you get stuck!
-
-The next topic will show you how to integrate :ref:`Access Control<feature_accesscontrol>`.

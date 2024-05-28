@@ -8,6 +8,24 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_5_7_0:
+
+Release 5.7.0, May Xth, 2024
+-------------------------------
+
+.. note::
+    Support for .NET 6 ends in November 2024. See `.NET Support Policy <https://dotnet.microsoft.com/en-us/platform/support/policy>`_. This version of Firely Server supports .NET 8. So we recommend that you upgrade to Firely Server 5.7.0 and hence .NET 8 before November 2024.
+
+Feature
+^^^^^^^
+#. Firely Server is upgraded to .NET 8. This means that you need the .NET 8 runtime to run FS. The docker image has been updated for you. We recommend that you update your plugins to .NET 8 as well. 
+
+Fix
+^^^
+#. On SQL Server, permanent deletions of resources by the ``$erase`` and ``$purge`` operations are now processed asynchronously, so they do not block regular operations. See also :ref:`erase`.
+#. The Administration API can be restricted by IP Network. We have fixed an issue where an IP address without a subnet prefix length was interpreted with a length of ``/24``, allowing IP addresses with a different last segment to pass. See :ref:`configure_administration_access` for more information.
+
+
 .. _vonk_releasenotes_5_6_0:
 
 Release 5.6.0, April 11th, 2024

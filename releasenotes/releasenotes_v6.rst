@@ -10,11 +10,25 @@ Current Firely Server release notes (v6.x)
 
 .. _vonk_releasenotes_6_0_0:
 
-Release 6.0.0, xyz, 2024
--------------------------------
+=======
+
+
+Release 6.0.0, [Month] [Date], 2024
+---------------------------------------
 
 Features
 ^^^^^^^^
 
 #. Firely Server offers the ``$member-match`` operation to find the identifier of a member of a health plan. See :ref:`member-match` for more information.
 
+
+Configuration
+^^^^^^^^^^^^^
+.. attention::
+    Default behavior of Firely Server has been tweaked by changing conviguration values. 
+    Make sure to reflect the desired behaviour by adjusting ``appsettings.instance.json`` or environment variables.
+
+#. Evaluation of :ref:`Subscriptions<feature_subscription>` is now turned off by default. To enable - adjust ``SubscriptionEvaluatorOptions`` accordingly.
+
+.. note::
+    With the release of Firely Server 6.0, we will officially stop support for Firely Server v4.x. We will continue supporting customers that run Firely Server v5.x.

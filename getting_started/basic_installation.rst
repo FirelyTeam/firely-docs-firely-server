@@ -42,7 +42,7 @@ Running Firely Server
 .. important:: 
 	
 	The next step assumes you have a .NET Core environment installed. If not, please 
-	`download and install <https://dotnet.microsoft.com/en-us/download/dotnet/6.0>`_ **ASP.NET Core Runtime 6.x.xx Hosting Bundle** before you continue.
+	`download and install <https://dotnet.microsoft.com/en-us/download/dotnet/8.0>`_ **ASP.NET Core Runtime 8.x.xx Hosting Bundle** before you continue.
 	Choose the latest security patch to mitigate security issues in previous versions.
 
 When you have completed your configuration changes, start the server.

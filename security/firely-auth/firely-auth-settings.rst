@@ -338,6 +338,7 @@ For hosting (either directly with Kestrel as shown below, or with a reverse prox
 Necessary data:
 
 - Pre-load one version of US-Core conformance resources to the Firely Server administration endpoint
+  (please note :ref:`this warning<us-core_composite_parameters>`)
 - Pre-load the example resource of the same version of US-Core to the regular endpoint
 
 We have a full walkthrough of Inferno testing available as a whitepaper, see `our resources <https://fire.ly/resources/>`_.

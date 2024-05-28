@@ -321,6 +321,25 @@ Furthermore:
 
 #. Paging is supported, but it is not isolated from intermediate changes to resources.
 
+.. _us-core_composite_parameters:
+.. warning::
+
+    US-Core search parameters interfere with the evaluation of composite search parameters in Firely Server. 
+    US-Core redefines the Observation.code parameter, but does not redefine the related composite search parameters. 
+    
+    If you load the artifacts of US-Core into the administration endpoint, be aware that you need updated versions of the composite search parameters as well. 
+    
+    The pre-built SQLite administration database, that comes with the Firely Server distribution, has US-Core 3.1.1 preloaded. In this database, Firely has already taken care of this for you.
+    
+    Corrected versions of the search parameters are:
+    
+    - Observation.code-value-concept: :download:`download <../_static/files/us-core-composite-parameters/SearchParameter-firely-us-core-observation-code-value-concept.json>`
+    - Observation.code-value-date: :download:`download <../_static/files/us-core-composite-parameters/SearchParameter-firely-us-core-observation-code-value-date.json>`
+    - Observation.code-value-quantity: :download:`download <../_static/files/us-core-composite-parameters/SearchParameter-firely-us-core-observation-code-value-quantity.json>`
+    - Observation.code-value-string: :download:`download <../_static/files/us-core-composite-parameters/SearchParameter-firely-us-core-observation-code-value-string.json>`
+    
+    You can add these as individual files to your administration :ref:`import folder<conformance_fromdisk>`, or merge them into the US-Core package.
+
 .. _restful_history:
 
 History

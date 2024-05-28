@@ -154,6 +154,7 @@ Known Limitations
 
 * In order to validate resources claiming to conform to US Core, it is necessary to configure Firely Server to use an external terminology server incl. support for expanding SNOMED CT and LOINC ValueSets. See :ref:`feature_terminology`.
 * Certain parameters are not implemented for the ``$docref`` operation on DocumentReference resources. See :ref:`feature_docref` for more details.
+* US-Core Observation.code search parameter interferes with Firely Server's handling of composite parameters. See :ref:`this warning<us-core_composite_parameters>`.
 
 Test Data
 ---------

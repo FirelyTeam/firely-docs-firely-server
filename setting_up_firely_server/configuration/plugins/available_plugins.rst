@@ -686,13 +686,13 @@ Repository implementations
 
 :Name: Memory Repository
 :Configuration: ``Vonk.Repository.MemoryConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/memory
+:License token: http://fire.ly/vonk/plugins/repository/memory
 :Order: 210
 :Description: Implements a repository in working memory that fully supports all of the capabilities of Firely Server. This implementation is mainly used for unit testing.
 
 :Name: Memory Administration Repository
 :Configuration: ``Vonk.Repository.MemoryAdministrationConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/memory
+:License token: http://fire.ly/vonk/plugins/repository/memory
 :Order: 211
 :Description: Implements a repository in working memory for the Administration API. This implementation is mainly used for unit testing.
 
@@ -700,13 +700,13 @@ Repository implementations
 
 :Name: MongoDb Repository
 :Configuration: ``Vonk.Repository.MongoDbConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/mongo-db
+:License token: http://fire.ly/vonk/plugins/repository/mongo-db
 :Order: 230
 :Description: Implements a repository in MongoDb that fully supports all of the capabilities of Firely Server.
 
 :Name: MongoDb Administration Repository
 :Configuration: ``Vonk.Repository.MemoryAdministrationConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/mongo-db
+:License token: http://fire.ly/vonk/plugins/repository/mongo-db
 :Order: 231
 :Description: Implements a repository in MongoDb for the Administration API.
 
@@ -714,13 +714,13 @@ Repository implementations
 
 :Name: SQLite Repository
 :Configuration: ``Vonk.Repository.SqliteConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/sqlite
+:License token: http://fire.ly/vonk/plugins/repository/sqlite
 :Order: 240
 :Description: Implements a repository in SQLite that fully supports all of the capabilities of Firely Server.
 
 :Name: SQLite Administration Repository
 :Configuration: ``Vonk.Repository.SqliteAdministrationConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/sqlite
+:License token: http://fire.ly/vonk/plugins/repository/sqlite
 :Order: 241
 :Description: Implements a repository in SQLite for the Administration API.
 
@@ -728,13 +728,13 @@ Repository implementations
 
 :Name: SQL Server Repository
 :Configuration: ``Vonk.Repository.SqlConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/sql-server
+:License token: http://fire.ly/vonk/plugins/repository/sql-server
 :Order: 220
 :Description: Implements a repository in SQL Server that fully supports all of the capabilities of Firely Server.
 
 :Name: SQL Server Administration Repository
 :Configuration: ``Vonk.Repository.SqlAdministrationConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/sql-server
+:License token: http://fire.ly/vonk/plugins/repository/sql-server
 :Order: 221
 :Description: Implements a repository in SQL Server for the Administration API.
 
@@ -745,7 +745,7 @@ Administration API
 
 :Name: Administration API
 :Configuration: ``Vonk.Administration.Api.AdministrationOperationConfiguration``
-:license token: http://fire.ly/vonk/plugins/administration
+:License token: http://fire.ly/vonk/plugins/administration
 :Order: 1160
 :Description: Sets up a sequence of plugins for the Administration API. Administration API is different from general plugins since it branches off of the regular processing pipeline and sets up a second pipeline for the /administration endpoint.
 
@@ -753,7 +753,7 @@ Administration API
 
 :Name: Fhir STU3 Administration services
 :Configuration: ``Vonk.Administration.FhirR3.RepositoryConfigurationR3``
-:license token: http://fire.ly/vonk/plugins/administration/fhirr3
+:License token: http://fire.ly/vonk/plugins/administration/fhirr3
 :Order: 4310
 :Description: Implements support services to work with FHIR STU3 conformance resources in the Administration API.
 
@@ -761,7 +761,7 @@ Administration API
 
 :Name: Fhir R4 Administration services
 :Configuration: ``Vonk.Administration.FhirR4.RepositoryConfigurationR4``
-:license token: http://fire.ly/vonk/plugins/administration/fhirr4
+:License token: http://fire.ly/vonk/plugins/administration/fhirr4
 :Order: 4310
 :Description: Implements support services to work with FHIR R4 conformance resources in the Administration API.
 
@@ -770,7 +770,7 @@ Bulk Data
 
 :Name: System Bulk Data Export
 :Configuration: ``Vonk.Plugin.BulkDataExport.SystemBulkDataExportConfiguration``
-:license token: ``http://fire.ly/vonk/plugins/bulk-data-export``
+:License token: ``http://fire.ly/vonk/plugins/bulk-data-export``
 :Order: 5003
 :Description: Support for system-level ``$export`` operation. See :ref:`feature_bulkdataexport`.
 
@@ -778,7 +778,7 @@ Bulk Data
 
 :Name: Group Bulk Data Export
 :Configuration: ``Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration``
-:license token: ``http://fire.ly/vonk/plugins/bulk-data-export``
+:License token: ``http://fire.ly/vonk/plugins/bulk-data-export``
 :Order: 5004
 :Description: Support for instance-level ``$export`` operation. See :ref:`feature_bulkdataexport`.
 
@@ -786,7 +786,7 @@ Bulk Data
 
 :Name: Patient Bulk Data Export
 :Configuration: ``Vonk.Plugin.BulkDataExport.PatientBulkDataExportConfiguration``
-:license token: ``http://fire.ly/vonk/plugins/bulk-data-export``
+:License token: ``http://fire.ly/vonk/plugins/bulk-data-export``
 :Order: 5005
 :Description: Support for type-level ``$export`` operation. See :ref:`feature_bulkdataexport`.
 
@@ -794,7 +794,7 @@ Bulk Data
 
 :Name: Patient everything
 :Configuration: ``Vonk.Plugin.PatientEverything``
-:license token: ``http://fire.ly/vonk/plugins/patient-everything``
+:License token: ``http://fire.ly/vonk/plugins/patient-everything``
 :Order: 5006
 :Description: Request a Patient record. See :ref:`feature_patienteverything`.
 
@@ -803,6 +803,15 @@ X-Provenance header
 
 :Name: X-Provenance header
 :Configuration: ``Vonk.Plugin.Operations.Provenance.ProvenanceHeaderConfiguration``
-:license token: http://fire.ly/vonk/plugins/transaction
+:License token: http://fire.ly/vonk/plugins/transaction
 :Order: 1230
 :Description: Support for the X-Provenance header that adds a Provenance resource upon creating or updating another resource. See :ref:`feature_x-provenance`.
+
+Member Match operation
+----------------------
+
+:Name: Member Match operation
+:Configuration: ``Vonk.Plugin.MemberMatch.MemberMatchConfiguration``
+:License token: http://fire.ly/vonk/plugins/member-match
+:Order: 5400
+:Description: Implements the ``$member-match`` operation. See :ref:`member-match`.

@@ -10,8 +10,18 @@ Current Firely Server release notes (v6.x)
 
 .. _vonk_releasenotes_6_0_0:
 
+=======
+
+
 Release 6.0.0, [Month] [Date], 2024
 ---------------------------------------
+
+Features
+^^^^^^^^
+
+#. Firely Server offers the ``$member-match`` operation to find the identifier of a member of a health plan. See :ref:`member-match` for more information.
+
+
 Configuration
 ^^^^^^^^^^^^^
 .. attention::

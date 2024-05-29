@@ -21,6 +21,7 @@ Features
 #. (**IMPORTANT**) Firely Server is upgraded to .NET 8. This means that you need the .NET 8 runtime to run FS. The docker image has been updated for you. We recommend that you update your plugins to .NET 8 as well.
 #. (**IMPORTANT**) Implemented a check that all plugins specified in exclude section of the pipeline options are available. If not, Firely Server won't start. Please remove any missing configuration namespace from the appsettings if Firely Server encounters any error in the pipeline options during startup.
 #. On SQL Server, permanent deletions of resources by the ``$erase`` and ``$purge`` operations are now processed asynchronously, so they do not block regular operations. See also :ref:`erase`.
+#. Firely Server now provides functionality to run analytics queries on usage metrics collected via OpenTelemetry. This feature can be used to build reports for the ONC Real World Testing Condition and Maintenance of Certification requirement. See :ref:`feature_realworldtesting` for more information.
 
 Improvements
 ^^^^^^^^^^^^

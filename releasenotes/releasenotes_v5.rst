@@ -14,7 +14,10 @@ Release 5.7.0, May 29th, 2024
 -----------------------------
 
 .. note::
-    Support for .NET 6 ends in November 2024. See `.NET Support Policy <https://dotnet.microsoft.com/en-us/platform/support/policy>`_. This version of Firely Server requires .NET 8. Therefore, we recommend upgrading to Firely Server 5.7.0 and .NET 8 before November 2024.
+    Support for .NET 6 ends in November 2024. See `.NET Support Policy <https://dotnet.microsoft.com/en-us/platform/support/policy>`_. This version of Firely Server supports .NET 8. So we recommend that you upgrade to Firely Server 5.7.0 and hence .NET 8 before November 2024.
+    
+.. note::
+    Some internal changes in this release uncover a problem with the US Core search parameter for Observation.code and the related composite search parameters, like Observation.code-value-quantity. See :ref:`this warning<us-core_composite_parameters>` for fixes if you rely on US Core.
 
 Features
 ^^^^^^^^

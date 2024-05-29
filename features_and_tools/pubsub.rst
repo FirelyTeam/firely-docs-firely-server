@@ -41,6 +41,7 @@ You can enable PubSub by including the plugins in the pipeline options of the Fi
             }
         ]
     },
+
 The ``Vonk.Plugin.PubSub.Sub`` plugin allows Firely Server to subscribe to messages published to a message broker by other clients. The ``Vonk.Plugin.PubSub.Pub.Sql`` and ``Vonk.Plugin.PubSub.Pub.MongoDb`` plugins allow Firely Server to publish changes of the respective database (either SQL or MongoDb) to the message broker. 
 You can further adjust PubSub in the PubSub section of the `appsettings.instance.json` file:
 
@@ -72,7 +73,7 @@ You can further adjust PubSub in the PubSub section of the `appsettings.instance
   Enabling ResourceChangeNotifications requires one-time DB configuration to enable changes tracking for SQL server backends. See :ref:`SQL Server Tracking Initialization<pubsub_sql_tracking_init>` for the instructions.
 
 .. note::
-  If you have configured MongoDb as your Firely Server repository database, note that the publication plugin ``Vonk.Plugin.PubSub.Pub.MongoDb`` can only be used in combination with MongoDb `replica sets <https://www.mongodb.com/docs/manual/replication/>`_ or `sharded clusters <https://www.mongodb.com/docs/manual/sharding>`_, as the plugin utilizes the :ref:`Change Stream <https://www.mongodb.com/docs/manual/changeStreams/>` functionality of MongoDb and is thus restricted.
+  If you have configured MongoDb as your Firely Server repository database, note that the publication plugin ``Vonk.Plugin.PubSub.Pub.MongoDb`` can only be used in combination with MongoDb `replica sets <https://www.mongodb.com/docs/manual/replication/>`_ or `sharded clusters <https://www.mongodb.com/docs/manual/sharding>`_, as the plugin utilizes the `Change Stream <https://www.mongodb.com/docs/manual/changeStreams/>`_ functionality of MongoDb and is thus restricted.
 
 Message types and formats
 -------------------------
@@ -526,14 +527,14 @@ If you are interested in the result of a command execution, your application sho
 2. Bind the exchange to the incoming queue of your application
 3. Specify the exchange name in the ``responseAddress`` header of the command message (e.g. ``rabbitmq://rabbitmq-host/response-exchange-name?temporary=true`` where ``response-exchange-name`` is a name of your exchange)
 4. Send the command
-5. Listen for the response published by Firey Server
+5. Listen for the response published by Firely Server
 
 .. _azure_service_bus:
 
 Azure Service Bus
 ^^^^^^^^^^^^^^^^^
 
-As an alternative for RabbitMQ, it is also possible to set up Azure Service Bus as a messagebroker. The setup of Azure Service Bus is similar to that of RabbitMQ in that it differentiates between message producers and consumers, using `topics` and `subscriptions` rather than the RabbitMQ fanout `exchanges` for 1:n relations between these producers and consumers. More information on the workings of Azure Service Bus can also be found in `the Microsoft documentation <https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview>`_.
+As an alternative for RabbitMQ, it is also possible to set up Azure Service Bus as a message broker. The setup of Azure Service Bus is similar to that of RabbitMQ in that it differentiates between message producers and consumers, using `topics` and `subscriptions` rather than the RabbitMQ fanout `exchanges` for 1:n relations between these producers and consumers. More information on the workings of Azure Service Bus can also be found in `the Microsoft documentation <https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-messaging-overview>`_.
 
 **Configuration**
 
@@ -547,6 +548,7 @@ To use Azure Service Bus rather than RabbitMQ you need to set this in the ``Brok
             "ApplicationQueueName": "FirelyServer",
             // "VirtualHost": "/",
             "BrokerType": "AzureServiceBus" 
+
 You can comment out the ``Username``, ``Password``, and ``VirtualHost`` fields, since these are specifically meant for connecting to RabbitMQ. For connecting to Azure Service Bus, it is necessary to provide a complete Shared Access Key connection string in the ``Host`` section.
 
 **Events**
@@ -586,7 +588,7 @@ Similar to RabbitMQ, if you are interested in the result of a command execution 
 2. Create a `subscription` under that topic and bind this subscription to the incoming queue of your application
 3. Specify the `topic` in the ``responseAddress`` header of the command message (e.g. ``sb://<Azure Service Bus namespace>.servicebus.windows.net/<topic>?type=topic``, it is important not to forget ``?type=topic`` in your connection string)
 4. Send the command
-5. Listen for the response published by Firey Server
+5. Listen for the response published by Firely Server
 
 
 Database Tracking Initialization

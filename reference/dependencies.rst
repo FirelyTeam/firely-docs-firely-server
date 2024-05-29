@@ -42,10 +42,10 @@ Firely Server PubSub:
 
 #. MassTransit - Apache 2.0
 
-For in-house telemetry:
+For in-house telemetry and statistics:
 
 #. OpenTelemetry.* - Apache 2.0
-#. MongoDB.Driver.Core.Extensions.OpenTelemetry - Apache 2.0
+#. MongoDB.Driver.Core.Extensions.DiagnosticSources - Apache 2.0
 #. InfluxDB.Client - MIT
 
 For unit testing:

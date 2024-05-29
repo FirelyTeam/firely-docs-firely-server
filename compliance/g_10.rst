@@ -97,3 +97,5 @@ Conformance & Configuration
 * A mapping between USCDI and the US Core profiles can be found in the `US Core ImplementationGuide <http://build.fhir.org/ig/HL7/US-Core/uscdi.html>`_.
 
 * See :ref:`firely_auth_introduction` for details on how to configure a client to interact with Firely Server and Firely Auth.
+
+* See :ref:`feature_realworldtesting` for how to configure metrics in Firely Server needed to submit Real World Testing data.

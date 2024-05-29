@@ -8,6 +8,45 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_5_7_0:
+
+Release 5.7.0, May 29th, 2024
+-----------------------------
+
+.. note::
+    Support for .NET 6 ends in November 2024. See `.NET Support Policy <https://dotnet.microsoft.com/en-us/platform/support/policy>`_. This version of Firely Server supports .NET 8. So we recommend that you upgrade to Firely Server 5.7.0 and hence .NET 8 before November 2024.
+    
+.. note::
+    Some internal changes in this release uncover a problem with the US Core search parameter for Observation.code and the related composite search parameters, like Observation.code-value-quantity. See :ref:`this warning<us-core_composite_parameters>` for fixes if you rely on US Core.
+
+Features
+^^^^^^^^
+#. (**IMPORTANT**) Firely Server is upgraded to .NET 8. This means that you need the .NET 8 runtime to run FS. The docker image has been updated for you. We recommend that you update your plugins to .NET 8 as well.
+#. (**IMPORTANT**) Implemented a check that all plugins specified in exclude section of the pipeline options are available. If not, Firely Server won't start. Please remove any missing configuration namespace from the appsettings if Firely Server encounters any error in the pipeline options during startup.
+#. On SQL Server, permanent deletions of resources by the ``$erase`` and ``$purge`` operations are now processed asynchronously, so they do not block regular operations. See also :ref:`erase`.
+#. Firely Server now provides functionality to run analytics queries on usage metrics collected via OpenTelemetry. This feature can be used to build reports for the ONC Real World Testing Condition and Maintenance of Certification requirement. See :ref:`feature_realworldtesting` for more information.
+
+Improvements
+^^^^^^^^^^^^
+#. Loading of conformance resources from our ``errata`` zip files has been reworked. No changes functionality changes should be noticable.
+#. The internal indexing implementation has been refactored and aligned between FS and FSI as well as between different database backends. No changes functionality changes should be noticable.
+#. Improved the validation of fhirUser claims as part of an access token. Invalid claims are now rejected with HTTP 401 - Unauthorized.
+#. Firely Server will now use the X-Security-Context HTTP header as the value for Binary.securityContext when posting a native Binary to the Binary endpoint.
+
+Configuration
+^^^^^^^^^^^^^
+#. Firely Server will throw a VonkConfigurationException if $purge or $erase are configured for a repository for which this is not supported (e.g. Memory).
+#. Added a new setting do disable the creation of AuditEvent resources and Audit logs independently from each other. See :ref:`feature_auditing` for more information. 
+
+Fixes
+^^^^^
+#. The Administration API can be restricted by IP Network. We have fixed an issue where an IP address without a subnet prefix length was interpreted with a length of ``/24``, allowing IP addresses with a different last segment to pass. See :ref:`configure_administration_access` for more information.
+#. Resolved an issue where certain element values like ``HumanName.prefix`` or ``HumanName.suffix`` were not indexed correctly for SQL/SQLite databases.
+#. SMART on FHIR access tokens with ``OR`` scope combinations for a single resource type could behave as an ``AND``, causing certain requests to be unauthorized whereas access should have been granted.
+#. Addressed an issue that led to the generation of extra AuditEvent resources.
+#. Fixed an issue that would result in adding meta.versionId and meta.lastUpdated to contained resources.
+
+
 .. _vonk_releasenotes_5_6_0:
 
 Release 5.6.0, April 11th, 2024

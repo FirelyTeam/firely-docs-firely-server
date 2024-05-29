@@ -310,8 +310,8 @@ External identity providers
 - ``Scheme``: Name of the federated identity provider. Each identity provider must have a unique scheme.
 - ``Authority``: Url of the external identity provider.
 - ``DisplayName``: Name that will be displayed in the UI of Firely Auth for users to select which identity provider to use if multiple are configured or if a local login is enabled as well.
-- ``ClientId``: ClientId of Firely Auth that will be used in the implicit token flow in order to retreive an id token from the external identity provider.
-- ``ClientSecret``: ClientSecret of Firely Auth that will be used in the implicit token flow in order to retreive an id token from the external identity provider.
+- ``ClientId``: ClientId of Firely Auth that will be used in the implicit token flow in order to retrieve an id token from the external identity provider.
+- ``ClientSecret``: ClientSecret of Firely Auth that will be used in the implicit token flow in order to retrieve an id token from the external identity provider.
 
 .. _firely_auth_settings_allowedorigins:
 
@@ -338,6 +338,7 @@ For hosting (either directly with Kestrel as shown below, or with a reverse prox
 Necessary data:
 
 - Pre-load one version of US-Core conformance resources to the Firely Server administration endpoint
+  (please note :ref:`this warning<us-core_composite_parameters>`)
 - Pre-load the example resource of the same version of US-Core to the regular endpoint
 
 We have a full walkthrough of Inferno testing available as a whitepaper, see `our resources <https://fire.ly/resources/>`_.

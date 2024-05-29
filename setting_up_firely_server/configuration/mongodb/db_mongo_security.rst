@@ -15,13 +15,13 @@ Queryable Encryption
 --------------------
 Queryable Encryption is not supported by Firely Server.
 
-`More information <https://www.mongodb.com/docs/manual/core/queryable-encryption/>`_
+`More information <https://www.mongodb.com/docs/manual/core/queryable-encryption/>`__
 
 Client-Side Field Level Encryption
 ----------------------------------
 Client-Side Field Level Encryption is not supported by Firely Server.
 
-`More information <https://www.mongodb.com/docs/manual/core/csfle/>`_
+`More information <https://www.mongodb.com/docs/manual/core/csfle/>`__
 
 Encryption at Rest
 ------------------
@@ -29,7 +29,7 @@ Encryption at Rest is a mechanism that that will encrypt the data stored on disk
 This prevents copies of the database to be read properly without the certificate.
 The performance impact of using this security measure will be on the database server, as the data is encrypted/decrypted during write/read to/from disk activities.
 
-`More information <https://www.mongodb.com/docs/manual/tutorial/configure-encryption/>`_
+`More information <https://www.mongodb.com/docs/manual/tutorial/configure-encryption/>`__
 
 TLS/SSL (Transport Encryption)
 ------------------------------

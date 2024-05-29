@@ -16,7 +16,7 @@ The tool supports ingestion into SQL Server and MongoDB databases.
 
 Installation
 ------------
-To install the tool, you first need to have .NET Core SDK v6.x installed on your computer. You can download it `here <https://dotnet.microsoft.com/en-us/download>`__. Once it is installed, execute the following command:
+To install the tool, you first need to have .NET Core SDK v8.x installed on your computer. You can download it `here <https://dotnet.microsoft.com/en-us/download>`__. Once it is installed, execute the following command:
 
 ::
 
@@ -250,7 +250,7 @@ Specify a custom settings file **/path/to/your/custom/settings/appsettings.insta
   * FSI installation folder |br|
     e.g. ``C:\Users\Bob\.dotnet\tools``  
   * FSI installation ``dll`` folder |br| 
-    e.g. ``C:\Users\Bob\.dotnet\tools\.store\firely.server.ingest\version\firely.server.ingest\version\tools\net6.0\any``
+    e.g. ``C:\Users\Bob\.dotnet\tools\.store\firely.server.ingest\version\firely.server.ingest\version\tools\net8.0\any``
 
 Run the import for files located in directory **/path/to/your/input/files** and its subdirectories using license file **/path/to/your/license/fsi-license.json** targeting the database defined by the connection string. In case a resource being imported already exists in the target database, it gets skipped.
 

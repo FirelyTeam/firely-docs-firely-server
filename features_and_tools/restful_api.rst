@@ -70,26 +70,27 @@ Configuration for No-Op
 
 To make sure Firely server uses the No-Op scenario, the `UpdateNoOp` plugins need to be enabled in the `PipelineOptions`. 
 ::
-   "PipelineOptions": {
-   "PluginDirectory": "./plugins",
-   "Branches": [
-   {
-      "Path": "/",
-      "Include": [
-         "Vonk.Plugin.UpdateNoOp.UpdateNoOpConfiguration",
-         "Vonk.Plugin.UpdateNoOp.PatchNoOpConfiguration",
-         "Vonk.Plugin.UpdateNoOp.ConditionalUpdateNoOpConfiguration",
-      ]
-   }
-  ]
 
-   "UpdateNoOp": {
+  "PipelineOptions": {
+    "PluginDirectory": "./plugins",
+    "Branches": [
+      {
+        "Path": "/",
+        "Include": [
+          "Vonk.Plugin.UpdateNoOp.UpdateNoOpConfiguration",
+          "Vonk.Plugin.UpdateNoOp.PatchNoOpConfiguration",
+          "Vonk.Plugin.UpdateNoOp.ConditionalUpdateNoOpConfiguration",
+        ]
+      }
+    ]
+
+    "UpdateNoOp": {
       "AdditionalMetaToBeIgnored": [
-         "security",
-         "tag",
-         "profile"
+        "security",
+        "tag",
+        "profile"
       ]
-   }
+    }
 
 There are three No-Op plugins available:
 
@@ -97,10 +98,10 @@ There are three No-Op plugins available:
 * ``Vonk.Plugin.UpdateNoOp.PatchNoOpConfiguration`` - For Patch operations
 * ``Vonk.Plugin.UpdateNoOp.ConditionalUpdateNoOpConfiguration`` - For conditional updates
 
-By default the following meta elements are ignored during resource comparison: ``versionId``, ``lastUpdated`` and ``source``. You can also add ``security``, ``tag`` and ``profile`` or any other meta element to be ignored, but it depends on your specific usage of meta. For more information see `the hl7 specification <https://www.hl7.org/fhir/resource.html#tag-updates>`_.
+By default the following meta elements are ignored during resource comparison: ``versionId``, ``lastUpdated`` and ``source``. You can also add ``security``, ``tag`` and ``profile`` or any other meta element to be ignored, but it depends on your specific usage of meta. For more information see `the hl7 specification <https://www.hl7.org/fhir/resource.html#tag-updates>`__.
 
 To determine if your action resulted in a No-Op scenario, you can configure Firely Server to return an OperationOutcome. For this it is necessary to configure the Prefer Header as Firely Server does not return this response by default.
-The Prefer Header can be set in three ways, as per `the hl7 specification <https://build.fhir.org/http.html#ops>`_:
+The Prefer Header can be set in three ways, as per `the hl7 specification <https://build.fhir.org/http.html#ops>`__:
 
 * ``return=minimal``- Nothing is returned by the server
 * ``return=representation`` - The resource is returned as present in the database
@@ -108,34 +109,35 @@ The Prefer Header can be set in three ways, as per `the hl7 specification <https
 
 In the example below an OperationOutcome for a No-Op scenario is returned when the Prefer Header is set to ``return=OperationOutcome``:
 ::
-   {
+
+  {
     "resourceType": "OperationOutcome",
     "id": "26a724d9-10e4-4a71-819e-15d52f6f821c",
     "meta": {
-        "versionId": "b6063533-a93e-4cd1-bb0b-5f37381d0f20",
-        "lastUpdated": "2024-02-12T11:12:40.6172822+00:00"
+      "versionId": "b6063533-a93e-4cd1-bb0b-5f37381d0f20",
+      "lastUpdated": "2024-02-12T11:12:40.6172822+00:00"
     },
     "issue": [
-        {
-            "severity": "information",
-            "code": "informational",
-            "details": {
-                "coding": [
-                    {
-                        "system": "http://hl7.org/fhir/dotnet-api-operation-outcome",
-                        "code": "5025"
-                    }
-                ],
-                "text": "No changes were performed as the provided resource contains no changes to the existing resource"
+      {
+        "severity": "information",
+        "code": "informational",
+        "details": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/dotnet-api-operation-outcome",
+              "code": "5025"
             }
-        },
-        {
-            "severity": "information",
-            "code": "informational",
-            "diagnostics": "The operation was successful"
+          ],
+          "text": "No changes were performed as the provided resource contains no changes to the existing resource"
         }
+      },
+      {
+        "severity": "information",
+        "code": "informational",
+        "diagnostics": "The operation was successful"
+      }
     ]
-   }
+  }
 
 .. _restful_versioning:
 
@@ -318,6 +320,25 @@ In addition, Firely Server does not support the search parameters whose field ``
 Furthermore:
 
 #. Paging is supported, but it is not isolated from intermediate changes to resources.
+
+.. _us-core_composite_parameters:
+.. warning::
+
+    US-Core search parameters interfere with the evaluation of composite search parameters in Firely Server. 
+    US-Core redefines the Observation.code parameter, but does not redefine the related composite search parameters. 
+    
+    If you load the artifacts of US-Core into the administration endpoint, be aware that you need updated versions of the composite search parameters as well. 
+    
+    The pre-built SQLite administration database, that comes with the Firely Server distribution, has US-Core 3.1.1 preloaded. In this database, Firely has already taken care of this for you.
+    
+    Corrected versions of the search parameters are:
+    
+    - Observation.code-value-concept: :download:`download <../_static/files/us-core-composite-parameters/SearchParameter-firely-us-core-observation-code-value-concept.json>`
+    - Observation.code-value-date: :download:`download <../_static/files/us-core-composite-parameters/SearchParameter-firely-us-core-observation-code-value-date.json>`
+    - Observation.code-value-quantity: :download:`download <../_static/files/us-core-composite-parameters/SearchParameter-firely-us-core-observation-code-value-quantity.json>`
+    - Observation.code-value-string: :download:`download <../_static/files/us-core-composite-parameters/SearchParameter-firely-us-core-observation-code-value-string.json>`
+    
+    You can add these as individual files to your administration :ref:`import folder<conformance_fromdisk>`, or merge them into the US-Core package.
 
 .. _restful_history:
 

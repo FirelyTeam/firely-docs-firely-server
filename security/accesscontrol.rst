@@ -3,6 +3,7 @@
 ===========================
 Introduction Access control
 ===========================
+
 Access control generally consists of multiple interconnected components. This section will provide an overview how each of them can be implemented in Firely Server.
 
 - Identification: Who are you? -- usually a user name, login, or some identifier.
@@ -12,7 +13,7 @@ Access control generally consists of multiple interconnected components. This se
 
 Overview Authentication and Authorization workflow in Firely Server
 ===================================================================
-The whole security architecture for Firely Server is split into three parts to seperate out different responsibilities and to provide flexibility regarding the choice of technology for each component. 
+The whole security architecture for Firely Server is split into three parts to separate out different responsibilities and to provide flexibility regarding the choice of technology for each component. 
 For secure access to information in Firely Server through its REST API an authorization server, a system for managing user accounts, and an access control plugin in Firely Server is needed.
 
 Firely Server is meant to be used in an `OAuth2`_ environment in which an `OAuth2 provider`_ is responsible for providing authorization information. 
@@ -113,7 +114,7 @@ Therefore when you use AAD to provide SMART on FHIR scopes to Firely Server, you
 2. Configure Firely Server which character is used in Step 1, then Firely Server will generate a proper `SMART on FHIR scope <http://www.hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html>`_ and handle the request further. This can be configured via setting ``AccessTokenScopeReplace``. 
 
 For the first step above, instead of requesting different scopes in the user application, you can deploy `SMART on FHIR AAD Proxy <https://github.com/azure-smart-health/smart-on-fhir-aad-proxy>`_ to Azure, which helps you to replace ``/`` to ``-`` in a SMART scope when you request your access token.
-The other option would be to follow `Quickstart: Deploy Azure API for FHIR using Azure portal <https://docs.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/fhir-paas-portal-quickstart>`_, check "SMART on FHIR proxy" box in the "Additional settings" and use the proxy by following `Quickstart: Deploy Azure API for FHIR using Azure portal <https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/fhir-paas-portal-quickstart>`_.
+The other option would be to follow `Quickstart: Deploy Azure API for FHIR using Azure portal <https://docs.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/fhir-paas-portal-quickstart>`__, check "SMART on FHIR proxy" box in the "Additional settings" and use the proxy by following `Quickstart: Deploy Azure API for FHIR using Azure portal <https://learn.microsoft.com/en-us/azure/healthcare-apis/azure-api-for-fhir/fhir-paas-portal-quickstart>`__.
 
 .. warning:: 
   When you use the SMART on FHIR AAD Proxy, be careful with `SMART on FHIR v2 scopes <http://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html>`_.  ``-`` is an allowed character within the access scope (see examples below). 

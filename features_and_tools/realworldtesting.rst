@@ -71,12 +71,13 @@ Please make sure that `$realworldtesting` and `realworldtestingstatus` are liste
 To configure RWT one needs to also have values for connecting to InfluxDB configured.
 
 .. code-block:: json
-
-    "InfluxDbOptions": {
-        "Host": "https://influxdb-host-url",
-        "Bucket": "bucket-name",
-        "Token": "bucket-connection-token",
-        "Organization": "organization-name"
+    "RealWorldTesting": {
+        "InfluxDbOptions": {
+            "Host": "https://influxdb-host-url",
+            "Bucket": "bucket-name",
+            "Token": "bucket-connection-token",
+            "Organization": "organization-name"
+        }
     }
 
 InfluxDb has a concept of buckets and organizations, so one would need to use the same bucket for writing and reading data to the backend. 
@@ -87,7 +88,10 @@ In addition, there is the following configuration section for the Real World Tes
 .. code-block:: json
     
     "RealWorldTesting": {
-        "RepeatPeriod": 60000
+        "RepeatPeriod": 60000,
+        "InfluxDbOptions": {
+            // ... see above
+        }
     }
 
 In `RepeatPeriod` you can configure the polling interval (in milliseconds) for checking the Task queue for a new operation task.

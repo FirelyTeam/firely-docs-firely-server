@@ -165,7 +165,7 @@ The goal is to make as much data available to patients as possible through the A
 * Claim details and encounters (see :ref:`carin_ig`)
 * Clinical data incl. laboratory data (see :ref:`us_core_ig` and Da Vinci Payer Data Exchange)
 * Plan Coverage and Formularies (US Drug Formulary)
-* Prior Authorization Decisions (Da Vinci Prior Authorization Support)
+* Prior Authorization Decisions (Da Vinci Payer Data Exchange)
 
 .. image:: ../images/CMS-0057-P_PatientAccessAPI.pdf
 

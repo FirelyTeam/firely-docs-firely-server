@@ -88,10 +88,8 @@ To make Firely Server known to Firely Auth, fill in the ``FhirServer``:
     To have it accepted by Firely Server, set its ``SmartAuthorizationOptions:Audience`` setting to the same value as ``FHIR_BASE_URL``.
   - It correlates with the clients allowed to access the token introspection endpoint.
 
-- ``FHIR_BASE_URL``: This also has two uses:
+- ``FHIR_BASE_URL``:
 
-  - A token can have a claim in the form of ``patient=<base>/Patient/123``, to define the compartment the client is restricted to.
-    This url is used as the ``base`` part in that url, and should match the base url of Firely Server, as it is accessed by the client.
   - If an ``aud`` parameter is provided *in the authorize request*, it has to match this url. 
     E.g. in Postman you can provide this parameter by adding it to the Auth URL, like this: ``{{ids}}/connect/authorize?aud=http://localhost:4080`` 
     See the ``aud`` parameter in `SMART on FHIR authorization request`_
@@ -170,7 +168,7 @@ Therefore we register the users with Firely Auth. Firely Auth supports two types
 
 For the InMemory store, the users and their passwords are listed in plain text in this configuration. This is useful for testing, but not recommended for production use.
 
-The SqlServer store stores the users and their encrypted passwords in a MS SQL Server database. Also the `fhirUser` and `patient` claims for each user can be stored. 
+The SqlServer store stores the users and their encrypted passwords in a MS SQL Server database. Also the `fhirUser` for each user can be stored. 
 See :ref:`firely_auth_deploy_sql` for details on setting up the database.
 
 .. code-block:: json
@@ -185,7 +183,7 @@ See :ref:`firely_auth_deploy_sql` for details on setting up the database.
                   "Password": "password",
                   "AdditionalClaims": [
                       {
-                          "Name": "patient",
+                          "Name": "fhirUser",
                           "Value": "Patient/a123"
                       }
                   ]
@@ -206,9 +204,8 @@ See :ref:`firely_auth_deploy_sql` for details on setting up the database.
   - ``Password``: password for the user, in clear text
   - ``AdditionalClaims``: currently to be used for a single claim, to link the user to a Patient resource (and thereby to a Patient compartment), or a 'user' resource like a Practitioner in Firely Server. 
 
-    - ``Name``: name of the claim, currently only ``patient`` and ``fhirUser`` are supported
-    - ``Value``: logical id of the related Patient or Practitioner resource (``Patient/id``)
-      In the token this value will be expanded to an absolute url by prepending it with ``FhirServer.FHIR_BASE_URL`` (see :ref:`firely_auth_settings_server`).
+    - ``Name``: name of the claim
+    - ``Value``: user-defined string value. In case of `fhirUser` claim it must be the logical id of the related Patient or Practitioner resource (``Patient/id``) representing the user in the FHIR server. Note that a `patient` claim will be derived from the fhirUser claim in case the user is representing a Patient. This will influence the enforcement of a Patient compartment in Firely Server.
 
 - ``SqlServer``: settings for the SQL Server store
   
@@ -403,10 +400,6 @@ For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need
             "Username": "alice",
             "Password": "p@sSw0rd",
             "AdditionalClaims": [
-              {
-                "Name": "patient",
-                "Value": "<id of a patient in your Firely Server, e.g. 'example'>"
-              },
               {
                 "Name": "fhirUser",
                 "Value": "Practitioner/<id of a practitioner"

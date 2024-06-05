@@ -180,7 +180,7 @@ To initiate a Real World Testing operation, construct a request to the administr
 
    GET {{BASE_URL}}/administration/$realworldtesting?url=https://fire.ly/fhir/Library/rwt-all-requests&from=2024-03-18T14:34:16.772Z&to=2024-03-18T14:34:52.453Z
 
-Alternatively a POST request might be executed, however query parameters are passed as a Parameters resource in request body:
+Alternatively a POST request might be executed, here query parameters are passed as a Parameters resource in request body:
 
 .. code-block:: HTTP
    POST {{BASE_URL}}/administration/$realworldtesting

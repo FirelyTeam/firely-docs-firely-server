@@ -18,7 +18,7 @@ Features
 
 Improvements
 ^^^^^^^^^^^^
-#. Configuration values logged on startup are now redacted based on the principle of inclusion versus exclusion. This change may cause custom configuration values to be hidden in the log output.
+#. Configuration values logged on startup are now redacted based on the principle of inclusion versus exclusion. This change may cause custom configuration values to be hidden in the log output. In case of custom plugins relying on the old behaviour, it is advised to use a custom logging mechanism to log the configuration values.  
 
 Configuration
 ^^^^^^^^^^^^^

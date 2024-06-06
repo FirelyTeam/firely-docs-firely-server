@@ -13,6 +13,24 @@ Current Firely Server release notes (v5.x)
 Release 5.7.0, May 29th, 2024
 -----------------------------
 
+Features
+^^^^^^^^
+
+Improvements
+^^^^^^^^^^^^
+#. Configuration values logged on startup are now redacted based on the principle of inclusion versus exclusion. This change may cause custom configuration values to be hidden in the log output. In case of custom plugins relying on the old behaviour, it is advised to use a custom logging mechanism to log the configuration values.  
+
+Configuration
+^^^^^^^^^^^^^
+
+Fixes
+^^^^^
+
+.. _vonk_releasenotes_5_7_0:
+
+Release 5.7.0, May 29th, 2024
+-----------------------------
+
 .. note::
     Support for .NET 6 ends in November 2024. See `.NET Support Policy <https://dotnet.microsoft.com/en-us/platform/support/policy>`_. This version of Firely Server supports .NET 8. So we recommend that you upgrade to Firely Server 5.7.0 and hence .NET 8 before November 2024.
     

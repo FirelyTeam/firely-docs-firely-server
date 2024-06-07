@@ -61,7 +61,7 @@ To enable the ``$erase`` operation you will first have to make sure the plugin `
     ]
   },
 
-To enable the ``$purge`` operation you will first have to make sure the plugin ``Vonk.Plugin.PurgeOperation.PurgeOperationConfiguration`` is added to the PipelineOptions in the appsettings.
+To enable the ``$purge`` operation you will first have to make sure the plugin ``Vonk.Plugin.EraseOperation.PurgeOperationConfiguration`` is added to the PipelineOptions in the appsettings.
 
 .. code-block:: JavaScript
 

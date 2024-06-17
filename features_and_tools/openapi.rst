@@ -3,6 +3,13 @@
 OpenAPI
 =======
 
+.. note::
+
+  The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
+
+  * Firely Scale - 🌍 / 🇺🇸
+  * Firely CMS Compliance - 🇺🇸
+
 Firely Server is capable of generating Swagger / OpenAPI documentation. The content of these definitional artifacts are based on a `CapabilityStatement <http://hl7.org/fhir/capabilitystatement.html>`_.
 A full overview of the REST API provided by Firely Server can be found here: `OpenAPI documentation <../_static/swagger>`_. Please note that due to the feature-richness of the CapabilityStatement resource, it is not possible to expose all information through the OpenAPI documents and some limitations exist.
 

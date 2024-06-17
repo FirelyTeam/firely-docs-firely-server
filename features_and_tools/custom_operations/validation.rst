@@ -3,6 +3,10 @@
 Validation - $validate
 ======================
 
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
 Firely Server can validate a resource against a profile as defined in the `$validate`_ operation. 
 
 You can call validate on three levels:

@@ -4,6 +4,13 @@
 Real World Testing
 ==================
 
+.. note::
+
+  The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
+
+  * Firely Scale - 🌍 / 🇺🇸
+  * Firely CMS Compliance - 🇺🇸
+
 The Real World Testing functionality of Firely Server is designed to fulfill the requirements of the ONC Health IT Certification Program defined by the 21st Century Cures Act. See `ONC Health IT Certification Program - Real World Testing Resource Guide <https://www.healthit.gov/sites/default/files/page/2021-08/ONC-Real%20World%20Testing%20Resource%20Guide_Aug%202021.pdf>`_ for background.
 
 Real World Testing (RWT) is a process for recording and analyzing statistical data about the REST API behaviour of Firely Server. It allows for retrospectively gathering insights into the response codes of FHIR CRUD requests, as well as custom operations. The functionality enables the collection of all statistics needed for the `Firely Server Real World Testing Plans <https://fire.ly/g10-certification/>`_.
@@ -71,6 +78,7 @@ Please make sure that `$realworldtesting` and `realworldtestingstatus` are liste
 To configure RWT one needs to also have values for connecting to InfluxDB configured.
 
 .. code-block:: json
+
     "RealWorldTesting": {
         "InfluxDbOptions": {
             "Host": "https://influxdb-host-url",
@@ -183,6 +191,7 @@ To initiate a Real World Testing operation, construct a request to the administr
 Alternatively a POST request might be executed, here query parameters are passed as a Parameters resource in request body:
 
 .. code-block:: HTTP
+    
    POST {{BASE_URL}}/administration/$realworldtesting
 
 .. code-block:: json

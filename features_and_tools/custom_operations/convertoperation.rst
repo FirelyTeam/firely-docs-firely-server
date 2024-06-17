@@ -1,7 +1,11 @@
-.. _plugin_convertoperatoin:
+.. _feature_convertoperation:
 
-Convert plugin
-==============
+Convert XML <-> JSON - $convert
+===============================
+
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
 
 Description
 -----------
@@ -34,20 +38,3 @@ Configuration
          ...
       ]
    }
-
-Release notes
--------------
-
-Version 0.2.0
-^^^^^^^^^^^^^
-
-* Build against Firely Server (Vonk) 3.2.0
-* Compatible with Firely Server (Vonk) 3.2.0, 3.3.0
-* Functionally equivalent to version 0.1.0
-
-Version 0.1.0
-^^^^^^^^^^^^^ 
-
-* Build against Firely Server (Vonk) 3.0.0
-* Compatible with Firely Server (Vonk) 3.0.0, 3.1.0
-* Introduces the implementation of $convert for conversion between json and xml.

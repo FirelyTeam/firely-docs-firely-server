@@ -3,6 +3,10 @@
 Custom Resources
 ================
 
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
 Custom Resources are not formally defined in the FHIR Specification. To Firely Server a Custom Resource is a resource with a definition that is a specialization of DomainResource, but that is not in the Core FHIR Specification. Firely Server can handle these, provided it knows about the StructureDefinition that defines it. This page explains how to register such a StructureDefinition and store custom resources.
 
 .. warning::

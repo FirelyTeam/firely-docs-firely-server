@@ -1,5 +1,8 @@
 .. _cms:
 
+CMS Interoperability and Prior Authorization Final Rule (CMS-0057-F) - 🇺🇸
+=========================================================================
+
 .. |PATACC| replace:: Patient Access API
 .. |PROACC| replace:: Provider Access API
 .. |PRODIR| replace:: Provider Directory API
@@ -14,9 +17,6 @@
 .. |DTRIG|  replace:: Da Vinci Documentation Templates and Rules (DTR) IG Version STU 2.0.0
 .. |PASIG|  replace:: Da Vinci Prior Authorization Support (PAS) IG Version STU 2.0.1
 
-
-CMS Interoperability and Prior Authorization Final Rule (CMS-0057-F) - 🇺🇸
-=========================================================================
 
 The proposed `CMS Interoperability Rule (CMS-0057-F) <https://www.federalregister.gov/documents/2024/02/08/2024-00895/medicare-and-medicaid-programs-patient-protection-and-affordable-care-act-advancing-interoperability>`_ aims to promote greater interoperability, patient access, and innovation in the healthcare industry while also improving the quality and cost-effectiveness of care. Technically these goals are supported by multiple APIs that are required to be provided:
 

@@ -2,9 +2,6 @@
 ._buildhtml
 _build/
 .vscode/
-/.vs/slnx.sqlite
-/.vs/slnx.sqlite-journal
-/.vs/firely-docs/v16/.suo
-/.vs/firely-docs/config/applicationhost.config
-/.vs/VSWorkspaceState.json
-/.vs/firely-docs-firely-server/FileContentIndex
+/.vs/**
+/_static/files/drawio-source/*.bkp
+

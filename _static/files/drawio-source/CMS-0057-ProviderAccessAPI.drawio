@@ -1,0 +1,143 @@
+<mxfile host="Electron" modified="2024-06-19T10:34:04.892Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.5.3 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="N2pvLpiOzqzEj4WEdpjo" version="24.5.3" type="device">
+  <diagram name="Page-1" id="BACqo2qk8WsZglQtV_nf">
+    <mxGraphModel dx="1420" dy="840" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="NnsWn2N8nqPqRogkli4p-18" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;Provider Access API&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="325" y="10" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-20" value="&lt;div&gt;Payer&lt;/div&gt;&lt;div&gt;Firely Server&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3AB0DB;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.traditional_server;" parent="1" vertex="1">
+          <mxGeometry x="523" y="168.67000000000002" width="40" height="69.34" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" target="NnsWn2N8nqPqRogkli4p-24" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="802.9999999999998" y="203.66999999999996" as="sourcePoint" />
+            <Array as="points">
+              <mxPoint x="793" y="203.66999999999996" />
+              <mxPoint x="793" y="203.66999999999996" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="NnsWn2N8nqPqRogkli4p-24" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="562.9999999999998" y="203.34000000000003" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="742" y="196.66999999999996" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-23" value="&lt;div&gt;FHIR Resources&lt;br&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="NnsWn2N8nqPqRogkli4p-22" vertex="1" connectable="0">
+          <mxGeometry x="-0.2025" y="2" relative="1" as="geometry">
+            <mxPoint x="-4" y="-2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-24" value="ETL" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#FDD106;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.gear;labelPosition=center;" parent="1" vertex="1">
+          <mxGeometry x="725" y="189.33999999999992" width="28" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-25" value="Payer&lt;br&gt;System" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3AB0DB;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.traditional_server;" parent="1" vertex="1">
+          <mxGeometry x="803" y="168.67000000000002" width="40" height="69.34" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-57" value="&lt;div&gt;Provider&lt;/div&gt;&lt;div&gt;Firely Server&lt;/div&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3AB0DB;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.traditional_server;" parent="1" vertex="1">
+          <mxGeometry x="205.45999999999998" y="168.67000000000002" width="40" height="69.34" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-60" value="" style="group" parent="1" vertex="1" connectable="0">
+          <mxGeometry x="623" y="80" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-36" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;Workflow or Automation&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;labelPosition=center;verticalLabelPosition=top;align=center;verticalAlign=bottom;" parent="NnsWn2N8nqPqRogkli4p-60" vertex="1">
+          <mxGeometry x="-10" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-30" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;Patient Consent&lt;/font&gt;" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#3AB0DB;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.document;labelBackgroundColor=default;" parent="NnsWn2N8nqPqRogkli4p-60" vertex="1">
+          <mxGeometry x="25" y="10.000000000000016" width="20" height="27.08" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-35" value="&lt;font style=&quot;font-size: 9px;&quot;&gt;Attribution Groups&lt;/font&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3AB0DB;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.user;" parent="NnsWn2N8nqPqRogkli4p-60" vertex="1">
+          <mxGeometry x="95" y="10.000000000000016" width="27.08" height="27.08" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-64" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.482;exitY=1.029;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="NnsWn2N8nqPqRogkli4p-36" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="693" y="180" as="sourcePoint" />
+            <mxPoint x="563" y="180" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="690" y="170" />
+              <mxPoint x="690" y="180" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-68" value="Save to Payer and/or FHIR" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="NnsWn2N8nqPqRogkli4p-64" vertex="1" connectable="0">
+          <mxGeometry x="-0.8285" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-67" value="" style="endArrow=classic;html=1;rounded=0;dashed=1;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="693" y="180" as="sourcePoint" />
+            <mxPoint x="803" y="179.74923076923085" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-70" value="" style="group" parent="1" vertex="1" connectable="0">
+          <mxGeometry x="198" y="80" width="54.93" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-69" value="EMR" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3AB0DB;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.folders;" parent="NnsWn2N8nqPqRogkli4p-70" vertex="1">
+          <mxGeometry width="54.92957746478873" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-51" value="" style="shape=mxgraph.signs.healthcare.first_aid;html=1;pointerEvents=1;fillColor=#ff0000;strokeColor=none;verticalLabelPosition=bottom;verticalAlign=top;align=center;" parent="NnsWn2N8nqPqRogkli4p-70" vertex="1">
+          <mxGeometry x="15.398005769230775" y="18.329002182106713" width="16.514211538461538" height="16.51458044038881" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-71" value="" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" parent="1" source="NnsWn2N8nqPqRogkli4p-69" target="NnsWn2N8nqPqRogkli4p-20" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="343" y="100" as="sourcePoint" />
+            <mxPoint x="543" y="158.81864622142064" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="543" y="100" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-73" value="Search Groups For Member Attribution for Provider" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="NnsWn2N8nqPqRogkli4p-71" vertex="1" connectable="0">
+          <mxGeometry x="-0.4315" relative="1" as="geometry">
+            <mxPoint x="45" y="-2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-72" value="&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;1. Initiate request to Payer&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;for &lt;br&gt;Provider&#39;s patient records&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=default;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="8" y="90" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-76" value="" style="endArrow=classic;html=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" parent="1" source="NnsWn2N8nqPqRogkli4p-69" target="NnsWn2N8nqPqRogkli4p-20" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="198" y="120" as="sourcePoint" />
+            <mxPoint x="667.9999999999999" y="168.66864622142046" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="528" y="121" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-77" value="Request $export for Provider&#39;s Group" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="NnsWn2N8nqPqRogkli4p-76" vertex="1" connectable="0">
+          <mxGeometry x="-0.6373" y="1" relative="1" as="geometry">
+            <mxPoint x="53" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-78" value="&lt;div&gt;&lt;div&gt;2. Identify Provider Attribution Group&lt;/div&gt;&lt;div&gt;and request export&lt;/div&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=default;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="278" y="128.67" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-79" value="&lt;div&gt;3. Download&amp;nbsp;&lt;span style=&quot;background-color: initial;&quot;&gt;and ingest&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;FHIR resources&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=default;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="278" y="209.99999999999997" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-80" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" source="NnsWn2N8nqPqRogkli4p-20" target="NnsWn2N8nqPqRogkli4p-57" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="383" y="180" as="sourcePoint" />
+            <mxPoint x="343" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-81" value="Ingest bulk data export files" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="NnsWn2N8nqPqRogkli4p-80" vertex="1" connectable="0">
+          <mxGeometry x="0.2257" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-88" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="NnsWn2N8nqPqRogkli4p-85" target="NnsWn2N8nqPqRogkli4p-72" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="NnsWn2N8nqPqRogkli4p-85" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;Provider&lt;/font&gt;" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#3AB0DB;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.user;" parent="1" vertex="1">
+          <mxGeometry x="74.46000000000001" y="189.33999999999997" width="47.08" height="47.08" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

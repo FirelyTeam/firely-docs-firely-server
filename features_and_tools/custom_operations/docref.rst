@@ -36,8 +36,4 @@ To include the plugin in your pipeline, add the following extra Include:
          },
          ...
       ]
-   }  
-
-License
--------
-The $docref operation is licensed. To use it, you may need to renew your license.
+   }

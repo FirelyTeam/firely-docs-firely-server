@@ -21,11 +21,11 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    firely-server-ingest
    customresources
    customsearchparameters
+   openapi
    Custom Operations <custom_operations/customoperations>
    bulkdataexport
    subscription
    x-provenance
-   openapi
    pubsub
    realworldtesting
    features-availability

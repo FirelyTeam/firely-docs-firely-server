@@ -6,7 +6,7 @@ Generate a FHIR document - $document
 The $document operation is a custom operation defined in the `FHIR core specification <https://www.hl7.org/fhir/r4/composition-operation-document.html>`_ to facilitate the creation and retrieval of a complete, structured health record document.
 It plays a crucial role in infrastructures where the exchange of information depends on attested and potentially signed documents instead of individual resources. An introduction to the document exchange paradigm can be found `here <https://www.hl7.org/fhir/r4/documents.html>`_.
 
-Firely provides the source code for the $document operation as open-source on `GitHub <https://github.com/FirelyTeam/vonk.plugin.documentoperation>`_ to demonstrate a more elaborate example on how to implement a plugin.
+Yet, it is a fully functional and production ready implementation of the operation.
 
 API Usage
 ---------

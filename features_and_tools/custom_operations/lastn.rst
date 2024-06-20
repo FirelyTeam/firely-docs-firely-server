@@ -310,8 +310,3 @@ Response
     ],
     "id": "49ee0b4b-00bd-40b7-8cb5-96a0e0892380"
   }
-
-
-License
--------
-The $lastn operation is part of the core Firely Server functionality. However, to use it, you may need to request an updated license from Firely. You can use your current license file if it contains ``http://fire.ly/vonk/plugins/lastn``.

@@ -33,7 +33,7 @@ Alternatively the operation can be called via GET on an instance-level:
 
 .. code-block:: HTTP
 
-    POST {base-url}/Composition/<id>/$document
+GET {base-url}/Composition/<id>/$document
 
 The operation will retrieve all resources that are mentioned in any section of the composition as entry references. Absolute external references will not be resolved.
 

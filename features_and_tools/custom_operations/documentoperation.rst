@@ -59,6 +59,12 @@ The generated Document bundle can be immediately stored on the Bundle endpoint o
         ]
     }
 
+or
+
+.. code-block:: HTTP
+
+    POST {base-url}/Composition/<id>?persist=true
+
 Known limitations
 -----------------
 

@@ -167,7 +167,7 @@ The goal is to make as much data available to patients as possible through the A
 * Plan Coverage and Formularies (US Drug Formulary)
 * Prior Authorization Decisions (Da Vinci Prior Authorization Support)
 
-.. image:: ../images/CMS-0057-P_PatientAccessAPI.pdf
+.. image:: ../images/CMS-0057-PatientAccessAPI.svg
 
 .. note::
   The Da Vinci Payer Data Exchange Implementation Guide and the CARIN Blue Button Implementation Guide both use the ExplanationOfBenefits. 
@@ -186,7 +186,7 @@ To implement a Patient Access API it is necessary to:
 Impacted payers (see `CMS definition <https://www.cms.gov/priorities/key-initiatives/burden-reduction/interoperability/faqs>`_) are required to provide information exposed via a Patient Access API to providers who have a contractual relationship with the payer and a treatment relationship with the patient.
 Providers could access information for an individual patient as well as a group of information, providing further insight into the patient's care activity at the point of care.
 
-.. image:: ../images/CMS-0057-P_ProviderAccessAPI.pdf
+.. image:: ../images/CMS-0057-ProviderAccessAPI.svg
 
 To implement a Provider Access API (Bulk) it is necessary to:
 
@@ -203,6 +203,8 @@ Impacted payers (see `CMS definition <https://www.cms.gov/priorities/key-initiat
 The API must include provider names, addresses, phone numbers, and specialties, with updates accessible within 30 days. While CMS doesn't specify how payers should handle API access for contracted networks, they must ensure the API is publicly accessible without requiring authentication. 
 MA organizations offering MA-PD plans must provide pharmacy directory data, with CMS encouraging adherence to the PDex Plan-Net Implementation Guide. Developers accessing the Provider Directory API are not required to register, and its technical standards exclude authentication protocols. 
 Payers need to ensure the API and its documentation are available through a public-facing digital endpoint on their website, with restrictions only allowed for necessary security measures.
+
+.. image:: ../images/CMS-0057-ProviderDirectoryAPI.svg
 
 To implement a |PRODIR| it is necessary to:
 

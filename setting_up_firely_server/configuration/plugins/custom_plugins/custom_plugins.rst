@@ -17,3 +17,4 @@ Please have a look at the :ref:`architecture` to see how plugins fit in the Fire
    plugins_classes
    plugins_template
    plugins_directhttp
+   Example: $document <../../../../features_and_tools/custom_operations/documentoperation>

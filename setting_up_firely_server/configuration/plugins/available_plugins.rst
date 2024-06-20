@@ -42,7 +42,7 @@ Infrastructural plugins
 
 .. _vonk_plugins_core_services:
 :Name: Terminology Services
-:Configuration: `onk.Plugins.Terminology.TerminologyConfiguration`
+:Configuration: `Vonk.Plugins.Terminology.TerminologyConfiguration`
 :License token: http://fire.ly/vonk/plugins/terminology
 :Order: 132
 :Description: Registers local and remote terminology services to make them available as a core infrastructur.

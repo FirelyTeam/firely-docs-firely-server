@@ -138,6 +138,7 @@ The OutputTemplate listed here contains all the properties that can be logged:
 * ``Resource``: Resourcetype involved.
 * ``ResourceKey``: 'Key' of the resource involved (if any), consisting of the resourcetype and the id, formatted as "resourcetype/id".
 * ``StatusCode``: Statuscode of the response at the time of logging (by default '-1' when the request is not handled yet).
+* ``CorrelationId``: In case you want to follow requests across multiple containers, you can set the ``CorrelationId`` to be included in the logs. More information about the correlation Id can be found in the :ref:`logsettings <setting_correlation_id>`.
 
 For transactions and batches, the audit plugin will write a line for the transaction/batch as a whole *and* one for every entry in the transaction/batch.
 

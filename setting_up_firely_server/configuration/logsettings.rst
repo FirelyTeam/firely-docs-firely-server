@@ -395,7 +395,7 @@ Setting CorrelationId for tracing requests across multiple services
 -------------------------------------------------------------------
 
 Firely Server can log a ``RequestId`` to identify individual requests, but this is an auto-generated GUID and cannot be adjusted. This is tricky if you want to log requests across multiple services/containers, how to recognize a particular request from EHR to Firely Server if the ``RequestId`` is set automatically?
-As an answer to this, it is possible to set a ``CorrelationId`` for requests. The ``CorrelationId`` can be set manually by adding a header to the request that needs to be traced. Note that you can give any name to this header, as long as it matches the ``headerKey`` in the "Enrich" section of your logsettings.
+As an answer to this, it is possible to set a ``CorrelationId`` for requests in both the normal logging as the :ref:`audit logging <configure_audit_log_file>`. The ``CorrelationId`` can be set manually by adding a header to the request that needs to be traced. Note that you can give any name to this header, as long as it matches the ``headerKey`` in the "Enrich" section of your logsettings.
 This section needs to be adjusted to include the ``WithCorrelationIdHeader`` setting::
 
 	"Enrich": [

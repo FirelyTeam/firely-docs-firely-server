@@ -17,6 +17,4 @@ Please have a look at the :ref:`architecture` to see how plugins fit in the Fire
    plugins_classes
    plugins_template
    plugins_directhttp
-   Example: $document <example_documentoperation>
-   Featured plugin: Binary wrapper <featured/binarywrapper>
-   Featured plugin: Convert <featured/convertoperation>
+   Example: $document <../../../../features_and_tools/custom_operations/documentoperation>

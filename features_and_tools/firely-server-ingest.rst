@@ -4,6 +4,10 @@ Bulk Import via Firely Server Ingest
 ====================================
 
 .. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
+.. note::
   This application is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
   Your license already permits the usage of FSI if it contains ``http://fire.ly/vonk/plugins/bulk-data-import``. You can also try out Firely Server Ingest. It is limited to a maximum of 10000 resources in total in the connected Firely Server database.
 
@@ -30,8 +34,7 @@ The command above will install FSI from this `NuGet package <https://www.nuget.o
 
     - Please find more information on where globally installed tools are located in `this article <https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools#install-a-global-tool>`_. 
     - For Linux and Mac, make sure you add your ``.profile`` or ``.bash_profile`` to your path.
-
-
+    - In the Firely Essentials edition, FSI is limited to importing 1000 resource per batch. It is required to split up larger datasets into multiple batches and re-run FSI.
 
 General usage
 -------------

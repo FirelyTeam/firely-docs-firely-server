@@ -2,6 +2,14 @@
 
 Permissions (AccessPolicy)
 --------------------------
+
+.. note::
+
+  The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
+
+  * Firely Scale - 🌍 / 🇺🇸
+  * Firely CMS Compliance - 🇺🇸
+
 Firely Server supports enforcing custom permissions per user next to the granted authorization as part of a SMART on FHIR based access token.
 In general, the access token represents the set of scopes that a client (e.g. a SMART app) is allowed to request. These scopes may not overlap with the set of scopes that the user using the app is allowed to request. Firely Server can therefore filter the granted access scopes for a authenticated user by using built-in a custom AccessPolicy resource. 
 

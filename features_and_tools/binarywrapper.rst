@@ -1,14 +1,18 @@
 .. _plugin_binarywrapper:
 
-BinaryWrapper plugin
-====================
+Binary Handling
+===============
+
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
 
 Description
 -----------
 A Binary resource is a digital representation of a single raw artifact that can be accessed in its original format. 
 It can contain various types of content such as text, images, PDFs, zip archives, and more.
 
-The Binary Wrapper plugin facilitates the sending of binary content to Firely Server, where it is stored as a Binary resource. 
+The Binary Wrapper plugin, as part of Firely Server, facilitates the sending of binary content to Firely Server, where it is stored as a Binary resource. 
 Additionally, it enables retrieving a Binary resource and returning it in its original binary format. 
 Essentially, the Binary Wrapper plugin simplifies the process of converting raw artifacts to base64 and manually creating Binary resources.
 
@@ -76,53 +80,5 @@ Configuration
          ...
       ]
    }
-
-Release notes
--------------
-
-Version 0.6.0
-^^^^^^^^^^^^^
-
-* Built against Firely Server (Vonk) 5.7.0.
-* Compatible with Firely Server (Vonk) v5.0.0+.
-* After a successful read a `Location` header is now returned as well.
-* Updated BinaryWrapper plugin to better align with the `FHIR specification <https://hl7.org/fhir/r4/binary.html#rest>`_ when reading a Binary resource in its native form:
-
-   * Implemented `Last-Modified` header to be able to return `Binary.meta.lastUpdated`.
-   * Implemented `ETag` header to be able to return `Binary.meta.versionId`.
-   * Implemented `X-Security-Header` to allow the security context for a Binary resource to be specified when it is posted or read in native form.
-
-Version 0.5.0
-^^^^^^^^^^^^^
-
-* Built against Firely Server (Vonk) 4.1.0
-* Compatible with Firely Server (Vonk) v4.1.0
-* Functionally equivalent to version 0.4.0
-
-Version 0.4.0
-^^^^^^^^^^^^^
-
-* Built against Firely Server (Vonk) 4.0.0
-* Compatible with Firely Server (Vonk) v4.0.0
-* Functionally equivalent to version 0.3.0
-
-Version 0.3.0
-^^^^^^^^^^^^^
-
-* Built against Firely Server (Vonk) 3.2.0
-* Compatible with Firely Server (Vonk) 3.2.0, 3.2.1, 3.3.0
-* Introduces the decoding of Binary resources, so you can GET a Binary resource in its original binary format.
-
-Version 0.2.0
-^^^^^^^^^^^^^
-
-* Build against Firely Server (Vonk) 3.0.0
-* Compatible with Firely Server (Vonk) 3.0.0
-* Functionally equivalent to version 0.1.0
-
-Version 0.1.0
-^^^^^^^^^^^^^
-
-* Build against Firely Server (Vonk) 2.1.0
 * Compatible with Firely Server (Vonk) 2.1.0
 * Introduces the encoding of Binary resources, so you can POST binary contents and have it stored as a Binary resource.

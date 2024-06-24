@@ -1,7 +1,13 @@
 .. _member-match:
 
-HRex Member Match Operation
-===========================
+HRex Member Match - $member-match
+=================================
+
+.. note::
+
+  The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
+
+  * Firely CMS Compliance - 🇺🇸
 
 The HRex Member Match operation is used to find the identifier of a member of a health plan, with the member's demographic and coverage information as input.
 The retrieved identifier can then be used to perform subsequent queries and operations on the data that the health plan holds for this member.
@@ -94,9 +100,9 @@ By default Firely Server uses a SQLite administration database, that is part of 
 If you are using SQL Server or MongoDB as the administration database, you need to make sure that the HRex and US-Core profiles are available in the database.
 To do so:
 
-- download the package for US-Core 3.1 from the `downloads page <http://hl7.org/fhir/us/core/STU3.1.1/downloads.html>`_.
+- download the package for US-Core 3.1.1 from the `US Core IG downloads page <http://hl7.org/fhir/us/core/STU3.1.1/downloads.html>`_.
 - this is a `.tgz` (tarball) file, so you need to extract it, and repackage at least the profiles into a zip file.
-- download the resource definitions for HRex from the `downloads page <https://hl7.org/fhir/us/davinci-hrex/downloads.html>`_.
+- download the resource definitions for HRex from the `HRex IG downloads page <https://hl7.org/fhir/us/davinci-hrex/downloads.html>`_.
 - put both zip files in the administration import folder. See :ref:`conformance` for more information.
 
 Note that HRex 1.0.0 still depends on US-Core 3.1.0. 

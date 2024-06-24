@@ -3,6 +3,10 @@
 Snapshot generation - $snapshot
 ===============================
 
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
 Firely Server is capable of generating a snapshot for a StructureDefinition. This operation is not defined in the FHIR Specification.
 
 You can invoke this operation with

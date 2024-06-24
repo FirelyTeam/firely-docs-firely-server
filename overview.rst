@@ -23,10 +23,10 @@ If you are interested in Firely Server for commercial use within your organizati
 
    * - Firely Server US 🇺🇸
      - Firely Server International 🌍
-   * - Firely Server Essentials
-     - Firely Server Essentials
-   * - Firely Solution for Healthcare Technology
-     - Firely Server Premium
+   * - Firely Essentials
+     - Firely Essentials
+   * - Firely Scale
+     - Firely Scale
    * - Firely Solution for CMS Interoperability & Prior Authorization Final Rule
      - /
 

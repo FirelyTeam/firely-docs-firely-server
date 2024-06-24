@@ -15,15 +15,17 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    :titlesonly:
 
    restful_api
-   bulkdataexport
-   firely-server-ingest
+   documenthandling
+   binarywrapper
    terminology
-   Custom Operations <custom_operations/customoperations>
+   firely-server-ingest
    customresources
    customsearchparameters
+   openapi
+   Custom Operations <custom_operations/customoperations>
+   bulkdataexport
    subscription
    x-provenance
-   openapi
    pubsub
    realworldtesting
    multi-tenancy

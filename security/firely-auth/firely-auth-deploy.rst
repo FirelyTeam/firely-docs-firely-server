@@ -153,7 +153,7 @@ Sqlite is setup by default and will create a database in the ./Data/ folder. If 
 
 To add users to the store, you can use the UI  or through the :ref:`firely_auth_mgmt` once the application has started.
 
-When you want to use Sqlite as user store in docker, you will have to create a database file, mount it to your docker container, and adjust the Sqlite connectionstring.
+When you want to use Sqlite as user store in docker, you will have to create a database file, mount it to your docker container, and adjust the Sqlite connectionstring as described in :ref:`firely_auth_settings_userstore`.
 
 .. _firely_auth_deploy_sql:
 
@@ -165,7 +165,7 @@ Use of the SQL Server user store requires Microsoft SQL Server version 2016 or n
 Using your favorite database administration tool:
 
 - create a new database, e.g. 'firely_auth_store'
-- in this database, execute the scripts from the ``scripts/SqlServer/`` folder, available in the binaries, or let the application run the migrations by itself (but then the user must have enough privileges).
+- in this database, execute the scripts from the ``scripts/SqlServer/`` folder, available in the binaries, or let the application run the migrations by itself (but then the user must have enough privileges, `db_ddladmin`, `db_datareader` and `db_datawriter` is usually enough).
 - create a connection string to this database
 - configure :ref:`firely_auth_settings_userstore`
   

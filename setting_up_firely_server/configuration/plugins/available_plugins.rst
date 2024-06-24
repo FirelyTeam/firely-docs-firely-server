@@ -550,9 +550,9 @@ Terminology
 .. _vonk_plugins_codesystem_lookup:
 
 :Name: CodeSystem Lookup
-:Configuration: ``Vonk.Plugins.Terminology.[R3|R4|R5].CodeSystemLookupConfiguration``
+:Configuration: ``Vonk.Plugins.Terminology.CodeSystemLookupConfiguration``
 :License token: http://fire.ly/vonk/plugins/terminology
-:Order: 5110
+:Order: 5240
 :Description: Implements FHIR `$lookup <http://hl7.org/fhir/codesystem-operation-lookup.html>`_ on type level requests: ``POST <base>/administration/CodeSystem/$lookup`` or ``GET <base>/administration/CodeSystem/$lookup?...``
 
 .. _vonk_plugins_codesystem_compose:
@@ -584,7 +584,7 @@ Terminology
 :Name: ConceptMap Translate
 :Configuration: ``Vonk.Plugins.Terminology.ConceptMapTranslateConfiguration``
 :License token: http://fire.ly/vonk/plugins/terminology
-:Order: 5260
+:Order: 5160
 :Description: Implements FHIR `$translate <http://hl7.org/fhir/conceptmap-operation-translate.html>`_ on instance level requests: ``GET <base>/administration/ConceptMap/[id]/$translate?...`` and ``POST <base>/administration/ValueSet/[id]/$translate`` and on type level requests: ``POST <base>/administration/ConceptMap/$translate``.
 
 .. _vonk_plugins_codesystem_subsumes:
@@ -592,15 +592,15 @@ Terminology
 :Name: CodeSystem Subsumes
 :Configuration: ``Vonk.Plugins.Terminology.CodeSystemSubsumesConfiguration``
 :License token: http://fire.ly/vonk/plugins/terminology
-:Order: 5280
+:Order: 5180
 :Description: Implements FHIR `$subsumes <http://hl7.org/fhir/codesystem-operation-subsumes.html>`_ on instance level requests: ``GET <base>/administration/CodeSystem/[id]/$subsumes?...`` and on type level requests: ``POST <base>/administration/CodeSystem/$subsumes`` or ``GET <base>/administration/CodeSystem/$subsumes?...``
 
 .. _vonk_plugins_codesystem_closure:
 
 :Name: CodeSystem Closure
-:Configuration: ``Vonk.Plugins.Terminology.CodeSystemClosureConfiguration``
+:Configuration: ``Vonk.Plugins.Terminology.ClosureConfiguration``
 :License token: http://fire.ly/vonk/plugins/terminology
-:Order: 5300
+:Order: 5200
 :Description: Implements FHIR `$closure <http://hl7.org/fhir/codesystem-operation-closure.html>`_ on system level requests: ``POST <base>/administration/$closure``
 
 .. _vonk_plugins_smart:

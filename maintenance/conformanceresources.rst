@@ -3,6 +3,10 @@
 Managing Conformance Resources
 ==============================
 
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
 Firely Server uses `Conformance Resources <http://www.hl7.org/implement/standards/fhir/conformance-module.html>`_ along with some `Terminology Resources <http://www.hl7.org/implement/standards/fhir/terminology-module.html>`_ for various operations:
 
 * SearchParameter: For indexing resources and evaluating :ref:`search <restful_search>` interactions.

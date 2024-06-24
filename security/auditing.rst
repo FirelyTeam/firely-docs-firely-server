@@ -3,6 +3,13 @@
 Auditing
 ========
 
+.. note::
+
+  The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
+
+  * Firely Scale - 🌍 / 🇺🇸
+  * Firely CMS Compliance - 🇺🇸
+
 Firely Server can log access through the RESTful API for auditing purposes. It has three main features:
 
 #. Write requests and responses to a separate audit logfile.

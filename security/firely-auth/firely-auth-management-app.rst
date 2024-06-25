@@ -13,6 +13,25 @@ When you want to manage the users programmatically, you can use the API's that a
 To be able to use the api, you will need a client token (obtained trough the client_credentials flow) for a client who has the ``AllowManagementApiAccess`` property set to true.
 It is recommended to use a specific client for this API access.
 
+A Postman collection with demo requests of the administration API can be found here:
+
+    .. raw:: html
+
+      <div class="postman-run-button"
+      data-postman-action="collection/fork"
+      data-postman-visibility="public"
+      data-postman-var-1="6644549-e9cbac4a-154a-4b41-95f1-c97d5c42f5f3"
+      data-postman-collection-url="entityId=6644549-e9cbac4a-154a-4b41-95f1-c97d5c42f5f3&entityType=collection&workspaceId=822b68d8-7e7d-4b09-b8f1-68362070f0bd"></div>
+      <script type="text/javascript">
+        (function (p,o,s,t,m,a,n) {
+          !p[s] && (p[s] = function () { (p[t] || (p[t] = [])).push(arguments); });
+          !o.getElementById(s+t) && o.getElementsByTagName("head")[0].appendChild((
+            (n = o.createElement("script")),
+            (n.id = s+t), (n.async = 1), (n.src = m), n
+          ));
+        }(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
+      </script>
+
 In case the admin account is not known anymore, there is a way to create another admin account.
 For this, you can log in with the user ``FA_ADMIN`` and a password that you can configure in several ways.
 

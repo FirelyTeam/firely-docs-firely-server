@@ -3,6 +3,10 @@
 Using the In-Memory storage
 ===========================
 
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
 * Navigate to your Firely Server working directory
 * Changing a setting means overriding it as described in :ref:`configure_change_settings`. 
 

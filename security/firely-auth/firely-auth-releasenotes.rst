@@ -10,8 +10,8 @@ Release 4.0.0, June 24th, 2024
 
 .. attention::
 
-    The current release, version 4.0 of Firely Auth, features new API capabilities, a redesigned user interface and enhanced SMART on FHIR capabilities.
-    With this release, Firely is deprecating support for any previous version of Firely Auth. It is recommended that all customers upgrade to the latest version..
+    The current release of Firely Auth, version 4.0, features new API capabilities, a redesigned user interface, and enhanced SMART on FHIR capabilities.
+    With this release, Firely is deprecating support for any previous version of Firely Auth. It is recommended that all customers upgrade to the latest version.
 
 .. note::
 

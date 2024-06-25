@@ -76,7 +76,7 @@ These settings control the account specific options:
 .. code-block:: json
 
   "Account": {
-    "AuthenticationCookieExpiration": "1", // [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws] (provide days or timespan)
+    "AuthenticationCookieExpiration": "01:30", // [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws] (provide days or timespan)
     "Password": {
       "RequireDigit": true,
       "RequiredLength": 12,

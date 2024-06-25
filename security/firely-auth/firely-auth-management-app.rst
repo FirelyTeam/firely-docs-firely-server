@@ -52,6 +52,8 @@ A Postman collection with demo requests of the administration API can be found h
         }(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
       </script>
 
+You can follow further instructions on :ref:`postman_tutorial`, where in bullet 4 you will have to replace the ``AUTH_BASE_URL`` and ``AUTH_CLIENT_SECRET`` to your configuration.
+
 In case the admin account is not known anymore, there is a way to create another admin account.
 For this, you can log in with the user ``FA_ADMIN`` and a password that you can configure in several ways.
 

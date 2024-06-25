@@ -160,6 +160,7 @@ Infrastructural plugins
 .. _vonk_plugins_multitenancy:
 :Name: Virtual Multi-tenancy
 :Configuration: `Vonk.Plugin.VirtualTenants.VirtualTenantsConfiguration`
+:License token: http://fire.ly/server/plugins/virtual-tenants
 :Order: 3130
 :Description: Enables the virtual seperation of information stored by Firely Server based on a tenant id. See :ref:`feature_multitenancy` for more information.
 

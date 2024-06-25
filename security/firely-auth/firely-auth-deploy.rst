@@ -149,7 +149,7 @@ The InMemory user store is not supported since version 4.0. You will have to set
 Sqlite user store
 -----------------
 
-Sqlite is setup by default and will create a database in the ./data/ folder. If you want to change this, you can alter the settings as described in :ref:`firely_auth_settings_userstore`
+Sqlite is setup by default and will create a database in the ./Data/ folder. If you want to change this, you can alter the settings as described in :ref:`firely_auth_settings_userstore`
 
 To add users to the store, you can use the UI  or through the :ref:`firely_auth_mgmt` once the application has started.
 

@@ -137,17 +137,23 @@ See the instructions on :ref:`running Firely Server in Docker <use_docker>` to l
 Firely Auth is configured in the same way.
 
 
-
-
 .. _firely_auth_deploy_inmemory:
 
 InMemory user store
 -------------------
 
-The InMemory user store is only meant for testing your setup or evaluating Firely Auth.
-For production use configure the SQL Server user store.
+The InMemory user store is not supported since version 4.0. You will have to set up a Sqlite or a SqlServer database and add your users in the UI or through the :ref:`firely_auth_mgmt`.
 
-The users for the InMemory user store can be configured in :ref:`firely_auth_settings_userstore`
+.. _firely_auth_deploy_sqlite:
+
+Sqlite user store
+-----------------
+
+Sqlite is setup by default and will create a database in the ./Data/ folder. If you want to change this, you can alter the settings as described in :ref:`firely_auth_settings_userstore`
+
+To add users to the store, you can use the UI  or through the :ref:`firely_auth_mgmt` once the application has started.
+
+When you want to use Sqlite as user store in docker, you will have to create a database file, mount it to your docker container, and adjust the Sqlite connectionstring.
 
 .. _firely_auth_deploy_sql:
 
@@ -159,7 +165,7 @@ Use of the SQL Server user store requires Microsoft SQL Server version 2016 or n
 Using your favorite database administration tool:
 
 - create a new database, e.g. 'firely_auth_store'
-- in this database, execute the script ``scripts/InitializeSchema.sql``, available in the binaries
+- in this database, execute the scripts from the ``scripts/SqlServer/`` folder, available in the binaries, or let the application run the migrations by itself (but then the user must have enough privileges).
 - create a connection string to this database
 - configure :ref:`firely_auth_settings_userstore`
   
@@ -174,7 +180,7 @@ Using your favorite database administration tool:
 
 In the connection string you can use a user that is only allowed to read and write from the existing tables, no further DDL is needed.
 
-To add users to the store, you can use the :ref:`firely_auth_mgmt`.
+To add users to the store, you can use the UI or through the :ref:`firely_auth_mgmt` once the application has started.
 
 
 Using Firely Auth behind a proxy or load balancer

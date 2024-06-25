@@ -6,6 +6,11 @@
 
 Using MongoDB
 =============
+
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
 We assume you already have MongoDB installed. If not, please refer to the `MongoDB download <https://www.mongodb.com/download-center>`_ pages.
 
 Firely Server can work with MongoDb 4.0 and higher. Since Firely Server (Vonk) version 3.7.0 Firely Server uses the MongoDb Aggregation Framework heavily, and you are advised to upgrade to MongoDb 4.4 (or newer). 

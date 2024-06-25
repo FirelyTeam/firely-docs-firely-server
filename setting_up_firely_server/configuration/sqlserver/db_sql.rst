@@ -7,6 +7,10 @@
 Using SQL server
 ================
 
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
 There are two ways to create the Firely Server database on a SQL Server instance: Have Firely Server create it for you entirely or create an empty database and users yourself and have Firely Server create the schema (tables etc.).
 
 In both cases:

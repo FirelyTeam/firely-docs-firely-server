@@ -19,7 +19,11 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
     After a successful SSO login, authenticated users are matched against password-less local user accounts to see if the accounts are provisioned to use the local Firely Auth instance. 
     Admins must create an empty local user account assoicated with a matching claim. However it is not necessary to assign these accounts a password.
     The SSO account and the local account are matched based on claims issued in an ID token returned by the SSO provided via an implicit token flow. 
-    Firely Auth attempts to match the accounts based on an ``email`` or ``http://schemas.microsoft.com/identity/claims/objectidentifier`` claim.
+    Firely Auth attempts to match the accounts based on the following claims:
+
+        - ``email``
+        - ``http://schemas.microsoft.com/identity/claims/objectidentifier``
+        - ``http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress``
 
     Automated provisioning of local user accounts based on a SSO login is not yet supported by Firely Auth.
 

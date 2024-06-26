@@ -22,8 +22,7 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
     Firely Auth attempts to match the accounts based on the following claims:
 
         - ``email``
-        - ``http://schemas.microsoft.com/identity/claims/objectidentifier``
-        - ``http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress``
+        - ``oid``
 
     Automated provisioning of local user accounts based on a SSO login is not yet supported by Firely Auth.
 

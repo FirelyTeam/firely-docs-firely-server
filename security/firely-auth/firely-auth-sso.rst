@@ -64,7 +64,8 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
     - Select "Token configuration"
     - Select "+ Add optional claim"
     - Select "ID token"
-    - Choose a claim based on which the remote SSO account should be matched against a :ref:`password-less local account <firely_auth_mgmt_sso_user>`. Currently, Firely Auth only supports the "email" claim, but additional  claims may be supported in future. Please make sure to add this claim to the locally provisioned user account.
+    - Choose a claim based on which the remote SSO account should be matched against a :ref:`password-less local account <firely_auth_mgmt_sso_user>`. Currently, Firely Auth only supports the ``email`` and ``oid`` claim, but additional claims may be supported in future. Please make sure to add at least one of these claims to the locally provisioned user account.
+    - The ``oid`` claim is populated based on the Object ID that can be found on each user profile in Entra ID.
 
 #. Configure the ``ExternalIdentityProviders`` section
 

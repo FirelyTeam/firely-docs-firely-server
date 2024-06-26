@@ -18,9 +18,14 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
     Each user account must be associated with a unique claim inside the ID token. 
     After a successful SSO login, authenticated users are matched against password-less local user accounts to see if the accounts are provisioned to use the local Firely Auth instance. 
     Admins must create an empty local user account assoicated with a matching claim. However it is not necessary to assign these accounts a password.
+    The SSO account and the local account are matched based on claims issued in an ID token returned by the SSO provided via an implicit token flow. 
+    Firely Auth attempts to match the accounts based on an ``email`` or ``oid`` claim.
+
     Automated provisioning of local user accounts based on a SSO login is not yet supported by Firely Auth.
 
 #. Configure all SSO details in the ``ExternalIdentityProviders`` configuration section
+
+After a successful login accounts details are automatically updated based on the information provided by the SSO system. The fullname of the user and the email address are updated. The latter requires, logically, a match based on an ``oid`` claim.
 
 Using Microsoft Entra ID (formerly Azure Active Directory)
 ----------------------------------------------------------

@@ -6,7 +6,7 @@ Deployment
 License
 -------
 
-You can use your Firely Server license file, provided that it contains the license token for Firely Auth: ``http://fire.ly/server/auth``.
+You can use your Firely Server license file, provided that it contains the license token for Firely Auth: ``http://fire.ly/server/auth/unlimited``.
 This token is included in the evaluation license for Firely Server, and in your production license if Firely Auth is included in your order.
 
 Configure the path to the license file in the appsettings, section :ref:`firely_auth_settings_license`.
@@ -16,9 +16,7 @@ Configure the path to the license file in the appsettings, section :ref:`firely_
 Executable / binaries
 ---------------------
 
-You can request a copy of the binaries from Firely through our :ref:`contact page <vonk-contact>`
-
-.. You can download the binaries in a zip file from `the downloadserver <https://downloads.simplifier.net/firely-server/firely-auth-latest.zip>`_
+You can download the binaries in a zip file from `the offical Firely download server <https://downloads.fire.ly/firely-auth>`_
 
 .. _firely_auth_deploy_docker:
 

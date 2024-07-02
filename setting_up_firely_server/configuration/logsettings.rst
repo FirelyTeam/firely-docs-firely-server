@@ -416,3 +416,14 @@ Be sure to add ``[CorrId: {CorrelationId}]`` to your "outputTemplate" settings t
 
 Note that if this header is not included in the request, Firely Server will automatically assign a GUID to ``CorrelationId``.
  
+.. _enrichResourceInformation:
+
+Enrich logs with resource type and id
+-------------------------------------
+
+To enrich the logs with Resource type and id, you can add ``WithResource`` to the ``Enrich`` section of the logsettings.*.json::
+
+	"Enrich": [
+		"WithResource"
+	],
+

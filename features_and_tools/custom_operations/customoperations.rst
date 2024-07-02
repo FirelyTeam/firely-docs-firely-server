@@ -32,6 +32,7 @@ The FHIR Specification `operations framework`_ allows for the definition of cust
 #. :ref:`lastn`
 #. :ref:`erase`
 #. :ref:`feature_docref`
+#. :ref:`member-match`
 
 
 .. _operations framework: http://www.hl7.org/implement/standards/fhir/operations.html

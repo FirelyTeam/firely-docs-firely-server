@@ -79,11 +79,13 @@ To configure RWT one needs to also have values for connecting to InfluxDB config
 
 .. code-block:: json
 
-    "InfluxDbOptions": {
-        "Host": "https://influxdb-host-url",
-        "Bucket": "bucket-name",
-        "Token": "bucket-connection-token",
-        "Organization": "organization-name"
+    "RealWorldTesting": {
+        "InfluxDbOptions": {
+            "Host": "https://influxdb-host-url",
+            "Bucket": "bucket-name",
+            "Token": "bucket-connection-token",
+            "Organization": "organization-name"
+        }
     }
 
 InfluxDb has a concept of buckets and organizations, so one would need to use the same bucket for writing and reading data to the backend. 
@@ -94,7 +96,10 @@ In addition, there is the following configuration section for the Real World Tes
 .. code-block:: json
     
     "RealWorldTesting": {
-        "RepeatPeriod": 60000
+        "RepeatPeriod": 60000,
+        "InfluxDbOptions": {
+            // ... see above
+        }
     }
 
 In `RepeatPeriod` you can configure the polling interval (in milliseconds) for checking the Task queue for a new operation task.
@@ -182,6 +187,33 @@ To initiate a Real World Testing operation, construct a request to the administr
 .. code-block:: HTTP
 
    GET {{BASE_URL}}/administration/$realworldtesting?url=https://fire.ly/fhir/Library/rwt-all-requests&from=2024-03-18T14:34:16.772Z&to=2024-03-18T14:34:52.453Z
+
+Alternatively a POST request might be executed, here query parameters are passed as a Parameters resource in request body:
+
+.. code-block:: HTTP
+    
+   POST {{BASE_URL}}/administration/$realworldtesting
+
+.. code-block:: json
+
+    {
+        "resourceType": "Parameters",
+        "parameter": [
+            {
+                "name": "url",
+                "valueUri": "https://fire.ly/fhir/Library/rwt-all-requests"
+            },
+            {
+                "name": "from",
+                "valueDateTime": "2024-03-18T14:34:16.772Z"
+            },
+            {
+                "name": "to",
+                "valueDateTime": "2024-03-18T14:34:52.453Z"
+            }
+        ]
+    }
+
 
 This request triggers the execution of the specified Flux query against the InfluxDB dataset, with the provided parameters dynamically injected into the query.
 

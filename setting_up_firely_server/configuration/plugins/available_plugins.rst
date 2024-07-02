@@ -726,17 +726,31 @@ Repository implementations
 
 .. _vonk_plugins_repository_sql:
 
-:Name: SQL Server Repository
+:Name: SQL Server Repository (Legacy Implementation)
 :Configuration: ``Vonk.Repository.SqlConfiguration``
 :license token: http://fire.ly/vonk/plugins/repository/sql-server
 :Order: 220
-:Description: Implements a repository in SQL Server that fully supports all of the capabilities of Firely Server.
+:Description: Implements a repository in SQL Server that fully supports all of the capabilities of Firely Server. Replaced by ``Vonk.Repository.Raw.KSearchConfiguration``.
 
 :Name: SQL Server Administration Repository
 :Configuration: ``Vonk.Repository.SqlAdministrationConfiguration``
 :license token: http://fire.ly/vonk/plugins/repository/sql-server
 :Order: 221
-:Description: Implements a repository in SQL Server for the Administration API.
+:Description: Implements a repository in SQL Server for the Administration API. Replaced by ``Vonk.Repository.Raw.KAdminSearchConfiguration``.
+
+.. _vonk_plugins_repository_sql_raw:
+
+:Name: SQL Server Repository (Recommended Implementation for SQL)
+:Configuration: ``Vonk.Repository.Raw.KSearchConfiguration``
+:license token: http://fire.ly/vonk/plugins/repository/sql-server
+:Order: 222
+:Description: Implements a repository in SQL Server that fully supports all of the capabilities of Firely Server. It is recommended to use this implementation instead of the legacy one.
+
+:Name: SQL Server Administration Repository (Recommended Implementation for SQL)
+:Configuration: ``Vonk.Repository.Raw.KAdminSearchConfiguration``
+:license token: http://fire.ly/vonk/plugins/repository/sql-server
+:Order: 224
+:Description: Implements a repository in SQL Server for the Administration API. It is recommended to use this implementation instead of the legacy one.
 
 .. _vonk_plugins_administration:
 

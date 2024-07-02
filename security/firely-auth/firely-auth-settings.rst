@@ -167,10 +167,8 @@ To make Firely Server known to Firely Auth, fill in the ``FhirServer``:
     To have it accepted by Firely Server, set its ``SmartAuthorizationOptions:Audience`` setting to the same value as ``FHIR_BASE_URL``.
   - It correlates with the clients allowed to access the token introspection endpoint.
 
-- ``FHIR_BASE_URL``: This also has two uses:
+- ``FHIR_BASE_URL``:
 
-  - A token can have a claim in the form of ``patient=<base>/Patient/123``, to define the compartment the client is restricted to.
-    This url is used as the ``base`` part in that url, and should match the base url of Firely Server, as it is accessed by the client.
   - If an ``aud`` parameter is provided *in the authorize request*, it has to match this url. 
     E.g. in Postman you can provide this parameter by adding it to the Auth URL, like this: ``{{ids}}/connect/authorize?aud=http://localhost:4080`` 
     See the ``aud`` parameter in `SMART on FHIR authorization request`_
@@ -437,6 +435,22 @@ For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need
       "Name": "Firely Server",
       "FHIR_BASE_URL": "<url where you host Firely Server>",
       "IntrospectionSecret": "secret"
+    },
+    "KeyManagementConfig": {
+      "RSA_Config": {
+        "SupportedAlgorithms": [
+          "RS256",
+          "RS384",
+          "RS512"
+        ]
+      },
+      "EC_Config": {
+        "SupportedAlgorithms": [
+          "ES256",
+          "ES384",
+          "ES512"
+        ]
+      }
     },
     "Email": {
       "Type": "Smtp", // Smtp/SendGrid

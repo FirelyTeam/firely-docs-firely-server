@@ -22,21 +22,21 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
 
 #. Configure all SSO details in the ``ExternalIdentityProviders`` configuration section
 
-After a successful login accounts details are automatically updated based on the information provided by the SSO system. 
-The local password-less account is matched on all logins against the SSO account. This matching is based on either an ``email`` claim or ``oid`` claim from the ID token. This way Firely Auth always contains an up-to-date user profile.
-The fullname of the user and the email address are updated based on the SSO account information after login (based on a ``name`` and ``email`` claim). The latter requires, logically, a match based on an ``oid`` claim before.
+    After a successful login accounts details are automatically updated based on the information provided by the SSO system. 
+    The local password-less account is matched on all logins against the SSO account. This matching is based on either an ``email`` claim or ``oid`` claim from the ID token. This way Firely Auth always contains an up-to-date user profile.
+    The fullname of the user and the email address are updated based on the SSO account information after login (based on a ``name`` and ``email`` claim). The latter requires, logically, a match based on an ``oid`` claim before.
 
 #. Configure claims to be copied from the ID token
 
-Using the ``UserClaimsFromIdToken`` it is possible to store additional claims in the local Firely Auth user account in order to expose these claims to clients registered with Firely Auth.
-These claims will be copied from the ID token after a successful login and stored permanently. Each claim is updated automatically after each login with local changes being overwritten.
-It is possible to assign a new name to a claim using the ``CopyAs`` setting.
+    Using the ``UserClaimsFromIdToken`` it is possible to store additional claims in the local Firely Auth user account in order to expose these claims to clients registered with Firely Auth.
+    These claims will be copied from the ID token after a successful login and stored permanently. Each claim is updated automatically after each login with local changes being overwritten.
+    It is possible to assign a new name to a claim using the ``CopyAs`` setting.
 
 A note on the fhirUser claim
 ----------------------------
 
 In Firely Auth, each user profile must contain a fhirUser claim. See `SMART App Launch - Scopes for requesting identity data <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-identity-data>`_ for background.
-This claim may be copied from the ID token of the SSO provider (see `UserClaimsFromIdToken` setting above) or be set via the UI or REST API by an admin manually or some other automated process based after looking up the patient id in the FHIR server.
+This claim may be copied from the ID token of the SSO provider (see ``UserClaimsFromIdToken`` setting above) or be set via the UI or REST API by an admin manually or some other automated process based after looking up the patient id in the FHIR server.
 A login with an account not containing the claim will be blocked.
 
 Using Microsoft Entra ID (formerly Azure Active Directory)

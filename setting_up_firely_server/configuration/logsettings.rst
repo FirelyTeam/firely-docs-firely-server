@@ -421,7 +421,7 @@ Note that if this header is not included in the request, Firely Server will auto
 Enrich logs with resource type and id
 -------------------------------------
 
-To enrich log with Resource type and id, you can add the following enricher to the logsettings.*.json::
+To enrich the logs with Resource type and id, you can add ``WithResource`` to the ``Enrich`` section of the logsettings.*.json::
 
 	"Enrich": [
 		"WithResource"

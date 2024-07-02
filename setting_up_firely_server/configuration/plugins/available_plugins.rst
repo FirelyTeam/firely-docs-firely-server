@@ -891,7 +891,7 @@ Administration API
 
 :Name: Administration API
 :Configuration: ``Vonk.Administration.Api.AdministrationOperationConfiguration``
-:license token: http://fire.ly/vonk/plugins/administration
+:License token: http://fire.ly/vonk/plugins/administration
 :Order: 1160
 :Description: Sets up a sequence of plugins for the Administration API. Administration API is different from general plugins since it branches off of the regular processing pipeline and sets up a second pipeline for the /administration endpoint.
 
@@ -899,7 +899,7 @@ Administration API
 
 :Name: Fhir STU3 Administration services
 :Configuration: ``Vonk.Administration.FhirR3.RepositoryConfigurationR3``
-:license token: http://fire.ly/vonk/plugins/administration/fhirr3
+:License token: http://fire.ly/vonk/plugins/administration/fhirr3
 :Order: 4310
 :Description: Implements support services to work with FHIR STU3 conformance resources in the Administration API.
 

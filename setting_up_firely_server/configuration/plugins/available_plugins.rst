@@ -442,7 +442,7 @@ FHIR RESTful interactions
 :Name: Profile filter
 :Configuration: ``Vonk.Core.Operations.Validation.ProfileFilterConfiguration``
 :License token: http://fire.ly/vonk/plugins/validation
-:Order: 4310
+:Order: 103
 :Description: Blocks resources that do not conform to a list of profiles.
 :Options: ``Validation.AllowedProfiles``, see :ref:`validation_options`
 
@@ -900,7 +900,7 @@ Administration API
 :Name: Fhir STU3 Administration services
 :Configuration: ``Vonk.Administration.FhirR3.RepositoryConfigurationR3``
 :License token: http://fire.ly/vonk/plugins/administration/fhirr3
-:Order: 4310
+:Order: 103
 :Description: Implements support services to work with FHIR STU3 conformance resources in the Administration API.
 
 .. _vonk_plugins_administration_r4_services:

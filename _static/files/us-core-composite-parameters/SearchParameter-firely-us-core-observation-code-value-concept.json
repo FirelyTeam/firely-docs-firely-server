@@ -1,0 +1,36 @@
+{
+      "resourceType" : "SearchParameter",
+      "id" : "firely-us-core-observation-code-value-concept",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
+        "valueCode" : "trial-use"
+      }],
+      "url" : "http://fire.ly/fhir/us/core/SearchParameter/Observation-code-value-concept",
+      "version" : "4.0.1",
+      "name" : "code-value-concept",
+      "status" : "draft",
+      "experimental" : false,
+      "date" : "2019-11-01T09:29:23+11:00",
+      "publisher" : "Firely",
+      "contact" : [{
+        "telecom" : [{
+          "system" : "url",
+          "value" : "https://fire.ly"
+        }]
+      }],
+      "description" : "Code and coded value parameter pair - corrected to use use-core-observation-code",
+      "code" : "code-value-concept",
+      "base" : ["Observation"],
+      "type" : "composite",
+      "expression" : "Observation",
+      "xpathUsage" : "normal",
+      "multipleOr" : false,
+      "component" : [{
+        "definition" : "http://hl7.org/fhir/us/core/SearchParameter/us-core-observation-code",
+        "expression" : "code"
+      },
+      {
+        "definition" : "http://hl7.org/fhir/SearchParameter/Observation-value-concept",
+        "expression" : "value.as(CodeableConcept)"
+      }]
+    }

@@ -296,9 +296,8 @@ AWS Cloudwatch
 ^^^^^^^^^^^^^^
 Firely Server can also log to AWS Cloudwatch. What you need to do:
 
-#. Create a user with restricted privilages in AWS that can write to Cloudwatch
-#. Configure the machine with the Firely Server instance with the credentials of this AWS account 
-#. These 2 steps are described `here <https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/creds-assign.html>`_
+#. Create a user with restricted privilages in AWS that can write to Cloudwatch as described `here <https://docs.aws.amazon.com/sdkref/latest/guide/access-iam-users.html>`_
+#. Specify the credentials and the region in configuration files or through environment variables as described `here <https://docs.aws.amazon.com/sdkref/latest/guide/creds-config-files.html>`_
 #. Add the correct sink to the logsettings.json::
 
 		"WriteTo": [
@@ -396,7 +395,7 @@ Setting CorrelationId for tracing requests across multiple services
 -------------------------------------------------------------------
 
 Firely Server can log a ``RequestId`` to identify individual requests, but this is an auto-generated GUID and cannot be adjusted. This is tricky if you want to log requests across multiple services/containers, how to recognize a particular request from EHR to Firely Server if the ``RequestId`` is set automatically?
-As an answer to this, it is possible to set a ``CorrelationId`` for requests. The ``CorrelationId`` can be set manually by adding a header to the request that needs to be traced. Note that you can give any name to this header, as long as it matches the ``headerKey`` in the "Enrich" section of your logsettings.
+As an answer to this, it is possible to set a ``CorrelationId`` for requests in both the normal logging as the :ref:`audit logging <configure_audit_log_file>`. The ``CorrelationId`` can be set manually by adding a header to the request that needs to be traced. Note that you can give any name to this header, as long as it matches the ``headerKey`` in the "Enrich" section of your logsettings.
 This section needs to be adjusted to include the ``WithCorrelationIdHeader`` setting::
 
 	"Enrich": [
@@ -417,3 +416,14 @@ Be sure to add ``[CorrId: {CorrelationId}]`` to your "outputTemplate" settings t
 
 Note that if this header is not included in the request, Firely Server will automatically assign a GUID to ``CorrelationId``.
  
+.. _enrichResourceInformation:
+
+Enrich logs with resource type and id
+-------------------------------------
+
+To enrich the logs with Resource type and id, you can add ``WithResource`` to the ``Enrich`` section of the logsettings.*.json::
+
+	"Enrich": [
+		"WithResource"
+	],
+

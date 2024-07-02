@@ -8,18 +8,6 @@ Plugins available for Firely Server
 Infrastructural plugins
 -----------------------
 
-.. _vonk_plugins_scheduler:
-
-:Name: Scheduler
-:Configuration: ``Vonk.Core.Quartz.QuartzConfiguration``
-:License token: http://fire.ly/vonk/plugins/infra
-:Order: 10
-:Description: Registers a scheduler that can run jobs periodically. You can use this yourself, but with care (you don't want jobs slowing down the server):
-   
-   * Implement a ``Quartz.IJob``, let's say with class MyJob {...}
-   * Have the ``Quartz.IScheduler`` injected
-   * Call ``IScheduler.StartJob<MyJob>(TimeSpan runInterval, CancellationToken cancellationToken)``
-
 .. _vonk_plugins_maintenance:
 
 :Name: Maintenance
@@ -27,6 +15,14 @@ Infrastructural plugins
 :License token: http://fire.ly/vonk/plugins/infra
 :Order: 20
 :Description: Periodically cleans the indexed values for deleted or superseded resources from the database.
+
+.. _vonk_plugins_fhirpath:
+
+:Name: FhirPath
+:Configuration: ``Vonk.Core.Conformance.FhirPathConfiguration``
+:License token: http://fire.ly/vonk/plugins/infra
+:Order: 50
+:Description: Add FhirPath capabilities (Fhirpath compiler and custom function implementations)
 
 .. _vonk_plugins_license:
 
@@ -43,6 +39,13 @@ Infrastructural plugins
 :License token: http://fire.ly/vonk/plugins/infra
 :Order: 130
 :Description: Registers an implementation for the ``ISerializationService`` and ``ISerializationSupport`` interfaces and actual serializers and parsers for JSON and XML.
+
+.. _vonk_plugins_core_services:
+:Name: Terminology Services
+:Configuration: `Vonk.Plugins.Terminology.TerminologyConfiguration`
+:License token: http://fire.ly/vonk/plugins/terminology
+:Order: 132
+:Description: Registers local and remote terminology services to make them available as a core infrastructure.
 
 .. _vonk_plugins_pluggability:
 
@@ -154,6 +157,13 @@ Infrastructural plugins
    * ``BundleOptions.DefaultTotal``, see :ref:`bundle_options`
    * ``BundleOptions.DefaultSort``, see :ref:`bundle_options`
 
+.. _vonk_plugins_multitenancy:
+:Name: Virtual Multi-tenancy
+:Configuration: `Vonk.Plugin.VirtualTenants.VirtualTenantsConfiguration`
+:License token: http://fire.ly/server/plugins/virtual-tenants
+:Order: 3130
+:Description: Enables the virtual seperation of information stored by Firely Server based on a tenant id. See :ref:`feature_multitenancy` for more information.
+
 .. _vonk_plugins_fhir_versions:
 
 Support for different FHIR versions
@@ -207,6 +217,15 @@ Support for different FHIR versions
 :Order: 4845
 :Description: Registers a validator for FHIR R4.
 
+.. _vonk_plugins_endpoint_mapping:
+
+:Name: Endpoint mapping
+:Configuration: ``Vonk.Core.Context.Http.InformationModelEndpointConfiguration``
+:License token: -
+:Order: 700
+:Description: Implements mapping endpoints to FHIR versions. See :ref:`feature_multiversion_endpoints` for more information.
+
+
 .. _vonk_plugins_rest:
 
 FHIR RESTful interactions
@@ -231,18 +250,32 @@ FHIR RESTful interactions
 .. _vonk_plugins_update:
 
 :Name: Update
-:Configuration: ``Vonk.Core.Operations.Crud.UpdateConfiguration``
+:Configuration: ``Vonk.Core.Operations.Crud.UpdateResourceResolverConfiguration`` + ``Vonk.Core.Operations.Crud.UpdateConfiguration``
 :License token: http://fire.ly/vonk/plugins/update
-:Order: 4430
+:Order: 4430 + 4432
 :Description: Implements FHIR instance update, with support for 'upsert': creating a Resource with a pre-assigned id. Note that id's must be unique across FHIR versions.
+
+.. _vonk_plugins_update_noop:
+
+:Name: Update NoOp
+:Configuration: ``Vonk.Plugin.UpdateNoOp.UpdateNoOpConfiguration``
+:License token: http://fire.ly/vonk/plugins/update
+:Order: 4431
+:Description: Executes a NoOp operation if an Update interaction does not result in content in the database being changed. See :ref:`restful_noop` for more information.
 
 .. _vonk_plugins_patch:
 
 :Name: Patch
-:Configuration: ``Vonk.Core.Operations.Crud.FhirPatchConfiguration``
+:Configuration: ``Vonk.Core.Operations.Crud.FhirPatchResourceResolverConfiguration`` + ``Vonk.Core.Operations.Crud.FhirPatchConfiguration``
 :License token: http://fire.ly/vonk/plugins/update
-:Order: 4433
+:Order: 4433 + 4435
 :Description: Implements FHIR instance patch, as specified by `FHIR Patch <http://hl7.org/fhir/fhirpatch.html>`_.
+
+.. _vonk_plugins_patch_noop:
+:Configuration: ``Vonk.Plugin.UpdateNoOp.PatchNoOpConfiguration``
+:License token: http://fire.ly/vonk/plugins/update
+:Order: 4434
+:Description: Executes a NoOp operation if a Patch interaction does not result in content in the database being changed. See :ref:`restful_noop` for more information.
 
 .. _vonk_plugins_delete:
 
@@ -303,7 +336,7 @@ FHIR RESTful interactions
 :Name: Summary
 :Configuration: ``Vonk.Core.Context.Elements.SummaryConfiguration``
 :License token: http://fire.ly/vonk/plugins/search
-:Order: 1240
+:Order: 1241
 :Description: Applies the ``_summary`` parameter to the Resource that is in the response (single resource or bundle).
 
 .. _vonk_plugins_history:
@@ -331,6 +364,13 @@ FHIR RESTful interactions
 :Order: 4120
 :Description: Provides the CapabilityStatement on the ``<base>/metadata`` endpoint. The CapabilityStatement is tailored to the FHIR version of the request. The CapabilityStatement is built dynamically by visiting all the registered implementations of ICapabilityStatementContributor, see :ref:`vonk_architecture_capabilities`.
 
+.. _vonk_plugins_capability_cache:
+
+:Name: Capability Cache
+:Configuration: ``Vonk.Core.Infra.ResponseCache.CapabilityCacheConfiguration``
+:Order: 1223
+:Description: Caches the response of ``<base>/metadata`` endpoint.
+
 .. _vonk_plugins_conditional_create:
 
 :Name: Conditional Create
@@ -342,10 +382,18 @@ FHIR RESTful interactions
 .. _vonk_plugins_conditional_update:
 
 :Name: Conditional Update
-:Configuration: ``Vonk.Core.Operations.ConditionalCrud.ConditionalUpdateConfiguration``
+:Configuration: ``Vonk.Core.Operations.ConditionalCrud.ConditionalUpdateResourceResolverConfiguration`` + ``Vonk.Core.Operations.ConditionalCrud.ConditionalUpdateConfiguration``
 :License token: http://fire.ly/vonk/plugins/conditionalupdate
-:Order: 4520
-:Description: Implements FHIR conditional update.
+:Order: 4520 + 4522
+:Description: Implements FHIR conditional update. It depends on two plugins working together.
+
+.. _vonk_plugins_conditional_update_noop:
+
+:Name: Conditional Update NoOp
+:Configuration: ``Vonk.Plugin.UpdateNoOp.ConditionalUpdateNoOpConfiguration``
+:License token: http://fire.ly/vonk/plugins/conditionalupdate
+:Order: 4521
+:Description: Executes a NoOp operation if a Conditional Update interaction does not result in content in the database being changed. See :ref:`restful_noop` for more information.
 
 .. _vonk_plugins_conditional_delete:
 
@@ -456,7 +504,7 @@ FHIR RESTful interactions
 :Configuration: ``Vonk.Plugin.LastN.LastNConfiguration``
 :License token: http://fire.ly/vonk/plugins/lastn
 :Order: 5007
-:Description: Implements `FHIR $lastn <https://www.hl7.org/fhir/observation-operation-lastn.html>`_ on Observation resources.
+:Description: Implements `FHIR $lastn <https://www.hl7.org/fhir/observation-operation-lastn.html>`_ on Observation resources. See :ref:`lastn` for more information.
 
 .. _vonk_plugins_erase:
 
@@ -464,7 +512,36 @@ FHIR RESTful interactions
 :Configuration: ``Vonk.Plugin.EraseOperation.EraseOperationConfiguration``
 :License token: http://fire.ly/vonk/plugins/erase
 :Order: 5300
-:Description: Provides functionality to hard-delete FHIR resources in Firely Server database as opposed to the soft-delete used by default.
+:Description: Provides functionality to hard-delete FHIR resources in Firely Server database as opposed to the soft-delete used by default. See :ref:`erase`.
+
+.. _vonk_plugins_purge:
+
+:Name: Erase
+:Configuration: ``Vonk.Plugin.EraseOperation.PurgeOperationConfiguration``
+:License token: http://fire.ly/vonk/plugins/erase
+:Order: 5300
+:Description: Provides functionality to hard-delete all FHIR resources for a Patient. See :ref:`erase`.
+
+.. _vonk_plugins_version:
+
+:Name: Version operation
+:Configuration: ``Vonk.Plugin.Operations.VersionsOperation.VersionsOperationConfiguration``
+:Order: 5200
+:Description: Implements the `FHIR versions <https://www.hl7.org/fhir/capabilitystatement-operation-versions.html>` operation on the base endpoint.
+
+.. _vonk_plugins_cql_library_evaluate:
+:Name: CQL
+:Configuration: ``Vonk.Plugin.Cql.LibraryEvaluate.LibraryEvaluateOperationConfiguration``
+:License token: http://fire.ly/vonk/plugins/cql
+:Order: 5360
+:Description: Implements the `$evaluate <https://hl7.org/fhir/uv/cql/OperationDefinition-cql-library-evaluate.html>` operation on the Library endpoint to execute CQL-based content.
+
+.. _vonk_plugins_realworldtesting:
+:Name: Real World testing
+:Configuration: `Vonk.Plugin.RealWorldTesting.RealWorldTestingConfiguration`
+:License token: http://fire.ly/vonk/plugins/realworldtesting
+:Order: 4910
+:Description: Enables the execution of custom analytics queries on metrics collected by Firely Server. See :ref:`feature_realworldtesting`.
 
 .. _vonk_plugins_terminology:
 
@@ -474,9 +551,9 @@ Terminology
 .. _vonk_plugins_codesystem_lookup:
 
 :Name: CodeSystem Lookup
-:Configuration: ``Vonk.Plugins.Terminology.[R3|R4|R5].CodeSystemLookupConfiguration``
+:Configuration: ``Vonk.Plugins.Terminology.CodeSystemLookupConfiguration``
 :License token: http://fire.ly/vonk/plugins/terminology
-:Order: 5110
+:Order: 5240
 :Description: Implements FHIR `$lookup <http://hl7.org/fhir/codesystem-operation-lookup.html>`_ on type level requests: ``POST <base>/administration/CodeSystem/$lookup`` or ``GET <base>/administration/CodeSystem/$lookup?...``
 
 .. _vonk_plugins_codesystem_compose:
@@ -508,7 +585,7 @@ Terminology
 :Name: ConceptMap Translate
 :Configuration: ``Vonk.Plugins.Terminology.ConceptMapTranslateConfiguration``
 :License token: http://fire.ly/vonk/plugins/terminology
-:Order: 5260
+:Order: 5160
 :Description: Implements FHIR `$translate <http://hl7.org/fhir/conceptmap-operation-translate.html>`_ on instance level requests: ``GET <base>/administration/ConceptMap/[id]/$translate?...`` and ``POST <base>/administration/ValueSet/[id]/$translate`` and on type level requests: ``POST <base>/administration/ConceptMap/$translate``.
 
 .. _vonk_plugins_codesystem_subsumes:
@@ -516,15 +593,15 @@ Terminology
 :Name: CodeSystem Subsumes
 :Configuration: ``Vonk.Plugins.Terminology.CodeSystemSubsumesConfiguration``
 :License token: http://fire.ly/vonk/plugins/terminology
-:Order: 5280
+:Order: 5180
 :Description: Implements FHIR `$subsumes <http://hl7.org/fhir/codesystem-operation-subsumes.html>`_ on instance level requests: ``GET <base>/administration/CodeSystem/[id]/$subsumes?...`` and on type level requests: ``POST <base>/administration/CodeSystem/$subsumes`` or ``GET <base>/administration/CodeSystem/$subsumes?...``
 
 .. _vonk_plugins_codesystem_closure:
 
 :Name: CodeSystem Closure
-:Configuration: ``Vonk.Plugins.Terminology.CodeSystemClosureConfiguration``
+:Configuration: ``Vonk.Plugins.Terminology.ClosureConfiguration``
 :License token: http://fire.ly/vonk/plugins/terminology
-:Order: 5300
+:Order: 5200
 :Description: Implements FHIR `$closure <http://hl7.org/fhir/codesystem-operation-closure.html>`_ on system level requests: ``POST <base>/administration/$closure``
 
 .. _vonk_plugins_smart:
@@ -533,10 +610,24 @@ SMART on FHIR
 -------------
 
 :Name: SMART on FHIR
-:Configuration: ``Vonk.Smart.SmartConfiguration.SmartConfiguration``
+:Configuration: ``Vonk.Plugin.SoFv2.SmartV2Configuration``
 :License token: http://fire.ly/vonk/plugins/smartonfhir
-:Order: 2000
-:Description: Implements SMART on FHIR authentication and authorization, see :ref:`feature_accesscontrol`. 
+:Order: 2002
+:Description: Implements SMART on FHIR v2 authentication and authorization, see :ref:`feature_accesscontrol`. 
+
+:Name: SMART on FHIR License check
+:Configuration: ``Vonk.Plugin.SoFv2.SmartV2ConfigurationLicenseCheck``
+:License token:
+:Order: 2003
+:Description: Guards against accidentally enabling SMART on FHIR without the proper license. 
+
+:Name: SMART on FHIR OpenID Discovery
+:Configuration: ``Vonk.Plugin.SoFv2.SmartDiscoveryConfiguration``
+:License token: http://fire.ly/vonk/plugins/smartonfhir
+:Order: 1201
+:Description: Hosts the ``.well-known/smart-configuration`` endpoint, see :ref:`feature_accesscontrol`. 
+
+
 
 .. _vonk_plugins_subscriptions:
 
@@ -544,10 +635,16 @@ Subscriptions
 -------------
 
 :Name: Subscriptions
-:Configuration: ``Vonk.Subscriptions.SubscriptionConfiguration.SubscriptionConfiguration``
+:Configuration: ``Vonk.Subscriptions.SubscriptionConfiguration``
 :License token: http://fire.ly/vonk/plugins/subscriptions
 :Order: 3200
-:Description: Implements the FHIR Subscriptions framework, see :ref:`feature_subscription`. 
+:Description: Implements sending updates according to the the FHIR Subscriptions framework, see :ref:`feature_subscription`. 
+
+:Name: Subscriptions administration
+:Configuration: ``Vonk.Subscriptions.Administration.SubscriptionValidationConfiguration``
+:License token: http://fire.ly/vonk/plugins/subscriptions
+:Order: 3200
+:Description: Validates subscriptions before they are saved to the Administration database, see :ref:`feature_subscription`. 
 
 .. _vonk_plugins_audit:
 
@@ -590,7 +687,21 @@ Auditing
 :Configuration: ``Vonk.Plugin.Audit.AuditEventConfiguration``
 :License token: http://fire.ly/vonk/plugins/audit
 :Order: 3170
-:Description: Logs requests and responses to the database. See :ref:`feature_auditing` for more info.
+:Description: Logs requests and responses to the database. See :ref:`audit_event_integrity` for more info.
+
+.. _vonk_plugins_audit_event_signature:
+
+:Name: AuditEvent signature
+:Configuration: ``Vonk.Plugin.Audit.Integrity.ProvenanceConfiguration``
+:License token: http://fire.ly/vonk/plugins/audit
+:Order: 3171
+:Description: Creates a verifiable signature for each AuditEvent using a Provenance resource. See :ref:`feature_auditing` for more info.
+
+:Name: AuditEvent Integrity check
+:Configuration: ``Vonk.Plugin.Audit.Integrity.IntegrityVerificationConfiguration``
+:License token: http://fire.ly/vonk/plugins/audit
+:Order: 5006
+:Description: Verifies the integrity of signatures for AuditEvent resources. See :ref:`feature_auditing` for more info.
 
 .. _vonk_plugins_demoui:
 
@@ -657,6 +768,14 @@ Conversion
 Binary
 ------
 
+.. _vonk_plugins_azureservices:
+
+:Name: Azure Services
+:Configuration:``Vonk.Plugin.Services.Azure.AzureConfiguration``
+:License token:
+:Order: 1010
+:Description: Adds support to outsource the ndjson files generated by the Bulk Data plugin to Azure Blob storage
+
 .. _vonk_plugins_binarywrapper:
 
 :Name: Binary wrapper (Encode)
@@ -686,43 +805,55 @@ Repository implementations
 
 :Name: Memory Repository
 :Configuration: ``Vonk.Repository.MemoryConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/memory
-:Order: 210
+:License token: http://fire.ly/vonk/plugins/repository/memory
+:Order: 220
 :Description: Implements a repository in working memory that fully supports all of the capabilities of Firely Server. This implementation is mainly used for unit testing.
 
 :Name: Memory Administration Repository
 :Configuration: ``Vonk.Repository.MemoryAdministrationConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/memory
-:Order: 211
+:License token: http://fire.ly/vonk/plugins/repository/memory
+:Order: 230
 :Description: Implements a repository in working memory for the Administration API. This implementation is mainly used for unit testing.
 
 .. _vonk_plugins_repository_mongodb:
 
 :Name: MongoDb Repository
 :Configuration: ``Vonk.Repository.MongoDbConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/mongo-db
-:Order: 230
+:License token: http://fire.ly/vonk/plugins/repository/mongo-db
+:Order: 221
 :Description: Implements a repository in MongoDb that fully supports all of the capabilities of Firely Server.
 
 :Name: MongoDb Administration Repository
-:Configuration: ``Vonk.Repository.MemoryAdministrationConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/mongo-db
+:Configuration: ``Vonk.Repository.MongoDbAdministrationConfiguration``
+:License token: http://fire.ly/vonk/plugins/repository/mongo-db
 :Order: 231
 :Description: Implements a repository in MongoDb for the Administration API.
+
+:Name: MongoDb Task Repository
+:Configuration: ``Vonk.Repository.MongoDbTaskConfiguration``
+:License token: http://fire.ly/vonk/plugins/repository/mongo-db
+:Order: 231
+:Description: Implements a repository in MongoDb for async tasks (like BDE).
 
 .. _vonk_plugins_repository_sqlite:
 
 :Name: SQLite Repository
 :Configuration: ``Vonk.Repository.SqliteConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/sqlite
-:Order: 240
+:License token: http://fire.ly/vonk/plugins/repository/sqlite
+:Order: 224
 :Description: Implements a repository in SQLite that fully supports all of the capabilities of Firely Server.
 
 :Name: SQLite Administration Repository
 :Configuration: ``Vonk.Repository.SqliteAdministrationConfiguration``
-:license token: http://fire.ly/vonk/plugins/repository/sqlite
-:Order: 241
+:License token: http://fire.ly/vonk/plugins/repository/sqlite
+:Order: 234
 :Description: Implements a repository in SQLite for the Administration API.
+
+:Name: SQLite Task Repository
+:Configuration: ``Vonk.Repository.SqliteTaskConfiguration``
+:License token: http://fire.ly/vonk/plugins/repository/sqlite
+:Order: 242
+:Description: Implements a repository in SQLite for async tasks (like BDE).
 
 .. _vonk_plugins_repository_sql:
 
@@ -752,6 +883,12 @@ Repository implementations
 :Order: 224
 :Description: Implements a repository in SQL Server for the Administration API. It is recommended to use this implementation instead of the legacy one.
 
+:Name: SQL Server Task Repository
+:Configuration: ``Vonk.Repository.SqlTaskConfiguration``
+:License token: http://fire.ly/vonk/plugins/repository/sql-server
+:Order: 222
+:Description: Implements a repository in SQL Server for async tasks (like BDE).
+
 .. _vonk_plugins_administration:
 
 Administration API
@@ -759,7 +896,7 @@ Administration API
 
 :Name: Administration API
 :Configuration: ``Vonk.Administration.Api.AdministrationOperationConfiguration``
-:license token: http://fire.ly/vonk/plugins/administration
+:License token: http://fire.ly/vonk/plugins/administration
 :Order: 1160
 :Description: Sets up a sequence of plugins for the Administration API. Administration API is different from general plugins since it branches off of the regular processing pipeline and sets up a second pipeline for the /administration endpoint.
 
@@ -767,24 +904,66 @@ Administration API
 
 :Name: Fhir STU3 Administration services
 :Configuration: ``Vonk.Administration.FhirR3.RepositoryConfigurationR3``
-:license token: http://fire.ly/vonk/plugins/administration/fhirr3
-:Order: 4310
+:License token: http://fire.ly/vonk/plugins/administration/fhirr3
+:Order: 103
 :Description: Implements support services to work with FHIR STU3 conformance resources in the Administration API.
 
 .. _vonk_plugins_administration_r4_services:
 
 :Name: Fhir R4 Administration services
 :Configuration: ``Vonk.Administration.FhirR4.RepositoryConfigurationR4``
-:license token: http://fire.ly/vonk/plugins/administration/fhirr4
-:Order: 4310
+:License token: http://fire.ly/vonk/plugins/administration/fhirr4
+:Order: 104
 :Description: Implements support services to work with FHIR R4 conformance resources in the Administration API.
+
+.. _vonk_plugins_administration_r5_services:
+
+:Name: Fhir R5 Administration services
+:Configuration: ``Vonk.Administration.FhirR5.RepositoryConfigurationR5``
+:License token: http://fire.ly/vonk/plugins/administration/fhirr5
+:Order: 105
+:Description: Implements support services to work with FHIR R5 conformance resources in the Administration API.
+
+.. _vonk_plugins_administration_import:
+
+:Name: Administration import services
+:Configuration: ``Vonk.Administration.Api.Import.*``
+:License token: http://fire.ly/vonk/plugins/administration
+:Order: 5000 - 5001
+:Description: Implements support for importing conformance resources in the Administration API. See :ref:`conformance_import`.
+
+.. _vonk_plugins_administration_crud:
+
+:Name: Administration CRUD services
+:Configuration: ``Vonk.Administration.Operations``
+:License token: http://fire.ly/vonk/plugins/administration
+:Order: 1228, 4221 - 4392
+:Description: Implements (conditional) create, read, update and delete on conformance resources in the Administration API. See :ref:`conformance_administration_api`.
+
+.. _vonk_plugins_administration_security:
+
+:Name: Administration security
+:Configuration: ``Vonk.Administration.Security.SecurityConfiguration``
+:License token: http://fire.ly/vonk/plugins/administration
+:Order: 104
+:Description: Implements IP restrictions on the Administration API. See :ref:`configure_administration_access`.
+
+.. _vonk_plugins_administration_pluggability:
+
+:Name: Administration database services
+:Configuration: ``Vonk.Administration.Pluggability``
+:License token: http://fire.ly/vonk/plugins/administration
+:Order: 300
+:Description: Supporting services to allow the use of various databases for the Administration API. The actual implementation is done by the :ref:`Repository plugins <vonk_plugins_repository>`.
 
 Bulk Data
 ---------
 
+.. _vonk_plugins_system_bulk_data_export:
+
 :Name: System Bulk Data Export
 :Configuration: ``Vonk.Plugin.BulkDataExport.SystemBulkDataExportConfiguration``
-:license token: ``http://fire.ly/vonk/plugins/bulk-data-export``
+:License token: ``http://fire.ly/vonk/plugins/bulk-data-export``
 :Order: 5003
 :Description: Support for system-level ``$export`` operation. See :ref:`feature_bulkdataexport`.
 
@@ -792,7 +971,7 @@ Bulk Data
 
 :Name: Group Bulk Data Export
 :Configuration: ``Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration``
-:license token: ``http://fire.ly/vonk/plugins/bulk-data-export``
+:License token: ``http://fire.ly/vonk/plugins/bulk-data-export``
 :Order: 5004
 :Description: Support for instance-level ``$export`` operation. See :ref:`feature_bulkdataexport`.
 
@@ -800,7 +979,7 @@ Bulk Data
 
 :Name: Patient Bulk Data Export
 :Configuration: ``Vonk.Plugin.BulkDataExport.PatientBulkDataExportConfiguration``
-:license token: ``http://fire.ly/vonk/plugins/bulk-data-export``
+:License token: ``http://fire.ly/vonk/plugins/bulk-data-export``
 :Order: 5005
 :Description: Support for type-level ``$export`` operation. See :ref:`feature_bulkdataexport`.
 
@@ -808,15 +987,58 @@ Bulk Data
 
 :Name: Patient everything
 :Configuration: ``Vonk.Plugin.PatientEverything``
-:license token: ``http://fire.ly/vonk/plugins/patient-everything``
+:License token: ``http://fire.ly/vonk/plugins/patient-everything``
 :Order: 5006
 :Description: Request a Patient record. See :ref:`feature_patienteverything`.
+
+.. _vonk_plugins_x_proveance:
 
 X-Provenance header
 -------------------
 
 :Name: X-Provenance header
 :Configuration: ``Vonk.Plugin.Operations.Provenance.ProvenanceHeaderConfiguration``
-:license token: http://fire.ly/vonk/plugins/transaction
+:License token: http://fire.ly/vonk/plugins/transaction
 :Order: 1230
 :Description: Support for the X-Provenance header that adds a Provenance resource upon creating or updating another resource. See :ref:`feature_x-provenance`.
+
+.. _vonk_plugins_member_match:
+
+Member Match operation
+----------------------
+
+:Name: Member Match operation
+:Configuration: ``Vonk.Plugin.MemberMatch.MemberMatchConfiguration``
+:License token: http://fire.ly/vonk/plugins/member-match
+:Order: 5400
+:Description: Implements the ``$member-match`` operation. See :ref:`member-match`.
+
+.. _vonk_plugins_pubsub:
+
+PubSub Messaging
+----------------
+
+.. _vonk_plugins_pubsub_sub:
+
+:Name: Subscribe to external changes
+:Configuration: ``Vonk.Plugin.PubSub.Sub.SubConfiguration``
+:License token: http://fire.ly/vonk/plugins/pubsub
+:Order: 1139
+:Description: Implements receiving changes from a queue for any repository. See :ref:`PubSub`.
+
+.. _vonk_plugins_pubsub_pub_mongodb:
+
+:Name: Publish changes to external queue from MongoDB
+:Configuration: ``Vonk.Plugin.PubSub.Pub.MongoDb.PubMongoDbConfiguration``
+:License token: http://fire.ly/vonk/plugins/pubsub
+:Order: 1140
+:Description: Implements publishingn changes to a queue for the MongoDB repository. See :ref:`PubSub`.
+
+.. _vonk_plugins_pubsub_pub_sql:
+
+:Name: Publish changes to external queue from SQL Server
+:Configuration: ``Vonk.Plugin.PubSub.Pub.Sql.PubSqlDbConfiguration``
+:License token: http://fire.ly/vonk/plugins/pubsub
+:Order: 1140
+:Description: Implements publishingn changes to a queue for the MongoDB repository. See :ref:`PubSub`.
+

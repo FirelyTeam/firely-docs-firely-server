@@ -3,6 +3,13 @@
 Fetch DocumentReference - $docref
 =================================
 
+.. note::
+
+  The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
+
+  * Firely Scale - 🌍 / 🇺🇸
+  * Firely CMS Compliance - 🇺🇸
+
 The $docref operations allows a client to search for DocumentReference resources representing documents relating to a patient.
 $docref is being implemented as defined in the `US Core <https://hl7.org/fhir/us/core/OperationDefinition-docref.html>`_ and `International Patient Access <https://build.fhir.org/ig/HL7/fhir-ipa/OperationDefinition-docref.html>`_ ImplementationGuide.
 
@@ -29,8 +36,4 @@ To include the plugin in your pipeline, add the following extra Include:
          },
          ...
       ]
-   }  
-
-License
--------
-The $docref operation is licensed. To use it, you may need to renew your license.
+   }

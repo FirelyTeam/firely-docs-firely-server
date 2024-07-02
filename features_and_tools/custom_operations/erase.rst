@@ -3,6 +3,13 @@
 Permanently delete resources - $erase and $purge
 ================================================
 
+.. note::
+
+  The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
+
+  * Firely Scale - 🌍 / 🇺🇸
+  * Firely CMS Compliance - 🇺🇸
+
 Description
 -----------
 When Firely Server receives a DELETE request for a resource, it marks it as deleted in the database which makes it hidden from search results. However, the data is still present in the database. This approach is known as *soft deletion*. This comes in handy in scenarios when you want to recover accidentally deleted data. However, there are also scenarios when you *actually* want the data to be erased from the database. For that purpose, Firely Server provides the $erase operation.
@@ -61,7 +68,7 @@ To enable the ``$erase`` operation you will first have to make sure the plugin `
     ]
   },
 
-To enable the ``$purge`` operation you will first have to make sure the plugin ``Vonk.Plugin.PurgeOperation.PurgeOperationConfiguration`` is added to the PipelineOptions in the appsettings.
+To enable the ``$purge`` operation you will first have to make sure the plugin ``Vonk.Plugin.EraseOperation.PurgeOperationConfiguration`` is added to the PipelineOptions in the appsettings.
 
 .. code-block:: JavaScript
 

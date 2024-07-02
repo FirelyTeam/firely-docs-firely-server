@@ -66,6 +66,85 @@ Nevertheless you can control the settings for Kestrel.
 These settings are not Firely Auth specific, and you can read more about them in the `Microsoft documentation <https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints>`_.
 In that documentation you can also read how to use the ``Https`` setting instead of ``HttpsFromPem`` to use a ``.pfx`` file for your SSL certificate.
 
+.. _firely_auth_settings_account:
+
+Account
+^^^^^^^
+
+These settings control the account specific options:
+
+.. code-block:: json
+
+  "Account": {
+    "AuthenticationCookieExpiration": "01:30", // [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws] (provide days or timespan)
+    "Password": {
+      "RequireDigit": true,
+      "RequiredLength": 12,
+      "RequireUppercase": true,
+      "RequireLowercase": true,
+      "RequireNonAlphanumeric": false
+    }
+  },
+
+- ``AuthenticationCookieExpiration``: specifies how long the authentication cookie is valid. You can specify just a number that specifies the days the token is valid, or you can provide a timespan.
+
+- ``Password``: Here you can specify where the user passwords must comply to.
+
+.. _firely_auth_settings_email:
+
+Email
+^^^^^
+
+These settings are the configuration settings for the email client Firely Auth uses to send emails to users.
+Currently SMTP and SendGrid are the supported email clients.
+
+.. code-block:: json
+
+  "Email": {
+    "Type": "Smtp",
+    "FromEmailAddress": "", 
+    "EmailTemplateFolder": "./Data/EmailTemplates",
+    "ActivateAccountEmailSubject": "Firely Server account activation.",
+    "ForgotPasswordEmailSubject":  "Firely Server forgot password.",
+    //,"Smtp": {
+    //	"Server": "",
+    //	"Port": 0,
+    //	"RequiresAuthentication":true,
+    //	"User": "",
+    //	"Password": "",
+    //	"UseSsl": true
+    //}
+    //,"SendGrid": {
+    //    "ApiKey": ""
+    //}
+  },
+
+- ``Type``: The type of email client: ``Smtp`` or ``SendGrid``. 
+- ``FromEmailAddress``: The email address to use as sender.
+- ``EmailTemplateFolder``: The path to email templates that are used. These use the liquid format (https://shopify.github.io/liquid/). You can change these templates and store them in a folder that does not get overwritten when you update Firely Auth. You should not change the name of the template files, and only the variables that are used in the original template are available to use in custom templates.
+- ``ActivateAccountEmailSubject``: The subject that will be put in account activation emails.
+- ``ForgotPasswordEmailSubject``: The subject that will be put in forgot password emails.
+- ``Smtp``: Fill these settings when you use the ``Smtp`` type.
+- ``SendGrid``: Fill this setting when you use the ``SendGrid`` type.
+
+.. _firely_auth_settings_ui:
+
+UI Settings
+^^^^^^^^^^^
+
+These settings control the white labelling options for Firely Auth:
+
+.. code-block:: json
+
+  "UISettings": {
+    "LoginPageText": "Please login to Firely Auth",
+    "OrganizationLogoPath": "<firely logo>"
+  },
+
+- ``LoginPageText``: Here you can put a text that will be displayed on the login page.
+
+- ``OrganizationLogoPath``: Here you can point to an image file you want to use as logo in the application.
+
 .. _firely_auth_settings_server:
 
 Firely Server
@@ -88,10 +167,8 @@ To make Firely Server known to Firely Auth, fill in the ``FhirServer``:
     To have it accepted by Firely Server, set its ``SmartAuthorizationOptions:Audience`` setting to the same value as ``FHIR_BASE_URL``.
   - It correlates with the clients allowed to access the token introspection endpoint.
 
-- ``FHIR_BASE_URL``: This also has two uses:
+- ``FHIR_BASE_URL``:
 
-  - A token can have a claim in the form of ``patient=<base>/Patient/123``, to define the compartment the client is restricted to.
-    This url is used as the ``base`` part in that url, and should match the base url of Firely Server, as it is accessed by the client.
   - If an ``aud`` parameter is provided *in the authorize request*, it has to match this url. 
     E.g. in Postman you can provide this parameter by adding it to the Auth URL, like this: ``{{ids}}/connect/authorize?aud=http://localhost:4080`` 
     See the ``aud`` parameter in `SMART on FHIR authorization request`_
@@ -166,31 +243,18 @@ User store
 ^^^^^^^^^^
 
 A :term:`user` must be able to authenticate to Firely Auth before granting permissions to a :term:`client`. 
-Therefore we register the users with Firely Auth. Firely Auth supports two types of stores: In memory and SQL Server.
+Therefore we register the users with Firely Auth. Firely Auth supports two types of stores: Sqlite and SQL Server.
 
-For the InMemory store, the users and their passwords are listed in plain text in this configuration. This is useful for testing, but not recommended for production use.
-
-The SqlServer store stores the users and their encrypted passwords in a MS SQL Server database. Also the `fhirUser` and `patient` claims for each user can be stored. 
-See :ref:`firely_auth_deploy_sql` for details on setting up the database.
+The store stores the user information, their encrypted passwords and their claims in the database.
+See :ref:`firely_auth_deploy_sqlite` and :ref:`firely_auth_deploy_sql` for details on setting up the database.
 
 .. code-block:: json
 
   "UserStore": {
-      "Type": "InMemory", // InMemory | SqlServer
+      "Type": "Sqlite", // Sqlite | SqlServer
       "PasswordHashIterations": 600000,
-      "InMemory": {
-          "AllowedUsers": [
-              {
-                  "Username": "bob",
-                  "Password": "password",
-                  "AdditionalClaims": [
-                      {
-                          "Name": "patient",
-                          "Value": "Patient/a123"
-                      }
-                  ]
-              }
-          ]
+      "Sqlite": {
+          "ConnectionString": "<connection string here>"
       },
       "SqlServer": {
           "ConnectionString": "<connection string here>"
@@ -199,21 +263,13 @@ See :ref:`firely_auth_deploy_sql` for details on setting up the database.
 
 - ``Type``: select the type of store to use
 - ``PasswordHashIterations``: number of password hash iterations to prevent brute force attacks. Default 600000. Sync this value when using Firely Auth Management App :ref:`firely_auth_mgmt`.
-- ``InMemory``: settings for the InMemory store
+- ``Sqlite``: settings for the Sqlite store
 
-  - ``AllowedUsers``: list of users
-  - ``Username``: login for a user
-  - ``Password``: password for the user, in clear text
-  - ``AdditionalClaims``: currently to be used for a single claim, to link the user to a Patient resource (and thereby to a Patient compartment), or a 'user' resource like a Practitioner in Firely Server. 
-
-    - ``Name``: name of the claim, currently only ``patient`` and ``fhirUser`` are supported
-    - ``Value``: logical id of the related Patient or Practitioner resource (``Patient/id``)
-      In the token this value will be expanded to an absolute url by prepending it with ``FhirServer.FHIR_BASE_URL`` (see :ref:`firely_auth_settings_server`).
+  - ``ConnectionString``: connection string to the SQL Server database where the users are to be stored.
 
 - ``SqlServer``: settings for the SQL Server store
-  
-  - ``ConnectionString``: connection string to the SQL Server database where the users are to be stored. 
-    This database and the schema therein must be created beforehand with a script. 
+
+  - ``ConnectionString``: connection string to the SQL Server database where the users are to be stored. This database and the schema therein must be created beforehand with a script when you use a database account with limited permissions. 
 
 .. _firely_auth_settings_clients:
 
@@ -256,7 +312,8 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
                   "Value": "ClaimValue"
                 }
               ],
-              "ClientClaimPrefix": ""
+              "ClientClaimPrefix": "",
+              "AllowManagementApiAccess": false
           }
       ]
   }
@@ -298,8 +355,9 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
   - ``Value``: the value of the claim
 
 - ``ClientClaimPrefix``: Add custom defined prefix to the name of all custom client claims. Works together with the setting ``ClientClaims``. 
+- ``AllowManagementApiAccess``: Allows this client to use the :ref:`firely_auth_mgmt`
 
-  .. note::
+.. note::
 
     Please follow the principle of least privilege to register a SMART Backend Service client, especially when the settings ``ClientClaims`` and ``ClientClaimPrefix`` are used.
 
@@ -338,6 +396,7 @@ For hosting (either directly with Kestrel as shown below, or with a reverse prox
 Necessary data:
 
 - Pre-load one version of US-Core conformance resources to the Firely Server administration endpoint
+  (please note :ref:`this warning<us-core_composite_parameters>`)
 - Pre-load the example resource of the same version of US-Core to the regular endpoint
 
 We have a full walkthrough of Inferno testing available as a whitepaper, see `our resources <https://fire.ly/resources/>`_.
@@ -372,7 +431,6 @@ For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need
     // Use "Https" option instead if you want to use a .pfx file. See https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints
     }
    },
-
     "FhirServer": {
       "Name": "Firely Server",
       "FHIR_BASE_URL": "<url where you host Firely Server>",
@@ -394,26 +452,23 @@ For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need
         ]
       }
     },
-    "UserStore": {
-      "Type": "InMemory", // InMemory | SqlServer
-      "InMemory": {
-        "AllowedUsers": [
-          {
-            "Username": "alice",
-            "Password": "p@sSw0rd",
-            "AdditionalClaims": [
-              {
-                "Name": "patient",
-                "Value": "<id of a patient in your Firely Server, e.g. 'example'>"
-              },
-              {
-                "Name": "fhirUser",
-                "Value": "Practitioner/<id of a practitioner"
-              }
-            ]
-          }
-        ]
-      },
+    "Email": {
+      "Type": "Smtp", // Smtp/SendGrid
+      "FromEmailAddress": "", // the email address to use as sender
+      "EmailTemplateFolder": "./Data/EmailTemplates", // the path to the folder with the email templates
+      "ActivateAccountEmailSubject": "Firely Server account activation.", // the subject that will be put in account activation emails
+      "ForgotPasswordEmailSubject":  "Firely Server forgot password.", // the subject that will be put in forgot password emails
+      //,"Smtp": { // either provide your smtp settings or your sendgrid settings
+      //	"Server": "",
+      //	"Port": 0,
+      //	"RequiresAuthentication":true,
+      //	"User": "",
+      //	"Password": "",
+      //	"UseSsl": true
+      //}
+      //,"SendGrid": {
+      //    "ApiKey": ""
+      //}
     },
     "ClientRegistration": {
       "AllowedClients": [

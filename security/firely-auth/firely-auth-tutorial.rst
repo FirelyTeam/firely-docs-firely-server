@@ -32,7 +32,7 @@ Step 1 - Software
 
 Firely Auth is distributed as .NET Core 6 binaries and in a Docker image. For this introduction we will use the binaries.
 
-#. Install .NET Core 6 Runtime
+#. Install .NET Core 8 Runtime
 #. Download the zip file with Firely Auth binaries from `the download server <https://downloads.simplifier.net/firely-auth/firely-auth-latest.zip>`_
 #. Extract the zip to a location from where you are allowed to execute the program. We will call this the 'bin-directory'
 
@@ -47,41 +47,40 @@ You can adjust the location of the license file in the configuration settings, s
 
 Additionally you will have to place a file called ``Duende_License.key`` also adjacent to the ``Firely.Auth.Core.exe``. This is required for production use but not testing or development. Firely will provide this key with purchase of Firely Auth. Please note that the path to this file cannot be configured. 
 
-With the license in place, you can start Firely Auth in PowerShell by running::
+Step 3 - Ssl certificate
+^^^^^^^^^^^^^^^^^^^^^^^^
 
-    > ./Firely.Auth.Core.exe
+Firely Auth will only run on https. To create a self signed certificate (for testing purposes only), you can use the tool mkcert ``https://github.com/FiloSottile/mkcert``.
+To enable the certificate you will have to adjust the :ref:`_firely_auth_settings_kestrel` settings. You can use these values:
 
-And you can access it with a browser on ``https://localhost:5001``. It will use a self-signed certificate by default, for which your browser will warn you.
-Accept the risk and proceed to the website.
+  .. code-block:: json
 
-Firely Auth will present you with a login screen. But what user to login as?
+    "Kestrel": {
+      "Endpoints": {
+        "HttpsFromPem": {
+          "Url": "https://localhost:5001",
+          "SslProtocols": [ "Tls12", "Tls13" ],
+          "Certificate": {
+            "Path": "[path to your certificate]\\localhost.pem",
+            "KeyPath": "[path to your certificate]\\localhost-key.pem"
+          }
+        }
+      }
+    },  
 
-Step 3 - Users
-^^^^^^^^^^^^^^
+Step 4 - User store
+^^^^^^^^^^^^^^^^^^^
 
-You need to add at least one user to Firely Auth. Firely Auth supports two types of stores for users: In memory and SQL Server.
-For this introduction we will configure a user in the In memory store.
+You will need to configure a user store to persist your data. This can be a SqlServer or Sqlite database.
+See :ref:`firely_auth_settings_userstore` to read up on how they are configured.
 
-#. Go to the bin-directory
-#. Copy ``appsettings.default.json`` to a new file, named ``appsettings.instance.json``. This allows you to change settings while keeping the defaults for reference. See :ref:`firely_auth_settings`.
-#. Open ``appsettings.instance.json`` and look for the section ``UserStore``
-#. By default the ``Type`` is already set to ``InMemory``.
-#. Now add to the ``InMemory:AllowedUsers`` array:
+Step 5 - Email client
+^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: json
+Firely Auth sends email messages to users, like activating accounts and to execute password resets.
+See :ref:`firely_auth_settings_email` to read up on how this is configured. 
 
-    {
-        "Username": "alice",
-        "Password": "AlicePassword1!",
-        "AdditionalClaims": []
-    }
-
-We won't add any claims yet - see :ref:`firely_auth_settings_userstore` to read up on how they work.
-
-If you did this, you can stop Firely Auth again in the command window you started it in (``Ctrl+C``), and start it again. 
-You should be able to login as ``alice`` with the password as configured above.
-
-Step 4 - Clients
+Step 6 - Clients
 ^^^^^^^^^^^^^^^^
 
 The concept of OAuth2 in general and SMART on FHIR in particular is that a client (an app, a website) can access data on your behalf.
@@ -126,7 +125,7 @@ The values for ``ClientId`` and ``ClientSecrets.Secret`` are randomly generated.
 
 We will use Postman to issue a request for an Access Token. For this we created a collection 'Firely Auth docs', 
 and we will set the Authorization for the collection as a whole. That way the authorization can be reused for all requests in the collection.
-Click 'Get New Access Token' and you'll be taken to the login page of Firely Auth. If you are still logged in since step 3, you will be authorized immediately.
+Click 'Get New Access Token' and you'll be taken to the login page of Firely Auth. You will have to create an user account to be able to log in first (see Step 6).
 
 If the authorization request fails, check both the Postman console and the Firely Auth logging for a clue.
 
@@ -145,7 +144,24 @@ Note that we also set the Audience in the Advanced Settings to the default value
 
 .. image:: /images/auth_postman_encode_secret.png
 
-Step 5 - Connect Firely Server to Firely Auth
+Step 7 - Users
+^^^^^^^^^^^^^^
+
+With the required settings in place, you can start Firely Auth in PowerShell by running::
+
+    > ./Firely.Auth.Core.exe
+
+And you can access it with a browser on ``https://localhost:5001``. It will use the self-signed certificate by default, for which your browser can warn you.
+Accept the risk and proceed to the website.
+
+Firely Auth will present you with a screen to create an admin account. Enter an e-mail address and password and you will be able to log into the management environment. Here you can manage users, view clients and view the openid configuration. 
+
+You need to add at least one non-admin user to be able to use Firely Auth, go to ``User Management`` and click the ``+`` to add a user.
+An email will be sent to this user to activate the account and set a password. After this is done, you can now use this account to get an access token.
+
+
+
+Step 8 - Connect Firely Server to Firely Auth
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Ultimately the access token that we just retrieved is meant to get access to resources in Firely Server. To demonstrate that we will:

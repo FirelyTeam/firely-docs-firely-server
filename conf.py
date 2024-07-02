@@ -18,7 +18,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Firely Server'
-copyright = '2023, Firely'
+copyright = '2024, Firely'
 author = 'Firely'
 
 
@@ -31,7 +31,9 @@ extensions = ['sphinx.ext.intersphinx']
 
 intersphinx_mapping = {
     'main_docs': ('https://docs.fire.ly', None),
-    'firely_net_sdk_docs': ('https://docs.fire.ly/projects/Firely-NET-SDK/', None),
+    'firely_terminal_docs': ('https://docs.fire.ly/projects/Firely-Terminal/', None),
+    'forge_docs': ('https://docs.fire.ly/projects/Forge/', None),
+    'firely_net_sdk_docs': ('https://docs.fire.ly/projects/Firely-NET-SDK/en/latest/', None),
     'simplifier_docs': ('https://docs.fire.ly/projects/Simplifier/', None)
     }
     

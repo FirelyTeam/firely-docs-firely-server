@@ -4,6 +4,13 @@
 Real World Testing
 ==================
 
+.. note::
+
+  The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
+
+  * Firely Scale - 🌍 / 🇺🇸
+  * Firely CMS Compliance - 🇺🇸
+
 The Real World Testing functionality of Firely Server is designed to fulfill the requirements of the ONC Health IT Certification Program defined by the 21st Century Cures Act. See `ONC Health IT Certification Program - Real World Testing Resource Guide <https://www.healthit.gov/sites/default/files/page/2021-08/ONC-Real%20World%20Testing%20Resource%20Guide_Aug%202021.pdf>`_ for background.
 
 Real World Testing (RWT) is a process for recording and analyzing statistical data about the REST API behaviour of Firely Server. It allows for retrospectively gathering insights into the response codes of FHIR CRUD requests, as well as custom operations. The functionality enables the collection of all statistics needed for the `Firely Server Real World Testing Plans <https://fire.ly/g10-certification/>`_.
@@ -72,11 +79,13 @@ To configure RWT one needs to also have values for connecting to InfluxDB config
 
 .. code-block:: json
 
-    "InfluxDbOptions": {
-        "Host": "https://influxdb-host-url",
-        "Bucket": "bucket-name",
-        "Token": "bucket-connection-token",
-        "Organization": "organization-name"
+    "RealWorldTesting": {
+        "InfluxDbOptions": {
+            "Host": "https://influxdb-host-url",
+            "Bucket": "bucket-name",
+            "Token": "bucket-connection-token",
+            "Organization": "organization-name"
+        }
     }
 
 InfluxDb has a concept of buckets and organizations, so one would need to use the same bucket for writing and reading data to the backend. 
@@ -87,7 +96,10 @@ In addition, there is the following configuration section for the Real World Tes
 .. code-block:: json
     
     "RealWorldTesting": {
-        "RepeatPeriod": 60000
+        "RepeatPeriod": 60000,
+        "InfluxDbOptions": {
+            // ... see above
+        }
     }
 
 In `RepeatPeriod` you can configure the polling interval (in milliseconds) for checking the Task queue for a new operation task.
@@ -175,6 +187,33 @@ To initiate a Real World Testing operation, construct a request to the administr
 .. code-block:: HTTP
 
    GET {{BASE_URL}}/administration/$realworldtesting?url=https://fire.ly/fhir/Library/rwt-all-requests&from=2024-03-18T14:34:16.772Z&to=2024-03-18T14:34:52.453Z
+
+Alternatively a POST request might be executed, here query parameters are passed as a Parameters resource in request body:
+
+.. code-block:: HTTP
+    
+   POST {{BASE_URL}}/administration/$realworldtesting
+
+.. code-block:: json
+
+    {
+        "resourceType": "Parameters",
+        "parameter": [
+            {
+                "name": "url",
+                "valueUri": "https://fire.ly/fhir/Library/rwt-all-requests"
+            },
+            {
+                "name": "from",
+                "valueDateTime": "2024-03-18T14:34:16.772Z"
+            },
+            {
+                "name": "to",
+                "valueDateTime": "2024-03-18T14:34:52.453Z"
+            }
+        ]
+    }
+
 
 This request triggers the execution of the specified Flux query against the InfluxDB dataset, with the provided parameters dynamically injected into the query.
 

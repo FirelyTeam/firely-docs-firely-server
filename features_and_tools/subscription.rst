@@ -3,6 +3,13 @@
 Subscriptions
 =============
 
+.. note::
+
+  The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
+
+  * Firely Scale - 🌍 / 🇺🇸
+  * Firely CMS Compliance - 🇺🇸
+
 Subscriptions can be managed in the :ref:`administration_api`, on the ``/administration/Subscription`` endpoint. If you post a Subscription
 to the regular FHIR endpoint, it will be stored but not evaluated. Subscriptions posted to the
 ``/administration`` endpoint will be processed and evaluated for each POST/PUT to the server.
@@ -69,7 +76,7 @@ You can control the period and the batchsize. If an evaluation of a Subscription
 ::
 
     "SubscriptionEvaluatorOptions": {
-        "Enabled" : true,
+        "Enabled" : true, // default value is false
         "RepeatPeriod": 20000,
         "SubscriptionBatchSize" : 1,
         "RetryPeriod": 60000,

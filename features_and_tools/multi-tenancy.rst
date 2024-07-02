@@ -3,6 +3,13 @@
 Multi-tenancy
 =============
 
+.. note::
+
+  The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
+
+  * Firely Scale - 🌍 / 🇺🇸
+  * Firely CMS Compliance - 🇺🇸
+
 Firely Server offers *virtual* multi-tenancy. All the resources are still stored in a single database, but by applying tenant information they are virtually separated.
 The basics are simple:
 

@@ -66,6 +66,11 @@ This implementation guide does not specify any FHIR conformance resources and pr
      - * `hl7.fhir.uv.bulkdata|1.0.0 <https://registry.fhir.org/package/hl7.fhir.uv.bulkdata|1.0.0>`_
        * `hl7.fhir.uv.bulkdata|2.0.0 <https://registry.fhir.org/package/hl7.fhir.uv.bulkdata|2.0.0>`_
 
+Known Limitations
+-----------------
+
+* The _elements, patient, includeAssociatedData, and _typeFilter parameters are not supported during the BDE kickoff request on system-, group-, and patient-level.
+
 ------------
 
 .. _bulp_ig:       
@@ -154,6 +159,7 @@ Known Limitations
 
 * In order to validate resources claiming to conform to US Core, it is necessary to configure Firely Server to use an external terminology server incl. support for expanding SNOMED CT and LOINC ValueSets. See :ref:`feature_terminology`.
 * Certain parameters are not implemented for the ``$docref`` operation on DocumentReference resources. See :ref:`feature_docref` for more details.
+* US-Core Observation.code search parameter interferes with Firely Server's handling of composite parameters. See :ref:`this warning<us-core_composite_parameters>`.
 
 Test Data
 ---------

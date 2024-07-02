@@ -7,6 +7,10 @@
 Using SQLite
 ============
 
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
 SQLite is a file based database engine. The engine itself does not run separately on the server, but in-process in the application, Firely Server in this case. 
 
 For more background on SQLite please refer to the `SQLite documentation <https://sqlite.org/about.html>`_.

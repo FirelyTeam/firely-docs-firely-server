@@ -8,6 +8,10 @@
 Custom Search Parameters
 ========================
 
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
 .. _feature_customsp_configure:
 
 Configure Search Parameters

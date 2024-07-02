@@ -3,6 +3,10 @@
 FHIR RESTful API
 ================
 
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
 Firely Server supports most of the features in the `FHIR RESTful API <http://www.hl7.org/implement/standards/fhir/http.html>`_.
 
 FHIR Versions
@@ -321,6 +325,25 @@ Furthermore:
 
 #. Paging is supported, but it is not isolated from intermediate changes to resources.
 
+.. _us-core_composite_parameters:
+.. warning::
+
+    US-Core search parameters interfere with the evaluation of composite search parameters in Firely Server. 
+    US-Core redefines the Observation.code parameter, but does not redefine the related composite search parameters. 
+    
+    If you load the artifacts of US-Core into the administration endpoint, be aware that you need updated versions of the composite search parameters as well. 
+    
+    The pre-built SQLite administration database, that comes with the Firely Server distribution, has US-Core 3.1.1 preloaded. In this database, Firely has already taken care of this for you.
+    
+    Corrected versions of the search parameters are:
+    
+    - Observation.code-value-concept: :download:`download <../_static/files/us-core-composite-parameters/SearchParameter-firely-us-core-observation-code-value-concept.json>`
+    - Observation.code-value-date: :download:`download <../_static/files/us-core-composite-parameters/SearchParameter-firely-us-core-observation-code-value-date.json>`
+    - Observation.code-value-quantity: :download:`download <../_static/files/us-core-composite-parameters/SearchParameter-firely-us-core-observation-code-value-quantity.json>`
+    - Observation.code-value-string: :download:`download <../_static/files/us-core-composite-parameters/SearchParameter-firely-us-core-observation-code-value-string.json>`
+    
+    You can add these as individual files to your administration :ref:`import folder<conformance_fromdisk>`, or merge them into the US-Core package.
+
 .. _restful_history:
 
 History
@@ -365,15 +388,6 @@ Capabilities
 
 On the Capabilities interaction (``<firely-server-endpoint>/metadata``) Firely Server returns a CapabilityStatement that is built dynamically from the 
 supported ResourceTypes, SearchParameters and interactions. E.g. if you :ref:`feature_customsp_configure`, the SearchParameters that are actually loaded appear in the CapabilityStatement.
-
-.. _restful_documenthandling:
-
-Document endpoint
------------------
-
-Firely Server supports submitting `FHIR document bundles <https://www.hl7.org/fhir/documents.html#3.3>`_ to the base endpoint of the server. The current version of Firely Server will only extract the unstructured part of the document, i.e. the narrative of the document bundle. The submission of the document will return a DocumentReference containing an attachment linking to a Binary resource containing the original narrative. Please note that only the top-level narrative will be extracted. No section narrative will be handled. Updates to narratives from documents with the same document identifier will result in an Update interaction on the DocumentReference.
-
-Please make sure that ``Vonk.Plugin.DocumentHandling.DocumentHandlingConfiguration`` is enabled in the pipeline options to use this feature.
 
 .. _restful_notsupported:
 

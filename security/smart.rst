@@ -3,6 +3,10 @@
 SMART on FHIR Configuration
 ===========================
 
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
 Firely Server fully supports the syntax of SMART v1: ``( 'patient' | 'user' ) '/' ( fhir-resource | '*' ) '.' ( 'read' | 'write' | '*' )``
 
 Additionally, the syntax of SMART v2 scopes is fully supported: ``( 'patient' | 'user' | 'system' ) '/' ( fhir-resource | '*' ) '.' ( 'c' | 'r' | 'u' | 'd' | 's' | '*') ? param = value``

@@ -1,0 +1,42 @@
+{
+      "resourceType" : "SearchParameter",
+      "id" : "firely-us-core-observation-code-value-string",
+      "extension" : [{
+        "url" : "http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status",
+        "valueCode" : "trial-use"
+      }],
+      "url" : "http://fire.ly/fhir/us/core/SearchParameter/Observation-code-value-string",
+      "version" : "4.0.1",
+      "name" : "code-value-string",
+      "status" : "draft",
+      "experimental" : false,
+      "date" : "2019-11-01T09:29:23+11:00",
+      "publisher" : "Health Level Seven International (Orders and Observations)",
+      "contact" : [{
+        "telecom" : [{
+          "system" : "url",
+          "value" : "https://fire.ly"
+        }]
+      },
+      {
+        "telecom" : [{
+          "system" : "url",
+          "value" : "http://www.hl7.org/Special/committees/orders/index.cfm"
+        }]
+      }],
+      "description" : "Code and string value parameter pair - corrected to use use-core-observation-code",
+      "code" : "code-value-string",
+      "base" : ["Observation"],
+      "type" : "composite",
+      "expression" : "Observation",
+      "xpathUsage" : "normal",
+      "multipleOr" : false,
+      "component" : [{
+        "definition" : "http://hl7.org/fhir/us/core/SearchParameter/us-core-observation-code",
+        "expression" : "code"
+      },
+      {
+        "definition" : "http://hl7.org/fhir/SearchParameter/Observation-value-string",
+        "expression" : "value.as(string)"
+      }]
+    }

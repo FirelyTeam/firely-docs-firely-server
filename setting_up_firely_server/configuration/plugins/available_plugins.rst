@@ -442,7 +442,7 @@ FHIR RESTful interactions
 :Name: Profile filter
 :Configuration: ``Vonk.Core.Operations.Validation.ProfileFilterConfiguration``
 :License token: http://fire.ly/vonk/plugins/validation
-:Order: 103
+:Order: 4310
 :Description: Blocks resources that do not conform to a list of profiles.
 :Options: ``Validation.AllowedProfiles``, see :ref:`validation_options`
 
@@ -898,7 +898,7 @@ Administration API
 .. _vonk_plugins_administration_stu3_services:
 
 :Name: Fhir STU3 Administration services
-:Configuration: ``Vonk.Administration.FhirR3.RepositoryConfigurationR3``
+:Configuration: ``Vonk.Fhir.R3.Internal.FhirR3AdministrationConfiguration``
 :License token: http://fire.ly/vonk/plugins/administration/fhirr3
 :Order: 103
 :Description: Implements support services to work with FHIR STU3 conformance resources in the Administration API.
@@ -906,7 +906,7 @@ Administration API
 .. _vonk_plugins_administration_r4_services:
 
 :Name: Fhir R4 Administration services
-:Configuration: ``Vonk.Administration.FhirR4.RepositoryConfigurationR4``
+:Configuration: ``Vonk.Fhir.R4.Internal.Configuration.FhirR4AdministrationConfiguration``
 :License token: http://fire.ly/vonk/plugins/administration/fhirr4
 :Order: 104
 :Description: Implements support services to work with FHIR R4 conformance resources in the Administration API.
@@ -914,7 +914,7 @@ Administration API
 .. _vonk_plugins_administration_r5_services:
 
 :Name: Fhir R5 Administration services
-:Configuration: ``Vonk.Administration.FhirR5.RepositoryConfigurationR5``
+:Configuration: ``Vonk.Fhir.R5.Internal.Configuration.FhirR5AdministrationConfiguration``
 :License token: http://fire.ly/vonk/plugins/administration/fhirr5
 :Order: 105
 :Description: Implements support services to work with FHIR R5 conformance resources in the Administration API.
@@ -993,7 +993,7 @@ X-Provenance header
 
 :Name: X-Provenance header
 :Configuration: ``Vonk.Plugin.Operations.Provenance.ProvenanceHeaderConfiguration``
-:License token: http://fire.ly/vonk/plugins/transaction
+:License token: http://fire.ly/vonk/plugins/transaction and http://fire.ly/server/plugins/provenance
 :Order: 1230
 :Description: Support for the X-Provenance header that adds a Provenance resource upon creating or updating another resource. See :ref:`feature_x-provenance`.
 

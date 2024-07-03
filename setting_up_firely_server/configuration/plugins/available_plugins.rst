@@ -806,25 +806,25 @@ Repository implementations
 :Name: Memory Repository
 :Configuration: ``Vonk.Repository.MemoryConfiguration``
 :License token: http://fire.ly/vonk/plugins/repository/memory
-:Order: 220
+:Order: 210
 :Description: Implements a repository in working memory that fully supports all of the capabilities of Firely Server. This implementation is mainly used for unit testing.
 
 :Name: Memory Administration Repository
 :Configuration: ``Vonk.Repository.MemoryAdministrationConfiguration``
 :License token: http://fire.ly/vonk/plugins/repository/memory
-:Order: 230
+:Order: 211
 :Description: Implements a repository in working memory for the Administration API. This implementation is mainly used for unit testing.
 
 .. _vonk_plugins_repository_mongodb:
 
 :Name: MongoDb Repository
-:Configuration: ``Vonk.Repository.MongoDbConfiguration``
+:Configuration: ``Vonk.Repository.MongoDbVonkConfiguration``
 :License token: http://fire.ly/vonk/plugins/repository/mongo-db
-:Order: 221
+:Order: 230
 :Description: Implements a repository in MongoDb that fully supports all of the capabilities of Firely Server.
 
 :Name: MongoDb Administration Repository
-:Configuration: ``Vonk.Repository.MongoDbAdministrationConfiguration``
+:Configuration: ``Vonk.Repository.MongoDbAdminConfiguration``
 :License token: http://fire.ly/vonk/plugins/repository/mongo-db
 :Order: 231
 :Description: Implements a repository in MongoDb for the Administration API.
@@ -832,7 +832,7 @@ Repository implementations
 :Name: MongoDb Task Repository
 :Configuration: ``Vonk.Repository.MongoDbTaskConfiguration``
 :License token: http://fire.ly/vonk/plugins/repository/mongo-db
-:Order: 231
+:Order: 232
 :Description: Implements a repository in MongoDb for async tasks (like BDE).
 
 .. _vonk_plugins_repository_sqlite:
@@ -840,40 +840,49 @@ Repository implementations
 :Name: SQLite Repository
 :Configuration: ``Vonk.Repository.SqliteConfiguration``
 :License token: http://fire.ly/vonk/plugins/repository/sqlite
-:Order: 224
+:Order: 240
 :Description: Implements a repository in SQLite that fully supports all of the capabilities of Firely Server.
 
 :Name: SQLite Administration Repository
 :Configuration: ``Vonk.Repository.SqliteAdministrationConfiguration``
 :License token: http://fire.ly/vonk/plugins/repository/sqlite
-:Order: 234
+:Order: 241
 :Description: Implements a repository in SQLite for the Administration API.
-
-:Name: SQLite Task Repository
-:Configuration: ``Vonk.Repository.SqliteTaskConfiguration``
-:License token: http://fire.ly/vonk/plugins/repository/sqlite
-:Order: 242
-:Description: Implements a repository in SQLite for async tasks (like BDE).
 
 .. _vonk_plugins_repository_sql:
 
-:Name: SQL Server Repository
-:Configuration: ``Vonk.Repository.SqlConfiguration``
+:Name: SQL Server Repository (Legacy Implementation)
+:Configuration: ``Vonk.Repository.SqlVonkConfiguration``
 :License token: http://fire.ly/vonk/plugins/repository/sql-server
-:Order: 223
-:Description: Implements a repository in SQL Server that fully supports all of the capabilities of Firely Server.
+:Order: 220
+:Description: Implements a repository in SQL Server that fully supports all of the capabilities of Firely Server. Replaced by ``Vonk.Repository.Raw.KSearchConfiguration``.
 
-:Name: SQL Server Administration Repository
+:Name: SQL Server Administration Repository (Legacy Implementation)
 :Configuration: ``Vonk.Repository.SqlAdministrationConfiguration``
 :License token: http://fire.ly/vonk/plugins/repository/sql-server
-:Order: 233
-:Description: Implements a repository in SQL Server for the Administration API.
+:Order: 221
+:Description: Implements a repository in SQL Server for the Administration API. Replaced by ``Vonk.Repository.Raw.KAdminSearchConfiguration``.
 
 :Name: SQL Server Task Repository
 :Configuration: ``Vonk.Repository.SqlTaskConfiguration``
 :License token: http://fire.ly/vonk/plugins/repository/sql-server
 :Order: 222
 :Description: Implements a repository in SQL Server for async tasks (like BDE).
+
+.. _vonk_plugins_repository_sql_raw:
+
+:Name: SQL Server Repository (Recommended Implementation for SQL)
+:Configuration: ``Vonk.Repository.Raw.KSearchConfiguration``
+:License token: http://fire.ly/vonk/plugins/repository/sql-server
+:Order: 222
+:Description: Implements a repository in SQL Server that fully supports all of the capabilities of Firely Server. It is recommended to use this implementation instead of the legacy one.
+
+:Name: SQL Server Administration Repository (Recommended Implementation for SQL)
+:Configuration: ``Vonk.Repository.Raw.KAdminSearchConfiguration``
+:License token: http://fire.ly/vonk/plugins/repository/sql-server
+:Order: 224
+:Description: Implements a repository in SQL Server for the Administration API. It is recommended to use this implementation instead of the legacy one.
+
 
 .. _vonk_plugins_administration:
 
@@ -889,7 +898,7 @@ Administration API
 .. _vonk_plugins_administration_stu3_services:
 
 :Name: Fhir STU3 Administration services
-:Configuration: ``Vonk.Administration.FhirR3.RepositoryConfigurationR3``
+:Configuration: ``Vonk.Fhir.R3.Internal.FhirR3AdministrationConfiguration``
 :License token: http://fire.ly/vonk/plugins/administration/fhirr3
 :Order: 103
 :Description: Implements support services to work with FHIR STU3 conformance resources in the Administration API.
@@ -897,7 +906,7 @@ Administration API
 .. _vonk_plugins_administration_r4_services:
 
 :Name: Fhir R4 Administration services
-:Configuration: ``Vonk.Administration.FhirR4.RepositoryConfigurationR4``
+:Configuration: ``Vonk.Fhir.R4.Internal.Configuration.FhirR4AdministrationConfiguration``
 :License token: http://fire.ly/vonk/plugins/administration/fhirr4
 :Order: 104
 :Description: Implements support services to work with FHIR R4 conformance resources in the Administration API.
@@ -905,7 +914,7 @@ Administration API
 .. _vonk_plugins_administration_r5_services:
 
 :Name: Fhir R5 Administration services
-:Configuration: ``Vonk.Administration.FhirR5.RepositoryConfigurationR5``
+:Configuration: ``Vonk.Fhir.R5.Internal.Configuration.FhirR5AdministrationConfiguration``
 :License token: http://fire.ly/vonk/plugins/administration/fhirr5
 :Order: 105
 :Description: Implements support services to work with FHIR R5 conformance resources in the Administration API.
@@ -984,7 +993,7 @@ X-Provenance header
 
 :Name: X-Provenance header
 :Configuration: ``Vonk.Plugin.Operations.Provenance.ProvenanceHeaderConfiguration``
-:License token: http://fire.ly/vonk/plugins/transaction
+:License token: http://fire.ly/vonk/plugins/transaction and http://fire.ly/server/plugins/provenance
 :Order: 1230
 :Description: Support for the X-Provenance header that adds a Provenance resource upon creating or updating another resource. See :ref:`feature_x-provenance`.
 

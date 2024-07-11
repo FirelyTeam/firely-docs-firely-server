@@ -21,7 +21,6 @@ Release 5.8.0, July 11th, 2024
     - **Firely Scale** (Available for US and International customers)
     - **Firely Solution for CMS Interoperability & Prior Authorization Final Rule** (Available for US customers only)
 
-    For more details, please visit our new pricing page.
 
     Important Notes for existing Customers:
     

@@ -21,7 +21,7 @@ Release 5.8.0, July 11th, 2024
     - **Firely Scale** (Available for US and International customers)
     - **Firely Solution for CMS Interoperability & Prior Authorization Final Rule** (Available for US customers only)
 
-    For more details, please visit our `new pricing page <http://fire.ly/packages>`_.
+    For more details, please visit our new pricing page.
 
     Important Notes for existing Customers:
     
@@ -43,6 +43,7 @@ Fix
 ^^^
 
 #. The `Hosting.PathBase` setting was not correctly applied in version v5.7.0
+#. Upgraded `System.Text.Json` to version 8.0.4 to address the vulnerability `CVE-2024-30105`. Please see the vulnerability details `here <https://github.com/advisories/GHSA-hh2w-p6rv-4g7w>`_.
 
 .. _vonk_releasenotes_5_7_0:
 

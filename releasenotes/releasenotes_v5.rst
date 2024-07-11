@@ -8,6 +8,42 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_5_8_0:
+
+Release 5.8.0, July 11th, 2024
+------------------------------
+
+.. note::
+
+    Firely has restructured its licensing options, offering different packages of features tailored for various use cases. The new packages include:
+
+    - **Firely Essentials** (Available for US and International customers)
+    - **Firely Scale** (Available for US and International customers)
+    - **Firely Solution for CMS Interoperability & Prior Authorization Final Rule** (Available for US customers only)
+
+    For more details, please visit our `new pricing page <http://fire.ly/packages>`_.
+
+    Important Notes for existing Customers:
+    
+    - Existing customers will retain their current feature set.
+    - New features might only be available in certain editions.
+    
+    Please contact us if you are interested in a certain license package.
+
+Configuration
+^^^^^^^^^^^^^
+
+#. License restrictions are now enforced for the X-Provenance header.
+#. License restrictions are now enforced for Bulk Data Export in combination with PDex Member Attribution Lists.
+#. License restrictions are now enforced for building custom plugins and facades.
+#. License restrictions are now enforced for Access Policies.
+#. License restrictions are now enforced for Virtual multi-tenancy.
+
+Fix
+^^^
+
+#. The `Hosting.PathBase` setting was not correctly applied in version v5.7.0
+
 .. _vonk_releasenotes_5_7_0:
 
 Release 5.7.0, May 29th, 2024

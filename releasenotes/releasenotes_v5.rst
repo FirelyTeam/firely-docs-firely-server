@@ -10,7 +10,7 @@ Current Firely Server release notes (v5.x)
 
 .. _vonk_releasenotes_5_8_0:
 
-Release 5.8.0, July 2th, 2024
+Release 5.8.0, July 11th, 2024
 -----------------------------
 
 .. note::

@@ -18,7 +18,7 @@ The structure definitions are preloaded in Firely Server and can be viewed on th
 `Firely Server Definitions - Access Policy (R4) <https://simplifier.net/Vonk-ResourcesR4/~resources?text=access&fhirVersion=R4&sortBy=RankScore_desc>`_ .
 The *AccessPolicyDefinition* resource controls the scopes which are permissible. 
 The *AccessPolicy* resource contains the references to Patient, Group, Practitioner, PractitionerRole, Person, RelatedPerson and Device for which the AccessPolicyDefinition applies.
-If a reference (Patient, Group, ...) is not referenced by an AccessPolicy, the requested scopes are granted without filtering.
+If a reference (Patient, Group, ...) is not referenced by an AccessPolicy - the requested scopes are filtered through values configured for ``SmartAuthorizationOptions.DefaultAccessPolicyDefinitions``.
 
 .. note::
 
@@ -115,6 +115,59 @@ Policy Creation Example:
     Multiple AccessPolicy resources containing the same Reference will be combined. In the above example if the user Alice is found in another policy with ``user/Patient.c``, the resulting permission will be ``user/Patient.crs``
 
 3. Any request where the 'fhirUser' claim within an access token corresponds to any subject listed in the AccessPolicy, will be filtered according to the AccessPolicyDefinition.
+
+.. _feature_default_access_policies:
+
+Default AccessPolicy rules:
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. note::
+
+    By disabling ``SmartAuthorizationOptions.EnforceAccessPolicies`` default access policy rules are disregarded.
+
+Starting with Firely Server 6.0 default access policies are applied. There is a configuration section that defines the behaviour: 
+
+.. code-block:: json
+
+    "SmartAuthorizationOptions": {
+        "Enabled": true,
+        "DefaultAccessPolicyDefinitions" : {
+            "Patient": "https://fire.ly/fhir/AccessPolicyDefinition/default-patient"
+        }
+    }
+
+Here, ``DefaultAccessPolicyDefinitions`` defines access restrictions that are applied if no other user specific policies are applied for the user.
+``https://fire.ly/fhir/AccessPolicyDefinition/default-patient`` is a part of ``errata`` distribution and looks like the following:
+
+.. code-block:: json
+
+    {
+    "resourceType": "AccessPolicyDefinition",
+    "id": "default-patient",
+    "url": "https://fire.ly/fhir/AccessPolicyDefinition/default-patient",
+    "version": "1.0.0",
+    "name": "default-patient",
+    "status": "active",
+    "policy": [
+        {
+        "type": {
+            "code": "smart-v1"
+        },
+        "restriction": [
+            "patient/*.*"
+        ]
+        },
+        {
+        "type": {
+            "code": "smart-v2"
+        },
+        "restriction": [
+            "patient/*.*"
+        ]
+        }
+    ]
+    }
+
+To change the behavior it is recomended to either change the ``AccessPolicyDefinition`` above using the API, or to create a new ``AccessPolicyDefinition``, changing the configuration values to reference the new resource.
 
 Search capabilities:
 ^^^^^^^^^^^^^^^^^^^^

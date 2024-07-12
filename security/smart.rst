@@ -40,6 +40,7 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
 
     "SmartAuthorizationOptions": {
       "Enabled": true,
+      "EnforceAccessPolicies": true,
       "Filters": [
         {
           "FilterType": "Patient", //Filter on a Patient compartment if a 'patient' launch scope is in the auth token
@@ -99,10 +100,14 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
         //"PermissionV2",
         "ContextStyle",
         "ContextBanner"
-      ]
+      ],
+      "DefaultAccessPolicyDefinitions" : {
+        "Patient": "https://fire.ly/fhir/AccessPolicyDefinition/default-patient"
+      }
     }
 
 * Enabled: With this setting you can disable ('false') the authentication and authorization altogether. When it is enabled ('true'), Firely Server will also evaluate the other settings. The default value is 'false'. This implies that authorization is disabled as if no SmartAuthorizationOptions section is present in the settings.
+* EnforceAccessPolicies: Defines whether ``AccessPolicy`` resources existing on Firely Server restrict user's access.
 * Filters: Defines how different launch contexts are translated to search arguments. See :ref:`feature_accesscontrol_compartment` for more background.
 
     * FilterType: Both a launch context and a CompartmentDefinition are defined by a resourcetype. Use FilterType to define for which launch context and related CompartmentDefinition this Filter is applicable.
@@ -118,6 +123,7 @@ You can control the way Access Control based on SMART on FHIR behaves with the S
 * ShowAuthorizationPII: This is a flag to indicate whether or not personally identifiable information is shown in logs.
 * AccessTokenScopeReplace: With this optional setting you tell Firely Server which character replaces the ``/`` (forward slash) character in a SMART scope. This setting is needed in cases like working with Azure Active Directory (see details in section :ref:`feature_accesscontrol_aad`). 
 * SmartCapabilities: This setting can be used to configure `SMART capabilities <http://hl7.org/fhir/smart-app-launch/conformance.html#smart-on-fhir-oauth-authorization-endpoints-and-capabilities>`_. All capabilities listed here are supported by Firely Server, you can enable/disable specific capabilities based on your authorization server implementation. 
+* DefaultAccessPolicyDefinitions: This setting can be used to configure default access per user type. 
 
 .. note:: 
   After properly configuring Firely Server to work with an OAuth2 authorization server, enabling SMART and configuring the SmartCapabilities for Firely Server, you are able to discover the SMART configuration metadata by retrieving ``<base-url>/.well-known/smart-configuration``. 

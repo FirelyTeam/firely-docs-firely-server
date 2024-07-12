@@ -19,6 +19,7 @@ Release 6.0.0, [Month] [Date], 2024
 Features
 ^^^^^^^^
 
+#. (**IMPORTANT**)Default access policies per user type are now configured for SoF authorization. If none are set - user is denied in access. See :ref:`feature_default_access_policies`.
 #. Firely Server offers the ``$member-match`` operation to find the identifier of a member of a health plan. See :ref:`member-match` for more information.
 
 

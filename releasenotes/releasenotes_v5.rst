@@ -22,12 +22,13 @@ Release 5.8.0, July 11th, 2024
     - **Firely Solution for CMS Interoperability & Prior Authorization Final Rule** (Available for US customers only)
 
 
-    Important Notes for existing Customers:
+    Important information for existing customers:
+
+    - Current contracts and feature sets will be honored.
+    - If a license change is required in the future, our sales team will reach out to you.
+    - New features may only be available in certain packages.
     
-    - Existing customers will retain their current feature set.
-    - New features might only be available in certain editions.
-    
-    Please contact us if you are interested in a certain license package.
+   `Read all about our new packages <http://fire.ly/packages/>`_ and please contact our sales team if you are interested in adding certain features or changing your package.
 
 Configuration
 ^^^^^^^^^^^^^

@@ -8,6 +8,29 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. important::
+
+    Firely is publishing the following annocument in response to important upcoming change regarding the .NET platform that affects our Firely Server.
+
+    As you may be aware, Microsoft has decided to deprecate .NET 6, which has been the foundation of our Firely Server, as of November 12, 2024. After this date, .NET 6 will no longer receive updates, including essential security patches and stability improvements.
+
+    To ensure that our Firely Server continues to provide the highest level of performance, security, and stability, we have proactively upgraded Firely Server to .NET 8. This upgrade is part of our commitment to offering you the most reliable and up-to-date solutions.
+
+    *Key Updates:*
+
+    * Firely Server v5.7.0: The upgrade to .NET 8 has been implemented in Firely Server v5.7.0 and later. We highly recommend all customers upgrade to the latest version to continue receiving stable updates and security patches.
+    * Upcoming Firely Server 6: Before November 12, 2024, we will be releasing a new major version, Firely Server 6. According to our support policy, Firely Server 4 will not be supported anymore and therefore not be updated to .NET 8. It is crucial for customers using Firely Server 4 to plan their upgrade path to a supported version.
+    * Upgrade Support: For customers using previous versions, especially previous major versions, we are here to assist you with your upgrade strategies. Please reach out to our support team at `server@fire.ly <mailto:server@fire.ly>`_ to discuss your specific needs.
+
+    *What This Means for You:*
+
+    * Continued Support: By moving to .NET 8, we guarantee that Firely Server will continue to receive regular updates, including critical security patches and new feature enhancements.
+    * Enhanced Performance and Security: .NET 8 brings improvements in performance, security, and functionality, ensuring that your applications run efficiently and securely.
+
+    We appreciate your continued trust in Firely Server. If you have any questions or require further assistance regarding this update, please do not hesitate to reach out to our support team at `server@fire.ly <mailto:server@fire.ly>`_.
+
+    For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
+
 .. _vonk_releasenotes_5_8_0:
 
 Release 5.8.0, July 11th, 2024

@@ -100,7 +100,7 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
        
         ::
             
-            { "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#applications('<object id of your registered app>')/extensionProperties/$entity", "id": <id>", "deletedDateTime": null, "appDisplayName": "<name of your registered app>", "dataType": "String", "isMultiValued": false, "isSyncedFromOnPremises": false, "name": "extension_<extension id>_fhirUser", "targetObjects": [ "User" ] }
+            { "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#applications('<object id of your registered app>')/extensionProperties/$entity", "id": "<id>", "deletedDateTime": null, "appDisplayName": "<name of your registered app>", "dataType": "String", "isMultiValued": false, "isSyncedFromOnPremises": false, "name": "extension_<extension id>_fhirUser", "targetObjects": [ "User" ] }
 
     - The next step requires admin rights in your Azure environment. Copy the value of the ``name`` element of the response above, you need it to link the extension to an existing user along with a value for the FhirUser claim by a PATCH request to ``https://graph.microsoft.com/v1.0/users/<user object id>`` with the following body:
         

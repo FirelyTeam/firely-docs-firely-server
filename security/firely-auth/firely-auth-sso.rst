@@ -79,18 +79,46 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
 #. Configure the ``API permissions`` section
 
     - Select "API permissions"
-    - Make sure to at least add "email", "profile", and "profile" as permissions
+    - Make sure to at least add "email", "profile", and "openid" as permissions
 
 #. Configure the ``ExternalIdentityProviders`` section
 
     - Select "Overview".
     - Select "Endpoints"
-    - Use the base url of any of the displayed OAuth 2.0 endpoints as the authority in the settings. It should start with "https://login.microsoftonline.com/" followed by the tenant id within Microsoft Entra ID, ending in "/v2.0/".
+    - One of the displayed OAuth 2.0 endpoints can be used as the authority in the settings. It should look like this: ``https://login.microsoftonline.com/<Directory (tenant) ID of the registered application>/v2.0``.
 
-#. Optional: Add a `Directory extension <https://learn.microsoft.com/en-us/graph/extensibility-overview?tabs=http#directory-microsoft-entra-id-extensions>`_ for the fhirUser claim owned by the Firely Auth application registered above. 
+#. Optional: Add a `Directory extension <https://learn.microsoft.com/en-us/graph/extensibility-overview?tabs=http#directory-microsoft-entra-id-extensions>`_ for the fhirUser claim owned by the Firely Auth application registered above. You can try it out with Microsoft Graph Explorer.
+   
+    - Navigate to `Microsoft Graph Explorer <https://developer.microsoft.com/en-us/graph/graph-explorer>`_ and log in.
+    - Make a POST request to ``https://graph.microsoft.com/v1.0/applications/<object id of your registered app>/extensionProperties`` with the following body:
+        
+        ::
 
+            { "name": "fhirUser", "dataType": "String", "targetObjects": [ "User" ] }
+      
+    - The response will look like this:
+       
+        ::
+            
+            { "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#applications('<object id of your registered app>')/extensionProperties/$entity", "id": <id>", "deletedDateTime": null, "appDisplayName": "<name of your registered app>", "dataType": "String", "isMultiValued": false, "isSyncedFromOnPremises": false, "name": "extension_<extension id>_fhirUser", "targetObjects": [ "User" ] }
+
+    - The next step requires admin rights in your Azure environment. Copy the value of the ``name`` element of the response above, you need it to link the extension to an existing user along with a value for the FhirUser claim by a PATCH request to ``https://graph.microsoft.com/v1.0/users/<user object id>`` with the following body:
+        
+        ::
+            
+            { "<value of the name element>": "<value of the fhirUser claim>" }
+
+    - You can check if the extension is succesfully linked to the user by making a GET request to ``https://graph.microsoft.com/beta/users/<user object id>?$select=<value of the name element mentioned above>``
+        
     The EntraID admin needs to assure that a fhirUser claim is assigned to all accounts that are allowed to be used together with Firely Auth.
     After creating the directory extension please ensure that the extension is exposed as a claim in the ID token. It needs to be enabled via the "Add optional claim" setting above.
-    Note that EntraID creates the claim for a directory extension with an "extn" prefix. Therefore, use the ``CopyAs`` setting in Firely Auth to copy the claim as "fhirUser" instead of "extn_fhirUser".
+    Note that EntraID creates the claim for a directory extension with an "extn" prefix. Therefore, use the ``CopyAs`` setting in Firely Auth to copy the claim as "fhirUser" instead of "extn.fhirUser":
+        
+        ::
+            
+            "UserClaimsFromIdToken": [{
+				"Key": "extn.fhirUser",
+				"CopyAs": "fhirUser"
+			    }]
 
 #. If configured successfully the login page of Firely Auth should show a button with a label identical to the chosen display name

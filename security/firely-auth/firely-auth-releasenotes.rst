@@ -3,6 +3,27 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.1.0:
+
+Release 4.1.0, July xx, 2024
+----------------------------
+
+Feature
+^^^^^^^
+
+#. With this release, it is possible to let users log in via the :ref:`firely_auth_sso` flow without them needing a user account in Firely Auth first. Upon logging in, these users will be automatically created via auto-provisioning and stored in the Firely Auth user database.
+#. It is now possible to edit client settings via the user interface. Before, these settings could only be changed by altering the appsettings. Note that because of this change, Firely Auth will load clients from the appsettings only once. After this initial load client settings need to be removed from the appsettings, or they will block start up of Firely Auth. 
+
+Configuration
+^^^^^^^^^^^^^
+
+#. It is now possible to add custom disclaimer templates that will be visible when the user tries to retrieve an access token. for more information, see :ref:``
+
+Database
+^^^^^^^^
+
+#. This release comes with an upgrade in the database structure to support the user auto-provisioning feature mentioned above. Any necessary database migrations will be automatically performed by Firely Auth  upon start up.
+
 .. _firelyauth_releasenotes_4.0.0:
 
 Release 4.0.0, June 24th, 2024

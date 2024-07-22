@@ -116,9 +116,13 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
         
         ::
             
-            "UserClaimsFromIdToken": [{
-				"Key": "extn.fhirUser",
-				"CopyAs": "fhirUser"
+		"ExternalIdentityProviders": {
+		    "IdentityProvider": [{
+                        "UserClaimsFromIdToken": [{
+			    "Key": "extn.fhirUser",
+			    "CopyAs": "fhirUser"
 			    }]
+			}]
+		}
 
 #. If configured successfully the login page of Firely Auth should show a button with a label identical to the chosen display name

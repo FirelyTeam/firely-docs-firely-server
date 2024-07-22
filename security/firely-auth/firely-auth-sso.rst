@@ -111,7 +111,7 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
     - You can check if the extension is succesfully linked to the user by making a GET request to ``https://graph.microsoft.com/beta/users/<user object id>?$select=<value of the name element mentioned above>``
         
     The EntraID admin needs to assure that a fhirUser claim is assigned to all accounts that are allowed to be used together with Firely Auth.
-    After creating the directory extension please ensure that the extension is exposed as a claim in the ID token. It needs to be enabled via the "Add optional claim" setting above.
+    After creating the directory extension please ensure that the extension is exposed as a claim in the ID token. It needs to be enabled via the "Add optional claim" setting above. Select "ID" as the token type, as well as "extn.fhirUser" as the claim.
     Note that EntraID creates the claim for a directory extension with an "extn" prefix. Therefore, use the ``CopyAs`` setting in Firely Auth to copy the claim as "fhirUser" instead of "extn.fhirUser":
         
         ::

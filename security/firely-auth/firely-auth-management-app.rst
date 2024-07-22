@@ -10,7 +10,7 @@ After you have installed, started and created your admin account, you can now ma
 After creation of a local account (not using Single Sign-on), an email will be sent to the address of the account to activate the account. When this link expires, an admin can resend this email through the UI.
 
 When you want to manage the users programmatically, you can use the API's that are specified in the swagger documentation which you can find at: https://localhost:5001/swagger/ (or replace localhost with the url of your Firely Auth installation). The API enables the creation, updating and deletion of users.
-To be able to use the api, you will need a client token (obtained trough the client_credentials flow) for a client who has the ``AllowManagementApiAccess`` property set to true.
+To be able to use the api, you will need a client token (obtained trough the client_credentials flow) for a client who has the ``AllowManagementApiAccess`` property set to true. Note that if you do not set this property to true and try to use the api, Firely Auth will throw an error on the scopes: ``No scopes found in request``. This is because you don't need to use SoF scopes to use the Management API, but Firely Auth will check for the presence of these scopes if the use of the Management API is disabled.
 It is recommended to use a specific client for this API access, like:
 
   .. code-block:: json

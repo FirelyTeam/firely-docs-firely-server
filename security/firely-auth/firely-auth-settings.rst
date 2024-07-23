@@ -313,6 +313,7 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
                 }
               ],
               "ClientClaimPrefix": "",
+              "AlwaysSendClientClaims": false,
               "AllowManagementApiAccess": false
           }
       ]
@@ -355,6 +356,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
   - ``Value``: the value of the claim
 
 - ``ClientClaimPrefix``: Add custom defined prefix to the name of all custom client claims. Works together with the setting ``ClientClaims``. 
+- ``AlwaysSendClientClaims``: Add the claims defined in ``ClientClaims`` regardless of the OAuth 2.0 flow used by a client (e.g. even if a authorization_code flow is used)
 - ``AllowManagementApiAccess``: Allows this client to use the :ref:`firely_auth_mgmt`
 
 .. note::

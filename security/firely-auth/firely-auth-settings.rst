@@ -388,6 +388,37 @@ AllowedOrigins
 By default CORS is enabled for all origins communicating over https. To adjust this, change the allowed origins in the ``AllowedOrigins`` setting.
 Wildcards can be used, for example to allow all ports: ``"https://localhost:*"``, or to allow all subdomains ``"https://*.fire.ly"``.
 
+.. _firely_auth_settings_disclaimers:
+
+Disclaimer Registration
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Firely Auth can render custom disclaimers that will be shown to the user to collect user consent for custom policies (e.g. terms of service or privacy policies).
+These policies will be presented in the UI after the user has been authenticated after a login, but still before a token is issued. Agreeing to all disclaimers is mandatory.
+
+.. code-block:: json
+
+  	"DisclaimerRegistration": {
+      "Disclaimers": [
+        //{
+        //	"Id" : "<string>", // some id that will not change for this disclaimer
+        //	"Template": "<path to .liquid template for this disclaimer>",
+        //	"Description": "<string>" // the text that will be shown next to the checkbox
+        //	"TemplateProperties":{ // this is a dictionary of additional properties that will be provided to the template
+        //		"propertyName":"propertyValue",
+        //		"propertyName2":"propertyValue2"
+        //	}
+        //}
+      ]
+	  }
+
+Each disclaimer needs to be uniquely identifable. Please ensure that all an id is provided to all disclaimers. We recommend assigning an UUID here.
+The content of a disclaimer is user-defined and can be expressed in a `liquid template <https://github.com/Shopify/liquid>`_.
+For each disclaimer a checkbox is rendered in the UI by Firely Auth on the disclaimer page. A description shown next the checkbox can be defined for each disclaimer.
+Firely Auth will automatically fill out placeholders defined in the liquid template based on static properties defined as ``TemplateProperties``.
+
+See the ``Data\DisclaimerTemplates`` folder in the Firely Auth disribution for an example disclaimer template.
+
 Inferno test settings
 ---------------------
 

@@ -29,6 +29,7 @@ Configuration
     Make sure to reflect the desired behaviour by adjusting ``appsettings.instance.json`` or environment variables.
 
 #. Evaluation of :ref:`Subscriptions<feature_subscription>` is now turned off by default. To enable - adjust ``SubscriptionEvaluatorOptions`` accordingly.
+#. ``BundleOptions.DefaultTotal`` from now on has a default value of ``none``. For available options see :ref:`bundle_options`.
 
 .. note::
     With the release of Firely Server 6.0, we will officially stop support for Firely Server v4.x. We will continue supporting customers that run Firely Server v5.x.

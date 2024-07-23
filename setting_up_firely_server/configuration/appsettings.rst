@@ -365,7 +365,7 @@ Search size
 ::
 
     "BundleOptions": {
-        "DefaultTotal": "accurate", // Allowed values: none, estimate, accurate
+        "DefaultTotal": "none", // Allowed values: none, estimate, accurate
         "DefaultCount": 10,
         "MaxCount": 50,
         "DefaultSort": "-_lastUpdated"

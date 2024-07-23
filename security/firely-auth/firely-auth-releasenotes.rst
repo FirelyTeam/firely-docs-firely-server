@@ -22,6 +22,10 @@ Configuration
 Database
 ^^^^^^^^
 
+.. attention::
+
+    Starting with Firely Auth 4.1.0, every user account needs to contain a fhirUser claim in login. Users will be blocked from receiving an access token if the claim is not present. 
+
 #. This release comes with an upgrade in the database structure to support the user auto-provisioning feature mentioned above. Any necessary database migrations will be automatically performed by Firely Auth  upon start up.
 
 .. _firelyauth_releasenotes_4.0.0:

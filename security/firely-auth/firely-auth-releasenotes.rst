@@ -17,7 +17,7 @@ Feature
 Configuration
 ^^^^^^^^^^^^^
 
-#. It is now possible to add custom disclaimer templates that will be visible when the user tries to retrieve an access token. for more information, see :ref:``
+#. It is now possible to add custom disclaimer templates that will be visible when the user tries to retrieve an access token. for more information, see :ref:`firely_auth_settings_disclaimers`.
 
 Database
 ^^^^^^^^

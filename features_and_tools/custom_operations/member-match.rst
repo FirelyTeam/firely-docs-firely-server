@@ -83,7 +83,7 @@ Set the options for the operation
 
 The operation has a single option that can be set in the :ref:`appsettings <configure_appsettings>`:
 
-.. code-block:: jsonc
+.. code-block:: json
 
     "MemberMatch": {
         "IsDemographicOnlyMatchAllowed": false // true/false, default is false

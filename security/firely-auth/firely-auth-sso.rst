@@ -35,8 +35,8 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
 A note on the fhirUser claim
 ----------------------------
 
-In Firely Auth, each user profile must contain a fhirUser claim. See `SMART App Launch - Scopes for requesting identity data <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-identity-data>`_ for background.
-This claim may be copied from the ID token of the SSO provider (see ``UserClaimsFromIdToken`` setting above) or be set via the UI or REST API by an admin manually or some other automated process based after looking up the patient id in the FHIR server.
+In Firely Auth, each user profile must contain a fhirUser claim - regardless if the profile represents a Patient or Practitioner account. See `SMART App Launch - Scopes for requesting identity data <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-identity-data>`_ for background.
+This claim may be copied from the ID token of the SSO provider (see ``UserClaimsFromIdToken`` setting above) or be set via the UI or account management REST API by an admin manually or some other automated process based after looking up the patient id in the FHIR server.
 A login with an account not containing the claim will be blocked.
 
 Using Microsoft Entra ID (formerly Azure Active Directory)

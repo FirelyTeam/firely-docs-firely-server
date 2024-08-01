@@ -9,7 +9,7 @@ Firely Auth
   The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
 
 In order to use :ref:`access control <feature_accesscontrol>` you need an authorization server that can provide OAuth2 tokens with claims that conform to `SMART on FHIR`_. 
-In a production scenario, you typically already have at least an identity provider, i.e. authentication server, in place. It could be the EHR system, a Active Directory, or a provider set up specifically for let's say a Patient Portal.
+In a production scenario, you typically already have at least an identity provider, i.e. authentication server, in place. It could be the EHR system, an Azure Active Directory / Microsoft EntraID, or a provider set up specifically for let's say a Patient Portal.
 
 Creating SMART on FHIR conformant tokens and handling all protocol details related to a SMART app launch requires dedicated support which generic authorization servers do not offer. Firely provides Firely Auth, an external authorization service optimized for SMART on FHIR, which enables a out-of-the-box experience with your existing authentication services. 
 

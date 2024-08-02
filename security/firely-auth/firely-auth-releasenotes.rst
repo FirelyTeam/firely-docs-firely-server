@@ -3,6 +3,70 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.1.0:
+
+Release 4.1.0, August 1st, 2024
+-------------------------------
+
+Feature
+^^^^^^^
+
+#. With this release, it is possible to let users log in via the :ref:`firely_auth_sso` flow without them needing a user account in Firely Auth first. Upon logging in, these users will be automatically created via auto-provisioning and stored in the Firely Auth user database.
+#. It is now possible to add and edit client settings via the user interface. Before, these settings could only be changed by altering the appsettings. Note that because of this change, Firely Auth will load clients from the appsettings only once. After this initial load client settings need to be removed from the appsettings, or they will block start up of Firely Auth. 
+#. We have made several improvements to the UI for a better user experience.
+
+Configuration
+^^^^^^^^^^^^^
+
+#. Added `Lockout` options to customize the lockout period and max amount of failed lock-in requests.
+#. It is now possible to add custom disclaimer templates that will be visible when the user tries to retrieve an access token. For more information, see :ref:`firely_auth_settings_disclaimers`.
+
+Fix
+^^^
+
+#. Allow a missing trailing "/" when comparing the FHIR Server base url against the `aud` parameter when requesting a token.
+
+Database
+^^^^^^^^
+
+.. attention::
+
+    Starting with Firely Auth 4.1.0, every user account needs to contain a fhirUser claim in login. Users will be blocked from receiving an access token if the claim is not present. 
+
+#. This release comes with an upgrade in the database structure to support the user auto-provisioning feature mentioned above. Any necessary database migrations will be automatically performed by Firely Auth  upon start up.
+
+.. _firelyauth_releasenotes_4.0.0:
+
+Release 4.0.0, June 24th, 2024
+------------------------------
+
+.. attention::
+
+    The current release of Firely Auth, version 4.0, features new API capabilities, a redesigned user interface, and enhanced SMART on FHIR capabilities.
+    With this release, Firely is deprecating support for any previous version of Firely Auth. It is recommended that all customers upgrade to the latest version.
+
+.. note::
+
+    Support for .NET 6 ends in November 2024. See `.NET Support Policy <https://dotnet.microsoft.com/en-us/platform/support/policy>`_. This version of Firely Auth supports .NET 8. So, we recommend that you upgrade to Firely Auth 4.0.0 and hence .NET 8 before November 2024.
+
+Feature
+^^^^^^^
+
+#. (**Important**) Firely Auth has been upgraded to .NET 8. Please update the .NET runtime accordingly if installing Firely Auth using binaries. The Docker image has been updated for you. 
+#. The homepage of Firely Auth provides a logged-in admin user the possibility to visualize the local .well-known/openid-configuration document incl. an overview of exposed endpoints and requestable SMART / OpenID scopes.
+#. The homepage of Firely Auth provides a logged-in admin user the possibility to view statistics about registered clients and users.
+#. Implemented an overview of all registered client applications for logged-in admin users which can be filtered based on different criteria.
+#. The management CLI for Firely Auth has been removed. As an alternative, all functionality has been moved to a management API. See :ref:`firely_auth_mgmt` for more details.
+#. The user management for Firely Auth has been redesigned. In-Memory users are no longer available. As an alternative Firely Auth now provides, by default, a SQLite database as an administration backend. Please migrate all In-Memory users manually either through the UI or management API. See :ref:`firely_auth_deploy_sqlite` for more details.
+#. Implemented an overview of all registered users (local and SSO) for logged-in admin users.
+
+Configuration
+^^^^^^^^^^^^^
+
+#. Added the possibility to provide custom email templates for the account verification of local users.
+#. Added the possibility to customize the logo and text on the welcome page of Firely Auth.
+
+
 .. _firelyauth_releasenotes_3.3.1:
 
 Release 3.3.1, April 22nd, 2024

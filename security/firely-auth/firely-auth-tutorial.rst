@@ -47,19 +47,40 @@ You can adjust the location of the license file in the configuration settings, s
 
 Additionally you will have to place a file called ``Duende_License.key`` also adjacent to the ``Firely.Auth.Core.exe``. This is required for production use but not testing or development. Firely will provide this key with purchase of Firely Auth. Please note that the path to this file cannot be configured. 
 
-Step 3 - User store
+Step 3 - Ssl certificate
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Firely Auth will only run on https. To create a self signed certificate (for testing purposes only), you can use the tool mkcert ``https://github.com/FiloSottile/mkcert``.
+To enable the certificate you will have to adjust the :ref:`_firely_auth_settings_kestrel` settings. You can use these values:
+
+  .. code-block:: json
+
+    "Kestrel": {
+      "Endpoints": {
+        "HttpsFromPem": {
+          "Url": "https://localhost:5001",
+          "SslProtocols": [ "Tls12", "Tls13" ],
+          "Certificate": {
+            "Path": "[path to your certificate]\\localhost.pem",
+            "KeyPath": "[path to your certificate]\\localhost-key.pem"
+          }
+        }
+      }
+    },  
+
+Step 4 - User store
 ^^^^^^^^^^^^^^^^^^^
 
 You will need to configure a user store to persist your data. This can be a SqlServer or Sqlite database.
 See :ref:`firely_auth_settings_userstore` to read up on how they are configured.
 
-Step 4 - Email client
+Step 5 - Email client
 ^^^^^^^^^^^^^^^^^^^^^
 
 Firely Auth sends email messages to users, like activating accounts and to execute password resets.
 See :ref:`firely_auth_settings_email` to read up on how this is configured. 
 
-Step 5 - Clients
+Step 6 - Clients
 ^^^^^^^^^^^^^^^^
 
 The concept of OAuth2 in general and SMART on FHIR in particular is that a client (an app, a website) can access data on your behalf.
@@ -123,14 +144,14 @@ Note that we also set the Audience in the Advanced Settings to the default value
 
 .. image:: /images/auth_postman_encode_secret.png
 
-Step 6 - Users
+Step 7 - Users
 ^^^^^^^^^^^^^^
 
 With the required settings in place, you can start Firely Auth in PowerShell by running::
 
     > ./Firely.Auth.Core.exe
 
-And you can access it with a browser on ``https://localhost:5001``. It will use a self-signed certificate by default, for which your browser will warn you.
+And you can access it with a browser on ``https://localhost:5001``. It will use the self-signed certificate by default, for which your browser can warn you.
 Accept the risk and proceed to the website.
 
 Firely Auth will present you with a screen to create an admin account. Enter an e-mail address and password and you will be able to log into the management environment. Here you can manage users, view clients and view the openid configuration. 
@@ -140,7 +161,7 @@ An email will be sent to this user to activate the account and set a password. A
 
 
 
-Step 7 - Connect Firely Server to Firely Auth
+Step 8 - Connect Firely Server to Firely Auth
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Ultimately the access token that we just retrieved is meant to get access to resources in Firely Server. To demonstrate that we will:

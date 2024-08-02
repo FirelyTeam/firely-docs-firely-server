@@ -9,7 +9,7 @@ Bulk Import via Firely Server Ingest
 
 .. note::
   This application is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
-  Your license already permits the usage of FSI if it contains ``http://fire.ly/vonk/plugins/bulk-data-import``. You can also try out Firely Server Ingest. It is limited to a maximum of 10000 resources in total in the connected Firely Server database.
+  Your license already permits the usage of FSI if it contains ``http://fire.ly/vonk/plugins/bulk-data-import``. You can also try out Firely Server Ingest. It is limited to a maximum of 10000 resources in total in the connected Firely Server database, in addition to the Recovery Journal feature being disabled.
 
 
 **Firely Server Ingest (FSI)** is a CLI application designed to optimize massive resource ingestion into a Firely Server instance. In contrast to resource ingestion by sending HTTP requests to a running Firely Server instance, this tool writes data directly to the underlying FS database which increases the throughput significantly.
@@ -316,7 +316,6 @@ When enabled, the process runs as follows:
 #. Then the data ingestion will start. Information about every successfully ingested resource also gets added to the journal.
 
 If the ingestion procedure gets interrupted at any point, or some of the resources do not get ingested because of a transient error (e.g. network connection to the target DB is temporarily down), the ingestion process can be restarted by running the application with the same parameters. The application will skip all the previously ingested resources based on the journal.
-
 .. note::
   
   - Note that the recovery journal directory must be empty before performing the initial ingestion attempt for a given set of files. 

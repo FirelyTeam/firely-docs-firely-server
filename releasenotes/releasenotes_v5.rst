@@ -10,7 +10,7 @@ Current Firely Server release notes (v5.x)
 
 .. important::
 
-    Firely is publishing the following annocument in response to important upcoming change regarding the .NET platform that affects our Firely Server.
+    Firely is publishing the following announcement in response to important upcoming change regarding the .NET platform that affects our Firely Server.
 
     As you may be aware, Microsoft has decided to deprecate .NET 6, which has been the foundation of our Firely Server, as of November 12, 2024. After this date, .NET 6 will no longer receive updates, including essential security patches and stability improvements.
 

@@ -31,6 +31,20 @@ Current Firely Server release notes (v5.x)
 
     For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
 
+.. _vonk_releasenotes_5_9_0:
+
+Release 5.9.0, August 7th, 2024
+-------------------------------
+
+This update was necessary to further improve the behavior with regard to the new licensing system for Firely Server Ingest. There are no changes to the functionality of Firely Server or Firely Server Ingest.
+The new license system for FSI implements support for the packages mentioned in release :ref:`vonk_releasenotes_5_8_0`. 
+
+#. With the **Firely Essentials** license, there are no restrictions to the amount of resources that can be loaded into the database, but you can only load 1000 resources in one batch. The use of the :ref:`tool_fsi_recovery` functionality is disabled.
+#. With the  **Firely Scale** license, there are no restrictions to the amount of resources that can be loaded into the database, and you can load an unlimited amount of resources in one batch.
+#. with the **Firely Solution for CMS Interoperability & Prior Authorization Final Rule**, likewise, there are no restrictions to the amount of resources that can be loaded into the database, and you can load an unlimited amount of resources in one batch.
+
+If you are still using an old version of the license, nothing changes for you. The new license system is only enforced for new licenses. You can check if you have the new license version by looking for the field ``LicenseVersion`` in your license file. If this field is present, you have the new license version.
+
 .. _vonk_releasenotes_5_8_0:
 
 Release 5.8.0, July 11th, 2024

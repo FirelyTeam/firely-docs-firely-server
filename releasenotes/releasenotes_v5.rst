@@ -37,7 +37,7 @@ Release 5.9.0, August 7th, 2024
 -------------------------------
 
 This update was necessary to further improve the behavior with regard to the new licensing system for Firely Server Ingest. There are no changes to the functionality of Firely Server or Firely Server Ingest.
-The new license system for FSI implements support for the packages mentioned in release :ref:`vonk_releasenotes_5_8_0`. 
+The new license system for FSI implements support for the packages mentioned in :ref:`vonk_releasenotes_5_8_0`. 
 
 #. With the **Firely Essentials** license, there are no restrictions to the amount of resources that can be loaded into the database, but you can only load 1000 resources in one batch. The use of the :ref:`tool_fsi_recovery` functionality is disabled.
 #. With the  **Firely Scale** license, there are no restrictions to the amount of resources that can be loaded into the database, and you can load an unlimited amount of resources in one batch.

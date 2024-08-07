@@ -13,7 +13,7 @@ Bulk Import via Firely Server Ingest
   
   #. **Firely Essentials**
     * Contains the ``http://fire.ly/vonk/plugins/bulk-data-import`` token
-    * Has no restrictions to the amount of resources that can be loaded in total
+    * Is unrestricted in the amount of resources that can be loaded in total
     * Restricts the amount of resources that can be loaded in one go to 1000
     * Does not support the Recovery Journal feature
   #. **Firely Scale**

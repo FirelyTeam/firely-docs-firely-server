@@ -43,7 +43,7 @@ The new license system for FSI implements support for the packages mentioned in 
 #. With the  **Firely Scale** license, there are no restrictions to the amount of resources that can be loaded into the database, and you can load an unlimited amount of resources in one batch.
 #. with the **Firely Solution for CMS Interoperability & Prior Authorization Final Rule**, likewise, there are no restrictions to the amount of resources that can be loaded into the database, and you can load an unlimited amount of resources in one batch.
 
-If you are still using an old version of the license, nothing changes for you. The new license system is only enforced for new licenses. You can check if you have the new license version by looking for the field ``LicenseVersion`` in your license version. If this field is present, you have the new license version.
+If you are still using an old version of the license, nothing changes for you. The new license system is only enforced for new licenses. You can check if you have the new license version by looking for the field ``LicenseVersion`` in your license file. If this field is present, you have the new license version.
 
 .. _vonk_releasenotes_5_8_0:
 

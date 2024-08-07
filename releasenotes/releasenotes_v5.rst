@@ -8,6 +8,43 @@ Current Firely Server release notes (v5.x)
         
         docker pull firely/server:latest
 
+.. important::
+
+    Firely is publishing the following announcement in response to important upcoming change regarding the .NET platform that affects our Firely Server.
+
+    As you may be aware, Microsoft has decided to deprecate .NET 6, which has been the foundation of our Firely Server, as of November 12, 2024. After this date, .NET 6 will no longer receive updates, including essential security patches and stability improvements.
+
+    To ensure that our Firely Server continues to provide the highest level of performance, security, and stability, we have proactively upgraded Firely Server to .NET 8. This upgrade is part of our commitment to offering you the most reliable and up-to-date solutions.
+
+    *Key Updates:*
+
+    * Firely Server v5.7.0: The upgrade to .NET 8 has been implemented in Firely Server v5.7.0 and later. We highly recommend all customers upgrade to the latest version to continue receiving stable updates and security patches.
+    * Upcoming Firely Server 6: Before November 12, 2024, we will be releasing a new major version, Firely Server 6. According to our support policy, Firely Server 4 will not be supported anymore and therefore not be updated to .NET 8. It is crucial for customers using Firely Server 4 to plan their upgrade path to a supported version.
+    * Upgrade Support: For customers using previous versions, especially previous major versions, we are here to assist you with your upgrade strategies. Please reach out to our support team at `server@fire.ly <mailto:server@fire.ly>`_ to discuss your specific needs.
+
+    *What This Means for You:*
+
+    * Continued Support: By moving to .NET 8, we guarantee that Firely Server will continue to receive regular updates, including critical security patches and new feature enhancements.
+    * Enhanced Performance and Security: .NET 8 brings improvements in performance, security, and functionality, ensuring that your applications run efficiently and securely.
+
+    We appreciate your continued trust in Firely Server. If you have any questions or require further assistance regarding this update, please do not hesitate to reach out to our support team at `server@fire.ly <mailto:server@fire.ly>`_.
+
+    For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
+
+.. _vonk_releasenotes_5_9_0:
+
+Release 5.9.0, August 7th, 2024
+-------------------------------
+
+This update was necessary to further improve the behavior with regard to the new licensing system for Firely Server Ingest. There are no changes to the functionality of Firely Server or Firely Server Ingest.
+The new license system for FSI implements support for the packages mentioned in :ref:`vonk_releasenotes_5_8_0`. 
+
+#. With the **Firely Essentials** license, there are no restrictions to the amount of resources that can be loaded into the database, but you can only load 1000 resources in one batch. The use of the :ref:`tool_fsi_recovery` functionality is disabled.
+#. With the  **Firely Scale** license, there are no restrictions to the amount of resources that can be loaded into the database, and you can load an unlimited amount of resources in one batch.
+#. with the **Firely Solution for CMS Interoperability & Prior Authorization Final Rule**, likewise, there are no restrictions to the amount of resources that can be loaded into the database, and you can load an unlimited amount of resources in one batch.
+
+If you are still using an old version of the license, nothing changes for you. The new license system is only enforced for new licenses. You can check if you have the new license version by looking for the field ``LicenseVersion`` in your license file. If this field is present, you have the new license version.
+
 .. _vonk_releasenotes_5_8_0:
 
 Release 5.8.0, July 11th, 2024
@@ -21,14 +58,14 @@ Release 5.8.0, July 11th, 2024
     - **Firely Scale** (Available for US and International customers)
     - **Firely Solution for CMS Interoperability & Prior Authorization Final Rule** (Available for US customers only)
 
-    For more details, please visit our `new pricing page <http://fire.ly/packages>`_.
 
-    Important Notes for existing Customers:
+    Important information for existing customers:
+
+    - Current contracts and feature sets will be honored.
+    - If a license change is required in the future, our sales team will reach out to you.
+    - New features may only be available in certain packages.
     
-    - Existing customers will retain their current feature set.
-    - New features might only be available in certain editions.
-    
-    Please contact us if you are interested in a certain license package.
+   `Read all about our new packages <http://fire.ly/packages/>`_ and please contact our sales team if you are interested in adding certain features or changing your package.
 
 Configuration
 ^^^^^^^^^^^^^
@@ -43,24 +80,7 @@ Fix
 ^^^
 
 #. The `Hosting.PathBase` setting was not correctly applied in version v5.7.0
-
-.. _vonk_releasenotes_5_7_0:
-
-Release 5.7.0, May 29th, 2024
------------------------------
-
-Features
-^^^^^^^^
-
-Improvements
-^^^^^^^^^^^^
-#. Configuration values logged on startup are now redacted based on the principle of inclusion versus exclusion. This change may cause custom configuration values to be hidden in the log output. In case of custom plugins relying on the old behaviour, it is advised to use a custom logging mechanism to log the configuration values.  
-
-Configuration
-^^^^^^^^^^^^^
-
-Fixes
-^^^^^
+#. Upgraded `System.Text.Json` to version 8.0.4 to address the vulnerability `CVE-2024-30105`. Please see the vulnerability details `here <https://github.com/advisories/GHSA-hh2w-p6rv-4g7w>`_.
 
 .. _vonk_releasenotes_5_7_0:
 

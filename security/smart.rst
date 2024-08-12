@@ -33,7 +33,7 @@ configuration in the ``PipelineOptions`` section, or copy that section from ``ap
 Add ``Vonk.Plugin.Smart`` to the list of included plugins. When you restart Firely Server, the Smart service will be added to the pipeline.
 
 .. note:: 
-  From Firely Server v5.5.0 on, the ``Vonk.Plugin.Smart`` plugin replaces the legacy plugins ``Vonk.Smart`` (for SMART v1) and ``Vonk.Plugin.SoFv2`` (for SMART v2). For Firely Server versions older than v5.5.0, these legacy plugins may still be used. 
+  From Firely Server v5.5.0 on, the ``Vonk.Plugin.Smart`` plugin replaces the legacy plugins ``Vonk.Smart`` (for SMART v1) and ``Vonk.Plugin.SoFv2`` (for SMART v2). For Firely Server versions older than v5.5.0, these legacy plugins may still be used. For Firely Server versions v6.0.0 and newer, the legacy plugins are no longer supported.
   Be sure to only enable one of these plugins since an error will be thrown if both plugins are part of the pipeline. Please note that the SMART v2 plugin will allow the usage of the SMART v1 and SMART v2 syntax.
 
 You can control the way Access Control based on SMART on FHIR behaves with the SmartAuthorizationOptions in the :ref:`configure_appsettings`::

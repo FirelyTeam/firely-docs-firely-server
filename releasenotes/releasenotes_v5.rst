@@ -33,6 +33,17 @@ Current Firely Server release notes (v5.x)
 
 .. _vonk_releasenotes_5_9_0:
 
+Release 5.9.1, August 12th, 2024
+--------------------------------
+
+Fix
+^^^
+
+#. Enabled the NoOp plugin to work in combination with transaction bundles. Duplicate updates were not detected within transaction bundles.
+#. Fixed a misleading error message in case a SearchParameter of type 'canonical' cannot be indexed due to invalid data.
+
+.. _vonk_releasenotes_5_9_0:
+
 Release 5.9.0, August 7th, 2024
 -------------------------------
 

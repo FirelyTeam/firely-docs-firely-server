@@ -37,8 +37,8 @@ This implementation guide does not specify any FHIR conformance resources and pr
    
      - * `hl7.fhir.uv.smart-app-launch|1.0.0 <https://registry.fhir.org/package/hl7.fhir.uv.smart-app-launch|1.0.0>`_
        * `hl7.fhir.uv.smart-app-launch|2.0.0 <https://registry.fhir.org/package/hl7.fhir.uv.smart-app-launch|2.0.0>`_
-       * `hl7.fhir.uv.smart-app-launch|2.0.0 <https://registry.fhir.org/package/hl7.fhir.uv.smart-app-launch|2.1.0>`_
-       * `hl7.fhir.uv.smart-app-launch|2.0.0 <https://registry.fhir.org/package/hl7.fhir.uv.smart-app-launch|2.2.0>`_
+       * `hl7.fhir.uv.smart-app-launch|2.1.0 <https://registry.fhir.org/package/hl7.fhir.uv.smart-app-launch|2.1.0>`_
+       * `hl7.fhir.uv.smart-app-launch|2.2.0 <https://registry.fhir.org/package/hl7.fhir.uv.smart-app-launch|2.2.0>`_
 
 Known Limitations
 -----------------

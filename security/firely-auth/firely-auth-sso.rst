@@ -92,7 +92,7 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
     - Select "Endpoints"
     - One of the displayed OAuth 2.0 endpoints can be used as the authority in the settings. It should look like this: ``https://login.microsoftonline.com/<Directory (tenant) ID of the registered application>/v2.0``.
 
-#. Optional: Expose the `groups <https://learn.microsoft.com/en-us/entra/identity-platform/optional-claims?tabs=appui#configure-groups-optional-claims>`_ in the ID token if the SSO auto-provisioning is restricted certain security groups.
+#. Optional: Expose the `groups <https://learn.microsoft.com/en-us/entra/identity-platform/optional-claims?tabs=appui#configure-groups-optional-claims>`_ in the ID token if the SSO auto-provisioning is restricted to certain security groups.
 
 #. Optional: Add a `Directory extension <https://learn.microsoft.com/en-us/graph/extensibility-overview?tabs=http#directory-microsoft-entra-id-extensions>`_ for the fhirUser claim owned by the Firely Auth application registered above. You can try it out with Microsoft Graph Explorer.
    

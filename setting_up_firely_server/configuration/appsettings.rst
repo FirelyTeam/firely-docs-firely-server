@@ -424,6 +424,7 @@ FHIR Capabilities
 ::
 
   "FhirCapabilities": {
+    "AllowCreateOnUpdate": true|false
     "ConditionalDeleteOptions": {
       "ConditionalDeleteType": "Single", // Single or Multiple,
       "ConditionalDeleteMaxItems": 1

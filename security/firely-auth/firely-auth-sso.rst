@@ -32,6 +32,11 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
     These claims will be copied from the ID token after a successful login and stored permanently. Each claim is updated automatically after each login with local changes being overwritten.
     It is possible to assign a new name to a claim using the ``CopyAs`` setting.
 
+#. Configure security groups
+
+    Based on the ``AutoProvisionFromSecurityGroup`` setting it is possible to restrict the sign-up of users based on security groups defined in the SSO provider. The attribution of a user account to a one or more security group needs to be exposed via the ``groups`` claim.
+    If the ID token received from the SSO provider contains such a claim and the value is part of the whitelisted security groups in the appsetttings, the auto-provisioning is allowed by Firely Auth. Note that Azure allows you to set different values for this claim, such as the Object ID or the display name of the security group. Depending on how this claim is configured in Azure, the respective value, either Object ID or display name of the Security Group, should be added to the ``AutoProvisionFromSecurityGroup`` list to allow auto-provisioning for this group.
+
 A note on the fhirUser claim
 ----------------------------
 
@@ -68,7 +73,7 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
     - Select "Add a certificate or secret".
     - Complete steps to create a new client secret and note it down safely.
 
-#. Chose the claim in the id token for account matching
+#. Choose the claim in the id token for account matching
 
     - Select "Token configuration"
     - Select "+ Add optional claim"
@@ -86,6 +91,8 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
     - Select "Overview".
     - Select "Endpoints"
     - One of the displayed OAuth 2.0 endpoints can be used as the authority in the settings. It should look like this: ``https://login.microsoftonline.com/<Directory (tenant) ID of the registered application>/v2.0``.
+
+#. Optional: Expose the `groups <https://learn.microsoft.com/en-us/entra/identity-platform/optional-claims?tabs=appui#configure-groups-optional-claims>`_ in the ID token if the SSO auto-provisioning is restricted to certain security groups. As mentioned above, you can configure Azure to add different values to this claim, such as Group ID (the Object ID of the Security Group) or the name of the Security Group. The values listed in the ``AutoProvisionFromSecurityGroup`` setting should match the values of the ``groups`` claim in the ID token.
 
 #. Optional: Add a `Directory extension <https://learn.microsoft.com/en-us/graph/extensibility-overview?tabs=http#directory-microsoft-entra-id-extensions>`_ for the fhirUser claim owned by the Firely Auth application registered above. You can try it out with Microsoft Graph Explorer.
    

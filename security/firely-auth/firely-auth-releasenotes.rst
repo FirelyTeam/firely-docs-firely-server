@@ -3,6 +3,16 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.1.1:
+
+Release 4.1.1, September 4th, 2024
+----------------------------------
+
+Fix
+^^^
+
+#. This is a hotfix release where we fixed the manual update scripts for updating the user databases to v4.1.x and higher. The scripts were not working correctly in the previous release.
+
 .. _firelyauth_releasenotes_4.1.0:
 
 Release 4.1.0, August 1st, 2024

@@ -76,6 +76,9 @@ You can further adjust PubSub in the PubSub section of the `appsettings.instance
         }
     },
 
+.. attention::
+  SQLite backend is not supported for ResourceChangeNotifications.
+
 .. note::
   Enabling ResourceChangeNotifications requires one-time DB configuration to enable changes tracking for SQL server backends. See :ref:`SQL Server Tracking Initialization<pubsub_sql_tracking_init>` for the instructions.
 

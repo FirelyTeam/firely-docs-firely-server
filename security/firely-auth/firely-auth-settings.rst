@@ -306,6 +306,7 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               "AllowFirelySpecialScopes": true,
               "RequireClientSecret": true,
               "RefreshTokenLifetime": "30",
+              "ConsentLifetime": "365",
               "RequireMfa": true,
               "AccessTokenType": "Jwt",
               "ClientClaims": [
@@ -351,6 +352,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``AllowFirelySpecialScopes``: true / false - Allow app to request scopes for Firely Server specific operations. Currently just 'http://server.fire.ly/auth/scope/erase-operation'
 - ``RequireClientSecret``: true / false - A :term:`public client` cannot hold a secret, and then this can be set to ``false``. Then the ``ClientSecrets`` section is ignored. See also the note below.
 - ``RefreshTokenLifetime``: If the client is allowed to use a :term:`refresh token`, how long should it be valid? The value is in days. You can also use HH:mm:ss for lower values.
+- ``ConsentLifetime`` : This is an optional setting which can specify a period after which the users consent will be revoked. The value is in days. You can also use HH:mm:ss for lower values.
 - ``AccessTokenType``: ``Jwt`` or ``Reference``. ``Jwt`` means that this client will get self-contained Json Web Tokens. ``Reference`` means that this client will get reference tokens, that refer to the actual token kept in memory by Firely Auth. For more background see :term:`reference token`.
 - ``ClientClaims``: Enable a client to add static custom claims in the client credential flow. 
 

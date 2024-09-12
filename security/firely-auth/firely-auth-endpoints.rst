@@ -117,3 +117,31 @@ Known Limitations
 
 * In Firely Auth no Backchannel Authentication Endpoint is available, therefore Client Initiated Backchannel Authentication (CIBA) requests are not supported. For more information, see `Duende Documentation - Client Initiated Backchannel Authentication (CIBA) <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/ciba/>`_.
 * A Device Authorization Flow is not supported by SMART on FHIR. Therefore it is not available in Firely Auth. For more information, see `Duende Documentation - Device Authorization Endpoint <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/device_authorization/>`_.
+
+Liveness and readiness
+----------------------
+
+It can be useful to check whether Firely Auth is still up and running, and ready to handle requests. Either just for notification, or for automatic failover.
+A prominent use case is to start dependent services only after Firely Auth is up and running, e.g. in a docker-compose or in a Helm chart.
+
+Firely Auth provides two endpoints, for different purposes:
+
+* ``GET <base>/$liveness``
+* ``GET <base>/$readiness``
+
+These align - intentionally - with the use of liveness and readiness probes in Kubernetes, see `Probes <https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/>`_.
+
+Results
+-------
+
+The ``$liveness`` operation may return one of these http status codes:
+
+#. 200 OK: Firely Auth is up and running.
+#. 402 Payment Required: The license is expired or otherwise invalid.
+#. 500 or higher: An unexpected error happened, the server is not running or not reachable (in the latter case the error originates from a component in front of Firely Auth).
+
+The ``$readiness`` operation may return one of these http status codes:
+
+#. 200 OK: Firely Auth is up and running and ready to process requests.
+#. 402 Payment Required: The license is expired or otherwise invalid.
+#. 500 or higher: An unexpected error happened, the server is not running or not reachable (in the latter case the error originates from a component in front of Firely Auth).

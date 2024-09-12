@@ -129,7 +129,7 @@ Firely Auth provides two endpoints, for different purposes:
 * ``GET <base>/$liveness``
 * ``GET <base>/$readiness``
 
-These align - intentionally - with the use of liveness and readiness probes in Kubernetes.
+These align - intentionally - with the use of liveness and readiness probes in Kubernetes, see `Probes <https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/>`_.
 
 Results
 -------

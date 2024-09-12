@@ -262,6 +262,7 @@ See :ref:`firely_auth_deploy_sqlite` and :ref:`firely_auth_deploy_sql` for detai
   "UserStore": {
       "Type": "Sqlite", // Sqlite | SqlServer
       "PasswordHashIterations": 600000,
+      "LogSqlQueryParameterValues": false,
       "Sqlite": {
           "ConnectionString": "<connection string here>"
       },
@@ -272,6 +273,7 @@ See :ref:`firely_auth_deploy_sqlite` and :ref:`firely_auth_deploy_sql` for detai
 
 - ``Type``: select the type of store to use
 - ``PasswordHashIterations``: number of password hash iterations to prevent brute force attacks. Default 600000. Sync this value when using Firely Auth Management App :ref:`firely_auth_mgmt`.
+- ``LogSqlQueryParameterValues``: when you configured logging of executed queries, the parameter values that are sent to the database are hidden by default. By putting this setting to ``true``, the values will be unhidden and visible in the logs. This might expose sensitive data. You will have to change the ``Serilog->MinimumLevel->Default`` and ``Serilog->MinimumLevel->Override->Microsoft`` log settings to ``Information``. 
 - ``Sqlite``: settings for the Sqlite store
 
   - ``ConnectionString``: connection string to the SQL Server database where the users are to be stored.

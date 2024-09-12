@@ -136,12 +136,12 @@ Results
 
 The ``$liveness`` operation may return one of these http status codes:
 
-#. 200 OK: Firely Server is up and running (but may still be blocked by a long running process).
+#. 200 OK: Firely Auth is up and running.
 #. 402 Payment Required: The license is expired or otherwise invalid.
 #. 500 or higher: An unexpected error happened, the server is not running or not reachable (in the latter case the error originates from a component in front of Firely Auth).
 
 The ``$readiness`` operation may return one of these http status codes:
 
-#. 200 OK: Firely Server is up and running and ready to process requests.
+#. 200 OK: Firely Auth is up and running and ready to process requests.
 #. 402 Payment Required: The license is expired or otherwise invalid.
 #. 500 or higher: An unexpected error happened, the server is not running or not reachable (in the latter case the error originates from a component in front of Firely Auth).

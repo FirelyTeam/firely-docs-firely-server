@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MedicationKnowledge",
-    "version": "5.1.1"
+    "version": "6.0.0-alpha-build-20240916.7+93b8de6236fd817865a1630ca9f3992194b3d29a"
   },
   "servers": [
     {
@@ -1877,8 +1877,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "The specific code",
-        "style": "form",
+        "description": "Code that identifies this medication",
         "schema": {
           "type": "string"
         }
@@ -1894,8 +1893,7 @@
       "ingredient": {
         "name": "ingredient",
         "in": "query",
-        "description": "Returns medications for this ingredient reference",
-        "style": "form",
+        "description": "Medication(s) or substance(s) contained in the medication",
         "schema": {
           "type": "string"
         }
@@ -1903,8 +1901,7 @@
       "ingredient-code": {
         "name": "ingredient-code",
         "in": "query",
-        "description": "Returns medications for this ingredient code",
-        "style": "form",
+        "description": "Medication(s) or substance(s) contained in the medication",
         "schema": {
           "type": "string"
         }
@@ -1912,8 +1909,7 @@
       "manufacturer": {
         "name": "manufacturer",
         "in": "query",
-        "description": "The manufacturer of the device",
-        "style": "form",
+        "description": "Manufacturer of the item",
         "schema": {
           "type": "string"
         }
@@ -1961,7 +1957,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "candidate | eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn",
+        "description": "The current status of the Episode of Care as provided (does not check the status history collection)",
         "style": "form",
         "schema": {
           "type": "string"

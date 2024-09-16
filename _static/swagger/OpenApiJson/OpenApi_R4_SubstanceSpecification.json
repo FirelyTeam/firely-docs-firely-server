@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - SubstanceSpecification",
-    "version": "5.1.1"
+    "version": "6.0.0-alpha-build-20240916.7+93b8de6236fd817865a1630ca9f3992194b3d29a"
   },
   "servers": [
     {
@@ -1697,6 +1697,7 @@
         "name": "_has",
         "in": "query",
         "description": "Enables querying a reverse chain",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1704,7 +1705,8 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "The specific code",
+        "description": "Code that identifies this medication",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1714,6 +1716,7 @@
         "in": "path",
         "description": "Resource Logical ID",
         "required": true,
+        "style": "simple",
         "schema": {
           "type": "string"
         }
@@ -1723,6 +1726,7 @@
         "in": "path",
         "description": "Resource Version Number",
         "required": true,
+        "style": "simple",
         "schema": {
           "type": "string"
         }

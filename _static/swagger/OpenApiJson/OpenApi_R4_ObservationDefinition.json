@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - ObservationDefinition",
-    "version": "5.1.1"
+    "version": "6.0.0-alpha-build-20240916.7+93b8de6236fd817865a1630ca9f3992194b3d29a"
   },
   "servers": [
     {

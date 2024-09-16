@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MessageHeader",
-    "version": "5.1.1"
+    "version": "6.0.0-alpha-build-20240916.7+93b8de6236fd817865a1630ca9f3992194b3d29a"
   },
   "servers": [
     {
@@ -1874,7 +1874,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "The provider or device that identified the issue",
+        "description": "Flag creator",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1883,7 +1883,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "The specific code",
+        "description": "Code that identifies this medication",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1892,7 +1892,8 @@
       "destination": {
         "name": "destination",
         "in": "query",
-        "description": "Name of system",
+        "description": "Returns dispenses that should be sent to a specific destination",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1917,7 +1918,7 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "Type of the event itself in relation to the subject",
+        "description": "Main clinical acts documented",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1934,7 +1935,7 @@
       "receiver": {
         "name": "receiver",
         "in": "query",
-        "description": "Who collected the Supply",
+        "description": "The identity of a receiver to list dispenses for",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1951,8 +1952,7 @@
       "responsible": {
         "name": "responsible",
         "in": "query",
-        "description": "Who maintains system namespace?",
-        "style": "form",
+        "description": "Final responsibility for event",
         "schema": {
           "type": "string"
         }
@@ -1960,7 +1960,8 @@
       "sender": {
         "name": "sender",
         "in": "query",
-        "description": "Real world sender of the message",
+        "description": "Message sender",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1968,7 +1969,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "The source value set that contains the concepts that are being mapped",
+        "description": "Who or where the information in the statement came from",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1986,7 +1987,7 @@
       "target": {
         "name": "target",
         "in": "query",
-        "description": "The target value set which provides context for the mappings",
+        "description": "Types of resource (if a resource reference)",
         "style": "form",
         "schema": {
           "type": "string"

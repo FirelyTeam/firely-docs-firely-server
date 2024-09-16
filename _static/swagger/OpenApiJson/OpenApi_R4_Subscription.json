@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Subscription",
-    "version": "5.1.1"
+    "version": "6.0.0-alpha-build-20240916.7+93b8de6236fd817865a1630ca9f3992194b3d29a"
   },
   "servers": [
     {
@@ -1770,8 +1770,7 @@
       "contact": {
         "name": "contact",
         "in": "query",
-        "description": "Name of an individual to contact",
-        "style": "form",
+        "description": "Contact details for the subscription",
         "schema": {
           "type": "string"
         }
@@ -1795,7 +1794,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "candidate | eligible | follow-up | ineligible | not-registered | off-study | on-study | on-study-intervention | on-study-observation | pending-on-study | potential-candidate | screening | withdrawn",
+        "description": "The current status of the Episode of Care as provided (does not check the status history collection)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1804,7 +1803,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "The kind of coverage (health plan, auto, Workers Compensation)",
+        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): allergy | intolerance - Underlying mechanism (if known)\r\n* [Composition](composition.html): Kind of composition (LOINC if possible)\r\n* [DocumentManifest](documentmanifest.html): Kind of document set\r\n* [DocumentReference](documentreference.html): Kind of document (LOINC if possible)\r\n* [Encounter](encounter.html): Specific type of encounter\r\n* [EpisodeOfCare](episodeofcare.html): Type/class  - e.g. specialist referral, disease management\r\n",
         "style": "form",
         "schema": {
           "type": "string"

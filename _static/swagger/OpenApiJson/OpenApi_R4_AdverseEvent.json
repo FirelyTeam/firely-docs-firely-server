@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - AdverseEvent",
-    "version": "5.1.1"
+    "version": "6.0.0-alpha-build-20240916.7+93b8de6236fd817865a1630ca9f3992194b3d29a"
   },
   "servers": [
     {
@@ -1856,7 +1856,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "food | medication | environment | biologic",
+        "description": "Returns statements of this category of medicationstatement",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1865,7 +1865,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Start and end of participation",
+        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Date first version of the resource instance was recorded\r\n* [CarePlan](careplan.html): Time period plan covers\r\n* [CareTeam](careteam.html): Time period team covers\r\n* [ClinicalImpression](clinicalimpression.html): When the assessment was documented\r\n* [Composition](composition.html): Composition editing time\r\n* [Consent](consent.html): When this Consent was created or indexed\r\n* [DiagnosticReport](diagnosticreport.html): The clinically relevant time of the report\r\n* [Encounter](encounter.html): A date within the period the Encounter lasted\r\n* [EpisodeOfCare](episodeofcare.html): The provided date search value falls within the episode of care's period\r\n* [FamilyMemberHistory](familymemberhistory.html): When history was recorded or last updated\r\n* [Flag](flag.html): Time period when flag is active\r\n* [Immunization](immunization.html): Vaccination  (non)-Administration Date\r\n* [List](list.html): When the list was prepared\r\n* [Observation](observation.html): Obtained date/time. If the obtained element is a period, a date that falls in the period\r\n* [Procedure](procedure.html): When the procedure was performed\r\n* [RiskAssessment](riskassessment.html): When was assessment made?\r\n* [SupplyRequest](supplyrequest.html): When the request was made\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1874,7 +1874,8 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "Type of the event itself in relation to the subject",
+        "description": "Main clinical acts documented",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1882,7 +1883,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "A location, where the resource is found",
+        "description": "Uri where the data can be found",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1916,7 +1917,7 @@
       "severity": {
         "name": "severity",
         "in": "query",
-        "description": "mild | moderate | severe (of event as a whole)",
+        "description": "The severity of the condition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1934,7 +1935,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "The identity of the subject of the contract",
+        "description": "The identity of a subject to list flags for",
         "style": "form",
         "schema": {
           "type": "string"

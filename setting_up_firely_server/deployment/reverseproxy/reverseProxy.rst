@@ -50,6 +50,8 @@ A popular open source alternative is Nginx. For instruction on how to deploy Fir
 
    Nginx <nginx>
 
+.. _xforwardedheader:
+
 Using X-Forwarded-Host header
 -----------------------------
 
@@ -67,3 +69,6 @@ When using this header, make sure that the header value only contains the domain
 
 - fire/
 - https://fire.ly
+
+Additionally to the ```X-Forwarded-Host`` header, Firely Server will interpret the ```X-Forwarded-Prefix`` header. Based on the header a :ref:`PathBase<hosting_options>` can be dynamically added to each request.
+In scenarios where a single Firely Server instance is hosted behind a reverse proxy that is configured to handle multiple virtual base urls with subpaths in it, each subpath can be forwarded to Firely Server as the PathBase. For example, a reverse proxy handling the base urls "https://example.org/my/path/to/firelyserver/tenant1" and "https://example.org/my/path/to/firelyserver/tenant2" can forward the requests to a single Firely Server with "/my/path/to/firelyserver/tenant1" and "/my/path/to/firelyserver/tenant2" as the X-Forwarded-Prefix header value. This will result in Firely Server running on a single base url behind the reverse proxy to generate urls using the correct base url.

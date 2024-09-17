@@ -31,6 +31,16 @@ Current Firely Server release notes (v5.x)
 
     For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
 
+.. _vonk_releasenotes_5_10_0:
+
+Release 5.10.0, [Date to be specified]
+--------------------------------
+
+Feature
+^^^^^^^
+
+#. (Only for SQL Server) Added support for recursive inclusion of additional resources for BDE export (read about the new config setting ``AdditionalResourcesMaxRecursionDepth`` in :ref:`feature_bulkdataexport`)
+
 .. _vonk_releasenotes_5_9_0:
 
 Release 5.9.1, August 13th, 2024

@@ -135,6 +135,10 @@ Using all this to turn the ``SearchResult`` returned from the ``ISearchRepositor
 
 .. code-block:: csharp
 
+      using Vonk.Fhir.R4;
+
+      ...
+
       var bundle = searchResult
             .ToSearchBundle(SearchMode.match, vonkContext.InformationModel)
             //informationModel is needed because bundle has slight differences between STU3 and R4

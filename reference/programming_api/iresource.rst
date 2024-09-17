@@ -63,7 +63,7 @@ IResource
         IEnumerable<IResource> ContainedResources { get; }
    }
 
-If you work with a POCO, you can use the extension method ToIResource(string informationModel) from Vonk.Core to adapt it to an IResource:
+If you work with a POCO, you can use the extension method ToIResource(string informationModel) from Vonk.Fhir.R4 to adapt it to an IResource:
 
 .. code-block:: csharp
 

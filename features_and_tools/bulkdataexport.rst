@@ -134,6 +134,7 @@ BDE introduces several new parts to the appsettings:
   },
   "BulkDataExport": {
       "RepeatPeriod" : 60000, //ms
+      "AdditionalResourcesMaxRecursionDepth": 1,
       "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "BodyStructure", "Medication", "Coverage" ] 
   },
   "SqlDbOptions": {
@@ -141,11 +142,21 @@ BDE introduces several new parts to the appsettings:
       "BulkDataExportTimeout": 300 // in seconds
   }
 
-In `RepeatPeriod` you can configure the polling interval (in milliseconds) for checking the Task queue for a new export task.
+In ``RepeatPeriod`` you can configure the polling interval (in milliseconds) for checking the Task queue for a new export task.
 
-A patient-based or group-based Bulk Data Export returns resources based on the Patient compartment definition (https://www.hl7.org/fhir/compartmentdefinition-patient.html). These resources may reference resources outside the compartment as well, such as a Practitioner who is the performer of a Procedure. Using the `AdditionalResources`-setting, you can determine which types of referenced resources are exported in addition to the compartment resources.
+A patient-based or group-based Bulk Data Export returns resources based on the Patient compartment definition (https://www.hl7.org/fhir/compartmentdefinition-patient.html). 
 
-Exporting a large number of resources from a SQL Server database can cause a timeout exception. You can adjust the timeout period in `BulkDataExportTimeout`. There is no timeout limitation when exporting data from MongoDB.
+These resources may reference resources outside the compartment as well, such as a Practitioner who is the performer of a Procedure. Using the ``AdditionalResources``-setting, you can determine which types of referenced resources are exported in addition to the compartment resources.
+
+Furthermore, additional resources may reference other resources that can also be exported. The depth of this inclusion can be configured using the setting ``AdditionalResourcesMaxRecursionDepth``.
+
+Resources of type ``Group`` and ``Patient`` never get exported as Additional resources.
+
+.. note::
+
+  Currently, if MongoDB is used as a repository, the only supported value for ``AdditionalResourcesMaxRecursionDepth`` is 1.
+
+Exporting a large number of resources from a SQL Server database can cause a timeout exception. You can adjust the timeout period in ``BulkDataExportTimeout``. There is no timeout limitation when exporting data from MongoDB.
 
 Writing to a local disk
 ^^^^^^^^^^^^^^^^^^^^^^^

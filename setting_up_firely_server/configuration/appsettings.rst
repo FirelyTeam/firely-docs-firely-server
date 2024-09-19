@@ -606,7 +606,7 @@ Uri conversion on import and export
 Upon importing, Firely Server converts all references expressed as absolute URIs with the root corresponding to the server URL.
 For example, ``"reference": "https://someHost/fhir/Patient/someId"`` will be stored as ``"reference": "Patient/someId"`` .
 Similarly,  upon exporting, the references stored as relative URIs will be converted back to an absolute URI by adding the 
-root server location to the relative URI.
+root server location to the relative URI. Firely Server ensures that on a response the ``Location`` and ``Content-Location`` header contains an absolute URI.
 
 In addition, any element of type ``url`` or ``uri`` can also be converted upon import or export, as long as the FHIR path 
 corresponding to the element in the FHIR resource are listed in the setting ``UrlMapping`` :
@@ -614,12 +614,14 @@ corresponding to the element in the FHIR resource are listed in the setting ``Ur
 ::
 
   "UrlMapping": {
+     "ExportRelativeReferences": true,
      "AdditionalPathsToMap": [
        "DocumentReference.content.attachment.url",
        "Bundle.entry.resource.content.attachment.url"
      ]
    },
 
+Setting the ``ExportRelativeReferences`` to ``false`` will result in relative references that are imported as such to be returned without any tranformation.
 Note that the setting is still in beta and is subject to change in future release of Firely Server.
 
 Binary Wrapper

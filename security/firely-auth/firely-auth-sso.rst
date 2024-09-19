@@ -32,6 +32,27 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
     These claims will be copied from the ID token after a successful login and stored permanently. Each claim is updated automatically after each login with local changes being overwritten.
     It is possible to assign a new name to a claim using the ``CopyAs`` setting.
 
+#. Configure the ``FhirUserLookupClaimsMapping`` if the FhirUser claim cannot be derived from the ID token
+
+    The FhirUser claim is a mandatory claim in Firely Auth. If the FhirUser claim cannot be derived from the ID token, the ``FhirUserLookupClaimsMapping`` setting can be used to use claims from the ID token to look up a user, either a Practitioner or a Patient, in the Firely Server database. The FhirUser claim will then be derived from the resource Type and the ID from the resource. For example:
+
+    .. code-block:: json
+
+        		"FhirUserLookupClaimsMapping": [
+					{
+						"SearchParameterName": "identifier",
+						"SearchParameterValueTemplate": "https://myidentifiersystem|{0}",
+						"CopySearchParameterValuesFromClaims": ["family_name", "given_name"]
+					}
+					,
+					{
+						"SearchParameterName": "email",
+						"CopySearchParameterValuesFromClaims": ["email"]
+					}
+				]
+    
+    Here, the FhirUser claim will be derived from the Patient or Practitioner resource with the identifier system "https://myidentifiersystem" and the value of the family_name claim from the ID token, and email with the value of the email claim from the ID token. Also see the :ref:`firely_auth_settings_externalidp`.
+
 #. Configure security groups
 
     Based on the ``AutoProvisionFromSecurityGroup`` setting it is possible to restrict the sign-up of users based on security groups defined in the SSO provider. The attribution of a user account to a one or more security group needs to be exposed via the ``groups`` claim.
@@ -41,7 +62,7 @@ A note on the fhirUser claim
 ----------------------------
 
 In Firely Auth, each user profile must contain a fhirUser claim - regardless if the profile represents a Patient or Practitioner account. See `SMART App Launch - Scopes for requesting identity data <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-identity-data>`_ for background.
-This claim may be copied from the ID token of the SSO provider (see ``UserClaimsFromIdToken`` setting above) or be set via the UI or account management REST API by an admin manually or some other automated process based after looking up the patient id in the FHIR server.
+This claim may be copied from the ID token of the SSO provider (see ``UserClaimsFromIdToken`` setting above), be set via the UI or account management REST API by an admin manually (see below), or by looking up the patient or practitioner id in the FHIR server (see the ``FhirUserLookupClaimsMapping`` setting above).
 A login with an account not containing the claim will be blocked.
 
 Using Microsoft Entra ID (formerly Azure Active Directory)

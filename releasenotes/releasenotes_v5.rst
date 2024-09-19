@@ -31,6 +31,17 @@ Current Firely Server release notes (v5.x)
 
     For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
 
+.. _vonk_releasenotes_5_10_0:
+
+Release 5.10.0, [Date to be specified]
+--------------------------------
+
+Feature
+^^^^^^^
+
+#. (Only for SQL Server): Added support for recursively including additional resources in BDE export. Read about the new config setting AdditionalResourcesMaxRecursionDepth in :ref:feature_bulkdataexport. The default value of this setting is 1, which maintains the behavior of previous Firely Server versions.
+#. Changes in Bulk Data Export behavior: For Group- and Patient-level exports, any Group resources outside the respective Patient compartment that are referenced by resources within the Patient's compartment (i.e., Additional Resources) will no longer be included in the export.
+
 .. _vonk_releasenotes_5_9_0:
 
 Release 5.9.1, August 13th, 2024

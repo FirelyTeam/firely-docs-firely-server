@@ -70,5 +70,12 @@ When using this header, make sure that the header value only contains the domain
 - fire/
 - https://fire.ly
 
-Additionally to the ```X-Forwarded-Host`` header, Firely Server will interpret the ```X-Forwarded-Prefix`` header. Based on the header a :ref:`PathBase<hosting_options>` can be dynamically added to each request.
-In scenarios where a single Firely Server instance is hosted behind a reverse proxy that is configured to handle multiple virtual base urls with subpaths in it, each subpath can be forwarded to Firely Server as the PathBase. For example, a reverse proxy handling the base urls "https://example.org/my/path/to/firelyserver/tenant1" and "https://example.org/my/path/to/firelyserver/tenant2" can forward the requests to a single Firely Server with "/my/path/to/firelyserver/tenant1" and "/my/path/to/firelyserver/tenant2" as the X-Forwarded-Prefix header value. This will result in Firely Server running on a different single base url (e.g. "https://example.org/fhir") behind the reverse proxy to generate urls using the correct virtual base urls.
+Additionally to the ``X-Forwarded-Host`` header, Firely Server will interpret the ``X-Forwarded-Prefix`` header. This header allows for setting the :ref:`PathBase<hosting_options>` dynamically per request. With this feature you can host a single Firely Server behind a reverse proxy that exposes multiple virtual base urls with subpaths in it. For example: 
+
+* Firely Server itself is hosted on https://fhir.example.org/
+* Through a reverse proxy it listens to multiple tenants:
+
+   * "https://fhir.example.org/my/path/to/firelyserver/tenant1" (setting X-ForwardedPrefix = "/my/path/to/firelyserver/tenant1")
+   * "https://fhir.example.org/my/path/to/firelyserver/tenant2" (setting X-ForwardedPrefix = "/my/path/to/firelyserver/tenant2")
+
+This will result in Firely Server generating urls using the correct virtual base urls while running behind the reverse proxy.

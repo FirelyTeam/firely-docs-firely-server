@@ -51,7 +51,7 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
 					}
 				]
     
-    Here, the FhirUser claim will be derived from the Patient or Practitioner resource with the identifier system "https://myidentifiersystem" and the value of the family_name claim from the ID token, and email with the value of the email claim from the ID token. Also see the :ref:`firely_auth_settings_externalidp`.
+    Here, the FhirUser claim will be derived from the Patient or Practitioner resource with the identifier system "https://myidentifiersystem" and the value of the family_name claim from the ID token, and email with the value of the email claim from the ID token. Also see the :ref:`firely_auth_settings_externalidp` section.
 
 #. Configure security groups
 

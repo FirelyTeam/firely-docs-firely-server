@@ -75,7 +75,7 @@ Additionally to the ``X-Forwarded-Host`` header, Firely Server will interpret th
 * Firely Server itself is hosted on https://fhir.example.org/
 * Through a reverse proxy it listens to multiple tenants:
 
-   * "https://fhir.example.org/my/path/to/firelyserver/tenant1" (setting X-ForwardedPrefix = "/my/path/to/firelyserver/tenant1")
-   * "https://fhir.example.org/my/path/to/firelyserver/tenant2" (setting X-ForwardedPrefix = "/my/path/to/firelyserver/tenant2")
+   * "https://fhir.example.org/my/path/to/firelyserver/tenant1" (setting X-Forwarded-Prefix = "/my/path/to/firelyserver/tenant1")
+   * "https://fhir.example.org/my/path/to/firelyserver/tenant2" (setting X-Forwarded-Prefix = "/my/path/to/firelyserver/tenant2")
 
 This will result in Firely Server generating urls using the correct virtual base urls while running behind the reverse proxy.

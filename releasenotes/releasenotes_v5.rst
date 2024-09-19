@@ -39,7 +39,8 @@ Release 5.10.0, [Date to be specified]
 Feature
 ^^^^^^^
 
-#. (Only for SQL Server) Added support for recursive inclusion of additional resources for BDE export (read about the new config setting ``AdditionalResourcesMaxRecursionDepth`` in :ref:`feature_bulkdataexport`)
+#. (Only for SQL Server): Added support for recursively including additional resources in BDE export. Read about the new config setting AdditionalResourcesMaxRecursionDepth in :ref:feature_bulkdataexport. The default value of this setting is 1, which maintains the behavior of previous Firely Server versions.
+#. Changes in Bulk Data Export behavior: For Group- and Patient-level exports, any Group resources outside the respective Patient compartment that are referenced by resources within the Patient's compartment (i.e., Additional Resources) will no longer be included in the export.
 
 .. _vonk_releasenotes_5_9_0:
 

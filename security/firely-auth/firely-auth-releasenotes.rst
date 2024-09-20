@@ -11,7 +11,8 @@ Release 4.2.0, XX-XX-XXXX
 Feature
 ^^^^^^^
 
-#. With this release, it is possible to restrict auto provisioning of SSO users by their security groups. for this we added a new setting: ``AutoProvisionFromSecurityGroup``. For more information, see :ref:`firely_auth_settings_externalidp`.
+#. With this release, it is possible to restrict auto provisioning of SSO users by their security groups. For this we added a new setting: ``AutoProvisionFromSecurityGroup``. For more information, see :ref:`firely_auth_settings_externalidp`.
+#. It is now possible to derive the FhirUser claim for SSO auto-provisioning from existing users in the Firely Server database using the ```FhirUserLookupClaimsMapping`` setting. For more information, see :ref:`firely_auth_settings_externalidp`.
 
 .. _firelyauth_releasenotes_4.1.1:
 

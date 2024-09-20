@@ -53,6 +53,9 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
     
     Here, the FhirUser claim will be derived from the Patient or Practitioner resource with the identifier system "https://myidentifiersystem" and the value of the family_name claim from the ID token, and email with the value of the email claim from the ID token. Also see the :ref:`firely_auth_settings_externalidp` section.
 
+    .. Note:: 
+        Note that if Firely Auth queries resources in Firely Server, it will do so via the default FHIR information model of Firely Server. Only R3 or R4 resources are supported by Firely Auth and can be used to derive the fhirUser claim this way. If the resource is not found, Firely Auth will not be able to derive the FhirUser claim. In this case, the user will not be able to log in.
+
 #. Configure security groups
 
     Based on the ``AutoProvisionFromSecurityGroup`` setting it is possible to restrict the sign-up of users based on security groups defined in the SSO provider. The attribution of a user account to a one or more security group needs to be exposed via the ``groups`` claim.

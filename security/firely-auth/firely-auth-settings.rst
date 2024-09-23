@@ -439,7 +439,11 @@ These policies will be presented in the UI after the user has been authenticated
         	"TemplateProperties":{ // this is a dictionary of additional properties that will be provided to the template
         		"propertyName":"propertyValue",
         		"propertyName2":"propertyValue2"
-        	}
+        	},
+          "ShowDisclaimerFor": {
+				  "EveryLogin": false|true, // if true then the disclaimer is shown on each login, there is a grace period here where the consent is temporary stored
+				  "Clients": [ "<ClientId>" ], // if set then this disclaimer will only be shown for the specified clients
+				  }
         }
       ]
 	  }

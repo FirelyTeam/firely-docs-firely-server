@@ -143,7 +143,9 @@ Settings for the Console sink:
 		* ``{Level}``: Level of the log, see the values in :ref:`configure_log_level`
 		* ``{MachineName}``: Name of the machine hosting the Firely Server instance. Especially useful when running multiple instances all logging to the same file.
 		* ``{RequestId}``: Unique id of the web request, useful to correlate log statements
-		* ``{Message:l}``: Actual message being logged, with formatting
+		* ``{Message:l}``: Actual message being logged, `with formatting <https://github.com/serilog/serilog/wiki/Formatting-Output#formatting-plain-text>`_
+		    * The :l format specifier switches off quoting of strings
+		    * The :j format specifier uses JSON-style rendering for any embedded structured data.  
 		* ``{Exception}``: If an error is logged, Firely Server may include the original exception. That is then formatted here.
 		* ``{SourceContext}``: The class from which the log statement originated (this is usually not needed by end users).
 		* ``{NewLine}``: Well, ehh, continue on the next line,

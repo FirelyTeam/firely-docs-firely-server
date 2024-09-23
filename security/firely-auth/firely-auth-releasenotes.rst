@@ -5,8 +5,8 @@ Release notes
 
 .. _firelyauth_releasenotes_4.2.0:
 
-Release 4.2.0, XX-XX-XXXX
--------------------------------
+Release 4.2.0, September 25th, 2024
+-----------------------------------
 
 Feature
 ^^^^^^^
@@ -14,6 +14,7 @@ Feature
 #. The user interface for regular users has been improved in several ways. Users can now view and revoke the consent they have given to clients. In addition, they can view and revoke the disclaimers they have accepted. For more information, see :ref:`firely_auth_settings_disclaimers`.
 #. Admins are now able to view the .well-known/smart-configuration of the connected Firely Server instance.
 #. The client registration form has been improved to become more intuitive. Depending on the grant type (either client_credentials or authorization_code), the form will show the necessary fields to fill in.
+#. Firely Auth implemented $liveness and $readiness endpoints. These endpoints can be used to check the health of Firely Auth. For more information, see :ref:`firely_auth_liveness_readiness`.
 
 Configuration
 ^^^^^^^^^^^^^

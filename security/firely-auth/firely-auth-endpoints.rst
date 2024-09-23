@@ -118,6 +118,8 @@ Known Limitations
 * In Firely Auth no Backchannel Authentication Endpoint is available, therefore Client Initiated Backchannel Authentication (CIBA) requests are not supported. For more information, see `Duende Documentation - Client Initiated Backchannel Authentication (CIBA) <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/ciba/>`_.
 * A Device Authorization Flow is not supported by SMART on FHIR. Therefore it is not available in Firely Auth. For more information, see `Duende Documentation - Device Authorization Endpoint <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/device_authorization/>`_.
 
+.. _firely_auth_liveness_readiness:
+
 Liveness and readiness
 ----------------------
 

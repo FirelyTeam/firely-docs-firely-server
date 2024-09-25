@@ -3,6 +3,16 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.2.0:
+
+Release 4.2.0, XX-XX-XXXX
+-------------------------------
+
+Feature
+^^^^^^^
+
+#. With this release, it is possible to restrict auto provisioning of SSO users by their security groups. for this we added a new setting: ``AutoProvisionFromSecurityGroup``. For more information, see :ref:`firely_auth_settings_externalidp`.
+
 .. _firelyauth_releasenotes_4.1.1:
 
 Release 4.1.1, September 4th, 2024

@@ -363,6 +363,8 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
     Please follow the principle of least privilege to register a SMART Backend Service client, especially when the settings ``ClientClaims`` and ``ClientClaimPrefix`` are used.
 
+.. _firely_auth_settings_externalidp:
+
 External identity providers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -372,6 +374,9 @@ External identity providers
 - ``DisplayName``: Name that will be displayed in the UI of Firely Auth for users to select which identity provider to use if multiple are configured or if a local login is enabled as well.
 - ``ClientId``: ClientId of Firely Auth that will be used in the implicit token flow in order to retrieve an id token from the external identity provider.
 - ``ClientSecret``: ClientSecret of Firely Auth that will be used in the implicit token flow in order to retrieve an id token from the external identity provider.
+-	``AllowAutoProvision``: true / false - If true, Firely Auth will automatically create a user in its own database if the user logs in with an external identity provider for the first time. The user will be created with the claims that are provided by the external identity provider.
+- ``AutoProvisionFromSecurityGroup``: When ``AllowAutoProvision`` is true, this setting allows you to specify a security group that the user must be a member of in order to be automatically provisioned. If the user is not a member of this group, the user will not be automatically provisioned.
+- ``UserClaimsFromIdToken``: This setting allows you to map the claims from the token that is received from the external identity provider to the claims that are stored in the Firely Auth database. The key is the claim that is received from the external identity provider. This key can be copied as a value that is recognized by Firely Auth. For intance, Azure is able to provide fhirUser claim to the token, but will prefix this claim with ``extn.``. The CopyAs field can be used to remove this prefix, so that Firely Auth is able to recognize the fhirUser claim.
 
 .. _firely_auth_settings_allowedorigins:
 
@@ -393,15 +398,15 @@ These policies will be presented in the UI after the user has been authenticated
 
   	"DisclaimerRegistration": {
       "Disclaimers": [
-        //{
-        //	"Id" : "<string>", // some id that will not change for this disclaimer
-        //	"Template": "<path to .liquid template for this disclaimer>",
-        //	"Description": "<string>" // the text that will be shown next to the checkbox
-        //	"TemplateProperties":{ // this is a dictionary of additional properties that will be provided to the template
-        //		"propertyName":"propertyValue",
-        //		"propertyName2":"propertyValue2"
-        //	}
-        //}
+        {
+        	"Id" : "<string>", // some id that will not change for this disclaimer
+        	"Template": "<path to .liquid template for this disclaimer>",
+        	"Description": "<string>" // the text that will be shown next to the checkbox
+        	"TemplateProperties":{ // this is a dictionary of additional properties that will be provided to the template
+        		"propertyName":"propertyValue",
+        		"propertyName2":"propertyValue2"
+        	}
+        }
       ]
 	  }
 

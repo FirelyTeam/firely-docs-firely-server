@@ -51,7 +51,7 @@ Step 3 - Ssl certificate
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 Firely Auth will only run on https. To create a self signed certificate (for testing purposes only), you can use the tool mkcert ``https://github.com/FiloSottile/mkcert``.
-To enable the certificate you will have to adjust the :ref:`_firely_auth_settings_kestrel` settings. You can use these values:
+To enable the certificate you will have to adjust the :ref:`firely_auth_settings_kestrel` settings. You can use these values:
 
   .. code-block:: json
 

@@ -31,7 +31,17 @@ Current Firely Server release notes (v5.x)
 
     For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
 
-.. _vonk_releasenotes_5_9_0:
+.. _vonk_releasenotes_5_10_0:
+
+Release 5.10.0, September XXth, 2024
+--------------------------------
+
+Change
+^^^^^^
+
+#. `[ContextAware]` attribute does not support ``Path`` argument anymore. Consider using route prefixes or alternatives to achieve the same effect when using multiple FHIR versions.
+
+.. _vonk_releasenotes_5_9_1:
 
 Release 5.9.1, August 13th, 2024
 --------------------------------

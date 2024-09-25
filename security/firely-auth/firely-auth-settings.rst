@@ -83,12 +83,20 @@ These settings control the account specific options:
       "RequireUppercase": true,
       "RequireLowercase": true,
       "RequireNonAlphanumeric": false
+    },
+    "Lockout": {
+      "LockoutPeriod": "00:05", // [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws] (provide days or timespan)
+      "MaxFailedAccessAttempts" : 5 
     }
   },
 
-- ``AuthenticationCookieExpiration``: specifies how long the authentication cookie is valid. You can specify just a number that specifies the days the token is valid, or you can provide a timespan.
+- ``AuthenticationCookieExpiration``: Specifies how long the authentication cookie is valid. You can specify just a number that specifies the days the token is valid, or you can provide a timespan.
 
 - ``Password``: Here you can specify where the user passwords must comply to.
+
+- ``LockoutPeriod``: Specifies how long the user will be locked out from trying to login. You can specify just a number that specifies the days the token is valid, or you can provide a timespan.
+
+- ``MaxFailedAccessAttempts``: Specifies after how many login attempts the account will be locked out
 
 .. _firely_auth_settings_email:
 
@@ -112,7 +120,8 @@ Currently SMTP and SendGrid are the supported email clients.
     //	"RequiresAuthentication":true,
     //	"User": "",
     //	"Password": "",
-    //	"UseSsl": true
+    //	"UseSsl": true,
+    //	"SocketOptions" : null // one of: null, "None", "Auto", "SslOnConnect", "StartTls", "StartTlsWhenAvailable"
     //}
     //,"SendGrid": {
     //    "ApiKey": ""
@@ -124,7 +133,7 @@ Currently SMTP and SendGrid are the supported email clients.
 - ``EmailTemplateFolder``: The path to email templates that are used. These use the liquid format (https://shopify.github.io/liquid/). You can change these templates and store them in a folder that does not get overwritten when you update Firely Auth. You should not change the name of the template files, and only the variables that are used in the original template are available to use in custom templates.
 - ``ActivateAccountEmailSubject``: The subject that will be put in account activation emails.
 - ``ForgotPasswordEmailSubject``: The subject that will be put in forgot password emails.
-- ``Smtp``: Fill these settings when you use the ``Smtp`` type.
+- ``Smtp``: Fill these settings when you use the ``Smtp`` type. If the ``Port`` has a value of ``0``, then the ``SocketOptions`` parameter is used to determine the default port to connect to. The default port used with ``SslOnConnect`` is ``465``. All other values will use a default port of ``25``. If the ``SocketOptions`` has a value of ``null`` or ``Auto``, then the ``Port`` is used to determine the default security options. If the ``Port`` has a value of ``465``, then the default options used will be ``SslOnConnect``. All other values will use ``StartTlsWhenAvailable``.
 - ``SendGrid``: Fill this setting when you use the ``SendGrid`` type.
 
 .. _firely_auth_settings_ui:

@@ -36,7 +36,7 @@ Introduction
 
 
 Firely Server provides the option to export resources with the Bulk Data Export Service. 
-The Bulk Data Export Service enables the $export operation from the Fhir specification. Read more about the `$export request flow <https://hl7.org/fhir/uv/bulkdata/export/index.html#request-flow>`_.
+The Bulk Data Export Service enables the $export operation from the Fhir specification. Read more about the `$export request flow <https://hl7.org/fhir/uv/bulkdata/export.html#bulk-data-export-operation-request-flow>`_.
 
 .. note:: 
 
@@ -197,7 +197,14 @@ Group
 
 This will create an instance level export task. For each Patient in the Group, the task will export all resources included in the Patient Compartment in the Firely Server database to an .ndjson file per resourcetype.
 
-.. note:: For now we only support inclusion in a Group through Group.member.
+.. note:: 
+  For now we only support inclusion in a Group export through Group.member.
+
+  A group member will be excluded from the export if and only if it is marked as inactive (`Group.member.inactive = true`) or has a flag indicating that it previously belonged to the group (based on `Group.member.period`).
+  
+  In the `Da Vinci Member Attribution (ATR) List <https://hl7.org/fhir/us/davinci-atr/index.html>`_ use case, we make an exception to this.
+  All group members, including inactive members, are included in a Group export if the Group has ``http://hl7.org/fhir/us/davinci-atr/StructureDefinition/atr-group`` in its `meta.profile <https://hl7.org/fhir/resource-definitions.html#meta>`_ element.
+
 
 $export Response
 ^^^^^^^^^^^^^^^^

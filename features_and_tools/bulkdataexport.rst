@@ -200,7 +200,7 @@ This will create an instance level export task. For each Patient in the Group, t
 .. note:: 
   For now we only support inclusion in a Group export through Group.member.
 
-  A group member will be excluded from the export if and only if it is marked as inactive (`Group.member.inactive = true`) or not active currently (based on `Group.member.period`).
+  A group member will be excluded from the export if and only if it is marked as inactive (`Group.member.inactive = true`) or has a flag indicating that it previously belonged to the group (based on `Group.member.period`).
   
   In the `Da Vinci Member Attribution (ATR) List <https://hl7.org/fhir/us/davinci-atr/index.html>`_ use case, we make an exception to this.
   All group members, including inactive members, are included in a Group export if the Group has ``http://hl7.org/fhir/us/davinci-atr/StructureDefinition/atr-group`` in its `meta.profile <https://hl7.org/fhir/resource-definitions.html#meta>`_ element.

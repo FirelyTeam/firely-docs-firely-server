@@ -618,14 +618,14 @@ corresponding to the element in the FHIR resource are listed in the setting ``Ur
 ::
 
   "UrlMapping": {
-     "ExportRelativeReferences": true,
+     "ReturnAbsoluteReferences": true,
      "AdditionalPathsToMap": [
        "DocumentReference.content.attachment.url",
        "Bundle.entry.resource.content.attachment.url"
      ]
    },
 
-Setting the ``ExportRelativeReferences`` to ``false`` will result in relative references that are imported as such to be returned without any tranformation.
+Setting the ``ReturnAbsoluteReferences`` to ``false`` will result in relative references that are imported as such to be returned without any tranformation.
 Note that the setting is still in beta and is subject to change in future release of Firely Server.
 
 Binary Wrapper

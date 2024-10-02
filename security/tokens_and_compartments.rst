@@ -201,7 +201,7 @@ User-level scopes
 -----------------
 
 SMART on FHIR also defines scopes starting with 'user/' instead of 'patient/'. In Firely Server these are evaluated differently. With a scope of 'patient/' you are required to also have a 'patient=...' launch context to know to which patient the user connects.
-Firely Server will additionally handle user-level scopes by checking the syntax of the SMART on FHIR scopes within the access token. It enforces that only allowed resources types are accessed and only allowed actions are executed.
+Firely Server will additionally handle user-level scopes by checking the syntax of the SMART on FHIR scopes within the access token. It enforces that only allowed resource types are accessed and only allowed actions are executed.
 
 .. warning::
   Requests using a user-level scope are not limited a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly advised to implement additional security measures using a custom plugin or :ref:`access policies <feature_accesscontrol_permissions>`, e.g. by enforcing a certain Practitioner or Encounter context.

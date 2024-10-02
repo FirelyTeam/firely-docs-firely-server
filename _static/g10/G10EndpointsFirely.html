@@ -4,16 +4,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Firely Server Endpoint list</title>
+    <title>Firely Server Endpoint List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 </head>
 
 <body>
     <div class="container">
-
-        <a href="https://fire.ly/g10-certification/"><img style="padding-top: 25px;" src="https://fire.ly/wp-content/themes/firely/images/logo.svg" /></a>
+        <div class="text-center" style="padding-top: 25px;">
+            <a href="https://fire.ly/g10-certification/">
+                <img src="https://fire.ly/wp-content/themes/firely/images/logo.svg" height="150px" />
+            </a>
+        </div>
 
         <br><br>
         <div id="id01"></div>
@@ -40,7 +42,6 @@
     </div>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-
             var xmlhttp = new XMLHttpRequest();
             var url = "EndpointBundleFirely.json";
 
@@ -52,50 +53,68 @@
             };
             xmlhttp.open("GET", url, true);
             xmlhttp.send();
+
             function createTableRows(bundle) {
-                const organizations = {}; // Object to store organizations and their endpoints
+                const tableBody = document.querySelector('#eptable tbody');
+                const organizationMap = {};
 
+                // Loop through entries
                 bundle.entry.forEach(entry => {
-                    if (entry.resource && entry.resource.resourceType === "Endpoint") {
-                        const organizationUrl = entry.resource.organization.reference;
-                        const organizationName = bundle.entry.find(e => e.fullUrl === organizationUrl)?.resource.name || 'Unknown Organization';
-                        const endpointName = entry.resource.name || 'Unknown Endpoint';
-                        const address = entry.resource.address;
+                    if (entry.resource.resourceType === "Organization") {
+                        const organizationName = entry.resource.name;
 
-                        // If the organization doesn't exist in the organizations object, add it
-                        if (!organizations[organizationName]) {
-                            organizations[organizationName] = [];
-                        }
+                        // Find corresponding endpoints
+                        entry.resource.endpoint.forEach(endpoint => {
+                            const endpointRef = endpoint.reference;
 
-                        // Add endpoint to the corresponding organization
-                        organizations[organizationName].push({ endpointName, address });
+                            // Find the actual endpoint resource
+                            const endpointEntry = bundle.entry.find(e => e.fullUrl === endpointRef);
+                            if (endpointEntry) {
+                                const endpointName = endpointEntry.resource.name;
+                                const endpointAddress = endpointEntry.resource.address; // Get the address
+
+                                // Check if the organization already exists in the table
+                                if (!organizationMap[organizationName]) {
+                                    organizationMap[organizationName] = { count: 1 };
+
+                                    // Create a new row with rowspan
+                                    const row = tableBody.insertRow();
+                                    row.insertCell().textContent = organizationName;
+                                    row.insertCell().textContent = endpointName;
+
+                                    // Create a link for the address
+                                    const addressCell = row.insertCell();
+                                    const link = document.createElement('a');
+                                    link.href = endpointAddress;
+                                    link.textContent = endpointAddress;
+                                    link.target = "_blank"; // Open in new tab
+                                    addressCell.appendChild(link);
+
+                                    // Set rowspan for the organization cell
+                                    row.cells[0].rowSpan = entry.resource.endpoint.length;
+                                } else {
+                                    // For subsequent endpoints, just add the endpoint info
+                                    const row = tableBody.insertRow();
+                                    row.insertCell().textContent = endpointName;
+
+                                    // Create a link for the address
+                                    const addressCell = row.insertCell();
+                                    const link = document.createElement('a');
+                                    link.href = endpointAddress;
+                                    link.textContent = endpointAddress;
+                                    link.target = "_blank"; // Open in new tab
+                                    addressCell.appendChild(link);
+                                }
+                            }
+                        });
                     }
                 });
-
-                // Loop through organizations and generate table rows
-                const tableBody = document.querySelector('#eptable tbody');
-
-                for (const [organizationName, endpoints] of Object.entries(organizations)) {
-                    endpoints.forEach((endpoint, index) => {
-                        const row = tableBody.insertRow();
-                        if (index === 0) {
-                            const cell1 = row.insertCell();
-                            cell1.rowSpan = endpoints.length; // Set rowspan for the organization name cell
-                            cell1.innerHTML = organizationName;
-                        }
-                        const cell2 = row.insertCell();
-                        cell2.innerHTML = endpoint.endpointName;
-                        const cell3 = row.insertCell();
-                        cell3.innerHTML = '<a href="' + endpoint.address + '">' + endpoint.address + '</a>';
-                    });
-                }
             }
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-            crossorigin="anonymous"></script>
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
 </body>
-
 
 </html>

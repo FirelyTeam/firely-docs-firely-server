@@ -23,7 +23,7 @@ Using PubSub might provide several advantages:
   Correct configuration and maintenance of the message broker is not part of the service provided by Firely. We strongly advise you to consider this setup carefully in order to prevent data loss.
 
 .. note::
-  PubSub can be tested using the evaluation license for Firely Server. It is also included in the enterprise license for Firely Server. Your license allows the use of PubSub if "http://fire.ly/vonk/plugins/pubsub" is included in the plugins list of the license file.
+  PubSub can be tested using the evaluation license for Firely Server. It is also included in the enterprise license for Firely Server. Your license allows the use of PubSub if ``http://fire.ly/vonk/plugins/pubsub`` is included in the plugins list of the license file.
 
 .. _pubsub_configuration:
 

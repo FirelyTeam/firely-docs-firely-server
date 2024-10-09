@@ -176,8 +176,8 @@ These are not included in the examples, to keep those readable.
 User-level scopes
 -----------------
 
-SMART on FHIR also defines scopes starting with ``user/`` instead of ``patient/``. If no patient-level scopes are present in an access token, a compartment is not required and not even evaluated.
-But Firely Server will apply the restrictions expressed in the user-level scopes: 
+SMART on FHIR also defines scopes starting with ``user/`` instead of ``patient/``. If no patient-level scopes are present in an access token, a compartment is not enforced and not even evaluated.
+But Firely Server will still apply the restrictions expressed in the user-level scopes: 
 
 - It checks the syntax of the SMART on FHIR scopes within the access token. 
 - It enforces that only allowed resources types are accessed and only allowed actions are executed.
@@ -185,7 +185,7 @@ But Firely Server will apply the restrictions expressed in the user-level scopes
 - It will evaluate AccessPolicies connected to the ``fhirUser``.
 
 .. warning::
-  Requests using a user-level scope are not limited a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly advised to implement additional security measures using a custom plugin or :ref:`access policies <feature_accesscontrol_permissions>`, e.g. by enforcing a certain Practitioner or Encounter context.
+  Requests using a user-level scope are not limited to a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly advised to implement additional security measures using a custom plugin or :ref:`access policies <feature_accesscontrol_permissions>`, e.g. by enforcing a certain Practitioner or Encounter context.
 
 System-level scopes
 -------------------

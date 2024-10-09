@@ -16,6 +16,17 @@ Current Firely Server release notes (v6.x)
 Release 6.0.0, [Month] [Date], 2024
 ---------------------------------------
 
+Security
+^^^^^^^^
+
+.. note::
+    We have identified a potential security issue if your deployment matches all of the criteria below. If that is the case, or if you are in doubt, please contact the support desk.
+    For background information on these criteria, see `ref:feature_accesscontrol_config`.
+    
+    #. Firely Server is configured to accept write interactions, more specifically ‘create’
+    #. You allow client applications with ``user/`` level scopes to do these write interactions.
+    #. You use SMART on FHIR v2 scopes that include search arguments, either from the acces token or from applicable AccessPolicyDefinitions.
+
 Features
 ^^^^^^^^
 

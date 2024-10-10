@@ -91,6 +91,8 @@ Access Control Decisions for Patient-level scopes
 -------------------------------------------------
 
 In this paragraph we will explain how access control decisions are made for the various FHIR interactions. For the examples assume a Patient Compartment with identifier=123 as filter.
+For the Type-Access decision, Firely Server will also take into account restrictions set by search arguments on the relevant SMART on FHIR v2 scopes, retrieved from the access token and any applicable AccessPolicyDefinitions.
+These are not included in the examples, to keep those readable.
 
 #. Search
 
@@ -174,13 +176,18 @@ In this paragraph we will explain how access control decisions are made for the 
 User-level scopes
 -----------------
 
-SMART on FHIR also defines scopes starting with 'user/' instead of 'patient/'. In Firely Server these are evaluated differently. With a scope of 'patient/' you are required to also have a 'patient=...' launch context to know to which patient the user connects.
-Firely Server will additionally handle user-level scopes by checking the syntax of the SMART on FHIR scopes within the access token. It enforces that only allowed resources types are accessed and only allowed actions are executed.
+SMART on FHIR also defines scopes starting with ``user/`` instead of ``patient/``. If no patient-level scopes are present in an access token, a compartment is not enforced and not even evaluated.
+But Firely Server will still apply the restrictions expressed in the user-level scopes: 
+
+- It checks the syntax of the SMART on FHIR scopes within the access token. 
+- It enforces that only allowed resources types are accessed and only allowed actions are executed.
+- It enforces search arguments that may be part of a scope in SMART v2 syntax.
+- It will evaluate AccessPolicies connected to the ``fhirUser``.
 
 .. warning::
-  Requests using a user-level scope are not limited a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly advised to implement additional security measures using a custom plugin or :ref:`access policies <feature_accesscontrol_permissions>`, e.g. by enforcing a certain Practitioner or Encounter context.
+  Requests using a user-level scope are not limited to a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly advised to implement additional security measures using a custom plugin or :ref:`access policies <feature_accesscontrol_permissions>`, e.g. by enforcing a certain Practitioner or Encounter context.
 
 System-level scopes
 -------------------
 
-System-level scopes are evaluated equally to user-level scopes. The same restriction and suggestions for additional access control apply in this case.
+System-level scopes - starting with ``system/`` - are evaluated equally to user-level scopes.

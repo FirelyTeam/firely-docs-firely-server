@@ -9,13 +9,33 @@ SMART on FHIR Configuration
 
 Firely Server fully supports the syntax of SMART v1: ``( 'patient' | 'user' ) '/' ( fhir-resource | '*' ) '.' ( 'read' | 'write' | '*' )``
 
+These are examples of SMART v1 scopes, which are all supported by Firely Server:
+
+* ``scope=user/Observation.read``: the user is allowed to read Observation resources
+* ``scope=user/Encounter.write``: the user is allowed to write Encounter resources
+* ``scope=user/*.read``: the user is allowed to read any type of resource
+* ``scope=user/*.write``: the user is allowed to write any type of resource
+* ``scope=[array of individual scopes]``: the user is allowed to do the union of what each of the scopes allow
+
 Additionally, the syntax of SMART v2 scopes is fully supported: ``( 'patient' | 'user' | 'system' ) '/' ( fhir-resource | '*' ) '.' ( 'c' | 'r' | 'u' | 'd' | 's' | '*') ? param = value``
 
-All search capabilities supported by Firely Server can also be evaluated as part of the access scope using SMART v2. Chaining and Reverse Chaining is explicitly supported here:
+All SMART v1 scopes can also be expressed in SMART v2:
 
-* scope=user/Observation.r?category=laboratory: the user is allowed to read Observation resources with a category element containing the code "laboratory"
-* scope=user/\*.rs?_tag=http://example.org/fhir/sid/codes|some-tag: the user is allowed to read and search all resource containing a tag in Meta.tag with system "http://example.org/fhir/sid/codes" and code "some-tag"
-* scope=user/Observation.rs?encounter.id=Encounter/test: the user is allowed to see all Observation resources linked to the Encounter with id "test".
+* ``scope=user/Observation.r``: the user allows to read Observation resources
+* ``scope=user/Encounter.cu``: the user allows to write (create and update) Encounter resources
+* ``scope=user/\*.r``: the user allows to read any type of resource
+* ``scope=user/\*.cu``: the user allows to write (create and update) any type of resource
+* ``scope=[array of individual scopes]``: the user is allowed to do the union of what each of the scopes allow
+
+All search capabilities supported by Firely Server can also be evaluated as part of the access scope using SMART v2. 
+
+* ``scope=user/Observation.r?category=laboratory``: the user is allowed to read Observation resources with a category element containing the code "laboratory"
+* ``scope=user/*.rs?_tag=http://example.org/fhir/sid/codes|some-tag``: the user is allowed to read and search all resource containing a tag in ``Meta.tag`` with system ``http://example.org/fhir/sid/codes`` and code ``some-tag``
+* ``scope=user/Observation.rs?encounter.id=Encounter/test``: the user is allowed to see all Observation resources linked to the Encounter with id "test".
+* ``scope=user/Observation.rs?encounter.identifier=http://my-hospital/ids|3456789``: the user is allowed to see all Observation resources linked to the Encounter with an identifier with system ``http://my-hospital/ids`` and value ``345678``.
+
+.. note::
+    As you can see from the last example, chaining (and reverse Chaining, ``_has``) is supported. Note though that using a (reverse) chained search as part of authorization can make search queries significantly more complex and less performant.
 
 You will need to add the Smart plugin to the Firely Server pipeline. See :ref:`vonk_plugins` for more information. In ``appsettings[.instance].json``, locate the pipeline
 configuration in the ``PipelineOptions`` section, or copy that section from ``appsettings.default.json`` (see also :ref:`configure_change_settings`)::

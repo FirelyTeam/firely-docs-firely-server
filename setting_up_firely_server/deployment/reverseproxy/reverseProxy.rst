@@ -49,6 +49,8 @@ A popular open source alternative is Nginx. For instruction on how to deploy Fir
    :hidden:
 
    Nginx <nginx>
+   
+.. _X_Forwarded_Host:
 
 Using X-Forwarded-Host header
 -----------------------------

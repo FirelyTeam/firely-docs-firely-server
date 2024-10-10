@@ -18,7 +18,7 @@ Fix
 
 #. We fixed an issue where clients could no longer be saved in the UI if no external identity provider was configured.
 #. We removed the "*" option from the Allowed Resources section in the client registration form as this lead the client to not accept any resources at all. To accept all resources the Allowed Resources field can be left empty.
-#. We fixed an issue where the client grant consent lifetime would be set to zero if not otherwise configured, causing the consent to expire as soon as it was granted by the user. Vonsent will now only expire if an expiration time or date is set.
+#. We fixed an issue where the client grant consent lifetime would be set to zero if not otherwise configured, causing the consent to expire as soon as it was granted by the user. Consent will now only expire if an expiration time or date is set.
 
 
 .. _firelyauth_releasenotes_4.2.0:

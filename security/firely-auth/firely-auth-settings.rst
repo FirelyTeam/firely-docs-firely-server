@@ -138,12 +138,18 @@ These settings control the white labelling options for Firely Auth:
 
   "UISettings": {
     "LoginPageText": "Please login to Firely Auth",
-    "OrganizationLogoPath": "<firely logo>"
+    "OrganizationTitle": "Firely Auth",
+    "OrganizationLogoPath": "<firely logo>",
+    "OrganizationFavIconPath": "<firely favicon>"
   },
 
 - ``LoginPageText``: Here you can put a text that will be displayed on the login page.
 
+- ``OrganizationTitle``: Here you can put a text that will be displayed in the title bar of the browser.
+
 - ``OrganizationLogoPath``: Here you can point to an image file you want to use as logo in the application.
+
+- ``OrganizationFavIconPath``: Here you can point to an image file you want to use as favicon in the browser.
 
 .. _firely_auth_settings_server:
 

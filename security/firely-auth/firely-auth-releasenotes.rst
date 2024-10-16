@@ -3,6 +3,17 @@
 Release notes
 =============
 
+
+.. _firelyauth_releasenotes_4.3.0:
+
+Release 4.3.0, XX-XX-XXXX
+-------------------------
+
+Feature
+^^^^^^^
+
+#. We added two new options to the UI settings: ``OrganizationTitle`` and ``OrganizationFavIconPath``. For more information, see :ref:`firely_auth_settings_ui`.
+
 .. _firelyauth_releasenotes_4.2.1:
 
 Release 4.2.1, October 10th, 2024

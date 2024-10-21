@@ -31,6 +31,27 @@ Current Firely Server release notes (v5.x)
 
     For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
 
+.. _vonk_releasenotes_5_10_0:
+
+Release 5.10.0, October 21st, 2024
+----------------------------------
+
+Fix
+^^^
+
+#. Fixed a ``DuplicateKey`` exception occuring when creating resources under heavy load in parallel using MongoDB as the backend for the main database.
+#. The ``$liveness`` and ``$readiness`` heatlh checks were not responding while loading conformance resources to the administration database.
+
+Feature
+^^^^^^^
+
+#. (Only for SQL Server): Added support for recursively including additional resources in BDE export. Read about the new config setting AdditionalResourcesMaxRecursionDepth in :ref:`feature_bulkdataexport`. The default value of this setting is 1, which maintains the behavior of previous Firely Server versions.
+#. Changes in Bulk Data Export behavior: For Group- and Patient-level exports, any Group resources outside the respective Patient compartment that are referenced by resources within the Patient's compartment (i.e., Additional Resources) will no longer be included in the export.
+#. Requests protected using system-level scopes with tokens containing a ``fhirUser`` claim of type Device are now rejected by default if no matching Access Policy can be found. This ensures that system-level clients are using appropriate scopes. See :ref:`system_level_scopes` for more details.
+#. Added support for the ``X-Forwarded-Prefix`` header when hosting Firely Server on virtual subpaths. See :ref:`xforwardedheader` for more details.
+#. Improved debug logging in case JWT / reference token validation fails with an exception.
+#. Exporting relative references to absoulte references when sending back a response to a client can now be disabled. See :ref:`uri_conversion` for more details.
+
 .. _vonk_releasenotes_5_9_0:
 
 Release 5.9.1, August 13th, 2024

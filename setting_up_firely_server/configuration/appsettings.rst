@@ -283,14 +283,18 @@ http and https
     }
     },
     
-Refer to :ref:`configure_hosting` for enabling https and adjusting port numbers. The `PathBase` enables the option to specify a path as part of root path (See `PathBase middleware <https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.usepathbaseextensions.usepathbase?view=aspnetcore-6.0>`_ for more information). The `ClientCertificateMode` will instruct Firely Server to request or require a TLS client certificate (See `ASP .NET Core - Client Certificates <https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?view=aspnetcore-6.0#client-certificates>`_ for more information).
+Refer to :ref:`configure_hosting` for enabling https and adjusting port numbers.
+
+In case Firely Server is hosted behind a reverse proxy using a subpath as part of the base url, use the `PathBase` option to specify the path after the root to enable Firely Server to generate correct links in places where the absolute base url is used (e.g. in the ``Location`` header when returning an HTTP response). See `PathBase middleware <https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.usepathbaseextensions.usepathbase>`_ for more information. Only a single static path is allowed here. For more dynamic options using multiple paths, see support for the :ref:`X-Forwarded-Prefix header<xforwardedheader>`.
+
+The `ClientCertificateMode` will instruct Firely Server to request or require a TLS client certificate. See `ASP .NET Core - Client Certificates <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?#configure-client-certificates-in-appsettingsjson>`_ for more information.
 
 The :code:`Limits` is mapped to 
-`KestrelServerLimits <https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.server.kestrel.core.kestrelserverlimits?view=aspnetcore-6.0>`_
+`KestrelServerLimits <https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.server.kestrel.core.kestrelserverlimits>`_
 and allows to modify the default Kestrel limits by adding the relevant property. 
 In the example above, the default value of 1048576 of the property :code:`MaxRequestBufferSize` is overriden by  2097152.
 You could similarly modify the default value for the maximum number of concurrent connections, 
-`MaxConcurrentConnections <https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.server.kestrel.core.kestrelserverlimits.maxconcurrentconnections?view=aspnetcore-6.0#microsoft-aspnetcore-server-kestrel-core-kestrelserverlimits-maxconcurrentconnections>`_, 
+`MaxConcurrentConnections <https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.server.kestrel.core.kestrelserverlimits.maxconcurrentconnections#microsoft-aspnetcore-server-kestrel-core-kestrelserverlimits-maxconcurrentconnections>`_, 
 however, we recommend using a reverse proxy in front of Firely server, see :ref:`reverse proxy<deploy_reverseProxy>`, and let the reverse proxy take care of those aspects.
 
 .. _validation_options:
@@ -606,7 +610,7 @@ Uri conversion on import and export
 Upon importing, Firely Server converts all references expressed as absolute URIs with the root corresponding to the server URL.
 For example, ``"reference": "https://someHost/fhir/Patient/someId"`` will be stored as ``"reference": "Patient/someId"`` .
 Similarly,  upon exporting, the references stored as relative URIs will be converted back to an absolute URI by adding the 
-root server location to the relative URI.
+root server location to the relative URI. Firely Server ensures that on a response the ``Location`` and ``Content-Location`` header contains an absolute URI.
 
 In addition, any element of type ``url`` or ``uri`` can also be converted upon import or export, as long as the FHIR path 
 corresponding to the element in the FHIR resource are listed in the setting ``UrlMapping`` :
@@ -614,12 +618,14 @@ corresponding to the element in the FHIR resource are listed in the setting ``Ur
 ::
 
   "UrlMapping": {
+     "ReturnAbsoluteReferences": true,
      "AdditionalPathsToMap": [
        "DocumentReference.content.attachment.url",
        "Bundle.entry.resource.content.attachment.url"
      ]
    },
 
+Setting the ``ReturnAbsoluteReferences`` to ``false`` will result in relative references that are imported as such to be returned without any tranformation.
 Note that the setting is still in beta and is subject to change in future release of Firely Server.
 
 Binary Wrapper

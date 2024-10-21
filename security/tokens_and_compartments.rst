@@ -206,7 +206,12 @@ Firely Server will additionally handle user-level scopes by checking the syntax 
 .. warning::
   Requests using a user-level scope are not limited a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly advised to implement additional security measures using a custom plugin or :ref:`access policies <feature_accesscontrol_permissions>`, e.g. by enforcing a certain Practitioner or Encounter context.
 
+.. _system_level_scopes:  
+
 System-level scopes
 -------------------
 
 System-level scopes are evaluated equally to user-level scopes. The same restriction and suggestions for additional access control apply in this case.
+When integrating backend services using system-level scopes, AccessPolicies which are bound to a fhirUser of type 'Device' can be used. Firely Server allows a Device resource to represent a fhirUser even if it's not defined in the SMART on FHIR standard.
+If an access token with such a fhirUser claim is sent as part of a request, Firely Server enforces that at least one AccessPolicy is present for the corresponding fhirUser. This AccessPolicy may be bound to the same scopes that the backend service is allowed to request from the authorization server. However, additional restrictions can be applied via constraining the applicable scopes.
+This reduces the risk that backend services are by default allowed more access then necessary or allowed. 

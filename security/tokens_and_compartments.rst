@@ -206,6 +206,8 @@ Firely Server will additionally handle user-level scopes by checking the syntax 
 .. warning::
   Requests using a user-level scope are not limited a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly advised to implement additional security measures using a custom plugin or :ref:`access policies <feature_accesscontrol_permissions>`, e.g. by enforcing a certain Practitioner or Encounter context.
 
+.. _system_level_scopes:  
+
 System-level scopes
 -------------------
 

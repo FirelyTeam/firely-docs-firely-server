@@ -147,6 +147,10 @@ If you want to **change** the payload, assign a whole new one. Generally you wou
 
 .. code-block:: csharp
 
+   using Vonk.Fhir.R4;
+
+   ...
+
    if (request.TryGetPayload(response, out var resource)
    {
       //Explicit typing of variables for clarity, normally you would use 'var'.

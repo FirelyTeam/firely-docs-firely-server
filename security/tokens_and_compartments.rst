@@ -178,6 +178,7 @@ User-level scopes
 
 SMART on FHIR also defines scopes starting with ``user/`` instead of ``patient/``. If no patient-level scopes are present in an access token, a compartment is not enforced and not even evaluated.
 But Firely Server will still apply the restrictions expressed in the user-level scopes: 
+Firely Server will additionally handle user-level scopes by checking the syntax of the SMART on FHIR scopes within the access token. It enforces that only allowed resource types are accessed and only allowed actions are executed.
 
 - It checks the syntax of the SMART on FHIR scopes within the access token. 
 - It enforces that only allowed resources types are accessed and only allowed actions are executed.
@@ -187,7 +188,12 @@ But Firely Server will still apply the restrictions expressed in the user-level 
 .. warning::
   Requests using a user-level scope are not limited to a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly advised to implement additional security measures using a custom plugin or :ref:`access policies <feature_accesscontrol_permissions>`, e.g. by enforcing a certain Practitioner or Encounter context.
 
+.. _system_level_scopes:  
+
 System-level scopes
 -------------------
 
 System-level scopes - starting with ``system/`` - are evaluated equally to user-level scopes.
+When integrating backend services using system-level scopes, AccessPolicies which are bound to a fhirUser of type 'Device' can be used. Firely Server allows a Device resource to represent a fhirUser even if it's not defined in the SMART on FHIR standard.
+If an access token with such a fhirUser claim is sent as part of a request, Firely Server enforces that at least one AccessPolicy is present for the corresponding fhirUser. This AccessPolicy may be bound to the same scopes that the backend service is allowed to request from the authorization server. However, additional restrictions can be applied via constraining the applicable scopes.
+This reduces the risk that backend services are by default allowed more access then necessary or allowed. 

@@ -11,6 +11,11 @@ This token is included in the evaluation license for Firely Server, and in your 
 
 Configure the path to the license file in the appsettings, section :ref:`firely_auth_settings_license`.
 
+Supported browsers
+------------------
+
+Firely Auth only offers support for modern browers for its authentication and administration UI. To deliver a high quality web application, Firely Auth depends on `next.js <https://nextjs.org>`_, therefore the same restrictions to supported browers apply here. See `next.js - Supported Browsers <https://nextjs.org/docs/architecture/supported-browsers>`_.
+
 .. _firely_auth_deploy_exe:
 
 Executable / binaries

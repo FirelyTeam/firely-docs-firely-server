@@ -20,3 +20,28 @@ This list uses the NuGet package names (or prefixes of them) so you can easily l
 #. Newtonsoft.Json - MIT
 #. Superpower - Apache 2.0
 #. QRCode.js - MIT (https://github.com/davidshimjs/qrcodejs)
+
+The frontend of Firely Auth uses the following packages, found using `NPM <https://www.npmjs.com>`_:
+
+* @emotion/react - MIT
+* @emotion/styled - MIT 
+* @mui/icons-material - MIT
+* @mui/material - MIT
+* axios - MIT
+* html-react-parser - MIT
+* lodash - MIT
+* next - MIT
+* react - MIT
+* react-dom - MIT
+* react-qr-code - MIT
+* react18-json-view - MIT
+* sharp - Apache-2.0
+* zustand - MIT
+* @types/lodash - MIT
+* @types/node - MIT
+* @types/react - MIT
+* @types/react-dom - MIT
+* eslint - MIT
+* eslint-config-next - MIT
+* eslint-plugin-jsx-a11y - MIT
+* typescript - Apache-2.0

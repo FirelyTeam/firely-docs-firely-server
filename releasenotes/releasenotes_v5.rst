@@ -41,6 +41,7 @@ Fix
 
 #. Fixed a ``DuplicateKey`` exception occuring when creating resources under heavy load in parallel using MongoDB as the backend for the main database.
 #. The ``$liveness`` and ``$readiness`` heatlh checks were not responding while loading conformance resources to the administration database.
+#. ``[ContextAware]`` attribute does not support ``Path`` argument anymore. Consider using route prefixes or alternatives to achieve the same effect when using multiple FHIR versions.
 
 Feature
 ^^^^^^^

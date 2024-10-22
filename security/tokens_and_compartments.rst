@@ -178,7 +178,6 @@ User-level scopes
 
 SMART on FHIR also defines scopes starting with ``user/`` instead of ``patient/``. If no patient-level scopes are present in an access token, a compartment is not enforced and not even evaluated.
 But Firely Server will still apply the restrictions expressed in the user-level scopes: 
-Firely Server will additionally handle user-level scopes by checking the syntax of the SMART on FHIR scopes within the access token. It enforces that only allowed resource types are accessed and only allowed actions are executed.
 
 - It checks the syntax of the SMART on FHIR scopes within the access token. 
 - It enforces that only allowed resources types are accessed and only allowed actions are executed.

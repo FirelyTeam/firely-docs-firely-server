@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - NamingSystem",
-    "version": "5.9.1+8273fb74d4fc80b7f800a387afca6c9e06fc0627"
+    "version": "5.10.0+ff27cb752c94b730403b3b42fcba219fa32b1e1e"
   },
   "servers": [
     {
@@ -1993,7 +1993,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Date first version of the resource instance was recorded\r\n* [CarePlan](careplan.html): Time period plan covers\r\n* [CareTeam](careteam.html): Time period team covers\r\n* [ClinicalImpression](clinicalimpression.html): When the assessment was documented\r\n* [Composition](composition.html): Composition editing time\r\n* [Consent](consent.html): When this Consent was created or indexed\r\n* [DiagnosticReport](diagnosticreport.html): The clinically relevant time of the report\r\n* [Encounter](encounter.html): A date within the period the Encounter lasted\r\n* [EpisodeOfCare](episodeofcare.html): The provided date search value falls within the episode of care's period\r\n* [FamilyMemberHistory](familymemberhistory.html): When history was recorded or last updated\r\n* [Flag](flag.html): Time period when flag is active\r\n* [Immunization](immunization.html): Vaccination  (non)-Administration Date\r\n* [List](list.html): When the list was prepared\r\n* [Observation](observation.html): Obtained date/time. If the obtained element is a period, a date that falls in the period\r\n* [Procedure](procedure.html): When the procedure was performed\r\n* [RiskAssessment](riskassessment.html): When was assessment made?\r\n* [SupplyRequest](supplyrequest.html): When the request was made\r\n",
+        "description": "Appointment date/time.",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2028,7 +2028,7 @@
       "kind": {
         "name": "kind",
         "in": "query",
-        "description": "operation | query",
+        "description": "primitive-type | complex-type | resource | logical",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2046,7 +2046,7 @@
       "period": {
         "name": "period",
         "in": "query",
-        "description": "Time of service that is being documented\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
+        "description": "Timeframe for this rule",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2064,8 +2064,7 @@
       "responsible": {
         "name": "responsible",
         "in": "query",
-        "description": "Final responsibility for event",
-        "style": "form",
+        "description": "Who maintains system namespace?",
         "schema": {
           "type": "string"
         }
@@ -2073,7 +2072,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the Episode of Care as provided (does not check the status history collection)",
+        "description": "The overall status of the appointment",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2082,7 +2081,7 @@
       "telecom": {
         "name": "telecom",
         "in": "query",
-        "description": "The value in any kind of contact",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): The value in any kind of telecom details of the patient\r\n* [Person](person.html): The value in any kind of contact\r\n* [Practitioner](practitioner.html): The value in any kind of contact\r\n* [PractitionerRole](practitionerrole.html): The value in any kind of contact\r\n* [RelatedPerson](relatedperson.html): The value in any kind of contact\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2091,7 +2090,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): allergy | intolerance - Underlying mechanism (if known)\r\n* [Composition](composition.html): Kind of composition (LOINC if possible)\r\n* [DocumentManifest](documentmanifest.html): Kind of document set\r\n* [DocumentReference](documentreference.html): Kind of document (LOINC if possible)\r\n* [Encounter](encounter.html): Specific type of encounter\r\n* [EpisodeOfCare](episodeofcare.html): Type/class  - e.g. specialist referral, disease management\r\n",
+        "description": "Amino Acid Sequence/ DNA Sequence / RNA Sequence",
         "style": "form",
         "schema": {
           "type": "string"

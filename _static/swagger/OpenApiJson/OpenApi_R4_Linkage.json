@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Linkage",
-    "version": "5.9.1+8273fb74d4fc80b7f800a387afca6c9e06fc0627"
+    "version": "5.10.0+ff27cb752c94b730403b3b42fcba219fa32b1e1e"
   },
   "servers": [
     {
@@ -1731,7 +1731,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Flag creator",
+        "description": "Who created",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1740,7 +1740,8 @@
       "item": {
         "name": "item",
         "in": "query",
-        "description": "Matches on any item in the Linkage",
+        "description": "Actual entry",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1748,7 +1749,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Who or where the information in the statement came from",
+        "description": "The device resource",
         "style": "form",
         "schema": {
           "type": "string"

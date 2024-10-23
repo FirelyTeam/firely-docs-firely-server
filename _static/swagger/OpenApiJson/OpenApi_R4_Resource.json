@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Resource",
-    "version": "5.9.1+8273fb74d4fc80b7f800a387afca6c9e06fc0627"
+    "version": "5.10.0+ff27cb752c94b730403b3b42fcba219fa32b1e1e"
   },
   "servers": [
     {

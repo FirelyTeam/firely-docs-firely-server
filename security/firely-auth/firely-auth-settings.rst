@@ -49,9 +49,6 @@ Nevertheless you can control the settings for Kestrel.
     
   "Kestrel": {
     "Endpoints": {
-      "Http": {
-        "Url": "http://localhost:5100"
-      },
       "HttpsFromPem": {
         "Url": "https://localhost:5101",
         "SslProtocols": [ "Tls12", "Tls13" ],
@@ -65,6 +62,17 @@ Nevertheless you can control the settings for Kestrel.
  
 These settings are not Firely Auth specific, and you can read more about them in the `Microsoft documentation <https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints>`_.
 In that documentation you can also read how to use the ``Https`` setting instead of ``HttpsFromPem`` to use a ``.pfx`` file for your SSL certificate.
+
+Note: you can configure a http endpoint like:
+
+.. code-block:: json
+
+    "Http": {
+      "Url": "http://localhost:5100"
+    },
+
+But this is not supported when you do not use a proxy in front of the application that exposes it to the outside world over ``Https``. 
+Without a proxy, this would lead to security issues and the authorization flow not working properly.  
 
 .. _firely_auth_settings_account:
 

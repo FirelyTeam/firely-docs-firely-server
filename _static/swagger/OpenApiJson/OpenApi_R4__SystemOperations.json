@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - System Operations",
-    "version": "5.1.1"
+    "version": "5.9.1+8273fb74d4fc80b7f800a387afca6c9e06fc0627"
   },
   "servers": [
     {

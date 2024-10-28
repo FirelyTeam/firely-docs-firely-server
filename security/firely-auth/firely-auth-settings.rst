@@ -262,6 +262,7 @@ See :ref:`firely_auth_deploy_sqlite` and :ref:`firely_auth_deploy_sql` for detai
   "UserStore": {
       "Type": "Sqlite", // Sqlite | SqlServer
       "PasswordHashIterations": 600000,
+      "LogSqlQueryParameterValues": false,
       "Sqlite": {
           "ConnectionString": "<connection string here>"
       },
@@ -272,6 +273,7 @@ See :ref:`firely_auth_deploy_sqlite` and :ref:`firely_auth_deploy_sql` for detai
 
 - ``Type``: select the type of store to use
 - ``PasswordHashIterations``: number of password hash iterations to prevent brute force attacks. Default 600000. Sync this value when using Firely Auth Management App :ref:`firely_auth_mgmt`.
+- ``LogSqlQueryParameterValues``: when you configured logging of executed queries, the parameter values that are sent to the database are hidden by default. By putting this setting to ``true``, the values will be unhidden and visible in the logs. This might expose sensitive data. You will have to change the ``Serilog->MinimumLevel->Default`` and ``Serilog->MinimumLevel->Override->Microsoft`` log settings to ``Information``. 
 - ``Sqlite``: settings for the Sqlite store
 
   - ``ConnectionString``: connection string to the SQL Server database where the users are to be stored.
@@ -313,6 +315,7 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               "AllowFirelySpecialScopes": true,
               "RequireClientSecret": true,
               "RefreshTokenLifetime": "30",
+              "ConsentLifetime": "365",
               "RequireMfa": true,
               "AccessTokenType": "Jwt",
               "ClientClaims": [
@@ -358,6 +361,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``AllowFirelySpecialScopes``: true / false - Allow app to request scopes for Firely Server specific operations. Currently just 'http://server.fire.ly/auth/scope/erase-operation'
 - ``RequireClientSecret``: true / false - A :term:`public client` cannot hold a secret, and then this can be set to ``false``. Then the ``ClientSecrets`` section is ignored. See also the note below.
 - ``RefreshTokenLifetime``: If the client is allowed to use a :term:`refresh token`, how long should it be valid? The value is in days. You can also use HH:mm:ss for lower values.
+- ``ConsentLifetime`` : This is an optional setting which can specify a period after which the users consent will be revoked. The value is in days. You can also use HH:mm:ss for lower values.
 - ``AccessTokenType``: ``Jwt`` or ``Reference``. ``Jwt`` means that this client will get self-contained Json Web Tokens. ``Reference`` means that this client will get reference tokens, that refer to the actual token kept in memory by Firely Auth. For more background see :term:`reference token`.
 - ``ClientClaims``: Enable a client to add static custom claims in the client credential flow. 
 
@@ -372,8 +376,36 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
     Please follow the principle of least privilege to register a SMART Backend Service client, especially when the settings ``ClientClaims`` and ``ClientClaimPrefix`` are used.
 
+.. _firely_auth_settings_externalidp:
+
 External identity providers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: json
+
+  "ExternalIdentityProviders": {
+		"IdentityProvider": [
+			{
+			"LogoutMethod": "LocalOnly", // <LocalOnly> logout of Firely Auth only | <SingleSignout> also logout of external provider
+			"Scheme": "OpenIdConnect-SAMPLE", // generate a unique name for each Identity Provider
+			"Authority": "<url to external OpenId Connect endpoint>",
+			"DisplayName": "Login via SSO - <Name of IdentityProvider>",
+			"ClientId": "ClientId for Firely Auth, pre-registered with external service",
+			"ClientSecret": "secret for clientId",
+			"AllowAutoProvision": true|false,
+			"AutoProvisionFromSecurityGroup": ["<Security Group>"],
+			"UserClaimsFromIdToken": [{
+				"Key": "<key of claim to copy>",
+				"CopyAs": "<optional name if claim to be renamed>"
+			}],
+			"FhirUserLookupClaimsMapping": [{
+				"SearchParameterName": "<code>",
+				"SearchParameterValueTemplate": "{NumericalIndexForClaim}",
+			  "CopySearchParameterValuesFromClaims": []
+			}]
+			}
+		]
+	}
 
 - ``LogoutMethod``: Allows the user to automatically logout of the federated identity provider if the user logs out of Firely Auth. By default the user will only be logged out locally.
 - ``Scheme``: Name of the federated identity provider. Each identity provider must have a unique scheme.
@@ -381,6 +413,13 @@ External identity providers
 - ``DisplayName``: Name that will be displayed in the UI of Firely Auth for users to select which identity provider to use if multiple are configured or if a local login is enabled as well.
 - ``ClientId``: ClientId of Firely Auth that will be used in the implicit token flow in order to retrieve an id token from the external identity provider.
 - ``ClientSecret``: ClientSecret of Firely Auth that will be used in the implicit token flow in order to retrieve an id token from the external identity provider.
+-	``AllowAutoProvision``: true / false - If true, Firely Auth will automatically create a user in its own database if the user logs in with an external identity provider for the first time. The user will be created with the claims that are provided by the external identity provider.
+- ``AutoProvisionFromSecurityGroup``: When ``AllowAutoProvision`` is true, this setting allows you to specify a security group that the user must be a member of in order to be automatically provisioned. If the user is not a member of this group, the user will not be automatically provisioned.
+- ``UserClaimsFromIdToken``: This setting allows you to map the claims from the token that is received from the external identity provider to the claims that are stored in the Firely Auth database. The key is the claim that is received from the external identity provider. This key can be copied as a value that is recognized by Firely Auth. For intance, Azure is able to provide fhirUser claim to the token, but will prefix this claim with ``extn.``. The CopyAs field can be used to remove this prefix, so that Firely Auth is able to recognize the fhirUser claim.
+- ``FhirUserLookupClaimsMapping``: As an alternative for retrieving the FhirUser Claim from the ``UserClaimsFromIdToken`` setting, ``FhirUserLookupClaimsMapping`` allows you to use the claims from the ID token to search for a users respective resource in Firely Server. This can either be a Patient resource or a Practitioner recource. Firely Auth will then use the id of this resource to derive the fhirUser claim of the user upon SSO auto-provisioning. Multiple mappings can be provided. Each search parameter will be combined using a logical  AND while searching for the fhirUser resource. The fhirUser is only derived if there is an unambiguous match in Firely Server.
+- ``SearchParameterName``: The search parameter that will be used to search for the user in Firely Server. This can be any search parameter that can be used to query ``Patient`` or ``Practitioner`` resources. This search parameter will be used on a system-level search against Firely Server.
+- ``SearchParameterValueTemplate``: The template that will be used to construct the value that will be used to search for the user in Firely Server. The template can contain placeholders that will be replaced by the values of the claims from the ID token. The placeholders should be in the format ``{NumericalIndexForClaim}``. The numerical index is the index of the claim in the array of claims that are provided by the external identity provider. The index starts at 0.
+- ``CopySearchParameterValuesFromClaims``: This setting allows you to copy the values of the claims from the ID token to the template that is used to construct the value that will be used to search for the user in Firely Server. The values of the claims will be copied in the order that they are provided in the array. The values will be copied to the placeholders in the template that are in the format ``{NumericalIndexForClaim}``.
 
 .. _firely_auth_settings_allowedorigins:
 
@@ -402,15 +441,19 @@ These policies will be presented in the UI after the user has been authenticated
 
   	"DisclaimerRegistration": {
       "Disclaimers": [
-        //{
-        //	"Id" : "<string>", // some id that will not change for this disclaimer
-        //	"Template": "<path to .liquid template for this disclaimer>",
-        //	"Description": "<string>" // the text that will be shown next to the checkbox
-        //	"TemplateProperties":{ // this is a dictionary of additional properties that will be provided to the template
-        //		"propertyName":"propertyValue",
-        //		"propertyName2":"propertyValue2"
-        //	}
-        //}
+        {
+        	"Id" : "<string>", // some id that will not change for this disclaimer
+        	"Template": "<path to .liquid template for this disclaimer>",
+        	"Description": "<string>" // the text that will be shown next to the checkbox
+        	"TemplateProperties":{ // this is a dictionary of additional properties that will be provided to the template
+        		"propertyName":"propertyValue",
+        		"propertyName2":"propertyValue2"
+        	},
+          "ShowDisclaimerFor": {
+				  "EveryLogin": false|true, // if true then the disclaimer is shown on each login, there is a grace period here where the consent is temporary stored
+				  "Clients": [ "<ClientId>" ], // if set then this disclaimer will only be shown for the specified clients
+				  }
+        }
       ]
 	  }
 

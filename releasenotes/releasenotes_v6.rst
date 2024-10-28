@@ -16,11 +16,32 @@ Current Firely Server release notes (v6.x)
 Release 6.0.0, [Month] [Date], 2024
 ---------------------------------------
 
+Security
+^^^^^^^^
+
+.. note::
+    We have identified a potential security issue if your deployment matches all of the criteria below.
+    Of course, we fixed the issue, see Fixes #1 below.
+    If you match the criteria for your current deployment, or if you are in doubt, please contact the support desk.
+    For background information on these criteria, see `ref:feature_accesscontrol_config`.
+    
+    #. Firely Server is configured to accept write interactions, more specifically ‘create’
+    #. You allow client applications with ``user/`` level scopes to do these write interactions.
+    #. You use SMART on FHIR v2 scopes that include search arguments, either from the acces token or from applicable AccessPolicyDefinitions.
+
 Features
 ^^^^^^^^
 
 #. Firely Server offers the ``$member-match`` operation to find the identifier of a member of a health plan. See :ref:`member-match` for more information.
+#. Starting from this release the ``Vonk.Smart`` and ``Vonk.Plugin.SoFv2`` plugins are no longer supported and have been removed. They are replaced by the ``Vonk.Plugin.Smart`` plugin. For more information see :ref:`feature_accesscontrol_config`. It is necessary to adjust the pipeline options accordingly.
+#. It is now possible to disable the create-on-update feature with a new setting in the ``FhirCapabilities`` section of the app settings. For more information see :ref:`restful_crud`.
+#. With this release ``Update with no changes (No-Op)`` is enabled by default. For more information about the plugin see :ref:`restful_noop`.
+#. The use of other compartments then Patient in SMART on FHIR authorization is not well defined and potentially unsafe. So we redacted the ``Filters`` settings in ``SmartAuthorizationOptions``. You can now only specify a filter on the Patient compartment. For more information see :ref:`feature_accesscontrol_config`. If you configured just a Patient filter in the old format, Firely Server will interpret it in the new format and log a warning that you should update your settings. If you configured a filter on a different compartment, Firely Server will log an error and halt.
 
+Fixes
+^^^^^
+
+#. SMART on FHIR v2 scopes can include search arguments. Upon writing resources (create, update, delete) Firely Server used to only evaluate those for ``patient/`` scopes. Now, they are also evaluated for ``user/`` and ``system/`` scopes. Please check the note above whether your deployment may be affected.
 
 Configuration
 ^^^^^^^^^^^^^

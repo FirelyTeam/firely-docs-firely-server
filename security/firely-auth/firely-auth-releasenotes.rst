@@ -3,21 +3,78 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.2.1:
+
+Release 4.2.1, October 10th, 2024
+---------------------------------
+
+Feature
+^^^^^^^
+
+#. With this hotfix release we enabled the use of X-Forwarded-Host and X-Forwarded-Prefix headers in combination with Firely Server. Also see :ref:`X_Forwarded_Host` for more information.
+
+Fix
+^^^
+
+#. We fixed an issue where clients could no longer be saved in the UI if no external identity provider was configured.
+#. We removed the "*" option from the Allowed Resources section in the client registration form as this lead the client to not accept any resources at all. To accept all resources the Allowed Resources field can be left empty.
+#. We fixed an issue where the client grant consent lifetime would be set to zero if not otherwise configured, causing the consent to expire as soon as it was granted by the user. Consent will now only expire if an expiration time or date is set.
+
+
+.. _firelyauth_releasenotes_4.2.0:
+
+Release 4.2.0, September 25th, 2024
+-----------------------------------
+
+Feature
+^^^^^^^
+
+#. The user interface for regular users has been improved in several ways. Users can now view and revoke the consent they have given to clients. In addition, they can view and revoke the disclaimers they have accepted. For more information, see :ref:`firely_auth_settings_disclaimers`.
+#. Admins are now able to view the .well-known/smart-configuration of the connected Firely Server instance.
+#. The client registration form has been improved to become more intuitive. Depending on the grant type (either client_credentials or authorization_code), the form will show the necessary fields to fill in.
+#. Firely Auth implemented $liveness and $readiness endpoints. These endpoints can be used to check the health of Firely Auth. For more information, see :ref:`firely_auth_liveness_readiness`.
+
+Configuration
+^^^^^^^^^^^^^
+
+#. With this release, it is possible to restrict auto provisioning of SSO users by their security groups. For this we added a new setting: ``AutoProvisionFromSecurityGroup``. For more information, see :ref:`firely_auth_settings_externalidp`.
+#. It is now possible to derive the FhirUser claim for SSO auto-provisioning from existing users in the Firely Server database using the ``FhirUserLookupClaimsMapping`` setting. For more information, see :ref:`firely_auth_settings_externalidp`.
+#. It is now possible to set ``ConsentLifetime`` settings to control the lifetime of consent to clients. After this period has expired, users will be prompted again to give consent to this client. For more information, see :ref:`_firely_auth_settings_clients`.  
+#. Added the option ``ShowDisclaimerFor`` to the disclaimer section to control when a disclaimer should be shown to the user. For more information, see :ref:`firely_auth_settings_disclaimers`.
+
+
+.. _firelyauth_releasenotes_4.1.1:
+
+Release 4.1.1, September 4th, 2024
+----------------------------------
+
+Fix
+^^^
+
+#. This is a hotfix release where we fixed the manual update scripts for updating the user databases to v4.1.x and higher. The scripts were not working correctly in the previous release.
+
 .. _firelyauth_releasenotes_4.1.0:
 
-Release 4.1.0, July xx, 2024
-----------------------------
+Release 4.1.0, August 1st, 2024
+-------------------------------
 
 Feature
 ^^^^^^^
 
 #. With this release, it is possible to let users log in via the :ref:`firely_auth_sso` flow without them needing a user account in Firely Auth first. Upon logging in, these users will be automatically created via auto-provisioning and stored in the Firely Auth user database.
-#. It is now possible to edit client settings via the user interface. Before, these settings could only be changed by altering the appsettings. Note that because of this change, Firely Auth will load clients from the appsettings only once. After this initial load client settings need to be removed from the appsettings, or they will block start up of Firely Auth. 
+#. It is now possible to add and edit client settings via the user interface. Before, these settings could only be changed by altering the appsettings. Note that because of this change, Firely Auth will load clients from the appsettings only once. After this initial load client settings need to be removed from the appsettings, or they will block start up of Firely Auth. 
+#. We have made several improvements to the UI for a better user experience.
 
 Configuration
 ^^^^^^^^^^^^^
 
-#. It is now possible to add custom disclaimer templates that will be visible when the user tries to retrieve an access token. for more information, see :ref:`firely_auth_settings_disclaimers`.
+#. Added `Lockout` options to customize the lockout period and max amount of failed lock-in requests.
+#. It is now possible to add custom disclaimer templates that will be visible when the user tries to retrieve an access token. For more information, see :ref:`firely_auth_settings_disclaimers`.
+
+Fix
+^^^
+
+#. Allow a missing trailing "/" when comparing the FHIR Server base url against the `aud` parameter when requesting a token.
 
 Database
 ^^^^^^^^

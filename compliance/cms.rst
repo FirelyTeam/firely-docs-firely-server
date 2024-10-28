@@ -20,7 +20,8 @@ CMS Interoperability and Prior Authorization Final Rule (CMS-0057-F) - 🇺🇸
 
 The proposed `CMS Interoperability Rule (CMS-0057-F) <https://www.federalregister.gov/documents/2024/02/08/2024-00895/medicare-and-medicaid-programs-patient-protection-and-affordable-care-act-advancing-interoperability>`_ aims to promote greater interoperability, patient access, and innovation in the healthcare industry while also improving the quality and cost-effectiveness of care. Technically these goals are supported by multiple APIs that are required to be provided:
 
-Firely Server supports all mandatory requirements out-of-the-box. The following implementation guides build the foundation of the APIs mentioned below.
+.. important::
+  Firely Server supports all mandatory requirements out-of-the-box. The following implementation guides build the foundation of the APIs mentioned below.
 
 .. list-table:: Firely Server Compliance CMS Interoperability Mandatory IGs
    :widths: 10, 10, 10, 10, 10
@@ -34,45 +35,47 @@ Firely Server supports all mandatory requirements out-of-the-box. The following 
 
    * - |PATACC|
      
-     - ✅ 
-     - ✅ 
-     - ✅ 
-     - Not needed
+     - ☑️ 
+     - ☑️ 
+     - ☑️ 
+     - Not applicable
      
    * - |PROACC|
    
-     - ✅ 
-     - ✅ 
-     - ✅ 
-     - ✅ 
+     - ☑️ 
+     - ☑️ 
+     - ☑️ 
+     - ☑️ 
      
    * - |PRODIR|
    
-     - ✅ 
-     - ✅ 
-     - ✅ 
-     - Not needed
+     - ☑️ 
+     - ☑️ 
+     - ☑️ 
+     - Not applicable
      
    * - |PRTOPR|
    
-     - ✅ 
-     - ✅ 
-     - ✅ 
-     - ✅ 
+     - ☑️ 
+     - ☑️ 
+     - ☑️ 
+     - ☑️ 
      
    * - |PRAUTH|
    
-     - ✅ 
-     - ✅ 
-     - ✅ 
-     - Not needed
+     - ☑️ 
+     - ☑️ 
+     - ☑️ 
+     - Not applicable
+
+.. note::
+  There are additional Implementation Guides strongly recommended by CMS. We provide guidance on how to implement these Implementation Guides with Firely Server in the sections below.
 
 .. list-table:: Firely Server Compliance CMS Interoperability Recommended IGs
-   :widths: 10, 10, 10, 10, 10, 10, 10
+   :widths: 10, 10, 10, 10, 10, 10
    :header-rows: 1
    
    * - Implementation Guide
-     - 
      - |PATACC|
      - |PROACC|
      - |PRODIR|
@@ -81,80 +84,67 @@ Firely Server supports all mandatory requirements out-of-the-box. The following 
 
    * - |CARIN|
 
+     - ☑️ 
+     - ☑️ 
+     - Not applicable
      - ☑️
-     - ✅ 
-     - ✅ 
-     - ⚪
-     - ✅
-     - ⚪
+     - Not applicable
 
    * - |SMART|
      
+     - Not applicable
+     - ☑️ 
+     - Not applicable
      - ☑️
-     - ⚪ 
-     - ✅ 
-     - ⚪ 
-     - ✅
-     - ⚪
+     - Not applicable
 
    * - |PDXIG|  
      
-     - 
-     - ✅ 
-     - ✅ 
-     - ⚪
-     - ✅
-     - ⚪
+     - ☑️ 
+     - ☑️ 
+     - Not applicable
+     - ☑️
+     - Not applicable
 
    * - |PDRIG|  
 
-     - 
-     - ✅
-     - ⚪ 
-     - ⚪
-     - ⚪
-     - ⚪
+     - ☑️
+     - Not applicable 
+     - Not applicable
+     - Not applicable
+     - Not applicable
 
    * - |PNTIG|
 
+     - Not applicable
+     - Not applicable
      - ☑️
-     - ⚪
-     - ⚪ 
-     - ✅
-     - ⚪
-     - ⚪
+     - Not applicable
+     - Not applicable
 
    * - |CRDIG|  
 
-     - 
-     - ⚪
-     - ⚪ 
-     - ⚪
-     - ⚪
-     - ✅
+     - Not applicable
+     - Not applicable
+     - Not applicable
+     - Not applicable
+     - ☑️
 
    * - |DTRIG|  
 
-     - 
-     - ⚪
-     - ⚪ 
-     - ⚪
-     - ⚪
-     - ✅
+     - Not applicable
+     - Not applicable
+     - Not applicable
+     - Not applicable
+     - ☑️
 
    * - |PASIG|  
 
-     - 
-     - ⚪
-     - ⚪ 
-     - ⚪
-     - ⚪
-     - ✅
-
-☑️ = fully supported in the current release of Firely Server
-
-.. note::
-  There are additional Implementation Guides strongly recommended by CMS. Not all of them are currently supported by Firely Server. 
+     - Not applicable
+     - Not applicable
+     - Not applicable
+     - Not applicable
+     - ☑️
 
 |PATACC|
 ------------------

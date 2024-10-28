@@ -36,7 +36,7 @@ Introduction
 
 
 Firely Server provides the option to export resources with the Bulk Data Export Service. 
-The Bulk Data Export Service enables the $export operation from the Fhir specification. Read more about the `$export request flow <https://hl7.org/fhir/uv/bulkdata/export/index.html#request-flow>`_.
+The Bulk Data Export Service enables the $export operation from the Fhir specification. Read more about the `$export request flow <https://hl7.org/fhir/uv/bulkdata/export.html#bulk-data-export-operation-request-flow>`_.
 
 .. note:: 
 
@@ -134,6 +134,7 @@ BDE introduces several new parts to the appsettings:
   },
   "BulkDataExport": {
       "RepeatPeriod" : 60000, //ms
+      "AdditionalResourcesMaxRecursionDepth": 1,
       "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "BodyStructure", "Medication", "Coverage" ] 
   },
   "SqlDbOptions": {
@@ -141,11 +142,21 @@ BDE introduces several new parts to the appsettings:
       "BulkDataExportTimeout": 300 // in seconds
   }
 
-In `RepeatPeriod` you can configure the polling interval (in milliseconds) for checking the Task queue for a new export task.
+In ``RepeatPeriod`` you can configure the polling interval (in milliseconds) for checking the Task queue for a new export task.
 
-A patient-based or group-based Bulk Data Export returns resources based on the Patient compartment definition (https://www.hl7.org/fhir/compartmentdefinition-patient.html). These resources may reference resources outside the compartment as well, such as a Practitioner who is the performer of a Procedure. Using the `AdditionalResources`-setting, you can determine which types of referenced resources are exported in addition to the compartment resources.
+A patient-based or group-based Bulk Data Export returns resources based on the Patient compartment definition (https://www.hl7.org/fhir/compartmentdefinition-patient.html). 
 
-Exporting a large number of resources from a SQL Server database can cause a timeout exception. You can adjust the timeout period in `BulkDataExportTimeout`. There is no timeout limitation when exporting data from MongoDB.
+These resources may reference resources outside the compartment as well, such as a Practitioner who is the performer of a Procedure. Using the ``AdditionalResources``-setting, you can determine which types of referenced resources are exported in addition to the compartment resources.
+
+Furthermore, additional resources may reference other resources that can also be exported. The depth of this inclusion can be configured using the setting ``AdditionalResourcesMaxRecursionDepth``.
+
+Resources of type ``Group`` and ``Patient`` never get exported as Additional resources.
+
+.. note::
+
+  Currently, if MongoDB is used as a repository, the only supported value for ``AdditionalResourcesMaxRecursionDepth`` is 1.
+
+Exporting a large number of resources from a SQL Server database can cause a timeout exception. You can adjust the timeout period in ``BulkDataExportTimeout``. There is no timeout limitation when exporting data from MongoDB.
 
 Writing to a local disk
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -186,7 +197,14 @@ Group
 
 This will create an instance level export task. For each Patient in the Group, the task will export all resources included in the Patient Compartment in the Firely Server database to an .ndjson file per resourcetype.
 
-.. note:: For now we only support inclusion in a Group through Group.member.
+.. note:: 
+  For now we only support inclusion in a Group export through Group.member.
+
+  A group member will be excluded from the export if and only if it is marked as inactive (`Group.member.inactive = true`) or has a flag indicating that it previously belonged to the group (based on `Group.member.period`).
+  
+  In the `Da Vinci Member Attribution (ATR) List <https://hl7.org/fhir/us/davinci-atr/index.html>`_ use case, we make an exception to this.
+  All group members, including inactive members, are included in a Group export if the Group has ``http://hl7.org/fhir/us/davinci-atr/StructureDefinition/atr-group`` in its `meta.profile <https://hl7.org/fhir/resource-definitions.html#meta>`_ element.
+
 
 $export Response
 ^^^^^^^^^^^^^^^^

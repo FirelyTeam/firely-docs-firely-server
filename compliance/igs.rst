@@ -27,6 +27,8 @@ This implementation guide does not specify any FHIR conformance resources and pr
 
    * - * ✔️ v1.0.0
        * ✔️ v2.0.0
+       * ✔️ v2.1.0
+       * ✔️ v2.2.0
   
      - * :ref:`Firely Auth <firely_auth_index>`
        * :ref:`feature_accesscontrol`
@@ -35,6 +37,14 @@ This implementation guide does not specify any FHIR conformance resources and pr
    
      - * `hl7.fhir.uv.smart-app-launch|1.0.0 <https://registry.fhir.org/package/hl7.fhir.uv.smart-app-launch|1.0.0>`_
        * `hl7.fhir.uv.smart-app-launch|2.0.0 <https://registry.fhir.org/package/hl7.fhir.uv.smart-app-launch|2.0.0>`_
+       * `hl7.fhir.uv.smart-app-launch|2.1.0 <https://registry.fhir.org/package/hl7.fhir.uv.smart-app-launch|2.1.0>`_
+       * `hl7.fhir.uv.smart-app-launch|2.2.0 <https://registry.fhir.org/package/hl7.fhir.uv.smart-app-launch|2.2.0>`_
+
+Known Limitations
+-----------------
+
+* No dedicated support for User-access Brands and Endpoints
+* No dedicated support for SMART App State Persistence
 
 ------------       
 
@@ -69,7 +79,7 @@ This implementation guide does not specify any FHIR conformance resources and pr
 Known Limitations
 -----------------
 
-* The _elements, patient, includeAssociatedData, and _typeFilter parameters are not supported during the BDE kickoff request on system-, group-, and patient-level.
+* The includeAssociatedData and _typeFilter parameters are not supported during the BDE kickoff request on system-, group-, and patient-level.
 
 ------------
 

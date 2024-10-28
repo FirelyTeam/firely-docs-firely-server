@@ -610,24 +610,22 @@ SMART on FHIR
 -------------
 
 :Name: SMART on FHIR
-:Configuration: ``Vonk.Plugin.SoFv2.SmartV2Configuration``
+:Configuration: ``Vonk.Plugin.Smart``
 :License token: http://fire.ly/vonk/plugins/smartonfhir
 :Order: 2002
-:Description: Implements SMART on FHIR v2 authentication and authorization, see :ref:`feature_accesscontrol`. 
+:Description: Implements SMART on FHIR authentication and authorization, see :ref:`feature_accesscontrol`. 
 
 :Name: SMART on FHIR License check
-:Configuration: ``Vonk.Plugin.SoFv2.SmartV2ConfigurationLicenseCheck``
+:Configuration: ``Vonk.Plugin.Smart.SmartConfigurationLicenseCheck``
 :License token:
 :Order: 2003
 :Description: Guards against accidentally enabling SMART on FHIR without the proper license. 
 
 :Name: SMART on FHIR OpenID Discovery
-:Configuration: ``Vonk.Plugin.SoFv2.SmartDiscoveryConfiguration``
+:Configuration: ``Vonk.Plugin.Smart.SmartDiscoveryConfiguration``
 :License token: http://fire.ly/vonk/plugins/smartonfhir
 :Order: 1201
 :Description: Hosts the ``.well-known/smart-configuration`` endpoint, see :ref:`feature_accesscontrol`. 
-
-
 
 .. _vonk_plugins_subscriptions:
 

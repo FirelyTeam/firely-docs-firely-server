@@ -32,11 +32,40 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
     These claims will be copied from the ID token after a successful login and stored permanently. Each claim is updated automatically after each login with local changes being overwritten.
     It is possible to assign a new name to a claim using the ``CopyAs`` setting.
 
+#. Configure the ``FhirUserLookupClaimsMapping`` if the FhirUser claim cannot be derived from the ID token
+
+    The FhirUser claim is a mandatory claim in Firely Auth. If the FhirUser claim cannot be derived from the ID token, the ``FhirUserLookupClaimsMapping`` setting can be used to use claims from the ID token to look up a user, either a Practitioner or a Patient, in the Firely Server database. The FhirUser claim will then be derived from the resource Type and the ID from the resource. For example:
+
+    .. code-block:: json
+
+        		"FhirUserLookupClaimsMapping": [
+					{
+						"SearchParameterName": "identifier",
+						"SearchParameterValueTemplate": "https://myidentifiersystem|{0}",
+						"CopySearchParameterValuesFromClaims": ["family_name", "given_name"]
+					}
+					,
+					{
+						"SearchParameterName": "email",
+						"CopySearchParameterValuesFromClaims": ["email"]
+					}
+				]
+    
+    Here, the FhirUser claim will be derived from the Patient or Practitioner resource with the identifier system "https://myidentifiersystem" and the value of the family_name claim from the ID token, and email with the value of the email claim from the ID token. Also see the :ref:`firely_auth_settings_externalidp` section.
+
+    .. Note:: 
+        Note that if Firely Auth queries resources in Firely Server, it will do so via the default FHIR information model of Firely Server. Only R3 or R4 resources are supported by Firely Auth and can be used to derive the fhirUser claim this way. If the resource is not found, Firely Auth will not be able to derive the FhirUser claim. In this case, the user will not be able to log in.
+
+#. Configure security groups
+
+    Based on the ``AutoProvisionFromSecurityGroup`` setting it is possible to restrict the sign-up of users based on security groups defined in the SSO provider. The attribution of a user account to a one or more security group needs to be exposed via the ``groups`` claim.
+    If the ID token received from the SSO provider contains such a claim and the value is part of the whitelisted security groups in the appsetttings, the auto-provisioning is allowed by Firely Auth. Note that Azure allows you to set different values for this claim, such as the Object ID or the display name of the security group. Depending on how this claim is configured in Azure, the respective value, either Object ID or display name of the Security Group, should be added to the ``AutoProvisionFromSecurityGroup`` list to allow auto-provisioning for this group.
+
 A note on the fhirUser claim
 ----------------------------
 
 In Firely Auth, each user profile must contain a fhirUser claim - regardless if the profile represents a Patient or Practitioner account. See `SMART App Launch - Scopes for requesting identity data <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#scopes-for-requesting-identity-data>`_ for background.
-This claim may be copied from the ID token of the SSO provider (see ``UserClaimsFromIdToken`` setting above) or be set via the UI or account management REST API by an admin manually or some other automated process based after looking up the patient id in the FHIR server.
+This claim may be copied from the ID token of the SSO provider (see ``UserClaimsFromIdToken`` setting above), be set via the UI or account management REST API by an admin manually (see below), or by looking up the patient or practitioner id in the FHIR server (see the ``FhirUserLookupClaimsMapping`` setting above).
 A login with an account not containing the claim will be blocked.
 
 Using Microsoft Entra ID (formerly Azure Active Directory)
@@ -68,7 +97,7 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
     - Select "Add a certificate or secret".
     - Complete steps to create a new client secret and note it down safely.
 
-#. Chose the claim in the id token for account matching
+#. Choose the claim in the id token for account matching
 
     - Select "Token configuration"
     - Select "+ Add optional claim"
@@ -86,6 +115,8 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
     - Select "Overview".
     - Select "Endpoints"
     - One of the displayed OAuth 2.0 endpoints can be used as the authority in the settings. It should look like this: ``https://login.microsoftonline.com/<Directory (tenant) ID of the registered application>/v2.0``.
+
+#. Optional: Expose the `groups <https://learn.microsoft.com/en-us/entra/identity-platform/optional-claims?tabs=appui#configure-groups-optional-claims>`_ in the ID token if the SSO auto-provisioning is restricted to certain security groups. As mentioned above, you can configure Azure to add different values to this claim, such as Group ID (the Object ID of the Security Group) or the name of the Security Group. The values listed in the ``AutoProvisionFromSecurityGroup`` setting should match the values of the ``groups`` claim in the ID token.
 
 #. Optional: Add a `Directory extension <https://learn.microsoft.com/en-us/graph/extensibility-overview?tabs=http#directory-microsoft-entra-id-extensions>`_ for the fhirUser claim owned by the Firely Auth application registered above. You can try it out with Microsoft Graph Explorer.
    

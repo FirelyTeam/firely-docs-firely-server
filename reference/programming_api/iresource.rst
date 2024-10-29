@@ -63,12 +63,12 @@ IResource
         IEnumerable<IResource> ContainedResources { get; }
    }
 
-If you work with a POCO, you can use the extension method ToIResource(string informationModel) from Vonk.Fhir.R4 to adapt it to an IResource:
+If you work with a POCO, you can use an extension method ToIResource() from a FHIR version namespace, such as Vonk.Fhir.R4, to adapt it to an IResource:
 
 .. code-block:: csharp
 
    var patientPoco = new Patient(); //Requires Hl7.Fhir.Model
-   var resource = patientPoco.ToIResource(VonkConstants.Model.FhirR4);
+   var resource = patientPoco.ToIResource(); //Requires a version namespace like Vonk.Fhir.R4
 
 IResource is immutable, so changes will always result in a new instance. Changes can usually be applied with extension methods on ISourceNode, found in :ref:`Vonk.Core.ElementModel.ISourceNodeExtensions <vonk_reference_api_elementmodel>`. There are also several extension methods specifically for IResource in Vonk.Core.Common.IResourceExtensions:
 

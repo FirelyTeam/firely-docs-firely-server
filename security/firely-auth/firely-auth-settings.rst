@@ -469,6 +469,72 @@ Firely Auth will automatically fill out placeholders defined in the liquid templ
 
 See the ``Data\DisclaimerTemplates`` folder in the Firely Auth disribution for an example disclaimer template.
 
+EHR and standalone launch context settings
+------------------------------------------
+To enable supporting launch scopes, the server must be configured with launch context settings. 
+These settings contain the username and password that have to be used as basic authentication data when calling the EHR launch endpoint, and will configure what gets displayed when the user logs in to choose resources to use as context.
+
+.. code-block:: json
+
+  "LaunchContextRegistration": {
+    "EHRLaunchUsername": "launchUsername", // The username used for authentication when calling the EHR launch endpoint
+    "EHRLaunchSecret": "launchSecret", // The secret used for authentication when calling the EHR launch endpoint
+    "Resources": [
+      {
+        "ResourceType": "Patient",
+        "Columns": [
+          {
+            "ColumnName": "Given",
+            "Fhirpath": "name.given"
+          },
+          {
+            "ColumnName": "Family",
+            "Fhirpath": "name.family"
+          },
+          {
+            "ColumnName": "Gender",
+            "Fhirpath": "gender"
+          },
+          {
+            "ColumnName": "Birthdate",
+            "Fhirpath": "birthDate"
+          }
+          // There is a maximum of 4 items to display
+        ]
+      },
+      {
+        "ResourceType": "Observation",
+        "Columns": [
+          {
+            "ColumnName": "Given",
+            "Fhirpath": "name.given"
+          },
+          {
+            "ColumnName": "Family",
+            "Fhirpath": "name.family"
+          },
+          {
+            "ColumnName": "Gender",
+            "Fhirpath": "gender"
+          },
+          {
+            "ColumnName": "Birthdate",
+            "Fhirpath": "birthDate"
+          }
+          // There is a maximum of 4 items to display
+        ]
+      }
+      //,{
+      //	"ResourceType": "Encounter",
+      //	...
+      //}
+    ]
+  },
+
+Per resource type you can configure a maximum of 4 properties of that resource type that will get shown in the UI. 
+Then UI will only show resource types that are not provided by a call to the EHR launch endpoint (:ref:`firely_auth_endpoints_launchcontext`).
+Also when a ``launch`` or ``launch/patient``, or a ``patient/xxxx.yyy`` scope is requested, and a patient logs in, the patient context will automatically be added based on the fhirUser claim of the user.
+
 Inferno test settings
 ---------------------
 

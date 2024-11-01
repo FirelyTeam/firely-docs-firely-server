@@ -537,7 +537,7 @@ These settings contain the username and password that have to be used as basic a
 
 Per resource type you can configure a maximum of 4 properties of that resource type that will get shown in the UI. 
 Then UI will only show resource types that are not provided by a call to the EHR launch endpoint (:ref:`firely_auth_endpoints_launchcontext`).
-Also when a ``launch`` or ``launch/patient``, or a ``patient/xxxx.yyy`` scope is requested, and a patient logs in, the patient context will automatically be added based on the fhirUser claim of the user.
+Also when a ``launch`` or ``launch/patient``, or a ``patient/xxxx.yyy`` scope is requested, and a patient logs in, the patient context will automatically be added based on the fhirUser claim of the user. This will not happen when you log in as practitioner.
 
 Inferno test settings
 ---------------------

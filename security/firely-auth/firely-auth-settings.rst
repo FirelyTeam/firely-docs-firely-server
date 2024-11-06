@@ -510,22 +510,13 @@ These settings contain the username and password that have to be used as basic a
         "ResourceType": "Observation",
         "Columns": [
           {
-            "ColumnName": "Given",
-            "Fhirpath": "name.given"
+            "ColumnName": "Id",
+            "Fhirpath": "id"
           },
           {
-            "ColumnName": "Family",
-            "Fhirpath": "name.family"
-          },
-          {
-            "ColumnName": "Gender",
-            "Fhirpath": "gender"
-          },
-          {
-            "ColumnName": "Birthdate",
-            "Fhirpath": "birthDate"
+            "ColumnName": "Date",
+            "Fhirpath": "effectiveDateTime"
           }
-          // There is a maximum of 4 items to display
         ]
       }
       //,{

@@ -59,6 +59,8 @@ You can further adjust PubSub in the PubSub section of the `appsettings.instance
             "Host": "localhost", // The URL where the message broker can be found
             "Username": "guest", // RabbitMQ username
             "Password": "guest", // RabbitMQ password
+            "PrefetchCount": 1, // RabbitMQ, ASB Number of messages to prefetch from the message broker Sets the `PrefetchCout` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints
+            "ConcurrencyNumber": 1, // RabbitMQ, ASB Number of concurrent messages that can be consumed. Sets the `ConcurrentMessageLimit` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints
             "ApplicationQueueName": "FirelyServer", // The name of the message queue used by Firely Server
             "VirtualHost": "/" // RabbitMQ virtual host; see https://www.rabbitmq.com/vhosts.html for details
         },

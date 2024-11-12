@@ -314,7 +314,8 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               "AllowOnlineAccess": false,
               "AllowFirelySpecialScopes": true,
               "RequireClientSecret": true,
-              "RefreshTokenLifetime": "30",
+              "AccessTokenLifetime": "01:00:00", // [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws]
+              "RefreshTokenLifetime": "90", // [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws]
               "ConsentLifetime": "365",
               "RequireMfa": true,
               "AccessTokenType": "Jwt",
@@ -360,6 +361,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``AllowOnlineAccess``: true / false - Whether app can request refresh tokens while the user is offline, see `SMART on FHIR refresh tokens`_. A user is offline if he is logged out of Firely Auth, either manually or by expiration
 - ``AllowFirelySpecialScopes``: true / false - Allow app to request scopes for Firely Server specific operations. Currently just 'http://server.fire.ly/auth/scope/erase-operation'
 - ``RequireClientSecret``: true / false - A :term:`public client` cannot hold a secret, and then this can be set to ``false``. Then the ``ClientSecrets`` section is ignored. See also the note below.
+- ``AccessTokenLifetime``: How long should an :term:`access token` be valid for a client? The value is specified as HH:mm:ss. A single integer is interpreted as days. NOTE: To account for clock skew, Firely Server adds a 5 minute grace period to the token lifetime by default when validating JWTs, but not reference tokens.
 - ``RefreshTokenLifetime``: If the client is allowed to use a :term:`refresh token`, how long should it be valid? The value is in days. You can also use HH:mm:ss for lower values.
 - ``ConsentLifetime`` : This is an optional setting which can specify a period after which the users consent will be revoked. The value is in days. You can also use HH:mm:ss for lower values.
 - ``AccessTokenType``: ``Jwt`` or ``Reference``. ``Jwt`` means that this client will get self-contained Json Web Tokens. ``Reference`` means that this client will get reference tokens, that refer to the actual token kept in memory by Firely Auth. For more background see :term:`reference token`.
@@ -579,6 +581,7 @@ For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need
           "AllowOfflineAccess": true,
           "AllowOnlineAccess": false,
           "RequireClientSecret": true,
+          "AccessTokenLifetime": "01:00:00",
           "RefreshTokenLifetime": "90",
           "AccessTokenType": "Reference"
         },
@@ -598,6 +601,7 @@ For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need
           "AllowOfflineAccess": true,
           "AllowOnlineAccess": false,
           "RequireClientSecret": false,
+          "AccessTokenLifetime": "01:00:00",
           "RefreshTokenLifetime": "90",
           "AccessTokenType": "Reference"
         },
@@ -625,6 +629,7 @@ For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need
             }
           ],
           "RequireClientSecret": true,
+          "AccessTokenLifetime": "01:00:00",
           "RefreshTokenLifetime": "90",
           "AccessTokenType": "Jwt"
         }

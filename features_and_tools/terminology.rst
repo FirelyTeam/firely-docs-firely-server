@@ -188,7 +188,7 @@ Notes:
 * The Endpoint, Username and Password settings are not valid for the Local Terminology Server, just for the Remote services.
 * If a Remote Terminology Service has different endpoints for different FHIR versions, configure each endpoint separately.
 * The ``SupportedInformationModels`` cannot be broader than the corresponding ``Fhir.Rx`` plugins configured in the PipelineOptions.
-* Firely Server automatically requests JWT token for an OAuth2-protected endpoint and ensures that a valid token is always submitted as part of the request to the external terminology service.
+* Firely Server automatically requests JWT tokens for an OAuth2-protected endpoint and ensures that a valid token is always submitted as part of the request to the external terminology service.
 
 A sample Terminology section in the appsettings can look like this:
 

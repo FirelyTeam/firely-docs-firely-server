@@ -50,6 +50,12 @@ Filter Logic Examples:
 |                               |                               |                              |
 | ``user/Patient.d``            |                               |                              |
 +-------------------------------+-------------------------------+------------------------------+
+| ``user/Patient.crus,``        | ``user/Patient.rs``           | ``user/Patient.rs,``         |
+|                               |                               |                              |
+| ``user/Observation.*``        | ``user/Observation.rs``       | ``user/Observation.rs``      |
+|                               |                               |                              |
+| ``user/Encounter.rs``         |                               |                              |
++-------------------------------+-------------------------------+------------------------------+
 
 Policy Creation Example:
 ^^^^^^^^^^^^^^^^^^^^^^^^

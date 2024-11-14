@@ -178,6 +178,9 @@ For each terminology service you can set the following options:
     :Endpoint: The endpoint url where Firely Server can redirect the requests to.
     :Username: If the terminology service uses Basic Authentication, you can set the required username here. 
     :Password: If the terminology service uses Basic Authentication, you can set the required password here.
+    :ClientId: If the terminology sercice uses a `client_credentials`-based OAuth2 flow, you can set the client_id here.
+    :ClientSecret: If the terminology sercice uses a `client_credentials`-based OAuth2 flow, you can set the shared client secret here.
+    :Scopes: If the terminology sercice uses a `client_credentials`-based OAuth2 flow, you can set the scopes requested by Firely Server here.
     :MediaType: Default Media-Type that should be used for serialization of the Parameters resources forwarded to the external terminology servie
 
 Notes:
@@ -185,6 +188,7 @@ Notes:
 * The Endpoint, Username and Password settings are not valid for the Local Terminology Server, just for the Remote services.
 * If a Remote Terminology Service has different endpoints for different FHIR versions, configure each endpoint separately.
 * The ``SupportedInformationModels`` cannot be broader than the corresponding ``Fhir.Rx`` plugins configured in the PipelineOptions.
+* Firely Server automatically requests JWT token for an OAuth2-protected endpoint and ensures that a valid token is always submitted as part of the request to the external terminology service.
 
 A sample Terminology section in the appsettings can look like this:
 

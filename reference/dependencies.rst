@@ -37,6 +37,7 @@ This list uses the NuGet package names (or prefixes of them) so you can easily l
 #. CreativeCode.JWS - MIT
 #. Azure.Storage.* - MIT
 #. MongoDB.* - Apache 2.0
+#. Duende.AccessTokenManagement - Apache-2.0
 
 Firely Server PubSub:
 

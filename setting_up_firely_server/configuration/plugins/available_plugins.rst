@@ -1035,3 +1035,36 @@ PubSub Messaging
 :Order: 1140
 :Description: Implements publishingn changes to a queue for the MongoDB repository. See :ref:`PubSub`.
 
+
+.. _vonk_tools_fsi:
+Bulk Data Import
+----------------
+
+.. _vonk_tools_fsi_bulk_data_import:
+
+:Name: Bulk Data Import
+:License token: http://fire.ly/vonk/plugins/bulk-data-import
+:Description: Token unrestricted in the amount of resources that can be loaded in total, restricts the amount of resources that can be loaded in one go to 1000, and does not support Recovery Journal feature. See :ref:`Firely Server Ingest <tool_fsi>`.
+
+.. _vonk_tools_fsi_bulk_data_import_unlimited:
+
+:Name: Bulk Data Import - Unlimited
+:License token: http://fire.ly/vonk/plugins/bulk-data-import/unlimited
+:Description: Token unrestricted in the amount of resources that can be loaded in total as well as in one go, supports the Recovery Journal feature. See :ref:`Firely Server Ingest <tool_fsi>`.
+
+.. _vonk_tools_firely_auth:
+Firely Auth
+----------------
+
+.. _vonk_tools_firely_auth:
+
+:Name: Firely Auth
+:License token: http://fire.ly/server/auth
+:Description: Token restricted to three registered clients in total. See :ref:`Firely Auth <firely_auth_index>`.
+
+.. _vonk_tools_firely_auth_unlimited:
+
+:Name: Firely Auth - Unlimited
+:License token: http://fire.ly/server/auth/unlimited
+:Description: Token unrestricted in the amount of registered clients. See :ref:`Firely Auth <firely_auth_index>`.
+

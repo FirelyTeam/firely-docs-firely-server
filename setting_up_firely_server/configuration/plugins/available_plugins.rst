@@ -1025,7 +1025,7 @@ PubSub Messaging
 :Configuration: ``Vonk.Plugin.PubSub.Pub.MongoDb.PubMongoDbConfiguration``
 :License token: http://fire.ly/vonk/plugins/pubsub
 :Order: 1140
-:Description: Implements publishingn changes to a queue for the MongoDB repository. See :ref:`PubSub`.
+:Description: Implements publishing changes to a queue for the MongoDB repository. See :ref:`PubSub`.
 
 .. _vonk_plugins_pubsub_pub_sql:
 
@@ -1033,5 +1033,5 @@ PubSub Messaging
 :Configuration: ``Vonk.Plugin.PubSub.Pub.Sql.PubSqlDbConfiguration``
 :License token: http://fire.ly/vonk/plugins/pubsub
 :Order: 1140
-:Description: Implements publishingn changes to a queue for the MongoDB repository. See :ref:`PubSub`.
+:Description: Implements publishing changes to a queue for the SQL Server repository. See :ref:`PubSub`.
 

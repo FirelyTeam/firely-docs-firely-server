@@ -15,6 +15,6 @@ Using a primary constructor this could look like:
     
 You can also get access to conformance resources directly through the ``IAdministrationSearchRepository``. However, using the ``IAsyncResourceResolver`` implementation provides extras:
 
-- StructureDefinition resources have a freshly calculated snapshot. This is important for correct validation.
-- ValueSets have a fresh expansion.
 - Conformance resources are cached in memory.    
+- StructureDefinition resources have a freshly calculated snapshot. This is important for correct validation.
+- When a ValueSet is expanded (e.g. during a validation), the expansion is cached along with the ValueSet itself. ValueSets are not expanded by Firely Server by default, but they may have an expansion already present when loaded into the administration database.

@@ -467,6 +467,10 @@ The content of a disclaimer is user-defined and can be expressed in a `liquid te
 For each disclaimer a checkbox is rendered in the UI by Firely Auth on the disclaimer page. A description shown next the checkbox can be defined for each disclaimer.
 Firely Auth will automatically fill out placeholders defined in the liquid template based on static properties defined as ``TemplateProperties``.
 
+For versioning, the ``Id`` property can be used, like using ``GeneralTermsV1`` and then changing it to ``GeneralTermsV2`` if needed.
+After doing a change like this, the system will ask for agreement to ``GeneralTermsV2`` upon next login that requires this disclaimers consent.
+The consent for the previous disclaimer will stay in the database for future reference.
+
 See the ``Data\DisclaimerTemplates`` folder in the Firely Auth disribution for an example disclaimer template.
 
 EHR and standalone launch context settings

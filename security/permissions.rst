@@ -112,7 +112,10 @@ Policy Creation Example:
 
 .. note::
 
-    Multiple AccessPolicy resources containing the same Reference will be combined. In the above example if the user Alice is found in another policy with ``user/Patient.c``, the resulting permission will be ``user/Patient.crs``
+    Multiple AccessPolicy resources containing the same Reference will be combined. In the above example if the user Alice is found in another policy with ``user/Patient.c``, the resulting permission will be ``user/Patient.crs``.
+    
+    
+    (**IMPORTANT**) AccessPolicy resources cannot be accessed or edited with a wildcard resource scope (e.g., ``system/*.*``). To manage AccessPolicy resources, use specific scopes such as ``system/AccessPolicy.*``.
 
 3. Any request where the 'fhirUser' claim within an access token corresponds to any subject listed in the AccessPolicy, will be filtered according to the AccessPolicyDefinition.
 

@@ -19,6 +19,8 @@ Release 6.0.0, [Month] [Date], 2024
 Security
 ^^^^^^^^
 
+#. AccessPolicy resources cannot be accessed by a resource wildcard scope. E.g. ``system/*.*`` should be replaced with  - ``system/AccessPolicy.*`` to be able to access AccessPolicy resources.
+
 .. note::
     We have identified a potential security issue if your deployment matches all of the criteria below.
     Of course, we fixed the issue, see Fixes #1 below.

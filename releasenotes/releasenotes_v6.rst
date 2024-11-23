@@ -16,6 +16,18 @@ Current Firely Server release notes (v6.x)
 Release 6.0.0, [Month] [Date], 2024
 ---------------------------------------
 
+Firely is proud to announce a new major version of Firely Server. This release represents a significant step forward in our commitment to providing a reliable, compliant and easy to use FHIR server.
+With this new version, we've focused on delivering:
+
+- enhanced performance based on a new database schema for MongoDB which additionally supports Sharding
+- detailed insights into Firely Server deployments based on OpenTelemetry metrics and traces
+- improved integration into exising infrastructures with Kafka support for Firely Server PubSub
+- out-of-the-box compliance with more HL7 DaVinci Implementation Guides, e.g. by providing support for the HRex $member-match operation
+- flexibility for deployments requiring multi-tenancy
+
+Please study the release notes carefully as they contain breaking changes to the behaviour of Firely Server, as well as the configuration of the server. 
+Our support team is happy to provide assitance in the upgrade and can be reached at `server@fire.ly <mailto:server@fire.ly>`_ or through the support desk.
+
 Security
 ^^^^^^^^
 
@@ -39,6 +51,7 @@ Features
 #. It is now possible to disable the create-on-update feature with a new setting in the ``FhirCapabilities`` section of the app settings. For more information see :ref:`restful_crud`.
 #. With this release ``Update with no changes (No-Op)`` is enabled by default. For more information about the plugin see :ref:`restful_noop`.
 #. The use of other compartments then Patient in SMART on FHIR authorization is not well defined and potentially unsafe. So we redacted the ``Filters`` settings in ``SmartAuthorizationOptions``. You can now only specify a filter on the Patient compartment. For more information see :ref:`feature_accesscontrol_config`. If you configured just a Patient filter in the old format, Firely Server will interpret it in the new format and log a warning that you should update your settings. If you configured a filter on a different compartment, Firely Server will log an error and halt.
+#. Added support for reading messages from a Kafka topic when using Firely Server PubSub
 
 Fixes
 ^^^^^

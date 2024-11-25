@@ -517,6 +517,19 @@ RabbitMQ
 
 All applications involved in message exchange are connected to the same message broker. Hypothetically, every party can publish and consume messages of any type. However, in practice, it is far more common that applications are only interested in consuming specific types of messages. Scenarios covered by PubSub are no exception. RabbitMQ allows for flexible configuration of message routing by decoupling message producers from message consumers using primitives such as `exchanges` and `queues`. You can read more about them in the `RabbitMQ documentation <https://www.rabbitmq.com/tutorials/amqp-concepts.html#amqp-model>`_.
 
+**Additional configuration**
+
+RabbitMQ has inbuilt support for `TLS <https://www.rabbitmq.com/docs/ssl#overview>`_. By default Firely Server PubSub assumes that TLS support is disabled for the message broker and connects to port `5672`. It is possible to change the port to `5671` in order to automatically enable TLS support.
+
+      "PubSub": {
+        "MessageBroker": {
+            "Host": "Endpoint=sb://<Service Bus Namespace>.servicebus.windows.net/;SharedAccessKeyName=<Shared Access Key name>;SharedAccessKey=<Shared Access Key>",
+            // "Username": "guest",
+            // "Password": "guest",
+            // "RabbitMQ": {
+            //   "Port": 5672
+            // },
+
 **Events**
 
 If you want to subscribe to events from Firely Server, your application will need to create a queue bound to either or both of these exchanges:

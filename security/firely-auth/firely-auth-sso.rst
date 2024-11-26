@@ -56,7 +56,7 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
     .. Note:: 
         Note that if Firely Auth queries resources in Firely Server, it will do so via the default FHIR information model of Firely Server. Only R3 or R4 resources are supported by Firely Auth and can be used to derive the fhirUser claim this way. If the resource is not found, Firely Auth will not be able to derive the FhirUser claim. In this case, the user will not be able to log in.
         
-        For client authentication, Firely Auth will automatically request internally a JWT access token. `Firely-Auth-Internal-FhirLookup` will be used as the client id within the token. There is no need to configure this client_id via the admin interfaces of Firely Auth.
+        For setting up this connection with Firely Server in a secure fashion, Firely Auth will automatically request internally a JWT access token. `Firely-Auth-Internal-FhirLookup` will be used as the client id within the token. There is no need to configure this client_id via the admin interfaces of Firely Auth.
 
 #. Configure security groups
 

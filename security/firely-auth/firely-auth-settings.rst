@@ -333,8 +333,8 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               "AlwaysSendClientClaims": false,
               "AllowManagementApiAccess": false,
               "EnableLocalLogin": false, 
-					    "EnableExternalLogin": false, 
-			        "IdentityProviderRestrictions": [ "OpenIdConnect-SAMPLE" ]
+              "EnableExternalLogin": false, 
+              "IdentityProviderRestrictions": [ "OpenIdConnect-SAMPLE" ]
           }
       ]
   }

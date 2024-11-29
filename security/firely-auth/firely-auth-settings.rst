@@ -331,7 +331,10 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               ],
               "ClientClaimPrefix": "",
               "AlwaysSendClientClaims": false,
-              "AllowManagementApiAccess": false
+              "AllowManagementApiAccess": false,
+              "EnableLocalLogin": false, 
+					    "EnableExternalLogin": false, 
+			        "IdentityProviderRestrictions": [ "OpenIdConnect-SAMPLE" ]
           }
       ]
   }
@@ -376,6 +379,9 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``ClientClaimPrefix``: Add custom defined prefix to the name of all custom client claims. Works together with the setting ``ClientClaims``. 
 - ``AlwaysSendClientClaims``: Add the claims defined in ``ClientClaims`` regardless of the OAuth 2.0 flow used by a client (e.g. even if a authorization_code flow is used)
 - ``AllowManagementApiAccess``: Allows this client to use the :ref:`firely_auth_mgmt`
+- ``EnableLocalLogin``: true / false - Enables/disables the possibility to use the builtin login mechanism. If disable the user can only use an external identity provider to log in.
+- ``EnableExternalLogin``: true / false - Enables/disables the possibility to use external identity providers to log in with.
+- ``IdentityProviderRestrictions``: Optional, a list of ``Schemes`` of configured external identity providers which this client can use to login with. If not provided, all configured external identity providers will be available.
 
 .. note::
 

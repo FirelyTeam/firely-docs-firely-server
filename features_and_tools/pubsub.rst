@@ -626,6 +626,10 @@ SQL Server
 
 If you want to enable publishing notifications whenever resources get changed in Firely Server and you use SQL Server, some initial configuration is required to enable tracking of changes in the DB. This can be done automatically by Firely Server or manually.
 
+.. note::
+
+    Not all editions of SQL Server support the required Change Data Capture features. See :ref:`configure_sql` for more information.
+
 **Automatic initialization**
 
 If you want Firely Server to do that configuration for you, based on your settings:

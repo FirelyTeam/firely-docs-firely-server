@@ -15,8 +15,12 @@ There are two ways to create the Firely Server database on a SQL Server instance
 
 In both cases:
 
-*   Prepare an instance of SQL Server 2012 or newer. Any edition - including SQL Server Express - will do.
-    The instance will have a servername and possibly an instancename: ``server/instance``.
+*   Prepare an instance of SQL Server 2012 or newer. The instance will have a servername and possibly an instancename: ``server/instance``.
+
+.. note:: 
+
+    Any edition of SQL Server can be used. However, for :ref:`PubSub`, support for Change Data Capture is required. In this case you cannot use SQL Express or Azure SQL Database below tier S3. 
+    For more information, see `SQL Server editions <https://learn.microsoft.com/en-us/sql/sql-server/editions-and-components-of-sql-server-2022>`_ and `Features comparison: Azure SQL Database and Azure SQL Managed Instance <https://learn.microsoft.com/en-us/azure/azure-sql/database/features-comparison>`_.
 
 *   Changing a setting means overriding it as described in :ref:`configure_change_settings`. 
 

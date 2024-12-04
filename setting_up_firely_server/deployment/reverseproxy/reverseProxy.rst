@@ -57,7 +57,22 @@ A popular open source alternative is Nginx. For instruction on how to deploy Fir
 Using X-Forwarded-Host header
 -----------------------------
 
-The `X-Forwarded-Host header <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Host>`_ is used for identifying the original host by the client, which is especially useful with reverse proxies. As per the `FHIR specification <http://hl7.org/fhir/http.html#custom>`_, Firely Server supports usage of this header. Keep in mind that usage of the header exposes privacy sensitive information.
+The `X-Forwarded-Host header <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-Host>`_ is used for identifying the original host by the client, which is especially useful with reverse proxies. 
+As per the `FHIR specification <http://hl7.org/fhir/http.html#custom>`_, Firely Server supports usage of this header. Keep in mind that usage of the header exposes privacy sensitive information.
+
+In practice, this header can be set by any HTTP client sending a request, not only the trusted reverse proxy. This might pose a security risk when combined with the functionality of :ref:`limiting access to the administration endpoints based on IP addresses <configure_administration_access>`.
+To mitigate these risks, Firely Server offers settings that allow specifying network ranges or specific IPs for trusted reverse proxies. Firely Server ignores the `X-Forwarded-*` headers if the request comes from a non-trusted IP.
+
+    .. code-block:: json
+    
+         "Hosting": {
+            "ReverseProxySupport": {
+               "Enabled": true,
+               "TrustedProxyIPs": ["192.168.0.5"],
+               "TrustedProxyIPNetworks": ["192.168.0.0/24"]
+            }
+         }
+
 
 When using this header, make sure that the header value only contains the domain name like listed below:
 

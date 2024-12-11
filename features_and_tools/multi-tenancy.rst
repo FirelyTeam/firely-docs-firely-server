@@ -21,6 +21,11 @@ The basics are simple:
 Implications
 ------------
 
+.. danger:: 
+
+    Currently, this feature is not compatible with the `create-on-update functionality in FHIR <https://www.hl7.org/fhir/http.html#upsert>`_. 
+    If two operations are enabled in the same Firely Server installation, this can lead to data leakage. See :ref:`below<feature_multitenancy_create_on_update>` on how to mitigate this issue.
+
 .. warning:: 
 
     It is very difficult to enable this feature after resources have already been loaded into Firely Server. 
@@ -65,3 +70,62 @@ You can control the working of the feature with the settings:
 
     Choose the ``TenantLabelSystem`` wisely. Once resources have been loaded into Firely Server it is nearly impossible to update this.
 
+
+
+
+Known issues
+------------
+
+When virtual multitenency is enabled, the `DELETE` behavior differs from the default Firely Server behavior. Normally, when a deleted resource gets requested, Firely Server responds with `410 Gone`. 
+However, if the virtual multitenancy is used, the server will respond with `404 Not Found`.
+
+.. _feature_multitenancy_create_on_update:
+
+**Create-on-Update issue**
+
+This behavior has implications for the `create-on-update functionality<https://www.hl7.org/fhir/http.html#upsert>`. Specifically, the following scenario is a concern:
+
+.. note::
+
+    1. create a resource with id `A` in Tenant 1
+    2. delete resource `A`
+    3. (re)create resource `A` in Tenant 2
+    4. request history of resource `A` – **this will include versions that belonged to Tenant 1**
+
+There are two mitigation strategies:
+
+* Setting ``AllowCreateOnUpdate`` in the settings to ``false``:
+
+    .. code-block:: json
+        
+        {
+            // ...
+            "FhirCapabilities": {
+                "AllowCreateOnUpdate": false,
+                // ..
+            }
+        }
+
+* Disabling ``Vonk.Plugin.Operations.History`` to prevent reading old resource revisions.
+
+
+    .. code-block:: json
+        
+        { 
+          "PipelineOptions": {
+            "PluginDirectory": "./plugins",
+            "Branches": [
+              {
+                "Path": "/",
+                "Include": [
+                  // ...
+                ],
+                "Exclude": [
+                  "Vonk.Plugin.Operations.History",
+                  // ...
+                ]
+              },
+              // ...
+            ]
+          }
+        }

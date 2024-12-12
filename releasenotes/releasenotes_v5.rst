@@ -137,7 +137,7 @@ Release 5.7.0, May 29th, 2024
 
 .. note::
 
-    Due to a security vulnerability we recommend not to use version 5.7.0. Please update to version 5.10.1. See :ref:`vonk_releasenotes_5_10_0` for more information.
+    Due to a security vulnerability we recommend not to use version 5.7.0. Please update to version 5.10.1. See :ref:`vonk_releasenotes_5_10_1` for more information.
 
 .. note::
     Support for .NET 6 ends in November 2024. See `.NET Support Policy <https://dotnet.microsoft.com/en-us/platform/support/policy>`_. This version of Firely Server supports .NET 8. So we recommend that you upgrade to Firely Server 5.7.0 and hence .NET 8 before November 2024.

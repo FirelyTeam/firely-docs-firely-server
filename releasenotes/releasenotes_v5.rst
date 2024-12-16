@@ -19,7 +19,7 @@ Current Firely Server release notes (v5.x)
     *Key Updates:*
 
     * Firely Server v5.7.0: The upgrade to .NET 8 has been implemented in Firely Server v5.7.0 and later. We highly recommend all customers upgrade to the latest version to continue receiving stable updates and security patches.
-    * Upcoming Firely Server 6: Before November 12, 2024, we will be releasing a new major version, Firely Server 6. According to our support policy, Firely Server 4 will not be supported anymore and therefore not be updated to .NET 8. It is crucial for customers using Firely Server 4 to plan their upgrade path to a supported version.
+    * Upcoming Firely Server 6: Early 2025, we will be releasing a new major version, Firely Server 6. According to our support policy, Firely Server 4 will not be supported anymore and therefore not be updated to .NET 8. It is crucial for customers using Firely Server 4 to plan their upgrade path to a supported version.
     * Upgrade Support: For customers using previous versions, especially previous major versions, we are here to assist you with your upgrade strategies. Please reach out to our support team at `server@fire.ly <mailto:server@fire.ly>`_ to discuss your specific needs.
 
     *What This Means for You:*
@@ -30,6 +30,20 @@ Current Firely Server release notes (v5.x)
     We appreciate your continued trust in Firely Server. If you have any questions or require further assistance regarding this update, please do not hesitate to reach out to our support team at `server@fire.ly <mailto:server@fire.ly>`_.
 
     For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
+
+.. _vonk_releasenotes_5_10_1:
+
+Release 5.10.1, December 12th, 2024
+----------------------------------
+
+.. important::
+
+    Firely has found a vulnerability in Firely Server. In versions 5.7.0, 5.8.0, 5.9.0, 5.9.1 or 5.10.0 it does not correctly validate the signature of JWT Tokens. If you use SMART on FHIR authentication and use one of the mentioned versions, we recommend that you update to version 5.10.1 as soon as possible.
+    
+Fix
+^^^
+
+#. Fixed a vulnerability in the validation of JWT Tokens. 
 
 .. _vonk_releasenotes_5_10_0:
 
@@ -119,6 +133,10 @@ Fix
 
 Release 5.7.0, May 29th, 2024
 -----------------------------
+
+.. note::
+
+    Due to a security vulnerability we recommend not to use version 5.7.0. Please update to version 5.10.1. See :ref:`vonk_releasenotes_5_10_1` for more information.
 
 .. note::
     Support for .NET 6 ends in November 2024. See `.NET Support Policy <https://dotnet.microsoft.com/en-us/platform/support/policy>`_. This version of Firely Server supports .NET 8. So we recommend that you upgrade to Firely Server 5.7.0 and hence .NET 8 before November 2024.

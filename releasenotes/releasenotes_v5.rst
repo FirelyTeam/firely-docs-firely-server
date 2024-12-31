@@ -31,10 +31,39 @@ Current Firely Server release notes (v5.x)
 
     For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
 
+.. _vonk_releasenotes_5_10_2:
+
+Release 5.10.2, January xxth, 2025
+----------------------------------
+
 .. _vonk_releasenotes_5_10_1:
 
+Security
+^^^^^^^^
+#. Enhanced the security of the following custom operations. Previously, these operations would only check for any valid token if they were specified in the :ref:`Protected <feature_accesscontrol_config>` operations setting. All operations now take limitations expressed in the SMART on FHIR scopes within the access token into account:
+
+    - $erase
+    - $docref
+    - $find-matches
+    - $document
+    - $member-match
+    - $everything
+    - $meta, $meta-add, $meta-delete
+    - Document Handling on the root endpoint
+    - Provenance handling
+
+Feature
+^^^^^^^
+
+#. Introduced a new setting ``ReverseProxySupport`` enabling limits on which IPs or networks can specify an X-Forwarded-For header for Firely Server. In case the /administration endpoint is not otherwise protected by a firewall, the X-Forwarded-For header could be used previously to bypass the network protections of the API.
+
+
+Fix
+^^^
+#. The $versions operation now works in combination with a X-Forwarded-Prefix header. Previously it would return "The $versions operation is only supported on the root of the server or the root of a mapped endpoint".
+
 Release 5.10.1, December 12th, 2024
-----------------------------------
+-----------------------------------
 
 .. important::
 

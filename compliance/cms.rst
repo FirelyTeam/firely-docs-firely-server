@@ -214,7 +214,7 @@ Impacted payers (see `CMS definition <https://www.cms.gov/priorities/key-initiat
 To implement a Payor-To-Payor API it is necessary to:
   #. Enable SMART on FHIR and point Firely Server to an authorization server managing organizational access for external payors. See :ref:`feature_accesscontrol`.
   #. Expose the Patient record with all its USCDI, CPCDS, and prior authorization data elements
-  #. To update the Payor-To-Payor API data within one business day of its availability. Its recommended to either :ref:`PubSub` or :ref:`tool_fsi` to ingest the resource updates.
+  #. Update the Payor-To-Payor API data within one business day of its availability. It's recommended to either :ref:`PubSub` or :ref:`tool_fsi` to ingest the resource updates.
   #. Provide an API for member-match based on demographics such that the new payor can identify their members on the current system.
   #. Limit the API access via individual resource access using the :ref:`restful`, :ref:`feature_patienteverything` or :ref:`feature_bulkdataexport` to only Patients that have been previously matched by the new payor. This can be achieved by using dynamic Access Policies. See :ref:`feature_accesscontrol_permissions`.
 

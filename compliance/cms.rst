@@ -205,7 +205,7 @@ To implement a |PRODIR| it is necessary to:
 
 |PRTOPR|
 -------------------
-Impacted payers (see `CMS definition <https://www.cms.gov/priorities/key-initiatives/burden-reduction/interoperability/faqs>`_) are required to provide a Payor-To-Payor API in order to enable care continuity and support patient-centered data sharing with other payors. The goal of the API is to provide the possibility of transfering relevant data from an old payor to a new payor in order to support better decision-making and avoid delays in care. The following information should be provided via Payor-To-Payor API using the corresponding implementation guides:
+Impacted payers (see `CMS definition <https://www.cms.gov/priorities/key-initiatives/burden-reduction/interoperability/faqs>`_) are required to provide a Payor-To-Payor API to enable care continuity and patient-centered data sharing. The API facilitates the transfer of relevant data from an old payer to a new payer, supporting better decision-making and avoiding delays in care. The following information should be provided via Payor-To-Payor API using the corresponding implementation guides:
 
 * Claim details and encounters, excluding provider remittances and enrollee cost-sharing information (see :ref:`carin_ig`)
 * Clinical data incl. laboratory data (see :ref:`us_core_ig` and Da Vinci Payer Data Exchange)

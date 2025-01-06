@@ -14,9 +14,10 @@ Firely Server offers *virtual* multi-tenancy. All the resources are still stored
 The basics are simple:
 
 - On every request, the tenant is read from either a specific HTTP header or a claim in the authorization token.
+- If no tenant is specified, depending whether your operation configuration requires it, the special `shared` tenant might be used internally.
 - If the request creates or updates any resource, the tenant is applied to each of those resources. This is done by adding a *security label* to the ``meta.security`` element of the resource.
 - For both reading and writing resources, the tenant is used to limit access to only the resources having a matching security label.
-- Upon reading, the tenant security label is removed from the resource and thus not visible from the outside.
+- Upon reading, the tenant security label is (by default) removed from the resource and thus not visible from the outside.
 
 Implications
 ------------
@@ -30,6 +31,11 @@ Implications
 
     :ref:`Firely Server Ingest <tool_fsi>` does not apply tenant labels. You must add them to any resource before ingesting them. 
     This includes Bundle entries.
+
+.. warning:: 
+
+    As a security measure to prevent data leaks, when multi-tenancy is enabled, the :ref:`history <restful_history>` and `vread` operations are disabled.
+    Without this measure, when a resource is deleted by the tenant and later another tenant creates a resource with the same id, the history of changes would be accessible.
 
 Other implications:
 
@@ -52,7 +58,21 @@ You can control the working of the feature with the settings:
             "TenantClaim": "tenant",
             "TenantLabelSystem": "http://server.fire.ly/fhir/sid/tenant-label",
             "AllowTenantFromHeader": true,
-            "AllowTenantFromClaim": true
+            "AllowTenantFromClaim": true,
+            "RemoveTenantLabelFromResponse": true,
+            "ResourceAccess": {
+                "<unique-key>": {
+                  "Priority": 100,
+                  "Tenant": "Required"
+                },
+                "<unique-key>": {
+                  "Priority": 200,
+                  "Tenant": "Shared"
+                  "Profiles": [],
+                  "ResourceTypes": ["Patient", "Practitioner"],
+                  "Filter": "_tag=vip"
+                }
+            }
         },
 
 :TenantHeader: The name of the HTTP header to read the tenant from. This is only evaluated if ``AllowTenantFromHeader`` is set to ``true``.
@@ -60,6 +80,13 @@ You can control the working of the feature with the settings:
 :TenantLabelSystem: The value of the ``meta.security.system`` element to use for the tenant security label. You can only choose this once.
 :AllowTenantFromHeader: The tenant may be specified with an HTTP header, with the name specified in ``TenantHeader``.
 :AllowTenantFromClaim: The tenant may be specified with a claim in the authorization token, with the name specified in ``TenantClaim``.
+:RemoveTenantLabelFromResponse: The label will be removed from the resource by default, but this behaviour can be disabled if this option is set to ``false``.
+:ResourceAccess: This structure allows to define set of conditional logic that will be applied to each request.
+:ResourceAccess:Priority: This value will be used to choose most important logic entry if multiple entries would match the request.
+:ResourceAccess:Tenant: This value specifies whether the tenant is required to be specified when accessing the resource. It has to be either ``Required`` or ``Shared``.
+:ResourceAccess:Profiles: This value specifies a list of ``meta.profile`` values to look for in the resource. The resource should have at least one of those values.
+:ResourceAccess:ResourceTypes: This value specifies a list of resources this configuration will be applicable to. When left empty, it is assumed to be not constrained.
+:ResourceAccess:Filter: This value specifies a filter that resources must fulfill.
 
 .. warning:: 
 

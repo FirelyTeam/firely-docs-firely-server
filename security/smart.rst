@@ -119,3 +119,6 @@ You can control the way Access Control based on `SMART on FHIR <https://fire.ly/
   After properly configuring Firely Server to work with an OAuth2 authorization server, enabling SMART and configuring the SmartCapabilities for Firely Server, you are able to discover the SMART configuration metadata by retrieving ``<base-url>/.well-known/smart-configuration``. 
   
   Please check section `Retrieve .well-known/smart-configuration <https://build.fhir.org/ig/HL7/smart-app-launch/app-launch.html#retrieve-well-knownsmart-configuration>`_  in the SMART specification for more details on how to request the metadata and how to interpret the response.
+
+.. note::
+  Some resource type interactions can be further relaxed or restricted using :ref:`Resource Access <feature_resourceaccessdefinition>` configuration.

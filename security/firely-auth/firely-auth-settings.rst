@@ -523,15 +523,15 @@ For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need
       "FHIR_BASE_URL": "<url where you host Firely Server>",
       "IntrospectionSecret": "secret"
     },
-    "KeyManagementConfig": {
-      "RSA_Config": {
+    "KeyManagement": {
+      "RSA": {
         "SupportedAlgorithms": [
           "RS256",
           "RS384",
           "RS512"
         ]
       },
-      "EC_Config": {
+      "EC": {
         "SupportedAlgorithms": [
           "ES256",
           "ES384",

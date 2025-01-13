@@ -68,7 +68,6 @@ You can control the working of the feature with the settings:
 :AllowTenantFromHeader: The tenant may be specified with an HTTP header, with the name specified in ``TenantHeader``.
 :AllowTenantFromClaim: The tenant may be specified with a claim in the authorization token, with the name specified in ``TenantClaim``.
 :RemoveTenantLabelFromResponse: The label will be removed from the resource by default, but this behaviour can be disabled if this option is set to ``false``.
-:ResourceAccess:Filter: This value specifies a filter that resources must fulfill.
 
 .. warning:: 
 

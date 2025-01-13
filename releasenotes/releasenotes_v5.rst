@@ -54,7 +54,12 @@ Feature
 ^^^^^^^
 
 #. Introduced a new setting ``ReverseProxySupport`` enabling limits on which IPs or networks can specify an X-Forwarded-For header for Firely Server. In case the /administration endpoint is not otherwise protected by a firewall, the X-Forwarded-For header could be used previously to bypass the network protections of the API. See :ref:`xforwardedheader` for more details.
+#. Improved performance of pagination in some scenarios when Firely Server is used with a MongoDB backend.
+  - Note that because of the nature of this improvement, for some searches the ``last`` link in the search results bundle will not be available. This is because the last page is not known until the client requests it. The client can still use the ``next`` link to get the next page.
 
+Database
+^^^^^^^^
+#. For **MongoDB** we added a new index ``ix_lu_id`` that facilitates the pagination performance improvement mentioned above. The migration adding the index is executed automatically on startup. Alternatively, you can apply it manually using the script ``FS_SchemaUpgrade_Data_v26_v27``.
 
 Fix
 ^^^

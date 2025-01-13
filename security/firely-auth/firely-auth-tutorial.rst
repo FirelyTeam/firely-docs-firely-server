@@ -30,7 +30,7 @@ Getting started
 Step 1 - Software
 ^^^^^^^^^^^^^^^^^
 
-Firely Auth is distributed as .NET Core  binaries and in a Docker image. For this introduction we will use the binaries.
+Firely Auth is distributed as .NET Core binaries and in a Docker image. For this introduction we will use the binaries.
 
 #. Install .NET Core 8 Runtime
 #. Download the zip file with Firely Auth binaries from `the download server <https://downloads.simplifier.net/firely-auth/firely-auth-latest.zip>`_

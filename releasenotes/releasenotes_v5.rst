@@ -33,7 +33,7 @@ Current Firely Server release notes (v5.x)
 
 .. _vonk_releasenotes_5_10_2:
 
-Release 5.10.2, January xxth, 2025
+Release 5.11.0, January xxth, 2025
 ----------------------------------
 
 Security

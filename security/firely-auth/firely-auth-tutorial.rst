@@ -77,7 +77,7 @@ See :ref:`firely_auth_settings_userstore` to read up on how they are configured.
 Step 5 - Email client
 ^^^^^^^^^^^^^^^^^^^^^
 
-Firely Auth sends email messages to users in case their accounts should be mananged locally and not through an external ideneity provider. Emails will be send out for activating accounts and to execute password resets.
+Firely Auth sends email messages to users in case their accounts should be mananged locally and not through an external identity provider. Emails will be send out for activating accounts and to execute password resets.
 See :ref:`firely_auth_settings_email` to read up on how to configure an active email server for sending the messages.
 
 Step 6 - Clients

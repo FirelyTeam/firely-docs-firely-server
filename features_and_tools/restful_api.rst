@@ -188,7 +188,7 @@ Navigational paging links
 Paging behavior of Firely Server can be configured in the ``BundleOptions`` of the appsettings, also see :ref:`bundle_options`. ::
     
   "BundleOptions": {
-    "DefaultTotal": "accurate", // none, accurate
+    "DefaultTotal": "none", // none, accurate
     "DefaultCount": 10,
     "MaxCount": 50,
     "DefaultSort": "-_lastUpdated"

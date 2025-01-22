@@ -15,7 +15,7 @@ $document is implemented on the Composition endpoint of Firely Server. Typically
 
 .. code-block:: HTTP
 
-    POST {base-url}/Composition
+    POST {base-url}/Composition/$document
 
 .. code-block:: json
 
@@ -24,7 +24,7 @@ $document is implemented on the Composition endpoint of Firely Server. Typically
         "parameter": [
             {
                 "name": "id",
-                "valueString": "example"
+                "valueString": "<id of the composition resource>"
             }
         ]
     }
@@ -41,7 +41,7 @@ The generated Document bundle can be immediately stored on the Bundle endpoint o
 
 .. code-block:: HTTP
 
-    POST {base-url}/Composition
+    POST {base-url}/Composition/$document
 
 .. code-block:: json
 
@@ -50,7 +50,7 @@ The generated Document bundle can be immediately stored on the Bundle endpoint o
         "parameter": [
             {
                 "name": "id",
-                "valueString": "example"
+                "valueString": "<id of the composition resource>"
             },
             {
                 "name": "persist",
@@ -63,7 +63,7 @@ or
 
 .. code-block:: HTTP
 
-    GET {base-url}/Composition/<id>?persist=true
+    GET {base-url}/Composition/<id>/$document?persist=true
 
 Known limitations
 -----------------

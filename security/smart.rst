@@ -3,6 +3,10 @@
 SMART on FHIR Configuration
 ===========================
 
+.. warning::
+
+  In Firely Server version 5.11.0 and later versions ``vread`` and ``_history`` searches will be disabled when SMART on FHIR is enabled. 
+  
 .. note::
 
   The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.

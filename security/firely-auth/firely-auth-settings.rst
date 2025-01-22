@@ -311,6 +311,7 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               "AllowedSmartActions": ["c", "r", "u", "d", "s"],
               "AllowedSmartSubjects": [ "patient", "user", "system"],
               "AllowedResourceTypes": ["Patient", "Observation", "Claim"],
+              "ShowFineGrainedScopes": false,
               "EnableLegacyFhirContext": false,
               "AlwaysIncludeUserClaimsInIdToken": true,
               "RequirePkce": false,
@@ -360,6 +361,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``AllowedSmartActions``: Actions on resources that can be granted in SMART on FHIR v2: ``c``, ``r``, ``u``, ``d`` and/or ``s``, see `SMART on FHIR V2 scopes`_
 - ``AllowedSmartSubjects``: Categories of 'subjects' to which resource actions can be granted. Can be ``system``, ``user`` and/or ``patient``
 - ``AllowedResourceTypes``: The client can only request SMART scopes for these resource types. To allow all resource types, do not use ``["*"]"`` but just leave the array empty.
+- ``ShowFineGrainedScopes``: true / false - Whether when giving consent for the ``Condition`` or ``Observation`` resources, the UI will provide the user the option to restrict the consent to specific categories within that resource. For ``Condition`` these will be: ``Encounter Diagnosis``, ``Problem List``, and ``Health Concern``, for ``Observation`` these will be: ``Clinical Test``, ``Laboratory``, ``Social History``, ``SDOH``, ``Survey``, and ``Vital Signs``.
 - ``EnableLegacyFhirContext``: true / false - Whether to use the new syntax of ``fhirContext`` defined in `SMART on FHIR v2.1.0 <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#fhir-context>`_. Default is false, when set to true the old syntax of ``fhirContext`` defined in `SMART on FHIR v2.0.0 <https://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html#fhircontext>`_ is used.
 - ``AlwaysIncludeUserClaimsInIdToken``: true / false: When requesting both an id token and access token, should the user claims always be added to the id token instead of requiring the client to use the userinfo endpoint. Default is false
 - ``Require PKCE``: true / false - see :term:`PKCE`. true is recommended for a :term:`public client` and can offer an extra layer of security for :term:`confidential client`.

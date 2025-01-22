@@ -148,7 +148,7 @@ In the example below an OperationOutcome for a No-Op scenario is returned when t
 Versioning
 ----------
 
-Firely Server keeps a full version history of every resource, including the resources on the :ref:`administration_api`.
+Firely Server keeps a full version history of every resource, including the resources on the :ref:`administration_api`. Be aware that version specific searches cannot be used when SMART on FHIR is enabled in Firely Server version 5.11.0 and later versions.
 
 .. _restful_search:
 
@@ -180,9 +180,41 @@ Firely Server also supports ``_include:iterate`` and ``_revinclude:iterate``, as
 
 .. _navigational_links:
 
-Navigational links
-^^^^^^^^^^^^^^^^^^
-The "next", "prev", and "last" link may contain privacy-sensitive information as part of a search parameter value. In order to not expose these values in logs, the :ref:`Vonk.Plugin.SearchAnonymization<vonk_plugins_searchAnonymization>` plugin can be used. It will replace the query parameter part of the navigational link with an opaque UUID. The plugin must be used starting with FHIR R5 as the specification mandates the removal of sensitive information.
+Navigational paging links
+^^^^^^^^^^^^^^^^^^^^^^^^^
+.. warning:: Please be aware that setting the ``DefaultTotal`` to "accurate" may have a performance impact on the server, as additional queries need to be made to calculate this number.
+
+Paging behavior of Firely Server can be configured in the ``BundleOptions`` of the appsettings, also see :ref:`bundle_options`. ::
+    
+  "BundleOptions": {
+    "DefaultTotal": "none", // none, accurate
+    "DefaultCount": 10,
+    "MaxCount": 50,
+    "DefaultSort": "-_lastUpdated"
+  },
+  
+
+If ``DefaultTotal`` is set to "none" the server will return:
+
+* The ``self`` and ``next`` links in the bundle response on the first page
+* Additionally, the ``first`` and ``prev`` links are returned on subsequent pages
+* The ``self``, ``first``, and ``prev`` links are returned on the last page
+
+If ``DefaultTotal`` is set to "accurate" the server will additionally return a ``last`` link on all but the last page, as well as a ``total`` element in the bundle response. The ``total`` element contains the total number of resources that match the search criteria.
+With ``DefaultCount``, the number of resources that are returned per page can be regulated. The maximum number of resources that can be returned per page is set with ``MaxCount``. The default sort order can be set with ``DefaultSort``.
+
+If MongoDb is configured as the repository back-end, Firely Server may utilize keyset pagination for navigating through the search results for optimized performance. There are a few limitations to this feature:
+
+* It is only implemented for repositories with MongoDb as a database back-end, and not for SQL Server or SQLite.
+* It is only applied if ``_sort=-_lastUpdated`` or if ``_sort`` is not set by default and not provided in the query request
+* It is only applied if no resource specific search parameters are used in the query request
+* It cannot be used in combination with the ``_skip`` parameter
+* The result set will not contain a ``last`` link
+
+If keyset pagination is applied, the navigational links will only contain ``first``, ``self`` and ``next`` links, with the ``first`` link missing on the first page and the last page not containing a ``next`` link. These links will not contain the ``_skip`` parameter but instead have a ``_continuationToken`` that can be used to retrieve the next results page.
+
+The ``next``, ``prev``, and ``last`` link may contain privacy-sensitive information as part of a search parameter value. In order to not expose these values in logs, the :ref:`Vonk.Plugin.SearchAnonymization<vonk_plugins_searchAnonymization>` plugin can be used. It will replace the query parameter part of the navigational link with an opaque UUID. The plugin must be used starting with FHIR R5 as the specification mandates the removal of sensitive information.
+
 
 Modifiers
 ^^^^^^^^^
@@ -360,6 +392,7 @@ Limitations on history
 
 #. ``_at`` parameter is not yet supported.
 #. Paging is supported, but it is not isolated from intermediate changes to resources.
+#. In Firely Server version 5.11.0 and later versions ``_history`` cannot be used when SMART on FHIR is enabled.
 
 .. _restful_batch:
 

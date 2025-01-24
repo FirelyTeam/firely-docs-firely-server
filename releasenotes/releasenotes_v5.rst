@@ -33,8 +33,11 @@ Current Firely Server release notes (v5.x)
 
 .. _vonk_releasenotes_5_10_2:
 
-Release 5.11.0, January xxth, 2025
+Release 5.11.0, January 24th, 2025
 ----------------------------------
+
+.. important::
+    In Firely Server 5.11.0, we introduced the ``ReverseProxySupport`` setting. This setting by default disables the use of `X-Forwarded-*` headers, meaning that all deployments that utilize a reverse proxy may be impacted by this change. Please configure this setting carefully if you plan to upgrade.
 
 Security
 ^^^^^^^^

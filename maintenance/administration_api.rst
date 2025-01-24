@@ -101,6 +101,10 @@ Limited access
 
 .. warning::
 
+    Are you hosting Firely Server behind a reverse proxy? Please review other relevant settings here: :ref:`X_Forwarded_Host`.
+
+.. warning::
+
     If you run Firely Server **version 5.6.0 or older**, you MUST provide the subnet prefix length explicitly. 
     If you do not, the subnet will be based on the class of the IP address, which usually leads to ``/24`` for IPv4. 
     This may allow for more IP addressess than you intended to be able to access the restricted operations.

@@ -133,6 +133,7 @@ In summary, the USCDI defines the core health data elements for nationwide inter
 
    * - * ✔️ v1 - based on US Core 3.1.1, US Core 4.0.0
        * ✔️ v2 - based on US Core 5.0.1
+       * ✔️ v3 - based on US Core 6.1.0
   
      - n/A
 
@@ -140,6 +141,7 @@ In summary, the USCDI defines the core health data elements for nationwide inter
 
      - * `USCDI|1.0 - Errata <https://www.healthit.gov/isa/sites/isa/files/2020-10/USCDI-Version-1-July-2020-Errata-Final_0.pdf>`_
        * `USCDI|2.0 <https://www.healthit.gov/isa/sites/isa/files/2021-07/USCDI-Version-2-July-2021-Final.pdf>`_
+       * `USCDI|3.0 <https://www.healthit.gov/isp/sites/isp/files/2022-10/USCDI-Version-3-October-2022-Errata-Final.pdf>`_
 
 .. list-table:: US Core Overview
    :widths: 10, 10, 10, 10

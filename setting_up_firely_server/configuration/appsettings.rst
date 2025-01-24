@@ -369,7 +369,7 @@ Search size
 ::
 
     "BundleOptions": {
-        "DefaultTotal": "accurate", // Allowed values: none, estimate, accurate
+        "DefaultTotal": "none", // Allowed values: none, estimate, accurate
         "DefaultCount": 10,
         "MaxCount": 50,
         "DefaultSort": "-_lastUpdated"
@@ -428,6 +428,7 @@ FHIR Capabilities
 ::
 
   "FhirCapabilities": {
+    "AllowCreateOnUpdate": true|false
     "ConditionalDeleteOptions": {
       "ConditionalDeleteType": "Single", // Single or Multiple,
       "ConditionalDeleteMaxItems": 1
@@ -604,13 +605,15 @@ See :ref:`feature_patienteverything`.
 
 .. _uri_conversion:
 
-Uri conversion on import and export
+URI conversion on import and export
 -----------------------------------
 
-Upon importing, Firely Server converts all references expressed as absolute URIs with the root corresponding to the server URL.
-For example, ``"reference": "https://someHost/fhir/Patient/someId"`` will be stored as ``"reference": "Patient/someId"`` .
-Similarly,  upon exporting, the references stored as relative URIs will be converted back to an absolute URI by adding the 
-root server location to the relative URI. Firely Server ensures that on a response the ``Location`` and ``Content-Location`` header contains an absolute URI.
+Upon importing, Firely Server converts all references expressed as absolute URIs, with the root corresponding to the server URL, and stores them as *relative URIs* in the database.
+For example, ``"reference": "https://someHost/fhir/Patient/someId"`` will be stored as ``"reference": "Patient/someId"``.
+
+By default, GET requests to Firely Server will return *absolute URIs* by adding the root server location to each relative URI. The response headers ``Location`` and ``Content-Location`` will also contain absolute URIs.
+For example, ``"reference": "Patient/someId"`` stored in the database for Firely Server hosted at ``http://localhost:8080`` will return in a REST API response as ``"reference": "http://localhost:8080/Patient/someId"``.
+This behavior can be disabled with the setting ``ReturnAbsoluteReferences``. Note that the setting is still in beta and is subject to change in future release of Firely Server.
 
 In addition, any element of type ``url`` or ``uri`` can also be converted upon import or export, as long as the FHIR path 
 corresponding to the element in the FHIR resource are listed in the setting ``UrlMapping`` :
@@ -625,8 +628,7 @@ corresponding to the element in the FHIR resource are listed in the setting ``Ur
      ]
    },
 
-Setting the ``ReturnAbsoluteReferences`` to ``false`` will result in relative references that are imported as such to be returned without any tranformation.
-Note that the setting is still in beta and is subject to change in future release of Firely Server.
+Finally, the Bulk Data Export feature of Firely Server returns *relative URIs*. See :ref:`feature_bulkdataexport` for more information.
 
 Binary Wrapper
 --------------

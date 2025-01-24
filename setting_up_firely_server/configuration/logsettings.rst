@@ -120,7 +120,7 @@ The Console sink will write to your shell.
 						"Name": "Console",
 						"Args": {
 							"restrictedToMinimumLevel": "Information",
-							"outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {UserId} {Username} [{Level}] [ReqId: {RequestId}] {Message}{NewLine}{Exception}"
+							"outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {UserId} {Username} [{Level}] [ReqId: {RequestId}] {Message:l}{NewLine}{Exception}"
 						}
 						}
 					]
@@ -143,7 +143,9 @@ Settings for the Console sink:
 		* ``{Level}``: Level of the log, see the values in :ref:`configure_log_level`
 		* ``{MachineName}``: Name of the machine hosting the Firely Server instance. Especially useful when running multiple instances all logging to the same file.
 		* ``{RequestId}``: Unique id of the web request, useful to correlate log statements
-		* ``{Message}}``: Actual message being logged
+		* ``{Message:l}``: Actual message being logged, `with format specifier <https://github.com/serilog/serilog/wiki/Formatting-Output#formatting-plain-text>`_ that makes the logs more readable
+		    * The :l format specifier switches off quoting of strings
+		    * The :j format specifier uses JSON-style rendering for any embedded structured data.  
 		* ``{Exception}``: If an error is logged, Firely Server may include the original exception. That is then formatted here.
 		* ``{SourceContext}``: The class from which the log statement originated (this is usually not needed by end users).
 		* ``{NewLine}``: Well, ehh, continue on the next line,
@@ -176,7 +178,7 @@ The ``File`` sink will write to a file, possibly rolling it by interval or size.
 						"rollingInterval": "Day",
 						"fileSizeLimitBytes": "",
 						"retainedFileCountLimit": "7",
-						"outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {UserId} {Username} [{Application}] [{Level}] [Machine: {MachineName}] [ReqId: {RequestId}] {Message}{NewLine}{Exception}",
+						"outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {UserId} {Username} [{Application}] [{Level}] [Machine: {MachineName}] [ReqId: {RequestId}] {Message:l}{NewLine}{Exception}",
 						"restrictedToMinimumLevel": "Verbose"
 					}
 					}
@@ -395,7 +397,7 @@ Setting CorrelationId for tracing requests across multiple services
 -------------------------------------------------------------------
 
 Firely Server can log a ``RequestId`` to identify individual requests, but this is an auto-generated GUID and cannot be adjusted. This is tricky if you want to log requests across multiple services/containers, how to recognize a particular request from EHR to Firely Server if the ``RequestId`` is set automatically?
-As an answer to this, it is possible to set a ``CorrelationId`` for requests. The ``CorrelationId`` can be set manually by adding a header to the request that needs to be traced. Note that you can give any name to this header, as long as it matches the ``headerKey`` in the "Enrich" section of your logsettings.
+As an answer to this, it is possible to set a ``CorrelationId`` for requests in both the normal logging as the :ref:`audit logging <configure_audit_log_file>`. The ``CorrelationId`` can be set manually by adding a header to the request that needs to be traced. Note that you can give any name to this header, as long as it matches the ``headerKey`` in the "Enrich" section of your logsettings.
 This section needs to be adjusted to include the ``WithCorrelationIdHeader`` setting::
 
 	"Enrich": [
@@ -416,3 +418,14 @@ Be sure to add ``[CorrId: {CorrelationId}]`` to your "outputTemplate" settings t
 
 Note that if this header is not included in the request, Firely Server will automatically assign a GUID to ``CorrelationId``.
  
+.. _enrichResourceInformation:
+
+Enrich logs with resource type and id
+-------------------------------------
+
+To enrich the logs with Resource type and id, you can add ``WithResource`` to the ``Enrich`` section of the logsettings.*.json::
+
+	"Enrich": [
+		"WithResource"
+	],
+

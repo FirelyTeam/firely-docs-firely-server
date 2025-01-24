@@ -59,6 +59,8 @@ You can further adjust PubSub in the PubSub section of the `appsettings.instance
             "Host": "localhost", // The URL where the message broker can be found
             "Username": "guest", // RabbitMQ username
             "Password": "guest", // RabbitMQ password
+            "PrefetchCount": 1, // RabbitMQ, ASB Number of messages to prefetch from the message broker Sets the `PrefetchCout` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints
+            "ConcurrencyNumber": 1, // RabbitMQ, ASB Number of concurrent messages that can be consumed. Sets the `ConcurrentMessageLimit` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints
             "ApplicationQueueName": "FirelyServer", // The name of the message queue used by Firely Server
             "VirtualHost": "/" // RabbitMQ virtual host; see https://www.rabbitmq.com/vhosts.html for details
         },
@@ -75,6 +77,9 @@ You can further adjust PubSub in the PubSub section of the `appsettings.instance
             "MaxPublishBatchSize": 1000 // The maximum amount of resource changes that can be sent in a single message
         }
     },
+
+.. attention::
+  SQLite backend is not supported for ResourceChangeNotifications.
 
 .. note::
   Enabling ResourceChangeNotifications requires one-time DB configuration to enable changes tracking for SQL server backends. See :ref:`SQL Server Tracking Initialization<pubsub_sql_tracking_init>` for the instructions.
@@ -512,6 +517,19 @@ RabbitMQ
 
 All applications involved in message exchange are connected to the same message broker. Hypothetically, every party can publish and consume messages of any type. However, in practice, it is far more common that applications are only interested in consuming specific types of messages. Scenarios covered by PubSub are no exception. RabbitMQ allows for flexible configuration of message routing by decoupling message producers from message consumers using primitives such as `exchanges` and `queues`. You can read more about them in the `RabbitMQ documentation <https://www.rabbitmq.com/tutorials/amqp-concepts.html#amqp-model>`_.
 
+**Additional configuration**
+
+RabbitMQ has inbuilt support for `TLS <https://www.rabbitmq.com/docs/ssl#overview>`_. By default Firely Server PubSub assumes that TLS support is disabled for the message broker and connects to port `5672`. It is possible to change the port to `5671` in order to automatically enable TLS support.
+
+      "PubSub": {
+        "MessageBroker": {
+            "Host": "Endpoint=sb://<Service Bus Namespace>.servicebus.windows.net/;SharedAccessKeyName=<Shared Access Key name>;SharedAccessKey=<Shared Access Key>",
+            // "Username": "guest",
+            // "Password": "guest",
+            // "RabbitMQ": {
+            //   "Port": 5672
+            // },
+
 **Events**
 
 If you want to subscribe to events from Firely Server, your application will need to create a queue bound to either or both of these exchanges:
@@ -607,6 +625,10 @@ SQL Server
 ^^^^^^^^^^
 
 If you want to enable publishing notifications whenever resources get changed in Firely Server and you use SQL Server, some initial configuration is required to enable tracking of changes in the DB. This can be done automatically by Firely Server or manually.
+
+.. note::
+
+    Not all editions of SQL Server support the required Change Data Capture features. See :ref:`configure_sql` for more information.
 
 **Automatic initialization**
 

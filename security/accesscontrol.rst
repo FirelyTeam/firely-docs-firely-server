@@ -31,21 +31,7 @@ Authorization in Firely Server by default is based on `SMART on FHIR`_ and more 
 The SMART specification is released in two different version as of the date of publication: `SMART v1`_ and `SMART v2`_. Both versions are fully supported, see :ref:`Supported Implementation Guides - SMART App Launch <smart_app_launch_ig>`.
 SMART defines a syntax for rules, using so called "scope"-claims, to specify the precise access rights that a user wants to delegate to an external application on their behalf.
 
-These are examples of scopes that are recognized by Firely Server (SMART v1):
-
-* scope=user/Observation.read: the user is allowed to read Observation resources
-* scope=user/Encounter.write: the user is allowed to write Encounter resources
-* scope=user/*.read: the user is allowed to read any type of resource
-* scope=user/*.write: the user is allowed to write any type of resource
-* scope=[array of individual scopes]
-
-All scopes using SMART v1 can also be expressed in SMART v2:
-
-* scope=user/Observation.r: the user allows to read Observation resources
-* scope=user/Encounter.cu: the user allows to write (create and update) Encounter resources
-* scope=user/\*.r: the user allows to read any type of resource
-* scope=user/\*.cu: the user allows to write (create and update) any type of resource
-* scope=[array of individual scopes]
+Please see :ref:`feature_accesscontrol_config` for the syntax of and support for these scope claims.
 
 When a client application wants to access data in Firely Server on behalf of its user, it requests a token from the authorization server that is bound to the specific instance of Firely Server. 
 The configuration of the authorization server determines which claims are *available* for a certain application. The client app configuration determines which claims it *needs*.

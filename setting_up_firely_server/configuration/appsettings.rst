@@ -378,7 +378,6 @@ Search size
 
 The Search interactions returns a bundle with results. Users can specify the number of results that they want to receive in one response with the ``_count`` parameter. Also see :ref:`_navigational_links` .
 
-
 * ``DefaultCount`` sets the number of results if the user has not specified a ``_count`` parameter.
 * ``MaxCount`` sets the number of results in case the user specifies a ``_count`` value higher than this maximum. This is to protect Firely Server from being overloaded.
 * ``DefaultCount`` should be less than or equal to ``MaxCount``

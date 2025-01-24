@@ -74,7 +74,7 @@ To mitigate these risks, Firely Server offers settings that allow specifying net
 
 
 .. important::
-   For security, the use of the `X-Forwarded-Host` header is disabled by default in Firely Server 5.11.0 and later versions. This will impact all deployments using a reverse proxy. If you want to upgrade from a previous version, please configure this setting carefully.
+   For security, the use of the `X-Forwarded-*` header is disabled by default in Firely Server 5.11.0 and later versions. This will impact all deployments using a reverse proxy. If you want to upgrade from a previous version, please configure this setting carefully.
 
 .. note::
    If reverse proxy support is enabled, startup will be blocked if the ``TrustedProxyIPNetworks`` setting is configured to accept all ip addresses. This is to prevent accidental exposure of the administration endpoints. If you want to allow all ip addresses for testing purposes, you can set the value of the ``ASPNETCORE_ENVIRONMENT`` environment variable to "Development". Firely Server will then startup with a warning that the configuration is not secure.

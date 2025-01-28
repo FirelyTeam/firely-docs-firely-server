@@ -87,11 +87,23 @@ Fix
 Release 5.10.0, October 21st, 2024
 ----------------------------------
 
+.. note::
+    We have identified a potential security issue if your deployment matches all of the criteria below.
+    Of course, we fixed the issue.
+    If you match the criteria for your current deployment, or if you are in doubt, please contact the support desk.
+    For background information on these criteria, see :ref:`feature_accesscontrol_config`.
+    
+    #. Firely Server is configured to accept write interactions, more specifically ‘create’
+    #. You allow client applications with ``user/`` level scopes to do these write interactions.
+    #. You use SMART on FHIR v2 scopes that include search arguments, either from the access token or from applicable AccessPolicyDefinitions.
+    
+    In these specific circumstances it might be possible for a client to create a resource that would not match the scopes.
+
 Fix
 ^^^
 
 #. Fixed a ``DuplicateKey`` exception occuring when creating resources under heavy load in parallel using MongoDB as the backend for the main database.
-#. The ``$liveness`` and ``$readiness`` heatlh checks were not responding while loading conformance resources to the administration database.
+#. The ``$liveness`` and ``$readiness`` health checks were not responding while loading conformance resources to the administration database.
 #. ``[ContextAware]`` attribute does not support ``Path`` argument anymore. Consider using route prefixes or alternatives to achieve the same effect when using multiple FHIR versions.
 
 Feature
@@ -102,7 +114,7 @@ Feature
 #. Requests protected using system-level scopes with tokens containing a ``fhirUser`` claim of type Device are now rejected by default if no matching Access Policy can be found. This ensures that system-level clients are using appropriate scopes. See :ref:`system_level_scopes` for more details.
 #. Added support for the ``X-Forwarded-Prefix`` header when hosting Firely Server on virtual subpaths. See :ref:`xforwardedheader` for more details.
 #. Improved debug logging in case JWT / reference token validation fails with an exception.
-#. Exporting relative references to absoulte references when sending back a response to a client can now be disabled. See :ref:`uri_conversion` for more details.
+#. Exporting relative references to absolute references when sending back a response to a client can now be disabled. See :ref:`uri_conversion` for more details.
 
 .. _vonk_releasenotes_5_9_0:
 

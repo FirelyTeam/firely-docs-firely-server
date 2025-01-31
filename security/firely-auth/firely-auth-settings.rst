@@ -157,7 +157,7 @@ These settings control the white labelling options for Firely Auth:
 
 - ``OrganizationLogoPath``: Here you can point to an image file you want to use as logo in the application.
 
-- ``OrganizationFavIconPath``: Here you can point to an image file you want to use as favicon in the browser.
+- ``OrganizationFavIconPath``: Here you can point to an image file you want to use as favicon in the browser. Note that the recommended dimensions for favicons is typically 16x16 pixels. For high-resolution screens this is 32x32 pixels. Also see `favicon.io <https://favicon.io/>`_ or the `Real Favicon Generator <https://realfavicongenerator.net/>`_ for more information.
 
 .. _firely_auth_settings_server:
 
@@ -311,19 +311,19 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               "AllowedSmartActions": ["c", "r", "u", "d", "s"],
               "AllowedSmartSubjects": [ "patient", "user", "system"],
               "AllowedResourceTypes": ["Patient", "Observation", "Claim"],
-              "ShowFineGrainedScopes": false,
-              "EnableLegacyFhirContext": false,
+              "AllowedOperationScopes": ["<string>"],
+              "ShowFineGrainedScopes": false,            
               "AlwaysIncludeUserClaimsInIdToken": true,
-              "RequirePkce": false,
-              "Require2fa": false,
+              "RequirePkce": false,             
               "AllowOfflineAccess": false,
               "AllowOnlineAccess": false,
               "AllowFirelySpecialScopes": true,
               "RequireClientSecret": true,
+              "AccessTokenLifetime": "01:00:00",
               "RefreshTokenLifetime": "30",
               "ConsentLifetime": "365",
-              "RequireMfa": true,
               "AccessTokenType": "Jwt",
+              "EnableLegacyFhirContext": false,
               "ClientClaims": [
                 {
                   "Name": "ClaimName",
@@ -332,6 +332,7 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               ],
               "ClientClaimPrefix": "",
               "AlwaysSendClientClaims": false,
+              "Require2fa": false,
               "AllowManagementApiAccess": false,
               "EnableLocalLogin": false, 
               "EnableExternalLogin": false, 
@@ -361,18 +362,19 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``AllowedSmartActions``: Actions on resources that can be granted in SMART on FHIR v2: ``c``, ``r``, ``u``, ``d`` and/or ``s``, see `SMART on FHIR V2 scopes`_
 - ``AllowedSmartSubjects``: Categories of 'subjects' to which resource actions can be granted. Can be ``system``, ``user`` and/or ``patient``
 - ``AllowedResourceTypes``: The client can only request SMART scopes for these resource types. To allow all resource types, do not use ``["*"]"`` but just leave the array empty.
+- ``AllowedOperationScopes``: For restricting clients in their use of custom operation that the server supports. The value should be the canonical of the operation. For example, if the server supports the operation ``$export`` and the client is allowed the use of this operation, the value should be ``"http://hl7.org/fhir/uv/bulkdata/OperationDefinition/export"``. This will allow the client to request a token with the scope ``http://hl7.org/fhir/uv/bulkdata/OperationDefinition/export``. To allow all scopes just leave the array empty. Note that this functionality only works if Firely Auth is connected to Firely Server v6.x or higher. In Firely Server v5.x or earlier versions support for this functionality is not implemented.
 - ``ShowFineGrainedScopes``: true / false - Whether when giving consent for the ``Condition`` or ``Observation`` resources, the UI will provide the user the option to restrict the consent to specific categories within that resource. This will only work when US Core is enabled on the Firely Server. For ``Condition`` these will be: ``Encounter Diagnosis``, ``Problem List``, and ``Health Concern``, for ``Observation`` these will be: ``Clinical Test``, ``Laboratory``, ``Social History``, ``SDOH``, ``Survey``, and ``Vital Signs``.
-- ``EnableLegacyFhirContext``: true / false - Whether to use the new syntax of ``fhirContext`` defined in `SMART on FHIR v2.1.0 <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#fhir-context>`_. Default is false, when set to true the old syntax of ``fhirContext`` defined in `SMART on FHIR v2.0.0 <https://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html#fhircontext>`_ is used.
 - ``AlwaysIncludeUserClaimsInIdToken``: true / false: When requesting both an id token and access token, should the user claims always be added to the id token instead of requiring the client to use the userinfo endpoint. Default is false
 - ``Require PKCE``: true / false - see :term:`PKCE`. true is recommended for a :term:`public client` and can offer an extra layer of security for :term:`confidential client`.
-- ``Require2fa``: true / false - Whether users are obliged to set up Multi Factor Authentication before they can use their account to get a token.
 - ``AllowOfflineAccess``: true / false - Whether app can request refresh tokens while the user is online, see `SMART on FHIR refresh tokens`_
 - ``AllowOnlineAccess``: true / false - Whether app can request refresh tokens while the user is offline, see `SMART on FHIR refresh tokens`_. A user is offline if he is logged out of Firely Auth, either manually or by expiration
 - ``AllowFirelySpecialScopes``: true / false - Allow app to request scopes for Firely Server specific operations. Currently just 'http://server.fire.ly/auth/scope/erase-operation'
 - ``RequireClientSecret``: true / false - A :term:`public client` cannot hold a secret, and then this can be set to ``false``. Then the ``ClientSecrets`` section is ignored. See also the note below.
 - ``RefreshTokenLifetime``: If the client is allowed to use a :term:`refresh token`, how long should it be valid? The value is in days. You can also use HH:mm:ss for lower values.
+- ``AccessTokenLifetime``: Similar to the refresh token lifetime, for setting the validity of the :term:`access token`. The value is in days. You can also use HH:mm:ss for lower values.
 - ``ConsentLifetime`` : This is an optional setting which can specify a period after which the users consent will be revoked. The value is in days. You can also use HH:mm:ss for lower values.
 - ``AccessTokenType``: ``Jwt`` or ``Reference``. ``Jwt`` means that this client will get self-contained Json Web Tokens. ``Reference`` means that this client will get reference tokens, that refer to the actual token kept in memory by Firely Auth. For more background see :term:`reference token`.
+- ``EnableLegacyFhirContext``: true / false - Whether to use the new syntax of ``fhirContext`` defined in `SMART on FHIR v2.1.0 <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#fhir-context>`_. Default is false, when set to true the old syntax of ``fhirContext`` defined in `SMART on FHIR v2.0.0 <https://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html#fhircontext>`_ is used.
 - ``ClientClaims``: Enable a client to add static custom claims in the client credential flow. 
 
   - ``Name``: name of the claim
@@ -380,6 +382,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
 - ``ClientClaimPrefix``: Add custom defined prefix to the name of all custom client claims. Works together with the setting ``ClientClaims``. 
 - ``AlwaysSendClientClaims``: Add the claims defined in ``ClientClaims`` regardless of the OAuth 2.0 flow used by a client (e.g. even if a authorization_code flow is used)
+- ``Require2fa``: true / false - Whether users are obliged to set up Multi Factor Authentication before they can use their account to get a token.
 - ``AllowManagementApiAccess``: Allows this client to use the :ref:`firely_auth_mgmt`
 - ``EnableLocalLogin``: true / false - Enables/disables the possibility to use the builtin login mechanism. If disabled the user can only use an external identity provider to log in.
 - ``EnableExternalLogin``: true / false - Enables/disables the possibility to use external identity providers to log in with.

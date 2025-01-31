@@ -13,6 +13,7 @@ Feature
 ^^^^^^^
 
 #. We added two new options to the UI settings: ``OrganizationTitle`` and ``OrganizationFavIconPath``. For more information, see :ref:`firely_auth_settings_ui`.
+#. We introduced the setting ``AllowedOpenIdScopes`` to restrict the custom operation scopes that can be requested by a client. For more information, see :ref:`firely_auth_settings_clients`.
 
 .. _firelyauth_releasenotes_4.2.1:
 

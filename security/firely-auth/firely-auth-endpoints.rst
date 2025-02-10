@@ -169,3 +169,6 @@ These are:
     * ``form-action 'self';``
     * ``frame-ancestors 'none';``
     * ``upgrade-insecure-requests;``
+
+.. Note::
+    The headers ``X-Frame-Options``, ``Referrer-Policy``, and ``Permissions-Policy`` should be configured in the reverse proxy, as Firely Auth cannot set a generic value for these headers.

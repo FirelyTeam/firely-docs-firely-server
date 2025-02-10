@@ -74,6 +74,27 @@ Note: you can configure a http endpoint like:
 But this is not supported when you do not use a proxy in front of the application that exposes it to the outside world over ``Https``. 
 Without a proxy, this would lead to security issues and the authorization flow not working properly.  
 
+.. _firely_auth_settings_proxyheaders:
+
+Proxy headers
+^^^^^^^^^^^^^
+
+When running Firely Auth behind a reverse proxy, you can enable the use of ``X-Forwarded-*`` headers to get the correct client IP address and protocol. This setting is comparable to the :ref:`setting in Firely Server <X_Forwarded_Host>`. 
+
+.. code-block:: json
+
+  	"ReverseProxySupport": {
+		"Enabled": false,
+		"TrustedProxyIPNetworks": [] // Add "0.0.0.0/0" to trust reverse proxies with any IP address (for testing purposes only)
+	},
+
+- ``Enabled``: true / false - Enable or disable the use of X-Forwarded headers. 
+- ``TrustedProxyIPNetworks``: List of IP networks that are trusted to set the X-Forwarded headers.
+
+If ``ReverseProxySupport`` is disabled or if the request originates form an IP Network that is not trusted, Firely Auth will use the connection information from the incoming request and ignore the ``X-Forwarded-*`` headers. 
+
+
+
 .. _firely_auth_settings_account:
 
 Account

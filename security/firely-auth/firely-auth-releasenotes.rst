@@ -12,8 +12,11 @@ Release 4.3.0, XX-XX-XXXX
 Feature
 ^^^^^^^
 
+#. We have made Firely Auth safer by adding security headers to the responses. For more information, see :ref:`firely_auth_security_headers`.
 #. We added two new options to the UI settings: ``OrganizationTitle`` and ``OrganizationFavIconPath``. For more information, see :ref:`firely_auth_settings_ui`.
 #. We introduced the setting ``AllowedOperationScopes`` to restrict the custom operation scopes that can be requested by a client. For more information, see :ref:`firely_auth_settings_clients`.
+#. We introduced the ``ReverseProxySupport`` setting to enable and configure allowed IP ranges for ``X-Forwarded-*`` headers. For more information, see :ref:`firely_auth_settings_proxyheaders`.
+
 
 .. _firelyauth_releasenotes_4.2.1:
 

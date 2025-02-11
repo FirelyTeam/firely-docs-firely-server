@@ -13,7 +13,7 @@ Current Firely Server release notes (v6.x)
 =======
 
 
-Release 6.0.0, [Month] [Date], 2025
+Release 6.0.0, [Month] [Date], 2024
 ---------------------------------------
 
 Firely is proud to announce a new major version of Firely Server. This release represents a significant step forward in our commitment to providing a reliable, compliant and easy to use FHIR server.
@@ -32,16 +32,6 @@ Security
 ^^^^^^^^
 
 #. AccessPolicy resources cannot be accessed by a resource wildcard scope. E.g. ``system/*.*`` should be replaced with  - ``system/AccessPolicy.*`` to be able to access AccessPolicy resources.
-
-.. note::
-    We have identified a potential security issue if your deployment matches all of the criteria below.
-    Of course, we fixed the issue, see Fixes #1 below.
-    If you match the criteria for your current deployment, or if you are in doubt, please contact the support desk.
-    For background information on these criteria, see `ref:feature_accesscontrol_config`.
-    
-    #. Firely Server is configured to accept write interactions, more specifically ‘create’
-    #. You allow client applications with ``user/`` level scopes to do these write interactions.
-    #. You use SMART on FHIR v2 scopes that include search arguments, either from the acces token or from applicable AccessPolicyDefinitions.
 
 Features
 ^^^^^^^^

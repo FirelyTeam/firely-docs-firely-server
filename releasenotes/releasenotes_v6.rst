@@ -28,6 +28,10 @@ With this new version, we've focused on delivering:
 Please study the release notes carefully as they contain breaking changes to the behaviour of Firely Server, as well as the configuration of the server. 
 Our support team is happy to provide assistance in the upgrade and can be reached at `server@fire.ly <mailto:server@fire.ly>`_ or through the support desk.
 
+Database
+^^^^^^^^
+#. The minimum required MongoDB version is now 6.0.
+
 Security
 ^^^^^^^^
 

@@ -200,7 +200,7 @@ Key management
 
   "KeyManagement": {
       "RSA": {
-          //"RSA": "<JSON Web Key>", // JSON Web Key of type RSA
+          //"JWK": "<JSON Web Key>", // JSON Web Key of type RSA
           "SupportedAlgorithms": [
               "RS256",
               "RS384",

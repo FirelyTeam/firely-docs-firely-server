@@ -13,7 +13,7 @@ Current Firely Server release notes (v6.x)
 =======
 
 
-Release 6.0.0, [Month] [Date], 2025
+Release 6.0.0, [Month] [Date], 2024
 ---------------------------------------
 
 Firely is proud to announce a new major version of Firely Server. This release represents a significant step forward in our commitment to providing a reliable, compliant and easy to use FHIR server.
@@ -27,10 +27,6 @@ With this new version, we've focused on delivering:
 
 Please study the release notes carefully as they contain breaking changes to the behaviour of Firely Server, as well as the configuration of the server. 
 Our support team is happy to provide assistance in the upgrade and can be reached at `server@fire.ly <mailto:server@fire.ly>`_ or through the support desk.
-
-Database
-^^^^^^^^
-#. The minimum required MongoDB version is now 6.0.
 
 Security
 ^^^^^^^^
@@ -46,6 +42,10 @@ Security
     #. Firely Server is configured to accept write interactions, more specifically ‘create’
     #. You allow client applications with ``user/`` level scopes to do these write interactions.
     #. You use SMART on FHIR v2 scopes that include search arguments, either from the acces token or from applicable AccessPolicyDefinitions.
+
+Database
+^^^^^^^^
+#. The minimum required MongoDB version is now 6.0 (when MongoDB is used as the database).
 
 Features
 ^^^^^^^^

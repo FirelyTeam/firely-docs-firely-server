@@ -423,6 +423,34 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
     Please follow the principle of least privilege to register a SMART Backend Service client, especially when the settings ``ClientClaims`` and ``ClientClaimPrefix`` are used.
 
+.. code-block:: json
+
+  	"ResourceTypeGrouping": {
+		  "ShowPatientCompartmentGroup": true, // wether to show the patient compartment resources types as a group or not
+		  "ShowUsCoreGroup": true, // wether to show the Us Core (if available) resources types as a group or not
+		  "CustomGroups": [ // defining custom groups is possible
+		    {
+		      "Name": "CustomGroup1", // the name of the custom group
+		      "ResourceTypes": [ // the resource types to show in this custom group
+		        "Patient",
+		        "Observation"
+		      ]
+		    }
+		  ]
+		}
+
+The ResourceTypeGrouping configuration allows for organizing and selecting resource types as allowed resources in a structured manner. 
+This setting provides flexibility in categorizing resources based on predefined groups or custom-defined groups, enhancing the workflow of defining which resources a client is allowed to access.
+
+- ``ShowPatientCompartmentGroup``: true / false - Whether to show the patient compartment resource types as a group or not.
+
+- ``ShowUsCoreGroup``: true / false - Whether to show the US Core (if available) resource types as a group or not.
+
+- ``CustomGroups``: Allows the definition of custom groups.
+ 
+  - ``Name``: The name of the custom group.
+  - ``ResourceTypes``: A list of resource types to include in this custom group.
+
 .. _firely_auth_settings_externalidp:
 
 External identity providers

@@ -19,7 +19,7 @@ Current Firely Server release notes (v5.x)
     *Key Updates:*
 
     * Firely Server v5.7.0: The upgrade to .NET 8 has been implemented in Firely Server v5.7.0 and later. We highly recommend all customers upgrade to the latest version to continue receiving stable updates and security patches.
-    * Upcoming Firely Server 6: Before November 12, 2024, we will be releasing a new major version, Firely Server 6. According to our support policy, Firely Server 4 will not be supported anymore and therefore not be updated to .NET 8. It is crucial for customers using Firely Server 4 to plan their upgrade path to a supported version.
+    * Upcoming Firely Server 6: Early 2025, we will be releasing a new major version, Firely Server 6. According to our support policy, Firely Server 4 will not be supported anymore and therefore not be updated to .NET 8. It is crucial for customers using Firely Server 4 to plan their upgrade path to a supported version.
     * Upgrade Support: For customers using previous versions, especially previous major versions, we are here to assist you with your upgrade strategies. Please reach out to our support team at `server@fire.ly <mailto:server@fire.ly>`_ to discuss your specific needs.
 
     *What This Means for You:*
@@ -31,7 +31,91 @@ Current Firely Server release notes (v5.x)
 
     For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
 
-.. _vonk_releasenotes_5_9_0:
+.. _vonk_releasenotes_5_10_2:
+
+Release 5.11.0, January 24th, 2025
+----------------------------------
+
+.. important::
+    In Firely Server 5.11.0, we introduced the ``ReverseProxySupport`` setting. This setting by default disables the use of `X-Forwarded-*` headers, meaning that all deployments that utilize a reverse proxy may be impacted by this change. Please configure this setting carefully if you plan to upgrade.
+
+Security
+^^^^^^^^
+#. Enhanced the security of the following custom operations. Previously, these operations would only check for any valid token if they were specified in the :ref:`Protected <feature_accesscontrol_config>` operations setting. All operations now take limitations expressed in the SMART on FHIR scopes within the access token into account:
+
+    - $erase
+    - $docref
+    - $find-matches
+    - $document
+    - $member-match
+    - $everything
+    - $meta, $meta-add, $meta-delete
+    - Document Handling on the root endpoint
+    - Provenance handling
+
+Feature
+^^^^^^^
+
+#. Introduced a new setting ``ReverseProxySupport`` enabling limits on which IPs or networks can specify an X-Forwarded-For header for Firely Server. In case the /administration endpoint is not otherwise protected by a firewall, the X-Forwarded-For header could be used previously to bypass the network protections of the API. See :ref:`xforwardedheader` for more details.
+#. Improved performance of pagination in some scenarios when Firely Server is used with a MongoDB backend.
+  - Note that because of the nature of this improvement, for some searches the ``last`` link in the search results bundle will not be available. This is because the last page is not known until the client requests it. The client can still use the ``next`` link to get the next page. For more information see :ref:`navigational_links`.
+
+Database
+^^^^^^^^
+#. For **MongoDB** we added a new index ``ix_lu_id`` that facilitates the pagination performance improvement mentioned above. The migration adding the index is executed automatically on startup. Alternatively, you can apply it manually using the script ``FS_SchemaUpgrade_Data_v26_v27``.
+
+Fix
+^^^
+#. The $versions operation now works in combination with a X-Forwarded-Prefix header. Previously it would return "The $versions operation is only supported on the root of the server or the root of a mapped endpoint".
+
+.. _vonk_releasenotes_5_10_1:
+
+Release 5.10.1, December 12th, 2024
+-----------------------------------
+
+.. important::
+
+    Firely has found a vulnerability in Firely Server. In versions 5.7.0, 5.8.0, 5.9.0, 5.9.1 or 5.10.0 it does not correctly validate the signature of JWT Tokens. If you use SMART on FHIR authentication and use one of the mentioned versions, we recommend that you update to version 5.10.1 as soon as possible.
+    
+Fix
+^^^
+
+#. Fixed a vulnerability in the validation of JWT Tokens. 
+
+.. _vonk_releasenotes_5_10_0:
+
+Release 5.10.0, October 21st, 2024
+----------------------------------
+
+.. note::
+    We have identified a potential security issue if your deployment matches all of the criteria below.
+    Of course, we fixed the issue.
+    If you match the criteria for your current deployment, or if you are in doubt, please contact the support desk.
+    For background information on these criteria, see :ref:`feature_accesscontrol_config`.
+    
+    #. Firely Server is configured to accept write interactions, more specifically ‘create’
+    #. You allow client applications with ``user/`` level scopes to do these write interactions.
+    #. You use SMART on FHIR v2 scopes that include search arguments, either from the access token or from applicable AccessPolicyDefinitions.
+    
+    In these specific circumstances it might be possible for a client to create a resource that would not match the scopes.
+
+Fix
+^^^
+
+#. Fixed a ``DuplicateKey`` exception occuring when creating resources under heavy load in parallel using MongoDB as the backend for the main database.
+#. The ``$liveness`` and ``$readiness`` health checks were not responding while loading conformance resources to the administration database.
+#. ``[ContextAware]`` attribute does not support ``Path`` argument anymore. Consider using route prefixes or alternatives to achieve the same effect when using multiple FHIR versions.
+
+Feature
+^^^^^^^
+
+#. (Only for SQL Server): Added support for recursively including additional resources in BDE export. Read about the new config setting AdditionalResourcesMaxRecursionDepth in :ref:`feature_bulkdataexport`. The default value of this setting is 1, which maintains the behavior of previous Firely Server versions.
+#. Changes in Bulk Data Export behavior: For Group- and Patient-level exports, any Group resources outside the respective Patient compartment that are referenced by resources within the Patient's compartment (i.e., Additional Resources) will no longer be included in the export.
+#. Requests protected using system-level scopes with tokens containing a ``fhirUser`` claim of type Device are now rejected by default if no matching Access Policy can be found. This ensures that system-level clients are using appropriate scopes. See :ref:`system_level_scopes` for more details.
+#. Added support for the ``X-Forwarded-Prefix`` header when hosting Firely Server on virtual subpaths. See :ref:`xforwardedheader` for more details.
+#. Improved debug logging in case JWT / reference token validation fails with an exception.
+#. Exporting relative references to absolute references when sending back a response to a client can now be disabled. See :ref:`uri_conversion` for more details.
+
 
 Release 5.9.1, August 13th, 2024
 --------------------------------
@@ -98,6 +182,10 @@ Fix
 
 Release 5.7.0, May 29th, 2024
 -----------------------------
+
+.. note::
+
+    Due to a security vulnerability we recommend not to use version 5.7.0. Please update to version 5.10.1. See :ref:`vonk_releasenotes_5_10_1` for more information.
 
 .. note::
     Support for .NET 6 ends in November 2024. See `.NET Support Policy <https://dotnet.microsoft.com/en-us/platform/support/policy>`_. This version of Firely Server supports .NET 8. So we recommend that you upgrade to Firely Server 5.7.0 and hence .NET 8 before November 2024.

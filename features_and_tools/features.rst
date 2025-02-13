@@ -28,7 +28,9 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    x-provenance
    pubsub
    realworldtesting
+   multi-tenancy
    features-availability
+   
 
 
   

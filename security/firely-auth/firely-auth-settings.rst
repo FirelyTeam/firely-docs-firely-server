@@ -441,6 +441,9 @@ This setting provides flexibility in categorizing resources based on predefined 
   - ``Name``: The name of the custom group.
   - ``ResourceTypes``: A list of resource types to include in this custom group.
 
+.. note::
+  If a custom group consists entirely of resources that are all present in one of the predefined groups, and these groups are enabled, the custom group will automatically become enabled as well.
+
 .. _firely_auth_settings_externalidp:
 
 External identity providers

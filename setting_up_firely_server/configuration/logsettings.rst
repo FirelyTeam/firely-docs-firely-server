@@ -254,22 +254,21 @@ Elasticsearch
 
 `Elasticsearch <https://www.elastic.co/elasticsearch>`_ is a search engine based on the Lucene library. It provides a distributed, multitenant-capable full-text search engine with an HTTP web interface and schema-free JSON documents.
 
-For the ``Elasticsearch`` sink, you can also specify arguments. One of them is the nodeUris for your
+For the ``Elasticsearch`` sink, you can also specify arguments. The sink will only work for Elasticsearch versions 8.x and up. One of them is the nodes for your
 Elasticsearch server::
 
 		"WriteTo": [
 			{
   				"Name": "Elasticsearch",
 				"Args": {
-					"nodeUris": "http://localhost:9200",
-					"connectionGlobalHeaders": "Authorization=..."
+					"bootstrapMethod": "Silent",
+					"nodes": [ "http://localhost:9200" ],
 				}
 			}
 
-* Change ``nodeUris`` to the URL of your Elasticsearch node
-* Change ``connectionGlobalHeaders``: if you need to add headers to the request. For example, if you need to authenticate to your Elasticsearch server, you can add the ``Authorization`` header here.
-* ``restrictedToMinimumLevel``: as described for `Console`_.
-* More details can be found in sinks `Github repo <https://github.com/serilog-contrib/serilog-sinks-elasticsearch>`_ and `Elasticsearch docs <https://www.elastic.co/guide/en/ecs-logging/dotnet/current/serilog-data-shipper.html>`_.
+* Change ``bootstrapMethod`` to your needs, this entry is required. It indicates if/how the sink should attempt to install component and index templates to ensure the datastream has ECS mappings. Can be be either None (the default), Silent (attempt but fail silently), Failure (attempt and fail with exceptions if bootstrapping fails).
+* Change ``nodes`` to the URL of your Elasticsearch node
+* More details can be found in sinks `Github repo <https://github.com/elastic/ecs-dotnet/tree/main/src/Elastic.Serilog.Sinks>`_ and `Elasticsearch docs <https://www.elastic.co/guide/en/ecs-logging/dotnet/current/serilog-data-shipper.html>`_.
 
 MongoDb
 ^^^^^^^

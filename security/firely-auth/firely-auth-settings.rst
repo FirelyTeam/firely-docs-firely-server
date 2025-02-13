@@ -423,6 +423,11 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
     Please follow the principle of least privilege to register a SMART Backend Service client, especially when the settings ``ClientClaims`` and ``ClientClaimPrefix`` are used.
 
+.. _firely_auth_settings_resource_grouping:
+
+Resource Grouping for Allowed Resources
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. code-block:: json
 
   	"ResourceTypeGrouping": {

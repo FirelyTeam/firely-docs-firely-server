@@ -22,6 +22,5 @@ You will also find a section describing the steps to be taken for auditing in Fi
    firely-auth/firely-auth
    permissions
    auditing
-   resourceaccess
 
 .. add files here

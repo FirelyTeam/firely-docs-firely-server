@@ -72,6 +72,3 @@ You can control the working of the feature with the settings:
 .. warning:: 
 
     Choose the ``TenantLabelSystem`` wisely. Once resources have been loaded into Firely Server it is nearly impossible to update this.
-
-.. note::
-    Some resource type interactions can be further relaxed or restricted using :ref:`Resource Access <feature_resourceaccessdefinition>` configuration.

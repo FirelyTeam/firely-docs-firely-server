@@ -111,6 +111,7 @@ A successful response will return a status code of 200 and a ``launch`` identifi
     }
 
 An unauthorized request will return a 401.
+For selecting the launch context during the token request, we provide the ``LaunchContextRegistration`` setting, for more information see :ref:`firely_auth_settings_launchcontext`.
 
 Known Limitations
 -----------------

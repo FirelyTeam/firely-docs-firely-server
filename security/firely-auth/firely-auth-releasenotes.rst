@@ -16,7 +16,7 @@ Feature
 #. Firely Auth will now check the JWKS URL for updated keys if a new request for an access token is made by the client. Before, Firely Auth would only retrieve these keys from the JWKS URL once, and would not check for updated keys.
 #. We made improvements to the Standalone Launch and EHR Launch flows for the selection of the launch scope during the token request. For more information, see :ref:`firely_auth_endpoints_launchcontext` and :ref:`firely_auth_settings_launchcontext`.
 #. We improved the behavior of Firely Auth when a user requests a token for a client that enforces 2FA without that user having enabled 2FA. Users will now get prompted to activate 2FA.
-#. If a fhirUser claim is added as a ClientClaim, FirelyAuth now enforces that this claim points to a ``Device`` resource.
+#. If a fhirUser claim is added as a ClientClaim, Firely Auth now enforces that this claim points to a ``Device`` resource.
 
 Configuration
 ^^^^^^^^^^^^^

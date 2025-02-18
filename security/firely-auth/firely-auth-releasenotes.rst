@@ -6,7 +6,7 @@ Release notes
 
 .. _firelyauth_releasenotes_4.3.0:
 
-Release 4.3.0, XX-XX-XXXX
+Release 4.3.0, 18-02-2025
 -------------------------
 
 Feature

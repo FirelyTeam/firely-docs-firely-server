@@ -50,9 +50,18 @@ Filter Logic Examples:
 |                               |                               |                              |
 | ``user/Patient.d``            |                               |                              |
 +-------------------------------+-------------------------------+------------------------------+
+| ``user/Patient.crus,``        | ``user/Patient.rs``           | ``user/Patient.rs,``         |
+|                               |                               |                              |
+| ``user/Observation.*``        | ``user/Observation.rs``       | ``user/Observation.rs``      |
+|                               |                               |                              |
+| ``user/Encounter.rs``         |                               |                              |
++-------------------------------+-------------------------------+------------------------------+
 
 Policy Creation Example:
 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+In the example below, we will create an ``AccessPolicyDefinition`` that allows users to read Patients and Observations, and a corresponding ``AccessPolicy`` that applies this definition to two Practitioners. With this access policy, the practitioners Alice and Bob will be able to read Patients and Observations, but they will have no access of any kind to other resources. Should they try to read or search for any other resource, they will receive a 403 Forbidden response once the access policy is applied.
+
 
 1. Create an AccessPolicyDefinition resource on the administrative endpoint:
 

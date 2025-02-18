@@ -111,6 +111,7 @@ A successful response will return a status code of 200 and a ``launch`` identifi
     }
 
 An unauthorized request will return a 401.
+For selecting the launch context during the token request, we provide the ``LaunchContextRegistration`` setting, for more information see :ref:`firely_auth_settings_launchcontext`.
 
 Known Limitations
 -----------------
@@ -147,3 +148,28 @@ The ``$readiness`` operation may return one of these http status codes:
 #. 200 OK: Firely Auth is up and running and ready to process requests.
 #. 402 Payment Required: The license is expired or otherwise invalid.
 #. 500 or higher: An unexpected error happened, the server is not running or not reachable (in the latter case the error originates from a component in front of Firely Auth).
+
+.. _firely_auth_security_headers:
+
+Security headers
+----------------
+
+Firely Auth provides a set of security headers in its responses to protect the application from common security vulnerabilities. These headers are set by default and cannot be configured.
+These are:
+
+* ``X-Content-Type-Options``: Prevents browsers from MIME-sniffing a response away from the declared content-type. Set to ``nosniff``.
+* ``Content-Security-Policy``: Prevents a wide range of attacks, including Cross-Site Scripting and other cross-site injections. Set to:
+
+    * ``default-src 'self';``
+    * ``script-src 'self' 'unsafe-eval' 'unsafe-inline';``
+    * ``style-src 'self' 'unsafe-inline';``
+    * ``img-src 'self' blob: data:;``
+    * ``font-src 'self';``
+    * ``object-src 'none';``
+    * ``base-uri 'self';``
+    * ``form-action 'self';``
+    * ``frame-ancestors 'none';``
+    * ``upgrade-insecure-requests;``
+
+.. Note::
+    The headers ``X-Frame-Options``, ``Referrer-Policy``, and ``Permissions-Policy`` should be configured in the reverse proxy, as Firely Auth cannot set a generic value for these headers.

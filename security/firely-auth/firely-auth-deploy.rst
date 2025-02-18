@@ -208,4 +208,5 @@ are properly set by the proxy/load balancer so that the
 can retrieved the values of the public endpoint, allowing other middlewares to return the appropriate values, including 
 the ``secure`` property of the cookies.
 
+It is possible to restrict the IP addresses that are allowed to set the forwarded headers, for more information see :ref:`firely_auth_settings_proxyheaders`.
 

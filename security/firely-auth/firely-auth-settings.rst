@@ -49,9 +49,6 @@ Nevertheless you can control the settings for Kestrel.
     
   "Kestrel": {
     "Endpoints": {
-      "Http": {
-        "Url": "http://localhost:5100"
-      },
       "HttpsFromPem": {
         "Url": "https://localhost:5101",
         "SslProtocols": [ "Tls12", "Tls13" ],
@@ -65,6 +62,38 @@ Nevertheless you can control the settings for Kestrel.
  
 These settings are not Firely Auth specific, and you can read more about them in the `Microsoft documentation <https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints>`_.
 In that documentation you can also read how to use the ``Https`` setting instead of ``HttpsFromPem`` to use a ``.pfx`` file for your SSL certificate.
+
+Note: you can configure a http endpoint like:
+
+.. code-block:: json
+
+    "Http": {
+      "Url": "http://localhost:5100"
+    },
+
+But this is not supported when you do not use a proxy in front of the application that exposes it to the outside world over ``Https``. 
+Without a proxy, this would lead to security issues and the authorization flow not working properly.  
+
+.. _firely_auth_settings_proxyheaders:
+
+Proxy headers
+^^^^^^^^^^^^^
+
+When running Firely Auth behind a reverse proxy, you can enable the use of ``X-Forwarded-*`` headers to get the correct client IP address and protocol. This setting is comparable to the :ref:`setting in Firely Server <X_Forwarded_Host>`. 
+
+.. code-block:: json
+
+  	"ReverseProxySupport": {
+		"Enabled": false,
+		"TrustedProxyIPNetworks": [] // Add "0.0.0.0/0" to trust reverse proxies with any IP address (for testing purposes only)
+	},
+
+- ``Enabled``: true / false - Enable or disable the use of X-Forwarded headers. 
+- ``TrustedProxyIPNetworks``: List of IP networks that are trusted to set the X-Forwarded headers.
+
+If ``ReverseProxySupport`` is disabled or if the request originates form an IP Network that is not trusted, Firely Auth will use the connection information from the incoming request and ignore the ``X-Forwarded-*`` headers. 
+
+
 
 .. _firely_auth_settings_account:
 
@@ -138,12 +167,18 @@ These settings control the white labelling options for Firely Auth:
 
   "UISettings": {
     "LoginPageText": "Please login to Firely Auth",
-    "OrganizationLogoPath": "<firely logo>"
+    "OrganizationTitle": "Firely Auth",
+    "OrganizationLogoPath": "<firely logo>",
+    "OrganizationFavIconPath": "<firely favicon>"
   },
 
 - ``LoginPageText``: Here you can put a text that will be displayed on the login page.
 
+- ``OrganizationTitle``: Here you can put a text that will be displayed in the title bar of the browser.
+
 - ``OrganizationLogoPath``: Here you can point to an image file you want to use as logo in the application.
+
+- ``OrganizationFavIconPath``: Here you can point to an image file you want to use as favicon in the browser. Note that the recommended dimensions for favicons is typically 16x16 pixels. For high-resolution screens this is 32x32 pixels. Also see `favicon.io <https://favicon.io/>`_ or the `Real Favicon Generator <https://realfavicongenerator.net/>`_ for more information.
 
 .. _firely_auth_settings_server:
 
@@ -297,18 +332,19 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               "AllowedSmartActions": ["c", "r", "u", "d", "s"],
               "AllowedSmartSubjects": [ "patient", "user", "system"],
               "AllowedResourceTypes": ["Patient", "Observation", "Claim"],
-              "EnableLegacyFhirContext": false,
+              "AllowedOperationScopes": ["<string>"],
+              "ShowFineGrainedScopes": false,            
               "AlwaysIncludeUserClaimsInIdToken": true,
-              "RequirePkce": false,
-              "Require2fa": false,
+              "RequirePkce": false,             
               "AllowOfflineAccess": false,
               "AllowOnlineAccess": false,
               "AllowFirelySpecialScopes": true,
               "RequireClientSecret": true,
+              "AccessTokenLifetime": "01:00:00",
               "RefreshTokenLifetime": "30",
               "ConsentLifetime": "365",
-              "RequireMfa": true,
               "AccessTokenType": "Jwt",
+              "EnableLegacyFhirContext": false,
               "ClientClaims": [
                 {
                   "Name": "ClaimName",
@@ -317,7 +353,11 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
               ],
               "ClientClaimPrefix": "",
               "AlwaysSendClientClaims": false,
-              "AllowManagementApiAccess": false
+              "Require2fa": false,
+              "AllowManagementApiAccess": false,
+              "EnableLocalLogin": false, 
+              "EnableExternalLogin": false, 
+              "IdentityProviderRestrictions": [ "OpenIdConnect-SAMPLE" ]
           }
       ]
   }
@@ -343,17 +383,19 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``AllowedSmartActions``: Actions on resources that can be granted in SMART on FHIR v2: ``c``, ``r``, ``u``, ``d`` and/or ``s``, see `SMART on FHIR V2 scopes`_
 - ``AllowedSmartSubjects``: Categories of 'subjects' to which resource actions can be granted. Can be ``system``, ``user`` and/or ``patient``
 - ``AllowedResourceTypes``: The client can only request SMART scopes for these resource types. To allow all resource types, do not use ``["*"]"`` but just leave the array empty.
-- ``EnableLegacyFhirContext``: true / false - Whether to use the new syntax of ``fhirContext`` defined in `SMART on FHIR v2.1.0 <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#fhir-context>`_. Default is false, when set to true the old syntax of ``fhirContext`` defined in `SMART on FHIR v2.0.0 <https://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html#fhircontext>`_ is used.
+- ``AllowedOperationScopes``: For restricting clients in their use of custom operation that the server supports. The value should be the canonical of the operation. For example, if the server supports the operation ``$export`` and the client is allowed the use of this operation, the value should be ``"http://hl7.org/fhir/uv/bulkdata/OperationDefinition/export"``. This will allow the client to request a token with the scope ``http://hl7.org/fhir/uv/bulkdata/OperationDefinition/export``. To allow all scopes just leave the array empty. Note that this functionality only works if Firely Auth is connected to Firely Server v6.x or higher. In Firely Server v5.x or earlier versions support for this functionality is not implemented.
+- ``ShowFineGrainedScopes``: true / false - Whether when giving consent for the ``Condition`` or ``Observation`` resources, the UI will provide the user the option to restrict the consent to specific categories within that resource. This will only work when US Core is enabled on the Firely Server. For ``Condition`` these will be: ``Encounter Diagnosis``, ``Problem List``, and ``Health Concern``, for ``Observation`` these will be: ``Clinical Test``, ``Laboratory``, ``Social History``, ``SDOH``, ``Survey``, and ``Vital Signs``.
 - ``AlwaysIncludeUserClaimsInIdToken``: true / false: When requesting both an id token and access token, should the user claims always be added to the id token instead of requiring the client to use the userinfo endpoint. Default is false
 - ``Require PKCE``: true / false - see :term:`PKCE`. true is recommended for a :term:`public client` and can offer an extra layer of security for :term:`confidential client`.
-- ``Require2fa``: true / false - Whether users are obliged to set up Multi Factor Authentication before they can use their account to get a token.
 - ``AllowOfflineAccess``: true / false - Whether app can request refresh tokens while the user is online, see `SMART on FHIR refresh tokens`_
 - ``AllowOnlineAccess``: true / false - Whether app can request refresh tokens while the user is offline, see `SMART on FHIR refresh tokens`_. A user is offline if he is logged out of Firely Auth, either manually or by expiration
 - ``AllowFirelySpecialScopes``: true / false - Allow app to request scopes for Firely Server specific operations. Currently just 'http://server.fire.ly/auth/scope/erase-operation'
 - ``RequireClientSecret``: true / false - A :term:`public client` cannot hold a secret, and then this can be set to ``false``. Then the ``ClientSecrets`` section is ignored. See also the note below.
 - ``RefreshTokenLifetime``: If the client is allowed to use a :term:`refresh token`, how long should it be valid? The value is in days. You can also use HH:mm:ss for lower values.
+- ``AccessTokenLifetime``: Similar to the refresh token lifetime, for setting the validity of the :term:`access token`. The value is in days. You can also use HH:mm:ss for lower values.
 - ``ConsentLifetime`` : This is an optional setting which can specify a period after which the users consent will be revoked. The value is in days. You can also use HH:mm:ss for lower values.
 - ``AccessTokenType``: ``Jwt`` or ``Reference``. ``Jwt`` means that this client will get self-contained Json Web Tokens. ``Reference`` means that this client will get reference tokens, that refer to the actual token kept in memory by Firely Auth. For more background see :term:`reference token`.
+- ``EnableLegacyFhirContext``: true / false - Whether to use the new syntax of ``fhirContext`` defined in `SMART on FHIR v2.1.0 <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#fhir-context>`_. Default is false, when set to true the old syntax of ``fhirContext`` defined in `SMART on FHIR v2.0.0 <https://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html#fhircontext>`_ is used.
 - ``ClientClaims``: Enable a client to add static custom claims in the client credential flow. 
 
   - ``Name``: name of the claim
@@ -361,11 +403,51 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
 - ``ClientClaimPrefix``: Add custom defined prefix to the name of all custom client claims. Works together with the setting ``ClientClaims``. 
 - ``AlwaysSendClientClaims``: Add the claims defined in ``ClientClaims`` regardless of the OAuth 2.0 flow used by a client (e.g. even if a authorization_code flow is used)
+- ``Require2fa``: true / false - Whether users are obliged to set up Multi Factor Authentication before they can use their account to get a token.
 - ``AllowManagementApiAccess``: Allows this client to use the :ref:`firely_auth_mgmt`
+- ``EnableLocalLogin``: true / false - Enables/disables the possibility to use the builtin login mechanism. If disabled the user can only use an external identity provider to log in.
+- ``EnableExternalLogin``: true / false - Enables/disables the possibility to use external identity providers to log in with.
+- ``IdentityProviderRestrictions``: Optional, a list of ``Schemes`` of configured external identity providers which this client can use to login with. If not provided, all configured external identity providers will be available.
 
 .. note::
 
     Please follow the principle of least privilege to register a SMART Backend Service client, especially when the settings ``ClientClaims`` and ``ClientClaimPrefix`` are used.
+
+.. _firely_auth_settings_resource_grouping:
+
+Resource Grouping for Allowed Resources
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: json
+
+  	"ResourceTypeGrouping": {
+		  "ShowPatientCompartmentGroup": true, // wether to show the patient compartment resources types as a group or not
+		  "ShowUsCoreGroup": true, // wether to show the Us Core (if available) resources types as a group or not
+		  "CustomGroups": [ // defining custom groups is possible
+		    {
+		      "Name": "CustomGroup1", // the name of the custom group
+		      "ResourceTypes": [ // the resource types to show in this custom group
+		        "Patient",
+		        "Observation"
+		      ]
+		    }
+		  ]
+		}
+
+The ResourceTypeGrouping configuration allows for organizing and selecting resource types as allowed resources in a structured manner. 
+This setting provides flexibility in categorizing resources based on predefined groups or custom-defined groups, enhancing the workflow of defining which resources a client is allowed to access.
+
+- ``ShowPatientCompartmentGroup``: true / false - Whether to show the patient compartment resource types as a group or not.
+
+- ``ShowUsCoreGroup``: true / false - Whether to show the US Core (if available) resource types as a group or not.
+
+- ``CustomGroups``: Allows the definition of custom groups.
+ 
+  - ``Name``: The name of the custom group.
+  - ``ResourceTypes``: A list of resource types to include in this custom group.
+
+.. note::
+  If a custom group consists entirely of resources that are all present in one of the predefined groups, and these groups are enabled, the custom group will automatically become enabled as well.
 
 .. _firely_auth_settings_externalidp:
 
@@ -453,7 +535,69 @@ The content of a disclaimer is user-defined and can be expressed in a `liquid te
 For each disclaimer a checkbox is rendered in the UI by Firely Auth on the disclaimer page. A description shown next the checkbox can be defined for each disclaimer.
 Firely Auth will automatically fill out placeholders defined in the liquid template based on static properties defined as ``TemplateProperties``.
 
+For versioning, the ``Id`` property can be used, like using ``GeneralTermsV1`` and then changing it to ``GeneralTermsV2`` if needed.
+After doing a change like this, the system will ask for agreement to ``GeneralTermsV2`` upon next login that requires this disclaimers consent.
+The consent for the previous disclaimer will stay in the database for future reference.
+
 See the ``Data\DisclaimerTemplates`` folder in the Firely Auth disribution for an example disclaimer template.
+
+.. _firely_auth_settings_launchcontext:
+EHR and standalone launch context settings
+------------------------------------------
+To enable supporting launch scopes, the server must be configured with launch context settings. 
+These settings contain the username and password that have to be used as basic authentication data when calling the EHR launch endpoint, and will configure what gets displayed when the user logs in to choose resources to use as context.
+
+.. code-block:: json
+
+  "LaunchContextRegistration": {
+    "EHRLaunchUsername": "launchUsername", // The username used for authentication when calling the EHR launch endpoint
+    "EHRLaunchSecret": "launchSecret", // The secret used for authentication when calling the EHR launch endpoint
+    "Resources": [
+      {
+        "ResourceType": "Patient",
+        "Columns": [
+          {
+            "ColumnName": "Given",
+            "Fhirpath": "name.given"
+          },
+          {
+            "ColumnName": "Family",
+            "Fhirpath": "name.family"
+          },
+          {
+            "ColumnName": "Gender",
+            "Fhirpath": "gender"
+          },
+          {
+            "ColumnName": "Birthdate",
+            "Fhirpath": "birthDate"
+          }
+          // There is a maximum of 4 items to display
+        ]
+      },
+      {
+        "ResourceType": "Observation",
+        "Columns": [
+          {
+            "ColumnName": "Id",
+            "Fhirpath": "id"
+          },
+          {
+            "ColumnName": "Date",
+            "Fhirpath": "effectiveDateTime"
+          }
+        ]
+      }
+      //,{
+      //	"ResourceType": "Encounter",
+      //	...
+      //}
+    ]
+  },
+
+Per resource type you can configure a maximum of 4 properties of that resource type that will get shown in the UI. 
+The UI will only show resource types that are not provided by a call to the EHR launch endpoint (:ref:`firely_auth_endpoints_launchcontext`).
+Also when a ``launch`` or ``launch/patient``, or a ``patient/xxxx.yyy`` scope is requested, and a patient logs in, the patient context will automatically be added based on the fhirUser claim of the user. This will not happen when you log in as practitioner.
 
 Inferno test settings
 ---------------------

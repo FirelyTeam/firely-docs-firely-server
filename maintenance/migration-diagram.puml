@@ -1,0 +1,33 @@
+@startuml
+component "Reverse Proxy" as revProxy
+interface "HTTP" as revProxyHTTP
+
+package "Old Version" {
+  database "Old Database" as oldDB
+  component "Old Firely Server" as oldSrv
+  interface "HTTP" as oldSrvHTTP
+}
+
+package "New Version" {
+  database "New Database" as newDB
+  component "New Firely Server" as newSrv
+  interface "HTTP" as newSrvHTTP
+}
+
+component "Migration Tool" as migTool
+
+
+oldSrv --> oldDB
+newSrv --> newDB
+oldSrvHTTP - oldSrv
+
+migTool -up-> oldDB
+migTool -up-> newDB
+newSrvHTTP - newSrv
+
+
+revProxy ---> oldSrvHTTP
+revProxy ---> newSrvHTTP
+revProxy - revProxyHTTP
+
+@enduml

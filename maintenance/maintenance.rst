@@ -18,6 +18,7 @@ The administration database is key for the management and maintenance of Firely 
    administration_api
    conformanceresources
    upgrade
+   zero_downtime_migration
    errata
    preload
    multiversion

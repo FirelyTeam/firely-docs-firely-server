@@ -20,6 +20,7 @@ Firely is proud to announce a new major version of Firely Server. This release r
 With this new version, we've focused on delivering:
 
 - support for Sharding with MongoDB
+- zero-downtime migrations with MongoDB (see :ref:`zero_downtime_migration`)
 - detailed insights into Firely Server deployments based on OpenTelemetry metrics and traces
 - improved integration into existing infrastructures with Kafka support for Firely Server PubSub
 - out-of-the-box compliance with more HL7 DaVinci Implementation Guides, e.g. by providing support for the HRex $member-match operation

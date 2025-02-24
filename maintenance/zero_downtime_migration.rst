@@ -1,13 +1,17 @@
 .. _zero_downtime_migration:
 
-MongoDB Zero-downtime Migration
+Zero-downtime Migration
 ===============================
 
 Firely Server v6 introduces an enhanced MongoDB database migration process. In contrast to the previous migration method that required system downtime, this new approach enables zero-downtime migration. This allows for continuous operation of your existing Firely Server instance while the data migration to the new schema proceeds.
 
-
 .. note::
-   This migration process is applicable for both the *vonkdata* database and the *vonkadmin* database (if stored in MongoDB).
+   This migration process applies to the *vonkdata* database. 
+   
+   If you also use MongoDB as the **admin** database, you will need to initialize a new *vonkadmin* database from scratch by specifying a different connection string for the admin database than your previous installation.
+
+.. warning::
+   Please note that any snapshot produced by the bulk data export functionality will not be available after the migration.
 
 .. important::
    Bulk data export data is excluded from the migration process.
@@ -39,13 +43,16 @@ Before starting the migration, ensure you have:
 
 * Firely Server Integration (FSI) tool downloaded
 * Sufficient disk space for both databases during migration
+* License file with the token ``http://fire.ly/vonk/plugins/bulk-data-import/migration``
 * Access credentials for both source and target MongoDB instances
 * MongoDB Shell (mongosh) installed for sharding configuration
 
 Implementation Process
 ----------------------
 
-1. Determine the target database deployment location and securely document the connection string for reference.
+1. Determine the target database deployment location and make a note of the connection string for reference in the next steps.
+
+   If you use MongoDB as the **admin** database, you will need to initialize a new *vonkadmin* database from scratch by specifying a different connection string for the admin database than your previous installation. If you imported custom conformance resources, make sure to include them in your nw installation. See :ref:`conformance_import` for more information. 
 
 2. For implementations requiring sharding, execute the following configuration steps:
 

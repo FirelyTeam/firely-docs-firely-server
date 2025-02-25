@@ -56,7 +56,7 @@ Configuration
 
 #. Evaluation of :ref:`Subscriptions<feature_subscription>` is now turned off by default. To enable - adjust ``SubscriptionEvaluatorOptions`` accordingly.
 #. ``BundleOptions.DefaultTotal`` from now on has a default value of ``none``. For available options see :ref:`bundle_options`.
-#. ``SupportedInteractionOptions`` type has now been replaced in favor of ``Operations<T>`` to accomodate for the requirements of a configuration rewamp.
+#. ``SupportedInteractionOptions`` type has now been replaced by ``Operations<T>`` to accommodate for the requirements of a configuration revamp.
 
 .. note::
     With the release of Firely Server 6.0, we will officially stop support for Firely Server v4.x. We will continue supporting customers that run Firely Server v5.x.

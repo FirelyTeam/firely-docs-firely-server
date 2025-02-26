@@ -78,10 +78,10 @@ Limited access
 
   * Operations that can be secured are:
 
-    * ``reindex`` (see :ref:`feature_customsp_reindex`)
-    * ``reset`` (see :ref:`feature_resetdb`)
-    * ``preload`` (see :ref:`feature_preload`)
-    * ``importResources`` (see :ref:`conformance_on_demand`)
+    * ``$reindex`` and ``$reindex-all`` (see :ref:`feature_customsp_reindex`)
+    * ``$reset`` (see :ref:`feature_resetdb`)
+    * ``$preload`` (see :ref:`feature_preload`)
+    * ``$import-resources`` (see :ref:`conformance_on_demand`)
     * ``StructureDefinition`` (restrict both read and write)
     * ``SearchParameter`` (restrict both read and write)
     * ``ValueSet`` (restrict both read and write)
@@ -113,10 +113,11 @@ Limited access
 
    If these operations are not used on the Administration API, it is recommended to remove them from the API altogether:
    
-    * ``reindex``
-    * ``reset``
-    * ``preload``
-    * ``importResources``
+    * ``$reindex``
+    * ``$reindex-all``
+    * ``$reset``
+    * ``$preload``
+    * ``$import-resources``
     
    To do so, add ``Vonk.Administration.Api.AdministrationOperationConfiguration`` to the Exclude list in the ``PipelineOptions``:
     

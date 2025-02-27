@@ -165,10 +165,7 @@ Administration
         "LogSqlQueryParameterValues": false
         //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
       },
-      "Security": {
-        "AllowedNetworks": [ "127.0.0.1", "::1" ], // i.e.: ["127.0.0.1", "::1" (ipv6 localhost), "10.1.50.0/24", "10.5.3.0/24", "31.161.91.98"]
-        "OperationsToBeSecured": [ "reindex", "reset", "preload", "importResources" ]
-      }
+      "AllowedNetworks": [ "127.0.0.1", "::1" ], // i.e.: ["127.0.0.1", "::1" (ipv6 localhost), "10.1.50.0/24", "10.5.3.0/24", "31.161.91.98"]
     },
 
 The ``Administration`` section is part of the :ref:`administration_api` and its repository.
@@ -450,17 +447,26 @@ See :ref:`restful_crud`.
 Enable or disable interactions
 ------------------------------
 
-By default, the value ``SupportedInteractions`` contains all the interactions that are implemented in Firely Server.
-But you can disable interactions by removing them from these lists.
-::
+.. attention::
+   In Firely Server 6.0, the ``SupportedInteractions`` configuration has been replaced by the new ``Operations`` configuration. 
+   Please see :ref:`configure_operations` for detailed information on the new configuration structure.
 
-    "SupportedInteractions": {
-        "InstanceLevelInteractions": "read, vread, update, delete, history, conditional_delete, conditional_update, $validate",
-        "TypeLevelInteractions": "create, search, history, $validate, $snapshot, conditional_create",
-        "WholeSystemInteractions": "capabilities, batch, transaction, history, search, $validate"
-    },
+The new ``Operations`` section provides granular control over each operation, allowing you to enable/disable and configure authorization requirements for standard and custom operations.
 
-If you implement a custom operation in a plugin, you should also add the name of that operation at the correct level. E.g. add ``$convert`` to ``TypeLevelInteractions`` to allow ``<base>/<resourcetype>/$convert``.
+Example configuration for enabling a custom operation:
+
+.. code-block:: json
+
+    "Operations": {
+      "$myCustomOperation": {
+        "Name": "$myCustomOperation",
+        "Level": ["Type"],
+        "Enabled": true,
+        "RequireAuthorization": "WhenAuthEnabled",
+        "NetworkProtected": false,
+        "RequireTenant": true
+      }
+    }
 
 .. _supportedmodel:
 

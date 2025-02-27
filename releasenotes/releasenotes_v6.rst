@@ -51,12 +51,21 @@ Fixes
 Configuration
 ^^^^^^^^^^^^^
 .. attention::
-    Default behavior of Firely Server has been tweaked by changing conviguration values. 
+    Default behavior of Firely Server has been tweaked by changing configuration values. 
     Make sure to reflect the desired behaviour by adjusting ``appsettings.instance.json`` or environment variables.
 
 #. Evaluation of :ref:`Subscriptions<feature_subscription>` is now turned off by default. To enable - adjust ``SubscriptionEvaluatorOptions`` accordingly.
 #. ``BundleOptions.DefaultTotal`` from now on has a default value of ``none``. For available options see :ref:`bundle_options`.
-#. ``SupportedInteractionOptions`` type has now been replaced by ``Operations<T>`` to accommodate for the requirements of a configuration revamp.
+#. The configuration structure for operations has been completely revamped:
+
+   * ``SupportedInteractionOptions`` has been replaced by a new top-level ``Operations`` configuration section
+   * ``Administration.Security.OperationsToBeSecured`` has been replaced by per-operation ``NetworkProtected`` property
+   * ``SmartAuthorizationOptions.Protected`` has been replaced by per-operation ``RequireAuthorization`` property
+   * Each operation now has granular control over authorization, network protection, tenant requirements, etc.
+   * See :ref:`configure_operations` for detailed information about the new configuration structure and migration guide
+
+.. attention::
+    This change requires migration of your configuration files. The old configuration structure is no longer supported.
 
 .. note::
     With the release of Firely Server 6.0, we will officially stop support for Firely Server v4.x. We will continue supporting customers that run Firely Server v5.x.

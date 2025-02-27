@@ -8,6 +8,6 @@ It is very common to run Firely Server on a Kubernetes cluster. This can be any 
 
 To ease the process we provide a helm chart to deploy Firely Server on the cluster. The chart can be found in the `FirelyTeam/Helm.Charts <https://github.com/FirelyTeam/Helm.Charts>`_ repository.
 
-All the settings are described in the `Read.me <https://github.com/FirelyTeam/Helm.Charts/tree/main/firely-server>`_.
+The deployment instructions as well as the settings are described in the `Firely Server chart Read.me <https://github.com/FirelyTeam/Helm.Charts/blob/main/charts/firely-server/README.md>`_.
 
-The same repository also contains a helm chart to deploy :ref:`Firely Auth <feature_accesscontrol_idprovider>`, but that is very early still. Documentation and settings will be added to that as well.
+The same repository also contains a helm chart to deploy :ref:`Firely Auth <feature_accesscontrol_idprovider>` and the corresponding deployment intructions and settings are described in the `Firely Auth chart Read.me <https://github.com/FirelyTeam/Helm.Charts/blob/main/charts/firely-auth/README.md>`_.

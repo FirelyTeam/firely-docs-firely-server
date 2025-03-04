@@ -1052,6 +1052,12 @@ Bulk Data Import
 :License token: http://fire.ly/vonk/plugins/bulk-data-import/unlimited
 :Description: Token unrestricted in the amount of resources that can be loaded in total as well as in a single batch, supports the Recovery Journal feature. See :ref:`Firely Server Ingest <tool_fsi>`.
 
+.. _vonk_tools_fsi_bulk_data_import_migration:
+
+:Name: Bulk Data Import - Migration
+:License token: http://fire.ly/vonk/plugins/migration
+:Description: Token allowing zero-downtime migration using the FSI tool. See :ref:`zero_downtime_migration`.
+
 .. _vonk_tools_firely_auth:
 Firely Auth
 ----------------

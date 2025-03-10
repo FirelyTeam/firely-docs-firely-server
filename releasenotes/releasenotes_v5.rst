@@ -1,7 +1,7 @@
 .. _vonk_releasenotes_history_v5:
 
-Current Firely Server release notes (v5.x)
-==========================================
+Old Firely Server release notes (v5.x)
+======================================
 
 .. note::
     For information on how to upgrade, please have a look at our documentation on :ref:`upgrade`. You can download the binaries of the latest version from `this site <https://downloads.fire.ly/firely-server/versions/>`_, or pull the latest docker image::

@@ -583,7 +583,11 @@ Task File Management and Bulk Data Export
 ::
 
   "TaskFileManagement": {
-    "StoragePath": "./taskfiles"
+    "StorageService": {
+          "StorageType": "LocalFile", // LocalFile / AzureBlob / AzureFile
+          "StoragePath": "./taskfiles",
+          "ContainerName": "firelyserver" // For AzureBlob / AzureFile only
+      }
   },
 
 ::

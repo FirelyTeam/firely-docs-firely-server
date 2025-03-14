@@ -25,6 +25,11 @@ Using PubSub might provide several advantages:
 .. note::
   PubSub can be tested using the evaluation license for Firely Server. It is also included in the enterprise license for Firely Server. Your license allows the use of PubSub if ``http://fire.ly/vonk/plugins/pubsub`` is included in the plugins list of the license file.
 
+.. warning::
+  PubSub does not fully support :ref:`feature_multitenancy`. It will process the related security label if that is present in the resource. But the PubSub client sending or receiving the message is supposed to have access to all tenants and cannot specify a tenant in the message header.
+  
+  Likewise, PubSub does not support authorization - SMART on FHIR or otherwise - or auditing.
+
 .. _pubsub_configuration:
 
 Configuration

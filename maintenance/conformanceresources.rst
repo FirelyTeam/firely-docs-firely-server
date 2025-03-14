@@ -117,7 +117,7 @@ To ensure that only one instance runs the import you can do two things:
 
 #. Exclude the namespace ``Vonk.Administration.Api.Import`` from the :ref:`PipelineOptions<vonk_plugins_config>` in branch ``administration`` on all but one instance.
 
-If you want to use the manual import (``<url>/administration/import``) you are advised to apply solution nr. 1 above. In the second solution the call may or may not end up on an instance having the Import functionality.
+If you want to use the manual import (``<url>/administration/$import-resources``) you are advised to apply solution nr. 1 above. In the second solution the call may or may not end up on an instance having the Import functionality.
 
 We are aware that this can be a bit cumbersome. On the :ref:`vonk_roadmap` is therefore the story to host the Administration API in its own microservice.
 
@@ -209,7 +209,7 @@ Therefore you can instruct Firely Server to actually load the profiles from the 
 
 ::
 
-  POST http(s)://<firely-server-endpoint>/administration/importResources
+  POST http(s)://<firely-server-endpoint>/administration/$import-resources
 
 The operation will return an OperationOutcome resource, containing details about the number of resources created and updated, as well as any errors that occurred.
 Please note that this will also respect the history of already read files, and not read them again.

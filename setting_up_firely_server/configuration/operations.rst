@@ -68,9 +68,7 @@ For administrative operations, a similar structure exists under ``Administration
             "System"
           ],
           "Enabled": true,
-          "RequireAuthorization": "WhenAuthEnabled",
-          "NetworkProtected": true,
-          "RequireTenant": false
+          "NetworkProtected": true
         },
         "$reset": {
           "Name": "$reset",
@@ -78,9 +76,7 @@ For administrative operations, a similar structure exists under ``Administration
             "System"
           ],
           "Enabled": true,
-          "RequireAuthorization": "WhenAuthEnabled",
-          "NetworkProtected": true,
-          "RequireTenant": false
+          "NetworkProtected": true
         }
       }
     }
@@ -101,7 +97,7 @@ Each operation can be configured with the following properties:
 +------------------------+----------------------------+---------------------------------------------------------------------------------------------------+
 | ``RequireAuthorization``| string                    | Authorization requirement: "WhenAuthEnabled", "Always", or "Never"                               |
 +------------------------+----------------------------+---------------------------------------------------------------------------------------------------+
-| ``OperationScope``     | string                     | Required token scope for the operation (optional)                                                 |
+| ``OperationScope``     | string                     | Required token scope for the operation (only applies when authorization is enabled)               |
 +------------------------+----------------------------+---------------------------------------------------------------------------------------------------+
 | ``NetworkProtected``   | boolean                    | Whether the operation is restricted to allowed networks                                           |
 +------------------------+----------------------------+---------------------------------------------------------------------------------------------------+
@@ -157,9 +153,7 @@ For each operation in ``OperationsToBeSecured``, set ``NetworkProtected`` to ``t
           "Name": "reindex",
           "Level": ["System"],
           "Enabled": true,
-          "RequireAuthorization": "WhenAuthEnabled",
-          "NetworkProtected": true,
-          "RequireTenant": false
+          "NetworkProtected": true
         },
         // other operations...
       }
@@ -204,14 +198,50 @@ For each operation in ``SmartAuthorizationOptions.Protected.Operation``, set ``R
       }
     }
 
-Operation Authorization Options
+Operation Configuration Options
 ------------------------------
+
+Authorization Options
+^^^^^^^^^^^^^^^^^^^^
 
 The ``RequireAuthorization`` property has three possible values:
 
 1. ``"WhenAuthEnabled"`` (Default): Authorization is required only when authorization is enabled in Firely Server
-2. ``"Always"``: Authorization is always required, server start is prevented when Smart is disabled
+2. ``"Always"``: Authorization is always required, server start is prevented when authorization is disabled
 3. ``"Never"``: Authorization is never required, even if server authorization is enabled
+
+This property is only configurable for standard FHIR operations under the main ``Operations`` section. Administrative operations have fixed authorization behavior that cannot be changed.
+
+Operation Scope
+^^^^^^^^^^^^^^
+
+The ``OperationScope`` property defines the required token scope for an operation. This setting only applies when authorization is enabled in Firely Server.
+
+* If you do not provide a scope, the access token will not need to include any specific scope to perform this operation
+* If you provide a scope, the access token must include that scope to perform this operation
+* For standard scopes, refer to the SMART on FHIR scopes documentation (e.g., patient/Patient.read, user/Observation.write)
+
+For example, if you configure an operation with ``"OperationScope": "http://server.fire.ly/auth/scope/erase-operation"``, then any access token used to access this operation must include the "http://server.fire.ly/auth/scope/erase-operation" scope.
+
+Network Protection Options
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``NetworkProtected`` property controls access restrictions based on IP networks:
+
+1. ``true``: The operation can only be accessed from networks defined in the ``Administration.AllowedNetworks`` configuration
+2. ``false`` (Default): The operation can be accessed from any network
+
+Important: This property is only applicable to administrative operations (under the ``Administration.Operations`` section). It cannot be used with standard FHIR operations and is specifically designed to restrict sensitive administrative operations to specific IP networks.
+
+Multi-tenancy Options
+^^^^^^^^^^^^^^^^^^^^
+
+The ``RequireTenant`` property determines whether an operation requires tenant information:
+
+1. ``true``: The operation requires tenant information and will only work in a multi-tenant environment
+2. ``false``: The operation does not require tenant information and works in both single and multi-tenant environments
+
+This property is only applicable to standard FHIR operations (under the main ``Operations`` section). Administrative operations do not support this property as they operate at the system level across all tenants.
 
 Example Configuration
 -------------------
@@ -263,17 +293,13 @@ Here's an example of the new operation configuration structure:
             "Name": "$reindex",
             "Level": ["System"],
             "Enabled": true,
-            "RequireAuthorization": "WhenAuthEnabled",
-            "NetworkProtected": true,
-            "RequireTenant": false
+            "NetworkProtected": true
           },
           "$reset": {
             "Name": "$reset",
             "Level": ["System"],
             "Enabled": true,
-            "RequireAuthorization": "WhenAuthEnabled",
-            "NetworkProtected": true,
-            "RequireTenant": false
+            "NetworkProtected": true
           }
         }
       }

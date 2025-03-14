@@ -74,30 +74,63 @@ The Administration API uses a database separately from the main 'Firely Server D
 Limited access
 ^^^^^^^^^^^^^^
 
+.. attention::
+   In Firely Server 6.0, the administration endpoint configuration has been updated to use the new operations structure. The ``Security.OperationsToBeSecured`` setting has been replaced by individual operation configurations with the ``NetworkProtected`` property set to ``true``. See :ref:`configure_operations` for detailed information.
+
+**Firely Server 6.0+**
+
+In Firely Server 6.0+, you can restrict access to administrative operations by setting the ``NetworkProtected`` property to ``true`` in each operation's configuration under ``Administration.Operations``:
+
+.. code-block:: json
+
+    "Administration": {
+      "AllowedNetworks": ["127.0.0.1", "::1"],
+      "Operations": {
+        "$reindex": {
+          "Name": "$reindex",
+          "Level": ["System"],
+          "Enabled": true,
+          "NetworkProtected": true
+        },
+        "$reset": {
+          "Name": "$reset",
+          "Level": ["System"],
+          "Enabled": true,
+          "NetworkProtected": true
+        }
+      }
+    }
+
+The ``AllowedNetworks`` property defines which IP networks can access operations with ``NetworkProtected`` set to ``true``.
+
+**Firely Server 5.x and earlier**
+
 #. ``Security``: You can restrict access to the operations listed in ``OperationsToBeSecured`` to only be invoked from the IP networks listed in ``AllowedNetworks``.
 
-  * Operations that can be secured are:
+* Operations that can be secured are:
 
-    * ``$reindex`` and ``$reindex-all`` (see :ref:`feature_customsp_reindex`)
-    * ``$reset`` (see :ref:`feature_resetdb`)
-    * ``$preload`` (see :ref:`feature_preload`)
-    * ``$import-resources`` (see :ref:`conformance_on_demand`)
-    * ``StructureDefinition`` (restrict both read and write)
-    * ``SearchParameter`` (restrict both read and write)
-    * ``ValueSet`` (restrict both read and write)
-    * ``CodeSystem`` (restrict both read and write)
-    * ``CompartmentDefinition`` (restrict both read and write)
-    * ``Subscription``: (restrict both read and write, see :ref:`feature_subscription`)
+  * ``$reindex`` and ``$reindex-all`` (see :ref:`feature_customsp_reindex`)
+  * ``$reset`` (see :ref:`feature_resetdb`)
+  * ``$preload`` (see :ref:`feature_preload`)
+  * ``$import-resources`` (see :ref:`conformance_on_demand`)
+  * ``StructureDefinition`` (restrict both read and write)
+  * ``SearchParameter`` (restrict both read and write)
+  * ``ValueSet`` (restrict both read and write)
+  * ``CodeSystem`` (restrict both read and write)
+  * ``CompartmentDefinition`` (restrict both read and write)
+  * ``Subscription``: (restrict both read and write, see :ref:`feature_subscription`)
 
-  * The ``AllowedNetworks`` have to be valid IP networks, either IPv4 or IPv6, and providing an the subnet prefix length explicitly is recommended. If you provide a 'bare' IP Address, it will be interpreted as a ``/32`` for IPv4 and ``/128`` for IPv6, effectively reducing it to a single host network.
-  * We recommend to only use internal, single host networks. 
-  
-  Examples:
+For both versions, the following rules apply:
+
+* The ``AllowedNetworks`` have to be valid IP networks, either IPv4 or IPv6, and providing the subnet prefix length explicitly is recommended. If you provide a 'bare' IP Address, it will be interpreted as a ``/32`` for IPv4 and ``/128`` for IPv6, effectively reducing it to a single host network.
+* We recommend to only use internal, single host networks.
+
+Examples:
     
-        * ``127.0.0.1/32`` (IPv4 localhost)
-        * ``::1/128`` (IPv6 localhost)
-        * ``192.168.0.18/32`` (IPv4 single host)
-        * ``10.0.0.1/24`` (IPv4 network ranging from ``10.0.0.0`` to ``10.0.0.255``, not recommended)
+* ``127.0.0.1/32`` (IPv4 localhost)
+* ``::1/128`` (IPv6 localhost)
+* ``192.168.0.18/32`` (IPv4 single host)
+* ``10.0.0.1/24`` (IPv4 network ranging from ``10.0.0.0`` to ``10.0.0.255``, not recommended)
 
 .. warning::
 

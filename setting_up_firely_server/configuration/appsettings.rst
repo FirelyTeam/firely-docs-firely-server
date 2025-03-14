@@ -451,6 +451,8 @@ Enable or disable interactions
    In Firely Server 6.0, the ``SupportedInteractions`` configuration has been replaced by the new ``Operations`` configuration. 
    Please see :ref:`configure_operations` for detailed information on the new configuration structure.
 
+**Firely Server 6.0+**
+
 The new ``Operations`` section provides granular control over each operation, allowing you to enable/disable and configure authorization requirements for standard and custom operations.
 
 Example configuration for enabling a custom operation:
@@ -467,6 +469,18 @@ Example configuration for enabling a custom operation:
         "RequireTenant": true
       }
     }
+
+**Firely Server 5.x and earlier**
+
+By default, the value ``SupportedInteractions`` contains all the interactions that are implemented in Firely Server.
+But you can disable interactions by removing them from these lists.
+::
+
+    "SupportedInteractions": {
+        "InstanceLevelInteractions": "read, vread, update, delete, history, conditional_delete, conditional_update, $validate",
+        "TypeLevelInteractions": "create, search, history, $validate, $snapshot, conditional_create",
+        "WholeSystemInteractions": "capabilities, batch, transaction, history, search, $validate"
+    },
 
 .. _supportedmodel:
 

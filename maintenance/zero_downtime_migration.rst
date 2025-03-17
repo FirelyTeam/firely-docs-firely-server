@@ -5,16 +5,8 @@ Zero-downtime Migration
 
 Firely Server v6 introduces an enhanced MongoDB database migration process. In contrast to the previous migration method that required system downtime, this new approach enables zero-downtime migration. This allows for continuous operation of your existing Firely Server instance while the data migration to the new schema proceeds.
 
-.. note::
-   This migration process applies to the *vonkdata* database. 
-   
-   If you also use MongoDB as the **admin** database, you will need to initialize a new *vonkadmin* database from scratch by specifying a different connection string for the admin database than your previous installation.
-
 .. warning::
-   Please note that any snapshot produced by the bulk data export functionality will not be available after the migration.
-
-.. important::
-   Bulk data export data is excluded from the migration process.
+   Please note that any snapshot produced by the bulk data export functionality will not be available after the migration. Bulk data export data is excluded from the migration process.
 
 Architecture Overview
 ---------------------
@@ -34,7 +26,8 @@ The architecture consists of:
 * A reverse proxy managing request routing between instances
 
 .. note::
-   During the migration period, both database instances operate concurrently.
+   During the migration period, both database instances operate concurrently. 
+   However, the migration is one-way only, changes from the new instance are not synced back to the old instance.
 
 Prerequisites
 -------------
@@ -45,14 +38,27 @@ Before starting the migration, ensure you have:
 * Sufficient disk space for both databases during migration
 * License file with the token ``http://fire.ly/vonk/plugins/bulk-data-import/migration``
 * Access credentials for both source and target MongoDB instances
-* MongoDB Shell (mongosh) installed for sharding configuration
+* `MongoDB Shell (mongosh) <https://www.mongodb.com/products/tools/shell>`_ installed for sharding configuration
 
-Implementation Process
-----------------------
+.. _migration_admin_database:
+
+Migration of Admin Database
+---------------------------
+
+.. warning::
+   This zero-downtime migration process applies only to the main database, configured as described in :ref:`configure_mongodb`.
+
+If you use MongoDB as the **admin** database, you will need to let the new FS version instance initialize its new *vonkadmin* database from scratch. You can do that by specifying a different connection string for the admin database than your previous installation.
+If you previously imported custom conformance resources, make sure to include them in your new installation. 
+
+This can be done as described in :ref:`conformance_import` or by manually creating/updating the resources via the new FS installation's ``/administration`` endpoints.
+
+Make sure to re-create your custom :ref:`AccessPolicies <feature_accesscontrol_permissions>` and/or :ref:`Subscriptions <feature_subscription>` if you use them.
+
+Migration of Main Database
+--------------------------
 
 1. Determine the target database deployment location and make a note of the connection string for reference in the next steps.
-
-   If you use MongoDB as the **admin** database, you will need to initialize a new *vonkadmin* database from scratch by specifying a different connection string for the admin database than your previous installation. If you imported custom conformance resources, make sure to include them in your nw installation. See :ref:`conformance_import` for more information. 
 
 2. For implementations requiring sharding, execute the following configuration steps:
 
@@ -60,6 +66,7 @@ Implementation Process
    - Provision the schema using the following command:
 
       .. code-block:: bash
+         :caption: Bash
 
          COLLECTION_NAME=vonkentries
          CONNECTION_STRING=<YOUR_CONNECTION_STRING>
@@ -124,10 +131,13 @@ Implementation Process
 
    Migration completion is indicated by the following message: ``No new items found in the database. Waiting for 00:00:05 before retrying...``
 
-4. Provision the new version of Firely Server instance
+4. Provision an instance of the new version of Firely Server
+5. Verify that the migration was successful by inspecting the data in the target database, see the :ref:`verification steps <migration_admin_database_verification>` below
 5. Update the reverse proxy configuration to direct traffic to the new Firely Server instance
-6. Upon successful migration verification, terminate the FSI migration tool and decommission the previous Firely Server installation.
+6. Decommission the instance(s) of the old version of Firely Server
+6. Terminate the FSI migration tool
 
+.. _migration_admin_database_verification:
 
 Verification Steps
 ------------------
@@ -148,7 +158,7 @@ After migration completion:
       mongosh $CONNECTION_STRING --eval "db.vonkentries.count()"
 
 2. Verify data integrity by sampling records
-3. Test CRUD operations on the new Firely Server instance
+3. Try a few Search requests on the new Firely Server instance
 
 Rollback Plan
 -------------
@@ -164,4 +174,4 @@ Performance Optimization
 ------------------------
 
 **Network Considerations**
-- Use same datacenter for source and target DBs and FSI to ensure high network throughput
+- Use the same data center for the source and target databases and the machine that runs FSI to ensure high network throughput.

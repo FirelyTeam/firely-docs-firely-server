@@ -68,36 +68,33 @@ General usage
 
 Prerequisites
 ^^^^^^^^^^^^^
+
+.. note::
+
+  This prerequisite does not apply to FSI v6+ targeting a MongoDB database. In this case you can instruct FSI to provision the database automatically by setting the ``--provisionTargetDatabase`` flag to ``true``.
+
 The tool requires that the target database already exists and contains all required indexes and tables (for SQL Server). If you don't have a database with the schema yet, you first need to run the Firely Server at least once as described in the articles :ref:`configure_sql` and :ref:`configure_mongodb`.
 
-.. important::
+Each version of Firely Server Ingest is bound to a specific version of Firely Server.
+Starting from FS version 5.5.0, the FSI version number aligns with the FS version number.
 
-  Each version of Firely Server Ingest is bound to a specific version of Firely Server. 
-  
-  The following table shows which combinations of Firely Server (its database schema version respectively) and Firely Server Ingest can be used in combination.
+.. container:: toggle
 
+    .. container:: header
 
-+-----------------------+-----------------------------------------------------+
-| Firely Server Version | Firely Server Ingest Version                        |
-+=======================+=====================================================+
-| v5.5.0 and later      | FSI aligns with the version number of FS            |
-+-----------------------+-----------------------------------------------------+
-| v5.1.0 - v5.4.0       | v2.2.0 and v2.2.1                                   |
-+-----------------------+-----------------------------------------------------+
-| v5.0.0                | v2.1.0                                              |
-+-----------------------+-----------------------------------------------------+
-| v5.0.0-beta1          | v2.0.0                                              |
-+-----------------------+-----------------------------------------------------+
-| v4.10.0 and later     | v1.4.0                                              |
-+-----------------------+-----------------------------------------------------+
-| v4.9.0                | v1.3.0                                              |
-+-----------------------+-----------------------------------------------------+
-| v4.8.0                | v1.2.0                                              |
-+-----------------------+-----------------------------------------------------+
-| v4.2.0 and later      | v1.1.0                                              |
-+-----------------------+-----------------------------------------------------+
-| v4.2.0                | v1.0.0                                              |
-+-----------------------+-----------------------------------------------------+
+      Expand to see the matching FSI versions for older FS releases
+
+    The following list shows which combinations of Firely Server (its database schema version respectively) and Firely Server Ingest can be used in combination.
+
+    * **FS 5.5.0 and later**: FSI v5.5.0 and later
+    * **FS v5.1.0 - v5.4.0**: FSI v2.2.0 or v2.2.1
+    * **FS v5.0.0**: FSI v2.1.0
+    * **FS v5.0.0-beta1**: FSI v2.0.0
+    * **FS v4.10.0 and later**: FSI v1.4.0
+    * **FS v4.9.0**: FSI v1.3.0
+    * **FS v4.8.0**: FSI v1.2.0
+    * **FS v4.2.0 and later**: FSI v1.1.0
+    * **FS v4.2.0**: FSI v1.0.0
 
 Input files formats
 ^^^^^^^^^^^^^^^^^^^

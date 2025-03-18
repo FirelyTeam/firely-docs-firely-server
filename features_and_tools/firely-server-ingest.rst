@@ -41,7 +41,13 @@ To install the tool, you first need to have .NET Core SDK v8.x installed on your
 
   dotnet tool install --global Firely.Server.Ingest
 
-The command above will install FSI from this `NuGet package <https://www.nuget.org/packages/Firely.Server.Ingest/>`_.
+You can update to the latest version using the following command:
+
+::
+
+  dotnet tool update --global Firely.Server.Ingest
+
+The commands above will install FSI from this `NuGet package <https://www.nuget.org/packages/Firely.Server.Ingest/>`_.
 
 .. note::
 
@@ -66,7 +72,9 @@ The tool requires that the target database already exists and contains all requi
 
 .. important::
 
-  Each version of Firely Server Ingest is bound to a specific version of Firely Server. The following table shows which combinations of Firely Server (its database schema version respectively) and Firely Server Ingest can be used in combination.
+  Each version of Firely Server Ingest is bound to a specific version of Firely Server. 
+  
+  The following table shows which combinations of Firely Server (its database schema version respectively) and Firely Server Ingest can be used in combination.
 
 
 +-----------------------+-----------------------------------------------------+
@@ -378,21 +386,12 @@ Known issues
   
   * Please note that FSI will not check or warn you if the database already contains resources of a FHIR version different from that specified via the CLI options ``-f``, ``--fhir-version <R3|R4>`` or ``fhirVersion`` in the config file.
 
-* When importing data from large ``*.ndjson`` files, the memory consumption may be quite high.
 * When importing STU3 resources, the field ``Patient.deceased`` will always be set to ``true`` if it exists. This is caused by an error in the FHIR STU3 specification. In case you would like to use FSI with STU3 resources, please :ref:`contact us<vonk-contact>`.
 * If a resource is present in a workload more than once, the entries may get processed in parallel and a version that is different from the latest may be set as current.
 
 
 Release notes
 -------------
-
-.. note::
-    You can pull the latest version of Firely Server Ingest using the following instructions::
-        
-        dotnet tool update --global Firely.Server.Ingest
-
-
-
 
 Release 5.5.0+
 ^^^^^^^^^^^^^^
@@ -401,158 +400,119 @@ The FSI release cycle has been synchronized with the Firely Server release cycle
 Please refer to the :ref:`Firely Server release notes <vonk_releasenotes>` for the FSI change log.
 
 
-.. _fsi_releasenotes_2.3.0:
+.. container:: toggle
+
+    .. container:: header
+
+      Changelog before Firely Server 5.5.0
+
+    **Release 2.3.0, November 23rd, 2023**
+
+    * Feature: the mode ``--update-existing-resources onlyIfNewer`` is now supported for MongoDB.
+    * Feature: ``Serilog.Sinks.MongoDB`` was added to the list of supported log sinks.
+    * Fix: the ``SqlClient`` dependency package has been updated to version v5.1.1 to address the vulnerability: CVE-2022-41064.
+    * Fix: the rare exception ``System.InvalidOperationException: Cannot change state from Skipped to Error`` does not get thrown anymore.
+    * Internal: the way of handling command line arguments has been refactored.
+
+    **Release 2.2.1, September 19th, 2023**
+
+    * Added support for running FSI without the internet connection (see :ref:`tool_fsi_packages_cache`)
+    * This release includes a new setting for handling the conversion of absolute to relative references: ``absoluteUrlConversion``. This setting replaces the old ``convertAbsoluteUrlsToRelative`` setting. With this setting you can specify the FHIR Path of the elements that you would like to see converted. See also the ``urlConvBases:index url`` and ``urlConvElems:index FHIRPath`` arguments in the :ref:`FSI_supported_arguments` section for more information.
+      ::
+      
+        "absoluteUrlConversion": {
+          "baseEndpoints": [
+            // "http://localhost:4080/R4"
+          ],
+          "elements": [
+            "DocumentReference.content.attachment.url"
+          ]
+        }
+
+    **Release 1.4.1, August 28th, 2023**
+
+    .. note::
+      It is a hotfix release for the latest FSI that supports Firely Server v.4
+
+    * Added support for running FSI without the internet connection (see :ref:`tool_fsi_packages_cache`)
+
+    **Release 2.2.0, June 20th, 2023**
+
+    * Fix: Composite parameters are more accurately indexed for SQL Server, to align with Firely Server 5.1.0. See :ref:`vonk_releasenotes_5_1_0` and the accompanying warnings.
+    * Feature: FSI is now open to evaluation, just like Firely Server itself. It is limited though, to a maximum of 10.000 resources in the database, including history.
+    * Feature: FSI is updated to Firely .NET SDK 5.1.0, see `its releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.1.0>`_
+
+    **Release 2.1.0, March 9th, 2023**
+
+    * Fix: Eliminated deadlocks in FSI when writing data in parallel.
+    * Settings: The setting ``maxActiveResources`` and the related CLI argument ``--maxActiveRes`` are no longer needed and have been removed.
+
+    **Release 2.0.1, February 12th, 2023**
+
+    * Fix: Add support for schema version 25 for MongoDb
+
+    **Release 2.0.0, January 26th, 2023**
+
+    * Upgraded to work with the database schemas for :ref:`Firely Server 5.0.0-beta1<vonk_releasenotes_5_0_0-beta1>`
+    * Indexing has been updated to support searching for version-specific references.
+
+    **Release 1.4.0, October 6th, 2022**
+
+    * Added new setting ``convertAbsoluteUrlsToRelative`` which is an array of server URL base values. This feature converts absolute URL references to relative references for the given server URL base array. Example: Setting of ``http://example.org/R4`` will convert an absolute URL ``http://example.org/R4/Patient/123`` to relative as ``Patient/123``. 
+
+    * Added a new mode ``onlyIfNewer`` for option ``--update-existing-resources`` (see the CLI options above)
+
+      .. note::
+
+        This option is currently supported only for SQL Server
+
+    * The setting ``--useUcum`` has been removed. From now on, all quantitative values get automatically canonicalized to UCUM values
+
+    * Indexing has been fixed for search parameters of type `reference` that index resource elements of type `uri`. The following SearchParameters were affected by the bug:
+
+      - FHIR4: ConceptMap-source-uri, ConceptMap-target-uri, PlanDefinition-definition
+      - STU3: ImplementationGuide-resource, Provenance-agent
+      
+      Consider :ref:`re-indexing<feature_customsp_reindex_specific>` your database for these search parameters if you use them.
+
+      .. note::
+
+        Please note that due to a mistake in the official STU3 specification, search parameters `ConceptMap-source-uri`, `ConceptMap-target-uri` still do not work as expected. The correct search parameter expressions would be `ConceptMap.source.as(uri)` and `ConceptMap.target.as(uri)` while the specification contains `ConceptMap.source.as(Uri)` and `ConceptMap.target.as(Uri)` respectively. The issue has been addressed in R4.
+        
+    **Release 1.3.1**
+
+    * Corrected an exception when multiple batch threads are processing and saving in parallel to SQL Server.
+
+    **Release 1.3.0**
+
+    * Add configuration ``haltOnError``. When ``true``, the FSI will be stopped on a single error. Otherwise, it will log error and continue.  
+    * Changed the serialization format of decimal from string to use the native decimal type in MongoDB to improve performance.
+    * Bugfix: Fixed Money.currency indexing for FHIR STU3 and R4
+
+    **Release 1.2.0**
+
+    * Ability to provide a path to a custom ``appsettings.json`` file via a command-line argument (see :ref:`examples<tool_fsi_examples>` above)
+    * Bugfix: ensure FSI uses all available values from the SQL PK-generating sequences when inserting data to the vonk.entry and component tables
+
+    **Release 1.1.0**
+
+    * Feature: added support for MongoDb!
+    * Feature: added support for performance counters using dotnet-counters. See :ref:`tool_fsi_performance_counters` on how to setup and use dotnet-counters.
+    * FSI has been upgraded to .NET 6. To install the tool, you first need to have .NET Core SDK v6.x installed on your computer. See :ref:`tool_fsi_installation` for more information.
+    * The Firely .NET SDK that FSI uses has been upgraded to 3.7.0. The release notes for the SDK v3.7.0 can be found `here <https://github.com/FirelyTeam/firely-net-sdk/releases>`_.
+    * Multiple smaller fixes to improve reliability and performance of the tool.
+
+    **Release 1.0.0**
+
+    * First public release
+    * Performance: optimized memory consumption (especially, when reading large `*.ndjson` files)
+    * Feature: quantitative values can be automatically canonicalized to UCUM values (see --useUcum CLI option)
+    * Multiple smaller fixes to improve reliability and performance of the tool
 
 
-Release 2.3.0, November 23rd, 2023 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    .. |br| raw:: html
 
-* Feature: the mode ``--update-existing-resources onlyIfNewer`` is now supported for MongoDB.
-* Feature: ``Serilog.Sinks.MongoDB`` was added to the list of supported log sinks.
-* Fix: the ``SqlClient`` dependency package has been updated to version v5.1.1 to address the vulnerability: CVE-2022-41064.
-* Fix: the rare exception ``System.InvalidOperationException: Cannot change state from Skipped to Error`` does not get thrown anymore.
-* Internal: the way of handling command line arguments has been refactored.
-
-
-
-.. _fsi_releasenotes_2.2.1:
-
-
-
-Release 2.2.1, September 19th, 2023
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-* Added support for running FSI without the internet connection (see :ref:`tool_fsi_packages_cache`)
-* This release includes a new setting for handling the conversion of absolute to relative references: ``absoluteUrlConversion``. This setting replaces the old ``convertAbsoluteUrlsToRelative`` setting. With this setting you can specify the FHIR Path of the elements that you would like to see converted. See also the ``urlConvBases:index url`` and ``urlConvElems:index FHIRPath`` arguments in the :ref:`FSI_supported_arguments` section for more information.
-  ::
-  
-    "absoluteUrlConversion": {
-      "baseEndpoints": [
-        // "http://localhost:4080/R4"
-      ],
-      "elements": [
-        "DocumentReference.content.attachment.url"
-      ]
-    }
-
-.. _fsi_releasenotes_1.4.1:
-
-Release 1.4.1, August 28th, 2023
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. note::
-  It is a hotfix release for the latest FSI that supports Firely Server v.4
-
-* Added support for running FSI without the internet connection (see :ref:`tool_fsi_packages_cache`)
-
-.. _fsi_releasenotes_2.2.0:
-
-Release 2.2.0, June 20th, 2023
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-* Fix: Composite parameters are more accurately indexed for SQL Server, to align with Firely Server 5.1.0. See :ref:`vonk_releasenotes_5_1_0` and the accompanying warnings.
-* Feature: FSI is now open to evaluation, just like Firely Server itself. It is limited though, to a maximum of 10.000 resources in the database, including history.
-* Feature: FSI is updated to Firely .NET SDK 5.1.0, see `its releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.1.0>`_
-
-.. _fsi_releasenotes_2.1.0:
-
-Release 2.1.0, March 9th, 2023
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-* Fix: Eliminated deadlocks in FSI when writing data in parallel.
-* Settings: The setting ``maxActiveResources`` and the related CLI argument ``--maxActiveRes`` are no longer needed and have been removed.
-
-.. _fsi_releasenotes_2.0.1:
-
-Release 2.0.1, February 12th, 2023
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-* Fix: Add support for schema version 25 for MongoDb
-
-.. _fsi_releasenotes_2.0.0:
-
-Release 2.0.0, January 26th, 2023
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-* Upgraded to work with the database schemas for :ref:`Firely Server 5.0.0-beta1<vonk_releasenotes_5_0_0-beta1>`
-* Indexing has been updated to support searching for version-specific references.
-
-.. _fsi_releasenotes_1.4.0:
-
-Release 1.4.0, October 6th, 2022
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-* Added new setting ``convertAbsoluteUrlsToRelative`` which is an array of server URL base values. This feature converts absolute URL references to relative references for the given server URL base array. Example: Setting of ``http://example.org/R4`` will convert an absolute URL ``http://example.org/R4/Patient/123`` to relative as ``Patient/123``. 
-
-* Added a new mode ``onlyIfNewer`` for option ``--update-existing-resources`` (see the CLI options above)
-
-  .. note::
-
-    This option is currently supported only for SQL Server
-
-* The setting ``--useUcum`` has been removed. From now on, all quantitative values get automatically canonicalized to UCUM values
-
-* Indexing has been fixed for search parameters of type `reference` that index resource elements of type `uri`. The following SearchParameters were affected by the bug:
-
-  - FHIR4: ConceptMap-source-uri, ConceptMap-target-uri, PlanDefinition-definition
-  - STU3: ImplementationGuide-resource, Provenance-agent
-  
-  Consider :ref:`re-indexing<feature_customsp_reindex_specific>` your database for these search parameters if you use them.
-
-  .. note::
-
-    Please note that due to a mistake in the official STU3 specification, search parameters `ConceptMap-source-uri`, `ConceptMap-target-uri` still do not work as expected. The correct search parameter expressions would be `ConceptMap.source.as(uri)` and `ConceptMap.target.as(uri)` while the specification contains `ConceptMap.source.as(Uri)` and `ConceptMap.target.as(Uri)` respectively. The issue has been addressed in R4.
-    
-.. _fsi_releasenotes_1.3.1:
-
-Release 1.3.1
-^^^^^^^^^^^^^
-
-* Corrected an exception when multiple batch threads are processing and saving in parallel to SQL Server.
-
-.. _fsi_releasenotes_1.3.0:
-
-Release 1.3.0
-^^^^^^^^^^^^^
-
-* Add configuration ``haltOnError``. When ``true``, the FSI will be stopped on a single error. Otherwise, it will log error and continue.  
-* Changed the serialization format of decimal from string to use the native decimal type in MongoDB to improve performance.
-* Bugfix: Fixed Money.currency indexing for FHIR STU3 and R4
-
-.. _fsi_releasenotes_1.2.0:
-
-Release 1.2.0
-^^^^^^^^^^^^^
-
-* Ability to provide a path to a custom ``appsettings.json`` file via a command-line argument (see :ref:`examples<tool_fsi_examples>` above)
-* Bugfix: ensure FSI uses all available values from the SQL PK-generating sequences when inserting data to the vonk.entry and component tables
-
-
-.. _fsi_releasenotes_1.1.0:
-
-Release 1.1.0
-^^^^^^^^^^^^^
-
-* Feature: added support for MongoDb!
-* Feature: added support for performance counters using dotnet-counters. See :ref:`tool_fsi_performance_counters` on how to setup and use dotnet-counters.
-* FSI has been upgraded to .NET 6. To install the tool, you first need to have .NET Core SDK v6.x installed on your computer. See :ref:`tool_fsi_installation` for more information.
-* The Firely .NET SDK that FSI uses has been upgraded to 3.7.0. The release notes for the SDK v3.7.0 can be found `here <https://github.com/FirelyTeam/firely-net-sdk/releases>`_.
-* Multiple smaller fixes to improve reliability and performance of the tool.
-
-.. _fsi_releasenotes_1.0.0:
-
-Release 1.0.0
-^^^^^^^^^^^^^
-
-* First public release
-* Performance: optimized memory consumption (especially, when reading large `*.ndjson` files)
-* Feature: quantitative values can be automatically canonicalized to UCUM values (see --useUcum CLI option)
-* Multiple smaller fixes to improve reliability and performance of the tool
-
-
-.. |br| raw:: html
-
-   <br />
+      <br />
 
 .. _tool_fsi_bill_of_materials:
 

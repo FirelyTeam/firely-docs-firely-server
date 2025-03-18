@@ -34,7 +34,7 @@ Prerequisites
 
 Before starting the migration, ensure you have:
 
-* Firely Server Integration (FSI) tool downloaded
+* The latest version of :ref:`Firely Server Ingest <tool_fsi_installation>` (FSI) tool installed
 * Sufficient disk space for both databases during migration
 * License file with the token ``http://fire.ly/vonk/plugins/bulk-data-import/migration``
 * Access credentials for both source and target MongoDB instances

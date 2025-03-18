@@ -187,9 +187,9 @@ Migration of Main Database
 
 4. Provision an instance of the new version of Firely Server
 5. Verify that the migration was successful by inspecting the data in the target database, see the :ref:`verification steps <migration_admin_database_verification>` below
-5. Update the reverse proxy configuration to direct traffic to the new Firely Server instance
-6. Decommission the instance(s) of the old version of Firely Server
-6. Terminate the FSI migration tool
+6. Update the reverse proxy configuration to direct traffic to the new Firely Server instance
+7. Decommission the instance(s) of the old version of Firely Server
+8. Terminate the FSI migration tool
 
 .. _migration_admin_database_verification:
 

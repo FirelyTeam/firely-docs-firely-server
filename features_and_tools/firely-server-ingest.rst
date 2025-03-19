@@ -108,7 +108,7 @@ FSI supports the following input file formats:
 After the import
 ^^^^^^^^^^^^^^^^
 
-After ingesting massive amount of data, it is important to make sure the SQL Server indexes are in good shape. You can read more on this topic here: :ref:`sql_index_maintenance`.
+After ingesting massive amounts of data, it is important to make sure the SQL Server indexes are in good shape. You can read more on this topic here: :ref:`sql_index_maintenance`.
 
 Arguments
 ---------
@@ -117,144 +117,378 @@ The execution of FSI can be configured using input parameters. These parameters 
 
 If you want to specify input parameters in the file, you can use the snippet below as a base for your ``appsettings.instance.json``. In this case, you need to update the values that you want to set yourself and delete all other records.
 
-.. code-block:: JavaScript
 
-  {
-    "source": "./fsi-source", //valid directory
-    "limit": -1,
-    "fhirVersion": "R4",
-    "license": "C:\\data\\deploy\\vonk\\license\\performance-test-license.json",
-    "updateExistingResources": true,
-    "databaseType": "SQL",
-    "haltOnError": false,
-    
-    "absoluteUrlConversion": {
-      "baseEndpoints": [
-        // "http://localhost:4080/R4"
-      ],
-      "elements": [
-        "DocumentReference.content.attachment.url"
-      ]
-    },
-    
-    "sqlserver": {
-      "connectionString": "<connectionstring to the Firely Server SQL Server database>",
-      "saveParallel": 2,
-      "queryExistenceParallel": 4,
-      "batchSize": 500,
-      "commandTimeOut": 60 //seconds
-    },
+.. container:: toggle
 
-    "mongodb": {
-      "entryCollection": "vonkentries",
-      "connectionString": "<connectionstring to the Firely Server MongoDb database>",
-      "saveParallel": 2,
-      "queryExistenceParallel": 4,
-      "batchSize": 500
-    },
+    .. container:: header
 
-    "workflow": { //-1 = unbounded
-      "readParallel": 3,
-      "readBufferSize": 750,
-      "metaParallel": 1,
-      "metaBufferSize": 50,
-      "typeParallel": 4,
-      "typeBufferSize": 50,
-      "absoluteToRelativeParallel": 1,
-      "absoluteToRelativeBufferSize": 50,
-      "indexParallel": -1, //this is usually the most time consuming process - give it as much CPU time as possible.
-      "indexBufferSize": 50
-    }
-  }
+      Click to expand the appsettings.instance.json template file
+
+    .. code-block:: JavaScript
+
+      {
+          // General
+          "license": "C:\\data\\deploy\\vonk\\license\\performance-test-license.json",
+
+          // Import settings
+          "limit": -1,
+          "fhirVersion": "R4",
+          "updateExistingResources": true,
+          "haltOnError": false,
+          "recoveryJournalDirectory": null,
+
+          "absoluteUrlConversion": {
+              "baseEndpoints": [
+                  // "http://localhost:4080/R4"
+              ],
+              "elements": [
+                  "DocumentReference.content.attachment.url"
+              ]
+          },
+
+          "workflow": { //-1 = unbounded
+              "readBufferSize": 750,
+              "metaParallel": 1,
+              "metaBufferSize": 50,
+              "typeParallel": 4,
+              "typeBufferSize": 50,
+              "absoluteToRelativeParallel": 1,
+              "absoluteToRelativeBufferSize": 50,
+              "indexParallel": -1, //this is usually the most time consuming process - give it as much CPU time as possible.
+              "indexBufferSize": 50
+          },
+
+          // Source
+          "sourceType": "Filesystem", // Filesystem | MongoDb | None, None will try only to provision the target database
+          "source": "./fsi-source", // source directory when Filesystem source is used
+          "mongoDbSource": {
+              "connectionString": "<connectionstring to the Firely Server MongoDb source database>",
+              "collectionName": "vonkentries",
+              "runningMode": "AdHoc",
+              "documentFilterBson": "{ }" // See https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/ for the syntax
+          },
+
+          // Target
+          "provisionTargetDatabase": false,
+          "databaseType": "SQL",
+
+          "sqlserver": {
+              "connectionString": "<connectionstring to the Firely Server SQL Server database>",
+              "saveParallel": 2,
+              "queryExistenceParallel": 4,
+              "batchSize": 500,
+              "commandTimeOut": 60 //seconds
+          },
+
+          "mongodb": {
+              "entryCollection": "vonkentries",
+              "connectionString": "<connectionstring to the Firely Server MongoDb database>",
+              "saveParallel": 2,
+              "queryExistenceParallel": 4,
+              "batchSize": 500
+          },
+
+          // Telemetry
+          "OpenTelemetryOptions": {
+              "EnableMetrics": false,
+              "Endpoint": "http://localhost:4317"
+          }
+      }
 
 .. _FSI_supported_arguments:
 
-Supported arguments
-^^^^^^^^^^^^^^^^^^^
+General
+^^^^^^^
 
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| CLI argument                                             | Appsettings parameter name          | Required | Description                                                                                                                                         |
-+==========================================================+=====================================+==========+=====================================================================================================================================================+
-| ``--settings <settingsJsonFile>``                        |                                     |          | Custom settings json file                                                                                                                           |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``-f``, ``--fhir-version <R3|R4>``                       | fhirVersion                         |          | FHIR version of the input, R3 or R4 (not STU3)                                                                                                      |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``-s``, ``--source <source>``                            | source                              | yes      | Input directory for work (this directory is visited recursively including all the subdirectories)                                                   |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``-l``, ``--limit <limit>``                              | limit                               |          | Limit the number of resources to import. Use this for testing your setup                                                                            |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--license <license>``                                  | license                             | yes      | Firely Server license file                                                                                                                          |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--update-existing-resources <true|false|onlyIfNewer>`` | updateExistingResources             |          | When true, a resource is updated in the database if it already exists and a history record is created.                                              |
-|                                                          |                                     |          | When false, existing records in the database are skipped.                                                                                           |
-|                                                          |                                     |          | When onlyIfNewer, existing records with meta:LastUpdated greater in the database are skipped. ``--dbType <MongoDb>`` not supported for onlyIfNewer. |
-|                                                          |                                     |          | Default = true.                                                                                                                                     |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--dbType <MongoDb|SQL>``                               | databaseType                        |          | Specifies the target database type                                                                                                                  |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--haltOnError <true|false>``                           | haltOnError                         |          | When true, stop application on single error. Default = false.                                                                                       |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--urlConvBases:index url``                             | absoluteUrlConversion/baseEndpoints |          | Convert absolute URLs to relative for servers in this array. The array values must match exactly the base URL otherwise no changes are made.        |
-|      with index ranging from 0 to 19                     |                                     |          | The conversion is done for all elements of type ``reference`` as well as the elements of type ``Uri`` or ``Url`` matching a FHIR path provided  in  |
-|                                                          |                                     |          | ``absoluteUrlConversion/elements`` setting.                                                                                                         |
-|                                                          |                                     |          | Example: Setting of ``http://example.org/R4`` using Firely Server hosted at ``http://localhost:8080`` will convert an absolute URL                  |
-|                                                          |                                     |          | ``http://example.org/R4/Patient/123`` to a relative URL stored in the database as ``Patient/123``.                                                  |
-|                                                          |                                     |          | Firely Server will then return this URL as ``http://localhost:8080/Patient/123`` in REST API responses.                                             |
-|                                                          |                                     |          | When using the command line argument, the entries of the array must be provided one by one by suffixing with the relevant index. For example:       |
-|                                                          |                                     |          | ``--urlConvBases:0 https://host0/fhir  --urlConvBases:1 https://host1/fhir``                                                                        |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--urlConvElems:index FHIRPath``                        | absoluteUrlConversion/elements      |          | List of FHIR paths specifying the list of ``Uri`` or ``Url`` elements that should be converted from absolute to relative URI if their base          |
-|      with index ranging from 0 to 19                     |                                     |          | endpoints matches on of the base endpoint specified in ``absoluteUrlConversion/baseEndpoints``.                                                     |
-|                                                          |                                     |          | When using the command line argument, the entries of the array must be provided one by one by suffixing with the relevant index. For example:       |
-|                                                          |                                     |          | ``--urlConvElems:0 some.path  --urlConvElems:1 some.other.path``                                                                                    |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--useRecoveryJournal <recoveryJournalDirectory>``      | recoveryJournalDirectory            |          | A directory containing the recovery journal                                                                                                         |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--mongoCollection <mongoCollection>``                  | mongodb/entryCollection             |          | Collection name for entries                                                                                                                         |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--mongoConnectionstring <connectionstring>``           | mongodb/connectionString            | yes      | Connection string to Firely Server MongoDb database                                                                                                 |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--mongoPar <mongoPar>``                                | mongodb/saveParallel                |          | The number of batches to save in parallel. Depends on your bandwidth to MongoDb and its processing power                                            |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--mongoExistQryPar <mongoExistQryPar>``                | mongodb/queryExistenceParallel      |          | The number of parallel threads querying the DB to check whether a resource exists (only when ``--update-existing-resources`` is set to false)       |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--mongoBatch <mongoBatch>``                            | mongodb/batchSize                   |          | The number of resources to save in each batch                                                                                                       |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``-c``, ``--connectionstring <connectionstring>``        | sqlServer/connectionString          | yes      | Connection string to Firely Server SQL Server database                                                                                              |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--sqlPar <sqlPar>``                                    | sqlServer/saveParallel              |          | The number of batches to save in parallel. Depends on your bandwidth to SQL Server and its processing power                                         |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--sqlBatch <sqlBatch>``                                | sqlServer/saveBatchSize             |          | The number of resources to save in each batch. SQL Server must be able to process it within the CommandTimeout.                                     |
-|                                                          |                                     |          | It is recommended to set this value to at least 500 for optimal performance                                                                         |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--sqlTimeout <sqlTimeout>``                            | sqlServer/commandTimeOut            |          | The time SQL Server is allowed to process a batch of resources                                                                                      |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--sqlExistQryPar <sqlExistQryPar>``                    | sqlserver/queryExistenceParallel    |          | The number of parallel threads querying the DB to check whether a resource exists (only when ``--update-existing-resources`` is set to false).      |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--readBuffer <readBuffer>``                            | workflow/readBufferSize             |          | Number of resources to buffer after reading                                                                                                         |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--metaPar <metaPar>``                                  | workflow/metaParallel               |          | Number of threads to assign metadata. Should be higher than ReadParallel                                                                            |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--metaBuffer <metaBuffer>``                            | workflow/metaBufferSize             |          | Number of resources to buffer for assigning metadata                                                                                                |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--typePar <typePar>``                                  | workflow/typeParallel               |          | Number of threads to add type information. Should be higher than ReadParallel                                                                       |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--typeBuffer <typeBuffer>``                            | workflow/typeBufferSize             |          | Number of resources to buffer for adding type information                                                                                           |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--absRelPar <absRelPar>``                              | workflow/                           |          | Number of threads when converting absolute to relative references. Should be higher than ReadParallel                                               |
-|                                                          | absoluteToRelativeParallel          |          |                                                                                                                                                     |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--absRelBuffer <absRelBuffer>``                        | workflow/                           |          | Number of resources to buffer when converting absolute to relative references                                                                       |
-|                                                          | absoluteToRelativeBufferSize        |          |                                                                                                                                                     |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--indexPar <indexPar>``                                | workflow/indexParallel              |          | Number of threads to index the search parameters. This is typically the most resource intensive step and should have the most threads               |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--indexBuffer <indexBuffer>``                          | workflow/indexBufferSize            |          | Number of resources to buffer for indexing the search parameters                                                                                    |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--version``                                            |                                     |          | Show version information                                                                                                                            |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``-?``, ``-h``, ``--help``                               |                                     |          | Show help and usage information                                                                                                                     |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
+* ``--license <license>``: 
+
+  * **Config**: license
+  * **Required**: Yes
+  * **Description**: Firely Server license file.
+
+* ``-l``, ``--limit <limit>``: 
+
+  * **Config**: limit
+  * **Required**: No
+  * **Description**: Limit the number of resources to import. Use this for testing your setup.
+
+* ``-f``, ``--fhir-version <R3|R4>``: 
+
+  * **Config file parameter**: ``fhirVersion``
+  * **Required**: Yes
+  * **Description**: Specifies the FHIR version of the input data.
+
+* ``--update-existing-resources <true|false|onlyIfNewer>``: 
+
+  * **Config**: updateExistingResources
+  * **Required**: No
+  * **Description**: Defines the action to take when a resource with a given Type and Id already exists in the target database.
+  * **Options**:
+
+    * **true** (default): the existing resource gets marked as historical and the incoming resource gets saved as current
+    * **false**: the existing resource remains unchanged; the incoming resource gets logged as skipped
+    * **errorOnConflict**: the existing resource remains unchanged; the incoming resource errors out
+    * **onlyIfNewer**:
+
+      * MongoDb: if an existing resource has a ``meta:LastUpdated`` greater than the incoming resource, the incoming resource gets saved as historical and the existing resource remains unchanged.
+      * SQL Server: if an existing resource has a ``meta:LastUpdated`` greater than the incoming resource, the incoming resource gets skipped.  
+
+* ``--haltOnError <true|false>``: 
+
+  * **Config**: haltOnError
+  * **Required**: No
+  * **Description**: When true, stop application on a single error. Default = false.
+
+* ``--useRecoveryJournal <recoveryJournalDirectory>``: 
+
+  * **Config**: recoveryJournalDirectory
+  * **Required**: No
+  * **Description**: A directory containing the recovery journal. See :ref:`Recovery Journal<tool_fsi_recovery>`.
+
+* ``--urlConvBases:index url``: 
+
+  * **Config**: absoluteUrlConversion/baseEndpoints
+  * **Required**: No
+  * **Description**: Convert absolute URLs to relative for servers in this array. The array values must match exactly the base URL otherwise no changes are made.
+
+* ``--urlConvElems:index FHIRPath``: 
+
+  * **Config**: absoluteUrlConversion/elements
+  * **Required**: No
+  * **Description**: List of FHIR paths specifying the list of ``Uri`` or ``Url`` elements that should be converted from absolute to relative URI if their base endpoints match one of the base endpoint specified in ``absoluteUrlConversion/baseEndpoints``.
+
+Source
+^^^^^^
+
+
+* ``--sourceType <Filesystem|MongoDb|None>``: 
+
+  * **Config**: sourceType
+  * **Required**: No
+  * **Description**: Specifies the source type. None will try only to provision the target database.
+  * **Options**:
+
+    * **Filesystem**: read data from the filesystem
+    * **MongoDb**: read data from a Firely Server MongoDB database 
+    * **None**: use this option if you only want to provision the target database
+
+Source (for Filesystem)
+^^^^^^^^^^^^^^^^^^^^^^^
+
+* ``-s``, ``--source <source>``: 
+
+  * **Config**: sourceType
+  * **Required**: Yes
+  * **Description**: Input directory for work (this directory is visited recursively including all the subdirectories).
+
+Source (for MongoDb)
+^^^^^^^^^^^^^^^^^^^^
+
+This source is intended to be used in zero-downtime migration scenarios. Currently, it is only possible to use another MongoDB database as the target database.
+
+See more information on how to run migrations in :ref:`this article <zero_downtime_migration>`.
+
+* ``--srcMongoConnectionString <srcMongoConnectionString>``: 
+
+  * **Config**: mongoDbSource/connectionString
+  * **Required**: Yes
+  * **Description**: Connection string to read resources from.
+
+* ``--srcMongoCollection <srcMongoCollection>``: 
+
+  * **Config**: mongoDbSource/collectionName
+  * **Required**: Yes
+  * **Description**: Collection name to read entries from.
+
+* ``--srcMongoRunningMode <AdHoc|Continuous>``: 
+
+  * **Config**: mongoDbSource/runningMode
+  * **Required**: No
+  * **Description**: The mode in which the application should run.
+  * **Options**:
+
+    * **AdHoc** (default): the application will run once and exit
+    * **Continuous**: the application will run continuously and listen for changes in the source database until terminated by the user
+
+* Documents filter (can be set only via the config file): 
+
+  * **Config**: mongoDbSource/documentFilterBson
+  * **Required**: No
+  * **Description**: BSON filter to apply when reading documents. See `MongoDB aggregation match syntax <https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/>`_ for details.
+
+
+Target
+^^^^^^
+
+* ``--dbType <MongoDb|SQL>``: 
+
+  * **Config**: databaseType
+  * **Required**: No
+  * **Description**: Specifies the target database type.
+  * **Options**:
+
+    * **SQL**
+    * **MongoDb**
+
+
+* ``--provisionTargetDatabase <true|false>``: 
+
+  * **Config**: provisionTargetDatabase
+  * **Required**: No
+  * **Description**: Whether to provision the target database. *Note: currently only supported for MongoDB.*
+
+Target (for SQL Server)
+^^^^^^^^^^^^^^^^^^^^^^^
+
+* ``-c``, ``--connectionstring <connectionstring>``: 
+
+  * **Config**: sqlServer/connectionString
+  * **Required**: Yes
+  * **Description**: Connection string to Firely Server SQL Server database.
+
+* ``--sqlPar <sqlPar>``: 
+
+  * **Config**: sqlServer/saveParallel
+  * **Required**: No
+  * **Description**: The number of batches to save in parallel. Depends on your bandwidth to SQL Server and its processing power.
+
+* ``--sqlBatch <sqlBatch>``: 
+
+  * **Config**: sqlServer/saveBatchSize
+  * **Required**: No
+  * **Description**: The number of resources to save in each batch. SQL Server must be able to process it within the CommandTimeout. It is recommended to set this value to at least 500 for optimal performance.
+
+* ``--sqlTimeout <sqlTimeout>``: 
+
+  * **Config**: sqlServer/commandTimeOut
+  * **Required**: No
+  * **Description**: The time SQL Server is allowed to process a batch of resources.
+
+* ``--sqlExistQryPar <sqlExistQryPar>``: 
+
+  * **Config**: sqlserver/queryExistenceParallel
+  * **Required**: No
+  * **Description**: The number of parallel threads querying the DB to check whether a resource exists (only when ``--update-existing-resources`` is set to false).
+
+Target (for MongoDB)
+^^^^^^^^^^^^^^^^^^^^
+
+* ``--mongoConnectionstring <connectionstring>``: 
+
+  * **Config**: mongodb/connectionString
+  * **Required**: Yes
+  * **Description**: Connection string to Firely Server MongoDb source database.
+
+* ``--mongoCollection <mongoCollection>``: 
+
+  * **Config**: mongodb/entryCollection
+  * **Required**: No
+  * **Description**: Collection name for entries.
+
+* ``--mongoPar <mongoPar>``: 
+
+  * **Config**: mongodb/saveParallel
+  * **Required**: No
+  * **Description**: The number of batches to save in parallel. Depends on your bandwidth to MongoDb and its processing power.
+
+* ``--mongoExistQryPar <mongoExistQryPar>``: 
+
+  * **Config**: mongodb/queryExistenceParallel
+  * **Required**: No
+  * **Description**: The number of parallel threads querying the DB to check whether a resource exists (only when ``--update-existing-resources`` is set to false).
+
+* ``--mongoBatch <mongoBatch>``: 
+
+  * **Config**: mongodb/batchSize
+  * **Required**: No
+  * **Description**: The number of resources to save in each batch.
+
+Workflow
+^^^^^^^^
+
+* ``--readBuffer <readBuffer>``: 
+
+  * **Config**: workflow/readBufferSize
+  * **Required**: No
+  * **Description**: Number of resources to buffer after reading.
+
+* ``--metaPar <metaPar>``: 
+
+  * **Config**: workflow/metaParallel
+  * **Required**: No
+  * **Description**: Number of threads to assign metadata. Should be higher than ReadParallel.
+
+* ``--metaBuffer <metaBuffer>``: 
+
+  * **Config**: workflow/metaBufferSize
+  * **Required**: No
+  * **Description**: Number of resources to buffer for assigning metadata.
+
+* ``--typePar <typePar>``: 
+
+  * **Config**: workflow/typeParallel
+  * **Required**: No
+  * **Description**: Number of threads to add type information. Should be higher than ReadParallel.
+
+* ``--typeBuffer <typeBuffer>``: 
+
+  * **Config**: workflow/typeBufferSize
+  * **Required**: No
+  * **Description**: Number of resources to buffer for adding type information.
+
+* ``--absRelPar <absRelPar>``: 
+
+  * **Config**: workflow/absoluteToRelativeParallel
+  * **Required**: No
+  * **Description**: Number of threads when converting absolute to relative references. Should be higher than ReadParallel.
+
+* ``--absRelBuffer <absRelBuffer>``: 
+
+  * **Config**: workflow/absoluteToRelativeBufferSize
+  * **Required**: No
+  * **Description**: Number of resources to buffer when converting absolute to relative references.
+
+* ``--indexPar <indexPar>``: 
+
+  * **Config**: workflow/indexParallel
+  * **Required**: No
+  * **Description**: Number of threads to index the search parameters. This is typically the most resource-intensive step and should have the most threads.
+
+* ``--indexBuffer <indexBuffer>``: 
+
+  * **Config**: workflow/indexBufferSize
+  * **Required**: No
+  * **Description**: Number of resources to buffer for indexing the search parameters.
+
+
+Telemetry
+^^^^^^^^^
+
+* ``--OpenTelemetryOptions/EnableMetrics <true|false>``: 
+
+  * **Config**: OpenTelemetryOptions/EnableMetrics
+  * **Required**: No
+  * **Description**: Enable or disable OpenTelemetry metrics.
+
+* ``--OpenTelemetryOptions/Endpoint <endpoint>``: 
+
+  * **Config**: OpenTelemetryOptions/Endpoint
+  * **Required**: No
+  * **Description**: OpenTelemetry endpoint for metrics.
+
+Other
+^^^^^
+
+* ``--version``: 
+
+  * **Required**: No
+  * **Description**: Show version information.
+
+* ``-?``, ``-h``, ``--help``: 
+
+  * **Required**: No
+  * **Description**: Show help and usage information.
+
 
 .. _tool_fsi_examples:
 
@@ -268,7 +502,7 @@ Specify a custom settings file **/path/to/your/custom/settings/appsettings.insta
   fsi --settings ./path/to/your/custom/settings/appsettings.instance.json 
 
 .. note::
-  If ``--settings`` is omitted, FSI searches following folders sequentially and tries to find ``appsettings.instance.json``. The first occurrence will be used if FSI finds one, otherwise the default ``appsettings.json`` will be used.  
+  If ``--settings`` is omitted, FSI searches the following folders sequentially and tries to find ``appsettings.instance.json``. The first occurrence will be used if FSI finds one, otherwise the default ``appsettings.json`` will be used.  
   
   * Current launched folder |br| 
     e.g. ``C:\Users\Bob\Desktop``  

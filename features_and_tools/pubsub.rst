@@ -35,7 +35,7 @@ Using PubSub might provide several advantages:
 Configuration
 -------------
 
-You can enable PubSub by including the plugins in the pipeline options of the Firely Server `appsettings.instance.json` file:
+You can enable PubSub by including the plugins in the pipeline options of the Firely Server ``appsettings.instance.json`` file:
 
 .. code-block::
 
@@ -54,27 +54,17 @@ You can enable PubSub by including the plugins in the pipeline options of the Fi
         ]
     },
 
-The ``Vonk.Plugin.PubSub.Sub`` plugin allows Firely Server to subscribe to messages published to a message broker by other clients. The ``Vonk.Plugin.PubSub.Pub.Sql`` and ``Vonk.Plugin.PubSub.Pub.MongoDb`` plugins allow Firely Server to publish changes of the respective database (either SQL or MongoDb) to the message broker. 
-You can further adjust PubSub in the PubSub section of the `appsettings.instance.json` file:
+The ``Vonk.Plugin.PubSub.Sub`` plugin allows Firely Server to subscribe to messages published to a message broker by other clients. This is available for all repositories and all supported message brokers.
 
-.. code-block::
+The ``Vonk.Plugin.PubSub.Pub.Sql`` and ``Vonk.Plugin.PubSub.Pub.MongoDb`` plugins allow Firely Server to publish changes of the respective database. This is available for the SQL Server and MongoDB repositories, in combination with either RabbitMQ or Azure Service Bus.
+
+You can further adjust PubSub in the PubSub section of the ``appsettings.instance.json`` file. Firely Server supports the following message brokers: RabbitMQ, Azure Service Bus, and Kafka. The configuration for each of them is slightly different.
+
+You can configure the notifications sent by ``Vonk.Plugin.PubSub.Pub``:
+
+.. code-block:: JSON
 
     "PubSub": {
-        "MessageBroker": {
-            "Host": "localhost", // The URL where the message broker can be found (for Kafka, use format "hostname:port" e.g., "localhost:9092")
-            "Username": "guest", // RabbitMQ username
-            "Password": "guest", // RabbitMQ password
-            "PrefetchCount": 1, // RabbitMQ, ASB Number of messages to prefetch from the message broker Sets the `PrefetchCout` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints
-            "ConcurrencyNumber": 1, // RabbitMQ, ASB Number of concurrent messages that can be consumed. Sets the `ConcurrentMessageLimit` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints
-            "ApplicationQueueName": "FirelyServer", // The name of the message queue used by Firely Server
-            "VirtualHost": "/", // RabbitMQ virtual host; see https://www.rabbitmq.com/vhosts.html for details
-            "BrokerType": "RabbitMq" // RabbitMq, AzureServiceBus, Kafka
-        },
-        // The section below contains configuration related to publishing events when data gets changed in Firely Server 
-        // so that other services can sync with Firely Server. Note that this is only available for Firely Server 
-        // instances that use SQL server (2016 and newer) or MongoDb as a repository database. 
-        // It does not work in combination with SQLite. 
-        // If you have configured MongoDB as a backend, note that only replica sets and sharded cluster scenarios are supported in combination with PubSub.
         "ResourceChangeNotifications": { 
             "SendLightEvents": false, // If enabled, FS will send out events on changes. These events will not contain the complete resource
             "SendFullEvents": false, // If enabled, FS will send out events on changes. These events will contain the complete resource
@@ -84,30 +74,66 @@ You can further adjust PubSub in the PubSub section of the `appsettings.instance
         }
     },
 
-.. attention::
-  SQLite backend is not supported for ResourceChangeNotifications.
 
-.. note::
-  Enabling ResourceChangeNotifications requires one-time DB configuration to enable changes tracking for SQL server backends. See :ref:`SQL Server Tracking Initialization<pubsub_sql_tracking_init>` for the instructions.
+RabbitMQ Configuration
+^^^^^^^^^^^^^^^^^^^^^^
 
-.. note::
-  If you have configured MongoDb as your Firely Server repository database, note that the publication plugin ``Vonk.Plugin.PubSub.Pub.MongoDb`` can only be used in combination with MongoDb `replica sets <https://www.mongodb.com/docs/manual/replication/>`_ or `sharded clusters <https://www.mongodb.com/docs/manual/sharding>`_, as the plugin utilizes the `Change Stream <https://www.mongodb.com/docs/manual/changeStreams/>`_ functionality of MongoDb and is thus restricted.
+.. code-block:: JSON
 
-**Kafka Configuration Example**
+    "PubSub": {
+        "MessageBroker": {
+            "BrokerType": "RabbitMq",
+            "Host": "localhost",
+            "Username": "guest",
+            "Password": "guest",
+            "PrefetchCount": 1,
+            "ConcurrencyNumber": 1,
+            "ApplicationQueueName": "FirelyServer", // The name of the message queue used by Firely Server
+            "VirtualHost": "/"
+        }
+    },
+    
+- Host: The URL where the message broker can be found
+- PrefetchCount: Number of messages to prefetch from the message broker. Sets the `PrefetchCout` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints.
+- ConcurrencyNumber: Number of concurrent messages that can be consumed. Sets the `ConcurrentMessageLimit` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints
+- ApplicationQueueName: The name of the message queue used by Firely Server
+- VirtualHost: RabbitMQ virtual host; see https://www.rabbitmq.com/vhosts.html for details
 
-If you want to use Kafka as your message broker, here's a specific configuration example:
+Azure Service Bus Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block::
+.. code-block:: JSON
+
+    "PubSub": {
+        "MessageBroker": {
+            "BrokerType": "AzureServiceBus",
+            "Host": "localhost",
+            "PrefetchCount": 1,
+            "ConcurrencyNumber": 1,
+            "ApplicationQueueName": "FirelyServer"
+        }
+    },
+    
+- Host: ConnectionString to Azure Service Bus
+- PrefetchCount: Number of messages to prefetch from the message broker. Sets the `PrefetchCout` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints.
+- ConcurrencyNumber: Number of concurrent messages that can be consumed. Sets the `ConcurrentMessageLimit` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints
+- ApplicationQueueName: The name of the message queue used by Firely Server
+
+
+Kafka Configuration
+^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: JSON
 
     "PubSub": {
       "MessageBroker": {
-        "Host": "localhost:9092", // Address of Kafka service 
         "BrokerType": "Kafka", // Set to Kafka to use Kafka as the broker
+        "Host": "localhost:9092", // Address of Kafka service 
         "Kafka": {
           "TopicPrefix": "FirelyServerCommands", // Prefix for topic names (OPTIONAL)
           "ClientGroupId": "FirelyServer", // Consumer group ID
           "ClientId": "FirelyServer", // Unique client identifier
-          "NumberOfConcurrentConsumers": 5, // Number of parallel consumers
+          "NumberOfConcurrentConsumers": 5, // Maximum number of parallel consumers
           "AuthenticationMechanism": "SaslScram256", // None, SaslPlain, SaslScram256, SaslScram512
           "Username": "admin", // Only needed for SASL authentication
           "Password": "******", // Only needed for SASL authentication
@@ -116,15 +142,21 @@ If you want to use Kafka as your message broker, here's a specific configuration
           "KeystorePassword": "******", // Password for the keystore
           "ExecuteStorePlanCommandErrorTopicName": "FirelyServerCommands.ExecuteStorePlanCommand.Errors" // Optional custom topic for error messages
         }
-      },
-      "ResourceChangeNotifications": {
-        "SendLightEvents": true, // Send lightweight change events without full resource
-        "SendFullEvents": true, // Send events containing the complete changed resource
-        "ExcludeAuditEvents": false, // Do not send events for Audit resources
-        "PollingIntervalSeconds": 5, // Frequency of polling DB for changes
-        "MaxPublishBatchSize": 1000 // Maximum changes in a single message
       }
     }
+    
+- Setting AuthenticationMechanism to anything other than ``None`` will enable SASL authentication. The ``Username`` and ``Password`` fields are required for SASL authentication.
+- Setting a value for ``CaLocation`` enables SSL.
+- Setting a value for ``CaLocation`` *and* ``KeystoreLocation`` enables Mutual SSL. The ``KeystorePassword`` field is required for to read from the Keystore.
+
+.. attention::
+  SQLite backend is not supported for ResourceChangeNotifications.
+
+.. note::
+  Enabling ResourceChangeNotifications requires one-time DB configuration to enable changes tracking for SQL server backends. See :ref:`SQL Server Tracking Initialization<pubsub_sql_tracking_init>` for the instructions.
+
+.. note::
+  If you have configured MongoDb as your Firely Server repository database, note that the publication plugin ``Vonk.Plugin.PubSub.Pub.MongoDb`` can only be used in combination with MongoDb `replica sets <https://www.mongodb.com/docs/manual/replication/>`_ or `sharded clusters <https://www.mongodb.com/docs/manual/sharding>`_, as the plugin utilizes the `Change Stream <https://www.mongodb.com/docs/manual/changeStreams/>`_ functionality of MongoDb and is thus restricted.
 
 Message types and formats
 -------------------------

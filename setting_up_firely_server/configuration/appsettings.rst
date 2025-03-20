@@ -182,7 +182,7 @@ License
     "License": {
         "LicenseFile": "firelyserver-trial-license.json",
         "RequestInfoFile": "./.vonk-request-info.json",
-        "WriteRequestInfoFileInterval": 15 // in minutes
+        "WriteRequestInfoFileInterval": 60 // in minutes
     }
 
 

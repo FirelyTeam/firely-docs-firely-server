@@ -27,6 +27,8 @@ If you are interested in Firely Server for commercial use within your organizati
      - Firely Essentials
    * - Firely Scale
      - Firely Scale
+   * - Firely dQM (Digital Quality Measures)
+     - Firely dQM (Digital Quality Measures)
    * - Firely Solution for CMS Interoperability & Prior Authorization Final Rule
      - /
 

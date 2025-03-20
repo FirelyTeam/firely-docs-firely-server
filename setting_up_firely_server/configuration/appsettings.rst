@@ -180,9 +180,7 @@ License
 ::
 
     "License": {
-        "LicenseFile": "firelyserver-trial-license.json",
-        "RequestInfoFile": "./.vonk-request-info.json",
-        "WriteRequestInfoFileInterval": 60 // in minutes
+        "LicenseFile": "firelyserver-trial-license.json"
     }
 
 
@@ -191,11 +189,6 @@ The :ref:`vonk_getting_started` explains how to obtain a licensefile for Firely 
 .. note::
 
   It is also possible to supply a license via an environment variable. This functionality is handy when Firely Server is running within a Docker container. See :ref:`license_as_environment_variable` for details.
-
-Other settings:
-
-* ``RequestInfoFile`` sets the location of the file with request information. This file will be used in future releases.
-* ``WriteRequestInfoFileInterval`` sets the time interval (in minutes) to write aggregate information about processed requests to the RequestInfoFile.
 
 .. _configure_repository:
 

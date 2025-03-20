@@ -133,7 +133,7 @@ Kafka Configuration
           "TopicPrefix": "FirelyServerCommands", // Prefix for topic names (OPTIONAL)
           "ClientGroupId": "FirelyServer", // Consumer group ID
           "ClientId": "FirelyServer", // Unique client identifier
-          "NumberOfConcurrentConsumers": 5, // Maximum number of parallel consumers
+          "NumberOfConcurrentConsumers": 5, // Number of parallel consumers
           "AuthenticationMechanism": "SaslScram256", // None, SaslPlain, SaslScram256, SaslScram512
           "Username": "admin", // Only needed for SASL authentication
           "Password": "******", // Only needed for SASL authentication

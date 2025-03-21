@@ -27,6 +27,8 @@ If you are interested in Firely Server for commercial use within your organizati
      - Firely Essentials
    * - Firely Scale
      - Firely Scale
+   * - Firely dQM (Digital Quality Measures)
+     - Firely dQM (Digital Quality Measures)
    * - Firely Solution for CMS Interoperability & Prior Authorization Final Rule
      - /
 
@@ -41,7 +43,7 @@ Below you will find some links that help you quickly navigate through the docume
  *  :ref:`I want to see the latest release notes <vonk_releasenotes>`
  *  :ref:`I want to manage the conformance resource in my Firely Server to comply with an implementation guide <conformance>`
  *  :ref:`I want to grant clients secure access to Firely Server <feature_accesscontrol>`
- *  :ref:`I want to add a FHIR API to my database <vonk_facade>`
+ *  :ref:`I want to add a FHIR API to my proprietary database <vonk_facade>`
 
 Adjust Firely Server to your needs
 ----------------------------------

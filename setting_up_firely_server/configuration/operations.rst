@@ -31,8 +31,7 @@ The new configuration uses a top-level ``Operations`` section that contains oper
         ],
         "Enabled": true,
         "RequireAuthorization": "WhenAuthEnabled",
-        "NetworkProtected": false,
-        "RequireTenant": false
+        "RequireTenant": "Never"
       },
       "capabilities": {
         "Name": "capabilities",
@@ -41,8 +40,7 @@ The new configuration uses a top-level ``Operations`` section that contains oper
         ],
         "Enabled": true,
         "RequireAuthorization": "Never",
-        "NetworkProtected": false,
-        "RequireTenant": false
+        "RequireTenant": "Never"
       },
       "create": {
         "Name": "create",
@@ -51,8 +49,7 @@ The new configuration uses a top-level ``Operations`` section that contains oper
         ],
         "Enabled": true,
         "RequireAuthorization": "WhenAuthEnabled",
-        "NetworkProtected": false,
-        "RequireTenant": true
+        "RequireTenant": "WhenTenancyEnabled"
       }
     }
 
@@ -86,23 +83,42 @@ Configuration Properties
 
 Each operation can be configured with the following properties:
 
-+------------------------+----------------------------+---------------------------------------------------------------------------------------------------+
-| Property               | Type                       | Description                                                                                       |
-+========================+============================+===================================================================================================+
-| ``Name``               | string                     | The operation name, matching the key in the Operations dictionary                                 |
-+------------------------+----------------------------+---------------------------------------------------------------------------------------------------+
-| ``Level``              | array of strings           | The level(s) at which the operation is available: "System", "Type", and/or "Instance"            |
-+------------------------+----------------------------+---------------------------------------------------------------------------------------------------+
-| ``Enabled``            | boolean                    | Whether the operation is enabled                                                                  |
-+------------------------+----------------------------+---------------------------------------------------------------------------------------------------+
-| ``RequireAuthorization``| string                    | Authorization requirement: "WhenAuthEnabled", "Always", or "Never"                               |
-+------------------------+----------------------------+---------------------------------------------------------------------------------------------------+
-| ``OperationScope``     | string                     | Required token scope for the operation (only applies when authorization is enabled)               |
-+------------------------+----------------------------+---------------------------------------------------------------------------------------------------+
-| ``NetworkProtected``   | boolean                    | Whether the operation is restricted to allowed networks                                           |
-+------------------------+----------------------------+---------------------------------------------------------------------------------------------------+
-| ``RequireTenant``      | boolean                    | Whether the operation requires tenant information                                                 |
-+------------------------+----------------------------+---------------------------------------------------------------------------------------------------+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 15 50 15
+
+   * - Property
+     - Type
+     - Description
+     - Availability
+   * - ``Name``
+     - string
+     - The operation name, matching the key in the Operations dictionary
+     - Regular & Admin
+   * - ``Level``
+     - array of strings
+     - The level(s) at which the operation is available: "System", "Type", and/or "Instance"
+     - Regular & Admin
+   * - ``Enabled``
+     - boolean
+     - Whether the operation is enabled
+     - Regular & Admin
+   * - ``RequireAuthorization``
+     - string
+     - Authorization requirement: "WhenAuthEnabled", "Always", or "Never"
+     - Regular only
+   * - ``OperationScope``
+     - string
+     - Required token scope for the operation (only applies when authorization is enabled)
+     - Regular only
+   * - ``NetworkProtected``
+     - boolean
+     - Whether the operation is restricted to allowed networks
+     - Admin only
+   * - ``RequireTenant``
+     - string
+     - Tenant requirement: "WhenTenancyEnabled", "Always", or "Never"
+     - Regular only
 
 Migration from Previous Configuration
 ------------------------------------
@@ -186,7 +202,7 @@ For each operation in ``SmartAuthorizationOptions.Protected.Operation``, set ``R
         "Enabled": true,
         "RequireAuthorization": "Always",
         "NetworkProtected": false,
-        "RequireTenant": true
+        "RequireTenant": "WhenTenancyEnabled"
       },
       "$everything": {
         "Name": "$everything",
@@ -194,7 +210,7 @@ For each operation in ``SmartAuthorizationOptions.Protected.Operation``, set ``R
         "Enabled": true,
         "RequireAuthorization": "Always",
         "NetworkProtected": false,
-        "RequireTenant": true
+        "RequireTenant": "WhenTenancyEnabled"
       }
     }
 
@@ -236,10 +252,21 @@ Important: This property is only applicable to administrative operations (under 
 Multi-tenancy Options
 ^^^^^^^^^^^^^^^^^^^^
 
-The ``RequireTenant`` property determines whether an operation requires tenant information:
+The ``RequireTenant`` property controls whether an operation requires tenant information with three possible values:
 
-1. ``true``: The operation requires tenant information and will only work in a multi-tenant environment
-2. ``false``: The operation does not require tenant information and works in both single and multi-tenant environments
+1. ``"WhenTenancyEnabled"`` (Default): The operation requires tenant information only when VirtualMultitenancy is enabled
+2. ``"Always"``: The operation always requires tenant information; server start is prevented when VirtualMultitenancy is disabled
+3. ``"Never"``: The operation never requires tenant information, even if VirtualMultitenancy is enabled
+
+When VirtualMultitenancy is enabled:
+- Operations with ``RequireTenant: "WhenTenancyEnabled"`` will require a tenant to be specified in the request
+- Operations with ``RequireTenant: "Always"`` will require a tenant to be specified in the request
+- Operations with ``RequireTenant: "Never"`` will work without a tenant specification
+
+When VirtualMultitenancy is disabled:
+- Operations with ``RequireTenant: "WhenTenancyEnabled"`` will work without tenant information
+- Operations with ``RequireTenant: "Always"`` will prevent Firely Server from starting
+- Operations with ``RequireTenant: "Never"`` will work without tenant information
 
 This property is only applicable to standard FHIR operations (under the main ``Operations`` section). Administrative operations do not support this property as they operate at the system level across all tenants.
 
@@ -258,7 +285,7 @@ Here's an example of the new operation configuration structure:
           "Enabled": true,
           "RequireAuthorization": "WhenAuthEnabled",
           "NetworkProtected": false,
-          "RequireTenant": false
+          "RequireTenant": "Never"
         },
         "capabilities": {
           "Name": "capabilities",
@@ -266,7 +293,7 @@ Here's an example of the new operation configuration structure:
           "Enabled": true,
           "RequireAuthorization": "Never",
           "NetworkProtected": false,
-          "RequireTenant": false
+          "RequireTenant": "Never"
         },
         "create": {
           "Name": "create",
@@ -274,7 +301,7 @@ Here's an example of the new operation configuration structure:
           "Enabled": true,
           "RequireAuthorization": "WhenAuthEnabled",
           "NetworkProtected": false,
-          "RequireTenant": true
+          "RequireTenant": "WhenTenancyEnabled"
         },
         "$validate": {
           "Name": "$validate",
@@ -282,7 +309,7 @@ Here's an example of the new operation configuration structure:
           "Enabled": true,
           "RequireAuthorization": "WhenAuthEnabled",
           "NetworkProtected": false,
-          "RequireTenant": true,
+          "RequireTenant": "WhenTenancyEnabled",
           "OperationScope": "validation"
         }
       },
@@ -319,7 +346,7 @@ For custom operations, you need to explicitly add them to the ``Operations`` sec
         "Enabled": true,
         "RequireAuthorization": "WhenAuthEnabled",
         "NetworkProtected": false,
-        "RequireTenant": true,
+        "RequireTenant": "WhenTenancyEnabled",
         "OperationScope": "custom-operation"
       }
     }

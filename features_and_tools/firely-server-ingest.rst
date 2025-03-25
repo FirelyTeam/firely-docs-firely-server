@@ -231,7 +231,8 @@ General
     * **onlyIfNewer**:
 
       * MongoDb: if an existing resource has a ``meta:LastUpdated`` greater than the incoming resource, the incoming resource gets saved as historical and the existing resource remains unchanged.
-      * SQL Server: if an existing resource has a ``meta:LastUpdated`` greater than the incoming resource, the incoming resource gets skipped.  
+      * SQL Server: if an existing resource has a ``meta:LastUpdated`` greater than the incoming resource, the incoming resource gets skipped. 
+      * Note: when this mode is used, the incoming resources must have the ``meta:LastUpdated`` field set.
 
 * ``--haltOnError <true|false>``: 
 

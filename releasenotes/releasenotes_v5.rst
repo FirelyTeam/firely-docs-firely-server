@@ -31,7 +31,21 @@ Current Firely Server release notes (v5.x)
 
     For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
 
-.. _vonk_releasenotes_5_10_2:
+.. _vonk_releasenotes_5_11_1:
+
+Release 5.11.1, March 25th, 2025
+--------------------------------
+
+Feature
+^^^^^^^
+#. Enhanced logging with additional details when an invalid authorization token is received.
+
+Fix
+^^^
+
+#. Fixed a ``FormatException`` when generating BDE exports at the group level for groups with a very large number of members.
+
+.. _vonk_releasenotes_5_11_0:
 
 Release 5.11.0, January 24th, 2025
 ----------------------------------

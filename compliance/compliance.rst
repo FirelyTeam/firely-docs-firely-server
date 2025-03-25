@@ -19,3 +19,4 @@ Additionally, any necessary configuration to reproduce these certification resul
    nictiz
    gdpr
    hipaa
+   iso

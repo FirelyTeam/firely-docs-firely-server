@@ -28,7 +28,7 @@ If you have assigned different endpoints to different FHIR versions (see :ref:`h
 .. code-block:: 
 
    GET <base-url>/$liveness
-   GET <base-url>/STU3/$liveness
+   GET <base-url>/R3/$liveness
    GET <base-url>/R4/$liveness
 
 Results

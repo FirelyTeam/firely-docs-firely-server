@@ -17,5 +17,7 @@ If you want to develop a plugin for Firely Server, there are a couple of classes
    repository
    bundles
    accesscontrol_api
+   capabilities
+   resourceresolver
 .. add files here
 

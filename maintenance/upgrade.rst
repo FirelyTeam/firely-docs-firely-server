@@ -136,6 +136,9 @@ One of these cases is a scenario in which Firely Server operates at scale, handl
 MongoDB
 ^^^^^^^
 
+.. note::
+   Firely Server v6 introduces an enhanced MongoDB database migration process. In contrast to the previous migration method that required system downtime, this new approach enables zero-downtime migration. See :ref:`zero_downtime_migration` for more information.
+
 For Firely Server instances running on MongoDB, we consider databases with more than 500GB as large. Migrations for these databases take a long time which is why we introduced external migration scripts with Firely Server 4.5.0. These external scripts are written in JavaScript and allow to exert more control at the cost of some convenience. 
 
 The migration scripts usually perform two operations in this order: 

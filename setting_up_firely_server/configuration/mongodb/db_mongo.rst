@@ -13,8 +13,8 @@ Using MongoDB
 
 We assume you already have MongoDB installed. If not, please refer to the `MongoDB download <https://www.mongodb.com/download-center>`_ pages.
 
-Firely Server can work with MongoDb 4.0 and higher. Since Firely Server (Vonk) version 3.7.0 Firely Server uses the MongoDb Aggregation Framework heavily, and you are advised to upgrade to MongoDb 4.4 (or newer). 
-In this version issue `SERVER-7568 <https://jira.mongodb.org/browse/SERVER-7568>` is solved, so the most selective index is used more often.
+Firely Server can work with MongoDb 6.0 and higher.
+In this version issue `SERVER-7568 <https://jira.mongodb.org/browse/SERVER-7568>`_ is solved, so the most selective index is used more often.
 
 .. note:: 
     Using the correct Read and Write Concern for your MongoDb replica set is very important:
@@ -106,9 +106,6 @@ This works the same as with the normal Firely Server database, except that you:
 
 MongoDB Transactions
 --------------------
-
-.. note::
-    When utilizing MongoDb transactions we strongly advise to use MongoDb v4.2 or higher.
 
 In Firely Server versions prior to v4.9.0 transactions were simulated for development and test purposes. From Firely Server v4.9.0 and onwards transactions using MongoDb are now fully supported.
 

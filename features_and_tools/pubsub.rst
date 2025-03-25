@@ -10,7 +10,7 @@ Firely PubSub
   * Firely Scale - 🌍 / 🇺🇸
   * Firely CMS Compliance - 🇺🇸
 
-Firely offers the PubSub feature to enable other services to communicate with Firely Server on data changes asynchronously. Specifically, other applications can send *commands* to update FHIR resources in the database and subscribe to *events* published by the server whenever resources change. Both commands and events get communicated as messages via a message broker (RabbitMQ).
+Firely offers the PubSub feature to enable other services to communicate with Firely Server on data changes asynchronously. Specifically, other applications can send *commands* to update FHIR resources in the database and subscribe to *events* published by the server whenever resources change. Both commands and events get communicated as messages via a message broker (RabbitMQ, Azure Service Bus, or Kafka).
 
 Using PubSub might provide several advantages:
 
@@ -25,12 +25,17 @@ Using PubSub might provide several advantages:
 .. note::
   PubSub can be tested using the evaluation license for Firely Server. It is also included in the enterprise license for Firely Server. Your license allows the use of PubSub if ``http://fire.ly/vonk/plugins/pubsub`` is included in the plugins list of the license file.
 
+.. warning::
+  PubSub does not fully support :ref:`feature_multitenancy`. It will process the related security label if that is present in the resource. But the PubSub client sending or receiving the message is supposed to have access to all tenants and cannot specify a tenant in the message header. This limitation applies to all message brokers (RabbitMQ, Kafka, and Azure Service Bus).
+  
+  Likewise, PubSub does not support authorization - SMART on FHIR or otherwise - or auditing.
+
 .. _pubsub_configuration:
 
 Configuration
 -------------
 
-You can enable PubSub by including the plugins in the pipeline options of the Firely Server `appsettings.instance.json` file:
+You can enable PubSub by including the plugins in the pipeline options of the Firely Server ``appsettings.instance.json`` file:
 
 .. code-block::
 
@@ -49,24 +54,17 @@ You can enable PubSub by including the plugins in the pipeline options of the Fi
         ]
     },
 
-The ``Vonk.Plugin.PubSub.Sub`` plugin allows Firely Server to subscribe to messages published to a message broker by other clients. The ``Vonk.Plugin.PubSub.Pub.Sql`` and ``Vonk.Plugin.PubSub.Pub.MongoDb`` plugins allow Firely Server to publish changes of the respective database (either SQL or MongoDb) to the message broker. 
-You can further adjust PubSub in the PubSub section of the `appsettings.instance.json` file:
+The ``Vonk.Plugin.PubSub.Sub`` plugin allows Firely Server to subscribe to messages published to a message broker by other clients. This is available for all repositories and all supported message brokers.
 
-.. code-block::
+The ``Vonk.Plugin.PubSub.Pub.Sql`` and ``Vonk.Plugin.PubSub.Pub.MongoDb`` plugins allow Firely Server to publish changes of the respective database. This is available for the SQL Server and MongoDB repositories, in combination with either RabbitMQ or Azure Service Bus.
+
+You can further adjust PubSub in the PubSub section of the ``appsettings.instance.json`` file. Firely Server supports the following message brokers: RabbitMQ, Azure Service Bus, and Kafka. The configuration for each of them is slightly different.
+
+You can configure the notifications sent by ``Vonk.Plugin.PubSub.Pub``:
+
+.. code-block:: JSON
 
     "PubSub": {
-        "MessageBroker": {
-            "Host": "localhost", // The URL where the message broker can be found
-            "Username": "guest", // RabbitMQ username
-            "Password": "guest", // RabbitMQ password
-            "ApplicationQueueName": "FirelyServer", // The name of the message queue used by Firely Server
-            "VirtualHost": "/" // RabbitMQ virtual host; see https://www.rabbitmq.com/vhosts.html for details
-        },
-        // The section below contains configuration related to publishing events when data gets changed in Firely Server 
-        // so that other services can sync with Firely Server. Note that this is only available for Firely Server 
-        // instances that use SQL server (2016 and newer) or MongoDb as a repository database. 
-        // It does not work in combination with SQLite. 
-        // If you have configured MongoDB as a backend, note that only replica sets and sharded cluster scenarios are supported in combination with PubSub.
         "ResourceChangeNotifications": { 
             "SendLightEvents": false, // If enabled, FS will send out events on changes. These events will not contain the complete resource
             "SendFullEvents": false, // If enabled, FS will send out events on changes. These events will contain the complete resource
@@ -75,6 +73,84 @@ You can further adjust PubSub in the PubSub section of the `appsettings.instance
             "MaxPublishBatchSize": 1000 // The maximum amount of resource changes that can be sent in a single message
         }
     },
+
+
+RabbitMQ Configuration
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: JSON
+
+    "PubSub": {
+        "MessageBroker": {
+            "BrokerType": "RabbitMq",
+            "Host": "localhost",
+            "Username": "guest",
+            "Password": "guest",
+            "PrefetchCount": 1,
+            "ConcurrencyNumber": 1,
+            "ApplicationQueueName": "FirelyServer", // The name of the message queue used by Firely Server
+            "VirtualHost": "/"
+        }
+    },
+    
+- Host: The URL where the message broker can be found
+- PrefetchCount: Number of messages to prefetch from the message broker. Sets the `PrefetchCout` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints.
+- ConcurrencyNumber: Number of concurrent messages that can be consumed. Sets the `ConcurrentMessageLimit` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints
+- ApplicationQueueName: The name of the message queue used by Firely Server
+- VirtualHost: RabbitMQ virtual host; see https://www.rabbitmq.com/vhosts.html for details
+
+Azure Service Bus Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: JSON
+
+    "PubSub": {
+        "MessageBroker": {
+            "BrokerType": "AzureServiceBus",
+            "Host": "localhost",
+            "PrefetchCount": 1,
+            "ConcurrencyNumber": 1,
+            "ApplicationQueueName": "FirelyServer"
+        }
+    },
+    
+- Host: ConnectionString to Azure Service Bus
+- PrefetchCount: Number of messages to prefetch from the message broker. Sets the `PrefetchCout` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints.
+- ConcurrencyNumber: Number of concurrent messages that can be consumed. Sets the `ConcurrentMessageLimit` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints
+- ApplicationQueueName: The name of the message queue used by Firely Server
+
+
+Kafka Configuration
+^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: JSON
+
+    "PubSub": {
+      "MessageBroker": {
+        "BrokerType": "Kafka", // Set to Kafka to use Kafka as the broker
+        "Host": "localhost:9092", // Address of Kafka service 
+        "Kafka": {
+          "TopicPrefix": "FirelyServerCommands", // Prefix for topic names (OPTIONAL)
+          "ClientGroupId": "FirelyServer", // Consumer group ID
+          "ClientId": "FirelyServer", // Unique client identifier
+          "NumberOfConcurrentConsumers": 5, // Number of parallel consumers
+          "AuthenticationMechanism": "SaslScram256", // None, SaslPlain, SaslScram256, SaslScram512
+          "Username": "admin", // Only needed for SASL authentication
+          "Password": "******", // Only needed for SASL authentication
+          "CaLocation": "/path/to/ca.pem", // Path to CA certificate for SSL
+          "KeystoreLocation": "/path/to/kafka.keystore.p12", // Path to client keystore for SSL
+          "KeystorePassword": "******", // Password for the keystore
+          "ExecuteStorePlanCommandErrorTopicName": "FirelyServerCommands.ExecuteStorePlanCommand.Errors" // Optional custom topic for error messages
+        }
+      }
+    }
+    
+- Setting AuthenticationMechanism to anything other than ``None`` will enable SASL authentication. The ``Username`` and ``Password`` fields are required for SASL authentication.
+- Setting a value for ``CaLocation`` enables SSL.
+- Setting a value for ``CaLocation`` *and* ``KeystoreLocation`` enables Mutual SSL. The ``KeystorePassword`` field is required for to read from the Keystore.
+
+.. attention::
+  SQLite backend is not supported for ResourceChangeNotifications.
 
 .. note::
   Enabling ResourceChangeNotifications requires one-time DB configuration to enable changes tracking for SQL server backends. See :ref:`SQL Server Tracking Initialization<pubsub_sql_tracking_init>` for the instructions.
@@ -507,10 +583,25 @@ If enabled, Firely Server can also publish ``ResourcesChangedLightEvent`` messag
 Message Routing
 ---------------
 
+Firely Server PubSub supports different message brokers, each with its own specific routing mechanisms: RabbitMQ, Kafka, and Azure Service Bus. Choose the one that best fits your infrastructure needs.
+
 RabbitMQ
 ^^^^^^^^
 
 All applications involved in message exchange are connected to the same message broker. Hypothetically, every party can publish and consume messages of any type. However, in practice, it is far more common that applications are only interested in consuming specific types of messages. Scenarios covered by PubSub are no exception. RabbitMQ allows for flexible configuration of message routing by decoupling message producers from message consumers using primitives such as `exchanges` and `queues`. You can read more about them in the `RabbitMQ documentation <https://www.rabbitmq.com/tutorials/amqp-concepts.html#amqp-model>`_.
+
+**Additional configuration**
+
+RabbitMQ has inbuilt support for `TLS <https://www.rabbitmq.com/docs/ssl#overview>`_. By default Firely Server PubSub assumes that TLS support is disabled for the message broker and connects to port `5672`. It is possible to change the port to `5671` in order to automatically enable TLS support.
+
+      "PubSub": {
+        "MessageBroker": {
+            "Host": "Endpoint=sb://<Service Bus Namespace>.servicebus.windows.net/;SharedAccessKeyName=<Shared Access Key name>;SharedAccessKey=<Shared Access Key>",
+            // "Username": "guest",
+            // "Password": "guest",
+            // "RabbitMQ": {
+            //   "Port": 5672
+            // },
 
 **Events**
 
@@ -535,6 +626,169 @@ If you are interested in the result of a command execution, your application sho
 3. Specify the exchange name in the ``responseAddress`` header of the command message (e.g. ``rabbitmq://rabbitmq-host/response-exchange-name?temporary=true`` where ``response-exchange-name`` is a name of your exchange)
 4. Send the command
 5. Listen for the response published by Firely Server
+
+.. _kafka:
+
+Kafka
+^^^^^
+
+Kafka is a distributed event streaming platform that is well-suited for high-throughput, scalable message processing. Firely Server supports Kafka as a message broker for PubSub, allowing you to leverage Kafka's strengths in your FHIR infrastructure.
+
+**Advantages of Kafka**
+
+Kafka offers several advantages over other message brokers for FHIR data processing:
+
+* **Scalability**: Kafka's partitioned design allows horizontal scaling to handle high volumes of healthcare data
+* **Durability**: Persistent storage of messages enables replay and recovery scenarios
+* **High Throughput**: Optimized for handling thousands of messages per second, beneficial for large healthcare systems
+* **Fault Tolerance**: Built-in replication provides resilience against node failures
+* **Message Retention**: Configurable retention policies allow historical data access when needed
+* **Stream Processing**: Native compatibility with stream processing frameworks for real-time analytics
+
+**Authentication and Security**
+
+Kafka in Firely Server supports several authentication mechanisms specified by the ``AuthenticationMechanism`` setting:
+
+* ``None`` - No authentication (only suitable for development environments)
+* ``SaslPlain`` - Basic username and password authentication
+* ``SaslScram256`` - SCRAM-SHA-256 authentication, more secure than SASL/PLAIN
+* ``SaslScram512`` - SCRAM-SHA-512 authentication, the most secure SASL option
+
+When using SASL authentication, you must provide:
+* ``Username`` - The Kafka username for authentication
+* ``Password`` - The corresponding password
+
+**SSL/TLS Configuration**
+
+Firely Server supports both one-way and two-way SSL/TLS for Kafka connections:
+
+**One-way SSL/TLS** (Server authentication only):
+* ``CaLocation`` - Path to the trusted CA certificate that signed the Kafka broker's certificate
+* No client certificate is provided; the client (Firely Server) verifies the server but not vice versa
+
+**Two-way SSL/TLS** (Mutual authentication):
+* ``CaLocation`` - Path to the trusted CA certificate
+* ``KeystoreLocation`` - Path to the PKCS#12 keystore containing the client certificate
+* ``KeystorePassword`` - Password for accessing the keystore
+
+For production environments, we strongly recommend:
+1. Using SSL/TLS to encrypt all communication
+2. Implementing SASL authentication (preferably SCRAM-SHA-256 or SCRAM-SHA-512)
+3. If possible, using mutual TLS authentication for the strongest security model
+
+**Topic Naming Convention**
+
+Kafka uses topics to organize and categorize messages. In Firely Server, the topic names follow this convention:
+
+* Command topics: ``<TopicPrefix>.<CommandName>``
+* Error topics: ``<TopicPrefix>.<CommandName>.Errors``
+* Event topics: Topic names match the message types (e.g., ``Firely.Server.Contracts.Messages.V1:ResourcesChangedEvent``)
+
+The ``TopicPrefix`` is configurable and defaults to "FirelyServerCommands" if not specified.
+
+**Message Routing**
+
+When using Kafka, messages are routed using Kafka's publish-subscribe pattern:
+
+1. **For sending commands to Firely Server**, publish messages to the corresponding topic:
+   * ``<TopicPrefix>.ExecuteStorePlanCommand`` - For storing resources
+   * ``<TopicPrefix>.RetrievePlanCommand`` - For retrieving resources
+
+2. **For receiving events from Firely Server**, subscribe to these topics:
+   * For full resource change events: ``Firely.Server.Contracts.Messages.V1:ResourcesChangedEvent`` (format may vary based on MassTransit configuration; in some setups, it might use a dot or slash instead of a colon)
+   * For lightweight resource change events: ``Firely.Server.Contracts.Messages.V1:ResourcesChangedLightEvent``
+
+3. **For handling command results**, Firely Server will publish responses to:
+   * The topic specified in the ``responseAddress`` header of the command message. The response address format for Kafka should be: ``kafka://kafka-broker:9092/response-topic?type=topic``
+   * Error messages to ``<TopicPrefix>.ExecuteStorePlanCommand.Errors`` by default
+
+**Topic Creation**
+
+Unlike RabbitMQ exchanges, Kafka topics need to be created before they can be used. You should create the required topics before starting to use PubSub with Kafka. Most Kafka distributions include tools like the Kafka Admin UI or command-line utilities for creating topics.
+
+Required topics:
+* ``<TopicPrefix>.ExecuteStorePlanCommand`` - For sending storage commands
+* ``<TopicPrefix>.RetrievePlanCommand`` - For sending retrieval commands
+* ``<TopicPrefix>.ExecuteStorePlanCommand.Errors`` - For error messages 
+* Any custom error topics you've configured
+
+The ``<TopicPrefix>`` is the value set in your configuration (defaults to "FirelyServerCommands" if not specified).
+
+For resource change notifications, you may need to create event topics as well, depending on your MassTransit configuration.
+
+**Delivery Guarantees and Message Ordering**
+
+Kafka provides at-least-once delivery semantics in its default configuration. This means:
+* Messages will be delivered to consumers even in case of temporary failures
+* Duplicate deliveries are possible in failure scenarios, so consumers should handle this possibility
+
+Message ordering in Kafka is guaranteed only within a single partition. Messages sent to the same partition will be processed in the order they were produced.
+
+**Concurrency and Partitioning**
+
+Kafka's partitioning allows for parallel processing of messages. The ``NumberOfConcurrentConsumers`` setting controls how many consumers Firely Server will create to process messages in parallel. This should be aligned with the number of partitions in your Kafka topics for optimal performance.
+
+**Considerations for FHIR Resource Processing**
+
+When dealing with FHIR resources, there are important considerations for partitioning:
+
+1. **Resource Dependencies**: FHIR resources often have dependencies on other resources (e.g., an Observation referencing a Patient). If these related resources are processed in different partitions, there's a risk of processing them out of order. 
+
+2. **Partition Key Selection**: Choosing the right partition key is critical:
+   * Using resource ID as the key ensures operations on the same resource are processed in order
+   * However, this doesn't account for relationships between different resources
+   
+3. **Transaction Boundaries**: For operations that must be atomic across multiple resources, consider:
+   * Using the ExecuteStorePlanCommand to handle multiple resources in a single transaction
+   * Implementing application-level checks to verify referential integrity
+
+4. **Balancing Throughput and Consistency**:
+   * More partitions increase throughput but may complicate ordering guarantees
+   * Fewer partitions provide better ordering but limit parallelism
+
+The optimal configuration depends on your specific use case and consistency requirements. For critical healthcare data, you may need to implement additional application-level validation to ensure data integrity when using highly concurrent processing.
+
+**Message Serialization**
+
+When using Kafka with Firely Server, messages are serialized as JSON. When implementing your own Kafka clients, you need to structure your messages appropriately:
+
+* **Message body** - Contains the actual command or event payload
+* **Headers** - Contains metadata needed for message routing and processing
+
+For example, here's how to structure an ``ExecuteStorePlanCommand`` message for Kafka:
+
+**Message Body:**
+
+.. code-block::
+
+    {
+      "instructions": [
+        {
+          "itemId": "Patient/03",
+          "resource": "{\"resourceType\":\"Patient\",\"id\":\"03\",\"meta\":{\"versionId\":\"1\",\"lastUpdated\":\"2024-07-29T14:20:43.49818+02:00\"},\"name\":[{\"family\":\"sam\"}]}",
+          "resourceType": "Patient",
+          "resourceId": "03",
+          "currentVersion": "1",
+          "operation": "create"
+        }
+      ]
+    }
+
+**Headers:**
+
+.. code-block::
+
+    {
+      "SourceAddress": "loopback://localhost/",
+      "ConversationId": "98640000-5d8f-0015-12be-08dcaa663884",
+      "MessageId": "706e59e9-8ce2-4a23-83b2-4d2c4a0f70e7",
+      "DestinationAddress": "loopback://localhost/kafka/FirelyServerCommands.ExecuteStorePlanCommand",
+      "fhir-release": "R5"
+    }
+
+Note that the ``fhir-release`` header is important as it specifies which FHIR version is being used (R3, R4, or R5).
+
+The message body contains the serialized FHIR resource within the "resource" field, which itself is a JSON string properly escaped. This format ensures the FHIR data maintains its structure while being transported through Kafka.
 
 .. _azure_service_bus:
 
@@ -608,6 +862,10 @@ SQL Server
 
 If you want to enable publishing notifications whenever resources get changed in Firely Server and you use SQL Server, some initial configuration is required to enable tracking of changes in the DB. This can be done automatically by Firely Server or manually.
 
+.. note::
+
+    Not all editions of SQL Server support the required Change Data Capture features. See :ref:`configure_sql` for more information.
+
 **Automatic initialization**
 
 If you want Firely Server to do that configuration for you, based on your settings:
@@ -670,6 +928,29 @@ To enable logging for PubSub, you can add the PubSub plugin to the override sect
     ...
   }
 
+**Enhanced Logging for Message Brokers**
+
+For more detailed logging of the message broker interactions, especially when troubleshooting Kafka connectivity or message processing, you can enable MassTransit logging:
+
+.. code-block::
+
+  {
+    "Serilog": {
+      "Using": [ "Firely.Server" ],
+      "MinimumLevel": {
+        "Default": "Error",
+        "Override": {
+          "Vonk.Plugin.PubSub": "Debug",
+          "MassTransit": "Verbose",  // Enables detailed logging for all message broker operations
+          ...
+        }
+      },
+      ...
+    }
+  }
+
+The "MassTransit" logging category covers all broker-specific operations, including Kafka connections, consumer operations, and message publishing. Setting this to "Verbose" provides the most detailed logs but may generate significant output in production environments.
+
 .. _pubsub_clients:
 
 PubSub Clients
@@ -688,9 +969,21 @@ We provide sample code to connect to the pubsub API in the `firely-pubsub-sample
 * A postman collection displaying the raw queries to setup the infrastructure and send commands and receive events.
 
 .. note::
-  Before a client start consuming ``ResourceChangedEvent`` or ``ResourceLightChangedEvent``, it needs to create a queue and bind it the RabbitMq Exchange corresponding to the message type,
-  ``Firely.Server.Contracts.Messages.V1:ResourcesChangedEvent`` and ``Firely.Server.Contracts.Messages.V1:ResourcesChangedLightEvent`` respectively. 
-  Currently, Firely Server will setup those exchanges only once the first change in the database was detected.
-  If using the `MassTransit RabbitMq nuget package <https://www.nuget.org/packages/MassTransit.RabbitMQ>`_, it will take care of setting up the exchange if not yet present.
-  However, if not using this package, the client has to either take the responsibility of creating the correct exchange or wait until the exchanges are created, resulting in the loss of the first message.
+  Before a client starts consuming ``ResourceChangedEvent`` or ``ResourceLightChangedEvent``, it needs to create the appropriate message infrastructure:
+  
+  * For RabbitMQ: Create a queue and bind it to the RabbitMQ Exchange corresponding to the message type
+    (``Firely.Server.Contracts.Messages.V1:ResourcesChangedEvent`` and ``Firely.Server.Contracts.Messages.V1:ResourcesChangedLightEvent``).
+  
+  * For Kafka: Create the necessary topics before starting to use them. Unlike RabbitMQ, Kafka requires topics to be
+    explicitly created before they can be used.
+  
+  Currently, Firely Server will setup RabbitMQ exchanges only once the first change in the database is detected. For Kafka, topics must be created explicitly.
+  
+  If using the `MassTransit RabbitMQ nuget package <https://www.nuget.org/packages/MassTransit.RabbitMQ>`_, it will automatically create exchanges if not present.
+  For Kafka with `MassTransit Kafka nuget package <https://www.nuget.org/packages/MassTransit.Kafka>`_, automatic topic creation depends on specific Kafka broker 
+  settings and MassTransit configuration (TopicEndpoint configuration with CreateIfMissing option). In most production Kafka deployments, 
+  auto-creation of topics is disabled for security reasons, so you should create topics manually.
+  
+  If not using these packages, the client must take responsibility for creating the correct infrastructure before exchanging messages,
+  or risk message loss.
   

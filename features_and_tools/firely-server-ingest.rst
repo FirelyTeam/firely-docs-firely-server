@@ -58,6 +58,7 @@ General usage
 
   * Firely Server instances targeting the same database will be impacted severely by the workload that FSI puts on the database. We advise to stop the Firely Server instances while the import is performed.
   * Only one instance of FSI per database should be run at a time. FSI can utilize all the cores on the machine it is run on, and insert data over several connections to the database in parallel. Multiple instances would probably cause congestion in the database.
+  * FSI does not add tenant security labels, see :ref:`feature_multitenancy`.
 
 Prerequisites
 ^^^^^^^^^^^^^
@@ -68,25 +69,27 @@ The tool requires that the target database already exists and contains all requi
   Each version of Firely Server Ingest is bound to a specific version of Firely Server. The following table shows which combinations of Firely Server (its database schema version respectively) and Firely Server Ingest can be used in combination.
 
 
-+-----------------------+------------------------------+
-| Firely Server Version | Firely Server Ingest Version |
-+=======================+==============================+
-| v5.1.0 and later      | v2.2.0 and v2.2.1            |
-+-----------------------+------------------------------+
-| v5.0.0                | v2.1.0                       |
-+-----------------------+------------------------------+
-| v5.0.0-beta1          | v2.0.0                       |
-+-----------------------+------------------------------+
-| v4.10.0 and later     | v1.4.0                       |
-+-----------------------+------------------------------+
-| v4.9.0                | v1.3.0                       |
-+-----------------------+------------------------------+
-| v4.8.0                | v1.2.0                       |
-+-----------------------+------------------------------+
-| v4.2.0 and later      | v1.1.0                       |
-+-----------------------+------------------------------+
-| v4.2.0                | v1.0.0                       |
-+-----------------------+------------------------------+
++-----------------------+-----------------------------------------------------+
+| Firely Server Version | Firely Server Ingest Version                        |
++=======================+=====================================================+
+| v5.5.0 and later      | FSI aligns with the version number of FS            |
++-----------------------+-----------------------------------------------------+
+| v5.1.0 - v5.4.0       | v2.2.0 and v2.2.1                                   |
++-----------------------+-----------------------------------------------------+
+| v5.0.0                | v2.1.0                                              |
++-----------------------+-----------------------------------------------------+
+| v5.0.0-beta1          | v2.0.0                                              |
++-----------------------+-----------------------------------------------------+
+| v4.10.0 and later     | v1.4.0                                              |
++-----------------------+-----------------------------------------------------+
+| v4.9.0                | v1.3.0                                              |
++-----------------------+-----------------------------------------------------+
+| v4.8.0                | v1.2.0                                              |
++-----------------------+-----------------------------------------------------+
+| v4.2.0 and later      | v1.1.0                                              |
++-----------------------+-----------------------------------------------------+
+| v4.2.0                | v1.0.0                                              |
++-----------------------+-----------------------------------------------------+
 
 Input files formats
 ^^^^^^^^^^^^^^^^^^^
@@ -186,13 +189,12 @@ Supported arguments
 +----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--haltOnError <true|false>``                           | haltOnError                         |          | When true, stop application on single error. Default = false.                                                                                       |
 +----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
-| ``--convertAbsoluteUrlsToRelative:index url``            | convertAbsoluteUrlsToRelative       |          | This setting is deprecated. You should use ``absoluteUrlConversion/baseEndpoints`` instead.                                                         |
-|      with index ranging from 0 to 19                     |                                     |          |                                                                                                                                                     |
-+----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+
 | ``--urlConvBases:index url``                             | absoluteUrlConversion/baseEndpoints |          | Convert absolute URLs to relative for servers in this array. The array values must match exactly the base URL otherwise no changes are made.        |
 |      with index ranging from 0 to 19                     |                                     |          | The conversion is done for all elements of type ``reference`` as well as the elements of type ``Uri`` or ``Url`` matching a FHIR path provided  in  |
 |                                                          |                                     |          | ``absoluteUrlConversion/elements`` setting.                                                                                                         |
-|                                                          |                                     |          | Example: Setting of ``http://example.org/R4`` will convert an absolute URL ``http://example.org/R4/Patient/123`` to relative as ``Patient/123``     |
+|                                                          |                                     |          | Example: Setting of ``http://example.org/R4`` using Firely Server hosted at ``http://localhost:8080`` will convert an absolute URL                  |
+|                                                          |                                     |          | ``http://example.org/R4/Patient/123`` to a relative URL stored in the database as ``Patient/123``.                                                  |
+|                                                          |                                     |          | Firely Server will then return this URL as ``http://localhost:8080/Patient/123`` in REST API responses.                                             |
 |                                                          |                                     |          | When using the command line argument, the entries of the array must be provided one by one by suffixing with the relevant index. For example:       |
 |                                                          |                                     |          | ``--urlConvBases:0 https://host0/fhir  --urlConvBases:1 https://host1/fhir``                                                                        |
 +----------------------------------------------------------+-------------------------------------+----------+-----------------------------------------------------------------------------------------------------------------------------------------------------+

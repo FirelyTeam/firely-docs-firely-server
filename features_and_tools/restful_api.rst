@@ -23,7 +23,7 @@ Create, read, update, patch, delete
 These five operations to manage the contents of the Firely Server, commonly referenced by the acronym CRUD, are implemented as per the specification. Patch is implemented as `FHIR Patch <http://hl7.org/fhir/fhirpatch.html>`_, as this is the most versatile one.
 A few limitations apply.
 
-Firely Server enables create-on-update: If you request an update and no resource exists for the given id, the provided resource will be created under the provided id.
+Firely Server enables create-on-update: If you request an update and no resource exists for the given id, the provided resource will be created under the provided id. It is possible to disable this feature by setting ``AllowCreateOnUpdate`` to false in the ``FhirCapabilities`` configuration.
 
 Firely Server can reject a resource based on :ref:`feature_prevalidation`.
 
@@ -39,6 +39,7 @@ If you allow for multiple deletes, you have to specify a maximum number of resou
 ::
 
     "FhirCapabilities": {
+        "AllowCreateOnUpdate": true|false
         "ConditionalDeleteOptions": {
             "ConditionalDeleteType": "Single", // Single or Multiple,
             "ConditionalDeleteMaxItems": 1
@@ -187,7 +188,7 @@ Navigational paging links
 Paging behavior of Firely Server can be configured in the ``BundleOptions`` of the appsettings, also see :ref:`bundle_options`. ::
     
   "BundleOptions": {
-    "DefaultTotal": "accurate", // none, accurate
+    "DefaultTotal": "none", // none, accurate
     "DefaultCount": 10,
     "MaxCount": 50,
     "DefaultSort": "-_lastUpdated"

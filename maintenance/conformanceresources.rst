@@ -76,6 +76,9 @@ The process follows these steps for each FHIR version (currently STU3 and R4, an
 Loading the conformance resources from the various sources can take some time,
 especially on first startup when the :ref:`conformance_specification_zip` have to be imported.
 During the import Firely Server will respond with 423 'Locked' to every request to avoid storing or retrieving inconsistent data.
+To monitor for conformance resources to be fully loaded and server being responsive, the :ref:`$readiness<feature_healthcheck>` endpoint can be queried for 200 'Success' response.
+Alternatively, the following log line is being written once the process is finished::
+   Conformance resource loading finished successfully. Server is ready to receive requests.
 
 The read history keeps a record of files that have been read, with an MD5 hash of each.
 If you wish to force a renewed import of a specific file, you should:
@@ -114,7 +117,7 @@ To ensure that only one instance runs the import you can do two things:
 
 #. Exclude the namespace ``Vonk.Administration.Api.Import`` from the :ref:`PipelineOptions<vonk_plugins_config>` in branch ``administration`` on all but one instance.
 
-If you want to use the manual import (``<url>/administration/import``) you are advised to apply solution nr. 1 above. In the second solution the call may or may not end up on an instance having the Import functionality.
+If you want to use the manual import (``<url>/administration/$import-resources``) you are advised to apply solution nr. 1 above. In the second solution the call may or may not end up on an instance having the Import functionality.
 
 We are aware that this can be a bit cumbersome. On the :ref:`vonk_roadmap` is therefore the story to host the Administration API in its own microservice.
 
@@ -206,7 +209,7 @@ Therefore you can instruct Firely Server to actually load the profiles from the 
 
 ::
 
-  POST http(s)://<firely-server-endpoint>/administration/importResources
+  POST http(s)://<firely-server-endpoint>/administration/$import-resources
 
 The operation will return an OperationOutcome resource, containing details about the number of resources created and updated, as well as any errors that occurred.
 Please note that this will also respect the history of already read files, and not read them again.

@@ -123,6 +123,24 @@ With MongoDb transactions, there are a few things to consider:
 #. Although MongoDb transactions are supported as early as v4.0, please be aware of the following issue. In MongoDb v4.0 all write operations are contained in a single oplog entry. The oplog entry for the transaction must be within the BSON document size limit of 16MB. For v4.2+ every write operation gets its own oplog entry. This removes the 16MB total size limit for a transaction imposed by the single oplog entry for all its write operations. Note that each single oplog entry still has a limit of 16 MB. We highly recommend in using MongoDb v4.2 or higher when using transactions.
 #. Please read the official MongoDb documentation for production considerations when using transactions: `MongoDb manual <https://www.mongodb.com/docs/manual/core/transactions-production-consideration/>`_
 
+.. _configure_mongodb_sharding:
+
+MongoDB Sharding
+----------------
+
+Firely Server supports sharding with MongoDB. Sharding is a method for distributing data across multiple machines. It is a MongoDB feature that allows you to scale horizontally, i.e. across many servers.
+To enable sharding, you need to:
+
+#. Set up a `sharded cluster <https://docs.mongodb.com/manual/sharding/>`_.
+#. Configure the MongoDB connection string to point to the mongos instance of the sharded cluster.
+#. Initialize the sharded cluster with the Firely Server database and collection by running Firely Server once, or by using FSI to initialize the schema (see :ref:`tool_fsi`).
+#. Shard the ``vonkentries`` collection:
+
+    #. See the `MongoDB manual <https://www.mongodb.com/docs/atlas/atlas-ui/collections/#shard-a-collection/>`_ for more information on sharding collections.
+    #. Use this as the shard key: ``{ type: 1, im: 1, cur: 1, cnt: 1, change: 1, res_id: "hashed" }``.
+
+From now on, the sharding is transparent to Firely Server and works with all requests and operations.
+
 Tips and hints for using MongoDb for Firely Server
 --------------------------------------------------
 

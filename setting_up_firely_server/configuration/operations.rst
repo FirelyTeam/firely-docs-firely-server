@@ -163,7 +163,7 @@ For each operation in ``OperationsToBeSecured``, set ``NetworkProtected`` to ``t
 .. code-block:: json
 
     "Administration": {
-      "AllowedNetworks": ["127.0.0.1", "::1"],
+      "AllowedNetworks": ["127.0.0.1/32", "::1/128"],
       "Operations": {
         "reindex": {
           "Name": "reindex",
@@ -314,7 +314,7 @@ Here's an example of the new operation configuration structure:
         }
       },
       "Administration": {
-        "AllowedNetworks": ["127.0.0.1", "::1"],
+        "AllowedNetworks": ["127.0.0.1/32", "::1/128"],
         "Operations": {
           "$reindex": {
             "Name": "$reindex",

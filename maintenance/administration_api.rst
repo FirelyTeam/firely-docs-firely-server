@@ -44,10 +44,7 @@ You can configure the Administration API, including restricting access to functi
       "AutoUpdateDatabase": true,
       "MigrationTimeout": 1800 // in seconds
     },
-    "Security": {
-      "AllowedNetworks": [ "::1/128" ], // e.g.: ["127.0.0.1/32", "::1/128" (ipv6 localhost), "10.1.50.0/24", "10.5.3.0/24", "31.161.91.98/32"]
-      "OperationsToBeSecured": [ "reindex", "reset", "preload" ]
-    }
+    "AllowedNetworks": [ "127.0.0.1/32", "::1/128" ] // IPv4 and IPv6 localhost with explicit subnet masks
   },
 
 .. _configure_administration_repository:

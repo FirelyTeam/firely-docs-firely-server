@@ -24,6 +24,7 @@ If you want to change the way Firely Server logs its information, you can adjust
 
    appsettings
    environment_variables
+   operations
    prevalidation
    db_memory
    Using MongoDB <mongodb/db_mongo>

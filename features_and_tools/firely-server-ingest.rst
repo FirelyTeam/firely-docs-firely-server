@@ -250,7 +250,7 @@ General
 
   * **Config**: absoluteUrlConversion/baseEndpoints
   * **Required**: No
-  * **Description**: Convert absolute URLs to relative for servers in this array. The array values must match exactly the base URL otherwise no changes are made.
+  * **Description**: Convert absolute URLs to relative for endpoints included in this array. The array values must match exactly the base URL otherwise no changes are made.
 
 * ``--urlConvElems:index FHIRPath``: 
 
@@ -266,7 +266,7 @@ Source
 
   * **Config**: sourceType
   * **Required**: No
-  * **Description**: Specifies the source type. None will try only to provision the target database.
+  * **Description**: Specifies the source type
   * **Options**:
 
     * **Filesystem**: read data from the filesystem
@@ -278,8 +278,8 @@ Source (for Filesystem)
 
 * ``-s``, ``--source <source>``: 
 
-  * **Config**: sourceType
-  * **Required**: Yes
+  * **Config**: source
+  * **Required**: Yes when ``sourceType`` is set to ``Filesystem``
   * **Description**: Input directory for work (this directory is visited recursively including all the subdirectories).
 
 Source (for MongoDb)

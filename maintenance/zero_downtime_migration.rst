@@ -38,7 +38,7 @@ Before starting the migration, ensure you have:
 * Sufficient disk space for both databases during migration
 * License file with the token ``http://fire.ly/vonk/plugins/bulk-data-import/migration``
 * Access credentials for both source and target MongoDB instances
-* `MongoDB Shell (mongosh) <https://www.mongodb.com/products/tools/shell>`_ installed for sharding configuration
+* `MongoDB Shell (mongosh) <https://www.mongodb.com/products/tools/shell>`_ installed for comparing data and potentially for sharding configuration
 
 .. _migration_admin_database:
 
@@ -58,68 +58,9 @@ Make sure to re-create your custom :ref:`AccessPolicies <feature_accesscontrol_p
 Migration of Main Database
 --------------------------
 
-1. Determine the target database deployment location and make a note of the connection string for reference in the next steps.
-
-2. For implementations requiring sharding, execute the following configuration steps:
-
-   - Ensure your MongoDB installation supports sharding. Refer to the MongoDB documentation if uncertain.
-   - Provision the schema using the following command:
-
-      .. code-block:: bash
-         :caption: Bash
-
-         COLLECTION_NAME=vonkentries
-         CONNECTION_STRING=<YOUR_CONNECTION_STRING_INCLUDING_DB_NAME>
-         LICENSE_FILE=<path-to-your-license-file>
-
-         fsi \
-         --provisionTargetDatabase true \
-         --dbType MongoDb \
-         --mongoConnectionstring $CONNECTION_STRING \
-         --mongoCollection $COLLECTION_NAME \
-         --license $LICENSE_FILE \
-         --sourceType None
-
-      .. code-block:: powershell
-         :caption: PowerShell
-
-         $COLLECTION_NAME = "vonkentries"
-         $CONNECTION_STRING = "<YOUR_CONNECTION_STRING_INCLUDING_DB_NAME>"
-         $LICENSE_FILE = "<path-to-your-license-file>"
-
-         fsi `
-         --provisionTargetDatabase true `
-         --dbType MongoDb `
-         --mongoConnectionstring $CONNECTION_STRING `
-         --mongoCollection $COLLECTION_NAME `
-         --license $LICENSE_FILE `
-         --sourceType None
-
-   - Configure sharding for the entries collection using the command below:
-
-      .. code-block:: bash
-         :caption: Bash
-
-         DB_NAME=vonkdata
-         COLLECTION_NAME=vonkentries
-         CONNECTION_STRING=<YOUR_CONNECTION_STRING>
-
-         mongosh $CONNECTION_STRING <<EOF
-         sh.shardCollection("$DB_NAME.$COLLECTION_NAME", { im: 1, type: 1, res_id: "hashed" });
-         EOF
-
-      .. code-block:: powershell
-         :caption: PowerShell
-
-         $DB_NAME = "vonkdata"
-         $COLLECTION_NAME = "vonkentries"
-         $CONNECTION_STRING = "<YOUR_CONNECTION_STRING>"
-
-         mongosh $CONNECTION_STRING --eval @"
-         sh.shardCollection("$DB_NAME.$COLLECTION_NAME", { im: 1, type: 1, res_id: "hashed" })
-         "@
-
-3. Execute the FSI migration process:
+#. Determine the target database deployment location and make a note of the connection string for reference in the next steps.
+#. For implementations requiring sharding, refer to :ref:`configure_mongodb_sharding` to set up sharding for the target database.
+#. Execute the FSI migration process:
   
    Initialize the migration by executing the following command:
 
@@ -185,11 +126,11 @@ Migration of Main Database
 
    Migration completion is indicated by the following message: ``No new items found in the database. Waiting for 00:00:05 before retrying...``
 
-4. Provision an instance of the new version of Firely Server
-5. Verify that the migration was successful by inspecting the data in the target database, see the :ref:`verification steps <migration_admin_database_verification>` below
-6. Update the reverse proxy configuration to direct traffic to the new Firely Server instance
-7. Decommission the instance(s) of the old version of Firely Server
-8. Terminate the FSI migration tool
+#. Provision an instance of the new version of Firely Server
+#. Verify that the migration was successful by inspecting the data in the target database, see the :ref:`verification steps <migration_admin_database_verification>` below
+#. Update the reverse proxy configuration to direct traffic to the new Firely Server instance
+#. Decommission the instance(s) of the old version of Firely Server
+#. Terminate the FSI migration tool
 
 .. _migration_admin_database_verification:
 

@@ -19,7 +19,7 @@ Release 6.0.0, [Month] [Date], 2024
 Firely is proud to announce a new major version of Firely Server. This release represents a significant step forward in our commitment to providing a reliable, compliant and easy to use FHIR server.
 With this new version, we've focused on delivering:
 
-- support for Sharding with MongoDB
+- support for Sharding with MongoDB (see :ref:`configure_mongodb_sharding`)
 - zero-downtime migrations with MongoDB (see :ref:`zero_downtime_migration`)
 - detailed insights into Firely Server deployments based on OpenTelemetry metrics and traces
 - improved integration into existing infrastructures with Kafka support for Firely Server PubSub

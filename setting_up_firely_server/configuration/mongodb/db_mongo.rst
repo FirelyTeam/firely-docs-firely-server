@@ -129,15 +129,74 @@ MongoDB Sharding
 ----------------
 
 Firely Server supports sharding with MongoDB. Sharding is a method for distributing data across multiple machines. It is a MongoDB feature that allows you to scale horizontally, i.e. across many servers.
+
+Sharding on MongoDB is protected by a license token: ``http://fire.ly/vonk/plugins/repository/mongo-db/sharding``. Please check whether your license includes this token. If not, please contact us.
+
 To enable sharding, you need to:
 
+#. Install `MongoDB Shell (mongosh) <https://www.mongodb.com/products/tools/shell>`_ for sharding configuration
 #. Set up a `sharded cluster <https://docs.mongodb.com/manual/sharding/>`_.
 #. Configure the MongoDB connection string to point to the mongos instance of the sharded cluster.
-#. Initialize the sharded cluster with the Firely Server database and collection by running Firely Server once, or by using FSI to initialize the schema (see :ref:`tool_fsi`).
+#. Initialize the sharded cluster with the Firely Server database and collection by running Firely Server once, or by using FSI to initialize the schema (see :ref:`tool_fsi`). For the latter, these are the commands:
+
+      .. code-block:: bash
+          :caption: Bash
+ 
+          COLLECTION_NAME=vonkentries
+          CONNECTION_STRING=<YOUR_CONNECTION_STRING_INCLUDING_DB_NAME>
+          LICENSE_FILE=<path-to-your-license-file>
+ 
+          fsi \
+          --provisionTargetDatabase true \
+          --dbType MongoDb \
+          --mongoConnectionstring $CONNECTION_STRING \
+          --mongoCollection $COLLECTION_NAME \
+          --license $LICENSE_FILE \
+          --sourceType None
+ 
+       .. code-block:: powershell
+          :caption: PowerShell
+ 
+          $COLLECTION_NAME = "vonkentries"
+          $CONNECTION_STRING = "<YOUR_CONNECTION_STRING_INCLUDING_DB_NAME>"
+          $LICENSE_FILE = "<path-to-your-license-file>"
+ 
+          fsi `
+          --provisionTargetDatabase true `
+          --dbType MongoDb `
+          --mongoConnectionstring $CONNECTION_STRING `
+          --mongoCollection $COLLECTION_NAME `
+          --license $LICENSE_FILE `
+          --sourceType None
+ 
 #. Shard the ``vonkentries`` collection:
 
     #. See the `MongoDB manual <https://www.mongodb.com/docs/atlas/atlas-ui/collections/#shard-a-collection/>`_ for more information on sharding collections.
-    #. Use this as the shard key: ``{ type: 1, im: 1, cur: 1, cnt: 1, change: 1, res_id: "hashed" }``.
+    #. Use this as the shard key: ``{ im: 1, type: 1, res_id: "hashed" }``.
+    #. With MongoShell you can run the following command to shard the collection:
+
+       .. code-block:: bash
+          :caption: Bash
+ 
+          DB_NAME=vonkdata
+          COLLECTION_NAME=vonkentries
+          CONNECTION_STRING=<YOUR_CONNECTION_STRING>
+ 
+          mongosh $CONNECTION_STRING <<EOF
+          sh.shardCollection("$DB_NAME.$COLLECTION_NAME", { im: 1, type: 1, res_id: "hashed" });
+          EOF
+ 
+       .. code-block:: powershell
+          :caption: PowerShell
+ 
+          $DB_NAME = "vonkdata"
+          $COLLECTION_NAME = "vonkentries"
+          $CONNECTION_STRING = "<YOUR_CONNECTION_STRING>"
+ 
+          mongosh $CONNECTION_STRING --eval @"
+          sh.shardCollection("$DB_NAME.$COLLECTION_NAME", { im: 1, type: 1, res_id: "hashed" })
+          "@
+
 
 From now on, the sharding is transparent to Firely Server and works with all requests and operations.
 

@@ -210,6 +210,7 @@ General
 
   * **Config**: limit
   * **Required**: No
+  * **Default**: -1 (no limit)
   * **Description**: Limit the number of resources to import. Use this for testing your setup.
 
 * ``-f``, ``--fhir-version <R3|R4>``: 
@@ -222,10 +223,11 @@ General
 
   * **Config**: updateExistingResources
   * **Required**: No
+  * **Default**: true
   * **Description**: Defines the action to take when a resource with a given Type and Id already exists in the target database.
   * **Options**:
 
-    * **true** (default): the existing resource gets marked as historical and the incoming resource gets saved as current
+    * **true**: the existing resource gets marked as historical and the incoming resource gets saved as current
     * **false**: the existing resource remains unchanged; the incoming resource gets logged as skipped
     * **errorOnConflict**: the existing resource remains unchanged; the incoming resource errors out
     * **onlyIfNewer**:
@@ -238,24 +240,28 @@ General
 
   * **Config**: haltOnError
   * **Required**: No
-  * **Description**: When true, stop application on a single error. Default = false.
+  * **Default**: false
+  * **Description**: When true, stop application on a single error
 
 * ``--useRecoveryJournal <recoveryJournalDirectory>``: 
 
   * **Config**: recoveryJournalDirectory
   * **Required**: No
+  * **Default**: null
   * **Description**: A directory containing the recovery journal. See :ref:`Recovery Journal<tool_fsi_recovery>`.
 
 * ``--urlConvBases:index url``: 
 
   * **Config**: absoluteUrlConversion/baseEndpoints
   * **Required**: No
+  * **Default**: None
   * **Description**: Convert absolute URLs to relative for endpoints included in this array. The array values must match exactly the base URL otherwise no changes are made.
 
 * ``--urlConvElems:index FHIRPath``: 
 
   * **Config**: absoluteUrlConversion/elements
   * **Required**: No
+  * **Default**: None
   * **Description**: List of FHIR paths specifying the list of ``Uri`` or ``Url`` elements that should be converted from absolute to relative URI if their base endpoints match one of the base endpoint specified in ``absoluteUrlConversion/baseEndpoints``.
 
 Source
@@ -266,6 +272,7 @@ Source
 
   * **Config**: sourceType
   * **Required**: No
+  * **Default**: Filesystem
   * **Description**: Specifies the source type
   * **Options**:
 
@@ -298,23 +305,26 @@ See more information on how to run migrations in :ref:`this article <zero_downti
 * ``--srcMongoCollection <srcMongoCollection>``: 
 
   * **Config**: mongoDbSource/collectionName
-  * **Required**: Yes
+  * **Required**: No
+  * **Default**: vonkentries
   * **Description**: Collection name to read entries from.
 
 * ``--srcMongoRunningMode <AdHoc|Continuous>``: 
 
   * **Config**: mongoDbSource/runningMode
   * **Required**: No
+  * **Default**: AdHoc
   * **Description**: The mode in which the application should run.
   * **Options**:
 
-    * **AdHoc** (default): the application will run once and exit
+    * **AdHoc**: the application will run once and exit
     * **Continuous**: the application will run continuously and listen for changes in the source database until terminated by the user
 
 * Documents filter (can be set only via the config file): 
 
   * **Config**: mongoDbSource/documentFilterBson
   * **Required**: No
+  * **Default**: None
   * **Description**: BSON filter to apply when reading documents. See `MongoDB aggregation match syntax <https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/>`_ for details.
 
 
@@ -325,6 +335,7 @@ Target
 
   * **Config**: databaseType
   * **Required**: No
+  * **Default**: SQL
   * **Description**: Specifies the target database type.
   * **Options**:
 
@@ -336,6 +347,7 @@ Target
 
   * **Config**: provisionTargetDatabase
   * **Required**: No
+  * **Default**: false
   * **Description**: Whether to provision the target database. *Note: currently only supported for MongoDB.*
 
 Target (for SQL Server)
@@ -351,24 +363,28 @@ Target (for SQL Server)
 
   * **Config**: sqlServer/saveParallel
   * **Required**: No
+  * **Default**: 2
   * **Description**: The number of batches to save in parallel. Depends on your bandwidth to SQL Server and its processing power.
 
 * ``--sqlBatch <sqlBatch>``: 
 
   * **Config**: sqlServer/saveBatchSize
   * **Required**: No
+  * **Default**: 500
   * **Description**: The number of resources to save in each batch. SQL Server must be able to process it within the CommandTimeout. It is recommended to set this value to at least 500 for optimal performance.
 
 * ``--sqlTimeout <sqlTimeout>``: 
 
   * **Config**: sqlServer/commandTimeOut
   * **Required**: No
+  * **Default**: 60
   * **Description**: The time SQL Server is allowed to process a batch of resources.
 
 * ``--sqlExistQryPar <sqlExistQryPar>``: 
 
   * **Config**: sqlserver/queryExistenceParallel
   * **Required**: No
+  * **Default**: 4
   * **Description**: The number of parallel threads querying the DB to check whether a resource exists (only when ``--update-existing-resources`` is set to false).
 
 Target (for MongoDB)
@@ -384,24 +400,28 @@ Target (for MongoDB)
 
   * **Config**: mongodb/entryCollection
   * **Required**: No
+  * **Default**: vonkentries
   * **Description**: Collection name for entries.
 
 * ``--mongoPar <mongoPar>``: 
 
   * **Config**: mongodb/saveParallel
   * **Required**: No
+  * **Default**: 2
   * **Description**: The number of batches to save in parallel. Depends on your bandwidth to MongoDb and its processing power.
 
 * ``--mongoExistQryPar <mongoExistQryPar>``: 
 
   * **Config**: mongodb/queryExistenceParallel
   * **Required**: No
+  * **Default**: 4
   * **Description**: The number of parallel threads querying the DB to check whether a resource exists (only when ``--update-existing-resources`` is set to false).
 
 * ``--mongoBatch <mongoBatch>``: 
 
   * **Config**: mongodb/batchSize
   * **Required**: No
+  * **Default**: 500
   * **Description**: The number of resources to save in each batch.
 
 Workflow
@@ -411,54 +431,63 @@ Workflow
 
   * **Config**: workflow/readBufferSize
   * **Required**: No
+  * **Default**: 750
   * **Description**: Number of resources to buffer after reading.
 
 * ``--metaPar <metaPar>``: 
 
   * **Config**: workflow/metaParallel
   * **Required**: No
+  * **Default**: 1
   * **Description**: Number of threads to assign metadata. Should be higher than ReadParallel.
 
 * ``--metaBuffer <metaBuffer>``: 
 
   * **Config**: workflow/metaBufferSize
   * **Required**: No
+  * **Default**: 50
   * **Description**: Number of resources to buffer for assigning metadata.
 
 * ``--typePar <typePar>``: 
 
   * **Config**: workflow/typeParallel
   * **Required**: No
+  * **Default**: 4
   * **Description**: Number of threads to add type information. Should be higher than ReadParallel.
 
 * ``--typeBuffer <typeBuffer>``: 
 
   * **Config**: workflow/typeBufferSize
   * **Required**: No
+  * **Default**: 50
   * **Description**: Number of resources to buffer for adding type information.
 
 * ``--absRelPar <absRelPar>``: 
 
   * **Config**: workflow/absoluteToRelativeParallel
   * **Required**: No
+  * **Default**: 1
   * **Description**: Number of threads when converting absolute to relative references. Should be higher than ReadParallel.
 
 * ``--absRelBuffer <absRelBuffer>``: 
 
   * **Config**: workflow/absoluteToRelativeBufferSize
   * **Required**: No
+  * **Default**: 50
   * **Description**: Number of resources to buffer when converting absolute to relative references.
 
 * ``--indexPar <indexPar>``: 
 
   * **Config**: workflow/indexParallel
   * **Required**: No
+  * **Default**: -1 (no limit)
   * **Description**: Number of threads to index the search parameters. This is typically the most resource-intensive step and should have the most threads.
 
 * ``--indexBuffer <indexBuffer>``: 
 
   * **Config**: workflow/indexBufferSize
   * **Required**: No
+  * **Default**: 50
   * **Description**: Number of resources to buffer for indexing the search parameters.
 
 
@@ -469,12 +498,14 @@ Telemetry
 
   * **Config**: OpenTelemetryOptions/EnableMetrics
   * **Required**: No
+  * **Default**: false
   * **Description**: Enable or disable OpenTelemetry metrics.
 
 * ``--OpenTelemetryOptions/Endpoint <endpoint>``: 
 
   * **Config**: OpenTelemetryOptions/Endpoint
   * **Required**: No
+  * **Default**: http://localhost:4317
   * **Description**: OpenTelemetry endpoint for metrics.
 
 Other

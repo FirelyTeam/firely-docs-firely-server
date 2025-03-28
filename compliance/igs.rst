@@ -279,13 +279,13 @@ Payors are responsible of managing these lists. Based on ATR lists, providers ca
      - Realm
      - Specification Link
 
-   * - * ✔️ v2.0.0-ballot
+   * - * ✔️ v2.0.0
   
-     - n/A
+     - * n/A
 
      - * 🇺🇸
 
-     - * `hl7.fhir.us.davinci-atr|2.0.0-ballot <https://registry.fhir.org/package/hl7.fhir.us.davinci-atr|2.0.0-ballot>`_
+     - * `hl7.fhir.us.davinci-atr|2.0.0 <https://registry.fhir.org/package/hl7.fhir.us.davinci-atr|2.0.0>`_
 
 Known Limitations
 -----------------

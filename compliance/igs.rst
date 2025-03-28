@@ -244,12 +244,14 @@ By creating a common data format, the CPCDS facilitates the seamless sharing of 
      - Specification Link
 
    * - * ✔️ v2.0.0
+       * ✔️ v2.1.0
   
-     - n/A
+     - * n/A
 
      - * 🇺🇸
 
      - * `hl7.fhir.us.carin-bb|2.0.0 <https://registry.fhir.org/package/hl7.fhir.us.carin-bb|2.0.0>`_
+       * `hl7.fhir.us.carin-bb|2.1.0 <https://registry.fhir.org/package/hl7.fhir.us.carin-bb|2.1.0>`_
 
 Known Limitations
 -----------------

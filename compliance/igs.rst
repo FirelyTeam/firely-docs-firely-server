@@ -99,13 +99,13 @@ These patterns are intended for FHIR RESTful operations while focusing on the ma
      - Realm
      - Package Link
 
-   * - * ✔️ v1.1.1
+   * - * ✔️ v1.1.3
   
      - * :ref:`Auditing<feature_auditing>`
 
      - * 🌍
 
-     - * `ihe.iti.balp|1.1.1 <https://registry.fhir.org/package/ihe.iti.balp|1.1.1>`_
+     - * `ihe.iti.balp|1.1.3 <https://registry.fhir.org/package/ihe.iti.balp|1.1.3>`_
 
 ------------
 

@@ -294,6 +294,36 @@ Known Limitations
 * The ``_until`` parameter is not supported as part of the Bulk Date Export operations.
 * The ``$davinci-data-export`` wrapper around ``$export`` is not supported.
 
+Da Vinci - Da Vinci Payer Data Exchange
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The `"PDex" Implementation Guide <https://hl7.org/fhir/us/davinci-pdex/STU2/>`_ supports payer-to-payer data exchange, enabling payers to retrieve information about newly enrolled members who request data from their previous health plans.
+It also establishes a foundation for making clinical claims data—such as diagnoses, procedures, and drug codes—accessible to members via a Patient Access API.
+
+.. list-table:: Da Vinci - Da Vinci Payer Data Exchange Overview
+   :widths: 10, 10, 10, 10
+   :header-rows: 1
+
+   * - Supported version
+     - Supporting documentation
+     - Realm
+     - Specification Link
+
+   * - * ✔️ v2.0.0
+  
+     - * n/A
+
+     - * 🇺🇸
+
+     - * `hl7.fhir.us.davinci-pdex|2.0.0 <https://registry.fhir.org/package/hl7.fhir.us.davinci-pdex|2.0.0>`_
+
+Known Limitations
+-----------------
+
+* The same Limitations for ``$davinci-data-export`` as for the DaVinci ATR implementation guide apply.
+* The ``CoverageToLink`` parameter within the $member-match (single) is not supported
+* The Bulk Member Matching process is not supported
+
 ------------
 
 .. _isik_ig:

@@ -315,7 +315,7 @@ The ISiK FHIR implementation guide aims to improve interoperability and the exch
 
    * - * ✔️ v1.0.7
   
-     - n/A
+     - * n/A
 
      - * 🇩🇪
 

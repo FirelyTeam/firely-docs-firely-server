@@ -382,8 +382,6 @@ This section describes how to spin up a Firely Server container and a MongoDB co
 
 .. code-block:: yaml
    :linenos:
-
-   version: '3'
 	 
    services:
 	 

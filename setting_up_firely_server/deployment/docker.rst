@@ -44,7 +44,7 @@ Navigate to your working directory for Firely Server and run the container with 
 
 - in cmd.exe: ``docker run -d -p 8080:4080 --name firely.server -v %CD%/firelyserver-license.json:/app/firelyserver-license.json firely/server``
 
-- in Powershell: ``docker run -d -p 8080:4080 --name firely.server -v ${PWD}/firelyserver-license.json:/app/firelyserver-license.json firely/server``
+- in Powershell / Bash on macOS: ``docker run -d -p 8080:4080 --name firely.server -v ${PWD}/firelyserver-license.json:/app/firelyserver-license.json firely/server``
 
 If your license file has a different name, use that name instead of ``firelyserver-license`` on the left side of the `-v` parameter in the command above. E.g. ``-v ${PWD}/my-fancy-license.json:/app/firelyserver-license.json``
 

@@ -168,8 +168,8 @@ Be sure to mount your appsettings.instance.json as well, and make sure to point 
 .. code-block::
 
   "AdministrationImportOptions": {
-		"ImportDirectory": "./vonk-import",
-    "ImportedDirectory": "./vonk-imported"
+	"ImportDirectory": "./vonk-import",
+    	"ImportedDirectory": "./vonk-imported"
   }
 
 By default, Firely server will assume the resources placed in the vonk-import folder are R3 resources. If you want to load R4 or R5 resources, you need to alter the name of your import folder and volume accordingly:
@@ -261,8 +261,6 @@ We will use docker-compose to achieve this.
 
 .. code-block:: yaml
    :linenos:
-
-   version: '3'
    
    services:
      vonk-web:
@@ -326,8 +324,6 @@ To run the Firely Server container we will use the following docker-compose file
 
 .. code-block:: yaml
    :linenos:
-
-   version: '3'
 
    services:
  
@@ -438,8 +434,6 @@ If you use docker-compose, you can specify the variable in you docker-compose fi
 
 .. code-block:: yaml
    :linenos:
-
-   version: '3'
 
    services:
 

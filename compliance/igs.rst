@@ -294,6 +294,8 @@ Known Limitations
 * The ``_until`` parameter is not supported as part of the Bulk Date Export operations.
 * The ``$davinci-data-export`` wrapper around ``$export`` is not supported.
 
+.. _davinci_pdex_ig:
+
 Da Vinci - Da Vinci Payer Data Exchange
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

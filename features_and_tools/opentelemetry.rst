@@ -95,7 +95,7 @@ Firely Server's OpenTelemetry integration provides the following usages:
     Traces can be sent to tools like `Jaeger <https://www.jaegertracing.io/>`_ or `Seq <https://datalust.co/seq>`_ to monitor and analyze the processing of individual requests. This helps in identifying bottlenecks or errors in the request handling pipeline.
 
 2. **Monitoring Dashboards**:
-    Metrics collected by Firely Server can be exported to `Prometheus <https://prometheus.io/>`_ and visualized in `Grafana <https://grafana.com/>`_ to create monitoring dashboards. These dashboards provide insights into the overall performance and health of the server, such as request rates, latencies, and error rates.
+    Metrics collected by Firely Server can be exported to a time series database like `Prometheus <https://prometheus.io/>`_ and visualized in `Grafana <https://grafana.com/>`_ or ingested directly in `Azure Application Insight <https://learn.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview>`_ or its equivalent in other cloud provider. These dashboards provide insights into the overall performance and health of the server, such as request rates, latencies, and error rates.
 
 3. **Using OpenTelemetry Collector**:
     It is recommended to use a service like `OpenTelemetry Collector <https://opentelemetry.io/docs/collector/>`_ to filter, process, and dispatch traces and metrics to different endpoints. The collector acts as a central hub for telemetry data, enabling flexible routing and aggregation of data to various backends.

@@ -208,8 +208,6 @@ Another way to spin up a Firely Server container is to use a docker-compose file
 .. code-block:: yaml
    :linenos:
 
-   version: '3'
-
    services:
 
      vonk-web:

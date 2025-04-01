@@ -11,14 +11,6 @@ If you are not sure what would be the best option for your use case, or if you h
   :width: 250px
   :alt: Illustration of Firely server
 
-* :ref:`vonk_basic_installation`
-* :ref:`use_docker`
-* :ref:`azure_webapp`
-* :ref:`deploy_helm`
-* :ref:`deploy_reverseProxy`
-
-
-
 .. toctree::
    :maxdepth: 2
    :titlesonly:
@@ -27,6 +19,55 @@ If you are not sure what would be the best option for your use case, or if you h
    Binaries <binaries>
    Docker <docker>
    Kubernetes / Helm <helm>
-   Azure <azureWebApp>
+   Azure Web App Service <azureWebApp>
    Reverse Proxy <reverseproxy/reverseProxy>
 
+.. rubric:: Local deployment
+
+**Advantages:**
+
+- Quick setup for development or evaluation purposes.
+- Ideal for developers testing Firely Server on their local machine.
+- No dependency on external infrastructure or orchestration tools.
+
+.. seealso:: 
+   See :ref:`use_binaries`
+
+------
+
+.. rubric:: Docker
+
+**Advantages:**
+
+- Simple and reproducible deployment using Docker images.
+- Minimal setup required
+- Easily integrates with CI/CD pipelines and container registries when integrating Firely Serve into existing products and workflows
+
+.. seealso:: 
+   See :ref:`use_docker`
+
+------
+
+.. rubric:: Azure Web App Service
+
+**Advantages:**
+
+- Fully managed hosting with built-in scaling, patching, and monitoring.
+- Easy deployment of containerized Firely Server with minimal DevOps overhead.
+
+.. seealso:: 
+   See :ref:`azure_webapp`
+
+------
+
+.. rubric:: Kubernetes (with Helm chart)
+
+**Advantages:**
+
+- Scalable and highly available deployment across multiple nodes for high availability.
+- Declarative configuration using Helm for easier version control and automation.
+- Ideal for enterprise environments with existing Kubernetes infrastructure.
+- Compatible with all clouds (AKS, EKS, GKE) and on-prem clusters.
+
+.. seealso:: 
+   See :ref:`deploy_helm`

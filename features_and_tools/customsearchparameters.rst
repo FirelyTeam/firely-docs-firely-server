@@ -131,7 +131,7 @@ Adding a New SearchParameter
 Follow these steps to add a new `SearchParameter` to a running Firely Server instance:
 
 1. **Create the SearchParameter Resource**  
-   Define the `SearchParameter` resource in either JSON or XML format. Ensure that it includes the required fields such as `url`, `name`, `code`, `base`, and `expression`. For example:
+   Define the `SearchParameter` resource. Ensure that it includes the required fields. For example:
 
    .. code-block:: json
 
@@ -139,6 +139,7 @@ Follow these steps to add a new `SearchParameter` to a running Firely Server ins
         "resourceType": "SearchParameter",
         "url": "http://example.org/fhir/SearchParameter/Patient-example",
         "name": "example",
+        "description": "example description",
         "status": "active",
         "code": "example",
         "base": ["Patient"],

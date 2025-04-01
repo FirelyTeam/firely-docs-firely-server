@@ -48,7 +48,7 @@ If you are not sure what would be the best option for your use case, or if you h
 
 ------
 
-.. rubric:: Azure Web App Service
+.. rubric:: Azure App Service
 
 **Advantages:**
 

@@ -64,7 +64,7 @@ If you are not sure what would be the best option for your use case, or if you h
 
 **Advantages:**
 
-- Scalable and highly available deployment across multiple nodes for high availability.
+- Scalable deployment across multiple nodes for high availability.
 - Declarative configuration using Helm for easier version control and automation.
 - Ideal for enterprise environments with existing Kubernetes infrastructure.
 - Compatible with all clouds (AKS, EKS, GKE) and on-prem clusters.

@@ -1,7 +1,7 @@
 .. _feature_opentelemetry:
 
-Opentelemetry
-==================
+OpenTelemetry
+=============
 
 .. note::
 

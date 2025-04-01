@@ -40,7 +40,7 @@ If you are not sure what would be the best option for your use case, or if you h
 **Advantages:**
 
 - Simple and reproducible deployment using Docker images.
-- Minimal setup required
+- Minimal setup required.
 - Easily integrates with CI/CD pipelines and container registries when integrating Firely Serve into existing products and workflows
 
 .. seealso:: 

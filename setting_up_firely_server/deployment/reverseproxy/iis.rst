@@ -42,7 +42,7 @@ Prerequisites
    Web Deploy on the hosting system. To install Web Deploy, you can use the Web Platform Installer 
    (https://www.microsoft.com/web/downloads/platform.aspx).
 
-6. Install the `.NET Core Runtime & Hosting bundle <https://dotnet.microsoft.com/download/dotnet-core/3.1>`_ on the hosting system. After installing it, you may need to do a “net stop was /y” and “net start w3svc” to ensure all the changes are picked up for IIS. The bundle installs the .NET Core Runtime, .NET Core Library, and the ASP.NET Core Module. ASP.NET Core Module (ANCM) allows you to run ASP.NET Core applictions using Kestrel behind IIS. For more information about ANCM check https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/aspnet-core-module
+6. Install the `.NET Core Runtime & Hosting bundle <https://dotnet.microsoft.com/en-us/download/dotnet/8.0>`_ on the hosting system. After installing it, you may need to do a “net stop was /y” and “net start w3svc” to ensure all the changes are picked up for IIS. The bundle installs the .NET Core Runtime, .NET Core Library, and the ASP.NET Core Module. ASP.NET Core Module (ANCM) allows you to run ASP.NET Core applictions using Kestrel behind IIS. For more information about ANCM check https://docs.microsoft.com/en-us/aspnet/core/fundamentals/servers/aspnet-core-module
 
 6. Prepare binaries. You can either download the binaries for Firely Server (see :ref:`vonk_getting_started`), or create your own solution by building a facade.
 
@@ -102,7 +102,7 @@ Configuration
     </handlers>
 
 
-- You can configure the Firely Server using the appsettings.json file (see :ref:`configure_vonk`).
+- You can configure the Firely Server using the appsettings.json file (see :ref:`configure_appsettings`).
 
 - If you are building a Firely Server facade, you can use IISOptions to configure IISIntegration service options. You can read more about IISOptions at
   https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.iisoptions?view=aspnetcore-2.0.

@@ -32,7 +32,7 @@ and run the server. |br|
 		  }
 		}
 
-1. You can further configure Firely Server by adjusting the ``appsettings.json``. The section :ref:`configure_vonk` explains possible configuration settings.
+1. You can further configure Firely Server by adjusting the ``appsettings.json``. The section :ref:`vonk_setup_FS` explains possible configuration settings.
 
 .. _vonk_run:
 

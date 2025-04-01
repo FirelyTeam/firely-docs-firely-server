@@ -15,4 +15,33 @@ For a production usage, Microsoft SQL Server or MongoDB need to be installed in 
 
 Firely Server should be registered as a startup / system service (Windows Service or systemd on Linux) for operational reliability.
 
-See :ref:`vonk_performance` for some considerations around choosing the right amount of system resources (i.e. available memory, CPUs).
+Minimal platform requirements
+-----------------------------
+
+Firely Server is a high-performance FHIR server designed for scalability and reliability. While it can be deployed in various environments, optimal performance depends on proper provisioning of resources.
+
+**Deployment Options & Operating System:**
+  
+Firely Server is supported on all platforms supported by the `.NET framework <https://github.com/dotnet/core/blob/main/release-notes/8.0/supported-os.md>`_.
+In practice, the choice of operating system should align with your team's operational expertise and familiarity with the platform.
+There are no limitations regarding any hypervisor being used when using a virtual machine instead of a physical server.
+
+**Memory (RAM)**
+
+- Minimum: 2 GB
+- Recommended: 16 GB or more, particularly when working with large datasets. Firely Server caches definitional FHIR artifacts (e.g., StructureDefinitions, ValueSets) in memory to enhance performance.
+
+**CPU**
+
+- Minimum: 2-core X86-64 CPU
+- Recommended: at least 4-core X86-64 CPU
+- Note: More cores benefit concurrent request handling
+
+**Disk Space**
+
+- Minimum: 20 GB of free disk space
+- Recommended: 100 GB+ for production deployments with logging, database growth, and indexing
+- Note: SSD storage is strongly recommended for optimal I/O performance.
+
+
+See :ref:`vonk_performance` for additional considerations around choosing the right amount of system resources when scaling the server (i.e. available memory, CPUs).

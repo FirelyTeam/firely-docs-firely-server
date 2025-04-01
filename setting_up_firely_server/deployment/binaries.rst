@@ -39,9 +39,8 @@ There are no limitations regarding any hypervisor being used when using a virtua
 
 **Disk Space**
 
-- Minimum: 20 GB of free disk space
-- Recommended: 100 GB+ for production deployments with logging, database growth, and indexing
+- Minimum: 1.5 GB of free disk space for the raw installation of Firely Server
+- Recommended: The recommendation depends on the selected production database and expected numbers of resources. MongoDB uses ~4GB for 1 million resources. SQL Server uses ~34GB for 1 million resources.
 - Note: SSD storage is strongly recommended for optimal I/O performance.
-
 
 See :ref:`vonk_performance` for additional considerations around choosing the right amount of system resources when scaling the server (i.e. available memory, CPUs).

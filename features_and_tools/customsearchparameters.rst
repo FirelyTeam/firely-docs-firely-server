@@ -178,9 +178,6 @@ Follow these steps to add a new `SearchParameter` to a running Firely Server ins
 
       GET http(s)://<firely-server-endpoint>/Patient?example=<value>
 
-5. **Monitor Logs and Results**  
-   Check the Firely Server logs for any errors or warnings during the process. Ensure that the search results match the expected behavior.
-
 .. note::
    If you encounter any issues, ensure that the `SearchParameter` resource is valid and that the `expression` field correctly references the desired element in the FHIR resource.
 

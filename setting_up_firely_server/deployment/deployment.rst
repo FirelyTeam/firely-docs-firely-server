@@ -53,7 +53,7 @@ If you are not sure what would be the best option for your use case, or if you h
 **Advantages:**
 
 - Fully managed hosting with built-in scaling, patching, and monitoring.
-- Easy deployment of containerized Firely Server with minimal DevOps overhead.
+- Easy deployment of Firely Server via zipfile with minimal DevOps overhead.
 
 .. seealso:: 
    See :ref:`azure_webapp`

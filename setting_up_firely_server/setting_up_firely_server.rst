@@ -18,7 +18,7 @@ Next, the section :ref:`configure_appsettings` describes the options for configu
    
    Deployment <deployment/deployment>
    Adjusting settings <configure_appsettings>
-   Database Configuration <db_configuration/db_configuration>
+   Database configuration <db_configuration/db_configuration>
    Logging <logsettings>
    opentelemetry
    Appsettings Reference <appsettings_reference>

@@ -477,8 +477,8 @@ For each operation in ``OperationsToBeSecured``, set ``NetworkProtected`` to ``t
     "Administration": {
       "AllowedNetworks": ["127.0.0.1/32", "::1/128"],
       "Operations": {
-        "reindex": {
-          "Name": "reindex",
+        "$reindex": {
+          "Name": "$reindex",
           "Level": ["System"],
           "Enabled": true,
           "NetworkProtected": true
@@ -486,6 +486,8 @@ For each operation in ``OperationsToBeSecured``, set ``NetworkProtected`` to ``t
         // other operations...
       }
     }
+
+Note that the name of the operation is now prefixed with a "$" sign.
 
 **3. SmartAuthorizationOptions Protected**
 

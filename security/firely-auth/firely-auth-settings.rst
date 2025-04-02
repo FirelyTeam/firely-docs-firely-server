@@ -324,6 +324,9 @@ Clients
 
 The ``ClientRegistration`` is used to register the :term:`clients <client>` that are allowed to request access tokens from Firely Auth.
 
+These settings will be imported into the database only when starting Firely Auth for the first time with a new database. After subsequent starts, the clients must be managed in the database via the web interface, which will allow client updates without needing to restart Firely Auth.
+In order to add clients in the web interface, a connection to :ref:`firely_auth_settings_server` must be established.
+
 .. code-block:: json
 
   "ClientRegistration": {
@@ -496,7 +499,7 @@ External identity providers
 - ``DisplayName``: Name that will be displayed in the UI of Firely Auth for users to select which identity provider to use if multiple are configured or if a local login is enabled as well.
 - ``ClientId``: ClientId of Firely Auth that will be used in the implicit token flow in order to retrieve an id token from the external identity provider.
 - ``ClientSecret``: ClientSecret of Firely Auth that will be used in the implicit token flow in order to retrieve an id token from the external identity provider.
--	``AllowAutoProvision``: true / false - If true, Firely Auth will automatically create a user in its own database if the user logs in with an external identity provider for the first time. The user will be created with the claims that are provided by the external identity provider.
+-	``AllowAutoProvision``: true / false - If true, Firely Auth will automatically create a user in its own database if the user logs in with an external identity provider for the first time. The user will be created with the claims that are provided by the external identity provider. A request to Firely Server will attempt to match the user to a ``Patient`` or ``Practitioner`` resource and, if found, the respective resource ID will be used as the fhirUser claim. 
 - ``AutoProvisionFromSecurityGroup``: When ``AllowAutoProvision`` is true, this setting allows you to specify a security group that the user must be a member of in order to be automatically provisioned. If the user is not a member of this group, the user will not be automatically provisioned.
 - ``UserClaimsFromIdToken``: This setting allows you to map the claims from the token that is received from the external identity provider to the claims that are stored in the Firely Auth database. The key is the claim that is received from the external identity provider. This key can be copied as a value that is recognized by Firely Auth. For intance, Azure is able to provide fhirUser claim to the token, but will prefix this claim with ``extn.``. The CopyAs field can be used to remove this prefix, so that Firely Auth is able to recognize the fhirUser claim.
 - ``FhirUserLookupClaimsMapping``: As an alternative for retrieving the FhirUser Claim from the ``UserClaimsFromIdToken`` setting, ``FhirUserLookupClaimsMapping`` allows you to use the claims from the ID token to search for a users respective resource in Firely Server. This can either be a Patient resource or a Practitioner recource. Firely Auth will then use the id of this resource to derive the fhirUser claim of the user upon SSO auto-provisioning. Multiple mappings can be provided. Each search parameter will be combined using a logical  AND while searching for the fhirUser resource. The fhirUser is only derived if there is an unambiguous match in Firely Server.

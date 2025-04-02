@@ -514,7 +514,6 @@ For each operation in ``SmartAuthorizationOptions.Protected.Operation``, set ``R
         "Level": ["Type", "Instance"],
         "Enabled": true,
         "RequireAuthorization": "Always",
-        "NetworkProtected": false,
         "RequireTenant": "WhenTenancyEnabled"
       },
       "$everything": {
@@ -522,7 +521,6 @@ For each operation in ``SmartAuthorizationOptions.Protected.Operation``, set ``R
         "Level": ["Instance"],
         "Enabled": true,
         "RequireAuthorization": "Always",
-        "NetworkProtected": false,
         "RequireTenant": "WhenTenancyEnabled"
       }
     }
@@ -593,7 +591,6 @@ Here's an example of the new operation configuration structure:
           "Level": ["System"],
           "Enabled": true,
           "RequireAuthorization": "WhenAuthEnabled",
-          "NetworkProtected": false,
           "RequireTenant": "Never"
         },
         "capabilities": {
@@ -601,7 +598,6 @@ Here's an example of the new operation configuration structure:
           "Level": ["System"],
           "Enabled": true,
           "RequireAuthorization": "Never",
-          "NetworkProtected": false,
           "RequireTenant": "Never"
         },
         "create": {
@@ -609,7 +605,6 @@ Here's an example of the new operation configuration structure:
           "Level": ["Type"],
           "Enabled": true,
           "RequireAuthorization": "WhenAuthEnabled",
-          "NetworkProtected": false,
           "RequireTenant": "WhenTenancyEnabled"
         },
         "$validate": {
@@ -617,7 +612,6 @@ Here's an example of the new operation configuration structure:
           "Level": ["System", "Type", "Instance"],
           "Enabled": true,
           "RequireAuthorization": "WhenAuthEnabled",
-          "NetworkProtected": false,
           "RequireTenant": "WhenTenancyEnabled",
           "OperationScope": "validation"
         }

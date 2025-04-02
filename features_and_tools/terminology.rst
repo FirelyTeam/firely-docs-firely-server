@@ -26,7 +26,7 @@ Operations
 ValueSet $validate-code
 -----------------------
 
-:definition: http://www.hl7.org/implement/standards/fhir/valueset-operation-validate-code.html
+:definition: https://hl7.org/fhir/valueset-operation-validate-code.html
 :notes: 
    * Available on the type level ``<firely-server-endpoint>/administration/ValueSet/$validate-code`` and the instance level ``<firely-server-endpoint>/administration/ValueSet/<id>/$validate-code``.
    * Only the parameters url, valueSet, valueSetVersion, code, system, display, coding, codeableConcept, abstract are supported.
@@ -36,7 +36,7 @@ ValueSet $validate-code
 ValueSet $expand
 ----------------
 
-:definition: http://www.hl7.org/implement/standards/fhir/valueset-operation-expand.html
+:definition: https://hl7.org/fhir/valueset-operation-expand.html
 :notes:
    * Available on the type level ``<firely-server-endpoint>/administration/ValueSet/$expand`` and the instance level ``<firely-server-endpoint>/administration/ValueSet/<id>/$expand``.
    * Only the parameters url, valueSet, valueSetVersion and includeDesignations are supported.
@@ -46,7 +46,7 @@ ValueSet $expand
 CodeSystem $lookup
 ------------------
 
-:definition: http://www.hl7.org/implement/standards/fhir/codesystem-operation-lookup.html
+:definition: https://hl7.org/fhir/codesystem-operation-lookup.html
 :notes:
    * Available on the type level ``<firely-server-endpoint>/administration/CodeSystem/$lookup``.
    * Only the parameters code, system, version, coding and date are supported. 
@@ -56,7 +56,7 @@ CodeSystem $lookup
 CodeSystem $find-matches / $compose
 -----------------------------------
 
-:definition: http://www.hl7.org/implement/standards/fhir/codesystem-operation-find-matches.html
+:definition: https://hl7.org/fhir/codesystem-operation-find-matches.html
 :notes:
    * Available on the type level ``<firely-server-endpoint>/administration/CodeSystem/$find-matches`` and the instance level ``<firely-server-endpoint>/administration/CodeSystem/<id>/$find-matches``.
    * Only the parameters system, exact, version, property.code and property.value are supported.
@@ -68,7 +68,7 @@ CodeSystem $find-matches / $compose
 CodeSystem $subsumes
 --------------------
 
-:definition: http://www.hl7.org/implement/standards/fhir/codesystem-operation-subsumes.html
+:definition: https://hl7.org/fhir/codesystem-operation-subsumes.html
 :notes:
    * Available on the type level ``<firely-server-endpoint>/administration/CodeSystem/$subsumes``.
    * Only the parameters codeA, codeB, system, and version are supported.
@@ -78,7 +78,7 @@ CodeSystem $subsumes
 ConceptMap $closure
 --------------------
 
-:definition: http://www.hl7.org/implement/standards/fhir/conceptmap-operation-closure.html
+:definition: https://hl7.org/fhir/conceptmap-operation-closure.html
 :notes:
    * Available on the system level ``<firely-server-endpoint>/administration/$closure``.
    * This operation is passed on to a Remote Terminology Service supporting it. It supports any parameters that the Remote service supports. 
@@ -87,7 +87,7 @@ ConceptMap $closure
 ConceptMap $translate
 ---------------------
 
-:definition: http://www.hl7.org/implement/standards/fhir/conceptmap-operation-translate.html
+:definition: https://hl7.org/fhir/conceptmap-operation-translate.html
 :notes:
    * Available on the instance level ``<firely-server-endpoint>/administration/ConceptMap/[id]/$translate`` and the type level ``<firely-server-endpoint>/administration/ConceptMap/$translate``.
    * Only the parameters url, conceptMap (on POST), conceptMapVersion, code, system, version, source, target, targetsystem and reverse are supported.

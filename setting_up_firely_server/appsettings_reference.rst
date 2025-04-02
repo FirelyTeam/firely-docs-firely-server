@@ -648,7 +648,6 @@ For custom operations, you need to explicitly add them to the ``Operations`` sec
         "Level": ["Type"],
         "Enabled": true,
         "RequireAuthorization": "WhenAuthEnabled",
-        "NetworkProtected": false,
         "RequireTenant": "WhenTenancyEnabled",
         "OperationScope": "custom-operation"
       }

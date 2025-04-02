@@ -576,6 +576,7 @@ When VirtualMultitenancy is disabled:
 - Operations with ``RequireTenant: "Never"`` will work without tenant information
 
 This property is only applicable to standard FHIR operations (under the main ``Operations`` section). Administrative operations do not support this property as they operate at the system level across all tenants.
+See :ref:`feature_multitenancy` for more details about multitenancy.
 
 Example Configuration
 ^^^^^^^^^^^^^^^^^^^^^

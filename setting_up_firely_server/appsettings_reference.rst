@@ -1,145 +1,7 @@
-.. _configure_appsettings:
+.. _fs_settings_reference:
 
-Firely Server settings
-======================
-
-Firely Server settings are controlled in json configuration files called ``appsettings(.*).json``. The possible settings in these files are all the same and described below.
-The different files are read in a hierarchy so you can control settings on different levels. All appsettings files are in the Firely Server distribution directory, next to Firely.Server.dll.
-We go through all the sections of this file and refer you to detailed pages on each of them.
-
-You can also control :ref:`configure_envvar`.
-
-Changes to the settings require a restart of Firely Server.
-
-.. _configure_levels:
-
-Hierarchy of settings
----------------------
-
-Firely Server reads its settings from these sources, in this order:
-
-:appsettings.default.json: Installed with Firely Server, contains default settings and a template setting if no sensible default is available.
-:appsettings.json: You can create this one for your own settings. Because it is not part of the Firely Server distribution, it will not be overwritten by a next Firely Server version.
-:environment variables: See :ref:`configure_envvar`.
-:appsettings.instance.json: You can create this one to override settings for a specific instance of Firely Server. It is not part of the Firely Server distribution.
-                            This file is especially useful if you run multiple instances on the same machine.
-
-Settings lower in the list override the settings higher in the list (think CSS, if you're familiar with that).
-
-.. warning::
-
-   JSON settings files can have arrays in them. The configuration system can NOT merge arrays.
-   So if you override an array value, you need to provide all the values that you want in the array.
-   In the Firely Server settings this is relevant for e.g. Validation.AllowedProfiles and for the PipelineOptions.
-
-.. note::
-   By default in ASP.NET Core, if on a lower level the array has more items, you will still inherit those extra items.
-   We fixed this in Firely Server, an array will always overwrite the complete base array.
-   To nullify an array, add the value with an array with just an empty string in it::
-
-     "PipelineOptions": {
-       "Branches": [
-         {
-           "Path": "myroot",
-           "Exclude": [""]
-         }
-       ]
-     }
-
-   This also means you cannot override a single array element with an environment variable. (Which was tricky anyway - relying on the exact number and order of items in the original array.)
-
-.. _configure_change_settings:
-
-Changing the settings
----------------------
-
-In general you do not change the settings in ``appsettings.default.json`` but create your own overrides in ``appsettings.json`` or ``appsettings.instance.json``. That way your settings are not overwritten by a new version of Firely Server (with a new ``appsettings.default.json`` therein), and you automatically get sensible defaults for any new settings introduced in ``appsettings.default.json``.
-
-Settings after first install
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-After you installed Firely Server (see :ref:`vonk_getting_started`), either:
-
-* copy the ``appsettings.default.json`` to ``appsettings[.instance].json`` and remove settings that you do not intend to alter, or
-* create an empty ``appsettings[.instance].json`` and copy individual parts from the ``appsettings.default.json`` if you wish to adjust them.
-
-Adjust the new ``appsettings[.instance].json`` to your liking using the explanation below.
-
-When running :ref:`Firely Server on Docker<use_docker>` you probably want to adjust the settings using the :ref:`Environment Variables<configure_envvar>`.
-
-Settings after update
-^^^^^^^^^^^^^^^^^^^^^
-
-If you install the binaries of an updated version of Firely Server, you can:
-
-* copy the new binaries over the old ones, or
-* deploy the new version to a new directory and copy the ``appsettings[.instance].json`` over from the old version.
-
-In both cases, check the :ref:`vonk_releasenotes` to see if settings have changed, or new settings have been introduced.
-If you want to adjust a changed / new setting, copy the relevant section from ``appsettings.default.json`` to your own ``appsettings[.instance].json`` and then adjust it.
-
-Commenting out sections
-^^^^^^^^^^^^^^^^^^^^^^^
-
-JSON formally has no notion of comments. But the configuration system of ASP.Net Core (and hence Firely Server) accepts double slashes just fine::
-
-    "Administration": {
-        "Repository": "SQLite", //Memory / SQL / MongoDb
-        "SqlDbOptions": {
-            "ConnectionString": "connectionstring to your Firely Server Admin SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
-            "SchemaName": "vonkadmin",
-            "AutoUpdateDatabase": true,
-            "MigrationTimeout": 1800 // in seconds
-            //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
-        },
-
-This will ignore the AutoUpdateConnectionString.
-
-.. _configure_settings_path:
-
-Providing settings in a different folder
-----------------------------------------
-
-It can be useful or even necessary to provide settings outside of the Firely Server folder itself, e.g. when mounting the settings to a Docker container. That is possible. 
-
-1. Provide an environment variable named ``VONK_PATH_TO_SETTINGS``, set to the folder where the settings are to be read from. This path can be absolute or relative to the Firely Server directory.
-2. In this folder you must provide at least one of the following files:
-
-   1. ``appsettings.instance.json``
-   2. ``logsettings.instance.json``
-   3. ``auditlogsettings.instance.json``
-
-3. These files will be read with the same :ref:`priority <configure_levels>` as they would have if they were in the Firely Server directory. 
-
-Note that if you provide this environment variable, then:
-
-#. The designated folder must exist.
-#. At least one of the three files must be present.
-#. The account that runs Firely Server must have read access to each of the files.
-#. The Firely Server directory itself will no longer be scanned for any of the three files. So if you want to use any of the three ``*.instance.json`` files, you must provide all of them in the designated directory.
-
-Examples: 
-
-::
-
-    VONK_PATH_TO_SETTINGS=./config
-
-This relative path would read e.g. ``<Firely Server directory>/config/appsettings.instance.json``.
-
-::
-
-    VONK_PATH_TO_SETTINGS=/usr/config
-
-This absolute path would read e.g. ``/usr/config/appsettings.instance.json``.
-
-.. _log_configuration:
-
-Log of your configuration
--------------------------
-
-Because the hierarchy of settings can be overwhelming, Firely Server logs the resulting configuration.
-To enable that, the loglevel for ``Vonk.Server`` must be ``Information`` or more detailed. That is set for you by default in ``logsettings.default.json``.
-Refer to :ref:`configure_log` for information on setting log levels.
+Firely Server settings reference
+================================
 
 Administration
 --------------
@@ -440,7 +302,7 @@ See :ref:`restful_crud`.
 Enable or disable interactions
 ------------------------------
 
-The ``Operations`` section provides granular control over each operation, allowing you to enable/disable and configure authorization requirements for standard and custom operations. Please see :ref:`configure_operations` for detailed information on the configuration structure.
+The ``Operations`` section provides granular control over each operation, allowing you to enable/disable and configure authorization requirements for standard and custom operations.
 
 Example configuration for enabling a custom operation:
 
@@ -453,6 +315,341 @@ Example configuration for enabling a custom operation:
         "Enabled": true,
         "RequireAuthorization": "WhenAuthEnabled",
         "RequireTenant": "WhenTenancyEnabled"
+      }
+    }
+
+Introduction
+^^^^^^^^^^^^
+
+Firely Server 6.0 introduces a completely revamped operations configuration structure that provides more granular control over each operation. This new structure unifies previously scattered configuration settings from multiple sections into a cohesive and comprehensive model.
+
+**Key Benefits**
+
+- **Unified Configuration**: All operation settings are now in one place
+- **Granular Control**: Fine-grained control over individual operations
+- **Explicit Configuration**: All configuration options are explicitly defined
+- **Enhanced Security**: More detailed access control and authorization options
+
+New Configuration Structure
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The new configuration uses a top-level ``Operations`` section that contains operation configurations organized by operation name:
+
+.. code-block:: json
+
+    "Operations": {
+      "$closure": {
+        "Name": "$closure",
+        "Level": [
+          "System"
+        ],
+        "Enabled": true,
+        "RequireAuthorization": "WhenAuthEnabled",
+        "RequireTenant": "Never"
+      },
+      "capabilities": {
+        "Name": "capabilities",
+        "Level": [
+          "System"
+        ],
+        "Enabled": true,
+        "RequireAuthorization": "Never",
+        "RequireTenant": "Never"
+      },
+      "create": {
+        "Name": "create",
+        "Level": [
+          "Type"
+        ],
+        "Enabled": true,
+        "RequireAuthorization": "WhenAuthEnabled",
+        "RequireTenant": "WhenTenancyEnabled"
+      }
+    }
+
+For administrative operations, a similar structure exists under ``Administration.Operations``:
+
+.. code-block:: json
+
+    "Administration": {
+      "Operations": {
+        "$reindex": {
+          "Name": "$reindex",
+          "Level": [
+            "System"
+          ],
+          "Enabled": true,
+          "NetworkProtected": true
+        },
+        "$reset": {
+          "Name": "$reset",
+          "Level": [
+            "System"
+          ],
+          "Enabled": true,
+          "NetworkProtected": true
+        }
+      }
+    }
+
+Configuration Properties
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Each operation can be configured with the following properties:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 20 15 50 15
+
+   * - Property
+     - Type
+     - Description
+     - Availability
+   * - ``Name``
+     - string
+     - The operation name, matching the key in the Operations dictionary
+     - Regular & Admin
+   * - ``Level``
+     - array of strings
+     - The level(s) at which the operation is available: "System", "Type", and/or "Instance"
+     - Regular & Admin
+   * - ``Enabled``
+     - boolean
+     - Whether the operation is enabled
+     - Regular & Admin
+   * - ``RequireAuthorization``
+     - string
+     - Authorization requirement: "WhenAuthEnabled", "Always", or "Never"
+     - Regular only
+   * - ``OperationScope``
+     - string
+     - Required token scope for the operation (only applies when authorization is enabled)
+     - Regular only
+   * - ``NetworkProtected``
+     - boolean
+     - Whether the operation is restricted to allowed networks
+     - Admin only
+   * - ``RequireTenant``
+     - string
+     - Tenant requirement: "WhenTenancyEnabled", "Always", or "Never"
+     - Regular only
+
+Migration from Previous Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The new configuration structure replaces several previous configuration sections. Here's how to migrate your existing configuration:
+
+**1. SupportedInteractions Section**
+
+**Before (v5.x):**
+
+.. code-block:: json
+
+    "SupportedInteractions": {
+      "InstanceLevelInteractions": "read, vread, update, delete, history, conditional_delete, conditional_update, $validate",
+      "TypeLevelInteractions": "create, search, history, $validate, $snapshot, conditional_create",
+      "WholeSystemInteractions": "capabilities, batch, transaction, history, search, $validate"
+    }
+
+**After (v6.x):**
+
+For each operation, create an entry in the ``Operations`` section with appropriate settings. For standard operations, these are provided by default.
+
+**2. Administration Security OperationsToBeSecured**
+
+**Before (v5.x):**
+
+.. code-block:: json
+
+    "Administration": {
+      "Security": {
+        "AllowedNetworks": ["127.0.0.1", "::1"],
+        "OperationsToBeSecured": ["reindex", "reset", "preload", "importResources"]
+      }
+    }
+
+**After (v6.x):**
+
+For each operation in ``OperationsToBeSecured``, set ``NetworkProtected`` to ``true`` in the corresponding operation configuration:
+
+.. code-block:: json
+
+    "Administration": {
+      "AllowedNetworks": ["127.0.0.1/32", "::1/128"],
+      "Operations": {
+        "$reindex": {
+          "Name": "$reindex",
+          "Level": ["System"],
+          "Enabled": true,
+          "NetworkProtected": true
+        },
+        // other operations...
+      }
+    }
+
+Note that the name of the operation is now prefixed with a "$" sign.
+
+**3. SmartAuthorizationOptions Protected**
+
+**Before (v5.x):**
+
+.. code-block:: json
+
+    "SmartAuthorizationOptions": {
+      "Protected": {
+        "Resource": ["Patient", "Observation"],
+        "Operation": ["$lastn", "$everything"]
+      }
+    }
+
+**After (v6.x):**
+
+For each operation in ``SmartAuthorizationOptions.Protected.Operation``, set ``RequireAuthorization`` to ``"WhenAuthEnabled"`` or ``"Always"`` in the corresponding operation configuration:
+
+.. code-block:: json
+
+    "Operations": {
+      "$lastn": {
+        "Name": "$lastn",
+        "Level": ["Type", "Instance"],
+        "Enabled": true,
+        "RequireAuthorization": "Always",
+        "RequireTenant": "WhenTenancyEnabled"
+      },
+      "$everything": {
+        "Name": "$everything",
+        "Level": ["Instance"],
+        "Enabled": true,
+        "RequireAuthorization": "Always",
+        "RequireTenant": "WhenTenancyEnabled"
+      }
+    }
+
+Operation Configuration Options
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Authorization Options**
+
+The ``RequireAuthorization`` property has three possible values:
+
+1. ``"WhenAuthEnabled"`` (Default): Authorization is required only when authorization is enabled in Firely Server
+2. ``"Always"``: Authorization is always required, server start is prevented when authorization is disabled
+3. ``"Never"``: Authorization is never required, even if server authorization is enabled
+
+This property is only configurable for standard FHIR operations under the main ``Operations`` section. Administrative operations have fixed authorization behavior that cannot be changed.
+
+**Operation Scope**
+
+The ``OperationScope`` property defines the required token scope for an operation. This setting only applies when authorization is enabled in Firely Server.
+
+* If you do not provide a scope, the access token will not need to include any specific scope to perform this operation
+* If you provide a scope, the access token must include that scope to perform this operation
+* For standard scopes, refer to the SMART on FHIR scopes documentation (e.g., patient/Patient.read, user/Observation.write)
+
+For example, if you configure an operation with ``"OperationScope": "http://server.fire.ly/auth/scope/erase-operation"``, then any access token used to access this operation must include the "http://server.fire.ly/auth/scope/erase-operation" scope.
+
+**Network Protection Options**
+
+The ``NetworkProtected`` property controls access restrictions based on IP networks:
+
+1. ``true``: The operation can only be accessed from networks defined in the ``Administration.AllowedNetworks`` configuration
+2. ``false`` (Default): The operation can be accessed from any network
+
+Important: This property is only applicable to administrative operations (under the ``Administration.Operations`` section). It cannot be used with standard FHIR operations and is specifically designed to restrict sensitive administrative operations to specific IP networks.
+
+**Multi-tenancy Options**
+
+The ``RequireTenant`` property controls whether an operation requires tenant information with three possible values:
+
+1. ``"WhenTenancyEnabled"`` (Default): The operation requires tenant information only when VirtualMultitenancy is enabled
+2. ``"Always"``: The operation always requires tenant information; server start is prevented when VirtualMultitenancy is disabled
+3. ``"Never"``: The operation never requires tenant information, even if VirtualMultitenancy is enabled
+
+When VirtualMultitenancy is enabled:
+- Operations with ``RequireTenant: "WhenTenancyEnabled"`` will require a tenant to be specified in the request
+- Operations with ``RequireTenant: "Always"`` will require a tenant to be specified in the request
+- Operations with ``RequireTenant: "Never"`` will work without a tenant specification
+
+When VirtualMultitenancy is disabled:
+- Operations with ``RequireTenant: "WhenTenancyEnabled"`` will work without tenant information
+- Operations with ``RequireTenant: "Always"`` will prevent Firely Server from starting
+- Operations with ``RequireTenant: "Never"`` will work without tenant information
+
+This property is only applicable to standard FHIR operations (under the main ``Operations`` section). Administrative operations do not support this property as they operate at the system level across all tenants.
+See :ref:`feature_multitenancy` for more details about multitenancy.
+
+Example Configuration
+^^^^^^^^^^^^^^^^^^^^^
+
+Here's an example of the new operation configuration structure:
+
+.. code-block:: json
+
+    {
+      "Operations": {
+        "$closure": {
+          "Name": "$closure",
+          "Level": ["System"],
+          "Enabled": true,
+          "RequireAuthorization": "WhenAuthEnabled",
+          "RequireTenant": "Never"
+        },
+        "capabilities": {
+          "Name": "capabilities",
+          "Level": ["System"],
+          "Enabled": true,
+          "RequireAuthorization": "Never",
+          "RequireTenant": "Never"
+        },
+        "create": {
+          "Name": "create",
+          "Level": ["Type"],
+          "Enabled": true,
+          "RequireAuthorization": "WhenAuthEnabled",
+          "RequireTenant": "WhenTenancyEnabled"
+        },
+        "$validate": {
+          "Name": "$validate",
+          "Level": ["System", "Type", "Instance"],
+          "Enabled": true,
+          "RequireAuthorization": "WhenAuthEnabled",
+          "RequireTenant": "WhenTenancyEnabled",
+          "OperationScope": "validation"
+        }
+      },
+      "Administration": {
+        "AllowedNetworks": ["127.0.0.1/32", "::1/128"],
+        "Operations": {
+          "$reindex": {
+            "Name": "$reindex",
+            "Level": ["System"],
+            "Enabled": true,
+            "NetworkProtected": true
+          },
+          "$reset": {
+            "Name": "$reset",
+            "Level": ["System"],
+            "Enabled": true,
+            "NetworkProtected": true
+          }
+        }
+      }
+    }
+
+**Custom Operations**
+
+For custom operations, you need to explicitly add them to the ``Operations`` section with all required properties. Core operations like read, create, update, etc. are enabled by default, but custom operations must be explicitly configured.
+
+.. code-block:: json
+
+    "Operations": {
+      "$myCustomOperation": {
+        "Name": "$myCustomOperation",
+        "Level": ["Type"],
+        "Enabled": true,
+        "RequireAuthorization": "WhenAuthEnabled",
+        "RequireTenant": "WhenTenancyEnabled",
+        "OperationScope": "custom-operation"
       }
     }
 

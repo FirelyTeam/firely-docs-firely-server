@@ -7,7 +7,7 @@
 Configure http and https
 ========================
 
-You can enable http and/or https and adjust the port numbers for them in :ref:`configure_appsettings`.
+You can enable http and/or https and adjust the port numbers of Firely Server as described below.
 
 Changing the port number
 ------------------------

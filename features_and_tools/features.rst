@@ -18,6 +18,7 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    documenthandling
    binarywrapper
    terminology
+   validation
    firely-server-ingest
    customresources
    customsearchparameters
@@ -27,9 +28,9 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    subscription
    x-provenance
    pubsub
-   opentelemetry
    realworldtesting
    multi-tenancy
+   available_plugins
    features-availability
    
 

@@ -248,6 +248,7 @@ Seq server::
 
 * Change ``serverUrl`` to the URL of your Seq server
 * ``restrictedToMinimumLevel``: as described for `Console`_.
+* Use ``apiKey`` to use an authenticated connection between Firely Server and Seq, see `Serilog Seq documentation <https://github.com/datalust/serilog-sinks-seq?tab=readme-ov-file#json-appsettingsjson-configuration>`_.
 
 Elasticsearch
 ^^^^^^^^^^^^^

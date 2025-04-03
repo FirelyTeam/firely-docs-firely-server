@@ -15,7 +15,7 @@ The administration database is key for the management and maintenance of Firely 
    :maxdepth: 1
    :titlesonly:
 
-   altering
+   alerting
    administration_api
    conformanceresources
    upgrade

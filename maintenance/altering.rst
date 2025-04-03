@@ -1,6 +1,6 @@
 .. _upgrade:
 
-Altering for critical errors
+Alerting for critical errors
 ============================
 
 Ensuring uninterrupted operation of the Firely Server in production is crucial, as business processes built on top of the FHIR server require high availability.

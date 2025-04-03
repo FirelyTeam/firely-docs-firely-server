@@ -3,7 +3,7 @@
 Firely Server Administration API
 ================================
 
-The Administration database utilizes the Administration API. The endpoint for this API is:
+The Firely Server is fully manageable through RESTful interactions via the Administration API. This API provides access to the administration database and supports a range of maintenance operations.
 ::
 
    http(s)://<firely-server-endpoint>/administration
@@ -11,11 +11,11 @@ The Administration database utilizes the Administration API. The endpoint for th
 The following functions are available in the Administration API:
 
 * :ref:`conformance`
-* :ref:`feature_subscription`
+* :ref:`Enabling Subscriptions <feature_subscription>`
 * :ref:`feature_customsp_reindex`
-* :ref:`feature_resetdb`
+* :ref:`Reseting the database <feature_resetdb>`
 * :ref:`feature_preload`
-* :ref:`feature_terminology`
+* :ref:`Executing terminology operations <feature_terminology>`
 
 .. _configure_administration:
 
@@ -50,7 +50,7 @@ You can configure the Administration API, including restricting access to functi
 .. _configure_administration_repository:
 
 Choosing your storage
-^^^^^^^^^^^^^^^^^^^^^
+---------------------
 The Administration API uses a database separately from the main 'Firely Server Data' database. Historically, SQL Server, MongoDB and Memory are supported as databases for the Administration API.
 |br| As of Firely Server (Vonk) version 0.7.1, SQLite is advised for this, and we have made that the default configuration. See :ref:`configure_sqlite` on how to configure for this.
 
@@ -68,8 +68,8 @@ The Administration API uses a database separately from the main 'Firely Server D
 
 .. _configure_administration_access:
 
-Limited access
-^^^^^^^^^^^^^^
+Limiting access
+---------------
 
 You can restrict access to administrative operations by setting the ``NetworkProtected`` property to ``true`` in each operation's configuration under ``Administration.Operations``:
 
@@ -106,6 +106,10 @@ Operations that can be secured include:
 * ``ValueSet`` (restrict both read and write)
 * ``CodeSystem`` (restrict both read and write)
 * ``CompartmentDefinition`` (restrict both read and write)
+* ``StructureMap`` (restrict both read and write)
+* ``ConceptMap`` (restrict both read and write)
+* ``Library`` (restrict both read and write)
+* ``Measure`` (restrict both read and write)
 * ``Subscription``: (restrict both read and write, see :ref:`feature_subscription`)
 
 The following rules apply for network configuration:

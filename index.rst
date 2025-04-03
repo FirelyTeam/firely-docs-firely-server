@@ -28,8 +28,9 @@ or support contract.
    Maintenance and Management <maintenance/maintenance>
    Features and Tools <features_and_tools/features>
    Security and Tools <security/security>
+   Performance <performance/performance_firely_server>
    Programming API Reference<reference/reference>
    Compliance & Certification <compliance/compliance>
-   Releases <releasenotes/releasenotes>
+   Upgrading and Release Notes <releasenotes/releasenotes>
    FAQ <faq>
    contact

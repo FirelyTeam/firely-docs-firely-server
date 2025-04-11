@@ -46,6 +46,7 @@ Features
 #. With this release ``Update with no changes (No-Op)`` is enabled by default. For more information about the plugin see :ref:`restful_noop`.
 #. The use of other compartments then Patient in SMART on FHIR authorization is not well defined and potentially unsafe. So we redacted the ``Filters`` settings in ``SmartAuthorizationOptions``. You can now only specify a filter on the Patient compartment. For more information see :ref:`feature_accesscontrol_config`. If you configured just a Patient filter in the old format, Firely Server will interpret it in the new format and log a warning that you should update your settings. If you configured a filter on a different compartment, Firely Server will log an error and halt.
 #. Added support for reading messages from a Kafka topic when using Firely Server PubSub
+#. We have updated the validator api that is used by Firely Server for improved validation.
 
 Programming API changes
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -82,5 +83,12 @@ Configuration
 .. attention::
     This change requires migration of your configuration files. The old configuration structure is no longer supported.
 
+.. attention::
+    With the introduction of the new validator it is no longer allowed to use id fields containing underscores (``_``) in the resource id.
+
 .. note::
     With the release of Firely Server 6.0, we will officially stop support for Firely Server v4.x. We will continue supporting customers that run Firely Server v5.x.
+
+.. note::
+    If MultiTenancy is enabled, the ``history`` and ``vread`` operations are blocked for all resources. This is to prevent the possibility of cross-tenant access to resources. The ``history`` and ``vread`` operations are not supported in a multi-tenant environment.
+

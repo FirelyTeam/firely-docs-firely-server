@@ -8,6 +8,9 @@ Firely Server v6 introduces an enhanced MongoDB database migration process. In c
 .. warning::
    Please note that any snapshot produced by the bulk data export functionality will not be available after the migration. Bulk data export data is excluded from the migration process.
 
+.. note::
+   The FSI migration tool only supports migrations from Firely Server v5.0.0 and later to Firely Server v6.0.0 and later. If you are still using Firely Server v4, please upgrade to a v5 version before migrating or contact our support team for assistance.
+
 Architecture Overview
 ---------------------
 
@@ -88,7 +91,7 @@ Migration of Main Database
          --srcMongoCollection $SOURCE_COLLECTION_NAME \
          --srcMongoConnectionString $SOURCE_CONNECTION_STRING \
          --srcMongoRunningMode $RUNNING_MODE \
-         --update-existing-resources ErrorOnConflict \
+         --update-existing-resources OnlyIfNewer \
          --dbType MongoDb \
          --mongoConnectionstring $CONNECTION_STRING \
          --mongoCollection $COLLECTION_NAME \
@@ -118,7 +121,7 @@ Migration of Main Database
          --srcMongoCollection $SOURCE_COLLECTION_NAME `
          --srcMongoConnectionString $SOURCE_CONNECTION_STRING `
          --srcMongoRunningMode $RUNNING_MODE `
-         --update-existing-resources ErrorOnConflict `
+         --update-existing-resources OnlyIfNewer `
          --dbType MongoDb `
          --mongoConnectionstring $CONNECTION_STRING `
          --mongoCollection $COLLECTION_NAME `

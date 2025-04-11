@@ -135,7 +135,7 @@ Sharding on MongoDB is protected by a license token: ``http://fire.ly/vonk/plugi
 To enable sharding, you need to:
 
 #. Install `MongoDB Shell (mongosh) <https://www.mongodb.com/products/tools/shell>`_ for sharding configuration
-#. Set up a `sharded cluster <https://docs.mongodb.com/manual/sharding/>`_.
+#. Set up a `sharded cluster <https://docs.mongodb.com/manual/sharding/>`_. Note that the shard key should only be created and applied to the collection after initialization by Firely Server/FSI, see the following steps.
 #. Configure the MongoDB connection string to point to the mongos instance of the sharded cluster.
 #. Initialize the sharded cluster with the Firely Server database and collection by running Firely Server once, or by using FSI to initialize the schema (see :ref:`tool_fsi`). For the latter, these are the commands:
 

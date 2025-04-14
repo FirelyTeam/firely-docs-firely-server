@@ -194,7 +194,12 @@ Terminology
       //    "SupportedInformationModels": [ "Fhir3.0", "Fhir4.0" ],
       //    "Endpoint": "https://fhir.loinc.org/",
       //    "Username": "",
-      //    "Password": ""
+      //    "Password": "",
+      //    "ClientId": "",
+      //    "ClientSecret": "",
+      //    "TokenEndpoint": "",
+      //    "Scopes": "",
+      //    "RemoteTerminologyAuthentication": "Basic", // Jwt or Basic
       //  }
       //]
     },

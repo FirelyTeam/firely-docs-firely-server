@@ -858,6 +858,21 @@ Auditing
 
 Refer to :ref:`feature_auditing`.
 
+.. _configure_cors:
+
+
+Cross Origin Resource Sharing (CORS)
+------------------------------------
+
+::
+
+  "AllowedOrigins": [
+    "https://*"
+  ]
+
+Since Firely Server provides an API that is expected to be consumed by applications from different domains, CORS is enabled for any origin.
+However they need to be initiated using a https connection. 
+
 .. _settings_pipeline:
 
 Configuring the Firely Server Pipeline

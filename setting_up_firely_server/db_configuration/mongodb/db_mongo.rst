@@ -211,7 +211,8 @@ Tips and hints for using MongoDb for Firely Server
 
 #. With regards to Firely Server version and MongoDB version:
     #. If you are on a Firely Server (Vonk) version < v3.6, you can keep using MongoDB v4.0 or higher.
-    #. If you are on Firely Server (Vonk) v3.6 or higher and are unable to migrate to MongoDB 4.4 (relatively soon), please contact us if you need assistance.
+    #. If you are on Firely Server (Vonk) v3.6 or higher and are unable to migrate to MongoDB 4.4.
+    #. For Firely Server v6.0 and higher, MongoDB 6.0 is required.
 
 .. _mongodb_diskspace:
 

@@ -13,8 +13,8 @@ Current Firely Server release notes (v6.x)
 =======
 
 
-Release 6.0.0, [Month] [Date], 2024
----------------------------------------
+Release 6.0.0, April 15th, 2025
+-------------------------------
 
 Firely is proud to announce a new major version of Firely Server. This release represents a significant step forward in our commitment to providing a reliable, compliant, and easy to use FHIR server.
 With this new version, we've focused on delivering:

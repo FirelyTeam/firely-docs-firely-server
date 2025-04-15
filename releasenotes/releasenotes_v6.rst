@@ -28,6 +28,7 @@ With this new version, we've focused on delivering:
 
 Please study the release notes carefully as they contain breaking changes to the behavior of Firely Server, as well as the configuration of the server. 
 Our support team is happy to provide assistance in the upgrade and can be reached at `server@fire.ly <mailto:server@fire.ly>`_ or through the support desk.
+Need hands-on support with your upgrade? Our expert consultants are here to help. Explore our `Upgrade Support Package <https://fire.ly/upgrade-support-package/>`_ to get started.
 
 .. note::
     With the release of Firely Server 6.0, we will officially stop support for Firely Server v4.x. We will continue supporting customers that run Firely Server v5.x.

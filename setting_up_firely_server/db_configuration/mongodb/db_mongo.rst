@@ -13,8 +13,8 @@ Using MongoDB
 
 We assume you already have MongoDB installed. If not, please refer to the `MongoDB download <https://www.mongodb.com/download-center>`_ pages.
 
-Firely Server can work with MongoDb 4.0 and higher. Since Firely Server (Vonk) version 3.7.0 Firely Server uses the MongoDb Aggregation Framework heavily, and you are advised to upgrade to MongoDb 4.4 (or newer). 
-In this version issue `SERVER-7568 <https://jira.mongodb.org/browse/SERVER-7568>` is solved, so the most selective index is used more often.
+Firely Server can work with MongoDb 6.0 and higher.
+In this version issue `SERVER-7568 <https://jira.mongodb.org/browse/SERVER-7568>`_ is solved, so the most selective index is used more often.
 
 .. note:: 
     Using the correct Read and Write Concern for your MongoDb replica set is very important:
@@ -107,9 +107,6 @@ This works the same as with the normal Firely Server database, except that you:
 MongoDB Transactions
 --------------------
 
-.. note::
-    When utilizing MongoDb transactions we strongly advise to use MongoDb v4.2 or higher.
-
 In Firely Server versions prior to v4.9.0 transactions were simulated for development and test purposes. From Firely Server v4.9.0 and onwards transactions using MongoDb are now fully supported.
 
 With MongoDb transactions, there are a few things to consider:
@@ -126,6 +123,83 @@ With MongoDb transactions, there are a few things to consider:
 #. Although MongoDb transactions are supported as early as v4.0, please be aware of the following issue. In MongoDb v4.0 all write operations are contained in a single oplog entry. The oplog entry for the transaction must be within the BSON document size limit of 16MB. For v4.2+ every write operation gets its own oplog entry. This removes the 16MB total size limit for a transaction imposed by the single oplog entry for all its write operations. Note that each single oplog entry still has a limit of 16 MB. We highly recommend in using MongoDb v4.2 or higher when using transactions.
 #. Please read the official MongoDb documentation for production considerations when using transactions: `MongoDb manual <https://www.mongodb.com/docs/manual/core/transactions-production-consideration/>`_
 
+.. _configure_mongodb_sharding:
+
+MongoDB Sharding
+----------------
+
+Firely Server supports sharding with MongoDB. Sharding is a method for distributing data across multiple machines. It is a MongoDB feature that allows you to scale horizontally, i.e. across many servers.
+
+Sharding on MongoDB is protected by a license token: ``http://fire.ly/vonk/plugins/repository/mongo-db/sharding``. Please check whether your license includes this token. If not, please contact us.
+
+To enable sharding, you need to:
+
+#. Install `MongoDB Shell (mongosh) <https://www.mongodb.com/products/tools/shell>`_ for sharding configuration
+#. Set up a `sharded cluster <https://docs.mongodb.com/manual/sharding/>`_. Note that the shard key should only be created and applied to the collection after initialization by Firely Server/FSI, see the following steps.
+#. Configure the MongoDB connection string to point to the mongos instance of the sharded cluster.
+#. Initialize the sharded cluster with the Firely Server database and collection by running Firely Server once, or by using FSI to initialize the schema (see :ref:`tool_fsi`). For the latter, these are the commands:
+
+      .. code-block:: bash
+          :caption: Bash
+ 
+          COLLECTION_NAME=vonkentries
+          CONNECTION_STRING=<YOUR_CONNECTION_STRING_INCLUDING_DB_NAME>
+          LICENSE_FILE=<path-to-your-license-file>
+ 
+          fsi \
+          --provisionTargetDatabase true \
+          --dbType MongoDb \
+          --mongoConnectionstring $CONNECTION_STRING \
+          --mongoCollection $COLLECTION_NAME \
+          --license $LICENSE_FILE \
+          --sourceType None
+ 
+       .. code-block:: powershell
+          :caption: PowerShell
+ 
+          $COLLECTION_NAME = "vonkentries"
+          $CONNECTION_STRING = "<YOUR_CONNECTION_STRING_INCLUDING_DB_NAME>"
+          $LICENSE_FILE = "<path-to-your-license-file>"
+ 
+          fsi `
+          --provisionTargetDatabase true `
+          --dbType MongoDb `
+          --mongoConnectionstring $CONNECTION_STRING `
+          --mongoCollection $COLLECTION_NAME `
+          --license $LICENSE_FILE `
+          --sourceType None
+ 
+#. Shard the ``vonkentries`` collection:
+
+    #. See the `MongoDB manual <https://www.mongodb.com/docs/atlas/atlas-ui/collections/#shard-a-collection/>`_ for more information on sharding collections.
+    #. Use this as the shard key: ``{ im: 1, type: 1, res_id: "hashed" }``.
+    #. With MongoShell you can run the following command to shard the collection:
+
+       .. code-block:: bash
+          :caption: Bash
+ 
+          DB_NAME=vonkdata
+          COLLECTION_NAME=vonkentries
+          CONNECTION_STRING=<YOUR_CONNECTION_STRING>
+ 
+          mongosh $CONNECTION_STRING <<EOF
+          sh.shardCollection("$DB_NAME.$COLLECTION_NAME", { im: 1, type: 1, res_id: "hashed" });
+          EOF
+ 
+       .. code-block:: powershell
+          :caption: PowerShell
+ 
+          $DB_NAME = "vonkdata"
+          $COLLECTION_NAME = "vonkentries"
+          $CONNECTION_STRING = "<YOUR_CONNECTION_STRING>"
+ 
+          mongosh $CONNECTION_STRING --eval @"
+          sh.shardCollection("$DB_NAME.$COLLECTION_NAME", { im: 1, type: 1, res_id: "hashed" })
+          "@
+
+
+From now on, the sharding is transparent to Firely Server and works with all requests and operations.
+
 Tips and hints for using MongoDb for Firely Server
 --------------------------------------------------
 
@@ -137,7 +211,8 @@ Tips and hints for using MongoDb for Firely Server
 
 #. With regards to Firely Server version and MongoDB version:
     #. If you are on a Firely Server (Vonk) version < v3.6, you can keep using MongoDB v4.0 or higher.
-    #. If you are on Firely Server (Vonk) v3.6 or higher and are unable to migrate to MongoDB 4.4 (relatively soon), please contact us if you need assistance.
+    #. If you are on Firely Server (Vonk) v3.6 or higher and are unable to migrate to MongoDB 4.4.
+    #. For Firely Server v6.0 and higher, MongoDB 6.0 is required.
 
 .. _mongodb_diskspace:
 

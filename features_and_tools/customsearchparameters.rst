@@ -65,7 +65,7 @@ To re-index all resources for all search parameters, use:
 
 	::
 	
-		POST http(s)://<firely-server-endpoint>/administration/reindex/all
+		POST http(s)://<firely-server-endpoint>/administration/$reindex-all
 		Accept=application/fhir+json (or xml); fhirVersion=3.0 (or 4.0)
 
 This will delete any previously indexed data and extract it again from the resources.
@@ -85,7 +85,7 @@ To re-index all resources for certain search parameters, use:
 
 	::
 	
-		POST http(s)://<firely-server-endpoint>administration/reindex/searchparameters
+		POST http(s)://<firely-server-endpoint>administration/$reindex
 		Accept=application/fhir+json (or xml); fhirVersion=3.0 (or 4.0)
 
 In the body of the POST, you put the name of the search parameters to actually re-index as form parameters:
@@ -122,6 +122,64 @@ Besides that you can also control how many threads run in parallel to speed up t
     },
 
 Use any integer value >= 1.
+
+.. _feature_customsp_add:
+
+Adding a New SearchParameter
+----------------------------
+
+Follow these steps to add a new `SearchParameter` to a running Firely Server instance:
+
+1. **Create the SearchParameter Resource**  
+   Define the `SearchParameter` resource. Ensure that it includes the required fields as described in the `FHIR Core specification <https://www.hl7.org/fhir/searchparameter.html>`_. For example:
+
+   .. code-block:: json
+
+      {
+        "resourceType": "SearchParameter",
+        "url": "http://example.org/fhir/SearchParameter/Patient-example",
+        "name": "example",
+        "description": "example description",
+        "status": "active",
+        "code": "example",
+        "base": ["Patient"],
+        "type": "string",
+        "expression": "Patient.name"
+      }
+
+2. **Post the SearchParameter to the Administration API**  
+   Use the Administration API to add the `SearchParameter` to Firely Server. Send a `POST` request to the following endpoint:
+
+   .. code-block:: bash
+
+      POST http(s)://<firely-server-endpoint>/administration/SearchParameter
+      Content-Type: application/fhir+json
+
+   Include the `SearchParameter` resource in the body of the request.
+
+3. **Re-index the Resources**  
+   After adding the `SearchParameter`, you need to re-index the resources in the database to ensure the new parameter is applied. Use the `$reindex` operation:
+
+   .. code-block:: bash
+
+      POST http(s)://<firely-server-endpoint>/administration/$reindex
+      Content-Type: application/x-www-form-urlencoded
+
+   In the body of the request, specify the `include` parameter with the name of the new `SearchParameter`:
+
+   .. code-block:: text
+
+      include=Patient.example
+
+4. **Verify the SearchParameter**  
+   Once the re-indexing is complete, verify that the new `SearchParameter` is working as expected by performing a search query using the parameter. For example:
+
+   .. code-block:: bash
+
+      GET http(s)://<firely-server-endpoint>/Patient?example=<value>
+
+.. note::
+   If you encounter any issues, ensure that the `SearchParameter` resource is valid and that the `expression` field correctly references the desired element in the FHIR resource.
 
 .. _feature_customsp_limitations:
 

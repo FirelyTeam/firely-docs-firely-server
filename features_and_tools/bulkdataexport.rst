@@ -234,6 +234,8 @@ Making an **$export** request will create a new task in the database with status
 
 .. END-BDE-QUEUED-BODY
 
+.. note:: FHIR resource IDs and references will be exported as relative URIs.
+
 .. _bdeexportstatus:
 
 $exportstatus

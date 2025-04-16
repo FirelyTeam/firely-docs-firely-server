@@ -1,7 +1,7 @@
 .. _vonk_features:
 
-Features and Tools
-==================
+Features
+========
 
 Firely Server offers many features as defined in the FHIR Specification and beyond. Below pages provide you with an overview of these features and tools. Note that for some tools, such as Firely Server Ingest and Bulk Data Export, separate licensing applies. You can always reach out to us at server@fire.ly if you have questions.
 
@@ -18,6 +18,7 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    documenthandling
    binarywrapper
    terminology
+   validation
    firely-server-ingest
    customresources
    customsearchparameters
@@ -28,7 +29,10 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    x-provenance
    pubsub
    realworldtesting
+   multi-tenancy
+   available_plugins
    features-availability
+   
 
 
   

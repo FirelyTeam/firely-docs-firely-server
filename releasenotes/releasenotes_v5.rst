@@ -1,7 +1,7 @@
 .. _vonk_releasenotes_history_v5:
 
-Current Firely Server release notes (v5.x)
-==========================================
+Old Firely Server release notes (v5.x)
+======================================
 
 .. note::
     For information on how to upgrade, please have a look at our documentation on :ref:`upgrade`. You can download the binaries of the latest version from `this site <https://downloads.fire.ly/firely-server/versions/>`_, or pull the latest docker image::
@@ -141,7 +141,6 @@ Feature
 #. Improved debug logging in case JWT / reference token validation fails with an exception.
 #. Exporting relative references to absolute references when sending back a response to a client can now be disabled. See :ref:`uri_conversion` for more details.
 
-.. _vonk_releasenotes_5_9_0:
 
 Release 5.9.1, August 13th, 2024
 --------------------------------

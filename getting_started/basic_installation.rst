@@ -12,7 +12,7 @@ If you want to start using the standard Firely Server in your local environment,
 and run the server. |br|
 
 
-1.	Sign up for an `evaluation license <https://fire.ly/firely-server-trial/>`_. You will receive an email with the license file as well as a link to the download page were you can download the Firely Server binaries with the version of your choosing.
+1.	Sign up for an `evaluation license <https://fire.ly/firely-server-trial/>`_. You will receive an email with the license file as well as a link to the `download page <https://downloads.fire.ly/firely-server>`_ were you can download the Firely Server binaries with the version of your choosing.
 	
 2.	Extract the downloaded files to a location on your system, for example: :code:`C:\FirelyServer`. We will call this the 
 	working directory.
@@ -32,7 +32,7 @@ and run the server. |br|
 		  }
 		}
 
-1. You can further configure Firely Server by adjusting the ``appsettings.json``. The section :ref:`configure_vonk` explains possible configuration settings.
+1. You can further configure Firely Server by adjusting the ``appsettings.json``. The section :ref:`vonk_setup_FS` explains possible configuration settings.
 
 .. _vonk_run:
 

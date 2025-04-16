@@ -13,5 +13,6 @@ The reference documentation lists the available plugins for configuring the pipe
 
    Architecture <architecture>
    Facade <../facade/facade>
+   Plugins <custom_plugins/custom_plugins>
    Programming API <programming_api/programming_api>
    Dependencies and licenses <dependencies>

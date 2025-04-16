@@ -13,6 +13,9 @@ Please take a look at our :ref:`vonk_roadmap` to see which features we are plann
    :maxdepth: 1
    :titlesonly:
 
+   upgrade
+   zero_downtime_migration
+   releasenotes_v6
    releasenotes_v5
    releasenotes_v4
    releasenotes_v3

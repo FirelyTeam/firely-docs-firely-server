@@ -1,7 +1,7 @@
 .. _azure_webapp:
 
-Firely Server deployment on Azure Web App Service
-=================================================
+Firely Server deployment on Azure App Service
+=============================================
 
 In this section we explain how you can deploy Firely Server in the Azure cloud. 
 

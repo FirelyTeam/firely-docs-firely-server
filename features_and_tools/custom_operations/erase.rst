@@ -110,6 +110,31 @@ When SMART on FHIR is enabled on Firely Server, you need the following custom sc
 - Scope ``http://server.fire.ly/auth/scope/erase-operation`` for ``$erase``
 - Scope ``http://server.fire.ly/auth/scope/purge-operation`` for ``$purge``
 
+**Configuration in Firely Server 6.0+**
+
+In Firely Server 6.0+, you need to configure these required scopes using the new Operations configuration structure. Add or update the operation configurations in your appsettings.json file:
+
+.. code-block:: json
+
+    "Operations": {
+      "$erase": {
+        "Name": "$erase",
+        "Level": ["Instance"],
+        "Enabled": true,
+        "RequireAuthorization": "Always",
+        "OperationScope": "http://server.fire.ly/auth/scope/erase-operation"
+      },
+      "$purge": {
+        "Name": "$purge",
+        "Level": ["Instance"],
+        "Enabled": true,
+        "RequireAuthorization": "Always",
+        "OperationScope": "http://server.fire.ly/auth/scope/purge-operation"
+      }
+    }
+
+This configuration ensures that when authorization is enabled, access tokens must include the specified scope to execute the operation.
+
 .. note::
 
   When the above custom scopes are used, the other SMART on FHIR scopes will be ignored by Firely Server. Due to this limitation, scopes for ``$erase`` and ``$purge`` should only be granted to admin users.

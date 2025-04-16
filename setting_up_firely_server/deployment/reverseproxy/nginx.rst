@@ -64,7 +64,7 @@ Now you can run the Firely Server.
 Configuration
 -------------
 
-- To configure the Firely Server, you can use the appsettings.json file (see :ref:`configure_vonk`).
+- To configure the Firely Server, you can use the appsettings.json file (see :ref:`configure_appsettings`).
 
 - To configure Nginx you need to add extra options to the /etc/nginx/sites-available/default or to the nginx.conf file.
 

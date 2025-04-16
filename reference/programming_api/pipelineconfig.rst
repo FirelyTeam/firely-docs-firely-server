@@ -13,5 +13,3 @@ VonkConfigurationAttribute
 :properties:
 
    * ``Order``: Determines the place in the pipeline. See :ref:`vonk_plugins_order` for background.
-
-   .. (Firely Server (Vonk) 3.1.0) * ``IsLicensedAs``: If this configuration configures functionality that is licensed (that usually means: payed for), this defines the token that must be listed in the Firely Server license file to enable this configuration. We advise to use a url that is within your web domain as a token, e.g. ``http://acme.com/vonk/plugins/myawesomeplugin``.

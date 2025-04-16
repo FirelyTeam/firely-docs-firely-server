@@ -27,6 +27,8 @@ If you are interested in Firely Server for commercial use within your organizati
      - Firely Essentials
    * - Firely Scale
      - Firely Scale
+   * - Firely dQM (Digital Quality Measures)
+     - Firely dQM (Digital Quality Measures)
    * - Firely Solution for CMS Interoperability & Prior Authorization Final Rule
      - /
 
@@ -41,7 +43,7 @@ Below you will find some links that help you quickly navigate through the docume
  *  :ref:`I want to see the latest release notes <vonk_releasenotes>`
  *  :ref:`I want to manage the conformance resource in my Firely Server to comply with an implementation guide <conformance>`
  *  :ref:`I want to grant clients secure access to Firely Server <feature_accesscontrol>`
- *  :ref:`I want to add a FHIR API to my database <vonk_facade>`
+ *  :ref:`I want to add a FHIR API to my proprietary database <vonk_facade>`
 
 Adjust Firely Server to your needs
 ----------------------------------
@@ -52,7 +54,7 @@ Firely Server makes use of a repository database to save resources in, as well a
 Next, you might want to think about the method of :ref:`deploying Firely Server <deployment>`. Again, you have several options here, either running :ref:`Firely Server on Docker<use_docker>`, deploying Firely Server with :ref:`kubernetes<deploy_helm>`, hosting Firely Server on :ref:`Azure<azure_webapp>` or using a :ref:`reverse proxy<deploy_reverseProxy>`.
 
 With the database configuration and the deployment in place, it is time to tweak your configuration. Make sure Firely Server validates all incoming resources by configuring the :ref:`validation setting<feature_prevalidation>`.
-Configure :ref:`endpoints <feature_multiversion_endpoints>` for FHIR versions that you want to support, either FHIR STU3, FHIR R4, or FHIR R5. Next, configure the :ref:`processing pipeline<settings_pipeline>` to take along the :ref:`plugins<vonk_plugins_total>` that you would like to use. You also have the option to include :ref:`custom plugins<vonk_plugins>` of your own design.
+Configure :ref:`endpoints <feature_multiversion_endpoints>` for FHIR versions that you want to support, either FHIR STU3, FHIR R4, or FHIR R5. Next, configure the :ref:`processing pipeline<settings_pipeline>` to take along the :ref:`plugins<vonk_available_plugins>` that you would like to use. You also have the option to include :ref:`custom plugins<vonk_plugins>` of your own design.
 
 You can also further configure the :ref:`administration database <administration_api>` that allows you to configure the so-called :ref:`conformance resources <conformance>` that drive parsing, serialization, validation and terminology. The administration database is pre-filled with conformance resources such as the StructureDefinitions, Searchparameters, CodeSystems and ValueSets that come with the FHIR Specification. Beyond that you can use the administration database to make Firely Server aware of:
 

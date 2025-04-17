@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - CatalogEntry",
-    "version": "5.9.1+8273fb74d4fc80b7f800a387afca6c9e06fc0627"
+    "version": "6.0.0-alpha-build-20250416.14+98e1304c34427b9612b0e9dbc99085d535760e24"
   },
   "servers": [
     {

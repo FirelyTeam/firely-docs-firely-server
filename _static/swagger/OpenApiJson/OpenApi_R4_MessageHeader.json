@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MessageHeader",
-    "version": "5.9.1+8273fb74d4fc80b7f800a387afca6c9e06fc0627"
+    "version": "6.0.0-alpha-build-20250416.14+98e1304c34427b9612b0e9dbc99085d535760e24"
   },
   "servers": [
     {
@@ -1874,7 +1874,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Flag creator",
+        "description": "Who and/or what authored the composition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1883,7 +1883,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "Code that identifies this medication",
+        "description": "Code used in URL",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1909,7 +1909,7 @@
       "enterer": {
         "name": "enterer",
         "in": "query",
-        "description": "The party responsible for the entry of the Claim",
+        "description": "Individual who was entering",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1918,7 +1918,7 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "Main clinical acts documented",
+        "description": "The event that triggers the message or link to the event definition.",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1927,7 +1927,8 @@
       "focus": {
         "name": "focus",
         "in": "query",
-        "description": "The actual content of the message",
+        "description": "The focus of an observation when the focus is not the patient of record.",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1935,7 +1936,7 @@
       "receiver": {
         "name": "receiver",
         "in": "query",
-        "description": "The identity of a receiver to list dispenses for",
+        "description": "Who collected the Supply",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1952,7 +1953,8 @@
       "responsible": {
         "name": "responsible",
         "in": "query",
-        "description": "Final responsibility for event",
+        "description": "Who maintains system namespace?",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1969,7 +1971,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Who or where the information in the statement came from",
+        "description": "The device resource",
         "style": "form",
         "schema": {
           "type": "string"

@@ -22,7 +22,6 @@ If you are not sure what would be the best option for your use case, or if you h
    Kubernetes / Helm <helm>
    Reverse Proxy <reverseproxy/reverseProxy>
    HTTP(S) and Port settings <hosting>
-   cors
 
 .. rubric:: Local deployment
 

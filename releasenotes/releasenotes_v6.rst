@@ -8,10 +8,19 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
-.. _vonk_releasenotes_6_0_0:
+.. _vonk_releasenotes_6_1_0:
+
+Release 6.1.0, June 15th, 2025
+------------------------------
+
+Security
+^^^^^^^^
+
+#. AccessPolicy resources can now only be accessed or modified with system-level scopes (e.g., ``system/AccessPolicy.*``). Patient-level scopes (``patient/AccessPolicy.*``) and user-level scopes (``user/AccessPolicy.*``) are not allowed and will be rejected with a 403 Forbidden response.
 
 =======
 
+.. _vonk_releasenotes_6_0_0:
 
 Release 6.0.0, April 15th, 2025
 -------------------------------

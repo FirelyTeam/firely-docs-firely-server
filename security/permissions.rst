@@ -124,7 +124,13 @@ In the example below, we will create an ``AccessPolicyDefinition`` that allows u
     Multiple AccessPolicy resources containing the same Reference will be combined. In the above example if the user Alice is found in another policy with ``user/Patient.c``, the resulting permission will be ``user/Patient.crs``.
     
     
-    (**IMPORTANT**) AccessPolicy resources cannot be accessed or edited with a wildcard resource scope (e.g., ``system/*.*``). To manage AccessPolicy resources, use specific scopes such as ``system/AccessPolicy.*``.
+    (**IMPORTANT**) AccessPolicy resources can only be accessed or modified with a system-level scope (e.g., ``system/AccessPolicy.*``). Patient-level scopes (``patient/AccessPolicy.*``) and user-level scopes (``user/AccessPolicy.*``) are not allowed and will be rejected with a 403 Forbidden response, regardless of whether the scope would be required for the request being executed. To manage AccessPolicy resources, administrators must use a client with proper system-level scope (``system/AccessPolicy.*`` or a subset of CRUDS operations).
+    
+    The access token used for AccessPolicy management should NOT have a fhirUser claim, to avoid being restricted by the very AccessPolicies that the admin is trying to change. The client used for AccessPolicy management should be:
+    
+    * Configured in the authorization server to have the proper allowed scopes
+    * Only available to Firely Server administrators through proper access controls
+    * Used via a client-credentials flow to obtain an access token with the necessary system-level scopes
 
 3. Any request where the 'fhirUser' claim within an access token corresponds to any subject listed in the AccessPolicy, will be filtered according to the AccessPolicyDefinition.
 

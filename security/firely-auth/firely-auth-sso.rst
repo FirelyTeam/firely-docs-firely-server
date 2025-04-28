@@ -116,7 +116,7 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
 
     - Select "Overview".
     - Select "Endpoints"
-    - One of the displayed OAuth 2.0 endpoints can be used as the authority in the settings. It should look like this: ``https://login.microsoftonline.com/<Directory (tenant) ID of the registered application>/v2.0``.
+    - One of the displayed OAuth 2.0 endpoints can be used as the authority in the settings. It should look like this: ``https://login.microsoftonline.com/<Directory (tenant) ID of the registered application>/v2.0``. Please check that the URL uses this exact structure, without any extra subpaths. 
 
 #. Optional: Expose the `groups <https://learn.microsoft.com/en-us/entra/identity-platform/optional-claims?tabs=appui#configure-groups-optional-claims>`_ in the ID token if the SSO auto-provisioning is restricted to certain security groups. As mentioned above, you can configure Azure to add different values to this claim, such as Group ID (the Object ID of the Security Group) or the name of the Security Group. The values listed in the ``AutoProvisionFromSecurityGroup`` setting should match the values of the ``groups`` claim in the ID token.
 
@@ -147,7 +147,7 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
     After creating the directory extension please ensure that the extension is exposed as a claim in the ID token. It needs to be enabled via the "Add optional claim" setting above. Select "ID" as the token type, as well as "extn.fhirUser" as the claim.
     Note that EntraID creates the claim for a directory extension with an "extn" prefix. Therefore, use the ``CopyAs`` setting in Firely Auth to copy the claim as "fhirUser" instead of "extn.fhirUser":
         
-        ::
+        .. code-block:: json
             
 		"ExternalIdentityProviders": {
 		    "IdentityProvider": [{

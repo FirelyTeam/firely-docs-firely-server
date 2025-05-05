@@ -70,18 +70,7 @@ Security
 Feature
 ^^^^^^^
 
-#. Introduced a new setting ``ReverseProxySupport`` enabling limits on which IPs or networks can specify an X-Forwarded-For header for Firely Server. In case the /administration endpoint is not otherwise protected by a firewall, the X-Forwarded-For header could be used previously to bypass the network protections of the API. See :ref:`xforwardedheader` for more details. To retain the old behaviour the following configuration can be used to allow X-Forwarded-* headers from any network source:
-
-    .. code-block::
-
-        "TrustedProxyIPNetworks": [
-            "255.0.0.0/1",
-            "0.0.0.0/1",
-            "::1"
-      ]
-
-    Note: This will have security implications on the network protection of the administration API, due to the interpretation of the X-Forwarded-For header, if the access is not protected on a network layer. In addition, the ASPNETCORE_ENVIRONMENT environment variable needs to be set to "Development".
-
+#. Introduced a new setting ``ReverseProxySupport`` enabling limits on which IPs or networks can specify an X-Forwarded-For header for Firely Server. In case the /administration endpoint is not otherwise protected by a firewall, the X-Forwarded-For header could be used previously to bypass the network protections of the API. See :ref:`xforwardedheader` for more details.
 #. Improved performance of pagination in some scenarios when Firely Server is used with a MongoDB backend.
   - Note that because of the nature of this improvement, for some searches the ``last`` link in the search results bundle will not be available. This is because the last page is not known until the client requests it. The client can still use the ``next`` link to get the next page. For more information see :ref:`navigational_links`.
 

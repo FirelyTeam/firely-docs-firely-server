@@ -122,7 +122,7 @@ For more detailed guidance on defining and implementing FHIR-based measures, ref
 Example Measure
 ^^^^^^^^^^^^^^^
 
-Below are the detials of a Measure resource outlined.
+The following is a FHIR `Measure` resource defining the populations used in an example measure for Blood Pressure Checks for Adults:
 
 .. code-block:: json
    :caption: FHIR Measure Resource – Blood Pressure Check for Adults
@@ -212,3 +212,70 @@ Managing Measures
 ^^^^^^^^^^^^^^^^^
 
 Measures are treated as administrative resources and can be uploaded to the administration endpoint of Firely Server. See :ref:`administration_api` for more details.
+
+----
+
+FHIR Libaries
+-------------
+
+A FHIR Library resource contains one or more representations of the CQL logic that defines the population criteria referenced by the Measure resource. 
+In addition to publishing metadata, the Library includes the original CQL content—encoded in base64—within a content element annotated with contentType "text/cql".
+
+While CQL is designed to be human-readable and author-friendly, it must be translated into ELM to be machine-readable. 
+ELM uses a canonical abstract syntax tree (AST) to represent CQL expressions, decisions, and data references in a structured way. 
+This makes it portable and enables any compliant engine to evaluate the logic consistently, regardless of the original authoring tool.
+
+Firely Server internally uses the open-source `.NET CQL SDK <https://github.com/FirelyTeam/firely-cql-sdk>`_ to compile ELM into executable C# code, enabling enhanced debuggability and high-performance execution. 
+As a result, the ``Library`` resource must include a compiled binary (``.dll`` file), which is dynamically loaded at runtime during the execution of operations such as ``Measure/$evaluate-measure`` or ``Library/$evaluate``.
+
+Compiling CQL
+^^^^^^^^^^^^^
+
+Example Library
+^^^^^^^^^^^^^^^
+
+The following is a FHIR `Library` resource defining the CQL logic used in the Blood Pressure Check for Adults measure:
+
+.. code-block:: json
+   :caption: FHIR Library – Blood Pressure Check Logic
+   :name: bp-check-library
+
+   {
+     "resourceType": "Library",
+     "id": "bp-check-logic",
+     "url": "http://example.org/fhir/Library/bp-check-logic",
+     "version": "1.0.0",
+     "name": "BloodPressureCheckLogic",
+     "title": "Blood Pressure Check Logic",
+     "status": "active",
+     "experimental": true,
+     "type": {
+       "coding": [
+         {
+           "system": "http://terminology.hl7.org/CodeSystem/library-type",
+           "code": "logic-library"
+         }
+       ]
+     },
+     "date": "2025-01-01",
+     "publisher": "Example Health Org",
+     "description": "CQL logic for identifying adult patients with at least one systolic blood pressure reading during the measurement period.",
+     "content": [
+       {
+         "contentType": "text/cql",
+         "data": "bGlicmFyeSBCbG9vZFByZXNzdXJlQ2hlY2tMb2dpYwoKdXNpbmcgRkhJUiB2ZXJzaW9uICcyLjAnCgoiTGV0J3MgZGVmaW5lIHRoZSBNZXN1cmVtZW50IFBlcmlvZCIKZGVmaW5lICJNZWFzdXJlbWVudCBQZXJpb2QiOgogIFBlcmlvZCBmcm9tIFsxLzEvMjAyNSB0byAxMi8zMS8yMDI1XQoKIiBEZWZpbmUgdGhlIGluaXRpYWwgcG9wdWxhdGlvbiBvZiBhZHVsdCBwYXRpZW50cyIKZGVmaW5lICJBZHVsdFBhdGllbnRzIjogCiAgQWdlSW5ZZWFyc0F0KHN0YXJ0IG9mICJNZWFzdXJlbWVudCBQZXJpb2QiKSAmZ3Q7IDE4CgoiIERlZmluZSBwYXRpZW50cyB3aXRoIGEgU3lzdG9saWMgQmxvb2QgUHJlc3N1cmUgT2JzZXJ2YXRpb24iCmRlZmluZSAiSGFzQlBSZWFkaW5nIjogCiAgZXhpc3RzICgKICAgIFtPYnNlcnZhdGlvbjogIlN5c3RvbGljIEJsb29kIFByZXNzdXJlIl0gbwogICAgd2hlcmUgby5jb2RlIGNvZGUgSU4gIkxPSU5DOjg0ODAtNiIKICAgICAgICBhbmQgbw5lLmVmZmVjdGl2ZSBkdXJpbmcgIk1lYXN1cmVtZW50IFBlcmlvZCIKICAp"
+       }
+     ]
+   }
+
+
+
+Managing Libaries
+^^^^^^^^^^^^^^^^^
+
+Libraries are treated as administrative resources and can be uploaded to the administration endpoint of Firely Server. See :ref:`administration_api` for more details.
+
+----
+
+FHIR MeasureReports
+-------------------

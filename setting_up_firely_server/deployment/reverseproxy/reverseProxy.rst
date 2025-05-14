@@ -128,7 +128,7 @@ The ``ReverseProxySupport`` section provides options to configure how Firely Ser
    }
 
 The ``AllowAnyNetworkOrigins`` Option
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The ``AllowAnyNetworkOrigins`` setting is a boolean property that allows you to explicitly permit broad network configurations in any environment (including Production):
 

@@ -83,7 +83,7 @@ To mitigate these risks, Firely Server offers settings that allow specifying net
    There are two ways to allow broad IP configurations:
    
    1. Set the value of the ``ASPNETCORE_ENVIRONMENT`` environment variable to "Development" (not recommended for production)
-   2. Set the new ``AllowAnyNetworkOrigins`` option to ``true`` (available in newer versions)
+   2. Set the ``AllowAnyNetworkOrigins`` option to ``true`` (available in Firely Server v6.1.0 and higher)
    
    Both options will allow Firely Server to start, but with a warning that the configuration has security implications.
 

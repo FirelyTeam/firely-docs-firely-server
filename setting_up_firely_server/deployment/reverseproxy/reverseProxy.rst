@@ -135,8 +135,6 @@ The ``AllowAnyNetworkOrigins`` setting is a boolean property that allows you to 
 - When set to ``false`` (default): Firely Server will block startup if ``TrustedProxyIPNetworks`` contains ``0.0.0.0/0`` or ``0.0.0.0``, unless the environment is set to Development
 - When set to ``true``: Firely Server will allow any network origin configuration in any environment, with a warning about security implications
 
-This setting provides an alternative to setting ``ASPNETCORE_ENVIRONMENT=Development`` just to allow broad network configurations, which previously was the only option and could lead to unintended side effects in other areas of the application.
-
 Security Considerations
 ^^^^^^^^^^^^^^^^^^^^^
 

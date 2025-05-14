@@ -179,14 +179,3 @@ For Production with Network Security at Other Layers:
    }
 
 This configuration trusts all IP addresses as reverse proxies and should only be used when security is enforced at the network layer through firewalls, network security groups, or other mechanisms.
-
-Migration Notes
-^^^^^^^^^^^^^
-
-If you are currently using ``ASPNETCORE_ENVIRONMENT=Development`` to allow any reverse proxy network, you can now:
-
-1. Keep ``ASPNETCORE_ENVIRONMENT`` as Production (or your desired environment)
-2. Add ``"AllowAnyNetworkOrigins": true`` to your ``ReverseProxySupport`` configuration
-3. Continue using ``"TrustedProxyIPNetworks": ["0.0.0.0/0"]`` if necessary
-
-This approach provides more security flexibility while keeping the application environment correctly set for production use.

@@ -81,9 +81,9 @@ To mitigate these risks, Firely Server offers settings that allow specifying net
    If reverse proxy support is enabled, startup will be blocked if the ``TrustedProxyIPNetworks`` setting is configured to accept all IP addresses (e.g., ``0.0.0.0/0`` or ``0.0.0.0``). This is to prevent accidental exposure of the administration endpoints. 
    
    There are two ways to allow broad IP configurations:
-   
-   1. Set the value of the ``ASPNETCORE_ENVIRONMENT`` environment variable to "Development" (not recommended for production)
-   2. Set the ``AllowAnyNetworkOrigins`` option to ``true`` (available in Firely Server v6.1.0 and higher)
+
+   1. Set the ``AllowAnyNetworkOrigins`` option to ``true`` (available in Firely Server v6.1.0 and higher)
+   2. Set the value of the ``ASPNETCORE_ENVIRONMENT`` environment variable to "Development" (not recommended for production)
    
    Both options will allow Firely Server to start, but with a warning that the configuration has security implications.
 

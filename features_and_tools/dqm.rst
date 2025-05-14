@@ -441,3 +441,103 @@ Libraries are treated as administrative resources and can be uploaded to the adm
 
 FHIR MeasureReports
 -------------------
+
+Understanding Populiation results
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+For each population defined in the associated ``Measure``, there should be a corresponding population entry in the ``MeasureReport``.
+Each entry must include a ``count`` of either 0 or 1, indicating whether the patient did not or did meet the population criteria, respectively.
+
+MeasureReport resources are **not** stored on the administration endpoint of Firely Server, but rather on the standard FHIR data endpoint.
+
+Example MeasureReports
+^^^^^^^^^^^^^^^^^^^^^^
+
+The following example shows a FHIR ``MeasureReport`` resource representing the individual evaluation of a single patient against the "Blood Pressure Check for Adults" measure.
+
+.. code-block:: json
+   :caption: FHIR MeasureReport – Individual Result
+   :name: bp-check-measurereport
+
+   {
+     "resourceType": "MeasureReport",
+     "id": "bc23af57-f8a4-408b-9149-f91b4092e6dc",
+     "meta": {
+       "versionId": "5eb91495-f229-4faa-8cb6-e3bcde788a6d",
+       "lastUpdated": "2025-04-16T19:38:13.870+00:00"
+     },
+     "extension": [
+       {
+         "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-MeasureReport.population.description",
+         "valueString": "Measure assessing whether adult patients (18 years or older) had at least one systolic blood pressure reading during the measurement period."
+       }
+     ],
+     "status": "complete",
+     "type": "individual",
+     "measure": "http://example.org/fhir/Measure/bp-check-adults",
+     "subject": {
+       "reference": "Patient/test"
+     },
+     "date": "2025-05-14T00:00:00+00:00",
+     "period": {
+       "start": "2025-01-01T00:00:00+00:00",
+       "end": "2025-12-31T00:00:00+00:00"
+     },
+     "group": [
+       {
+         "id": "9a3f3b12-4e7d-4cf2-8e6a-729e5a21f4b9",
+         "population": [
+           {
+             "id": "initial-population",
+             "code": {
+               "coding": [
+                 {
+                   "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                   "code": "initial-population",
+                   "display": "Initial Population"
+                 }
+               ]
+             },
+             "count": 1
+           },
+           {
+             "id": "numerator",
+             "extension": [
+               {
+                 "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-MeasureReport.population.description",
+                 "valueString": "The number of umbrellas supplied to those suffering from Rock Fall conditions."
+               }
+             ],
+             "code": {
+               "coding": [
+                 {
+                   "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                   "code": "numerator",
+                   "display": "Numerator"
+                 }
+               ]
+             },
+             "count": 1
+           },
+           {
+             "id": "denominator",
+             "extension": [
+               {
+                 "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-MeasureReport.population.description",
+                 "valueString": "Those patients suffering from Rock Fall conditions."
+               }
+             ],
+             "code": {
+               "coding": [
+                 {
+                   "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                   "code": "denominator",
+                   "display": "Denominator"
+                 }
+               ]
+             },
+             "count": 1
+           }
+         ]
+       }
+     ]
+   }

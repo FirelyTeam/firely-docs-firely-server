@@ -101,6 +101,11 @@ Only ``ExecuteStorePlanCommand`` messages can be offloaded to external storage u
 
 Please refer to :ref:`pubsub_clients` to see how to use the claim check pattern in your client application.
 
+.. note::
+  Please note that files in Azure Blob Storage are not deleted automatically. To remove old files, you’ll need to implement a custom cleanup process. 
+  
+  One effective approach is to use `Azure Blob Storage lifecycle management <https://learn.microsoft.com/en-us/azure/storage/blobs/storage-lifecycle-management-concepts>`_.
+
 RabbitMQ Configuration
 ^^^^^^^^^^^^^^^^^^^^^^
 

@@ -74,6 +74,37 @@ You can configure the notifications sent by ``Vonk.Plugin.PubSub.Pub``:
         }
     },
 
+.. _pubsub_claimcheck:
+
+Claim Check Pattern
+^^^^^^^^^^^^^^^^^^^
+
+To reduce the size of messages sent to the message broker, Firely Server supports the claim check pattern for ``ExecuteStorePlanCommand`` messages. With this pattern, the original payload is stored externally (currently only Azure Blob Storage is supported), and the message broker only carries a reference to the payload.
+
+To enable the consumption of such messages, add a ``ClaimCheck`` section under ``PubSub`` in your configuration:
+
+.. code-block:: JSON
+
+    "PubSub": {
+        "ClaimCheck": {
+            "StorageType": "AzureBlobStorage", // or "Disabled"
+            "AzureBlobContainerName": "<your-container-name>",
+            "AzureBlobStorageConnectionString": "<your-connection-string>"
+        }
+    }
+
+- ``StorageType``: Set to ``AzureBlobStorage`` to enable, or ``Disabled`` to turn off claim check.
+- ``AzureBlobContainerName``: The name of the Azure Blob Storage container to use.
+- ``AzureBlobStorageConnectionString``: The connection string for accessing Azure Blob Storage.
+
+Only ``ExecuteStorePlanCommand`` messages can be offloaded to external storage using this pattern. Other message types are always sent in full via the broker.
+
+Please refer to :ref:`pubsub_clients` to see how to use the claim check pattern in your client application.
+
+.. note::
+  Please note that files in Azure Blob Storage are not deleted automatically. To remove old files, you’ll need to implement a custom cleanup process. 
+  
+  One effective approach is to use `Azure Blob Storage lifecycle management <https://learn.microsoft.com/en-us/azure/storage/blobs/storage-lifecycle-management-concepts>`_.
 
 RabbitMQ Configuration
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -965,7 +996,13 @@ See the `MassTransit documentation page <https://masstransit.io/documentation/co
 We provide sample code to connect to the pubsub API in the `firely-pubsub-sample Github Repository <https://github.com/FirelyTeam/firely-pubsub-sample>`_:
 
 * A C# client using the `Firely Server Contract nuget package <https://www.nuget.org/packages/Firely.Server.Contracts>`_ in a ``.Net`` app, 
+
+  * If you want to use the :ref:`pubsub_claimcheck` in your client app, you also need to `configure MassTransit ClaimCheck <https://masstransit.io/documentation/patterns/claim-check>`_ middleware. Then, you need to instantiate a `PubSubClient` with the constructor parameter **useClaimCheckPattern = false**.
 * A typescript client using the `masstransit-rabbitmq npm package <https://www.npmjs.com/package/masstransit-rabbitmq>`_  in a ``Node.js`` app,
+* Python scripts that demo how to send ``ExecuteStorePlanCommand`` messages
+
+  * Using plain ``ExecuteStorePlanCommand`` payload
+  * And using the :ref:`Claim Check <pubsub_claimcheck>` capablilities to send large resources
 * A postman collection displaying the raw queries to setup the infrastructure and send commands and receive events.
 
 .. note::
@@ -986,4 +1023,3 @@ We provide sample code to connect to the pubsub API in the `firely-pubsub-sample
   
   If not using these packages, the client must take responsibility for creating the correct infrastructure before exchanging messages,
   or risk message loss.
-  

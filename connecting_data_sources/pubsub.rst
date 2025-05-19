@@ -79,7 +79,7 @@ You can configure the notifications sent by ``Vonk.Plugin.PubSub.Pub``:
 Claim Check Pattern
 ^^^^^^^^^^^^^^^^^^^
 
-To reduce the size of messages sent to the message broker, Firely Server supports the claim check pattern for ``ExecuteStorePlanCommand`` messages. With this pattern, the original payload is stored externally (currently only Azure Blob Storage is supported), and the message broker only carries a reference to the payload.
+To reduce the size of messages sent to the message broker, Firely Server supports the `claim check pattern <https://masstransit.io/documentation/patterns/claim-check>`_ for ``ExecuteStorePlanCommand`` messages. With this pattern, the original payload is stored externally (currently only Azure Blob Storage is supported), and the message broker only carries a reference to the payload.
 
 To enable the consumption of such messages, add a ``ClaimCheck`` section under ``PubSub`` in your configuration:
 
@@ -98,6 +98,32 @@ To enable the consumption of such messages, add a ``ClaimCheck`` section under `
 - ``AzureBlobStorageConnectionString``: The connection string for accessing Azure Blob Storage.
 
 Only ``ExecuteStorePlanCommand`` messages can be offloaded to external storage using this pattern. Other message types are always sent in full via the broker.
+
+.. container:: toggle
+
+  .. container:: header
+
+    Click to expand
+
+  The message sent to the message broker will look like this:
+
+  .. code-block::
+
+    {
+      "messageType": [
+        "urn:message:Firely.Server.Contracts.Messages.V1:ExecuteStorePlanCommand"
+      ],
+      "headers": {
+        "fhir-release": "R4"
+      },
+      "responseAddress": "rabbitmq://rabbitmq-host/response-exchange?temporary=true",
+      "message": {
+        "payload": {
+          "data-ref": "https://<Azure Storage Account namespace>.blob.core.windows.net/firelyserver/<blob id>.json"
+          }
+        }
+      ...
+    }
 
 Please refer to :ref:`pubsub_clients` to see how to use the claim check pattern in your client application.
 

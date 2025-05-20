@@ -200,6 +200,34 @@ To enable sharding, you need to:
 
 From now on, the sharding is transparent to Firely Server and works with all requests and operations.
 
+
+Chained search parameters optimization
+--------------------------------------
+
+MongoDB isn't particularly efficient at joining collections, so Firely Server uses an optimization where search queries with chained search parameters (e.g. ``GET [base]/DiagnosticReport?subject:Patient.name=peter``) are executed in stages. In the example above, the first stage is to find all patients with the name "peter". The second stage is to find all DiagnosticReports that have a subject that matches one or more patients found in the first stage.
+
+To prevent excessive memory usage or long processing times, Firely Server limits the number of resources returned in the first stage. By default, this limit is set to 35,000 resources. If the result set exceeds this threshold, the server returns an error indicating that the limit has been surpassed.
+
+You can change this limit by setting the ``MongoDbOptions.ChainingThreshold`` and ``Administration.MongoDbOptions.ChainingThreshold`` setting in the configuration file.
+
+.. code-block:: JavaScript
+    
+    {
+        "Administration": {
+            "MongoDbOptions": {
+                "ChainingThreshold": 35000,
+                // ...
+            }
+        },
+        "MongoDbOptions": {
+            "ChainingThreshold": 35000,
+            // ...
+        },
+        // ...
+    }
+
+
+
 Tips and hints for using MongoDb for Firely Server
 --------------------------------------------------
 

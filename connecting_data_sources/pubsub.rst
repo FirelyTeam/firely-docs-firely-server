@@ -103,7 +103,7 @@ Only ``ExecuteStorePlanCommand`` messages can be offloaded to external storage u
 
   .. container:: header
 
-    Click to expand
+    Example message
 
   The message sent to the message broker will look like this:
 
@@ -123,6 +123,28 @@ Only ``ExecuteStorePlanCommand`` messages can be offloaded to external storage u
           }
         }
       ...
+    }
+
+.. container:: toggle
+
+  .. container:: header
+
+    Example payload in Blob Storage
+
+  The ``payload`` field of the message above contains a reference to the message instruction that is stored in Azure Blob Storage. These are the same ``instructions`` of the ExecuteStorePlanCommand discussed in more detail below.
+
+  .. code-block::
+
+    {
+        "instructions": [
+            {
+                "itemId": "Device/device-1",
+                "resourceType": "Device",
+                "resourceId": "device-1",
+                "resource": "{\"resourceType\": \"Device\", \"id\": \"device-1\", \"identifier\": [{\"system\": \"http://example.org/fhir/identifiers/devices\", \"value\": \"HRM123\"}], \"type\": {\"coding\": [{\"system\": \"http://snomed.info/sct\", \"code\": \"86184003\", \"display\": \"Heart rate monitor\"}], \"text\": \"Heart Rate Monitor\"}, \"manufacturer\": \"HealthCorp\", \"modelNumber\": \"HRM-2000\", \"version\": [{\"value\": \"1.0\"}], \"meta\": {\"versionId\": \"a253658c-846e-4ae8-85d5-4c6e3dc6d6ef\", \"lastUpdated\": \"2025-05-19T11:48:03.723283+00:00\"}}",
+                "operation": "Upsert"
+            }
+        ]
     }
 
 Please refer to :ref:`pubsub_clients` to see how to use the claim check pattern in your client application.

@@ -79,7 +79,7 @@ You can configure the notifications sent by ``Vonk.Plugin.PubSub.Pub``:
 Claim Check Pattern
 ^^^^^^^^^^^^^^^^^^^
 
-To reduce the size of messages sent to the message broker, Firely Server supports the claim check pattern for ``ExecuteStorePlanCommand`` messages. With this pattern, the original payload is stored externally (currently only Azure Blob Storage is supported), and the message broker only carries a reference to the payload.
+To reduce the size of messages sent to the message broker, Firely Server supports the `claim check pattern <https://masstransit.io/documentation/patterns/claim-check>`_ for ``ExecuteStorePlanCommand`` messages. With this pattern, the original payload is stored externally (currently only Azure Blob Storage is supported), and the message broker only carries a reference to the payload.
 
 To enable the consumption of such messages, add a ``ClaimCheck`` section under ``PubSub`` in your configuration:
 
@@ -98,6 +98,54 @@ To enable the consumption of such messages, add a ``ClaimCheck`` section under `
 - ``AzureBlobStorageConnectionString``: The connection string for accessing Azure Blob Storage.
 
 Only ``ExecuteStorePlanCommand`` messages can be offloaded to external storage using this pattern. Other message types are always sent in full via the broker.
+
+.. container:: toggle
+
+  .. container:: header
+
+    Example message
+
+  The message sent to the message broker will look like this:
+
+  .. code-block::
+
+    {
+      "messageType": [
+        "urn:message:Firely.Server.Contracts.Messages.V1:ExecuteStorePlanCommand"
+      ],
+      "headers": {
+        "fhir-release": "R4"
+      },
+      "responseAddress": "rabbitmq://rabbitmq-host/response-exchange?temporary=true",
+      "message": {
+        "payload": {
+          "data-ref": "https://<Azure Storage Account namespace>.blob.core.windows.net/firelyserver/<blob id>.json"
+          }
+        }
+      ...
+    }
+
+.. container:: toggle
+
+  .. container:: header
+
+    Example payload in Blob Storage
+
+  The ``payload`` field of the message above contains a reference to the message instruction that is stored in Azure Blob Storage. These are the same ``instructions`` of the ExecuteStorePlanCommand discussed in more detail below.
+
+  .. code-block::
+
+    {
+        "instructions": [
+            {
+                "itemId": "Device/device-1",
+                "resourceType": "Device",
+                "resourceId": "device-1",
+                "resource": "{\"resourceType\": \"Device\", \"id\": \"device-1\", \"identifier\": [{\"system\": \"http://example.org/fhir/identifiers/devices\", \"value\": \"HRM123\"}], \"type\": {\"coding\": [{\"system\": \"http://snomed.info/sct\", \"code\": \"86184003\", \"display\": \"Heart rate monitor\"}], \"text\": \"Heart Rate Monitor\"}, \"manufacturer\": \"HealthCorp\", \"modelNumber\": \"HRM-2000\", \"version\": [{\"value\": \"1.0\"}], \"meta\": {\"versionId\": \"a253658c-846e-4ae8-85d5-4c6e3dc6d6ef\", \"lastUpdated\": \"2025-05-19T11:48:03.723283+00:00\"}}",
+                "operation": "Upsert"
+            }
+        ]
+    }
 
 Please refer to :ref:`pubsub_clients` to see how to use the claim check pattern in your client application.
 

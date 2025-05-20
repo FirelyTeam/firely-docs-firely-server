@@ -206,7 +206,7 @@ Chained search parameters optimization
 
 Because MongoDB is not very performant when it comes to joining collections in the database, Firely Server uses an optimization where search queries that have chained search parameters (e.g. ``GET [base]/DiagnosticReport?subject:Patient.name=peter``) are executed in stages. In the example above, the first stage is to find all patients with the name "peter". The second stage is to find all DiagnosticReports that have a subject that matches one or more patients found in the first stage.
 
-Because the first stage can potentially return a lot of resources, Firely Server limits the number of resources returned in the first stage. This is done to prevent the server from running out of memory or taking too long to process the request. The default limit is set to 35000 resources. If the first stage returns more than this limit, Firely Server will return an error message indicating that the limit has been exceeded.
+To prevent excessive memory usage or long processing times, Firely Server limits the number of resources returned in the first stage. By default, this limit is set to 35,000 resources. If the result set exceeds this threshold, the server returns an error indicating that the limit has been surpassed.
 
 You can change this limit by setting the ``MongoDbOptions.ChainingThreshold`` and ``Administration.MongoDbOptions.ChainingThreshold`` setting in the configuration file.
 

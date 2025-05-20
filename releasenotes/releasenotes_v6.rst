@@ -27,7 +27,7 @@ Improvements and Fixes
 
 #. We improved the behavior of AuditEvent generation in combination with ``$member-match``. The AuditEvent will now capture the Patient ID and Identifier of the member after a successful match.
 #. We improved the performance of snapshot generation queries for Bulk Data Export against a SQL back-end.
-#. We fixed a bug for the Document Handling operation were references of the posted document bundle could not be resolved.
+#. We fixed a bug for the Document Handling operation. Before, references of the posted document bundle could not always be resolved.
 #. We improved error messaging of Firely Server for SoF reference tokens. Operation Outcomes indicating errors with regard to the token would only mention JWT tokens when a reference token was used. As this was misleading, we adjusted the error message to dynamically show the type of token that was used. 
 #. We fixed a bug in the handling of the ``above`` modifier in search queries. Firely Server does not support the ``above`` modifier and would show a large stack trace when this modifier was used in queries. Error handling for the use of this modifier is now improved.
 

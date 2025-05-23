@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - CoverageEligibilityResponse",
-    "version": "6.0.0-alpha-build-20250416.14+98e1304c34427b9612b0e9dbc99085d535760e24"
+    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
   },
   "servers": [
     {
@@ -1809,7 +1809,7 @@
       "created": {
         "name": "created",
         "in": "query",
-        "description": "The creation date for the EOB",
+        "description": "When created",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1819,7 +1819,6 @@
         "name": "disposition",
         "in": "query",
         "description": "The contents of the disposition message",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1827,7 +1826,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "An organization affiliation's Identifier",
+        "description": "External identifier for the example scenario",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1837,7 +1836,6 @@
         "name": "insurer",
         "in": "query",
         "description": "The organization which generated this resource",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1845,8 +1843,7 @@
       "outcome": {
         "name": "outcome",
         "in": "query",
-        "description": "Whether the event succeeded or failed",
-        "style": "form",
+        "description": "The processing outcome",
         "schema": {
           "type": "string"
         }
@@ -1854,7 +1851,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Who the care plan is for\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
+        "description": "Retrieve coverages for a patient",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1863,8 +1860,7 @@
       "request": {
         "name": "request",
         "in": "query",
-        "description": "The identifier of the request associated with the response",
-        "style": "form",
+        "description": "The EligibilityRequest reference",
         "schema": {
           "type": "string"
         }
@@ -1872,8 +1868,7 @@
       "requestor": {
         "name": "requestor",
         "in": "query",
-        "description": "The Provider of the claim",
-        "style": "form",
+        "description": "The EligibilityRequest provider",
         "schema": {
           "type": "string"
         }
@@ -1881,7 +1876,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The current status of the capability statement\r\n* [CodeSystem](codesystem.html): The current status of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The current status of the compartment definition\r\n* [ConceptMap](conceptmap.html): The current status of the concept map\r\n* [GraphDefinition](graphdefinition.html): The current status of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The current status of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The current status of the message definition\r\n* [NamingSystem](namingsystem.html): The current status of the naming system\r\n* [OperationDefinition](operationdefinition.html): The current status of the operation definition\r\n* [SearchParameter](searchparameter.html): The current status of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The current status of the structure definition\r\n* [StructureMap](structuremap.html): The current status of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The current status of the terminology capabilities\r\n* [ValueSet](valueset.html): The current status of the value set\r\n",
+        "description": "The current status of the example scenario",
         "style": "form",
         "schema": {
           "type": "string"

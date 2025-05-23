@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Schedule",
-    "version": "6.0.0-alpha-build-20250416.14+98e1304c34427b9612b0e9dbc99085d535760e24"
+    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
   },
   "servers": [
     {
@@ -1783,8 +1783,7 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Whether this organization affiliation record is in active use",
-        "style": "form",
+        "description": "Is the schedule in active use",
         "schema": {
           "type": "string"
         }
@@ -1792,7 +1791,7 @@
       "actor": {
         "name": "actor",
         "in": "query",
-        "description": "Any one of the individuals participating in the appointment",
+        "description": "Resource for the actor (or group, by role)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1801,7 +1800,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The capability statement publication date\r\n* [CodeSystem](codesystem.html): The code system publication date\r\n* [CompartmentDefinition](compartmentdefinition.html): The compartment definition publication date\r\n* [ConceptMap](conceptmap.html): The concept map publication date\r\n* [GraphDefinition](graphdefinition.html): The graph definition publication date\r\n* [ImplementationGuide](implementationguide.html): The implementation guide publication date\r\n* [MessageDefinition](messagedefinition.html): The message definition publication date\r\n* [NamingSystem](namingsystem.html): The naming system publication date\r\n* [OperationDefinition](operationdefinition.html): The operation definition publication date\r\n* [SearchParameter](searchparameter.html): The search parameter publication date\r\n* [StructureDefinition](structuredefinition.html): The structure definition publication date\r\n* [StructureMap](structuremap.html): The structure map publication date\r\n* [TerminologyCapabilities](terminologycapabilities.html): The terminology capabilities publication date\r\n* [ValueSet](valueset.html): The value set publication date\r\n",
+        "description": "The example scenario publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1810,7 +1809,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "An organization affiliation's Identifier",
+        "description": "External identifier for the example scenario",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1819,8 +1818,7 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "Service Category of the Healthcare Service",
-        "style": "form",
+        "description": "High-level category",
         "schema": {
           "type": "string"
         }
@@ -1828,8 +1826,7 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The type of service provided by this healthcare service",
-        "style": "form",
+        "description": "The type of appointments that can be booked into associated slot(s)",
         "schema": {
           "type": "string"
         }
@@ -1837,8 +1834,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Specific specialty of the participatingOrganization in the context of the role",
-        "style": "form",
+        "description": "Type of specialty needed",
         "schema": {
           "type": "string"
         }

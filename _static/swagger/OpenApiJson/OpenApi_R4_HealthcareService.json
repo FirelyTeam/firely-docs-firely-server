@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - HealthcareService",
-    "version": "6.0.0-alpha-build-20250416.14+98e1304c34427b9612b0e9dbc99085d535760e24"
+    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
   },
   "servers": [
     {
@@ -1848,7 +1848,7 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Whether this organization affiliation record is in active use",
+        "description": "Is the schedule in active use",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1857,7 +1857,8 @@
       "characteristic": {
         "name": "characteristic",
         "in": "query",
-        "description": "One of the HealthcareService's characteristics",
+        "description": "Kind of characteristic",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1873,7 +1874,7 @@
       "endpoint": {
         "name": "endpoint",
         "in": "query",
-        "description": "Technical endpoints providing access to services operated for this role",
+        "description": "The endpoint for the study or series",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1882,7 +1883,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "An organization affiliation's Identifier",
+        "description": "External identifier for the example scenario",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1891,7 +1892,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "The location(s) at which the role occurs",
+        "description": "Geographic region(s) for study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1900,7 +1901,7 @@
       "name": {
         "name": "name",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): Computationally friendly name of the capability statement\r\n* [CodeSystem](codesystem.html): Computationally friendly name of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): Computationally friendly name of the compartment definition\r\n* [ConceptMap](conceptmap.html): Computationally friendly name of the concept map\r\n* [GraphDefinition](graphdefinition.html): Computationally friendly name of the graph definition\r\n* [ImplementationGuide](implementationguide.html): Computationally friendly name of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): Computationally friendly name of the message definition\r\n* [NamingSystem](namingsystem.html): Computationally friendly name of the naming system\r\n* [OperationDefinition](operationdefinition.html): Computationally friendly name of the operation definition\r\n* [SearchParameter](searchparameter.html): Computationally friendly name of the search parameter\r\n* [StructureDefinition](structuredefinition.html): Computationally friendly name of the structure definition\r\n* [StructureMap](structuremap.html): Computationally friendly name of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): Computationally friendly name of the terminology capabilities\r\n* [ValueSet](valueset.html): Computationally friendly name of the value set\r\n",
+        "description": "Computationally friendly name of the example scenario",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1909,7 +1910,8 @@
       "organization": {
         "name": "organization",
         "in": "query",
-        "description": "The organization that provides this Healthcare Service",
+        "description": "Custodian of the consent",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1925,7 +1927,8 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "Service Category of the Healthcare Service",
+        "description": "High-level category",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1933,7 +1936,8 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The type of service provided by this healthcare service",
+        "description": "The type of appointments that can be booked into associated slot(s)",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1941,7 +1945,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Specific specialty of the participatingOrganization in the context of the role",
+        "description": "Type of specialty needed",
         "style": "form",
         "schema": {
           "type": "string"

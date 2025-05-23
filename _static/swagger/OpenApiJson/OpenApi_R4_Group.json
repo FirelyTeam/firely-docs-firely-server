@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Group",
-    "version": "6.0.0-alpha-build-20250416.14+98e1304c34427b9612b0e9dbc99085d535760e24"
+    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
   },
   "servers": [
     {
@@ -1830,8 +1830,7 @@
       "characteristic": {
         "name": "characteristic",
         "in": "query",
-        "description": "One of the HealthcareService's characteristics",
-        "style": "form",
+        "description": "Kind of characteristic",
         "schema": {
           "type": "string"
         }
@@ -1847,7 +1846,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "Code used in URL",
+        "description": "The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1864,7 +1863,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "An organization affiliation's Identifier",
+        "description": "External identifier for the example scenario",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1889,7 +1888,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "number | date | string | token | reference | composite | quantity | uri | special",
+        "description": "The kind of coverage (health plan, auto, Workers Compensation)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1898,7 +1897,8 @@
       "value": {
         "name": "value",
         "in": "query",
-        "description": "Value held by characteristic",
+        "description": "The unique identifier",
+        "style": "form",
         "schema": {
           "type": "string"
         }

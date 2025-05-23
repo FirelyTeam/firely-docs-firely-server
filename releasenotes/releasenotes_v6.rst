@@ -10,7 +10,7 @@ Current Firely Server release notes (v6.x)
 
 .. _vonk_releasenotes_6_1_0:
 
-Release 6.1.0, May 23nd, 2025
+Release 6.1.0, May 23rd, 2025
 -----------------------------
 
 Security

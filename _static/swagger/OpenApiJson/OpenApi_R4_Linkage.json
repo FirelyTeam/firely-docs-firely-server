@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Linkage",
-    "version": "6.0.0-alpha-build-20250416.14+98e1304c34427b9612b0e9dbc99085d535760e24"
+    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
   },
   "servers": [
     {
@@ -1731,7 +1731,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Who and/or what authored the composition",
+        "description": "The source of the decision",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1740,8 +1740,7 @@
       "item": {
         "name": "item",
         "in": "query",
-        "description": "Actual entry",
-        "style": "form",
+        "description": "Matches on any item in the Linkage",
         "schema": {
           "type": "string"
         }
@@ -1749,7 +1748,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "The device resource",
+        "description": "Name of system",
         "style": "form",
         "schema": {
           "type": "string"

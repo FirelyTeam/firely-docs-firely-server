@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Composition",
-    "version": "6.0.0-alpha-build-20250416.14+98e1304c34427b9612b0e9dbc99085d535760e24"
+    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
   },
   "servers": [
     {
@@ -2099,7 +2099,8 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Who and/or what authored the composition",
+        "description": "The source of the decision",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2107,7 +2108,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Type of plan\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
+        "description": "Classifications for the study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2124,7 +2125,7 @@
       "context": {
         "name": "context",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): A use context assigned to the capability statement\r\n* [CodeSystem](codesystem.html): A use context assigned to the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): A use context assigned to the compartment definition\r\n* [ConceptMap](conceptmap.html): A use context assigned to the concept map\r\n* [GraphDefinition](graphdefinition.html): A use context assigned to the graph definition\r\n* [ImplementationGuide](implementationguide.html): A use context assigned to the implementation guide\r\n* [MessageDefinition](messagedefinition.html): A use context assigned to the message definition\r\n* [NamingSystem](namingsystem.html): A use context assigned to the naming system\r\n* [OperationDefinition](operationdefinition.html): A use context assigned to the operation definition\r\n* [SearchParameter](searchparameter.html): A use context assigned to the search parameter\r\n* [StructureDefinition](structuredefinition.html): A use context assigned to the structure definition\r\n* [StructureMap](structuremap.html): A use context assigned to the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): A use context assigned to the terminology capabilities\r\n* [ValueSet](valueset.html): A use context assigned to the value set\r\n",
+        "description": "A use context assigned to the example scenario",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2133,7 +2134,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The capability statement publication date\r\n* [CodeSystem](codesystem.html): The code system publication date\r\n* [CompartmentDefinition](compartmentdefinition.html): The compartment definition publication date\r\n* [ConceptMap](conceptmap.html): The concept map publication date\r\n* [GraphDefinition](graphdefinition.html): The graph definition publication date\r\n* [ImplementationGuide](implementationguide.html): The implementation guide publication date\r\n* [MessageDefinition](messagedefinition.html): The message definition publication date\r\n* [NamingSystem](namingsystem.html): The naming system publication date\r\n* [OperationDefinition](operationdefinition.html): The operation definition publication date\r\n* [SearchParameter](searchparameter.html): The search parameter publication date\r\n* [StructureDefinition](structuredefinition.html): The structure definition publication date\r\n* [StructureMap](structuremap.html): The structure map publication date\r\n* [TerminologyCapabilities](terminologycapabilities.html): The terminology capabilities publication date\r\n* [ValueSet](valueset.html): The value set publication date\r\n",
+        "description": "The example scenario publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2142,7 +2143,7 @@
       "encounter": {
         "name": "encounter",
         "in": "query",
-        "description": "Encounter created as part of",
+        "description": "Multiple Resources: \r\n\r\n* [Composition](composition.html): Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter during which request was created\r\n* [DiagnosticReport](diagnosticreport.html): The Encounter when the order was made\r\n* [DocumentReference](documentreference.html): Context of the document  content\r\n* [Flag](flag.html): Alert relevant during encounter\r\n* [List](list.html): Context in which list created\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this encounter identifier\r\n* [Observation](observation.html): Encounter related to the observation\r\n* [Procedure](procedure.html): Encounter created as part of\r\n* [RiskAssessment](riskassessment.html): Where was assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter in which this request is made\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this encounter identifier\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2159,7 +2160,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "An organization affiliation's Identifier",
+        "description": "External identifier for the example scenario",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2168,7 +2169,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Who the care plan is for\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
+        "description": "Retrieve coverages for a patient",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2177,7 +2178,8 @@
       "period": {
         "name": "period",
         "in": "query",
-        "description": "The period covered by the documentation",
+        "description": "Timeframe for this rule",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2185,7 +2187,8 @@
       "related-id": {
         "name": "related-id",
         "in": "query",
-        "description": "Target of the relationship",
+        "description": "Identifiers of things that are related",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2193,7 +2196,8 @@
       "related-ref": {
         "name": "related-ref",
         "in": "query",
-        "description": "Target of the relationship",
+        "description": "Related Resource",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2209,7 +2213,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The current status of the capability statement\r\n* [CodeSystem](codesystem.html): The current status of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The current status of the compartment definition\r\n* [ConceptMap](conceptmap.html): The current status of the concept map\r\n* [GraphDefinition](graphdefinition.html): The current status of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The current status of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The current status of the message definition\r\n* [NamingSystem](namingsystem.html): The current status of the naming system\r\n* [OperationDefinition](operationdefinition.html): The current status of the operation definition\r\n* [SearchParameter](searchparameter.html): The current status of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The current status of the structure definition\r\n* [StructureMap](structuremap.html): The current status of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The current status of the terminology capabilities\r\n* [ValueSet](valueset.html): The current status of the value set\r\n",
+        "description": "The current status of the example scenario",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2218,7 +2222,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Who the care plan is for",
+        "description": "The subject of the report",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2227,7 +2231,7 @@
       "title": {
         "name": "title",
         "in": "query",
-        "description": "The human-friendly name of the measure",
+        "description": "Name for this study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2236,7 +2240,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "number | date | string | token | reference | composite | quantity | uri | special",
+        "description": "The kind of coverage (health plan, auto, Workers Compensation)",
         "style": "form",
         "schema": {
           "type": "string"

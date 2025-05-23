@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Bundle",
-    "version": "6.0.0-alpha-build-20250416.14+98e1304c34427b9612b0e9dbc99085d535760e24"
+    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
   },
   "servers": [
     {
@@ -1761,7 +1761,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "An organization affiliation's Identifier",
+        "description": "External identifier for the example scenario",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1786,7 +1786,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "number | date | string | token | reference | composite | quantity | uri | special",
+        "description": "The kind of coverage (health plan, auto, Workers Compensation)",
         "style": "form",
         "schema": {
           "type": "string"

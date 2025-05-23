@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Appointment",
-    "version": "6.0.0-alpha-build-20250416.14+98e1304c34427b9612b0e9dbc99085d535760e24"
+    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
   },
   "servers": [
     {
@@ -1913,7 +1913,8 @@
       "actor": {
         "name": "actor",
         "in": "query",
-        "description": "Any one of the individuals participating in the appointment",
+        "description": "Resource for the actor (or group, by role)",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1921,8 +1922,7 @@
       "appointment-type": {
         "name": "appointment-type",
         "in": "query",
-        "description": "The style of appointment or patient that may be booked in the slot (not service type)",
-        "style": "form",
+        "description": "The style of appointment or patient that has been booked in the slot (not service type)",
         "schema": {
           "type": "string"
         }
@@ -1930,7 +1930,7 @@
       "based-on": {
         "name": "based-on",
         "in": "query",
-        "description": "Fulfills CarePlan",
+        "description": "Reference to the service request.",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1939,7 +1939,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The capability statement publication date\r\n* [CodeSystem](codesystem.html): The code system publication date\r\n* [CompartmentDefinition](compartmentdefinition.html): The compartment definition publication date\r\n* [ConceptMap](conceptmap.html): The concept map publication date\r\n* [GraphDefinition](graphdefinition.html): The graph definition publication date\r\n* [ImplementationGuide](implementationguide.html): The implementation guide publication date\r\n* [MessageDefinition](messagedefinition.html): The message definition publication date\r\n* [NamingSystem](namingsystem.html): The naming system publication date\r\n* [OperationDefinition](operationdefinition.html): The operation definition publication date\r\n* [SearchParameter](searchparameter.html): The search parameter publication date\r\n* [StructureDefinition](structuredefinition.html): The structure definition publication date\r\n* [StructureMap](structuremap.html): The structure map publication date\r\n* [TerminologyCapabilities](terminologycapabilities.html): The terminology capabilities publication date\r\n* [ValueSet](valueset.html): The value set publication date\r\n",
+        "description": "The example scenario publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1948,7 +1948,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "An organization affiliation's Identifier",
+        "description": "External identifier for the example scenario",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1957,7 +1957,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "The location(s) at which the role occurs",
+        "description": "Geographic region(s) for study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1974,7 +1974,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Who the care plan is for\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
+        "description": "Retrieve coverages for a patient",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2007,7 +2007,7 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "Service Category of the Healthcare Service",
+        "description": "High-level category",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2016,7 +2016,7 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The type of service provided by this healthcare service",
+        "description": "The type of appointments that can be booked into associated slot(s)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2033,7 +2033,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Specific specialty of the participatingOrganization in the context of the role",
+        "description": "Type of specialty needed",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2042,7 +2042,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The current status of the capability statement\r\n* [CodeSystem](codesystem.html): The current status of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The current status of the compartment definition\r\n* [ConceptMap](conceptmap.html): The current status of the concept map\r\n* [GraphDefinition](graphdefinition.html): The current status of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The current status of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The current status of the message definition\r\n* [NamingSystem](namingsystem.html): The current status of the naming system\r\n* [OperationDefinition](operationdefinition.html): The current status of the operation definition\r\n* [SearchParameter](searchparameter.html): The current status of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The current status of the structure definition\r\n* [StructureMap](structuremap.html): The current status of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The current status of the terminology capabilities\r\n* [ValueSet](valueset.html): The current status of the value set\r\n",
+        "description": "The current status of the example scenario",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2051,7 +2051,8 @@
       "supporting-info": {
         "name": "supporting-info",
         "in": "query",
-        "description": "Additional information to support the appointment",
+        "description": "Information supporting the clinical impression",
+        "style": "form",
         "schema": {
           "type": "string"
         }

@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - OrganizationAffiliation",
-    "version": "6.0.0-alpha-build-20250416.14+98e1304c34427b9612b0e9dbc99085d535760e24"
+    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
   },
   "servers": [
     {
@@ -1874,7 +1874,8 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Whether this organization affiliation record is in active use",
+        "description": "Is the schedule in active use",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1882,7 +1883,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The capability statement publication date\r\n* [CodeSystem](codesystem.html): The code system publication date\r\n* [CompartmentDefinition](compartmentdefinition.html): The compartment definition publication date\r\n* [ConceptMap](conceptmap.html): The concept map publication date\r\n* [GraphDefinition](graphdefinition.html): The graph definition publication date\r\n* [ImplementationGuide](implementationguide.html): The implementation guide publication date\r\n* [MessageDefinition](messagedefinition.html): The message definition publication date\r\n* [NamingSystem](namingsystem.html): The naming system publication date\r\n* [OperationDefinition](operationdefinition.html): The operation definition publication date\r\n* [SearchParameter](searchparameter.html): The search parameter publication date\r\n* [StructureDefinition](structuredefinition.html): The structure definition publication date\r\n* [StructureMap](structuremap.html): The structure map publication date\r\n* [TerminologyCapabilities](terminologycapabilities.html): The terminology capabilities publication date\r\n* [ValueSet](valueset.html): The value set publication date\r\n",
+        "description": "The example scenario publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1891,7 +1892,8 @@
       "email": {
         "name": "email",
         "in": "query",
-        "description": "A value in an email contact",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A value in an email contact\r\n* [Person](person.html): A value in an email contact\r\n* [Practitioner](practitioner.html): A value in an email contact\r\n* [PractitionerRole](practitionerrole.html): A value in an email contact\r\n* [RelatedPerson](relatedperson.html): A value in an email contact\r\n",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1899,7 +1901,8 @@
       "endpoint": {
         "name": "endpoint",
         "in": "query",
-        "description": "Technical endpoints providing access to services operated for this role",
+        "description": "The endpoint for the study or series",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1907,7 +1910,8 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "An organization affiliation's Identifier",
+        "description": "External identifier for the example scenario",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1915,7 +1919,8 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "The location(s) at which the role occurs",
+        "description": "Geographic region(s) for study",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1939,7 +1944,8 @@
       "phone": {
         "name": "phone",
         "in": "query",
-        "description": "A value in a phone contact",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A value in a phone contact\r\n* [Person](person.html): A value in a phone contact\r\n* [Practitioner](practitioner.html): A value in a phone contact\r\n* [PractitionerRole](practitionerrole.html): A value in a phone contact\r\n* [RelatedPerson](relatedperson.html): A value in a phone contact\r\n",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1955,7 +1961,8 @@
       "role": {
         "name": "role",
         "in": "query",
-        "description": "Definition of the role the participatingOrganization plays",
+        "description": "The practitioner can perform this role at for the organization",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1963,7 +1970,8 @@
       "service": {
         "name": "service",
         "in": "query",
-        "description": "Healthcare services provided through the role",
+        "description": "Which rendered service is being charged?",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1971,7 +1979,8 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Specific specialty of the participatingOrganization in the context of the role",
+        "description": "Type of specialty needed",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1979,7 +1988,8 @@
       "telecom": {
         "name": "telecom",
         "in": "query",
-        "description": "The value in any kind of contact",
+        "description": "Contact details for individual or organization",
+        "style": "form",
         "schema": {
           "type": "string"
         }

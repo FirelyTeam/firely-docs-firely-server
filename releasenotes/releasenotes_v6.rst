@@ -8,10 +8,37 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
-.. _vonk_releasenotes_6_0_0:
+.. _vonk_releasenotes_6_1_0:
+
+Release 6.1.0, May 23rd, 2025
+-----------------------------
+
+Security
+^^^^^^^^
+
+#. AccessPolicy resources can now only be accessed or modified with system-level scopes (e.g., ``system/AccessPolicy.*``). Patient-level scopes (``patient/AccessPolicy.*``) and user-level scopes (``user/AccessPolicy.*``) are not allowed and will be rejected with a 403 Forbidden response.
+#. ``TrustedProxyIPNetworks`` now has an additional setting ``AllowAnyNetworkOrigins`` to allow any network origins to be trusted. Before, this configuration was only allowed if ``ASPNETCORE_ENVIRONMENT`` was set to ``Development``. Systems that used this environment variable to bypass the ip-range restrictions should switch to using this setting instead. This setting is disabled by default and should only be enabled if you are sure that your network is secure.
+#. We added a check to the SMART on FHIR settings to ensure that ``Authority`` is always configured.
+#. We added the ``ClockSkew`` setting to the ``SmartAuthorizationOptions``. This setting is used to adjust the expiration time and validity of JWT tokens. Before, you could only adjust the expiration time of a JWT token in FA, and Firely server would add an additional window of 5 minutes to this expiration time where the token would still be valid. This window can now be adjusted with this setting.  See :ref:`feature_accesscontrol_config` for more information.
+
+
+Improvements and Fixes
+^^^^^^^^^^^^^^^^^^^^^^
+
+#. We improved the behavior of AuditEvent generation in combination with ``$member-match``. The AuditEvent will now capture the Patient ID and Identifier of the member after a successful match.
+#. We improved the performance of snapshot generation queries for Bulk Data Export against a SQL back-end.
+#. We fixed a bug for the Document Handling operation. Before, references of the posted document bundle could not always be resolved.
+#. We improved error messaging of Firely Server for SMART on FHIR reference tokens. Operation Outcomes indicating errors with regard to the token would only mention JWT tokens when a reference token was used. As this was misleading, we adjusted the error message to dynamically show the type of token that was used. 
+#. We fixed a bug in the handling of the ``above`` modifier in search queries. Firely Server does not support the ``above`` modifier and would show a large stack trace when this modifier was used in queries. Error handling for the use of this modifier is now improved.
+
+Features
+^^^^^^^^
+
+#. We added support for the use of the Claim Check pattern in PubSub. This features allows you to outsource the payload of a message to an Azure Blob Storage Account that can be referenced in the message, leading to smaller messages and improved performance. See :ref:`pubsub_claimcheck` for more information.
 
 =======
 
+.. _vonk_releasenotes_6_0_0:
 
 Release 6.0.0, April 15th, 2025
 -------------------------------

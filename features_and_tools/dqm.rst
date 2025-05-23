@@ -10,7 +10,7 @@ Digital Quality Measures
   * Firely dQM - 🌍 / 🇺🇸
 
 Digital Quality Measures (dQMs) represent a transformative capability within the healthcare data ecosystem, enabling standardized and automated assessment of clinical outcomes.
-Firely Server provides native support for dQMs through based on an integrated clinical reasoning module. Firely Server’s digital quality measurement capabilities are built entirely on the HL7 Clinical Quality Language (CQL) standard, integrated with FHIR resources.
+Firely Server provides native support for dQMs through based on an integrated clinical reasoning module. Firely Server’s digital quality measurement capabilities are built entirely on the `HL7 Clinical Quality Language (CQL) <https://cql.hl7.org>`_ standard, integrated with FHIR resources.
 
 Quality in healthcare is measured by how effectively care enhances the chances of achieving desired health outcomes and reflects up-to-date clinical knowledge.
 FHIR supports these capabilities through standardized representations of quality measures, the underlying clinical data, and the reporting process.
@@ -38,10 +38,15 @@ Based on the foundation of dQMs, several key use cases can be effectively suppor
 
 	Within U.S. healthcare systems, digital quality measures can enhance prior authorization** workflows by providing automated clinical justification. Pre-populated clinical data and linked measure logic demonstrate medical necessity, helping streamline the review process and reduce delays in care delivery.
 
+#. Structured Data Capture via FHIR Questionnaires
+
+Using structured data capture tools, digital forms (Questionnaires) can be automatically filled with information already available in the patient’s record—such as age, past diagnoses, or lab results. This saves time for clinicians, reduces errors from manual entry, and ensures that the quality measures are based on up-to-date and complete information.
+
 How dQMs Are Represented in FHIR
 --------------------------------
 
-Digital Quality Measures are represented in FHIR using a structured set of resources that enable the definition, computation, and reporting of quality measures in a standardized, interoperable format. These resources are primarily part of the Clinical Reasoning module in FHIR and are often paired with the Clinical Quality Language (CQL) to express measure logic.
+Digital Quality Measures are represented in FHIR using a structured set of resources that enable the definition, computation, and reporting of quality measures in a standardized, interoperable format. 
+These resources are primarily part of the Clinical Reasoning module in FHIR and are often paired with the Clinical Quality Language (CQL) to express measure logic.
 
 #. Measure Resource
 
@@ -54,6 +59,8 @@ Digital Quality Measures are represented in FHIR using a structured set of resou
 #. MeasureReport Resource
 
 	The FHIR MeasureReport is a standardized resource that captures the results of a dQM after it has been evaluated. It functions as the output of the measurement process, summarizing whether patients or populations met the criteria defined in a Measure. In essence, it answers the question: “How did a patient or group perform against a specific quality measure over a defined period?”
+
+For more background information about Clinical Reasoning, see `Introduction to Clinical Reasoning - FHIR Core specification <https://hl7.org/fhir/R4/clinicalreasoning-module.html>`_.
 
 ----
 
@@ -224,6 +231,11 @@ Compiling CQL
 When uploading ``Library`` resources to Firely Server, it is expected that the compiled `.dll` file is included as one of the content representations within the resource.
 The compilation process must be performed manually using the `.NET CQL SDK <https://github.com/FirelyTeam/firely-cql-sdk>`_. After downloading the SDK, open the solution file ``Cql-Sdk-All.sln`` in your development environment.
 
+.. note::
+
+  The process can also be used to generate a FHIR Library resource directly from a CQL library. This is particularly useful when extending official CQL-based libraries, such as those used for HEDIS certification or CMS eCQMs. These libraries can be customized to include additional business-critical population criteria.
+  Moreover, extra expressions can be added for debugging purposes—for example, to inspect intermediate results during evaluation.
+
 Within the solution, the project ``PackageCli (Demo CQL -> FHIR)`` provides a demo of the packaging workflow. Any CQL files placed in the folder:
 
 ::
@@ -270,7 +282,7 @@ This command assumes that the ELM files already exist in the specified ``--elm``
 
 .. attention::
 
-	Firely Server currently depends on CQL SDK version v2.0.0-alpha16, which must be used for the compilation process to ensure compatibility.
+	Firely Server currently depends on CQL SDK version v2.0.0-alpha18, which must be used for the compilation process to ensure compatibility.
 
 Example Library
 ^^^^^^^^^^^^^^^
@@ -283,7 +295,7 @@ The following is a FHIR `Library` resource defining the CQL logic used in the Bl
 
    {
      "resourceType": "Library",
-     "id": "bp-check-logic",
+     "id": "76da88af-blood-pressure-check-logic-1.0.0",
      "url": "http://example.org/fhir/Library/bp-check-logic",
      "version": "1.0.0",
      "name": "BloodPressureCheckLogic",
@@ -432,12 +444,12 @@ Libraries are treated as administrative resources and can be uploaded to the adm
 FHIR MeasureReports
 -------------------
 
-Understanding Populiation results
+Understanding Population results
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 For each population defined in the associated ``Measure``, there should be a corresponding population entry in the ``MeasureReport``.
 Each entry must include a ``count`` of either 0 or 1, indicating whether the patient did not or did meet the population criteria, respectively.
 
-MeasureReport resources are **not** stored on the administration endpoint of Firely Server, but rather on the standard FHIR data endpoint.
+MeasureReport resources are **not** stored on the administration endpoint of Firely Server, but rather on the standard FHIR data endpoint (**not the administrative endpoint**).
 MeasureReports can be generated by executing ``Measure/$evaluate-measure`` (see above).
 
 Example MeasureReports

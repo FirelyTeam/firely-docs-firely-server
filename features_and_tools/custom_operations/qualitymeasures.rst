@@ -23,6 +23,8 @@ FHIR provides several mechanisms for executing dQMs, either in full or in part. 
 
 ----
 
+.. _feature_library_evaluate:
+
 Library/$evaluate
 -----------------
 
@@ -124,7 +126,7 @@ Firely Server supports the following parameters:
 The ``Library/$evaluate`` operation is supported as a ``POST`` request on both the type and instance levels.  
 Additionally, the instance-level operation may also be invoked using ``GET``.
 
-Example: Type-Level ``Library/$evaluate`` Invocation
+Example: Type-Level Library/$evaluate Invocation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This example evaluates the ``bp-check-logic`` library (version 1.0.0) against a specific patient

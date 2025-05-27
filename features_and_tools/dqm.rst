@@ -40,7 +40,7 @@ Based on the foundation of dQMs, several key use cases can be effectively suppor
 
 #. Structured Data Capture via FHIR Questionnaires
 
-Using structured data capture tools, digital forms (Questionnaires) can be automatically filled with information already available in the patient’s record—such as age, past diagnoses, or lab results. This saves time for clinicians, reduces errors from manual entry, and ensures that the quality measures are based on up-to-date and complete information.
+  Using structured data capture tools, digital forms (Questionnaires) can be automatically filled with information already available in the patient’s record—such as age, past diagnoses, or lab results. This saves time for clinicians, reduces errors from manual entry, and ensures that the quality measures are based on up-to-date and complete information.
 
 How dQMs Are Represented in FHIR
 --------------------------------
@@ -76,7 +76,7 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 	:Input: Canonical reference to a Library, expression name, and optional patient and context data.
 	:Output: The result of the evaluated expression (same as $cql, but tied to named expressions in a Library).
 
-	See `Using CQL with FHR - OperationDefinition Library/$evaluate <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-library-evaluate.html>`_ on how to execute this operation.
+	See `Using CQL with FHR - OperationDefinition Library/$evaluate <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-library-evaluate.html>`_ and :ref:`feature_library_evaluate` on how to execute this operation.
 
 * Library/$data-requirements
 
@@ -212,8 +212,8 @@ Measures are treated as administrative resources and can be uploaded to the admi
 
 ----
 
-FHIR Libaries
--------------
+FHIR Libraries
+--------------
 
 A FHIR Library resource contains one or more representations of the CQL logic that defines the population criteria referenced by the Measure resource. 
 In addition to publishing metadata, the Library includes the original CQL content—encoded in base64—within a content element annotated with contentType "text/cql".
@@ -434,8 +434,8 @@ It defines adult patients and checks whether they have a recorded systolic blood
 
 
 
-Managing Libaries
-^^^^^^^^^^^^^^^^^
+Managing Libraries
+^^^^^^^^^^^^^^^^^^
 
 Libraries are treated as administrative resources and can be uploaded to the administration endpoint of Firely Server. See :ref:`administration_api` for more details.
 

@@ -292,10 +292,16 @@ FHIR Capabilities
     },
     "SearchOptions": {
       "MaximumIncludeIterationDepth": 1,
-      "PagingCache": {
-        "MaxSize": 1100,
-        "ItemSize": 1,
-        "Duration": 10
+      "AnonymizationSettings": { // when the SearchAnonymization plugin is loaded, these settings will be used
+        "PagingLifetime": 10,// in minutes, the time an anonymized link is valid
+        "FallbackToEmbeddedEncryptionKey" :  true, // if true and there are no keys provided or the last provided key is no longer valid, the server will use the embedded key to encrypt.
+        //"EncryptionKeys": [ // a JWKS to use for paging encryption
+        //    {
+        //        "kty": "oct", // all keys should be of type oct
+        //        "k": "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0", // only base64url encoded keys are supported
+        //        "exp": "2099-12-31" // the expiration date of the key, this is a custom property and has to be added. Time will be ignored
+        //    }
+        //]
       }
     }
   },

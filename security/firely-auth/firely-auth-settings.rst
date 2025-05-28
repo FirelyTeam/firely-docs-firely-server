@@ -324,6 +324,10 @@ Clients
 
 The ``ClientRegistration`` is used to register the :term:`clients <client>` that are allowed to request access tokens from Firely Auth.
 
+.. note::
+
+    ``ClientRegistration`` is only used for the initial load of Firely Auth. For every further change required to the registered clients, please use the User Interface :ref:`firely_auth_settings_ui` or  the API’s that are specified in the swagger documentation which you can find at: https://localhost:5001/swagger/ (or replace localhost with the url of your Firely Auth installation).
+
 .. code-block:: json
 
   "ClientRegistration": {

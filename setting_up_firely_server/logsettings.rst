@@ -212,7 +212,12 @@ The ``File`` sink will write to a file, possibly rolling it by interval or size.
 Application Insights
 ^^^^^^^^^^^^^^^^^^^^
 
-Firely Server can also log to Azure Application Insights ("Application Insights Telemetry"). What you need to do:
+Firely Server can also log to Azure Application Insights ("Application Insights Telemetry"). 
+
+.. note::
+   Azure is deprecating the use of Instrumentation Keys. As a best practice, you should use the Application Insights Connection String instead of the Instrumentation Key when configuring Serilog.
+
+What you need to do:
 
 #. Create an Application Insights instance on Azure.
 #. Get the ConnectionString from the Properties blade of this instance.
@@ -223,11 +228,14 @@ Firely Server can also log to Azure Application Insights ("Application Insights 
 				"Name": "ApplicationInsights",
 				"Args": {
 					"connectionString": "[your connection string here]", 
-					"telemetryConverter": "Serilog.Sinks.ApplicationInsights.TelemetryConverters.TraceTelemetryConverter, Serilog.Sinks.ApplicationInsights" 
+					"telemetryConverter": "Serilog.Sinks.ApplicationInsights.TelemetryConverters.TraceTelemetryConverter, Serilog.Sinks.ApplicationInsights",
 					"restrictedToMinimumLevel": "Verbose" //Or a higher level
 				}
 			},
 		],
+
+   .. note::
+      The ``connectionString`` can be omitted if it's supplied in the ``APPLICATIONINSIGHTS_CONNECTION_STRING`` environment variable.
 
 #. This also enables Dependency Tracking for access to your database. This works for both SQL Server and MongoDB. And for the log sent to `Seq`_ if you enabled that.
 #. If you set the level for Application Insights to ``Verbose``, and combine that with `Database details`_, you get all the database commands right into Application Insights.

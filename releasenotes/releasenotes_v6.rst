@@ -16,7 +16,7 @@ Release 6.2.0, <date>
 Improvements and Fixes
 ^^^^^^^^^^^^^^^^^^^^^^
 
-#. Updated Serilog ApplicationInsights sink configuration to use Connection String instead of the deprecated Instrumentation Key. Azure no longer supports Instrumentation Keys, so Firely Server now recommends using ``connectionString`` in the ApplicationInsights sink configuration. The connection string can also be provided via the ``APPLICATIONINSIGHTS_CONNECTION_STRING`` environment variable. See :ref:`configure_log_insights` for more information.
+#. Updated Serilog ApplicationInsights sink configuration to use Connection String instead of the deprecated Instrumentation Key. Azure no longer supports Instrumentation Keys, so one should use ``connectionString`` in the ApplicationInsights sink configuration. The connection string can also be configured via ``ApplicationInsights:ConnectionString`` in appsettings.json. See :ref:`configure_log_insights` for more information.
 
 .. _vonk_releasenotes_6_1_0:
 

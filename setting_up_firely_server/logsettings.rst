@@ -221,7 +221,9 @@ What you need to do:
 
 #. Create an Application Insights instance on Azure.
 #. Get the ConnectionString from the Properties blade of this instance.
-#. Add the correct sink to the logsettings.json::
+#. Configure the connection string using one of these methods:
+
+   a. Add the correct sink to the logsettings.json::
 
 		"WriteTo": [
 			{
@@ -234,8 +236,12 @@ What you need to do:
 			},
 		],
 
-   .. note::
-      The ``connectionString`` can be omitted if it's supplied in the ``APPLICATIONINSIGHTS_CONNECTION_STRING`` environment variable.
+   b. Or configure it in appsettings.json::
+
+		"ApplicationInsights": {
+			"ConnectionString": "[your connection string here]"
+		}
+
 
 #. This also enables Dependency Tracking for access to your database. This works for both SQL Server and MongoDB. And for the log sent to `Seq`_ if you enabled that.
 #. If you set the level for Application Insights to ``Verbose``, and combine that with `Database details`_, you get all the database commands right into Application Insights.

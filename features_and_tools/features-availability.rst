@@ -111,3 +111,8 @@ Legend:
      - ❌
      - ❌
      - ❌
+   * - Digital Quality Measures
+     - ✅
+     - ❌
+     - ✅
+     - ✅

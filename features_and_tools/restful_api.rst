@@ -214,6 +214,8 @@ If MongoDb is configured as the repository back-end, Firely Server may utilize k
 
 If keyset pagination is applied, the navigational links will only contain ``first``, ``self`` and ``next`` links, with the ``first`` link missing on the first page and the last page not containing a ``next`` link. These links will not contain the ``_skip`` parameter but instead have a ``_continuationToken`` that can be used to retrieve the next results page.
 
+.. _restful_search_anonymization:
+
 Search Anonymization
 ^^^^^^^^^^^^^^^^^^^^
 

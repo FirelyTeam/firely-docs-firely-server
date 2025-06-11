@@ -17,6 +17,7 @@ Improvements and Fixes
 ^^^^^^^^^^^^^^^^^^^^^^
 
 #. Updated Serilog ApplicationInsights sink configuration to use Connection String instead of the deprecated Instrumentation Key. Azure no longer supports Instrumentation Keys, so one should use ``connectionString`` in the ApplicationInsights sink configuration. The connection string can also be configured via ``ApplicationInsights:ConnectionString`` in appsettings.json. See :ref:`configure_log_insights` for more information.
+#. Updated search anonymization to work across multiple Firely Server instances. This changes also changed the configuration, see: :ref:`restful_search_anonymization` on how to configure the search anonymization.
 
 .. _vonk_releasenotes_6_1_0:
 

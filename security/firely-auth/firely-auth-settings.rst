@@ -19,6 +19,15 @@ Unsure how to name your variables? This works the same as with :ref:`configure_e
 
 If you are working with deployments on Azure or AWS, it is necessary to load any configuration in a separate folder in the root of Firely Auth. Providing a folder for your settings files also works the same as with :ref:`configure_settings_path`, but then using the environment variable ``FIRELY_AUTH_PATH_TO_SETTINGS``.
 
+Firely Auth and the Firely Server $versions operation
+-----------------------------------------------------
+
+When using SMART with Firely Auth as the authorization server, ensure that the ``RequireAuthorization`` setting for the ``$versions`` operation is set to ``Never`` in the operation configuration. 
+
+This setting allows Firely Auth to correctly detect the default FHIR version and connect to Firely Server to retrieve the ``CapabilityStatement``.
+
+Since ``$versions`` only returns the enabled FHIR versions and does not expose any sensitive information, it is safe to make this operation accessible without authorization.
+
 Sections
 --------
 

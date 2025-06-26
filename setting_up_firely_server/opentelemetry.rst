@@ -7,7 +7,8 @@ OpenTelemetry
 
   The features described on this page are available for all :ref:`Firely Server editions <vonk_overview>`
 
-Firely Server can be configured to expose `Opentelemetry <https://opentelemetry.io/>`_ metrics and traces.
+Firely Server can be configured to expose `OpenTelemetry <https://opentelemetry.io/>`_ metrics and traces. By using OpenTelemetry, Firely Server enables observability into its pipeline based on an open standard.
+See `What is OpenTelemetry? <https://opentelemetry.io/docs/what-is-opentelemetry/>`_ for an introduction to the standard.
 
 Traces
 ------
@@ -55,7 +56,6 @@ Metrics
 -------
 Firely Server publishes the standard .Net metrics for the `HTTP Server <https://opentelemetry.io/docs/specs/semconv/dotnet/dotnet-http-metrics/#http-server>`_ and `Kestrel <https://opentelemetry.io/docs/specs/semconv/dotnet/dotnet-kestrel-metrics/>`_. 
 
-
 Configuration
 -------------
 
@@ -80,7 +80,7 @@ The individual settings are described below:
 
 * ``EnableTracing``: Enables tracing for the application. Set this to ``true`` to capture and export opentelemetry traces.
 * ``EnableMetrics``: Enables metrics collection for the application. Set this to ``true`` to capture and export opentelemetry metrics.
-* ``Endpoint``: Specifies the endpoint of the OpenTelemetry collector to which the traces and metrics will be sent. Replace `<otlp-collector-endpoint>` with the actual endpoint URL.
+* ``Endpoint``: Specifies the endpoint of the OpenTelemetry collector to which the traces and metrics will be sent. Replace `<otlp-collector-endpoint>` with the actual endpoint URL. Note that even though gRPC is used as the exchange protocol for the metrics and traces, the endpoint needs to use ``http`` or ``https`` as the protocol in the url.
 * ``RecordException``: When set to ``true``, exceptions will be recorded as part of the trace data.
 * ``SetDbStatementForText``: When set to ``true``, database statements for text-based queries will be included in the trace data.
 * ``SetDbStatementForStoredProcedure``: When set to ``true``, database statements for stored procedures will be included in the trace data.
@@ -101,4 +101,4 @@ Firely Server's OpenTelemetry integration provides the following usages:
     It is recommended to use a service like `OpenTelemetry Collector <https://opentelemetry.io/docs/collector/>`_ to filter, process, and dispatch traces and metrics to different endpoints. The collector acts as a central hub for telemetry data, enabling flexible routing and aggregation of data to various backends.
 
 4. **Real-World Testing**:
-    The `Real-World Testing <#feature_realworldtesting>`_ feature relies on OpenTelemetry traces to analyze server activities.
+    The `Real-World Testing <feature_realworldtesting>`_ feature relies on OpenTelemetry traces to analyze server activities.

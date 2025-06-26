@@ -30,7 +30,7 @@ Getting started
 Step 1 - Software
 ^^^^^^^^^^^^^^^^^
 
-Firely Auth is distributed as .NET Core 6 binaries and in a Docker image. For this introduction we will use the binaries.
+Firely Auth is distributed as .NET Core binaries and in a Docker image. For this introduction we will use the binaries.
 
 #. Install .NET Core 8 Runtime
 #. Download the zip file with Firely Auth binaries from `the download server <https://downloads.simplifier.net/firely-auth/firely-auth-latest.zip>`_
@@ -41,7 +41,7 @@ Step 2 - License
 
 Firely Auth is licensed, like all plugins and additional tools of Firely Server. It uses the same license file as the Firely Server instance it works with.
 Firely Auth requires this token to be present in the license file: ``http://fire.ly/server/auth``.
-If you don't have this in your license file yet, you probably need to acquire Firely Auth first. Please :ref:`vonk-contact` for that. You can also test Firely Auth with an evaluation license. To acquire this license you can `sign up <https://fire.ly/firely-server-trial/>`_ after which you will receive an email with the license file.
+If you don't have this in your license file yet, you probably need to acquire Firely Auth first. Please :ref:`vonk-contact` for that. You can also test Firely Auth with an evaluation license. To acquire this license you can `sign up <https://fire.ly/firely-auth-trial/>`_ after which you will receive an email with the license file.
 By default Firely Auth will look for a license file named ``firely-auth-license.json``, adjacent to the ``Firely.Auth.Core.exe`` 
 You can adjust the location of the license file in the configuration settings, see :ref:`firely_auth_settings_license`.
 
@@ -50,7 +50,7 @@ Additionally you will have to place a file called ``Duende_License.key`` also ad
 Step 3 - Ssl certificate
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Firely Auth will only run on https. To create a self signed certificate (for testing purposes only), you can use the tool mkcert ``https://github.com/FiloSottile/mkcert``.
+Firely Auth will only run on https. To create a self signed certificate (for testing purposes only), you can use the tool `mkcert <https://github.com/FiloSottile/mkcert>`_.
 To enable the certificate you will have to adjust the :ref:`firely_auth_settings_kestrel` settings. You can use these values:
 
   .. code-block:: json
@@ -77,15 +77,15 @@ See :ref:`firely_auth_settings_userstore` to read up on how they are configured.
 Step 5 - Email client
 ^^^^^^^^^^^^^^^^^^^^^
 
-Firely Auth sends email messages to users, like activating accounts and to execute password resets.
-See :ref:`firely_auth_settings_email` to read up on how this is configured. 
+Firely Auth sends email messages to users in case their accounts should be mananged locally and not through an external identity provider. Emails will be send out for activating accounts and to execute password resets.
+See :ref:`firely_auth_settings_email` to read up on how to configure an active email server for sending the messages.
 
 Step 6 - Clients
 ^^^^^^^^^^^^^^^^
 
 The concept of OAuth2 in general and SMART on FHIR in particular is that a client (an app, a website) can access data on your behalf.
 This means that Firely Auth must know these clients upfront. For each client several values need to be configured.
-For this introduction we will add Postman as a client, so you can test requests without actually building a client yourself.
+For this introduction we will add Postman as a client, so you can test requests without actually building a SMART client yourself.
 We'll just provide the correct settings here. The settings are documented in detail on :ref:`firely_auth_settings_clients`
 
 .. note:: 
@@ -151,15 +151,13 @@ With the required settings in place, you can start Firely Auth in PowerShell by 
 
     > ./Firely.Auth.Core.exe
 
-And you can access it with a browser on ``https://localhost:5001``. It will use the self-signed certificate by default, for which your browser can warn you.
+And you can access it with a browser on ``https://localhost:5001``. It will use the self-signed certificate by default, for which your browser may warn you.
 Accept the risk and proceed to the website.
 
 Firely Auth will present you with a screen to create an admin account. Enter an e-mail address and password and you will be able to log into the management environment. Here you can manage users, view clients and view the openid configuration. 
 
 You need to add at least one non-admin user to be able to use Firely Auth, go to ``User Management`` and click the ``+`` to add a user.
 An email will be sent to this user to activate the account and set a password. After this is done, you can now use this account to get an access token.
-
-
 
 Step 8 - Connect Firely Server to Firely Auth
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -191,7 +189,6 @@ With this, we can use ``<base>/R4`` to use FHIR R4 (see for background :ref:`fea
 Check that it runs without authorization before proceeding with the next step, by requesting the CapabilityStatement:
 
 .. image:: /images/auth_postman_fs_meta.png
-
 
 To be able to test the next steps, add a few example resources by issuing a batch request (``POST <base>/R4/``) 
 with :download:`this bundle </_static/files/FA_TestData.json>` (while authorization is still off).

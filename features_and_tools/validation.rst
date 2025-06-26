@@ -43,6 +43,57 @@ You can choose the level of validation:
 * Core: the resource is validated against the core definition of the resource type.
 * Full: the resource is validated against the core definition of the resource type and against any profiles in its ``meta.profile`` element.
   
+If validation is set to ``Full`` the following validation rules will be checked:
+
++-------------------------------+---------------------------------------------------------------+
+| Validation Rule               | Description                                                   |
++===============================+===============================================================+
+| BindingValidator              | Validates that a coded value exists in the bound ValueSet     |
++-------------------------------+---------------------------------------------------------------+
+| CanonicalValidator            | Ensures a ‘canonical’ type is an absolute URI or fragment     |
++-------------------------------+---------------------------------------------------------------+
+| CardinalityValidator          | Verifies element occurrences match defined cardinality        |
++-------------------------------+---------------------------------------------------------------+
+| ExtensionContextValidator     | Ensures an extension is used in its allowed context           |
++-------------------------------+---------------------------------------------------------------+
+| FhirPathValidator             | Validates resource fields against FHIRPath expressions        |
++-------------------------------+---------------------------------------------------------------+
+| FhirStringValidator           | Checks that a FHIR ‘string’ is not empty                      |
++-------------------------------+---------------------------------------------------------------+
+| FhirTypeLabelValidator        | Validates that instance type matches the declared label       |
++-------------------------------+---------------------------------------------------------------+
+| FhirUriValidator              | Ensures element value is a valid URI when serialized          |
++-------------------------------+---------------------------------------------------------------+
+| FixedValidator                | Checks that an element has the required fixed value           |
++-------------------------------+---------------------------------------------------------------+
+| MaxLengthValidator            | Enforces the maximum allowed string length                    |
++-------------------------------+---------------------------------------------------------------+
+| MinMaxValueValidator          | Validates numeric or primitive values against min/max limits  |
++-------------------------------+---------------------------------------------------------------+
+| PatternValidator              | Validates element value against a defined pattern             |
++-------------------------------+---------------------------------------------------------------+
+| RegExValidator                | Checks element value against a regular expression             |
++-------------------------------+---------------------------------------------------------------+
+| ReferencedInstanceValidator   | Resolves and validates referenced resources                   |
++-------------------------------+---------------------------------------------------------------+
+| SchemaReferenceValidator      | Validates element using its referenced schema                 |
++-------------------------------+---------------------------------------------------------------+
+| SliceValidator                | Validates element against slice constraints                   |
++-------------------------------+---------------------------------------------------------------+
+| FhirEle1Validator             | Requires element to have a value or children                  |
++-------------------------------+---------------------------------------------------------------+
+| FhirExt1Validator             | Requires element to have a value or extension                 |
++-------------------------------+---------------------------------------------------------------+
+| FhirTxt1Validator             | Validates that narrative contains valid HTML                  |
++-------------------------------+---------------------------------------------------------------+
+| FhirTxt2Validator             | Ensures narrative is not whitespace-only                      |
++-------------------------------+---------------------------------------------------------------+
+| ChildrenValidator             | Applies validation rules to child elements                    |
++-------------------------------+---------------------------------------------------------------+
+| DataTypeSchema /              | Validates against data type, resource, or extension schema    |
+| ResourceSchema /              |                                                               |
+| ExtensionSchema               |                                                               |
++-------------------------------+---------------------------------------------------------------+
 
 
 Allow for Specific Profiles

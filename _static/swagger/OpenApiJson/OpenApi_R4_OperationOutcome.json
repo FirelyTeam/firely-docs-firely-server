@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - OperationOutcome",
-    "version": "5.9.1+8273fb74d4fc80b7f800a387afca6c9e06fc0627"
+    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
   },
   "servers": [
     {
@@ -1680,6 +1680,7 @@
         "name": "_has",
         "in": "query",
         "description": "Enables querying a reverse chain",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1689,6 +1690,7 @@
         "in": "path",
         "description": "Resource Logical ID",
         "required": true,
+        "style": "simple",
         "schema": {
           "type": "string"
         }
@@ -1698,6 +1700,7 @@
         "in": "path",
         "description": "Resource Version Number",
         "required": true,
+        "style": "simple",
         "schema": {
           "type": "string"
         }

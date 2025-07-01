@@ -135,7 +135,7 @@ Sharding on MongoDB is protected by a license token: ``http://fire.ly/vonk/plugi
 To enable sharding, you need to:
 
 #. Install `MongoDB Shell (mongosh) <https://www.mongodb.com/products/tools/shell>`_ for sharding configuration
-#. Set up a `sharded cluster <https://docs.mongodb.com/manual/sharding/>`_.
+#. Set up a `sharded cluster <https://docs.mongodb.com/manual/sharding/>`_. Note that the shard key should only be created and applied to the collection after initialization by Firely Server/FSI, see the following steps.
 #. Configure the MongoDB connection string to point to the mongos instance of the sharded cluster.
 #. Initialize the sharded cluster with the Firely Server database and collection by running Firely Server once, or by using FSI to initialize the schema (see :ref:`tool_fsi`). For the latter, these are the commands:
 
@@ -200,6 +200,34 @@ To enable sharding, you need to:
 
 From now on, the sharding is transparent to Firely Server and works with all requests and operations.
 
+
+Chained search parameters optimization
+--------------------------------------
+
+MongoDB isn't particularly efficient at joining collections, so Firely Server uses an optimization where search queries with chained search parameters (e.g. ``GET [base]/DiagnosticReport?subject:Patient.name=peter``) are executed in stages. In the example above, the first stage is to find all patients with the name "peter". The second stage is to find all DiagnosticReports that have a subject that matches one or more patients found in the first stage.
+
+To prevent excessive memory usage or long processing times, Firely Server limits the number of resources returned in the first stage. By default, this limit is set to 35,000 resources. If the result set exceeds this threshold, the server returns an error indicating that the limit has been surpassed.
+
+You can change this limit by setting the ``MongoDbOptions.ChainingThreshold`` and ``Administration.MongoDbOptions.ChainingThreshold`` setting in the configuration file.
+
+.. code-block:: JavaScript
+    
+    {
+        "Administration": {
+            "MongoDbOptions": {
+                "ChainingThreshold": 35000,
+                // ...
+            }
+        },
+        "MongoDbOptions": {
+            "ChainingThreshold": 35000,
+            // ...
+        },
+        // ...
+    }
+
+
+
 Tips and hints for using MongoDb for Firely Server
 --------------------------------------------------
 
@@ -211,7 +239,8 @@ Tips and hints for using MongoDb for Firely Server
 
 #. With regards to Firely Server version and MongoDB version:
     #. If you are on a Firely Server (Vonk) version < v3.6, you can keep using MongoDB v4.0 or higher.
-    #. If you are on Firely Server (Vonk) v3.6 or higher and are unable to migrate to MongoDB 4.4 (relatively soon), please contact us if you need assistance.
+    #. If you are on Firely Server (Vonk) v3.6 or higher and are unable to migrate to MongoDB 4.4.
+    #. For Firely Server v6.0 and higher, MongoDB 6.0 is required.
 
 .. _mongodb_diskspace:
 

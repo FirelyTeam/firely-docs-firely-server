@@ -99,13 +99,13 @@ These patterns are intended for FHIR RESTful operations while focusing on the ma
      - Realm
      - Package Link
 
-   * - * ✔️ v1.1.1
+   * - * ✔️ v1.1.3
   
      - * :ref:`Auditing<feature_auditing>`
 
      - * 🌍
 
-     - * `ihe.iti.balp|1.1.1 <https://registry.fhir.org/package/ihe.iti.balp|1.1.1>`_
+     - * `ihe.iti.balp|1.1.3 <https://registry.fhir.org/package/ihe.iti.balp|1.1.3>`_
 
 ------------
 
@@ -134,6 +134,7 @@ In summary, the USCDI defines the core health data elements for nationwide inter
    * - * ✔️ v1 - based on US Core 3.1.1, US Core 4.0.0
        * ✔️ v2 - based on US Core 5.0.1
        * ✔️ v3 - based on US Core 6.1.0
+       * ✔️ v4 - based on US Core 7.0.0
   
      - n/A
 
@@ -142,6 +143,7 @@ In summary, the USCDI defines the core health data elements for nationwide inter
      - * `USCDI|1.0 - Errata <https://www.healthit.gov/isa/sites/isa/files/2020-10/USCDI-Version-1-July-2020-Errata-Final_0.pdf>`_
        * `USCDI|2.0 <https://www.healthit.gov/isa/sites/isa/files/2021-07/USCDI-Version-2-July-2021-Final.pdf>`_
        * `USCDI|3.0 <https://www.healthit.gov/isp/sites/isp/files/2022-10/USCDI-Version-3-October-2022-Errata-Final.pdf>`_
+       * `USCDI|4.0 <https://www.healthit.gov/isp/sites/isp/files/2023-10/USCDI-Version-4-October-2023-Errata-Final.pdf>`_
 
 .. list-table:: US Core Overview
    :widths: 10, 10, 10, 10
@@ -156,6 +158,7 @@ In summary, the USCDI defines the core health data elements for nationwide inter
        * ✔️ v4.0.0
        * ✔️ v5.0.1
        * ✔️ v6.1.0
+       * ✔️ v7.0.0
   
      - n/A
 
@@ -165,6 +168,7 @@ In summary, the USCDI defines the core health data elements for nationwide inter
        * `hl7.fhir.us.core|4.0.0 <https://registry.fhir.org/package/hl7.fhir.us.core|4.0.0>`_
        * `hl7.fhir.us.core|5.0.1 <https://registry.fhir.org/package/hl7.fhir.us.core|5.0.1>`_
        * `hl7.fhir.us.core|6.1.0 <https://registry.fhir.org/package/hl7.fhir.us.core|6.1.0>`_
+       * `hl7.fhir.us.core|7.0.0 <https://registry.fhir.org/package/hl7.fhir.us.core|7.0.0>`_
 
 Known Limitations
 -----------------
@@ -244,12 +248,14 @@ By creating a common data format, the CPCDS facilitates the seamless sharing of 
      - Specification Link
 
    * - * ✔️ v2.0.0
+       * ✔️ v2.1.0
   
-     - n/A
+     - * n/A
 
      - * 🇺🇸
 
      - * `hl7.fhir.us.carin-bb|2.0.0 <https://registry.fhir.org/package/hl7.fhir.us.carin-bb|2.0.0>`_
+       * `hl7.fhir.us.carin-bb|2.1.0 <https://registry.fhir.org/package/hl7.fhir.us.carin-bb|2.1.0>`_
 
 Known Limitations
 -----------------
@@ -257,7 +263,6 @@ Known Limitations
 * FHIR ExplanationOfBenefits instances are not rejected if the claim conformance to the `abstract "C4BB Explanation Of Benefit" <https://hl7.org/fhir/us/carin-bb/StructureDefinition-C4BB-ExplanationOfBenefit.html>`_ profile
 * In order to validate resources claiming to conform to CARIN Blue Button, it is necessary to configure Firely Server to use an external terminology server incl. support for expanding SNOMED CT, LOINC, NUBC, CPT, ICD-10, NCPDP, X12 ValueSets. See :ref:`feature_terminology`.
 * By default invalid values for a search parameter are not rejected by Firely Server with an HTTP 400 - Bad Request status code. To enable this behavior required by CARIN, include a "Prefer: handling=strict" HTTP header in the search request.
-* FHIRPath constraints using the "memberOf" function are not evaluated by Firely Server
 
 ------------
 
@@ -266,7 +271,7 @@ Known Limitations
 Da Vinci - Member Attribution (ATR) List
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The goal of `Da Vinci - Member Attribution (ATR) List <https://hl7.org/fhir/us/davinci-atr/2023Jan/>`_ implementation guide is to enable providers to gain access to managed lists of all members (Patients) attibuted to their organization.
+The goal of `Da Vinci - Member Attribution (ATR) List <https://hl7.org/fhir/us/davinci-atr/STU2/>`_ implementation guide is to enable providers to gain access to managed lists of all members (Patients) attibuted to their organization.
 Payors are responsible of managing these lists. Based on ATR lists, providers can retreive administrative information in bulk about all members. Additionally, ATR lists can serve as the basis to allow providers to access claims and encounter data.
 
 .. list-table:: Da Vinci - Member Attribution (ATR) List Overview
@@ -278,13 +283,13 @@ Payors are responsible of managing these lists. Based on ATR lists, providers ca
      - Realm
      - Specification Link
 
-   * - * ✔️ v2.0.0-ballot
+   * - * ✔️ v2.0.0
   
-     - n/A
+     - * n/A
 
      - * 🇺🇸
 
-     - * `hl7.fhir.us.davinci-atr|2.0.0-ballot <https://registry.fhir.org/package/hl7.fhir.us.davinci-atr|2.0.0-ballot>`_
+     - * `hl7.fhir.us.davinci-atr|2.0.0 <https://registry.fhir.org/package/hl7.fhir.us.davinci-atr|2.0.0>`_
 
 Known Limitations
 -----------------
@@ -292,6 +297,38 @@ Known Limitations
 * The custom operations ``$member-add`` and ``$member-remove`` are not supported. Therefore for all member updates, a new version of a Group resources is created.
 * The ``_until`` parameter is not supported as part of the Bulk Date Export operations.
 * The ``$davinci-data-export`` wrapper around ``$export`` is not supported.
+
+.. _davinci_pdex_ig:
+
+Da Vinci - Da Vinci Payer Data Exchange
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The `"PDex" Implementation Guide <https://hl7.org/fhir/us/davinci-pdex/STU2/>`_ supports payer-to-payer data exchange, enabling payers to retrieve information about newly enrolled members who request data from their previous health plans.
+It also establishes a foundation for making clinical claims data—such as diagnoses, procedures, and drug codes—accessible to members via a Patient Access API.
+
+.. list-table:: Da Vinci - Da Vinci Payer Data Exchange Overview
+   :widths: 10, 10, 10, 10
+   :header-rows: 1
+
+   * - Supported version
+     - Supporting documentation
+     - Realm
+     - Specification Link
+
+   * - * ✔️ v2.0.0
+  
+     - * n/A
+
+     - * 🇺🇸
+
+     - * `hl7.fhir.us.davinci-pdex|2.0.0 <https://registry.fhir.org/package/hl7.fhir.us.davinci-pdex|2.0.0>`_
+
+Known Limitations
+-----------------
+
+* The same Limitations for ``$davinci-data-export`` as for the DaVinci ATR implementation guide apply.
+* The ``CoverageToLink`` parameter within the $member-match (single) is not supported
+* The Bulk Member Matching process is not supported
 
 ------------
 
@@ -314,7 +351,7 @@ The ISiK FHIR implementation guide aims to improve interoperability and the exch
 
    * - * ✔️ v1.0.7
   
-     - n/A
+     - * n/A
 
      - * 🇩🇪
 

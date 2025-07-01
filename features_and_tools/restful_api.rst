@@ -214,8 +214,34 @@ If MongoDb is configured as the repository back-end, Firely Server may utilize k
 
 If keyset pagination is applied, the navigational links will only contain ``first``, ``self`` and ``next`` links, with the ``first`` link missing on the first page and the last page not containing a ``next`` link. These links will not contain the ``_skip`` parameter but instead have a ``_continuationToken`` that can be used to retrieve the next results page.
 
-The ``next``, ``prev``, and ``last`` link may contain privacy-sensitive information as part of a search parameter value. In order to not expose these values in logs, the :ref:`Vonk.Plugin.SearchAnonymization<vonk_plugins_searchAnonymization>` plugin can be used. It will replace the query parameter part of the navigational link with an opaque UUID. The plugin must be used starting with FHIR R5 as the specification mandates the removal of sensitive information.
+.. _restful_search_anonymization:
 
+Search Anonymization
+^^^^^^^^^^^^^^^^^^^^
+
+The ``next``, ``prev``, and ``last`` link may contain privacy-sensitive information as part of a search parameter value. In order to not expose these values in logs, the :ref:`Vonk.Plugin.SearchAnonymization<vonk_plugins_searchAnonymization>` plugin can be used. It will replace the query parameter part of the navigational link with an opaque UUID. The plugin must be used starting with FHIR R5 as the specification mandates the removal of sensitive information.
+The following settings manage the search anonymization:
+::
+
+  "FhirCapabilities": {
+    "SearchOptions": {
+      "AnonymizationSettings": { // when the SearchAnonymization plugin is loaded, these settings will be used
+        "PagingLifetime": 10,// in minutes, the time an anonymized link is valid
+        "FallbackToEmbeddedEncryptionKey" :  true, // if true and there are no keys provided or the last provided key is no longer valid, the server will use the embedded key to encrypt.
+        "EncryptionKeys": [ // a JWKS to use for paging encryption
+            {
+                "kty": "oct", // all keys should be of type oct
+                "k": "AyM1SysPpbyDfgZld3umj1qzKObwVMkoqQ-EstJQLr_T-1qS0gZH75aKtMN3Yj0", // only base64url encoded keys are supported
+                "exp": "2099-12-31" // the expiration date of the key, this is a custom property and has to be added. Time will be ignored
+            }
+        ]
+      }
+    }
+  },
+
+The ``PagingLifetime`` will set how long the navigational links are valid in minutes. When the link is expired, a HTTP 410 Gone will be returned.
+The ``FallbackToEmbeddedEncryptionKey`` setting indicates wether to use the default encryption key or not. This also means that when encryption keys are provided and this is set to true, the default key will be used when the last provided key is expired.
+The ``EncryptionKeys`` setting holds a set of JWK keys. The ``kty`` should be oct and a valid ``k`` value should be generated. Each key should also have the custom ``exp`` property which states a date when this key will expire.
 
 Modifiers
 ^^^^^^^^^

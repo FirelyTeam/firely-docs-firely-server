@@ -19,6 +19,15 @@ Unsure how to name your variables? This works the same as with :ref:`configure_e
 
 If you are working with deployments on Azure or AWS, it is necessary to load any configuration in a separate folder in the root of Firely Auth. Providing a folder for your settings files also works the same as with :ref:`configure_settings_path`, but then using the environment variable ``FIRELY_AUTH_PATH_TO_SETTINGS``.
 
+Firely Auth and the Firely Server $versions operation
+-----------------------------------------------------
+
+When using SMART with Firely Auth as the authorization server, ensure that the ``RequireAuthorization`` setting for the ``$versions`` operation is set to ``Never`` in the operation configuration. 
+
+This setting allows Firely Auth to correctly detect the default FHIR version and connect to Firely Server to retrieve the ``CapabilityStatement``.
+
+Since ``$versions`` only returns the enabled FHIR versions and does not expose any sensitive information, it is safe to make this operation accessible without authorization.
+
 Sections
 --------
 
@@ -324,8 +333,9 @@ Clients
 
 The ``ClientRegistration`` is used to register the :term:`clients <client>` that are allowed to request access tokens from Firely Auth.
 
-These settings will be imported into the database only when starting Firely Auth for the first time with a new database. After subsequent starts, the clients must be managed in the database via the web interface, which will allow client updates without needing to restart Firely Auth.
-In order to add clients in the web interface, a connection to :ref:`firely_auth_settings_server` must be established.
+.. note::
+
+    ``ClientRegistration`` is only used for the initial load of Firely Auth, when starting for the first time with a new database. For every further change required to the registered clients, please use the User Interface :ref:`firely_auth_settings_ui` or  the API’s that are specified in the swagger documentation which you can find at: https://localhost:5001/swagger/ (or replace localhost with the url of your Firely Auth installation). These interfaces will then allow client updates without needing to restart Firely Auth.
 
 .. code-block:: json
 

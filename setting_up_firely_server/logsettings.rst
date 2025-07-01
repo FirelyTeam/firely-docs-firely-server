@@ -212,22 +212,48 @@ The ``File`` sink will write to a file, possibly rolling it by interval or size.
 Application Insights
 ^^^^^^^^^^^^^^^^^^^^
 
-Firely Server can also log to Azure Application Insights ("Application Insights Telemetry"). What you need to do:
+Firely Server can also log to Azure Application Insights ("Application Insights Telemetry"). 
+
+.. note::
+   Azure is deprecating the use of Instrumentation Keys. As a best practice, you should use the Application Insights Connection String instead of the Instrumentation Key when configuring Serilog.
+
+What you need to do:
 
 #. Create an Application Insights instance on Azure.
 #. Get the ConnectionString from the Properties blade of this instance.
-#. Add the correct sink to the logsettings.json::
+#. Configure the connection string using one of these methods:
+
+   a. Add the correct sink to the logsettings.json::
 
 		"WriteTo": [
 			{
 				"Name": "ApplicationInsights",
 				"Args": {
 					"connectionString": "[your connection string here]", 
-					"telemetryConverter": "Serilog.Sinks.ApplicationInsights.TelemetryConverters.TraceTelemetryConverter, Serilog.Sinks.ApplicationInsights" 
+					"telemetryConverter": "Serilog.Sinks.ApplicationInsights.TelemetryConverters.TraceTelemetryConverter, Serilog.Sinks.ApplicationInsights",
 					"restrictedToMinimumLevel": "Verbose" //Or a higher level
 				}
 			},
 		],
+
+   b. Or configure it in appsettings.json::
+
+		"ApplicationInsights": {
+			"ConnectionString": "[your connection string here]"
+		}
+
+.. important::
+   **Unified SDK Activation**: Regardless of which configuration method you choose, Firely Server automatically activates the full Application Insights SDK.
+
+   **Both methods enable**:
+   
+   - Full request telemetry and performance metrics
+   - Dependency tracking for database operations (SQL Server, MongoDB)
+   - Exception tracking and reporting
+   - Custom metrics and events
+   - Integration with other configured sinks like Seq
+   
+   **Key difference**: When configuring via Serilog (method a), you gain additional control over which log levels are sent to Application Insights through the ``restrictedToMinimumLevel`` setting, while still collecting all telemetry data.
 
 #. This also enables Dependency Tracking for access to your database. This works for both SQL Server and MongoDB. And for the log sent to `Seq`_ if you enabled that.
 #. If you set the level for Application Insights to ``Verbose``, and combine that with `Database details`_, you get all the database commands right into Application Insights.
@@ -248,6 +274,7 @@ Seq server::
 
 * Change ``serverUrl`` to the URL of your Seq server
 * ``restrictedToMinimumLevel``: as described for `Console`_.
+* Use ``apiKey`` to use an authenticated connection between Firely Server and Seq, see `Serilog Seq documentation <https://github.com/datalust/serilog-sinks-seq?tab=readme-ov-file#json-appsettingsjson-configuration>`_.
 
 Elasticsearch
 ^^^^^^^^^^^^^

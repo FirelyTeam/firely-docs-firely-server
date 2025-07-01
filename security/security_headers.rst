@@ -1,5 +1,8 @@
 .. _security_headers:
 
+HTTP security headers
+=====================
+
 HTTP security headers are a critical part of web application security, helping to protect against various attacks such as cross-site scripting (XSS), clickjacking, and other code injection vulnerabilities. 
 By configuring these headers, web developers can enforce stricter communication policies between clients and servers, enhancing the overall security posture of their websites.
 

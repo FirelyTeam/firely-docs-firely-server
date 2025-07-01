@@ -44,7 +44,7 @@ Navigate to your working directory for Firely Server and run the container with 
 
 - in cmd.exe: ``docker run -d -p 8080:4080 --name firely.server -v %CD%/firelyserver-license.json:/app/firelyserver-license.json firely/server``
 
-- in Powershell: ``docker run -d -p 8080:4080 --name firely.server -v ${PWD}/firelyserver-license.json:/app/firelyserver-license.json firely/server``
+- in Powershell / Bash on macOS: ``docker run -d -p 8080:4080 --name firely.server -v ${PWD}/firelyserver-license.json:/app/firelyserver-license.json firely/server``
 
 If your license file has a different name, use that name instead of ``firelyserver-license`` on the left side of the `-v` parameter in the command above. E.g. ``-v ${PWD}/my-fancy-license.json:/app/firelyserver-license.json``
 
@@ -168,8 +168,8 @@ Be sure to mount your appsettings.instance.json as well, and make sure to point 
 .. code-block::
 
   "AdministrationImportOptions": {
-		"ImportDirectory": "./vonk-import",
-    "ImportedDirectory": "./vonk-imported"
+	"ImportDirectory": "./vonk-import",
+    	"ImportedDirectory": "./vonk-imported"
   }
 
 By default, Firely server will assume the resources placed in the vonk-import folder are R3 resources. If you want to load R4 or R5 resources, you need to alter the name of your import folder and volume accordingly:
@@ -207,8 +207,6 @@ Another way to spin up a Firely Server container is to use a docker-compose file
 
 .. code-block:: yaml
    :linenos:
-
-   version: '3'
 
    services:
 
@@ -263,8 +261,6 @@ We will use docker-compose to achieve this.
 
 .. code-block:: yaml
    :linenos:
-
-   version: '3'
    
    services:
      vonk-web:
@@ -329,8 +325,6 @@ To run the Firely Server container we will use the following docker-compose file
 .. code-block:: yaml
    :linenos:
 
-   version: '3'
-
    services:
  
      vonk-web:
@@ -384,8 +378,6 @@ This section describes how to spin up a Firely Server container and a MongoDB co
 
 .. code-block:: yaml
    :linenos:
-
-   version: '3'
 	 
    services:
 	 
@@ -442,8 +434,6 @@ If you use docker-compose, you can specify the variable in you docker-compose fi
 
 .. code-block:: yaml
    :linenos:
-
-   version: '3'
 
    services:
 

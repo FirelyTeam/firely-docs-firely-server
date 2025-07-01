@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Encounter",
-    "version": "5.9.1+8273fb74d4fc80b7f800a387afca6c9e06fc0627"
+    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
   },
   "servers": [
     {
@@ -2007,7 +2007,7 @@
       "based-on": {
         "name": "based-on",
         "in": "query",
-        "description": "Fulfills plan or proposal",
+        "description": "Reference to the service request.",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2024,7 +2024,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Date first version of the resource instance was recorded\r\n* [CarePlan](careplan.html): Time period plan covers\r\n* [CareTeam](careteam.html): Time period team covers\r\n* [ClinicalImpression](clinicalimpression.html): When the assessment was documented\r\n* [Composition](composition.html): Composition editing time\r\n* [Consent](consent.html): When this Consent was created or indexed\r\n* [DiagnosticReport](diagnosticreport.html): The clinically relevant time of the report\r\n* [Encounter](encounter.html): A date within the period the Encounter lasted\r\n* [EpisodeOfCare](episodeofcare.html): The provided date search value falls within the episode of care's period\r\n* [FamilyMemberHistory](familymemberhistory.html): When history was recorded or last updated\r\n* [Flag](flag.html): Time period when flag is active\r\n* [Immunization](immunization.html): Vaccination  (non)-Administration Date\r\n* [List](list.html): When the list was prepared\r\n* [Observation](observation.html): Obtained date/time. If the obtained element is a period, a date that falls in the period\r\n* [Procedure](procedure.html): When the procedure was performed\r\n* [RiskAssessment](riskassessment.html): When was assessment made?\r\n* [SupplyRequest](supplyrequest.html): When the request was made\r\n",
+        "description": "The example scenario publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2049,7 +2049,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): External ids for this item\r\n* [CarePlan](careplan.html): External Ids for this plan\r\n* [CareTeam](careteam.html): External Ids for this team\r\n* [Composition](composition.html): Version-independent identifier for the Composition\r\n* [Condition](condition.html): A unique identifier of the condition record\r\n* [Consent](consent.html): Identifier for this record (external references)\r\n* [DetectedIssue](detectedissue.html): Unique id for the detected issue\r\n* [DeviceRequest](devicerequest.html): Business identifier for request/order\r\n* [DiagnosticReport](diagnosticreport.html): An identifier for the report\r\n* [DocumentManifest](documentmanifest.html): Unique Identifier for the set of documents\r\n* [DocumentReference](documentreference.html): Master Version Specific Identifier\r\n* [Encounter](encounter.html): Identifier(s) by which this encounter is known\r\n* [EpisodeOfCare](episodeofcare.html): Business Identifier(s) relevant for this EpisodeOfCare\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a record identifier\r\n* [Goal](goal.html): External Ids for this goal\r\n* [ImagingStudy](imagingstudy.html): Identifiers for the Study, such as DICOM Study Instance UID and Accession number\r\n* [Immunization](immunization.html): Business identifier\r\n* [List](list.html): Business identifier\r\n* [MedicationAdministration](medicationadministration.html): Return administrations with this external identifier\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses with this external identifier\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions with this external identifier\r\n* [MedicationStatement](medicationstatement.html): Return statements with this external identifier\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this external identifier\r\n* [Observation](observation.html): The unique id for a particular observation\r\n* [Procedure](procedure.html): A unique identifier for a procedure\r\n* [RiskAssessment](riskassessment.html): Unique identifier for the assessment\r\n* [ServiceRequest](servicerequest.html): Identifiers assigned to this order\r\n* [SupplyDelivery](supplydelivery.html): External identifier\r\n* [SupplyRequest](supplyrequest.html): Business Identifier for SupplyRequest\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this external identifier\r\n",
+        "description": "External identifier for the example scenario",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2066,7 +2066,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Uri where the data can be found",
+        "description": "Geographic region(s) for study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2083,7 +2083,7 @@
       "part-of": {
         "name": "part-of",
         "in": "query",
-        "description": "Returns statements that are part of another event.",
+        "description": "Procedure or observation this questionnaire response was performed as a part of",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2092,7 +2092,7 @@
       "participant": {
         "name": "participant",
         "in": "query",
-        "description": "Who is involved",
+        "description": "The reference to a participant in the test execution",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2109,7 +2109,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Who the sensitivity is for\r\n* [CarePlan](careplan.html): Who the care plan is for\r\n* [CareTeam](careteam.html): Who care team is for\r\n* [ClinicalImpression](clinicalimpression.html): Patient or group assessed\r\n* [Composition](composition.html): Who and/or what the composition is about\r\n* [Condition](condition.html): Who has the condition?\r\n* [Consent](consent.html): Who the consent applies to\r\n* [DetectedIssue](detectedissue.html): Associated patient\r\n* [DeviceRequest](devicerequest.html): Individual the service is ordered for\r\n* [DeviceUseStatement](deviceusestatement.html): Search by subject - a patient\r\n* [DiagnosticReport](diagnosticreport.html): The subject of the report if a patient\r\n* [DocumentManifest](documentmanifest.html): The subject of the set of documents\r\n* [DocumentReference](documentreference.html): Who/what is the subject of the document\r\n* [Encounter](encounter.html): The patient or group present at the encounter\r\n* [EpisodeOfCare](episodeofcare.html): The patient who is the focus of this episode of care\r\n* [FamilyMemberHistory](familymemberhistory.html): The identity of a subject to list family member history items for\r\n* [Flag](flag.html): The identity of a subject to list flags for\r\n* [Goal](goal.html): Who this goal is intended for\r\n* [ImagingStudy](imagingstudy.html): Who the study is about\r\n* [Immunization](immunization.html): The patient for the vaccination record\r\n* [List](list.html): If all resources have the same subject\r\n* [MedicationAdministration](medicationadministration.html): The identity of a patient to list administrations  for\r\n* [MedicationDispense](medicationdispense.html): The identity of a patient to list dispenses  for\r\n* [MedicationRequest](medicationrequest.html): Returns prescriptions for a specific patient\r\n* [MedicationStatement](medicationstatement.html): Returns statements for a specific patient.\r\n* [NutritionOrder](nutritionorder.html): The identity of the person who requires the diet, formula or nutritional supplement\r\n* [Observation](observation.html): The subject that the observation is about (if patient)\r\n* [Procedure](procedure.html): Search by subject - a patient\r\n* [RiskAssessment](riskassessment.html): Who/what does assessment apply to?\r\n* [ServiceRequest](servicerequest.html): Search by subject - a patient\r\n* [SupplyDelivery](supplydelivery.html): Patient for whom the item is supplied\r\n* [VisionPrescription](visionprescription.html): The identity of a patient to list dispenses for\r\n",
+        "description": "Retrieve coverages for a patient",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2118,7 +2118,8 @@
       "practitioner": {
         "name": "practitioner",
         "in": "query",
-        "description": "Persons involved in the encounter other than the patient",
+        "description": "One of the individuals of the appointment is this practitioner",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2126,7 +2127,8 @@
       "reason-code": {
         "name": "reason-code",
         "in": "query",
-        "description": "Coded reason the encounter takes place",
+        "description": "Coded reason this appointment is scheduled",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2134,7 +2136,8 @@
       "reason-reference": {
         "name": "reason-reference",
         "in": "query",
-        "description": "Reason the encounter takes place (reference)",
+        "description": "Reason the appointment is to take place (resource)",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2158,7 +2161,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the Episode of Care as provided (does not check the status history collection)",
+        "description": "The current status of the example scenario",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2167,7 +2170,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "The identity of a subject to list flags for",
+        "description": "The subject of the report",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2176,7 +2179,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): allergy | intolerance - Underlying mechanism (if known)\r\n* [Composition](composition.html): Kind of composition (LOINC if possible)\r\n* [DocumentManifest](documentmanifest.html): Kind of document set\r\n* [DocumentReference](documentreference.html): Kind of document (LOINC if possible)\r\n* [Encounter](encounter.html): Specific type of encounter\r\n* [EpisodeOfCare](episodeofcare.html): Type/class  - e.g. specialist referral, disease management\r\n",
+        "description": "The kind of coverage (health plan, auto, Workers Compensation)",
         "style": "form",
         "schema": {
           "type": "string"

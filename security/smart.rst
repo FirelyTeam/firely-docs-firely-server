@@ -67,6 +67,7 @@ You can control the way Access Control based on `SMART on FHIR <https://fire.ly/
 
     "SmartAuthorizationOptions": {
       "Enabled": true,
+      //"ClockSkew": "00:05:00",
       "PatientFilter": "identifier=#patient#", //Filter on a Patient compartment if a 'patient' launch scope is in the auth token, for the Patient that has an identifier matching the value of that 'patient' launch scope
       "Authority": "https://example.org/base-url-to-your-identity-provider",
     //"AdditionalBaseEndpointsInDiscoveryDocument": ["additional-url-to-your-identity-provider"],
@@ -109,6 +110,7 @@ You can control the way Access Control based on `SMART on FHIR <https://fire.ly/
     }
 
 * Enabled: With this setting you can disable ('false') the authentication and authorization altogether. When it is enabled ('true'), Firely Server will also evaluate the other settings. The default value is 'false'. This implies that authorization is disabled as if no SmartAuthorizationOptions section is present in the settings.
+* ClockSkew: Allow potential time discrepancies between the authorization server and the FHIR server, allowing for a small tolerance window when checking token expiration and validity times. Defaults to 5 minutes.
 * PatientFilter: Defines how the ``patient`` launch context is translated to a search argument. See :ref:`feature_accesscontrol_compartment` for more background. You can use any supported search parameter defined on Patient. It should contain ``#patient#``, which is substituted by the value of the ``patient`` claim.
 * Authority: The base url of your identity provider, such that ``{{base_url}}/.well-known/openid-configuration`` returns a valid configuration response (`OpenID Connect Discovery documentation <https://openid.net/specs/openid-connect-discovery-1_0.html#rfc.section.4.2>`_). At minimum, the ``jwks_uri``, ``token_endpoint`` and ``authorization_endpoint`` keys are required in addition to the keys required by the specification. See :ref:`Firely Auth<feature_accesscontrol_idprovider>` for more background.
 * AdditionalBaseEndpointsInDiscoveryDocument: Optional configuration setting. Add additional base authority endpoints that your identity provider also uses for operations that are listed in the .well-known document. 

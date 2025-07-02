@@ -41,6 +41,7 @@ Other implications:
 
 - The logical id of a resource must be unique *across tenants*.
 - An update cannot change the tenant of a resource.
+- If a HTTP header is used to specify the tenant, this should be applied in a reverse proxy, to prevent clients from specifying their own tenant.
 - If a security label for the tenant is applied already in the body of the request, it must be consistent with the tenant in the request.
 - Handling the tenant information takes time and resources, and may increase the response time.
 

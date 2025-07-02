@@ -65,7 +65,7 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
 
 .. admonition:: Docker deployments
 
-    If :ref:`testing with Docker <firely_auth_deploy_docker>`, Firely Auth should be configured to use the local host network, instead of the default bridge network. This is necessary to allow the SSO provider to redirect back to the Firely Auth instance running in a Docker container.
+    If :ref:`testing with Docker <firely_auth_deploy_docker>`, Firely Auth should be configured to use the localhost network, instead of the default bridge network. This is necessary to allow the SSO provider to redirect back to the Firely Auth instance running in a Docker container.
 
 A note on the fhirUser claim
 ----------------------------

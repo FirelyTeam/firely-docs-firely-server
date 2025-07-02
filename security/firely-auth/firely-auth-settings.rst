@@ -488,7 +488,7 @@ External identity providers
 			"DisplayName": "Login via SSO - <Name of IdentityProvider>",
 			"ClientId": "ClientId for Firely Auth, pre-registered with external service",
 			"ClientSecret": "secret for clientId",
-			"AllowAutoProvision": true|false,
+			"AllowAutoProvision": true,
 			"AutoProvisionFromSecurityGroup": ["<Security Group>"],
 			"UserClaimsFromIdToken": [{
 				"Key": "<key of claim to copy>",
@@ -509,10 +509,10 @@ External identity providers
 - ``DisplayName``: Name that will be displayed in the UI of Firely Auth for users to select which identity provider to use if multiple are configured or if a local login is enabled as well.
 - ``ClientId``: ClientId of Firely Auth that will be used in the implicit token flow in order to retrieve an id token from the external identity provider.
 - ``ClientSecret``: ClientSecret of Firely Auth that will be used in the implicit token flow in order to retrieve an id token from the external identity provider.
--	``AllowAutoProvision``: true / false - If true, Firely Auth will automatically create a user in its own database if the user logs in with an external identity provider for the first time. The user will be created with the claims that are provided by the external identity provider. A request to Firely Server will attempt to match the user to a ``Patient`` or ``Practitioner`` resource and, if found, the respective resource ID will be used as the fhirUser claim. 
+-	``AllowAutoProvision``: true / false - If true, Firely Auth will automatically create a user in its own database if the user logs in with an external identity provider for the first time. The user will be created with the claims that are provided by the external identity provider. Note that either the ``UserClaimsFromIdToken`` or ``FhirUserLookupClaimsMapping`` setting may be necessary to map a custom user claim from the identity provider to the required ``fhirUser`` claim. A request to Firely Server will attempt to match the user to a ``Patient`` or ``Practitioner`` resource and, if found, the respective resource ID will be used as the ``fhirUser`` claim. 
 - ``AutoProvisionFromSecurityGroup``: When ``AllowAutoProvision`` is true, this setting allows you to specify a security group that the user must be a member of in order to be automatically provisioned. If the user is not a member of this group, the user will not be automatically provisioned.
-- ``UserClaimsFromIdToken``: This setting allows you to map the claims from the token that is received from the external identity provider to the claims that are stored in the Firely Auth database. The key is the claim that is received from the external identity provider. This key can be copied as a value that is recognized by Firely Auth. For intance, Azure is able to provide fhirUser claim to the token, but will prefix this claim with ``extn.``. The CopyAs field can be used to remove this prefix, so that Firely Auth is able to recognize the fhirUser claim.
-- ``FhirUserLookupClaimsMapping``: As an alternative for retrieving the FhirUser Claim from the ``UserClaimsFromIdToken`` setting, ``FhirUserLookupClaimsMapping`` allows you to use the claims from the ID token to search for a users respective resource in Firely Server. This can either be a Patient resource or a Practitioner recource. Firely Auth will then use the id of this resource to derive the fhirUser claim of the user upon SSO auto-provisioning. Multiple mappings can be provided. Each search parameter will be combined using a logical  AND while searching for the fhirUser resource. The fhirUser is only derived if there is an unambiguous match in Firely Server.
+- ``UserClaimsFromIdToken``: This setting allows you to map the claims from the token that is received from the external identity provider to the claims that are stored in the Firely Auth database. The key is the claim that is received from the external identity provider. This key can be copied as a value that is recognized by Firely Auth. For intance, Azure is able to provide ``fhirUser`` claim to the token, but will prefix this claim with ``extn.``. The CopyAs field can be used to remove this prefix, so that Firely Auth is able to recognize the ``fhirUser`` claim.
+- ``FhirUserLookupClaimsMapping``: As an alternative for retrieving the ``fhirUser`` Claim from the ``UserClaimsFromIdToken`` setting, ``FhirUserLookupClaimsMapping`` allows you to use the claims from the ID token to search for a users respective resource in Firely Server. This can either be a Patient resource or a Practitioner recource. Firely Auth will then use the id of this resource to derive the ``fhirUser`` claim of the user upon SSO auto-provisioning. Multiple mappings can be provided. Each search parameter will be combined using a logical  AND while searching for the ``fhirUser`` resource. The ``fhirUser`` is only derived if there is an unambiguous match in Firely Server.
 - ``SearchParameterName``: The search parameter that will be used to search for the user in Firely Server. This can be any search parameter that can be used to query ``Patient`` or ``Practitioner`` resources. This search parameter will be used on a system-level search against Firely Server.
 - ``SearchParameterValueTemplate``: The template that will be used to construct the value that will be used to search for the user in Firely Server. The template can contain placeholders that will be replaced by the values of the claims from the ID token. The placeholders should be in the format ``{NumericalIndexForClaim}``. The numerical index is the index of the claim in the array of claims that are provided by the external identity provider. The index starts at 0.
 - ``CopySearchParameterValuesFromClaims``: This setting allows you to copy the values of the claims from the ID token to the template that is used to construct the value that will be used to search for the user in Firely Server. The values of the claims will be copied in the order that they are provided in the array. The values will be copied to the placeholders in the template that are in the format ``{NumericalIndexForClaim}``.
@@ -546,7 +546,7 @@ These policies will be presented in the UI after the user has been authenticated
         		"propertyName2":"propertyValue2"
         	},
           "ShowDisclaimerFor": {
-				  "EveryLogin": false|true, // if true then the disclaimer is shown on each login, there is a grace period here where the consent is temporary stored
+				  "EveryLogin": false, // if true then the disclaimer is shown on each login, there is a grace period here where the consent is temporary stored
 				  "Clients": [ "<ClientId>" ], // if set then this disclaimer will only be shown for the specified clients
 				  }
         }
@@ -565,6 +565,7 @@ The consent for the previous disclaimer will stay in the database for future ref
 See the ``Data\DisclaimerTemplates`` folder in the Firely Auth disribution for an example disclaimer template.
 
 .. _firely_auth_settings_launchcontext:
+
 EHR and standalone launch context settings
 ------------------------------------------
 To enable supporting launch scopes, the server must be configured with launch context settings. 
@@ -620,7 +621,7 @@ These settings contain the username and password that have to be used as basic a
 
 Per resource type you can configure a maximum of 4 properties of that resource type that will get shown in the UI. 
 The UI will only show resource types that are not provided by a call to the EHR launch endpoint (:ref:`firely_auth_endpoints_launchcontext`).
-Also when a ``launch`` or ``launch/patient``, or a ``patient/xxxx.yyy`` scope is requested, and a patient logs in, the patient context will automatically be added based on the fhirUser claim of the user. This will not happen when you log in as practitioner.
+When a ``launch`` or ``launch/patient``, or a ``patient/xxxx.yyy`` scope is requested, and a patient logs in, the patient context will automatically be added based on the ``fhirUser`` claim of the user. This will not happen when you log in as practitioner.
 
 Inferno test settings
 ---------------------
@@ -648,8 +649,8 @@ We have a full walkthrough of Inferno testing available as a whitepaper, see `ou
     Firely Auth 3.2.0 introduces a new end point ``launchContext``, which can be used to request a ``launch`` identifier dynamically. Therefore no need to configure the static ``LaunchIds`` in the Inferno client settings.
     See more details in the :ref:`firely_auth_endpoints_launchcontext` for requesting ``launch`` identifier dynamically
 
-Firely Auth settings
-^^^^^^^^^^^^^^^^^^^^
+Firely Auth settings for Inferno
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Put these settings in ``appsettings.instance.json`` next to the executable. 
 
@@ -793,8 +794,8 @@ For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need
     }
   }
 
-Firely Server settings
-^^^^^^^^^^^^^^^^^^^^^^
+Firely Server settings for Inferno
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Put these settings in appsettings.instance.json, next to the executable.
 
@@ -818,7 +819,7 @@ For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need
       }
     ],
     "Authority": "<url where Firely Auth is hosted>",
-    "Audience": ""<url where you host Firely Server>", 
+    "Audience": "<url where you host Firely Server>", 
     "RequireHttpsToProvider": true, 
     "Protected": {
       "InstanceLevelInteractions": "read, vread, update, patch, delete, history, conditional_delete, conditional_update, $validate, $meta, $meta-add, $meta-delete, $export, $everything, $erase",

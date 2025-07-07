@@ -11,7 +11,7 @@ configure Kubernetes resources.
 In order to deploy Firely Server from the Azure Marketplace, follow these steps:
 
 1. Go to the `Azure Marketplace <https://azuremarketplace.microsoft.com/en-us/marketplace/apps?search=Firely&page=1>`_ and search for "Firely Server".
-2. Click on the "Create" button to start the deployment process.
+2. Click on the "Get it now" button to start the deployment process.
 3. On the first panel, provide the Azure subscription, the resource group and the cluster where Firely Server should be deployed.
 4. On the second pane, provide the parameters for configuring the deployment. 
 5. Click "Review + Create" to review your settings and then click "Create" to deploy Firely Server.

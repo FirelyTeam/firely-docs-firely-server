@@ -5,3 +5,4 @@ _build/
 /.vs/**
 /_static/files/drawio-source/*.bkp
 
+.python-version

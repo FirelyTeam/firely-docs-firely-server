@@ -3,33 +3,52 @@
 Using Firely Server from Azure Marketplace
 ==========================================
 
-Firely Server is available in the Azure Marketplace, which allows you to deploy it easily on Azure Kubernetes Service (AKS) with a single click. 
-This deployment method uses an embedded Helm chart, which simplifies the setup process and provides a consistent configuration experience.
+Firely Server is available as a Kubernetes App in the Azure Marketplace, which allows you to deploy it easily on Azure Kubernetes Service (AKS) with a single click. 
 The Azure Marketplace deployment is ideal for users who want to quickly get started with Firely Server on Azure without needing to manually 
 configure Kubernetes resources.
 
-In order to deploy Firely Server from the Azure Marketplace, follow these steps:
+Concretely, when deploying Firely Server from the Azure Marketplace, an AKS extension is deployed to your existing cluster, and the 
+extension consists in a set of Kubernetes resources packaged as a Helm chart and deployed in the ``firely-market-place`` namespace. 
+
+Pre-requisites
+--------------
+
+Before deploying Firely Server from the Azure Marketplace, ensure you have the following: 
+- An Azure account with an active subscription.
+- An Azure Kubernetes Service (AKS) cluster where you want to deploy Firely Server (see for example `this tutorial <https://learn.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster>`_).
+- Basic knowledge of Azure and Kubernetes concepts.
+- A valid Firely Server license in JSON format. An evaluation license can be retrieved from `the Firely Portal <https://fire.ly/firely-server-trial/>`_.
+
+
+In adition, if you want to use Ingress with TLS, you need to have the following: 
+- A registered hostname (i.e. a CNAME or A record in a DNS provider) 
+- A certificate manager (typically `cert-manager <https://cert-manager.io/>`_) 
+- A certificate issuer (see the `available issuers for cert-manager <https://cert-manager.io/docs/usage/issuer/>`_) already deployed in the Kubernetes cluster.
+
+Deployment Steps
+-----------------
+
+In order to deploy Firely Server from the Azure Marketplace, follow these steps:    
 
 1. Go to the `Azure Marketplace <https://azuremarketplace.microsoft.com/en-us/marketplace/apps?search=Firely&page=1>`_ and search for "Firely Server".
 2. Click on the "Get it now" button to start the deployment process.
 3. On the first panel, provide the Azure subscription, the resource group and the cluster where Firely Server should be deployed.
-4. On the second pane, provide the parameters for configuring the deployment. 
+4. On the second panel, provide the parameters for configuring the deployment. 
 5. Click "Review + Create" to review your settings and then click "Create" to deploy Firely Server.
-
-You can monitor the deployment progress in the Azure portal under the "Deployments" section of the selected resource group.
 
 For the most basic deployment, you can simply specify the extension resource name and the license, and leave the other parameters at their default values.
 This will deploy Firely Server in the selected kubernetes cluster as a kubernetes deployment and create a load balancer with a public IP, exposing Firely Server on port 80. 
-
 For more advanced scenarios, you can customize the deployment by providing additional parameters as described below.
 
+You can monitor the deployment progress in the Azure portal under the "Deployments" section of the selected resource group.
+
 Parameters
--------------
+----------
 
 The following parameters are available for configuring the Firely Server deployment:
 
 - **Extension Resource Name** (``extensionResourceName``):  
-  The name for the extension resource. Only alphanumeric characters are allowed, and the value must be between 6 and 30 characters long. *(Required)*
+  The name for the extension resource. This must be unique for the cluster, must only contain alphanumeric characters, and the value must be between 6 and 30 characters long, for example ``firelyserver``. *(Required)*
 
 - **Enable Ingress?** (``UseIngress``):  
   Determines whether to enable Kubernetes Ingress for Firely Server. Select "Yes" to expose the service via Ingress, or "No" to disable Ingress. Note that in order to use an Ingress, you need to have an Ingress Controller already deployed in your kubernetes cluster. *(Required)*
@@ -56,7 +75,7 @@ The following parameters are available for configuring the Firely Server deploym
   *(Required)*
 
 - **License** (``License``):  
-  The Firely Server license in JSON format. This field is required and must be a valid JSON object (starts and ends with curly braces). An evaluation license can be retrieved from `the Firely Portal <https://fire.ly/firely-server-trial/>`_.
+  The Firely Server license in JSON format. This field is required and must be a valid JSON object (starts and ends with curly braces).
 
 - **appsettings** (``appsettings``):  
   The Firely Server application settings in JSON format. This field is required and must be a valid JSON object but you can specify ``{}``. You can find more details about the available settings in the :ref:`Firely Server Settings reference section <fs_settings_reference>`.

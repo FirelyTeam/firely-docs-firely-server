@@ -7,7 +7,7 @@ Firely Server is available as a Kubernetes App in the Azure Marketplace, which a
 The Azure Marketplace deployment is ideal for users who want to quickly get started with Firely Server on Azure without needing to manually 
 configure Kubernetes resources.
 
-Concretely, when deploying Firely Server from the Azure Marketplace, an AKS extension is deployed to your existing cluster, and the 
+Concretely, when deploying Firely Server from the Azure Marketplace, an AKS extension of type ``Firely.FirelyServerEssentialsNonUs`` is deployed to your existing cluster, and the 
 extension consists in a set of Kubernetes resources packaged as a Helm chart and deployed in the ``firely-market-place`` namespace. 
 
 Pre-requisites
@@ -51,6 +51,9 @@ The following parameters are available for configuring the Firely Server deploym
 
 - **Extension Resource Name** (``extensionResourceName``):  
   The name for the extension resource. This must be unique for the cluster, must only contain alphanumeric characters, and the value must be between 6 and 30 characters long, for example ``firelyserver``. *(Required)*
+
+.. note::
+    There could be at most one extension resource of type ``Firely.FirelyServerEssentialsNonUs`` per AKS cluster. If you try to deploy again the Firely Server offer with with the different extension resource name, the deployment will fail. If you re-use the same name, the existing extension will be updated with the new parameters.
 
 - **Enable Ingress?** (``UseIngress``):  
   Determines whether to enable Kubernetes Ingress for Firely Server. Select "Yes" to expose the service via Ingress, or "No" to disable Ingress. Note that in order to use an Ingress, you need to have an Ingress Controller already deployed in your kubernetes cluster. *(Required)*

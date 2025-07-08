@@ -86,6 +86,6 @@ The following parameters are available for configuring the Firely Server deploym
   The Firely Server log settings in JSON format. This field is required and must be a valid JSON object but you can leave the default value of ``{}``. You can find more details about the available settings in the :ref:`log settings section <configure_log>`.
 
 .. note::
-    In order to update the parameters, you can either redeploy the extension with the new parameters or update the extension parameters in the Azure Portal 
-    (the extensions are located in the ``Extensions + applications`` in the ``Settings`` section of the AKS instance where the extension is deployed). If updating the extension parameters,
-    you need to encode the JSON values in base64 format.
+  In order to update the parameters, you can either redeploy the extension with the new parameters or update the extension parameters in the Azure Portal 
+  (the extensions are located in the ``Extensions + applications`` in the ``Settings`` section of the AKS instance where the extension is deployed). If updating the extension parameters,
+  you need to encode the JSON values in base64 format.

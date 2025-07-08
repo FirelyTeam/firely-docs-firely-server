@@ -13,7 +13,8 @@ extension consists in a set of Kubernetes resources packaged as a Helm chart and
 Pre-requisites
 --------------
 
-Before deploying Firely Server from the Azure Marketplace, ensure you have the following: 
+Before deploying Firely Server from the Azure Marketplace, ensure you have the following:
+
 - An Azure account with an active subscription.
 - An Azure Kubernetes Service (AKS) cluster where you want to deploy Firely Server (see for example `this tutorial <https://learn.microsoft.com/en-us/azure/aks/tutorial-kubernetes-deploy-cluster>`_).
 - Basic knowledge of Azure and Kubernetes concepts.
@@ -21,6 +22,7 @@ Before deploying Firely Server from the Azure Marketplace, ensure you have the f
 
 
 In adition, if you want to use Ingress with TLS, you need to have the following: 
+
 - A registered hostname (i.e. a CNAME or A record in a DNS provider) 
 - A certificate manager (typically `cert-manager <https://cert-manager.io/>`_) 
 - A certificate issuer (see the `available issuers for cert-manager <https://cert-manager.io/docs/usage/issuer/>`_) already deployed in the Kubernetes cluster.
@@ -78,7 +80,12 @@ The following parameters are available for configuring the Firely Server deploym
   The Firely Server license in JSON format. This field is required and must be a valid JSON object (starts and ends with curly braces).
 
 - **appsettings** (``appsettings``):  
-  The Firely Server application settings in JSON format. This field is required and must be a valid JSON object but you can specify ``{}``. You can find more details about the available settings in the :ref:`Firely Server Settings reference section <fs_settings_reference>`.
+  The Firely Server application settings in JSON format. This field is required and must be a valid JSON object but you leave the default value of ``{}``. You can find more details about the available settings in the :ref:`settings section <fs_settings_reference>`.
 
 - **logsettings** (``logsettings``):  
-  The Firely Server log settings in JSON format. This field is required and must be a valid JSON object but you can specify ```{}``. You can find more details about the available settings in the :ref:`Firely Server Settings logsettings section <configure_log>`.
+  The Firely Server log settings in JSON format. This field is required and must be a valid JSON object but you can leave the default value of ``{}``. You can find more details about the available settings in the :ref:`log settings section <configure_log>`.
+
+.. note::
+    In order to update the parameters, you can either redeploy the extension with the new parameters or update the extension parameters in the Azure Portal 
+    (the extensions are located in the ``Extensions + applications`` in the ``Settings`` section of the AKS instance where the extension is deployed). If updating the extension parameters,
+    you need to encode the JSON values in base64 format.

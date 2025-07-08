@@ -44,6 +44,13 @@ For more advanced scenarios, you can customize the deployment by providing addit
 
 You can monitor the deployment progress in the Azure portal under the "Deployments" section of the selected resource group.
 
+.. note::
+  In order to delete the deployment, you can either delete the extension in the Azure Portal 
+  (the extensions are located in the ``Extensions + applications`` in the ``Settings`` section of the AKS instance where the extension is deployed) or
+  delete the deployment (the deployment is located in the ``Deployments`` section of the resource group where the extension is deployed).
+
+
+
 Parameters
 ----------
 
@@ -92,3 +99,5 @@ The following parameters are available for configuring the Firely Server deploym
   In order to update the parameters, you can either redeploy the extension with the new parameters or update the extension parameters in the Azure Portal 
   (the extensions are located in the ``Extensions + applications`` in the ``Settings`` section of the AKS instance where the extension is deployed). If updating the extension parameters,
   you need to encode the JSON values in base64 format.
+
+

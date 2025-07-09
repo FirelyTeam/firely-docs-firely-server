@@ -10,14 +10,33 @@ Current Firely Server release notes (v6.x)
 
 .. _vonk_releasenotes_6_2_0:
 
-Release 6.2.0, <date>
----------------------
+Release 6.2.0, July xxth, 2025
+------------------------------
 
 Improvements and Fixes
 ^^^^^^^^^^^^^^^^^^^^^^
 
 #. Updated Serilog ApplicationInsights sink configuration to use Connection String instead of the deprecated Instrumentation Key. Azure no longer supports Instrumentation Keys, so one should use ``connectionString`` in the ApplicationInsights sink configuration. The connection string can also be configured via ``ApplicationInsights:ConnectionString`` in appsettings.json. See :ref:`configure_log_insights` for more information.
-#. Updated search anonymization to work across multiple Firely Server instances. This changes also changed the configuration, see: :ref:`restful_search_anonymization` on how to configure the search anonymization.
+#. Updated search anonymization to work across multiple Firely Server instances. This also changed the configuration, see: :ref:`restful_search_anonymization` on how to configure the search anonymization.
+#. It is now possible to pick up appsettings.json files by specifying the file location in the environment variable ``VONK_PATH_TO_SETTINGS``. See :ref:`configure_settings_path`. Before, only the appsettings.instance.json was picked up.
+#. We improved the behavior of license checks upon startup so that users will no longer see unnecessary warnings.
+#. We fixed the creation of the index ``IX_cmp_entryid`` in SQL that had inconsistent casing. This would lead to issues when SQL used the collation ``SQL_Latin1_General_CP1_CS_AS``.
+#. We made several improvements and fixes to the Vonk.Facade.Starter kit to help developers on their way with building a facade.
+    - It is possible to create Observation resources again.
+    - ``_total=none`` is now handled properly. Before this would lead to an error when doing a search.
+#. We made several improvements to FSI:
+    - We have improved the efficiency of FSI with regard to memory usage/CPU.
+    - FSI will now show a warning if it is unable to connect to a source database.
+#. Requests with a double slash (//) would lead to an uncaught exception. This will now lead to a ``501 Not Implemented`` response in case the double slash is used witin the URL and to a ``404 Not Found`` response in case the double slash is at the end.
+
+Features
+^^^^^^^^
+
+#. It is now possible to validate QuestionnaireResponse resources against their original Questionnaire resource. See :ref:`feature_advancedvalidation` for more information.
+#. FSI can now send resources to a MessageBroker. - Documentation to be done
+
+
+
 
 .. _vonk_releasenotes_6_1_0:
 

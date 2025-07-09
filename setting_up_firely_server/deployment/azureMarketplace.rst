@@ -38,8 +38,11 @@ In order to deploy Firely Server from the Azure Marketplace, follow these steps:
 4. On the second panel, provide the parameters for configuring the deployment. 
 5. Click "Review + Create" to review your settings and then click "Create" to deploy Firely Server.
 
-For the most basic deployment, you can simply specify the extension resource name and the license, and leave the other parameters at their default values.
-This will deploy Firely Server in the selected kubernetes cluster as a kubernetes deployment and create a load balancer with a public IP, exposing Firely Server on port 80. 
+.. note::
+  For the most basic deployment, you can simply provide a license, and leave the default values for all other parameters.
+  This will deploy Firely Server in the selected kubernetes cluster as a kubernetes deployment and create a load balancer with a public IP, exposing Firely Server on port 80. 
+  The public IP addresss exposed by the load balancer can be retrieved from the Azure portal by inspecting the ``Services and Ingresses`` section under ``Kubernetes resources`` of the kubernetes cluster.
+
 For more advanced scenarios, you can customize the deployment by providing additional parameters as described below.
 
 You can monitor the deployment progress in the Azure portal under the "Deployments" section of the selected resource group.
@@ -57,7 +60,7 @@ Parameters
 The following parameters are available for configuring the Firely Server deployment:
 
 - **Extension Resource Name** (``extensionResourceName``):  
-  The name for the extension resource. This must be unique for the cluster, must only contain alphanumeric characters, and the value must be between 6 and 30 characters long, for example ``firelyserver``. *(Required)*
+  The name for the extension resource. This must be unique for the cluster, must only contain alphanumeric characters and dashes, and the value must be between 6 and 40 characters long, we recommend keeping the default ``firely-server-market-place``. *(Required)*
 
 .. note::
     There could be at most one extension resource of type ``Firely.FirelyServerEssentialsNonUs`` per AKS cluster. If you try to deploy again the Firely Server offer with with the different extension resource name, the deployment will fail. If you re-use the same name, the existing extension will be updated with the new parameters.
@@ -87,7 +90,7 @@ The following parameters are available for configuring the Firely Server deploym
   *(Required)*
 
 - **License** (``License``):  
-  The Firely Server license in JSON format. This field is required and must be a valid JSON object (starts and ends with curly braces).
+  The Firely Server license in JSON format. An evaluation license can be retrieved from `the Firely Portal <https://fire.ly/firely-server-trial/>`_.
 
 - **appsettings** (``appsettings``):  
   The Firely Server application settings in JSON format. This field is required and must be a valid JSON object but you leave the default value of ``{}``. You can find more details about the available settings in the :ref:`settings section <fs_settings_reference>`.

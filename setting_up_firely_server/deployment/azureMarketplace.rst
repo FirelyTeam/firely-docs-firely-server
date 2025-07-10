@@ -34,14 +34,15 @@ In order to deploy Firely Server from the Azure Marketplace, follow these steps:
 
 1. Go to the `Azure Marketplace <https://azuremarketplace.microsoft.com/en-us/marketplace/apps?search=Firely&page=1>`_ and search for "Firely Server".
 2. Click on the "Get it now" button to start the deployment process.
-3. On the first panel, provide the Azure subscription, the resource group and the cluster where Firely Server should be deployed.
-4. On the second panel, provide the parameters for configuring the deployment. 
+3. On the first panel, provide the Azure subscription, the resource group containing the kubernetes cluster where you want to deploy the Firely Server extension and then select the kubernetes cluster where the Firely Server extension should be deployed.
+4. On the second panel, provide the parameters for configuring the deployment (see below for details). 
 5. Click "Review + Create" to review your settings and then click "Create" to deploy Firely Server.
 
 .. note::
   For the most basic deployment, you can simply provide a license, and leave the default values for all other parameters.
   This will deploy Firely Server in the selected kubernetes cluster as a kubernetes deployment and create a load balancer with a public IP, exposing Firely Server on port 80. 
   The public IP addresss exposed by the load balancer can be retrieved from the Azure portal by inspecting the ``Services and Ingresses`` section under ``Kubernetes resources`` of the kubernetes cluster.
+  Unfortunately, with this setup, the Firely Server UI will not be displayed correctly as it expects to be accessed via HTTPS, and the load balancer does not provide TLS termination.
 
 For more advanced scenarios, you can customize the deployment by providing additional parameters as described below.
 

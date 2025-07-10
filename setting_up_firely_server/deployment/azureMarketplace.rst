@@ -86,7 +86,6 @@ The following parameters are available for configuring the Firely Server deploym
   
   - ``LoadBalancer``: Exposes the service externally using a cloud provider's load balancer. Typically used if not using Ingress.
   - ``ClusterIP``: Exposes the service on a cluster-internal IP. Must be used if Ingress is enabled.
-  - ``NodePort``: Exposes the service on each node's IP at a static port.
   
   *(Required)*
 

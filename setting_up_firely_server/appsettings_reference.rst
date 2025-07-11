@@ -426,7 +426,7 @@ Each operation can be configured with the following properties:
      - Regular & Admin
    * - ``Enabled``
      - boolean
-     - Whether the operation is enabled
+     - Whether the operation's HTTP endpoints are enabled. Note: Disabling an operation only prevents HTTP access; any associated background services or task processors may continue to run if the plugin is loaded
      - Regular & Admin
    * - ``RequireAuthorization``
      - string

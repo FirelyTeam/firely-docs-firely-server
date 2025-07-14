@@ -94,6 +94,20 @@ Please make sure that `$realworldtesting` and `realworldtestingstatus` are enabl
       ...
     }
 
+.. important::
+
+   When the RWT operations are disabled (``"Enabled": false``) but the ``Vonk.Plugin.RealWorldTesting`` plugin remains loaded:
+   
+   * The HTTP endpoints (``$realworldtesting``, ``$realworldtestingstatus``) are NOT registered
+   * New RWT tasks cannot be created via the API  
+   * **However**, the background task processor continues to run and will:
+   
+     * Poll for existing tasks in the database
+     * Process any queued or active tasks
+     * Handle cancellation requests
+   
+   To completely stop RWT task processing, you must remove the ``Vonk.Plugin.RealWorldTesting`` plugin from the pipeline configuration.
+
 
 To configure RWT one needs to also have values for connecting to InfluxDB configured.
 

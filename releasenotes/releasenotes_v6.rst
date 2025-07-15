@@ -10,14 +10,39 @@ Current Firely Server release notes (v6.x)
 
 .. _vonk_releasenotes_6_2_0:
 
-Release 6.2.0, <date>
----------------------
+Release 6.2.0, July 15th, 2025
+------------------------------
 
-Improvements and Fixes
-^^^^^^^^^^^^^^^^^^^^^^
+Improvements
+^^^^^^^^^^^^
 
 #. Updated Serilog ApplicationInsights sink configuration to use Connection String instead of the deprecated Instrumentation Key. Azure no longer supports Instrumentation Keys, so one should use ``connectionString`` in the ApplicationInsights sink configuration. The connection string can also be configured via ``ApplicationInsights:ConnectionString`` in appsettings.json. See :ref:`configure_log_insights` for more information.
-#. Updated search anonymization to work across multiple Firely Server instances. This changes also changed the configuration, see: :ref:`restful_search_anonymization` on how to configure the search anonymization.
+#. Updated search anonymization to work across multiple Firely Server instances. This also changed the configuration, see: :ref:`restful_search_anonymization` on how to configure the search anonymization.
+#. It is now possible for Firely Server to pick up appsettings.json files during startup by specifying the file location in the environment variable ``VONK_PATH_TO_SETTINGS``. See :ref:`configure_settings_path`. Before, the configuration was only loaded from appsettings.instance.json.
+#. We improved the behavior of license checks upon startup so that users will no longer see warnings for unlicensed plugins that are not enabled in the pipeline.
+#. We made some improvements to Firely Server Ingest (FSI):
+    - We have improved the efficiency of FSI with regard to memory usage/CPU when generating the final usage statistics after a run. This could lead previously to excessive memory consumption and crashes.
+    - FSI will now show a warning if it is unable to connect to a source database.
+
+Fixes
+^^^^^
+
+#. Requests with a double slash (//) would lead to an uncaught exception. This will now lead to a ``501 Not Implemented`` response in case the double slash is used within the URL and to a ``404 Not Found`` response in case the double slash is at the end of the URL.
+#. We made some fixes to the Vonk.Facade.Starter kit to help developers on their way with building a facade.
+    - It is now possible to create Observation resources again.
+    - ``_total=none`` is now handled properly. Before this would lead to an error when doing a search.
+
+Features
+^^^^^^^^
+
+#. It is now possible to validate QuestionnaireResponse resources against their original Questionnaire resource. See :ref:`feature_advancedvalidation` for more information.
+#. The validator will now create extensions on validation errors pointing to the profile that caused the error in the http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-source extension. These issues will also be annotated with line numbers in the http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col and http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line extension.
+#. Message brokers can now be used as a target for Firely Server Ingest. FSI will publish messages to the message broker upon ingesting resources, which can then be consumed by Firely Server. Currently, only Azure Service Bus and RabbitMQ can be configured as message brokers for FSI. The use of a MongoDb source is not supported if the target is set to a message broker, only ingestion from files/folders is supported.
+#. We upgraded the .Net SDK to v5.12.0. See the `release notes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.12.0>`_ for more information.
+
+
+
+
 
 .. _vonk_releasenotes_6_1_0:
 

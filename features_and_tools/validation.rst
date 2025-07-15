@@ -99,6 +99,8 @@ If validation is set to ``Full`` the following validation rules will be checked:
 | ExtensionSchema               |                                                               |
 +-------------------------------+---------------------------------------------------------------+
 
+.. _feature_advancedvalidation:
+
 Advanced Validation
 -------------------
 

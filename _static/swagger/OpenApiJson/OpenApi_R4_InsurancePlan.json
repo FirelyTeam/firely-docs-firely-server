@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - InsurancePlan",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
   },
   "servers": [
     {
@@ -1870,8 +1870,7 @@
       "address-city": {
         "name": "address-city",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A city specified in an address\r\n* [Person](person.html): A city specified in an address\r\n* [Practitioner](practitioner.html): A city specified in an address\r\n* [RelatedPerson](relatedperson.html): A city specified in an address\r\n",
-        "style": "form",
+        "description": "A city specified in an address",
         "schema": {
           "type": "string"
         }
@@ -1879,8 +1878,7 @@
       "address-country": {
         "name": "address-country",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A country specified in an address\r\n* [Person](person.html): A country specified in an address\r\n* [Practitioner](practitioner.html): A country specified in an address\r\n* [RelatedPerson](relatedperson.html): A country specified in an address\r\n",
-        "style": "form",
+        "description": "A country specified in an address",
         "schema": {
           "type": "string"
         }
@@ -1888,8 +1886,7 @@
       "address-postalcode": {
         "name": "address-postalcode",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A postalCode specified in an address\r\n* [Person](person.html): A postal code specified in an address\r\n* [Practitioner](practitioner.html): A postalCode specified in an address\r\n* [RelatedPerson](relatedperson.html): A postal code specified in an address\r\n",
-        "style": "form",
+        "description": "A postal code specified in an address",
         "schema": {
           "type": "string"
         }
@@ -1897,8 +1894,7 @@
       "address-state": {
         "name": "address-state",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A state specified in an address\r\n* [Person](person.html): A state specified in an address\r\n* [Practitioner](practitioner.html): A state specified in an address\r\n* [RelatedPerson](relatedperson.html): A state specified in an address\r\n",
-        "style": "form",
+        "description": "A state specified in an address",
         "schema": {
           "type": "string"
         }
@@ -1906,8 +1902,7 @@
       "address-use": {
         "name": "address-use",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A use code specified in an address\r\n* [Person](person.html): A use code specified in an address\r\n* [Practitioner](practitioner.html): A use code specified in an address\r\n* [RelatedPerson](relatedperson.html): A use code specified in an address\r\n",
-        "style": "form",
+        "description": "A use code specified in an address",
         "schema": {
           "type": "string"
         }
@@ -1923,8 +1918,7 @@
       "endpoint": {
         "name": "endpoint",
         "in": "query",
-        "description": "The endpoint for the study or series",
-        "style": "form",
+        "description": "Technical endpoint",
         "schema": {
           "type": "string"
         }
@@ -1932,7 +1926,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CodeSystem](codesystem.html): External identifier for the code system\r\n* [ConceptMap](conceptmap.html): External identifier for the concept map\r\n* [MessageDefinition](messagedefinition.html): External identifier for the message definition\r\n* [StructureDefinition](structuredefinition.html): External identifier for the structure definition\r\n* [StructureMap](structuremap.html): External identifier for the structure map\r\n* [ValueSet](valueset.html): External identifier for the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1941,7 +1935,7 @@
       "name": {
         "name": "name",
         "in": "query",
-        "description": "Computationally friendly name of the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): Computationally friendly name of the capability statement\r\n* [CodeSystem](codesystem.html): Computationally friendly name of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): Computationally friendly name of the compartment definition\r\n* [ConceptMap](conceptmap.html): Computationally friendly name of the concept map\r\n* [GraphDefinition](graphdefinition.html): Computationally friendly name of the graph definition\r\n* [ImplementationGuide](implementationguide.html): Computationally friendly name of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): Computationally friendly name of the message definition\r\n* [NamingSystem](namingsystem.html): Computationally friendly name of the naming system\r\n* [OperationDefinition](operationdefinition.html): Computationally friendly name of the operation definition\r\n* [SearchParameter](searchparameter.html): Computationally friendly name of the search parameter\r\n* [StructureDefinition](structuredefinition.html): Computationally friendly name of the structure definition\r\n* [StructureMap](structuremap.html): Computationally friendly name of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): Computationally friendly name of the terminology capabilities\r\n* [ValueSet](valueset.html): Computationally friendly name of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1958,7 +1952,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The current status of the capability statement\r\n* [CodeSystem](codesystem.html): The current status of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The current status of the compartment definition\r\n* [ConceptMap](conceptmap.html): The current status of the concept map\r\n* [GraphDefinition](graphdefinition.html): The current status of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The current status of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The current status of the message definition\r\n* [NamingSystem](namingsystem.html): The current status of the naming system\r\n* [OperationDefinition](operationdefinition.html): The current status of the operation definition\r\n* [SearchParameter](searchparameter.html): The current status of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The current status of the structure definition\r\n* [StructureMap](structuremap.html): The current status of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The current status of the terminology capabilities\r\n* [ValueSet](valueset.html): The current status of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1967,7 +1961,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "The kind of coverage (health plan, auto, Workers Compensation)",
+        "description": "Type defined or constrained by this structure",
         "style": "form",
         "schema": {
           "type": "string"

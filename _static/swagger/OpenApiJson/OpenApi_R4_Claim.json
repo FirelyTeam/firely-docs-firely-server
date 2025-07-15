@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Claim",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
   },
   "servers": [
     {
@@ -1913,8 +1913,7 @@
       "care-team": {
         "name": "care-team",
         "in": "query",
-        "description": "Who's involved in plan?",
-        "style": "form",
+        "description": "Member of the CareTeam",
         "schema": {
           "type": "string"
         }
@@ -1922,7 +1921,7 @@
       "created": {
         "name": "created",
         "in": "query",
-        "description": "When created",
+        "description": "The creation date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1931,8 +1930,7 @@
       "detail-udi": {
         "name": "detail-udi",
         "in": "query",
-        "description": "UDI associated with a line item detail product or service",
-        "style": "form",
+        "description": "UDI associated with a line item, detail product or service",
         "schema": {
           "type": "string"
         }
@@ -1949,8 +1947,7 @@
       "enterer": {
         "name": "enterer",
         "in": "query",
-        "description": "The source of the data entry",
-        "style": "form",
+        "description": "The party responsible for the entry of the Claim",
         "schema": {
           "type": "string"
         }
@@ -1958,8 +1955,7 @@
       "facility": {
         "name": "facility",
         "in": "query",
-        "description": "Kind of facility where patient was seen",
-        "style": "form",
+        "description": "Facility where the products or services have been or will be provided",
         "schema": {
           "type": "string"
         }
@@ -1967,7 +1963,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CodeSystem](codesystem.html): External identifier for the code system\r\n* [ConceptMap](conceptmap.html): External identifier for the concept map\r\n* [MessageDefinition](messagedefinition.html): External identifier for the message definition\r\n* [StructureDefinition](structuredefinition.html): External identifier for the structure definition\r\n* [StructureMap](structuremap.html): External identifier for the structure map\r\n* [ValueSet](valueset.html): External identifier for the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1986,7 +1982,6 @@
         "name": "item-udi",
         "in": "query",
         "description": "UDI associated with a line item product or service",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1994,7 +1989,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Retrieve coverages for a patient",
+        "description": "The identity of a patient to search for guidance response results",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2004,7 +1999,6 @@
         "name": "payee",
         "in": "query",
         "description": "The party receiving any payment for the Claim",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2012,7 +2006,7 @@
       "priority": {
         "name": "priority",
         "in": "query",
-        "description": "The priority of the request group",
+        "description": "routine | urgent | asap | stat",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2022,7 +2016,6 @@
         "name": "procedure-udi",
         "in": "query",
         "description": "UDI associated with a procedure",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2039,7 +2032,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The current status of the capability statement\r\n* [CodeSystem](codesystem.html): The current status of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The current status of the compartment definition\r\n* [ConceptMap](conceptmap.html): The current status of the concept map\r\n* [GraphDefinition](graphdefinition.html): The current status of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The current status of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The current status of the message definition\r\n* [NamingSystem](namingsystem.html): The current status of the naming system\r\n* [OperationDefinition](operationdefinition.html): The current status of the operation definition\r\n* [SearchParameter](searchparameter.html): The current status of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The current status of the structure definition\r\n* [StructureMap](structuremap.html): The current status of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The current status of the terminology capabilities\r\n* [ValueSet](valueset.html): The current status of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2048,8 +2041,7 @@
       "subdetail-udi": {
         "name": "subdetail-udi",
         "in": "query",
-        "description": "UDI associated with a line item detail subdetail product or service",
-        "style": "form",
+        "description": "UDI associated with a line item, detail, subdetail product or service",
         "schema": {
           "type": "string"
         }
@@ -2057,8 +2049,7 @@
       "use": {
         "name": "use",
         "in": "query",
-        "description": "The type of claim",
-        "style": "form",
+        "description": "The kind of financial resource",
         "schema": {
           "type": "string"
         }

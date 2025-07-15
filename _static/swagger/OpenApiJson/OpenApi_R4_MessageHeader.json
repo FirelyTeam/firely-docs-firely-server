@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MessageHeader",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
   },
   "servers": [
     {
@@ -1874,7 +1874,8 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "The source of the decision",
+        "description": "Flag creator",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1882,7 +1883,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
+        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Code that identifies the allergy or intolerance\r\n* [Condition](condition.html): Code for the condition\r\n* [DeviceRequest](devicerequest.html): Code for what is being requested/ordered\r\n* [DiagnosticReport](diagnosticreport.html): The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a condition code\r\n* [List](list.html): What the purpose of this list is\r\n* [Medication](medication.html): Returns medications for a specific code\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication code\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine code\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions of this medication code\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication code\r\n* [Observation](observation.html): The code of the observation type\r\n* [Procedure](procedure.html): A code to identify a  procedure\r\n* [ServiceRequest](servicerequest.html): What is being requested/ordered\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1891,7 +1892,8 @@
       "destination": {
         "name": "destination",
         "in": "query",
-        "description": "Name of system",
+        "description": "Returns dispenses that should be sent to a specific destination",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1907,7 +1909,8 @@
       "enterer": {
         "name": "enterer",
         "in": "query",
-        "description": "The source of the data entry",
+        "description": "The party responsible for the entry of the Claim",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1915,7 +1918,8 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "Code for the event this message represents or link to event definition",
+        "description": "The event that triggers the message or link to the event definition.",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1923,7 +1927,7 @@
       "focus": {
         "name": "focus",
         "in": "query",
-        "description": "Drugs, devices, etc. under study",
+        "description": "A resource that is a permitted focus of the message",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1932,7 +1936,8 @@
       "receiver": {
         "name": "receiver",
         "in": "query",
-        "description": "Intended \"real-world\" recipient for the data",
+        "description": "The identity of a receiver to list dispenses for",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1948,7 +1953,8 @@
       "responsible": {
         "name": "responsible",
         "in": "query",
-        "description": "Final responsibility for event",
+        "description": "Who maintains system namespace?",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1956,7 +1962,8 @@
       "sender": {
         "name": "sender",
         "in": "query",
-        "description": "Real world sender of the message",
+        "description": "Message sender",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1964,7 +1971,8 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Name of system",
+        "description": "The identity of source detecting the event",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1972,7 +1980,8 @@
       "source-uri": {
         "name": "source-uri",
         "in": "query",
-        "description": "Actual message source address or id",
+        "description": "The source value set that contains the concepts that are being mapped",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1980,7 +1989,8 @@
       "target": {
         "name": "target",
         "in": "query",
-        "description": "Particular delivery destination within the destination",
+        "description": "A resource that was validated",
+        "style": "form",
         "schema": {
           "type": "string"
         }

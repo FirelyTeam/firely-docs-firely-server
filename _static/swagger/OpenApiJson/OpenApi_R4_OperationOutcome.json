@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - OperationOutcome",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
   },
   "servers": [
     {

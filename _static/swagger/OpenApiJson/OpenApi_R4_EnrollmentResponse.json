@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - EnrollmentResponse",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
   },
   "servers": [
     {
@@ -1731,7 +1731,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CodeSystem](codesystem.html): External identifier for the code system\r\n* [ConceptMap](conceptmap.html): External identifier for the concept map\r\n* [MessageDefinition](messagedefinition.html): External identifier for the message definition\r\n* [StructureDefinition](structuredefinition.html): External identifier for the structure definition\r\n* [StructureMap](structuremap.html): External identifier for the structure map\r\n* [ValueSet](valueset.html): External identifier for the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1740,7 +1740,7 @@
       "request": {
         "name": "request",
         "in": "query",
-        "description": "The EligibilityRequest reference",
+        "description": "The identifier of the request associated with the response",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1749,7 +1749,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The current status of the capability statement\r\n* [CodeSystem](codesystem.html): The current status of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The current status of the compartment definition\r\n* [ConceptMap](conceptmap.html): The current status of the concept map\r\n* [GraphDefinition](graphdefinition.html): The current status of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The current status of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The current status of the message definition\r\n* [NamingSystem](namingsystem.html): The current status of the naming system\r\n* [OperationDefinition](operationdefinition.html): The current status of the operation definition\r\n* [SearchParameter](searchparameter.html): The current status of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The current status of the structure definition\r\n* [StructureMap](structuremap.html): The current status of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The current status of the terminology capabilities\r\n* [ValueSet](valueset.html): The current status of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"

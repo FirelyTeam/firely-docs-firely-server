@@ -737,6 +737,10 @@ When using SASL authentication, you must provide:
 * ``Username`` - The Kafka username for authentication
 * ``Password`` - The corresponding password
 
+.. note::
+  
+  Firely Server may fail to connect to Kafka v4 (including ``confluentinc/cp-kafka:8.0``, released June 11, 2025) when SASL authentication is enabled. This is a known issue and will be addressed in a future release.
+
 **SSL/TLS Configuration**
 
 Firely Server supports both one-way and two-way SSL/TLS for Kafka connections:

@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - AuditEvent",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
   },
   "servers": [
     {
@@ -1974,7 +1974,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The example scenario publication date",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The capability statement publication date\r\n* [CodeSystem](codesystem.html): The code system publication date\r\n* [CompartmentDefinition](compartmentdefinition.html): The compartment definition publication date\r\n* [ConceptMap](conceptmap.html): The concept map publication date\r\n* [GraphDefinition](graphdefinition.html): The graph definition publication date\r\n* [ImplementationGuide](implementationguide.html): The implementation guide publication date\r\n* [MessageDefinition](messagedefinition.html): The message definition publication date\r\n* [NamingSystem](namingsystem.html): The naming system publication date\r\n* [OperationDefinition](operationdefinition.html): The operation definition publication date\r\n* [SearchParameter](searchparameter.html): The search parameter publication date\r\n* [StructureDefinition](structuredefinition.html): The structure definition publication date\r\n* [StructureMap](structuremap.html): The structure map publication date\r\n* [TerminologyCapabilities](terminologycapabilities.html): The terminology capabilities publication date\r\n* [ValueSet](valueset.html): The value set publication date\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2015,8 +2015,7 @@
       "outcome": {
         "name": "outcome",
         "in": "query",
-        "description": "The processing outcome",
-        "style": "form",
+        "description": "Whether the event succeeded or failed",
         "schema": {
           "type": "string"
         }
@@ -2024,7 +2023,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Retrieve coverages for a patient",
+        "description": "The identity of a patient to search for guidance response results",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2041,8 +2040,7 @@
       "site": {
         "name": "site",
         "in": "query",
-        "description": "Facility where study activities are conducted",
-        "style": "form",
+        "description": "Logical source location within the enterprise",
         "schema": {
           "type": "string"
         }
@@ -2050,8 +2048,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Name of system",
-        "style": "form",
+        "description": "The identity of source detecting the event",
         "schema": {
           "type": "string"
         }
@@ -2067,7 +2064,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "The kind of coverage (health plan, auto, Workers Compensation)",
+        "description": "Type defined or constrained by this structure",
         "style": "form",
         "schema": {
           "type": "string"

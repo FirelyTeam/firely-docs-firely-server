@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - CommunicationRequest",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
   },
   "servers": [
     {
@@ -1900,8 +1900,7 @@
       "authored": {
         "name": "authored",
         "in": "query",
-        "description": "When the questionnaire response was last changed",
-        "style": "form",
+        "description": "When request transitioned to being actionable",
         "schema": {
           "type": "string"
         }
@@ -1909,8 +1908,7 @@
       "based-on": {
         "name": "based-on",
         "in": "query",
-        "description": "Reference to the service request.",
-        "style": "form",
+        "description": "Fulfills plan or proposal",
         "schema": {
           "type": "string"
         }
@@ -1918,7 +1916,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Classifications for the study",
+        "description": "The behavior associated with the message",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1937,7 +1935,6 @@
         "name": "group-identifier",
         "in": "query",
         "description": "Composite request this is part of",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1945,7 +1942,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CodeSystem](codesystem.html): External identifier for the code system\r\n* [ConceptMap](conceptmap.html): External identifier for the concept map\r\n* [MessageDefinition](messagedefinition.html): External identifier for the message definition\r\n* [StructureDefinition](structuredefinition.html): External identifier for the structure definition\r\n* [StructureMap](structuremap.html): External identifier for the structure map\r\n* [ValueSet](valueset.html): External identifier for the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1962,8 +1959,7 @@
       "occurrence": {
         "name": "occurrence",
         "in": "query",
-        "description": "When the charged service was applied",
-        "style": "form",
+        "description": "When scheduled",
         "schema": {
           "type": "string"
         }
@@ -1971,7 +1967,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Retrieve coverages for a patient",
+        "description": "The identity of a patient to search for guidance response results",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1980,8 +1976,7 @@
       "priority": {
         "name": "priority",
         "in": "query",
-        "description": "The priority of the request group",
-        "style": "form",
+        "description": "routine | urgent | asap | stat",
         "schema": {
           "type": "string"
         }
@@ -1989,8 +1984,7 @@
       "recipient": {
         "name": "recipient",
         "in": "query",
-        "description": "Intended to get notified about this set of documents",
-        "style": "form",
+        "description": "Message recipient",
         "schema": {
           "type": "string"
         }
@@ -1998,8 +1992,7 @@
       "replaces": {
         "name": "replaces",
         "in": "query",
-        "description": "CarePlan replaced by this CarePlan",
-        "style": "form",
+        "description": "Request(s) replaced by this request",
         "schema": {
           "type": "string"
         }
@@ -2008,7 +2001,6 @@
         "name": "requester",
         "in": "query",
         "description": "Who/what is requesting service",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2016,8 +2008,7 @@
       "sender": {
         "name": "sender",
         "in": "query",
-        "description": "Real world sender of the message",
-        "style": "form",
+        "description": "Message sender",
         "schema": {
           "type": "string"
         }
@@ -2025,7 +2016,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The current status of the capability statement\r\n* [CodeSystem](codesystem.html): The current status of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The current status of the compartment definition\r\n* [ConceptMap](conceptmap.html): The current status of the concept map\r\n* [GraphDefinition](graphdefinition.html): The current status of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The current status of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The current status of the message definition\r\n* [NamingSystem](namingsystem.html): The current status of the naming system\r\n* [OperationDefinition](operationdefinition.html): The current status of the operation definition\r\n* [SearchParameter](searchparameter.html): The current status of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The current status of the structure definition\r\n* [StructureMap](structuremap.html): The current status of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The current status of the terminology capabilities\r\n* [ValueSet](valueset.html): The current status of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2034,7 +2025,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "The subject of the report",
+        "description": "The subject that the guidance response is about",
         "style": "form",
         "schema": {
           "type": "string"

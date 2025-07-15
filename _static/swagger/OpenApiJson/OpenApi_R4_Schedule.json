@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Schedule",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
   },
   "servers": [
     {
@@ -1783,7 +1783,8 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Is the schedule in active use",
+        "description": "Whether this organization affiliation record is in active use",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1791,7 +1792,7 @@
       "actor": {
         "name": "actor",
         "in": "query",
-        "description": "Resource for the actor (or group, by role)",
+        "description": "Any one of the individuals participating in the appointment",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1800,7 +1801,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The example scenario publication date",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The capability statement publication date\r\n* [CodeSystem](codesystem.html): The code system publication date\r\n* [CompartmentDefinition](compartmentdefinition.html): The compartment definition publication date\r\n* [ConceptMap](conceptmap.html): The concept map publication date\r\n* [GraphDefinition](graphdefinition.html): The graph definition publication date\r\n* [ImplementationGuide](implementationguide.html): The implementation guide publication date\r\n* [MessageDefinition](messagedefinition.html): The message definition publication date\r\n* [NamingSystem](namingsystem.html): The naming system publication date\r\n* [OperationDefinition](operationdefinition.html): The operation definition publication date\r\n* [SearchParameter](searchparameter.html): The search parameter publication date\r\n* [StructureDefinition](structuredefinition.html): The structure definition publication date\r\n* [StructureMap](structuremap.html): The structure map publication date\r\n* [TerminologyCapabilities](terminologycapabilities.html): The terminology capabilities publication date\r\n* [ValueSet](valueset.html): The value set publication date\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1809,7 +1810,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CodeSystem](codesystem.html): External identifier for the code system\r\n* [ConceptMap](conceptmap.html): External identifier for the concept map\r\n* [MessageDefinition](messagedefinition.html): External identifier for the message definition\r\n* [StructureDefinition](structuredefinition.html): External identifier for the structure definition\r\n* [StructureMap](structuremap.html): External identifier for the structure map\r\n* [ValueSet](valueset.html): External identifier for the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1818,7 +1819,8 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "High-level category",
+        "description": "A broad categorization of the service that is to be performed during this appointment",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1826,7 +1828,8 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The type of appointments that can be booked into associated slot(s)",
+        "description": "The type of appointments that can be booked into the slot",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1834,7 +1837,8 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Type of specialty needed",
+        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
+        "style": "form",
         "schema": {
           "type": "string"
         }

@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - RequestGroup",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
   },
   "servers": [
     {
@@ -1874,7 +1874,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "The source of the decision",
+        "description": "Flag creator",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1883,7 +1883,7 @@
       "authored": {
         "name": "authored",
         "in": "query",
-        "description": "When the questionnaire response was last changed",
+        "description": "When request transitioned to being actionable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1892,7 +1892,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
+        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Code that identifies the allergy or intolerance\r\n* [Condition](condition.html): Code for the condition\r\n* [DeviceRequest](devicerequest.html): Code for what is being requested/ordered\r\n* [DiagnosticReport](diagnosticreport.html): The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a condition code\r\n* [List](list.html): What the purpose of this list is\r\n* [Medication](medication.html): Returns medications for a specific code\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication code\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine code\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions of this medication code\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication code\r\n* [Observation](observation.html): The code of the observation type\r\n* [Procedure](procedure.html): A code to identify a  procedure\r\n* [ServiceRequest](servicerequest.html): What is being requested/ordered\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1919,7 +1919,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CodeSystem](codesystem.html): External identifier for the code system\r\n* [ConceptMap](conceptmap.html): External identifier for the concept map\r\n* [MessageDefinition](messagedefinition.html): External identifier for the message definition\r\n* [StructureDefinition](structuredefinition.html): External identifier for the structure definition\r\n* [StructureMap](structuremap.html): External identifier for the structure map\r\n* [ValueSet](valueset.html): External identifier for the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1946,7 +1946,7 @@
       "intent": {
         "name": "intent",
         "in": "query",
-        "description": "proposal | plan | original-order |reflex-order",
+        "description": "Search by task intent",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1955,8 +1955,7 @@
       "participant": {
         "name": "participant",
         "in": "query",
-        "description": "The reference to a participant in the test execution",
-        "style": "form",
+        "description": "The participant in the requests in the group",
         "schema": {
           "type": "string"
         }
@@ -1964,7 +1963,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Retrieve coverages for a patient",
+        "description": "The identity of a patient to search for guidance response results",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1973,7 +1972,8 @@
       "priority": {
         "name": "priority",
         "in": "query",
-        "description": "The priority of the request group",
+        "description": "routine | urgent | asap | stat",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1981,7 +1981,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The current status of the capability statement\r\n* [CodeSystem](codesystem.html): The current status of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The current status of the compartment definition\r\n* [ConceptMap](conceptmap.html): The current status of the concept map\r\n* [GraphDefinition](graphdefinition.html): The current status of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The current status of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The current status of the message definition\r\n* [NamingSystem](namingsystem.html): The current status of the naming system\r\n* [OperationDefinition](operationdefinition.html): The current status of the operation definition\r\n* [SearchParameter](searchparameter.html): The current status of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The current status of the structure definition\r\n* [StructureMap](structuremap.html): The current status of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The current status of the terminology capabilities\r\n* [ValueSet](valueset.html): The current status of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1990,7 +1990,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "The subject of the report",
+        "description": "The subject that the guidance response is about",
         "style": "form",
         "schema": {
           "type": "string"

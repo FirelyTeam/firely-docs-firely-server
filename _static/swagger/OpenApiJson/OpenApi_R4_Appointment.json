@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Appointment",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
   },
   "servers": [
     {
@@ -1913,8 +1913,7 @@
       "actor": {
         "name": "actor",
         "in": "query",
-        "description": "Resource for the actor (or group, by role)",
-        "style": "form",
+        "description": "Any one of the individuals participating in the appointment",
         "schema": {
           "type": "string"
         }
@@ -1922,7 +1921,8 @@
       "appointment-type": {
         "name": "appointment-type",
         "in": "query",
-        "description": "The style of appointment or patient that has been booked in the slot (not service type)",
+        "description": "The style of appointment or patient that may be booked in the slot (not service type)",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1930,7 +1930,7 @@
       "based-on": {
         "name": "based-on",
         "in": "query",
-        "description": "Reference to the service request.",
+        "description": "Fulfills plan or proposal",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1939,7 +1939,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The example scenario publication date",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The capability statement publication date\r\n* [CodeSystem](codesystem.html): The code system publication date\r\n* [CompartmentDefinition](compartmentdefinition.html): The compartment definition publication date\r\n* [ConceptMap](conceptmap.html): The concept map publication date\r\n* [GraphDefinition](graphdefinition.html): The graph definition publication date\r\n* [ImplementationGuide](implementationguide.html): The implementation guide publication date\r\n* [MessageDefinition](messagedefinition.html): The message definition publication date\r\n* [NamingSystem](namingsystem.html): The naming system publication date\r\n* [OperationDefinition](operationdefinition.html): The operation definition publication date\r\n* [SearchParameter](searchparameter.html): The search parameter publication date\r\n* [StructureDefinition](structuredefinition.html): The structure definition publication date\r\n* [StructureMap](structuremap.html): The structure map publication date\r\n* [TerminologyCapabilities](terminologycapabilities.html): The terminology capabilities publication date\r\n* [ValueSet](valueset.html): The value set publication date\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1948,7 +1948,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CodeSystem](codesystem.html): External identifier for the code system\r\n* [ConceptMap](conceptmap.html): External identifier for the concept map\r\n* [MessageDefinition](messagedefinition.html): External identifier for the message definition\r\n* [StructureDefinition](structuredefinition.html): External identifier for the structure definition\r\n* [StructureMap](structuremap.html): External identifier for the structure map\r\n* [ValueSet](valueset.html): External identifier for the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1957,7 +1957,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Geographic region(s) for study",
+        "description": "The location(s) at which the role occurs",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1974,7 +1974,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Retrieve coverages for a patient",
+        "description": "The identity of a patient to search for guidance response results",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1991,7 +1991,8 @@
       "reason-code": {
         "name": "reason-code",
         "in": "query",
-        "description": "Coded reason this appointment is scheduled",
+        "description": "Reason why the vaccine was administered",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1999,7 +2000,8 @@
       "reason-reference": {
         "name": "reason-reference",
         "in": "query",
-        "description": "Reason the appointment is to take place (resource)",
+        "description": "Why immunization occurred",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2007,7 +2009,7 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "High-level category",
+        "description": "A broad categorization of the service that is to be performed during this appointment",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2016,7 +2018,7 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The type of appointments that can be booked into associated slot(s)",
+        "description": "The type of appointments that can be booked into the slot",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2033,7 +2035,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Type of specialty needed",
+        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2042,7 +2044,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The current status of the capability statement\r\n* [CodeSystem](codesystem.html): The current status of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The current status of the compartment definition\r\n* [ConceptMap](conceptmap.html): The current status of the concept map\r\n* [GraphDefinition](graphdefinition.html): The current status of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The current status of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The current status of the message definition\r\n* [NamingSystem](namingsystem.html): The current status of the naming system\r\n* [OperationDefinition](operationdefinition.html): The current status of the operation definition\r\n* [SearchParameter](searchparameter.html): The current status of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The current status of the structure definition\r\n* [StructureMap](structuremap.html): The current status of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The current status of the terminology capabilities\r\n* [ValueSet](valueset.html): The current status of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2051,8 +2053,7 @@
       "supporting-info": {
         "name": "supporting-info",
         "in": "query",
-        "description": "Information supporting the clinical impression",
-        "style": "form",
+        "description": "Additional information to support the appointment",
         "schema": {
           "type": "string"
         }

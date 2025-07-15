@@ -39,6 +39,15 @@ In the ``PipelineOptions`` section of the :ref:`appsettings <configure_appsettin
 
 Manual control over this operation is possible by using ``Vonk.Plugin.Operations.VersionsOperationConfiguration`` in either ``include`` or ``exclude`` sections.
 
+$versions and Firely Auth
+------------------------
+
+When using SMART with Firely Auth as the authorization server, ensure that the ``RequireAuthorization`` setting for the ``$versions`` operation is set to ``Never`` in the operation configuration. 
+
+This setting allows Firely Auth to correctly detect the default FHIR version and connect to Firely Server to retrieve the ``CapabilityStatement``.
+
+Since ``$versions`` only returns the enabled FHIR versions and does not expose any sensitive information, it is safe to make this operation accessible without authorization.
+
 Example
 -------
 

@@ -3,6 +3,10 @@
 Validating incoming resources
 =============================
 
+.. note::
+
+  The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
 You can have Firely Server validate all resources that are sent in for create or update. The setting to do that is like this:
 ::
 
@@ -95,6 +99,31 @@ If validation is set to ``Full`` the following validation rules will be checked:
 | ExtensionSchema               |                                                               |
 +-------------------------------+---------------------------------------------------------------+
 
+.. _feature_advancedvalidation:
+
+Advanced Validation
+-------------------
+
+.. note::
+
+  The features described in this section are available in the following :ref:`Firely Server editions <vonk_overview>`:
+
+  * Firely Scale - 🌍 / 🇺🇸
+  * Firely CMS Compliance - 🇺🇸
+
+In the Firely Server edition mentioned above, Firely Server will execute additional advanced validation rules which are defined on top of the core FHIR specification for more quality control.
+
+If validation is set to ``Full`` the following validation rules will be checked:
+
++--------------------------------+---------------------------------------------------------------------------------------------------------------+
+| Validation Rule                | Description                                                                                                   |
++================================+===============================================================================================================+
+| ElementDefinitionValidator     | Validates that ElementDefinitions paths are valid                                                             |
++--------------------------------+---------------------------------------------------------------------------------------------------------------+
+| StructureDefinitionValidator   | Validates slicing and invariant definitions in StructureDefinitions                                           |
++--------------------------------+---------------------------------------------------------------------------------------------------------------+
+| QuestionnaireResponseValidator | Validates a QuestionnaireResponse against a Questionnaire (can be stored in the Firely Server admin database) |
++--------------------------------+---------------------------------------------------------------------------------------------------------------+
 
 Allow for Specific Profiles
 ---------------------------

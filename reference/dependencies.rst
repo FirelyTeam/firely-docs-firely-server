@@ -23,7 +23,6 @@ This list uses the NuGet package names (or prefixes of them) so you can easily l
 #. NETStandard.Library - MIT
 #. NewtonSoft.Json - MIT
 #. IdentityModel.* - Apache 2.0
-#. IdentityServer4.AccessTokenValidation - Apache 2.0
 #. IPNetwork2 - BSD 2-Clause "Simplified" License
 #. Serilog(.*) - Apache-2.0
 #. LinqKit.Microsoft.EntityFrameworkCore - MIT

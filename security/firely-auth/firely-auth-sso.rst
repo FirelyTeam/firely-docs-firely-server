@@ -63,6 +63,10 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
     Based on the ``AutoProvisionFromSecurityGroup`` setting it is possible to restrict the sign-up of users based on security groups defined in the SSO provider. The attribution of a user account to a one or more security group needs to be exposed via the ``groups`` claim.
     If the ID token received from the SSO provider contains such a claim and the value is part of the whitelisted security groups in the appsetttings, the auto-provisioning is allowed by Firely Auth. Note that Azure allows you to set different values for this claim, such as the Object ID or the display name of the security group. Depending on how this claim is configured in Azure, the respective value, either Object ID or display name of the Security Group, should be added to the ``AutoProvisionFromSecurityGroup`` list to allow auto-provisioning for this group.
 
+.. admonition:: Docker deployments
+
+    If :ref:`testing with Docker <firely_auth_deploy_docker>`, Firely Auth should be configured to use the localhost network, instead of the default bridge network. This is necessary to allow the SSO provider to redirect back to the Firely Auth instance running in a Docker container.
+
 A note on the fhirUser claim
 ----------------------------
 
@@ -116,7 +120,7 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
 
     - Select "Overview".
     - Select "Endpoints"
-    - One of the displayed OAuth 2.0 endpoints can be used as the authority in the settings. It should look like this: ``https://login.microsoftonline.com/<Directory (tenant) ID of the registered application>/v2.0``.
+    - One of the displayed OAuth 2.0 endpoints can be used as the authority in the settings. It should look like this: ``https://login.microsoftonline.com/<Directory (tenant) ID of the registered application>/v2.0``. Please check that the URL uses this exact structure, without any extra subpaths. 
 
 #. Optional: Expose the `groups <https://learn.microsoft.com/en-us/entra/identity-platform/optional-claims?tabs=appui#configure-groups-optional-claims>`_ in the ID token if the SSO auto-provisioning is restricted to certain security groups. As mentioned above, you can configure Azure to add different values to this claim, such as Group ID (the Object ID of the Security Group) or the name of the Security Group. The values listed in the ``AutoProvisionFromSecurityGroup`` setting should match the values of the ``groups`` claim in the ID token.
 
@@ -147,7 +151,7 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
     After creating the directory extension please ensure that the extension is exposed as a claim in the ID token. It needs to be enabled via the "Add optional claim" setting above. Select "ID" as the token type, as well as "extn.fhirUser" as the claim.
     Note that EntraID creates the claim for a directory extension with an "extn" prefix. Therefore, use the ``CopyAs`` setting in Firely Auth to copy the claim as "fhirUser" instead of "extn.fhirUser":
         
-        ::
+        .. code-block:: json
             
 		"ExternalIdentityProviders": {
 		    "IdentityProvider": [{
@@ -159,3 +163,47 @@ Configuring a new client application in Azure Active Directory (Azure AD) using 
 		}
 
 #. If configured successfully the login page of Firely Auth should show a button with a label identical to the chosen display name
+
+Example configuration for Microsoft Entra
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code-block:: json
+
+    "ExternalIdentityProviders": {
+        "IdentityProvider": [
+            {
+                "DisplayName": "My Health Clinic",
+                
+                // The scheme must be included in the Redirect URI, e.g. https://[Firely Auth base endpoint]/federation/MyHealthClinic/signin, assigned to the application under the 'Authorization' tab in Azure.
+                "Scheme": "MyHealthClinic",
+                
+                // The authority should include the 'Directory (tenant) ID' of the registered application.
+                // In Microsoft Entra, this is the base URL of the endpoint listed in 'Overview' -> 'Endpoints' -> 'OpenID Connect metadata document' base URL.
+                "Authority": "https://login.microsoftonline.com/egqb1140-e3e3-9719-866d-9c6eabbzzqqd/v2.0/",
+                
+                // In Microsoft Entra, this should be the 'Application (client) ID'
+                "ClientId": "2gf34c86-88bc-4645-91f8-3316be75757f",
+                
+                // In Microsoft Entra, this is found under 'Certificates & Secrets' -> 'New client secret'
+                "ClientSecret": "My client secret",
+                
+                "AllowAutoProvision": true,
+                "UserClaimsFromIdToken": [
+                    {
+                        "Key": "extn.fhirUser", // claim formatted by Microsoft Graph + Entra
+                        "CopyAs": "fhirUser" // claim required by Firely Auth
+                    },
+                    {
+                        "Key": "extn.memberid",
+                        "CopyAs": "memberid"
+                    }
+                ],
+                "FhirUserLookupClaimsMapping": [
+                    {
+                        "SearchParameterName": "identifier",
+                        "CopySearchParameterValuesFromClaims": [ "clinicid", "groupid", "memberid" ],
+                        "SearchParameterValueTemplate": "http://myhealthclinic/customer/fhir/{0}/{1}/member|{2}",
+                    }
+                ]
+            }
+        ]
+    }

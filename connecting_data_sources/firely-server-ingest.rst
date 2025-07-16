@@ -29,7 +29,7 @@ Bulk Import via Firely Server Ingest
     
 **Firely Server Ingest (FSI)** is a CLI application designed to optimize massive resource ingestion into a Firely Server instance. In contrast to resource ingestion by sending HTTP requests to a running Firely Server instance, this tool writes data directly to the underlying FS database which increases the throughput significantly.
 
-The tool supports ingestion into SQL Server and MongoDB databases.
+The tool supports ingestion into SQL Server and MongoDB databases or ingestion through the :ref:`PubSub <PubSub>` mechanism.
 
 .. _tool_fsi_installation:
 
@@ -72,6 +72,7 @@ Prerequisites
 .. note::
 
   This prerequisite does not apply to FSI v6+ targeting a MongoDB database. In this case you can instruct FSI to provision the database automatically by setting the ``--provisionTargetDatabase`` flag to ``true``.
+  This prerequisite also does not apply to FSI using PubSub as a target. In this case the consuming Firely Server instance(s) will take care of the database setup.
 
 The tool requires that the target database already exists and contains all required indexes and tables (for SQL Server). If you don't have a database with the schema yet, you first need to run the Firely Server at least once as described in the articles :ref:`configure_sql` and :ref:`configure_mongodb`.
 
@@ -170,7 +171,7 @@ If you want to specify input parameters in the file, you can use the snippet bel
 
           // Target
           "provisionTargetDatabase": false,
-          "databaseType": "SQL",
+          "databaseType": "SQL", // SQL | MongoDb | PubSub
 
           "sqlserver": {
               "connectionString": "<connectionstring to the Firely Server SQL Server database>",
@@ -188,11 +189,53 @@ If you want to specify input parameters in the file, you can use the snippet bel
               "batchSize": 500
           },
 
-          // Telemetry
-          "OpenTelemetryOptions": {
-              "EnableMetrics": false,
-              "Endpoint": "http://localhost:4317"
-          }
+          "PubSub": {
+            "batchSize": 1,
+            "MessageBroker": {
+                "Host": "<connectionstring to the pubsub endpoint>",
+                "Username": "guest",
+                "Password": "guest",
+                "ApplicationQueueName": "FirelyServer",
+                "PrefetchCount": 1,
+                "ConcurrencyNumber": 1,
+                "RabbitMQ": {
+                    "Port": 5672
+                },
+                "Kafka": {
+                    "TopicPrefix": "FirelyServerCommands",
+                    "ClientGroupId": "FirelyServer",
+                    "ClientId": "FirelyServer",
+                    "AuthenticationMechanism": "SaslScram256",
+                    "ExecuteStorePlanCommandErrorTopicName": "FirelyServerCommands.ExecuteStorePlanCommand.Errors",
+                    "NumberOfConcurrentConsumers": 1,
+                    "Username": "username",
+                    "Password": "password",
+                    "CaLocation": "", // path to ca file
+                    "KeystoreLocation": "", // path to private key file
+                    "KeystorePassword": "" // password to private key file
+                },
+                "VirtualHost": "/",
+                "BrokerType": "AzureServiceBus" //  RabbitMq, AzureServiceBus, Kafka
+            },
+            "ResourceChangeNotifications": {
+                "ExcludeAuditEvents": false,
+                "SendLightEvents": false,
+                "SendFullEvents": false,
+                "PollingIntervalSeconds": 5,
+                "MaxPublishStorePlanSize": 1000
+            },
+            "ClaimCheck": {
+                "StorageType": "Disabled", //"AzureBlobStorage", // Or "Disabled"
+                "AzureBlobContainerName": "messages-data",
+                "AzureBlobStorageConnectionString": "<connection string>"
+            }
+        },
+
+        // Telemetry
+        "OpenTelemetryOptions": {
+            "EnableMetrics": false,
+            "Endpoint": "http://localhost:4317"
+        }
       }
 
 .. _FSI_supported_arguments:
@@ -423,6 +466,12 @@ Target (for MongoDB)
   * **Required**: No
   * **Default**: 500
   * **Description**: The number of resources to save in each batch.
+
+Target (for PubSub)
+^^^^^^^^^^^^^^^^^^^
+
+PubSub options are not exposed trough command line parameters and must be provided in a ``appsettings.instance.json`` file as described above.
+The settings, except for the batchSize, are the same as in Firely Server and can be found in :ref:`this article <pubsub_configuration>`.
 
 Workflow
 ^^^^^^^^

@@ -188,11 +188,13 @@ Each ``override`` rule is defined using the following structure inside a FHIR ``
 Fields:
 
 - ``filter-type``: One of the following:
+
   - ``code`` – Match on the validation issue code (e.g., ``6007``)
   - ``message`` – Match on the human-readable issue text
   - ``location`` – Match on the issue's path; this uses a prefix match (``startswith``), and you can use an asterisk (``*``) suffix to include child elements.
 - ``match-value``: The value to match for the selected filter
 - ``severity``: The new severity value to apply. Must be one of:
+
   - ``success``, ``information``, ``warning``, ``error``, ``fatal``
 
 Suppress Rule
@@ -220,6 +222,7 @@ Each ``suppress`` rule is defined using the following structure inside a FHIR ``
 Fields:
 
 - ``filter-type``: One of the following:
+
   - ``code`` – Match on the validation issue code (e.g., ``8000``)
   - ``message`` – Match on the issue’s text exactly
   - ``location`` – Match on the FHIR path or element location; uses a **prefix match**, and may include an asterisk (``*``) to match children
@@ -258,6 +261,7 @@ Fields:
 
 - ``path``: The FHIR path to the element to be filtered. You can use a trailing asterisk (``*``) to include child elements.
 - ``options``: The types of rules to apply. You can include one or more of the following:
+
   - ``cardinality`` – Enforces min/max occurrence constraints
   - ``invariant`` – Evaluates invariants defined in StructureDefinition (e.g., ``ele-1``, ``dom-3``)
   - ``fixed`` – Validates fixed or pattern values defined on the element
@@ -293,11 +297,13 @@ Fields:
 
 - ``id``: The local ID of the contained resource (e.g., ``invalid`` for ``#invalid``).
 - ``kind``: The containment type. Typical values include:
+
   - ``contained`` – Standard contained resources (using ``#id`` references)
   - ``bundled`` – Contained-like entries that appear in a ``Bundle.entry`` context
   - ``parameters`` - Entries that appear in a ``Parameters.resource`` context
   - ``outcome`` - Subset of ``contained``, only works on contained resources inside ``OperationOutcome``
 - ``options``: The action to take. Currently, the supported value is:
+
   - ``skip`` – Skip validation for the matching contained resource
 
 Reference Rule
@@ -333,6 +339,7 @@ Fields:
 
 - ``id``: The FHIRPath or ID of the reference element to filter (e.g., ``#Observation.subject`` or ``#Patient.generalPractitioner``)
 - ``options``: One or more of the following:
+
   - ``exists`` – Check that the reference can be resolved
   - ``type`` – Check that the reference is of the correct resource type
 
@@ -376,6 +383,7 @@ Fields:
 - ``structure``: The canonical URI of the resource or profile to which the invariant applies (e.g., ``http://hl7.org/fhir/StructureDefinition/Patient``)
 - ``key``: The invariant key, as defined in the StructureDefinition (e.g., ``dom-3``, ``ele-1``)
 - ``options``: One or more of the following:
+
   - ``warning`` – Demote this invariant to a warning
   - ``error`` – Promote or preserve this invariant as an error
 
@@ -414,6 +422,7 @@ Fields:
 
 - ``path``: The FHIRPath to the resource being filtered (e.g., ``Bundle.entry[1].resource[0]``)
 - ``options``: Must be set to:
+
   - ``stated`` – Only validate against the explicitly declared structure or profile
 
 Coded Rule
@@ -448,8 +457,9 @@ Fields:
 
 - ``id``: The logical ID or FHIRPath of the coded element to apply the rule to (e.g., ``Patient.communication.language``)
 - ``options``: Optional refinement(s) of what to validate:
-  - ``concepts`` – Validate only the system/code pair and ignore the ``display`` field
 
+  - ``concepts`` – Validate only the system/code pair and ignore the ``display`` field
+  - ``display`` - Validate both system/code, and warn if display is not correct
 
 Allow for Specific Profiles
 ---------------------------

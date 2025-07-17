@@ -146,7 +146,7 @@ Configuration
 ^^^^^^^^^^^^^
 
 The ``AdvisorRules`` setting in the ``Validation`` section of the appsettings allows to declaratively control how FHIR validation behaves at runtime.
-``AdvisorRules`` must be provided as an escaped, JSON-encoded FHIR ``Parameters`` resource. The advisor rules are applied for all validation operations in Firely Server incl. pre-validation.
+``AdvisorRules`` must be provided as an escaped, JSON-encoded FHIR ``Parameters`` resource. The advisor rules are applied for all validation operations in Firely Server (i.e. $validate and pre-validation).
 
 Rules Structure (Post-Processing)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -447,7 +447,8 @@ Each ``coded`` rule is defined using the following structure inside a FHIR ``Par
               { "name": "id", "valueString": "<element-id>" }
             ]
           },
-          { "name": "options", "valueString": "<option>" }
+          { "name": "options", "valueString": "<option>" },
+          { "name": "valueSet", "valueString": "<canonical>" }
         ]
       }
     ]
@@ -460,6 +461,448 @@ Fields:
 
   - ``concepts`` – Validate only the system/code pair and ignore the ``display`` field
   - ``display`` - Validate both system/code, and warn if display is not correct
+- ``valueSet``: Canonical of the ValueSet bound to the element with logical ID ``id``
+
+Advisor Rules Example: Override, Suppress, and Coded Validation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This example demonstrates how Advisor Rules can be used to customize validation behavior in Firely Server. It shows how to:
+
+- Override the severity of specific issues
+- Suppress known or acceptable issues
+- Enable validation of weak bindings (e.g., ``preferred`` or ``example``) using the ``coded`` rule
+
+**Before Applying Advisor Rules:**
+
+By default, weak bindings (such as those on ``Observation.category`` or ``Observation.code``) are not validated. Also, issues like extension violations or known warnings are returned at their default severity.
+
+.. code-block:: json
+
+  {
+    "resourceType": "OperationOutcome",
+    "id": "d35f53fb-24fe-4834-9e27-f3e381940283",
+    "meta": {
+        "versionId": "7fd10d7a-cc0d-425f-954d-d95589ef349b",
+        "lastUpdated": "2025-07-16T13:56:50.666181+00:00"
+    },
+    "issue": [
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-authority",
+                    "valueUri": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-race"
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 14
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 21
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-source",
+                    "valueString": "BindingValidator"
+                }
+            ],
+            "severity": "warning",
+            "code": "informational",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/dotnet-api-operation-outcome",
+                        "code": "6006"
+                    }
+                ],
+                "text": "Code '2131-1' from system 'urn:oid:2.16.840.1.113883.6.238' has incorrect display 'Other race', should be 'Other Race' (for slice ombCategory)"
+            },
+            "expression": [
+                "Patient.extension[0].extension[0].valueCoding[0], element Patient(http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient).extension->Extension(http://hl7.org/fhir/us/core/StructureDefinition/us-core-race).extension[ombCategory].value[x]"
+            ]
+        },
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-authority",
+                    "valueUri": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 31
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 21
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-source",
+                    "valueString": "BindingValidator"
+                }
+            ],
+            "severity": "warning",
+            "code": "informational",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/dotnet-api-operation-outcome",
+                        "code": "6006"
+                    }
+                ],
+                "text": "Code 'UNK' from system 'http://terminology.hl7.org/CodeSystem/v3-NullFlavor' has incorrect display 'Unknown', should be 'unknown' (for slice ombCategory)"
+            },
+            "expression": [
+                "Patient.extension[0].extension[0].valueCoding[0], element Patient(http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient).extension->Extension(http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity).extension[ombCategory].value[x]"
+            ]
+        },
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-authority",
+                    "valueUri": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 43
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 21
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-source",
+                    "valueString": "BindingValidator"
+                }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/dotnet-api-operation-outcome",
+                        "code": "6007"
+                    }
+                ],
+                "text": "Code '2029-7' from system 'urn:oid:2.16.840.1.113883.6.238' does not exist in the value set 'Detailed ethnicity' (http://hl7.org/fhir/us/core/ValueSet/detailed-ethnicity) (for slice detailed)"
+            },
+            "expression": [
+                "Patient.extension[0].extension[2].valueCoding[0], element Patient(http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient).extension->Extension(http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity).extension[detailed].value[x]"
+            ]
+        },
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-authority",
+                    "valueUri": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 69
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 3
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-source",
+                    "valueString": "ExtensionSchema"
+                }
+            ],
+            "severity": "error",
+            "code": "incomplete",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/dotnet-api-operation-outcome",
+                        "code": "4000"
+                    }
+                ],
+                "text": "Unable to resolve reference to extension 'http://hl7.org/fhir/us/core/ValueSet/us-core-sexual-orientation'."
+            },
+            "expression": [
+                "Patient.extension, element Patient(http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient).extension"
+            ]
+        },
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-authority",
+                    "valueUri": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 31
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 21
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-source",
+                    "valueString": "BindingValidator"
+                }
+            ],
+            "severity": "warning",
+            "code": "informational",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/dotnet-api-operation-outcome",
+                        "code": "6006"
+                    }
+                ],
+                "text": "Code 'UNK' from system 'http://terminology.hl7.org/CodeSystem/v3-NullFlavor' has incorrect display 'Unknown', should be 'unknown' (for slice ombCategory)"
+            },
+            "expression": [
+                "Patient.extension[1].extension[0].valueCoding[0], element Patient(http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient).extension[ethnicity]->Extension(http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity).extension[ombCategory].value[x]"
+            ]
+        },
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-authority",
+                    "valueUri": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 43
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 21
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-source",
+                    "valueString": "BindingValidator"
+                }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/dotnet-api-operation-outcome",
+                        "code": "6007"
+                    }
+                ],
+                "text": "Code '2029-7' from system 'urn:oid:2.16.840.1.113883.6.238' does not exist in the value set 'Detailed ethnicity' (http://hl7.org/fhir/us/core/ValueSet/detailed-ethnicity) (for slice detailed)"
+            },
+            "expression": [
+                "Patient.extension[1].extension[2].valueCoding[0], element Patient(http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient).extension[ethnicity]->Extension(http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity).extension[detailed].value[x]"
+            ]
+        }
+    ]
+}
+
+**After Applying Advisor Rules:**
+
+The following ``Parameters`` resource defines Advisor Rules to:
+
+- Downgrade ``6007`` issues under ``Patient.extension`` to ``warning``
+- Suppress all ``6006`` issues
+- Enable code validation for ``Observation.category`` and ``Observation.code``, even if they use ``preferred`` bindings. This rule is only shown here for context to highlight that all rules for all resource types are defined in a single Parameters resource.
+
+.. code-block:: json
+
+    {
+      "resourceType": "Parameters",
+      "parameter": [
+        {
+          "name": "override",
+          "part": [
+            {
+              "name": "code",
+              "valueString": "6007"
+            },
+            {
+              "name": "severity",
+              "valueString": "warning"
+            },
+            {
+              "name": "location",
+              "valueString": "Patient.extension*"
+            }
+          ]
+        },
+        {
+          "name": "suppress",
+          "part": [
+            {
+              "name": "code",
+              "valueString": "6006"
+            }
+          ]
+        },
+        {
+          "name": "rules",
+          "part": [ 
+            {
+              "name": "coded",
+              "part": [
+                {
+                  "name": "filter",
+                  "part": [
+                    {
+                      "name": "id",
+                      "valueString": "#Observation.category"
+                    }
+                  ]
+                },
+                {
+                  "name": "options",
+                  "valueString": "concepts"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rules",
+          "part": [ 
+            {
+              "name": "coded",
+              "part": [
+                {
+                  "name": "filter",
+                  "part": [
+                    {
+                      "name": "id",
+                      "valueString": "#Observation.code"
+                    }
+                  ]
+                },
+                {
+                  "name": "valueSet",
+                  "valueString": "http://hl7.org/fhir/us/core/ValueSet/us-core-common-sdoh-assessments"
+                },
+                {
+                  "name": "options",
+                  "valueString": "concepts"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+
+**Effect on Validation Output:**
+
+After applying these rules, the resulting ``OperationOutcome`` would look like this:
+
+.. code-block:: json
+
+  {
+    "resourceType": "OperationOutcome",
+    "id": "d35f53fb-24fe-4834-9e27-f3e381940283",
+    "meta": {
+        "versionId": "7fd10d7a-cc0d-425f-954d-d95589ef349b",
+        "lastUpdated": "2025-07-16T13:56:50.666181+00:00"
+    },
+    "issue": [
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-authority",
+                    "valueUri": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 43
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 21
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-source",
+                    "valueString": "BindingValidator"
+                }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/dotnet-api-operation-outcome",
+                        "code": "6007"
+                    }
+                ],
+                "text": "Code '2029-7' from system 'urn:oid:2.16.840.1.113883.6.238' does not exist in the value set 'Detailed ethnicity' (http://hl7.org/fhir/us/core/ValueSet/detailed-ethnicity) (for slice detailed)"
+            },
+            "expression": [
+                "Patient.extension[0].extension[2].valueCoding[0], element Patient(http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient).extension->Extension(http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity).extension[detailed].value[x]"
+            ]
+        },
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-authority",
+                    "valueUri": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient"
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 69
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 3
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-source",
+                    "valueString": "ExtensionSchema"
+                }
+            ],
+            "severity": "error",
+            "code": "incomplete",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/dotnet-api-operation-outcome",
+                        "code": "4000"
+                    }
+                ],
+                "text": "Unable to resolve reference to extension 'http://hl7.org/fhir/us/core/ValueSet/us-core-sexual-orientation'."
+            },
+            "expression": [
+                "Patient.extension, element Patient(http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient).extension"
+            ]
+        },
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-authority",
+                    "valueUri": "http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity"
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 43
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 21
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-source",
+                    "valueString": "BindingValidator"
+                }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/dotnet-api-operation-outcome",
+                        "code": "6007"
+                    }
+                ],
+                "text": "Code '2029-7' from system 'urn:oid:2.16.840.1.113883.6.238' does not exist in the value set 'Detailed ethnicity' (http://hl7.org/fhir/us/core/ValueSet/detailed-ethnicity) (for slice detailed)"
+            },
+            "expression": [
+                "Patient.extension[1].extension[2].valueCoding[0], element Patient(http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient).extension[ethnicity]->Extension(http://hl7.org/fhir/us/core/StructureDefinition/us-core-ethnicity).extension[detailed].value[x]"
+            ]
+        }
+    ]
+  }
 
 Allow for Specific Profiles
 ---------------------------

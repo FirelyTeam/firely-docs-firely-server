@@ -295,6 +295,8 @@ Fields:
 - ``kind``: The containment type. Typical values include:
   - ``contained`` – Standard contained resources (using ``#id`` references)
   - ``bundled`` – Contained-like entries that appear in a ``Bundle.entry`` context
+  - ``parameters`` - Entries that appear in a ``Parameters.resource`` context
+  - ``outcome`` - Subset of ``contained``, only works on contained resources inside ``OperationOutcome``
 - ``options``: The action to take. Currently, the supported value is:
   - ``skip`` – Skip validation for the matching contained resource
 

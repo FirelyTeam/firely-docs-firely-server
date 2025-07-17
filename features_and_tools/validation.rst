@@ -820,7 +820,7 @@ After applying these rules, the resulting ``OperationOutcome`` would look like t
                     "valueString": "BindingValidator"
                 }
             ],
-            "severity": "error",
+            "severity": "warning",
             "code": "code-invalid",
             "details": {
                 "coding": [
@@ -888,7 +888,7 @@ After applying these rules, the resulting ``OperationOutcome`` would look like t
                     "valueString": "BindingValidator"
                 }
             ],
-            "severity": "error",
+            "severity": "warning",
             "code": "code-invalid",
             "details": {
                 "coding": [

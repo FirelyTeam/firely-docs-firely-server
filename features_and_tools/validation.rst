@@ -140,7 +140,7 @@ Filtering allows for:
 
   * Apply custom validation behavior (e.g., override severity, suppress issues, skip rules) only when specific conditions are met
   * Control the scope of your rules by narrowing them to targeted elements, structures, codes, or messages
-  * Combine multiple filters for granular validation strategies
+  * Combining multiple filters for granular validation strategies
 
 Configuration
 ^^^^^^^^^^^^^

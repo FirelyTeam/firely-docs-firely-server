@@ -138,7 +138,7 @@ Central to this system is the concept of filtering, which allows targeting speci
 
 Filtering allows for:
 
-  * Apply custom validation behavior (e.g., override severity, suppress issues, skip rules) only when specific conditions are met
+  * Applying custom validation behavior (e.g., override severity, suppress issues, skip rules) only when specific conditions are met
   * Controlling the scope of your rules by narrowing them to targeted elements, structures, codes, or messages
   * Combining multiple filters for granular validation strategies
 

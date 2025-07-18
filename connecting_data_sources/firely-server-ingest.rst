@@ -201,28 +201,8 @@ If you want to specify input parameters in the file, you can use the snippet bel
                 "RabbitMQ": {
                     "Port": 5672
                 },
-                "Kafka": {
-                    "TopicPrefix": "FirelyServerCommands",
-                    "ClientGroupId": "FirelyServer",
-                    "ClientId": "FirelyServer",
-                    "AuthenticationMechanism": "SaslScram256",
-                    "ExecuteStorePlanCommandErrorTopicName": "FirelyServerCommands.ExecuteStorePlanCommand.Errors",
-                    "NumberOfConcurrentConsumers": 1,
-                    "Username": "username",
-                    "Password": "password",
-                    "CaLocation": "", // path to ca file
-                    "KeystoreLocation": "", // path to private key file
-                    "KeystorePassword": "" // password to private key file
-                },
                 "VirtualHost": "/",
-                "BrokerType": "AzureServiceBus" //  RabbitMq, AzureServiceBus, Kafka
-            },
-            "ResourceChangeNotifications": {
-                "ExcludeAuditEvents": false,
-                "SendLightEvents": false,
-                "SendFullEvents": false,
-                "PollingIntervalSeconds": 5,
-                "MaxPublishStorePlanSize": 1000
+                "BrokerType": "AzureServiceBus" //  RabbitMq, AzureServiceBus
             },
             "ClaimCheck": {
                 "StorageType": "Disabled", //"AzureBlobStorage", // Or "Disabled"
@@ -467,11 +447,21 @@ Target (for MongoDB)
   * **Default**: 500
   * **Description**: The number of resources to save in each batch.
 
+.. _fsi_target_pubsub:
+
 Target (for PubSub)
 ^^^^^^^^^^^^^^^^^^^
 
-PubSub options are not exposed trough command line parameters and must be provided in a ``appsettings.instance.json`` file as described above.
-The settings, except for the batchSize, are the same as in Firely Server and can be found in :ref:`this article <pubsub_configuration>`.
+PubSub options are not exposed through command line parameters and must be provided in a ``appsettings.instance.json`` file as described above.
+The settings, except for the ``batchSize``, are the same as in Firely Server and can be found in :ref:`this article <pubsub_configuration>`.
+The ``batchSize`` property states how many resources are sent per message.
+If you have very large resources or are sending a lot of resources per message, it can be that you need to enable the claimcheck mechanism to not run into any message size limits.
+
+.. attention::
+  * Currently there is an issue with Kafka as a target, so this is not supported yet.
+  * You cannot specify MongoDb as a source when you set the target to PubSub.
+  * ``updateExistingResources`` should be set to true when using PubSub as a target.
+  * When ingesting a large amount of resources, take into account the limits of your message bus.
 
 Workflow
 ^^^^^^^^

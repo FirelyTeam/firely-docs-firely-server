@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - AdverseEvent",
-    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
+    "version": "6.3.0+85fabb8f54b85a88db93ba03d8f93be463c6707c"
   },
   "servers": [
     {
@@ -1856,7 +1856,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "The behavior associated with the message",
+        "description": "Classification of the consent statement - for indexing/retrieval",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1865,7 +1865,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The capability statement publication date\r\n* [CodeSystem](codesystem.html): The code system publication date\r\n* [CompartmentDefinition](compartmentdefinition.html): The compartment definition publication date\r\n* [ConceptMap](conceptmap.html): The concept map publication date\r\n* [GraphDefinition](graphdefinition.html): The graph definition publication date\r\n* [ImplementationGuide](implementationguide.html): The implementation guide publication date\r\n* [MessageDefinition](messagedefinition.html): The message definition publication date\r\n* [NamingSystem](namingsystem.html): The naming system publication date\r\n* [OperationDefinition](operationdefinition.html): The operation definition publication date\r\n* [SearchParameter](searchparameter.html): The search parameter publication date\r\n* [StructureDefinition](structuredefinition.html): The structure definition publication date\r\n* [StructureMap](structuremap.html): The structure map publication date\r\n* [TerminologyCapabilities](terminologycapabilities.html): The terminology capabilities publication date\r\n* [ValueSet](valueset.html): The value set publication date\r\n",
+        "description": "Date recommendation(s) created",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1874,8 +1874,7 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "The event that triggers the message or link to the event definition.",
-        "style": "form",
+        "description": "Type of the event itself in relation to the subject",
         "schema": {
           "type": "string"
         }
@@ -1883,7 +1882,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "The location(s) at which the role occurs",
+        "description": "The location of the Healthcare Service",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1924,7 +1923,8 @@
       "study": {
         "name": "study",
         "in": "query",
-        "description": "AdverseEvent.study",
+        "description": "Study subject is part of",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1932,7 +1932,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "The subject that the guidance response is about",
+        "description": "Individual the service is ordered for",
         "style": "form",
         "schema": {
           "type": "string"

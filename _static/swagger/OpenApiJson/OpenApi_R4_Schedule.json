@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Schedule",
-    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
+    "version": "6.3.0+85fabb8f54b85a88db93ba03d8f93be463c6707c"
   },
   "servers": [
     {
@@ -1783,7 +1783,7 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Whether this organization affiliation record is in active use",
+        "description": "The Healthcare Service is currently marked as active",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1792,7 +1792,7 @@
       "actor": {
         "name": "actor",
         "in": "query",
-        "description": "Any one of the individuals participating in the appointment",
+        "description": "Resource for the actor (or group, by role)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1801,7 +1801,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The capability statement publication date\r\n* [CodeSystem](codesystem.html): The code system publication date\r\n* [CompartmentDefinition](compartmentdefinition.html): The compartment definition publication date\r\n* [ConceptMap](conceptmap.html): The concept map publication date\r\n* [GraphDefinition](graphdefinition.html): The graph definition publication date\r\n* [ImplementationGuide](implementationguide.html): The implementation guide publication date\r\n* [MessageDefinition](messagedefinition.html): The message definition publication date\r\n* [NamingSystem](namingsystem.html): The naming system publication date\r\n* [OperationDefinition](operationdefinition.html): The operation definition publication date\r\n* [SearchParameter](searchparameter.html): The search parameter publication date\r\n* [StructureDefinition](structuredefinition.html): The structure definition publication date\r\n* [StructureMap](structuremap.html): The structure map publication date\r\n* [TerminologyCapabilities](terminologycapabilities.html): The terminology capabilities publication date\r\n* [ValueSet](valueset.html): The value set publication date\r\n",
+        "description": "Date recommendation(s) created",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1810,7 +1810,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CodeSystem](codesystem.html): External identifier for the code system\r\n* [ConceptMap](conceptmap.html): External identifier for the concept map\r\n* [MessageDefinition](messagedefinition.html): External identifier for the message definition\r\n* [StructureDefinition](structuredefinition.html): External identifier for the structure definition\r\n* [StructureMap](structuremap.html): External identifier for the structure map\r\n* [ValueSet](valueset.html): External identifier for the value set\r\n",
+        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): External ids for this item\r\n* [CarePlan](careplan.html): External Ids for this plan\r\n* [CareTeam](careteam.html): External Ids for this team\r\n* [Composition](composition.html): Version-independent identifier for the Composition\r\n* [Condition](condition.html): A unique identifier of the condition record\r\n* [Consent](consent.html): Identifier for this record (external references)\r\n* [DetectedIssue](detectedissue.html): Unique id for the detected issue\r\n* [DeviceRequest](devicerequest.html): Business identifier for request/order\r\n* [DiagnosticReport](diagnosticreport.html): An identifier for the report\r\n* [DocumentManifest](documentmanifest.html): Unique Identifier for the set of documents\r\n* [DocumentReference](documentreference.html): Master Version Specific Identifier\r\n* [Encounter](encounter.html): Identifier(s) by which this encounter is known\r\n* [EpisodeOfCare](episodeofcare.html): Business Identifier(s) relevant for this EpisodeOfCare\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a record identifier\r\n* [Goal](goal.html): External Ids for this goal\r\n* [ImagingStudy](imagingstudy.html): Identifiers for the Study, such as DICOM Study Instance UID and Accession number\r\n* [Immunization](immunization.html): Business identifier\r\n* [List](list.html): Business identifier\r\n* [MedicationAdministration](medicationadministration.html): Return administrations with this external identifier\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses with this external identifier\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions with this external identifier\r\n* [MedicationStatement](medicationstatement.html): Return statements with this external identifier\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this external identifier\r\n* [Observation](observation.html): The unique id for a particular observation\r\n* [Procedure](procedure.html): A unique identifier for a procedure\r\n* [RiskAssessment](riskassessment.html): Unique identifier for the assessment\r\n* [ServiceRequest](servicerequest.html): Identifiers assigned to this order\r\n* [SupplyDelivery](supplydelivery.html): External identifier\r\n* [SupplyRequest](supplyrequest.html): Business Identifier for SupplyRequest\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this external identifier\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1819,7 +1819,7 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "A broad categorization of the service that is to be performed during this appointment",
+        "description": "Service Category of the Healthcare Service",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1828,7 +1828,7 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The type of appointments that can be booked into the slot",
+        "description": "The type of service provided by this healthcare service",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1837,7 +1837,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
+        "description": "The specialty of the service provided by this healthcare service",
         "style": "form",
         "schema": {
           "type": "string"

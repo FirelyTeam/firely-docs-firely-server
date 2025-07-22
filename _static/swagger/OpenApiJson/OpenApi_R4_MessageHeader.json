@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MessageHeader",
-    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
+    "version": "6.3.0+85fabb8f54b85a88db93ba03d8f93be463c6707c"
   },
   "servers": [
     {
@@ -1874,7 +1874,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Flag creator",
+        "description": "Who and/or what authored the composition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1918,7 +1918,7 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "The event that triggers the message or link to the event definition.",
+        "description": "Type of the event itself in relation to the subject",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1927,7 +1927,7 @@
       "focus": {
         "name": "focus",
         "in": "query",
-        "description": "A resource that is a permitted focus of the message",
+        "description": "Drugs, devices, etc. under study",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1936,7 +1936,7 @@
       "receiver": {
         "name": "receiver",
         "in": "query",
-        "description": "The identity of a receiver to list dispenses for",
+        "description": "Who collected the Supply",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1971,7 +1971,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "The identity of source detecting the event",
+        "description": "Who or where the information in the statement came from",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1989,7 +1989,7 @@
       "target": {
         "name": "target",
         "in": "query",
-        "description": "A resource that was validated",
+        "description": "Target Reference(s) (usually version specific)",
         "style": "form",
         "schema": {
           "type": "string"

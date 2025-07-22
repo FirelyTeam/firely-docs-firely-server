@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - PractitionerRole",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
   },
   "servers": [
     {
@@ -1861,7 +1861,7 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Is the schedule in active use",
+        "description": "Whether this organization affiliation record is in active use",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1870,7 +1870,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The example scenario publication date",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The capability statement publication date\r\n* [CodeSystem](codesystem.html): The code system publication date\r\n* [CompartmentDefinition](compartmentdefinition.html): The compartment definition publication date\r\n* [ConceptMap](conceptmap.html): The concept map publication date\r\n* [GraphDefinition](graphdefinition.html): The graph definition publication date\r\n* [ImplementationGuide](implementationguide.html): The implementation guide publication date\r\n* [MessageDefinition](messagedefinition.html): The message definition publication date\r\n* [NamingSystem](namingsystem.html): The naming system publication date\r\n* [OperationDefinition](operationdefinition.html): The operation definition publication date\r\n* [SearchParameter](searchparameter.html): The search parameter publication date\r\n* [StructureDefinition](structuredefinition.html): The structure definition publication date\r\n* [StructureMap](structuremap.html): The structure map publication date\r\n* [TerminologyCapabilities](terminologycapabilities.html): The terminology capabilities publication date\r\n* [ValueSet](valueset.html): The value set publication date\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1879,7 +1879,7 @@
       "email": {
         "name": "email",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A value in an email contact\r\n* [Person](person.html): A value in an email contact\r\n* [Practitioner](practitioner.html): A value in an email contact\r\n* [PractitionerRole](practitionerrole.html): A value in an email contact\r\n* [RelatedPerson](relatedperson.html): A value in an email contact\r\n",
+        "description": "A value in an email contact",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1888,7 +1888,7 @@
       "endpoint": {
         "name": "endpoint",
         "in": "query",
-        "description": "The endpoint for the study or series",
+        "description": "Technical endpoint",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1897,7 +1897,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CodeSystem](codesystem.html): External identifier for the code system\r\n* [ConceptMap](conceptmap.html): External identifier for the concept map\r\n* [MessageDefinition](messagedefinition.html): External identifier for the message definition\r\n* [StructureDefinition](structuredefinition.html): External identifier for the structure definition\r\n* [StructureMap](structuremap.html): External identifier for the structure map\r\n* [ValueSet](valueset.html): External identifier for the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1906,7 +1906,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Geographic region(s) for study",
+        "description": "The location(s) at which the role occurs",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1915,7 +1915,7 @@
       "organization": {
         "name": "organization",
         "in": "query",
-        "description": "Custodian of the consent",
+        "description": "The organization that is managing the endpoint",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1924,7 +1924,7 @@
       "phone": {
         "name": "phone",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A value in a phone contact\r\n* [Person](person.html): A value in a phone contact\r\n* [Practitioner](practitioner.html): A value in a phone contact\r\n* [PractitionerRole](practitionerrole.html): A value in a phone contact\r\n* [RelatedPerson](relatedperson.html): A value in a phone contact\r\n",
+        "description": "A value in a phone contact",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1942,7 +1942,8 @@
       "role": {
         "name": "role",
         "in": "query",
-        "description": "The practitioner can perform this role at for the organization",
+        "description": "Definition of the role the participatingOrganization plays",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1950,7 +1951,7 @@
       "service": {
         "name": "service",
         "in": "query",
-        "description": "Which rendered service is being charged?",
+        "description": "Healthcare services provided through the role",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1959,7 +1960,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Type of specialty needed",
+        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1968,7 +1969,7 @@
       "telecom": {
         "name": "telecom",
         "in": "query",
-        "description": "Contact details for individual or organization",
+        "description": "The value in any kind of contact",
         "style": "form",
         "schema": {
           "type": "string"

@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Slot",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
   },
   "servers": [
     {
@@ -1796,8 +1796,7 @@
       "appointment-type": {
         "name": "appointment-type",
         "in": "query",
-        "description": "The style of appointment or patient that has been booked in the slot (not service type)",
-        "style": "form",
+        "description": "The style of appointment or patient that may be booked in the slot (not service type)",
         "schema": {
           "type": "string"
         }
@@ -1805,7 +1804,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CodeSystem](codesystem.html): External identifier for the code system\r\n* [ConceptMap](conceptmap.html): External identifier for the concept map\r\n* [MessageDefinition](messagedefinition.html): External identifier for the message definition\r\n* [StructureDefinition](structuredefinition.html): External identifier for the structure definition\r\n* [StructureMap](structuremap.html): External identifier for the structure map\r\n* [ValueSet](valueset.html): External identifier for the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1822,8 +1821,7 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "High-level category",
-        "style": "form",
+        "description": "A broad categorization of the service that is to be performed during this appointment",
         "schema": {
           "type": "string"
         }
@@ -1831,8 +1829,7 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The type of appointments that can be booked into associated slot(s)",
-        "style": "form",
+        "description": "The type of appointments that can be booked into the slot",
         "schema": {
           "type": "string"
         }
@@ -1840,8 +1837,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Type of specialty needed",
-        "style": "form",
+        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
         "schema": {
           "type": "string"
         }
@@ -1857,7 +1853,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The current status of the capability statement\r\n* [CodeSystem](codesystem.html): The current status of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The current status of the compartment definition\r\n* [ConceptMap](conceptmap.html): The current status of the concept map\r\n* [GraphDefinition](graphdefinition.html): The current status of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The current status of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The current status of the message definition\r\n* [NamingSystem](namingsystem.html): The current status of the naming system\r\n* [OperationDefinition](operationdefinition.html): The current status of the operation definition\r\n* [SearchParameter](searchparameter.html): The current status of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The current status of the structure definition\r\n* [StructureMap](structuremap.html): The current status of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The current status of the terminology capabilities\r\n* [ValueSet](valueset.html): The current status of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"

@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Provenance",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0-alpha-build-20250709.18+5045355ce50784e279c335dd1bd7a27e83076f4f"
   },
   "servers": [
     {
@@ -1857,7 +1857,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Geographic region(s) for study",
+        "description": "The location(s) at which the role occurs",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1866,7 +1866,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "Retrieve coverages for a patient",
+        "description": "The identity of a patient to search for guidance response results",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1891,7 +1891,7 @@
       "target": {
         "name": "target",
         "in": "query",
-        "description": "Particular delivery destination within the destination",
+        "description": "A resource that was validated",
         "style": "form",
         "schema": {
           "type": "string"

@@ -20,6 +20,7 @@ If you are not sure what would be the best option for your use case, or if you h
    Docker <docker>
    Azure App Service <azureWebApp>
    Kubernetes / Helm <helm>
+   Azure Marketplace <azureMarketplace>
    Reverse Proxy <reverseproxy/reverseProxy>
    HTTP(S) and Port settings <hosting>
 
@@ -72,3 +73,16 @@ If you are not sure what would be the best option for your use case, or if you h
 
 .. seealso:: 
    See :ref:`deploy_helm`
+
+------
+
+.. rubric:: Azure Market Place (with embedded Helm chart)
+
+**Advantages:**
+
+- One click deployment on Azure Kubernetes Service (AKS).
+- Simplified setup using an embedded Helm chart.
+- Ideal for users who want to quickly get started with Firely Server on Azure without needing to manually configure Kubernetes resources.
+
+.. seealso:: 
+   See :ref:`deploy_azure_marketplace`

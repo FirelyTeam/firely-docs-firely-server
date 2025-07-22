@@ -8,6 +8,17 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_6_3_0:
+
+Release 6.3.0, July 22th, 2025
+------------------------------
+
+Features
+^^^^^^^^
+
+#. We introduced the AdvisorRules setting for the validator for CMS and Scale licenses. The implementation of the Advisor Rules system allows users to customize validation behaviour on a more granular level by setting filters with which the outcome of validation or the validation itself can be modified. Note that this feature is still in beta. For meore information see :ref:`feature_advisor_rules`.
+#. The validator will now create extensions on validation errors pointing to the profile that caused the error in the http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-source extension. These issues will also be annotated with line numbers in the http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col and http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line extension.
+
 .. _vonk_releasenotes_6_2_0:
 
 Release 6.2.0, July 15th, 2025
@@ -36,7 +47,6 @@ Features
 ^^^^^^^^
 
 #. It is now possible to validate QuestionnaireResponse resources against their original Questionnaire resource. See :ref:`feature_advancedvalidation` for more information.
-#. The validator will now create extensions on validation errors pointing to the profile that caused the error in the http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-source extension. These issues will also be annotated with line numbers in the http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col and http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line extension.
 #. Message brokers can now be used as a target for Firely Server Ingest. FSI will publish messages to the message broker upon ingesting resources, which can then be consumed by Firely Server. Currently, only Azure Service Bus and RabbitMQ can be configured as message brokers for FSI. The use of a MongoDb source is not supported if the target is set to a message broker, only ingestion from files/folders is supported.
 #. We upgraded the .Net SDK to v5.12.0. See the `release notes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.12.0>`_ for more information.
 

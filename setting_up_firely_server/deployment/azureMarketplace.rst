@@ -21,10 +21,10 @@ Before deploying Firely Server from the Azure Marketplace, ensure you have the f
 - A valid Firely Server license in JSON format. An evaluation license can be retrieved from `the Firely Portal <https://fire.ly/firely-server-trial/>`_.
 
 
-In adition, if you want to use Ingress with TLS, you need to have the following: 
+In addition, if you want to use Ingress with TLS, you need to have the following: 
 
-- A registered hostname (i.e. a CNAME or A record in a DNS provider) 
-- A certificate manager (typically `cert-manager <https://cert-manager.io/>`_) 
+- A registered hostname (i.e. a CNAME or A record in a DNS provider). 
+- A certificate manager (typically `cert-manager <https://cert-manager.io/>`_). 
 - A certificate issuer (see the `available issuers for cert-manager <https://cert-manager.io/docs/usage/issuer/>`_) already deployed in the Kubernetes cluster.
 
 Deployment Steps

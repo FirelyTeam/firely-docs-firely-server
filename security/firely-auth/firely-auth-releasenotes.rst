@@ -3,6 +3,36 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.4.0:
+
+Release 4.4.0, XX-08-2025
+-------------------------
+
+Feature
+^^^^^^^
+
+#. Added the ability to assign custom ``tags`` to a client registration for better categorization. Admin users can label clients with tags such as ``"Testing"`` or ``"In-Production"``.
+#. SMART clients can now request a wildcard scope, even when restricted to certain resource types in the client registration. When a wildcard is requested, scopes will only be granted for the registered, allowed resource types.
+#. The client registration process has been streamlined to improve the experience for admin users registering applications.
+#. The client registration form now includes a "Legal & Compliance" section to document the following::
+
+     - Contact Us URL  
+     - Privacy Policy URL  
+     - Terms of Use URL  
+     - Legal Company Name
+     
+#. The FHIR Server Availability section on the admin dashboard now includes the FHIR Server endpoint information.
+#. The setting ``TrustedProxyIPNetworks`` now supports a new flag: ``AllowAnyNetworkOrigins``.  
+   - Previously, bypassing IP restrictions was only possible by setting ``ASPNETCORE_ENVIRONMENT=Development``.  
+   - With this release, the same behavior can be achieved explicitly via ``AllowAnyNetworkOrigins``.  
+   - **Note:** This setting is disabled by default and should only be enabled in trusted, secure environments.
+
+Fix
+^^^
+
+#. Fixed an ``ArgumentNullException`` that could occur if ``FhirUserLookupClaimsMapping`` was missing in the appsettings.
+#. Improved error handling for scenarios where the FHIR Server is not connected to Firely Auth and a client attempts to retrieve an access token.
+#. Fixed a startup issue that occurred while retrieving the CapabilityStatement from the FHIR Server configured with FHIR STU3 as its default information model.
 
 .. _firelyauth_releasenotes_4.3.0:
 

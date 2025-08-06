@@ -125,8 +125,14 @@ If validation is set to ``Full`` the following validation rules will be checked:
 | QuestionnaireResponseValidator | Validates a QuestionnaireResponse against a Questionnaire (can be stored in the Firely Server admin database) |
 +--------------------------------+---------------------------------------------------------------------------------------------------------------+
 
+.. _feature_advisor_rules:
+
 Filter validation outcome based on advisor rules
 ------------------------------------------------
+
+.. note::
+
+  This feature is currently in beta and is subject to change in future releases.
 
 .. note::
 
@@ -193,7 +199,7 @@ Fields:
 
   - ``code`` – Match on the validation issue code (e.g., ``6007``)
   - ``message`` – Match on the human-readable issue text
-  - ``location`` – Match on the issue's path; this uses a prefix match (``startswith``), and you can use an asterisk (``*``) suffix to include child elements.
+  - ``location`` – Match on the issue's path found in the ``expression`` field of the validation ``OperationOutcome``; this uses a prefix match (``startswith``), and you can use an asterisk (``*``) suffix to include child elements.
 - ``match-value``: The value to match for the selected filter
 - ``severity``: The new severity value to apply. Must be one of:
 
@@ -227,14 +233,14 @@ Fields:
 
   - ``code`` – Match on the validation issue code (e.g., ``8000``)
   - ``message`` – Match on the issue’s text exactly
-  - ``location`` – Match on the FHIR path or element location; uses a **prefix match**, and may include an asterisk (``*``) to match children
+  - ``location`` – Match on the issue's path found in the ``expression`` field of the validation ``OperationOutcome``; uses a **prefix match**, and may include an asterisk (``*``) to match children
 - ``match-value``: The value to compare for filtering
 
 Element Rule
 ^^^^^^^^^^^^
 
-The ``element`` rule in Advisor Rules allows you to selectively apply or skip specific types of validation
-checks on a given FHIR element path. This is useful when you want to fine-tune which rule types are enforced
+The ``element`` rule in Advisor Rules allows you to selectively apply specific types of validation
+checks on a given FHIR element path while skipping all other validation. This is useful when you want to fine-tune which rule types are enforced
 on certain parts of a resource.
 
 Each ``element`` rule is defined using the following structure inside a FHIR ``Parameters`` resource:
@@ -261,7 +267,7 @@ Each ``element`` rule is defined using the following structure inside a FHIR ``P
 
 Fields:
 
-- ``path``: The FHIR path to the element to be filtered. You can use a trailing asterisk (``*``) to include child elements.
+- ``path``: The FHIR path to the element to be filtered. Note that child elements are not automatically assessed, you can use a trailing asterisk (``*``) to include child elements.
 - ``options``: The types of rules to apply. You can include one or more of the following:
 
   - ``cardinality`` – Enforces min/max occurrence constraints
@@ -297,7 +303,7 @@ Each ``contained`` rule is defined using the following structure inside a FHIR `
 
 Fields:
 
-- ``id``: The local ID of the contained resource (e.g., ``invalid`` for ``#invalid``).
+- ``id``: The local ID of the contained resource (e.g., ``test-id`` for ``#test-id``).
 - ``kind``: The containment type. Typical values include:
 
   - ``contained`` – Standard contained resources (using ``#id`` references)
@@ -307,43 +313,6 @@ Fields:
 - ``options``: The action to take. Currently, the supported value is:
 
   - ``skip`` – Skip validation for the matching contained resource
-
-Reference Rule
-^^^^^^^^^^^^^^
-
-The ``reference`` rule allows you to constrain how references are validated in a resource. This enables
-you to control whether the validator enforces **type compatibility** or **existence checks** for specific
-reference elements.
-
-Each ``reference`` rule is defined using the following structure inside a FHIR ``Parameters`` resource:
-
-.. code-block:: json
-
-  {
-    "name": "rules",
-    "part": [
-      {
-        "name": "reference",
-        "part": [
-          {
-            "name": "filter",
-            "part": [
-              { "name": "id", "valueString": "<reference-path>" }
-            ]
-          },
-          { "name": "options", "valueString": "<option>" }
-        ]
-      }
-    ]
-  }
-
-Fields:
-
-- ``id``: The FHIRPath or ID of the reference element to filter (e.g., ``#Observation.subject`` or ``#Patient.generalPractitioner``)
-- ``options``: One or more of the following:
-
-  - ``exists`` – Check that the reference can be resolved
-  - ``type`` – Check that the reference is of the correct resource type
 
 Invariant Rule
 ^^^^^^^^^^^^^^
@@ -425,7 +394,7 @@ Fields:
 - ``path``: The FHIRPath to the resource being filtered (e.g., ``Bundle.entry[1].resource[0]``)
 - ``options``: Must be set to:
 
-  - ``stated`` – Only validate against the explicitly declared structure or profile
+  - ``stated`` – Only validate against the base profile of the resource type, ignoring any additional profiles in ``meta.profile``
 
 Coded Rule
 ^^^^^^^^^^
@@ -463,7 +432,7 @@ Fields:
 
   - ``concepts`` – Validate only the system/code pair and ignore the ``display`` field
   - ``display`` - Validate both system/code, and warn if display is not correct
-- ``valueSet``: Canonical of the ValueSet bound to the element with logical ID ``id``
+- ``valueSet``: Canonical of the ValueSet with an existing binding to the element with logical ID ``id``
 
 Advisor Rules Example: Override, Suppress, and Coded Validation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

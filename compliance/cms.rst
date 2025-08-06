@@ -6,7 +6,7 @@ CMS Interoperability and Prior Authorization Final Rule (CMS-0057-F) - 🇺🇸
 .. |PATACC| replace:: Patient Access API
 .. |PROACC| replace:: Provider Access API
 .. |PRODIR| replace:: Provider Directory API
-.. |PRTOPR| replace:: Payor-to-Payor API
+.. |PRTOPR| replace:: Payer-to-Payer API
 .. |PRAUTH| replace:: Prior Authorization API
 .. |CARIN|  replace:: CARIN for Blue Button® IG Version STU 2.0.0
 .. |SMART|  replace:: SMART App Launch IG Release 2.0.0 support Backend Services

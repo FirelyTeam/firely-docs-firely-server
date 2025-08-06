@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - OperationDefinition",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0+85fabb8f54b85a88db93ba03d8f93be463c6707c"
   },
   "servers": [
     {
@@ -1978,8 +1978,7 @@
       "base": {
         "name": "base",
         "in": "query",
-        "description": "Definition that this type is constrained/specialized from",
-        "style": "form",
+        "description": "Marks this as a profile of the base",
         "schema": {
           "type": "string"
         }
@@ -1987,7 +1986,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
+        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): Code that identifies the allergy or intolerance\r\n* [Condition](condition.html): Code for the condition\r\n* [DeviceRequest](devicerequest.html): Code for what is being requested/ordered\r\n* [DiagnosticReport](diagnosticreport.html): The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a condition code\r\n* [List](list.html): What the purpose of this list is\r\n* [Medication](medication.html): Returns medications for a specific code\r\n* [MedicationAdministration](medicationadministration.html): Return administrations of this medication code\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses of this medicine code\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions of this medication code\r\n* [MedicationStatement](medicationstatement.html): Return statements of this medication code\r\n* [Observation](observation.html): The code of the observation type\r\n* [Procedure](procedure.html): A code to identify a  procedure\r\n* [ServiceRequest](servicerequest.html): What is being requested/ordered\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1996,7 +1995,7 @@
       "context": {
         "name": "context",
         "in": "query",
-        "description": "A use context assigned to the example scenario",
+        "description": "A use context assigned to the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2005,7 +2004,7 @@
       "context-quantity": {
         "name": "context-quantity",
         "in": "query",
-        "description": "A quantity- or range-valued use context assigned to the example scenario",
+        "description": "A quantity- or range-valued use context assigned to the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2014,7 +2013,7 @@
       "context-type": {
         "name": "context-type",
         "in": "query",
-        "description": "A type of use context assigned to the example scenario",
+        "description": "A type of use context assigned to the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2023,7 +2022,7 @@
       "context-type-quantity": {
         "name": "context-type-quantity",
         "in": "query",
-        "description": "A use context type and quantity- or range-based value assigned to the example scenario",
+        "description": "A use context type and quantity- or range-based value assigned to the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2032,7 +2031,7 @@
       "context-type-value": {
         "name": "context-type-value",
         "in": "query",
-        "description": "A use context type and value assigned to the example scenario",
+        "description": "A use context type and value assigned to the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2041,7 +2040,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The example scenario publication date",
+        "description": "Date recommendation(s) created",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2050,7 +2049,7 @@
       "description": {
         "name": "description",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The description of the capability statement\r\n* [CodeSystem](codesystem.html): The description of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The description of the compartment definition\r\n* [ConceptMap](conceptmap.html): The description of the concept map\r\n* [GraphDefinition](graphdefinition.html): The description of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The description of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The description of the message definition\r\n* [NamingSystem](namingsystem.html): The description of the naming system\r\n* [OperationDefinition](operationdefinition.html): The description of the operation definition\r\n* [SearchParameter](searchparameter.html): The description of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The description of the structure definition\r\n* [StructureMap](structuremap.html): The description of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The description of the terminology capabilities\r\n* [ValueSet](valueset.html): The description of the value set\r\n",
+        "description": "The description of the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2075,7 +2074,7 @@
       "jurisdiction": {
         "name": "jurisdiction",
         "in": "query",
-        "description": "Intended jurisdiction for the example scenario",
+        "description": "Intended jurisdiction for the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2084,8 +2083,7 @@
       "kind": {
         "name": "kind",
         "in": "query",
-        "description": "primitive-type | complex-type | resource | logical",
-        "style": "form",
+        "description": "operation | query",
         "schema": {
           "type": "string"
         }
@@ -2093,7 +2091,7 @@
       "name": {
         "name": "name",
         "in": "query",
-        "description": "Computationally friendly name of the example scenario",
+        "description": "Computationally friendly name of the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2110,7 +2108,7 @@
       "publisher": {
         "name": "publisher",
         "in": "query",
-        "description": "Name of the publisher of the example scenario",
+        "description": "Name of the publisher of the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2119,7 +2117,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the example scenario",
+        "description": "entered-in-error | draft | active |suspended | completed",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2128,7 +2126,8 @@
       "system": {
         "name": "system",
         "in": "query",
-        "description": "Invoke at the system level?",
+        "description": "The system for any codes defined by this code system (same as 'url')",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2136,7 +2135,7 @@
       "title": {
         "name": "title",
         "in": "query",
-        "description": "Name for this study",
+        "description": "The human-friendly name of the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2145,7 +2144,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "The kind of coverage (health plan, auto, Workers Compensation)",
+        "description": "The type of collected specimen",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2154,7 +2153,7 @@
       "url": {
         "name": "url",
         "in": "query",
-        "description": "The uri that identifies the example scenario",
+        "description": "The basal contract definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2163,7 +2162,7 @@
       "version": {
         "name": "version",
         "in": "query",
-        "description": "The business version of the example scenario",
+        "description": "The business version of the research definition",
         "style": "form",
         "schema": {
           "type": "string"

@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MedicinalProductIngredient",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0+85fabb8f54b85a88db93ba03d8f93be463c6707c"
   },
   "servers": [
     {

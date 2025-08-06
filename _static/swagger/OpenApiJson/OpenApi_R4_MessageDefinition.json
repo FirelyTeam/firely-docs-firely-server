@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MessageDefinition",
-    "version": "6.1.0+4067978e479f74ad54ef88e4994b88b53ef442d0"
+    "version": "6.3.0+85fabb8f54b85a88db93ba03d8f93be463c6707c"
   },
   "servers": [
     {
@@ -1939,7 +1939,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Classifications for the study",
+        "description": "Classification of the consent statement - for indexing/retrieval",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1948,7 +1948,7 @@
       "context": {
         "name": "context",
         "in": "query",
-        "description": "A use context assigned to the example scenario",
+        "description": "A use context assigned to the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1957,7 +1957,7 @@
       "context-quantity": {
         "name": "context-quantity",
         "in": "query",
-        "description": "A quantity- or range-valued use context assigned to the example scenario",
+        "description": "A quantity- or range-valued use context assigned to the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1966,7 +1966,7 @@
       "context-type": {
         "name": "context-type",
         "in": "query",
-        "description": "A type of use context assigned to the example scenario",
+        "description": "A type of use context assigned to the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1975,7 +1975,7 @@
       "context-type-quantity": {
         "name": "context-type-quantity",
         "in": "query",
-        "description": "A use context type and quantity- or range-based value assigned to the example scenario",
+        "description": "A use context type and quantity- or range-based value assigned to the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1984,7 +1984,7 @@
       "context-type-value": {
         "name": "context-type-value",
         "in": "query",
-        "description": "A use context type and value assigned to the example scenario",
+        "description": "A use context type and value assigned to the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1993,7 +1993,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The example scenario publication date",
+        "description": "Date recommendation(s) created",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2002,7 +2002,7 @@
       "description": {
         "name": "description",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The description of the capability statement\r\n* [CodeSystem](codesystem.html): The description of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The description of the compartment definition\r\n* [ConceptMap](conceptmap.html): The description of the concept map\r\n* [GraphDefinition](graphdefinition.html): The description of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The description of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The description of the message definition\r\n* [NamingSystem](namingsystem.html): The description of the naming system\r\n* [OperationDefinition](operationdefinition.html): The description of the operation definition\r\n* [SearchParameter](searchparameter.html): The description of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The description of the structure definition\r\n* [StructureMap](structuremap.html): The description of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The description of the terminology capabilities\r\n* [ValueSet](valueset.html): The description of the value set\r\n",
+        "description": "The description of the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2011,7 +2011,7 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "Code for the event this message represents or link to event definition",
+        "description": "Type of the event itself in relation to the subject",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2029,7 +2029,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the example scenario",
+        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): External ids for this item\r\n* [CarePlan](careplan.html): External Ids for this plan\r\n* [CareTeam](careteam.html): External Ids for this team\r\n* [Composition](composition.html): Version-independent identifier for the Composition\r\n* [Condition](condition.html): A unique identifier of the condition record\r\n* [Consent](consent.html): Identifier for this record (external references)\r\n* [DetectedIssue](detectedissue.html): Unique id for the detected issue\r\n* [DeviceRequest](devicerequest.html): Business identifier for request/order\r\n* [DiagnosticReport](diagnosticreport.html): An identifier for the report\r\n* [DocumentManifest](documentmanifest.html): Unique Identifier for the set of documents\r\n* [DocumentReference](documentreference.html): Master Version Specific Identifier\r\n* [Encounter](encounter.html): Identifier(s) by which this encounter is known\r\n* [EpisodeOfCare](episodeofcare.html): Business Identifier(s) relevant for this EpisodeOfCare\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a record identifier\r\n* [Goal](goal.html): External Ids for this goal\r\n* [ImagingStudy](imagingstudy.html): Identifiers for the Study, such as DICOM Study Instance UID and Accession number\r\n* [Immunization](immunization.html): Business identifier\r\n* [List](list.html): Business identifier\r\n* [MedicationAdministration](medicationadministration.html): Return administrations with this external identifier\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses with this external identifier\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions with this external identifier\r\n* [MedicationStatement](medicationstatement.html): Return statements with this external identifier\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this external identifier\r\n* [Observation](observation.html): The unique id for a particular observation\r\n* [Procedure](procedure.html): A unique identifier for a procedure\r\n* [RiskAssessment](riskassessment.html): Unique identifier for the assessment\r\n* [ServiceRequest](servicerequest.html): Identifiers assigned to this order\r\n* [SupplyDelivery](supplydelivery.html): External identifier\r\n* [SupplyRequest](supplyrequest.html): Business Identifier for SupplyRequest\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this external identifier\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2038,7 +2038,7 @@
       "jurisdiction": {
         "name": "jurisdiction",
         "in": "query",
-        "description": "Intended jurisdiction for the example scenario",
+        "description": "Intended jurisdiction for the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2047,7 +2047,7 @@
       "name": {
         "name": "name",
         "in": "query",
-        "description": "Computationally friendly name of the example scenario",
+        "description": "Computationally friendly name of the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2056,8 +2056,7 @@
       "parent": {
         "name": "parent",
         "in": "query",
-        "description": "The parent DeviceMetric resource",
-        "style": "form",
+        "description": "A resource that is the parent of the definition",
         "schema": {
           "type": "string"
         }
@@ -2065,7 +2064,7 @@
       "publisher": {
         "name": "publisher",
         "in": "query",
-        "description": "Name of the publisher of the example scenario",
+        "description": "Name of the publisher of the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2074,7 +2073,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the example scenario",
+        "description": "entered-in-error | draft | active |suspended | completed",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2083,7 +2082,7 @@
       "title": {
         "name": "title",
         "in": "query",
-        "description": "Name for this study",
+        "description": "The human-friendly name of the research definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2092,7 +2091,7 @@
       "url": {
         "name": "url",
         "in": "query",
-        "description": "The uri that identifies the example scenario",
+        "description": "The basal contract definition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2101,7 +2100,7 @@
       "version": {
         "name": "version",
         "in": "query",
-        "description": "The business version of the example scenario",
+        "description": "The business version of the research definition",
         "style": "form",
         "schema": {
           "type": "string"

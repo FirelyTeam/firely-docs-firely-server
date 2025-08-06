@@ -29,7 +29,7 @@ Bulk Import via Firely Server Ingest
     
 **Firely Server Ingest (FSI)** is a CLI application designed to optimize massive resource ingestion into a Firely Server instance. In contrast to resource ingestion by sending HTTP requests to a running Firely Server instance, this tool writes data directly to the underlying FS database which increases the throughput significantly.
 
-The tool supports ingestion into SQL Server and MongoDB databases.
+The tool supports ingestion into SQL Server and MongoDB databases or ingestion through the :ref:`PubSub <PubSub>` mechanism.
 
 .. _tool_fsi_installation:
 
@@ -72,6 +72,7 @@ Prerequisites
 .. note::
 
   This prerequisite does not apply to FSI v6+ targeting a MongoDB database. In this case you can instruct FSI to provision the database automatically by setting the ``--provisionTargetDatabase`` flag to ``true``.
+  This prerequisite also does not apply to FSI using PubSub as a target. In this case the consuming Firely Server instance(s) will take care of the database setup.
 
 The tool requires that the target database already exists and contains all required indexes and tables (for SQL Server). If you don't have a database with the schema yet, you first need to run the Firely Server at least once as described in the articles :ref:`configure_sql` and :ref:`configure_mongodb`.
 
@@ -170,7 +171,7 @@ If you want to specify input parameters in the file, you can use the snippet bel
 
           // Target
           "provisionTargetDatabase": false,
-          "databaseType": "SQL",
+          "databaseType": "SQL", // SQL | MongoDb | PubSub
 
           "sqlserver": {
               "connectionString": "<connectionstring to the Firely Server SQL Server database>",
@@ -188,11 +189,33 @@ If you want to specify input parameters in the file, you can use the snippet bel
               "batchSize": 500
           },
 
-          // Telemetry
-          "OpenTelemetryOptions": {
-              "EnableMetrics": false,
-              "Endpoint": "http://localhost:4317"
-          }
+          "PubSub": {
+            "batchSize": 1,
+            "MessageBroker": {
+                "Host": "<connectionstring to the pubsub endpoint>",
+                "Username": "guest",
+                "Password": "guest",
+                "ApplicationQueueName": "FirelyServer",
+                "PrefetchCount": 1,
+                "ConcurrencyNumber": 1,
+                "RabbitMQ": {
+                    "Port": 5672
+                },
+                "VirtualHost": "/",
+                "BrokerType": "AzureServiceBus" //  RabbitMq, AzureServiceBus
+            },
+            "ClaimCheck": {
+                "StorageType": "Disabled", //"AzureBlobStorage", // Or "Disabled"
+                "AzureBlobContainerName": "messages-data",
+                "AzureBlobStorageConnectionString": "<connection string>"
+            }
+        },
+
+        // Telemetry
+        "OpenTelemetryOptions": {
+            "EnableMetrics": false,
+            "Endpoint": "http://localhost:4317"
+        }
       }
 
 .. _FSI_supported_arguments:
@@ -424,6 +447,22 @@ Target (for MongoDB)
   * **Default**: 500
   * **Description**: The number of resources to save in each batch.
 
+.. _fsi_target_pubsub:
+
+Target (for PubSub)
+^^^^^^^^^^^^^^^^^^^
+
+PubSub options are not exposed through command line parameters and must be provided in a ``appsettings.instance.json`` file as described above.
+The settings, except for the ``batchSize``, are the same as in Firely Server and can be found in :ref:`this article <pubsub_configuration>`.
+The ``batchSize`` property states how many resources are sent per message.
+If you have very large resources or are sending a lot of resources per message, it can be that you need to enable the claimcheck mechanism to not run into any message size limits.
+
+.. attention::
+  * Currently there is an issue with Kafka as a target, so this is not supported yet.
+  * You cannot specify MongoDb as a source when you set the target to PubSub.
+  * ``updateExistingResources`` should be set to true when using PubSub as a target.
+  * When ingesting a large amount of resources, take into account the limits of your message bus.
+
 Workflow
 ^^^^^^^^
 
@@ -439,7 +478,7 @@ Workflow
   * **Config**: workflow/metaParallel
   * **Required**: No
   * **Default**: 1
-  * **Description**: Number of threads to assign metadata. Should be higher than ReadParallel.
+  * **Description**: Number of threads to assign metadata.
 
 * ``--metaBuffer <metaBuffer>``: 
 
@@ -453,7 +492,7 @@ Workflow
   * **Config**: workflow/typeParallel
   * **Required**: No
   * **Default**: 4
-  * **Description**: Number of threads to add type information. Should be higher than ReadParallel.
+  * **Description**: Number of threads to add type information.
 
 * ``--typeBuffer <typeBuffer>``: 
 
@@ -467,7 +506,7 @@ Workflow
   * **Config**: workflow/absoluteToRelativeParallel
   * **Required**: No
   * **Default**: 1
-  * **Description**: Number of threads when converting absolute to relative references. Should be higher than ReadParallel.
+  * **Description**: Number of threads when converting absolute to relative references.
 
 * ``--absRelBuffer <absRelBuffer>``: 
 

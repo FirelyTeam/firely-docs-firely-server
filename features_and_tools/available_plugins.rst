@@ -408,7 +408,7 @@ FHIR RESTful interactions
 
 :Name: Validation
 :Configuration: ``Vonk.Core.Operations.Validation.ValidationConfiguration``
-:License token: http://fire.ly/vonk/plugins/validation
+:License token: http://fire.ly/vonk/plugins/validation or http://fire.ly/firely-validator (for advanced validation and advisor rules)
 :Order: 4000
 :Description: Implements `FHIR $validate <http://hl7.org/fhir/R4/resource-operation-validate.html>`_ on type and instance level for POST: ``POST <base>/Patient/$validate`` or ``POST <base>/Patient/123/$validate``.
 

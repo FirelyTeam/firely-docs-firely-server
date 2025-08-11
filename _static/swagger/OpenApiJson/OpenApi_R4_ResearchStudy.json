@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - ResearchStudy",
-    "version": "6.3.0+85fabb8f54b85a88db93ba03d8f93be463c6707c"
+    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
   },
   "servers": [
     {
@@ -1861,7 +1861,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Classification of the consent statement - for indexing/retrieval",
+        "description": "Classification of service",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1870,7 +1870,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Date recommendation(s) created",
+        "description": "The date of the measure report",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1879,7 +1879,8 @@
       "focus": {
         "name": "focus",
         "in": "query",
-        "description": "Drugs, devices, etc. under study",
+        "description": "The actual content of the message",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1887,7 +1888,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): External ids for this item\r\n* [CarePlan](careplan.html): External Ids for this plan\r\n* [CareTeam](careteam.html): External Ids for this team\r\n* [Composition](composition.html): Version-independent identifier for the Composition\r\n* [Condition](condition.html): A unique identifier of the condition record\r\n* [Consent](consent.html): Identifier for this record (external references)\r\n* [DetectedIssue](detectedissue.html): Unique id for the detected issue\r\n* [DeviceRequest](devicerequest.html): Business identifier for request/order\r\n* [DiagnosticReport](diagnosticreport.html): An identifier for the report\r\n* [DocumentManifest](documentmanifest.html): Unique Identifier for the set of documents\r\n* [DocumentReference](documentreference.html): Master Version Specific Identifier\r\n* [Encounter](encounter.html): Identifier(s) by which this encounter is known\r\n* [EpisodeOfCare](episodeofcare.html): Business Identifier(s) relevant for this EpisodeOfCare\r\n* [FamilyMemberHistory](familymemberhistory.html): A search by a record identifier\r\n* [Goal](goal.html): External Ids for this goal\r\n* [ImagingStudy](imagingstudy.html): Identifiers for the Study, such as DICOM Study Instance UID and Accession number\r\n* [Immunization](immunization.html): Business identifier\r\n* [List](list.html): Business identifier\r\n* [MedicationAdministration](medicationadministration.html): Return administrations with this external identifier\r\n* [MedicationDispense](medicationdispense.html): Returns dispenses with this external identifier\r\n* [MedicationRequest](medicationrequest.html): Return prescriptions with this external identifier\r\n* [MedicationStatement](medicationstatement.html): Return statements with this external identifier\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this external identifier\r\n* [Observation](observation.html): The unique id for a particular observation\r\n* [Procedure](procedure.html): A unique identifier for a procedure\r\n* [RiskAssessment](riskassessment.html): Unique identifier for the assessment\r\n* [ServiceRequest](servicerequest.html): Identifiers assigned to this order\r\n* [SupplyDelivery](supplydelivery.html): External identifier\r\n* [SupplyRequest](supplyrequest.html): Business Identifier for SupplyRequest\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this external identifier\r\n",
+        "description": "The unique identifier associated with the specimen",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1896,7 +1897,8 @@
       "keyword": {
         "name": "keyword",
         "in": "query",
-        "description": "Used to search for the study",
+        "description": "A code for the StructureDefinition",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1904,7 +1906,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "The location of the Healthcare Service",
+        "description": "This location is listed in the participants of the appointment",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1954,7 +1956,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "entered-in-error | draft | active |suspended | completed",
+        "description": "The status of the measure report",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1963,7 +1965,7 @@
       "title": {
         "name": "title",
         "in": "query",
-        "description": "The human-friendly name of the research definition",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The human-friendly name of the capability statement\r\n* [CodeSystem](codesystem.html): The human-friendly name of the code system\r\n* [ConceptMap](conceptmap.html): The human-friendly name of the concept map\r\n* [ImplementationGuide](implementationguide.html): The human-friendly name of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The human-friendly name of the message definition\r\n* [OperationDefinition](operationdefinition.html): The human-friendly name of the operation definition\r\n* [StructureDefinition](structuredefinition.html): The human-friendly name of the structure definition\r\n* [StructureMap](structuremap.html): The human-friendly name of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The human-friendly name of the terminology capabilities\r\n* [ValueSet](valueset.html): The human-friendly name of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"

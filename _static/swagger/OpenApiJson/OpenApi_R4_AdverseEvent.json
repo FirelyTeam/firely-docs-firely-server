@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - AdverseEvent",
-    "version": "6.3.0+85fabb8f54b85a88db93ba03d8f93be463c6707c"
+    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
   },
   "servers": [
     {
@@ -1856,7 +1856,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Classification of the consent statement - for indexing/retrieval",
+        "description": "Classification of service",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1865,7 +1865,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "Date recommendation(s) created",
+        "description": "The date of the measure report",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1874,7 +1874,8 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "Type of the event itself in relation to the subject",
+        "description": "Code for the event this message represents or link to event definition",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1882,7 +1883,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "The location of the Healthcare Service",
+        "description": "This location is listed in the participants of the appointment",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1915,7 +1916,8 @@
       "severity": {
         "name": "severity",
         "in": "query",
-        "description": "mild | moderate | severe",
+        "description": "The severity of the condition",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1932,7 +1934,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Individual the service is ordered for",
+        "description": "The identity of a subject to search for individual measure report results for",
         "style": "form",
         "schema": {
           "type": "string"

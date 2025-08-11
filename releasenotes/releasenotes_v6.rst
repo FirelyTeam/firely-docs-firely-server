@@ -17,7 +17,7 @@ Fixes
 ^^^^^
 
 #. We updated dependencies of the Elasticsearch sink to fix a security vulnerability in a dependency of the `Elastic.Serilog.Sinks` package. The updated version is now 8.18.2. See the `release notes <https://github.com/elastic/ecs-dotnet/releases>`_ for more information.
-#. We fixed a bug where FSI would a long time to start up when the MongoDb target database would contain a large number of resources. This was caused by FSI trying to perform a count on the target database, which would take a long time when there were many resources.
+#. We fixed a bug where FSI would take a long time to start up when the MongoDb target database would contain a large number of resources. This was caused by FSI trying to perform a count on the target database, which would take a long time when there were many resources.
 
 .. _vonk_releasenotes_6_3_0:
 

@@ -39,7 +39,7 @@ Release 5.11.2, August 11th, 2025
 Fix
 ^^^
 
-#. We fixed a bug where FSI would a long time to start up when the MongoDb target database would contain a large number of resources. This was caused by FSI trying to perform a count on the target database, which would take a long time when there were many resources.
+#. We fixed a bug where FSI would take a long time to start up when the MongoDb target database would contain a large number of resources. This was caused by FSI trying to perform a count on the target database, which would take a long time when there were many resources.
 
 .. _vonk_releasenotes_5_11_1:
 

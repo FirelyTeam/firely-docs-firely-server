@@ -8,6 +8,17 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_6_3_1:
+
+Release 6.3.1, August 11th, 2025
+--------------------------------
+
+Fixes
+^^^^^
+
+#. We updated dependencies of the Elasticsearch sink to fix a security vulnerability in a dependency of the `Elastic.Serilog.Sinks` package. The updated version is now 8.18.2. See the `release notes <https://github.com/elastic/ecs-dotnet/releases>`_ for more information.
+#. We fixed a bug where FSI would take a long time to start up when the MongoDb target database would contain a large number of resources. This was caused by FSI trying to perform a count on the target database, which would take a long time when there were many resources.
+
 .. _vonk_releasenotes_6_3_0:
 
 Release 6.3.0, July 22th, 2025

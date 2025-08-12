@@ -419,7 +419,7 @@ Feature
 Plugin and Facade API
 ^^^^^^^^^^^^^^^^^^^^^
 #. Vonk.Facade.Starter has been upgraded to work with Vonk 3.1.0
-#. IConformanceContributor and IConformanceBuilder have moved from Vonk.Core.Pluggability to Vonk.Fhir.R3.Metadata. It is also deprecated, as Vonk.Core.Metadata.ICapabilityStatementContributor is now preferred instead. See :ref:`vonk_architecture_capabilities` for more information
+#. IConformanceContributor and IConformanceBuilder have moved from Vonk.Core.Pluggability to Vonk.Fhir.R3.Metadata. It is also deprecated, as Vonk.Core.Metadata.ICapabilityStatementContributor is now preferred instead. See :ref:`vonk_reference_api_capabilities` for more information
 #. Implementations of ISearchRepository can now sort on multiple parameters (in BaseQuery.Shapes). Previously this would result in an error.
 #. Improved documentation on the :ref:`vonk_reference_api`
 #. See :ref:`vonk_releasenotes_300` for some additional issues you may encounter upgrading your plugins

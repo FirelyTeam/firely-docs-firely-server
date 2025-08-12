@@ -41,6 +41,7 @@ Infrastructural plugins
 :Description: Registers an implementation for the ``ISerializationService`` and ``ISerializationSupport`` interfaces and actual serializers and parsers for JSON and XML.
 
 .. _vonk_plugins_core_services:
+
 :Name: Terminology Services
 :Configuration: `Vonk.Plugins.Terminology.TerminologyConfiguration`
 :License token: http://fire.ly/vonk/plugins/terminology
@@ -158,6 +159,7 @@ Infrastructural plugins
    * ``BundleOptions.DefaultSort``, see :ref:`bundle_options`
 
 .. _vonk_plugins_multitenancy:
+
 :Name: Virtual Multi-tenancy
 :Configuration: `Vonk.Plugin.VirtualTenants.VirtualTenantsConfiguration`
 :License token: http://fire.ly/server/plugins/virtual-tenants
@@ -272,6 +274,7 @@ FHIR RESTful interactions
 :Description: Implements FHIR instance patch, as specified by `FHIR Patch <http://hl7.org/fhir/fhirpatch.html>`_.
 
 .. _vonk_plugins_patch_noop:
+
 :Configuration: ``Vonk.Plugin.UpdateNoOp.PatchNoOpConfiguration``
 :License token: http://fire.ly/vonk/plugins/update
 :Order: 4434
@@ -362,7 +365,7 @@ FHIR RESTful interactions
 :Configuration: ``Vonk.Core.Operations.Capability.CapabilityConfiguration``
 :License token: http://fire.ly/vonk/plugins/capability
 :Order: 4120
-:Description: Provides the CapabilityStatement on the ``<base>/metadata`` endpoint. The CapabilityStatement is tailored to the FHIR version of the request. The CapabilityStatement is built dynamically by visiting all the registered implementations of ICapabilityStatementContributor, see :ref:`vonk_architecture_capabilities`.
+:Description: Provides the CapabilityStatement on the ``<base>/metadata`` endpoint. The CapabilityStatement is tailored to the FHIR version of the request. The CapabilityStatement is built dynamically by visiting all the registered implementations of ICapabilityStatementContributor, see :ref:`vonk_reference_api_capabilities`.
 
 .. _vonk_plugins_capability_cache:
 
@@ -530,6 +533,7 @@ FHIR RESTful interactions
 :Description: Implements the `FHIR versions <https://www.hl7.org/fhir/capabilitystatement-operation-versions.html>` operation on the base endpoint.
 
 .. _vonk_plugins_cql_library_evaluate:
+
 :Name: CQL
 :Configuration: ``Vonk.Plugin.Cql.LibraryEvaluate.LibraryEvaluateOperationConfiguration``
 :License token: http://fire.ly/vonk/plugins/cql
@@ -537,6 +541,7 @@ FHIR RESTful interactions
 :Description: Implements the `$evaluate <https://hl7.org/fhir/uv/cql/OperationDefinition-cql-library-evaluate.html>` operation on the Library endpoint to execute CQL-based content.
 
 .. _vonk_plugins_realworldtesting:
+
 :Name: Real World testing
 :Configuration: `Vonk.Plugin.RealWorldTesting.RealWorldTestingConfiguration`
 :License token: http://fire.ly/vonk/plugins/realworldtesting
@@ -1035,8 +1040,22 @@ PubSub Messaging
 :Order: 1140
 :Description: Implements publishing changes to a queue for the SQL Server repository. See :ref:`PubSub`.
 
+CDS Hooks
+---------
+
+Please note that the CDS Hooks functionality and plugins are currently in beta and not yet available for production use.
+Their implementation and public API may change in the future. 
+
+.. _vonk_plugins_cds_hooks:
+
+:Name: CDS Hooks
+:Configuration: ``Vonk.Plugin.CdsHooks.Configuration``
+:License token: http://fire.ly/server/plugins/cds-hooks
+:Order: 5400
+:Description: Implements the CDS Hooks framework, allowing external systems to interact with Firely Server using the CDS Hooks protocol. This plugin provides the endpoint for the CDS Hooks Discovery document, and infrastructure for executing hooks. See :ref:`CDS Hooks <feature_cds_hooks>` for more information.
 
 .. _vonk_tools_fsi:
+
 Bulk Data Import
 ----------------
 
@@ -1059,10 +1078,11 @@ Bulk Data Import
 :Description: Token allowing zero-downtime migration using the FSI tool. See :ref:`zero_downtime_migration`.
 
 .. _vonk_tools_firely_auth:
-Firely Auth
-----------------
 
-.. _vonk_tools_firely_auth:
+Firely Auth
+-----------
+
+.. _vonk_tools_firely_auth_limited:
 
 :Name: Firely Auth
 :License token: http://fire.ly/server/auth

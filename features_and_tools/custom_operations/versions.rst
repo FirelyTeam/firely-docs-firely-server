@@ -40,7 +40,7 @@ In the ``PipelineOptions`` section of the :ref:`appsettings <configure_appsettin
 Manual control over this operation is possible by using ``Vonk.Plugin.Operations.VersionsOperationConfiguration`` in either ``include`` or ``exclude`` sections.
 
 $versions and Firely Auth
-------------------------
+-------------------------
 
 When using SMART with Firely Auth as the authorization server, ensure that the ``RequireAuthorization`` setting for the ``$versions`` operation is set to ``Never`` in the operation configuration. 
 

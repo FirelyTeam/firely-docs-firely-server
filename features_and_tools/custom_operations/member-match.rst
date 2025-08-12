@@ -75,7 +75,7 @@ In the ``PipelineOptions`` section of the :ref:`appsettings <configure_appsettin
 Check that the operation is listed as supported
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``$member-match`` should be listed in the ``Operations`` section of the :ref:`appsettings <_disable_interactions>`.
+The ``$member-match`` should be listed in the ``Operations`` section of the :ref:`appsettings <disable_interactions>`.
 That is by default the case, but if you have previously overridden this section, you need to make sure that the operation is listed there.
 
 Set the options for the operation

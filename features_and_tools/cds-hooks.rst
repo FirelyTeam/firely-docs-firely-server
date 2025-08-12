@@ -93,7 +93,7 @@ See also the :ref:`CDS Hooks operations <cds_hooks_operations>` section for more
     }
   },
     
-The example service is not protected by a license token.
+The example service is also protected by the CDS Hooks license token.
 
 When you have added the plugin, you can request the CDS Hooks Discovery document again to see that the service is listed:
  
@@ -301,7 +301,7 @@ This is easiest understood with a code example. This example shows how to create
         
         namespace Vonk.Plugin.CdsHooks.PatientViewTestHook;
         
-        [InternalVonkConfiguration(order: 5500, isLicensedAs: VonkConstants.Plugins.Fhir.Operation.CdsHooks)]
+        [VonkConfiguration(order: 5500, isLicensedAs: VonkConstants.Plugins.Fhir.Operation.CdsHooks)]
         [Experimental("CdsHooks")]
         public static class PatientViewTestHookConfiguration
         {

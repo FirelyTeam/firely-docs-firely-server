@@ -15,7 +15,7 @@ $document is implemented on the Composition endpoint of Firely Server. Typically
 
 .. code-block:: HTTP
 
-    POST {base-url}/Composition/$document
+    POST {base-url}/Composition/$document HTTP/1.1
 
 .. code-block:: json
 
@@ -33,7 +33,7 @@ Alternatively the operation can be called via GET on an instance-level:
 
 .. code-block:: HTTP
 
-   GET {base-url}/Composition/<id>/$document
+   GET {base-url}/Composition/<id>/$document HTTP/1.1
 
 The operation will retrieve all resources that are mentioned in any section of the composition as entry references. Absolute external references will not be resolved.
 
@@ -41,7 +41,7 @@ The generated Document bundle can be immediately stored on the Bundle endpoint o
 
 .. code-block:: HTTP
 
-    POST {base-url}/Composition/$document
+    POST {base-url}/Composition/$document HTTP/1.1
 
 .. code-block:: json
 
@@ -63,7 +63,7 @@ or
 
 .. code-block:: HTTP
 
-    GET {base-url}/Composition/<id>/$document?persist=true
+    GET {base-url}/Composition/<id>/$document?persist=true HTTP/1.1
 
 Known limitations
 -----------------

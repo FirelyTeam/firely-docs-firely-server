@@ -51,7 +51,7 @@ You can now access the CDS Hooks Discovery document at ``<base-url>/cds-services
 
 .. code-block:: HTTP
 
-   GET <base-url>/cds-services  HTTP/1.1
+   GET <base-url>/cds-services HTTP/1.1
    Accept: application/json
     
 Configuring an example CDS Hooks service
@@ -118,7 +118,7 @@ You can then access the example service at the following URL: ``<base-url>/cds-s
 
 .. code-block:: HTTP
 
-    POST <base-url>/cds-services/patient-view-test-hook  HTTP/1.1
+    POST <base-url>/cds-services/patient-view-test-hook HTTP/1.1
     Accept: application/json
     Content-Type: application/json
     

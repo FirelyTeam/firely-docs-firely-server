@@ -136,7 +136,7 @@ and a defined measurement period using a ``POST`` request to the type-level oper
 
 .. code-block:: http
 
-   POST [base]/Library/$evaluate
+   POST [base]/Library/$evaluate HTTP/1.1
    Content-Type: application/fhir+json
 
 **Request Body**

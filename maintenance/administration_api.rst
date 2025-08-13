@@ -146,7 +146,7 @@ Examples:
     
    To do so, add ``Vonk.Administration.Api.AdministrationOperationConfiguration`` to the Exclude list in the ``PipelineOptions``:
     
-    .. code-block:: json
+    .. code-block:: javascript
     
          "PipelineOptions": {
             "Branches": [
@@ -154,7 +154,7 @@ Examples:
                     "Name": "administration",
                     "Include": [
                         "Vonk.Administration",
-                        ...
+                        // ...
                     ],
                     "Exclude": [
                         "Vonk.Administration.Api.AdministrationOperationConfiguration"

@@ -283,13 +283,13 @@ To initiate a Real World Testing operation, construct a request to the administr
 
 .. code-block:: HTTP
 
-   GET {{BASE_URL}}/administration/$realworldtesting?url=https://fire.ly/fhir/Library/rwt-all-requests&from=2024-03-18T14:34:16.772Z&to=2024-03-18T14:34:52.453Z
+   GET {{BASE_URL}}/administration/$realworldtesting?url=https://fire.ly/fhir/Library/rwt-all-requests&from=2024-03-18T14:34:16.772Z&to=2024-03-18T14:34:52.453Z HTTP/1.1
 
 Alternatively a POST request might be executed, here query parameters are passed as a Parameters resource in request body:
 
 .. code-block:: HTTP
     
-   POST {{BASE_URL}}/administration/$realworldtesting
+   POST {{BASE_URL}}/administration/$realworldtesting HTTP/1.1
 
 .. code-block:: json
 
@@ -321,7 +321,7 @@ Upon successful initiation, the operation returns a 202 status code with a ``Con
 
 .. code-block:: HTTP
 
-   {{BASE_URL}}/administration/$realworldtestingstatus?_id=7e700b18-d8b0-40da-8deb-f6d1d6a51b23
+   GET {{BASE_URL}}/administration/$realworldtestingstatus?_id=7e700b18-d8b0-40da-8deb-f6d1d6a51b23 HTTP/1.1
 
 There are six possible status options:
 
@@ -476,5 +476,4 @@ All the placeholder parameters are replaced if:
 
 .. note::
    There are some restrictions for the parameter values that can be injected. 
-   Currently `'`, `"`, `|`,  `>`,  `(`,  `)`, are not allowed symbols, and the $realworldtesting operation request will return HTTP 400 (BadRequest) if any of those symbols are present. 
-
+   Currently `'`, `"`, `|`,  `>`,  `(`,  `)`, are not allowed symbols, and the $realworldtesting operation request will return HTTP 400 (BadRequest) if any of those symbols are present.

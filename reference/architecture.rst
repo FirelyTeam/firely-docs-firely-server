@@ -110,3 +110,9 @@ This allows for easy extensibility without defining your own SearchParameter res
 Note however that Firely Server also supports :ref:`feature_customsp`.
 
 The ``ResultShape`` method is called when an argument is recognized as a '`Search result parameter`_', like _sort or _include.
+
+.. _middleware: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/middleware
+.. _dependency injection: https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection
+.. _FHIR RESTful API: http://www.hl7.org/implement/standards/fhir/http.html
+.. _FHIR RESTful Search: http://www.hl7.org/implement/standards/fhir/search.html
+.. _Search result parameter: http://www.hl7.org/implement/standards/fhir/search.html#2.21.1.1

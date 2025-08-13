@@ -21,7 +21,7 @@ Configuration
 
 In the ``PipelineOptions`` section of the :ref:`appsettings <configure_appsettings>` it is enabled by default when ``Vonk.Plugin.Operations`` is present in the ``include`` section:
 
-.. code-block:: json
+.. code-block:: JavaScript
 
     "PipelineOptions": {
         "PluginDirectory": "./plugins",
@@ -29,13 +29,13 @@ In the ``PipelineOptions`` section of the :ref:`appsettings <configure_appsettin
           {
             "Path": "/",
             "Include": [
-              ...
+              // ...
               "Vonk.Plugin.Operations",
             ],
             "Exclude": [
-              ...
+              // ...
             ]
-          }, ...etc...
+          }, // ...etc...
 
 Manual control over this operation is possible by using ``Vonk.Plugin.Operations.VersionsOperationConfiguration`` in either ``include`` or ``exclude`` sections.
 

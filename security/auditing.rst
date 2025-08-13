@@ -18,7 +18,7 @@ Firely Server can log access through the RESTful API for auditing purposes. It h
 
 These features can be enabled by including ``Vonk.Plugin.Audit`` in the pipeline and by changing configuration values in the ``Audit`` section.
 
-.. code-block:: json
+.. code-block:: javascript
 
    "PipelineOptions": {
       "PluginDirectory": "./plugins",
@@ -27,12 +27,12 @@ These features can be enabled by including ``Vonk.Plugin.Audit`` in the pipeline
             "Path": "/",
             "Include": [
                "Vonk.Core",
-               ...
+               // ...
                "Vonk.Plugin.Audit"
             ],
-            ...
+            // ...
          },
-         ...
+         // ...
       ]
    }
 
@@ -46,11 +46,13 @@ Please see :ref:`vonk_plugins_audit` for the available options.
 
 Additionally there are configuration values for enabling/disabling audit features. 
 Keep in mind that those are disregarded if the pipeline is not configured to enable logging.
-.. code-block:: json
+
+.. code-block:: javascript
+
    "Audit": {
       "EnableAuditEventLogging": true, // enables database logging
       "EnableAuditFileLogging": true, // enables file logging
-      ...
+      //...
    }
 
 Filtering configuration
@@ -377,14 +379,14 @@ By default, the signature of the AuditEvent and their verification is disabled. 
 First of all, in the `PipelineOptions`, you need to have `"Vonk.Plugin.Audit.Integrity"` (or a prefix of it) as part of the plugin pipelines. 
 As it is listed in the ``Exclude`` section by default, you have to remove it from this section:
 
-.. code-block:: json
+.. code-block:: javascript
 
    "PipelineOptions": {
       "PluginDirectory": "./plugins",
       "Branches": [
-         ...
+         // ...
          "Vonk.Plugin.Audit",
-         ...
+         // ...
       ],
       "Exclude": [
            "Vonk.Subscriptions.Administration"
@@ -395,18 +397,18 @@ Also, as part of the ``Administration`` pipeline, you need to enable the support
 for the asynchronous processing of the integrity verification operation. This is done by having the Task configuration corresponding
 to the database type used for the administration:
 
-.. code-block:: json
-  
+.. code-block:: javascript
+
   {
         "Path": "/administration",
         "Include": [
-          ...
+          // ...
           "Vonk.Repository.Sql.SqlTaskConfiguration",
-          or
+          // or
           "Vonk.Repository.Sqlite.SqliteTaskConfiguration",
-          or
+          // or
           "Vonk.Repository.MongoDb.MongoDbTaskConfiguration",
-          ...
+          // ...
         ]
       }
 

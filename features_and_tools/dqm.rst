@@ -401,7 +401,7 @@ In such cases, the FHIR ``Period`` can be translated to either a ``CQL Interval<
 The following CQL logic corresponds to the population expressions defined in the Blood Pressure Check library. 
 It defines adult patients and checks whether they have a recorded systolic blood pressure observation during the measurement period.
 
-.. code-block:: cql
+.. code-block:: text
    :caption: BloodPressureCheckLogic.cql
    :name: bp-check-cql
 

@@ -51,8 +51,9 @@ You can now access the CDS Hooks Discovery document at ``<base-url>/cds-services
 
 .. code-block:: HTTP
 
-  GET <base-url>/cds-services
-
+   GET <base-url>/cds-services  HTTP/1.1
+   Accept: application/json
+    
 Configuring an example CDS Hooks service
 ----------------------------------------
 Firely Server provides an example CDS Hooks service to demonstrate how to configure and use CDS Hooks.
@@ -117,7 +118,8 @@ You can then access the example service at the following URL: ``<base-url>/cds-s
 
 .. code-block:: HTTP
 
-  POST <base-url>/cds-services/patient-view-test-hook
+    POST <base-url>/cds-services/patient-view-test-hook  HTTP/1.1
+    Accept: application/json
     Content-Type: application/json
     
     {
@@ -330,7 +332,127 @@ Note however that:
 
 * Neither of these StructureDefinitions are part of the FHIR specification. They are only available experimentally as logical models in the `FHIR tools package <https://simplifier.net/packages/hl7.fhir.uv.tools.r4>`_.
 * Since logical models do not define resource types, Firely has adjusted those to the StructureDefinitions that are packaged with the server.
-* ``CDSHooksRequest`` has specific elements for each hook, like ``patientToGreet`` for the example service. If a new hook requires additional elements, these should be added to the ``CDSHooksRequest`` resource type.
+* You can request the current definitions of these resource types from the server with this request:
+
+    .. code-block:: HTTP
+    
+        GET <base-url>/administration/StructureDefinition?type=CDSHooksRequest,CDSHooksResponse HTTP/1.1
+        Accept: application/fhir+json; fhirVersion=4.0
+
+* ``CDSHooksRequest`` has specific elements underneath both ``context`` and ``prefetch`` for each hook, like ``prefetch.patientToGreet`` for the example service. If a new hook requires additional elements, these should be added to the ``CDSHooksRequest`` resource type. For a detailed example, expand the section below.
+
+.. container:: toggle
+
+    .. container:: header
+
+      CDSHooksRequest StructureDefinition
+      
+    The following is an example of the ``CDSHooksRequest`` StructureDefinition, which defines the structure of a CDS Hooks request in FHIR.
+    This example includes common elements like ``hookInstance`` and ``fhirAuthorization``, as well as specific elements for the context and prefetch sections.
+    In the ``context`` section, it includes ``patientId`` (for the Patient View hook), but also ``userId`` and ``encounterId`` for another hook requiring those ids.
+    Likewise, the ``prefetch`` section includes ``patientToGreet`` for the Patient View hook, but also ``serviceRequest`` for another hook, and it can be extended with other resources as needed.
+    
+    So the ``context`` and ``prefetch`` sections are accumulations of all the elements that are needed for the hooks that are implemented in the server.
+    
+      .. code-block:: JavaScript
+      
+        {
+            "resourceType": "StructureDefinition",
+            "id": "CDSHooksRequest",
+            "url": "http://hl7.org/fhir/tools/StructureDefinition/CDSHooksRequest",
+            "version": "1.0.0",
+            "name": "CDSHooksRequest",
+            "title": "Custom Hook Instance Resource",
+            "status": "draft",
+            "experimental": true,
+            "date": "2024-10-04",
+            "publisher": "Example Organization",
+            "description": "A custom resource structure for handling hook instances, FHIR server information, authorization, context, and prefetch resources.",
+            "fhirVersion": "4.0.1",
+            "kind": "resource",
+            "abstract": false,
+            "type": "CDSHooksRequest",
+            "baseDefinition": "http://hl7.org/fhir/StructureDefinition/DomainResource",
+            "derivation": "specialization",
+            "differential": {
+                "element": [
+                    //common elements like hookInstance and fhirAuthorization
+                    {...},
+                    {
+                        "id": "CDSHooksRequest.context",
+                        "path": "CDSHooksRequest.context",
+                        "short": "Contextual details for the hook instance",
+                        "type": [
+                            {
+                                "code": "BackboneElement"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "CDSHooksRequest.context.userId",
+                        "path": "CDSHooksRequest.context.userId",
+                        "short": "Identifier for the user",
+                        "type": [
+                            {
+                                "code": "string"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "CDSHooksRequest.context.patientId",
+                        "path": "CDSHooksRequest.context.patientId",
+                        "short": "Identifier for the patient",
+                        "type": [
+                            {
+                                "code": "string"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "CDSHooksRequest.context.encounterId",
+                        "path": "CDSHooksRequest.context.encounterId",
+                        "short": "Identifier for the encounter",
+                        "type": [
+                            {
+                                "code": "string"
+                            }
+                        ]
+                    },
+                    //{ any additional context elements for other hooks },
+                    {
+                        "id": "CDSHooksRequest.prefetch",
+                        "path": "CDSHooksRequest.prefetch",
+                        "short": "Prefetch information for the hook",
+                        "type": [
+                            {
+                                "code": "BackboneElement"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "CDSHooksRequest.prefetch.patientToGreet",
+                        "path": "CDSHooksRequest.prefetch.patientToGreet",
+                        "short": "Inline Patient resource to be prefetched",
+                        "type": [
+                            {
+                                "code": "Resource"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "CDSHooksRequest.prefetch.serviceRequest",
+                        "path": "CDSHooksRequest.prefetch.serviceRequest",
+                        "short": "Inline ServiceRequest resource to be prefetched",
+                        "type": [
+                            {
+                                "code": "Resource"
+                            }
+                        ]
+                    },
+                    // { any additional prefetch elements for other hooks }
+                ]
+            }
+        }
 
 .. _cds_hooks_operations:
 

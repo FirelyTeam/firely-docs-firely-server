@@ -1,6 +1,6 @@
 $docsroot = Resolve-Path $PSScriptRoot
 Write-Information -Message "Building documentation in folder ${docsroot}" -InformationAction Continue
-docker run --rm -v ${docsroot}:/docs firely.azurecr.io/firely/docs-sphinx:3.0.0-alpha
+docker run --rm -v ${docsroot}:/docs firely.azurecr.io/firely/docs-sphinx:latest
 if ($LASTEXITCODE -ne 0) {
     Write-Error -Message "Docker run failed. Is Docker active?" -RecommendedAction "Start Docker Desktop" -InformationAction Stop
     Exit

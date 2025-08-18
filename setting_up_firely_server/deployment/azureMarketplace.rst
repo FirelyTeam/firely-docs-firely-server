@@ -30,7 +30,7 @@ In addition, if you want to use Ingress with TLS, you need to have the following
   If you don't have one, you can deploy the `NGINX Ingress Controller <https://learn.microsoft.com/en-us/azure/aks/ingress-basic>`_ or the `Traefik Ingress Controller <https://learn.microsoft.com/en-us/azure/aks/ingress-tls>`_.
 
 In order to simplify the setup process, we have created a `public repository <https://github.com/FirelyTeam/kubernetes-cluster-deployment>`_ with sample code to deploy an Azure Kubernetes cluster with Terraform 
-as well as deploying an ingress Controller and a certificate manager using Helm.
+as well as an ingress Controller and a certificate manager using Helm.
 
 Deployment Steps
 -----------------

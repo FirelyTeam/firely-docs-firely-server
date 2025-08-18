@@ -26,6 +26,11 @@ In addition, if you want to use Ingress with TLS, you need to have the following
 - A registered hostname (i.e. a CNAME or A record in a DNS provider). 
 - A certificate manager (typically `cert-manager <https://cert-manager.io/>`_). 
 - A certificate issuer (see the `available issuers for cert-manager <https://cert-manager.io/docs/usage/issuer/>`_) already deployed in the Kubernetes cluster.
+- An Ingress Controller already deployed in your Kubernetes cluster. 
+  If you don't have one, you can deploy the `NGINX Ingress Controller <https://learn.microsoft.com/en-us/azure/aks/ingress-basic>`_ or the `Traefik Ingress Controller <https://learn.microsoft.com/en-us/azure/aks/ingress-tls>`_.
+
+In order to simplify the setup process, we have created a `public repository <https://github.com/FirelyTeam/kubernetes-cluster-deployment>`_ with sample code to deploy an Azure Kubernetes cluster with Terraform 
+as well as deploying an ingress Controller and a certificate manager using Helm.
 
 Deployment Steps
 -----------------

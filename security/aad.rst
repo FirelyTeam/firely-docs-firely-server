@@ -1,6 +1,6 @@
 .. _feature_accesscontrol_aad:
 
-Azure Active Directory
+Azure Active Directory / Microsoft Entra
 ----------------------
 
 Azure Active Directory can be used independently as an authorization server, however some caveats exist regarding the usage of SMART on FHIR here.

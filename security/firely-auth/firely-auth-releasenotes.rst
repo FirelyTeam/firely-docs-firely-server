@@ -5,7 +5,7 @@ Release notes
 
 .. _firelyauth_releasenotes_4.4.0:
 
-Release 4.4.0, XX-08-2025
+Release 4.4.0, 19-08-2025
 -------------------------
 
 Feature
@@ -13,7 +13,7 @@ Feature
 
 #. Added the ability to assign custom ``tags`` to a client registration for better categorization. Admin users can label clients with tags such as ``"Testing"`` or ``"In-Production"``.
 #. SMART clients can now request a wildcard scope, even when restricted to certain resource types in the client registration. When a wildcard is requested, scopes will only be granted for the registered, allowed resource types.
-#. The client registration process has been streamlined to improve the experience for admin users registering applications.
+#. The client registration process has been streamlined to improve the experience for admin users registering applications with the introduction of client types. Clients can be created following a type, which is either a Standalone/EHR Launch type, a Backend Service type, or a Management API type. Be aware that during upgrading you might be prompted to update your clients to pass the newly introduced client validation. Clients that are not yet updated will remain active with their full functionality. Upon editing these clients the admin will be prompted to update them to the new client registration format.
 #. The client registration form now includes a "Legal & Compliance" section to document the following::
 
      - Contact Us URL  
@@ -22,6 +22,7 @@ Feature
      - Legal Company Name
      
 #. The FHIR Server Availability section on the admin dashboard now includes the FHIR Server endpoint information.
+#. The Firely Auth user interface has been upgraded to visualize given consent and disclaimers per client as well as client compliance details more clearly.
 #. The setting ``TrustedProxyIPNetworks`` now supports a new flag: ``AllowAnyNetworkOrigins``.  
    - Previously, bypassing IP restrictions was only possible by setting ``ASPNETCORE_ENVIRONMENT=Development``.  
    - With this release, the same behavior can be achieved explicitly via ``AllowAnyNetworkOrigins``.  

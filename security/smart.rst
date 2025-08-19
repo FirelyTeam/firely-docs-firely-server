@@ -1,18 +1,16 @@
 .. _feature_accesscontrol_config:
 
-SMART on FHIR Configuration
-===========================
-.. warning::
+Enforcing access control
+========================
 
-  In Firely Server version 5.11.0 and later versions ``vread`` and ``_history`` searches will be disabled when SMART on FHIR is enabled. 
-
-.. warning::
-
-  In Firely Server version 5.11.0 and later versions ``vread`` and ``_history`` searches will be disabled when SMART on FHIR is enabled. 
-  
 .. note::
 
   The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
+Firely Server offers a robust and flexible framework for enforcing access control, supporting everything from SMART on FHIR scopes to custom authorization logic via plugins. This section explains how to configure these mechanisms to meet a wide range of security and integration requirements.
+
+SMART on FHIR configuration
+---------------------------
 
 Firely Server fully supports the syntax of SMART v1: ``( 'patient' | 'user' ) '/' ( fhir-resource | '*' ) '.' ( 'read' | 'write' | '*' )``
 
@@ -62,6 +60,9 @@ Add ``Vonk.Plugin.Smart`` to the list of included plugins. When you restart Fire
 .. note:: 
   From Firely Server v5.5.0 on, the ``Vonk.Plugin.Smart`` plugin replaces the legacy plugins ``Vonk.Smart`` (for SMART v1) and ``Vonk.Plugin.SoFv2`` (for SMART v2). For Firely Server versions older than v5.5.0, these legacy plugins may still be used. For Firely Server versions v6.0.0 and newer, the legacy plugins are no longer supported and have been removed.
   Be sure to only enable one of these plugins since an error will be thrown if both plugins are part of the pipeline. Please note that the SMART v2 plugin will allow the usage of the SMART v1 and SMART v2 syntax.
+
+.. note::
+    Before version 6.0, Firely Server allowed configuring other compartments than Patient in the SmartOptions. This is no longer supported. If you have configured this, you will need to adjust the configuration to only specify a filter on the Patient compartment. 
 
 You can control the way Access Control based on `SMART on FHIR <https://fire.ly/smart-on-fhir/>`_ behaves with the SmartAuthorizationOptions in the :ref:`configure_appsettings`::
 
@@ -128,3 +129,19 @@ You can control the way Access Control based on `SMART on FHIR <https://fire.ly/
   After properly configuring Firely Server to work with an OAuth2 authorization server, enabling SMART and configuring the SmartCapabilities for Firely Server, you are able to discover the SMART configuration metadata by retrieving ``<base-url>/.well-known/smart-configuration``. 
   
   Please check section `Retrieve .well-known/smart-configuration <https://build.fhir.org/ig/HL7/smart-app-launch/app-launch.html#retrieve-well-knownsmart-configuration>`_  in the SMART specification for more details on how to request the metadata and how to interpret the response.
+
+.. warning::
+
+  In Firely Server version 5.11.0 and later versions ``vread`` and ``_history`` searches will be disabled when SMART on FHIR is enabled. 
+
+Other forms of Authorization
+----------------------------
+
+In :ref:`accesscontrol_api` you can find the interfaces relevant to authorization in Firely Server.  
+If your environment requires other authorization information than the standard SMART on FHIR claims, you can create your own implementations of these interfaces.
+You do this by implementing a :ref:`custom plugin <vonk_plugins>`. 
+All the standard plugins of Firely Server can then use that implementation to enforce access control.
+
+.. _SMART App Authorization Guide: http://docs.smarthealthit.org/authorization/
+.. _Patient CompartmentDefinition: http://www.hl7.org/implement/standards/fhir/compartmentdefinition-patient.html
+.. _ASP.NET Core Identity: https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity

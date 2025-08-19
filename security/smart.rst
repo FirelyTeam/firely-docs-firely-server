@@ -1,18 +1,16 @@
 .. _feature_accesscontrol_config:
 
-SMART on FHIR Configuration
-===========================
-.. warning::
+Enforcing access control
+========================
 
-  In Firely Server version 5.11.0 and later versions ``vread`` and ``_history`` searches will be disabled when SMART on FHIR is enabled. 
-
-.. warning::
-
-  In Firely Server version 5.11.0 and later versions ``vread`` and ``_history`` searches will be disabled when SMART on FHIR is enabled. 
-  
 .. note::
 
   The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
+
+Firely Server offers a robust and flexible framework for enforcing access control, supporting everything from SMART on FHIR scopes to custom authorization logic via plugins. This section explains how to configure these mechanisms to meet a wide range of security and integration requirements.
+
+SMART on FHIR configuration
+---------------------------
 
 Firely Server fully supports the syntax of SMART v1: ``( 'patient' | 'user' ) '/' ( fhir-resource | '*' ) '.' ( 'read' | 'write' | '*' )``
 
@@ -109,13 +107,18 @@ You can control the way Access Control based on `SMART on FHIR <https://fire.ly/
       ]
     }
 
+To enable SMART on FHIR in Firely Server, the following core settings must be configured:
+
 * Enabled: With this setting you can disable ('false') the authentication and authorization altogether. When it is enabled ('true'), Firely Server will also evaluate the other settings. The default value is 'false'. This implies that authorization is disabled as if no SmartAuthorizationOptions section is present in the settings.
-* ClockSkew: Allow potential time discrepancies between the authorization server and the FHIR server, allowing for a small tolerance window when checking token expiration and validity times. Defaults to 5 minutes.
 * PatientFilter: Defines how the ``patient`` launch context is translated to a search argument. See :ref:`feature_accesscontrol_compartment` for more background. You can use any supported search parameter defined on Patient. It should contain ``#patient#``, which is substituted by the value of the ``patient`` claim.
 * Authority: The base url of your identity provider, such that ``{{base_url}}/.well-known/openid-configuration`` returns a valid configuration response (`OpenID Connect Discovery documentation <https://openid.net/specs/openid-connect-discovery-1_0.html#rfc.section.4.2>`_). At minimum, the ``jwks_uri``, ``token_endpoint`` and ``authorization_endpoint`` keys are required in addition to the keys required by the specification. See :ref:`Firely Auth<feature_accesscontrol_idprovider>` for more background.
+* Audience: Defines the name of this Firely Server instance as it is known to the Authorization server. The default should be the base url of Firely Server.
+
+Additional advanced configuration can be achieved through the following settings:
+
+* ClockSkew: Allow potential time discrepancies between the authorization server and the FHIR server, allowing for a small tolerance window when checking token expiration and validity times. Defaults to 5 minutes.
 * AdditionalBaseEndpointsInDiscoveryDocument: Optional configuration setting. Add additional base authority endpoints that your identity provider also uses for operations that are listed in the .well-known document. 
 * AdditionalIssuersInToken: Optional configuration setting. The additional issuer setting will extend the list of issuer urls that are valid within the issuer claim in the token passed to Firely Server. The token validation will be adjusted accordingly. Please note that it does not influence which issuer urls are allowed in the .well-known/openid-configuration document of the authorization server.
-* Audience: Defines the name of this Firely Server instance as it is known to the Authorization server. Default is the base url of Firely Server.
 * ClaimsNamespace: Some authorization providers will prefix all their claims with a namespace, e.g. ``http://my.company.org/auth/user/*.read``. Configure the namespace here to make Firely Server interpret it correctly. It will then strip off that prefix and interpret it as just ``user/*.read``. By default no namespace is configured.
 * RequireHttpsToProvider: Token exchange with an Authorization server should always happen over https. However, in a local testing scenario you may need to use http. Then you can set this to 'false'. The default value is 'true'. 
 * Protected: This setting controls which of the interactions actually require authentication. In the example values provided here, $validate is not in the TypeLevelInteractions. This means that you can use POST [base-url]/Patient/$validate without authorization. Since you only read Conformance resources with this interaction, this might make sense.
@@ -128,3 +131,20 @@ You can control the way Access Control based on `SMART on FHIR <https://fire.ly/
   After properly configuring Firely Server to work with an OAuth2 authorization server, enabling SMART and configuring the SmartCapabilities for Firely Server, you are able to discover the SMART configuration metadata by retrieving ``<base-url>/.well-known/smart-configuration``. 
   
   Please check section `Retrieve .well-known/smart-configuration <https://build.fhir.org/ig/HL7/smart-app-launch/app-launch.html#retrieve-well-knownsmart-configuration>`_  in the SMART specification for more details on how to request the metadata and how to interpret the response.
+
+.. warning::
+
+  #. In Firely Server version 5.11.0 and later versions ``vread`` and ``_history`` searches will be disabled when SMART on FHIR is enabled as the authorization cannot be enforced on historic resource instances.
+  #. Before version 6.0, Firely Server allowed configuring other compartments than Patient in the SmartOptions. This is no longer supported. If you have configured this, you will need to adjust the configuration to only specify a filter on the Patient compartment.  
+
+Other forms of Authorization
+----------------------------
+
+In :ref:`accesscontrol_api` you can find the interfaces relevant to authorization in Firely Server.  
+If your environment requires other authorization information than the standard SMART on FHIR claims, you can create your own implementations of these interfaces.
+You do this by implementing a :ref:`custom plugin <vonk_plugins>`. 
+All the standard plugins of Firely Server can then use that implementation to enforce access control.
+
+.. _SMART App Authorization Guide: http://docs.smarthealthit.org/authorization/
+.. _Patient CompartmentDefinition: http://www.hl7.org/implement/standards/fhir/compartmentdefinition-patient.html
+.. _ASP.NET Core Identity: https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity

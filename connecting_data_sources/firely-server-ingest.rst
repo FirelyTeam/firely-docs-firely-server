@@ -478,7 +478,7 @@ Workflow
   * **Config**: workflow/metaParallel
   * **Required**: No
   * **Default**: 1
-  * **Description**: Number of threads to assign metadata. Should be higher than ReadParallel.
+  * **Description**: Number of threads to assign metadata.
 
 * ``--metaBuffer <metaBuffer>``: 
 
@@ -492,7 +492,7 @@ Workflow
   * **Config**: workflow/typeParallel
   * **Required**: No
   * **Default**: 4
-  * **Description**: Number of threads to add type information. Should be higher than ReadParallel.
+  * **Description**: Number of threads to add type information.
 
 * ``--typeBuffer <typeBuffer>``: 
 
@@ -506,7 +506,7 @@ Workflow
   * **Config**: workflow/absoluteToRelativeParallel
   * **Required**: No
   * **Default**: 1
-  * **Description**: Number of threads when converting absolute to relative references. Should be higher than ReadParallel.
+  * **Description**: Number of threads when converting absolute to relative references.
 
 * ``--absRelBuffer <absRelBuffer>``: 
 

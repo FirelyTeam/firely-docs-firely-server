@@ -16,6 +16,7 @@ The administration database is key for the management and maintenance of Firely 
    :titlesonly:
 
    alerting
+   metrics_dashboard
    administration_api
    conformanceresources
    errata

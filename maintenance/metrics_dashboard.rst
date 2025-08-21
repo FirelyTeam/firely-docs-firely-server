@@ -23,6 +23,10 @@ The dashboard is intended for:
    analytics, and alerting, it is recommended to export telemetry data to an
    OpenTelemetry Collector and visualize it in a dedicated monitoring stack.
 
+.. important::
+
+  Full support for the metrics dashboard requires Firely Server and Firely Server Ingest v6.5.0, and Firely Auth v4.5.0.
+
 Available Metrics
 -----------------
 
@@ -56,7 +60,7 @@ Accessing the Dashboard
 
 To access the Metrics Dashboard:
 
-#. Enable metrics in the configuration. See :ref:`feature_opentelemetry` for details.
+#. Enable metrics in the configuration. See :ref:`feature_opentelemetry` for details. The metrics dashboard ingests OTLP metrics from Firely Server, Firely Auth, and Firely Server Ingest. Each application must be configured separately.
 #. Configure the OpenTelemetry endpoint to point to the Firely Server Metrics Dashboard backend on port ``7174`` and start the backend service. Alternatively, configure the OpenTelemetry Collector to forward metrics to both the dashboard and Prometheus endpoints.
 #. Start Firely Server.
 #. Open the dashboard endpoint at ``https://example.org:7174/``.
@@ -69,6 +73,6 @@ To access the Metrics Dashboard:
 Example Use Cases
 -----------------
 
-- Health check: Verify responsiveness and request handling in real time.
+- Health check: Verify responsiveness and request handling.
 - Development and testing: Monitor latency and error spikes without additional tooling.
-- Resource ingestion insights: Monitor Firely Server performance in real time.
+- Resource ingestion insights: Monitor Firely Server performance and ensure data ingestion without failures.

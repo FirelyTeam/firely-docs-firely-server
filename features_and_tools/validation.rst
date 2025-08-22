@@ -109,7 +109,7 @@ Advanced Validation
   The features described in this section are available in the following :ref:`Firely Server editions <vonk_overview>`:
 
   * Firely Scale - 🌍 / 🇺🇸
-  * Firely CMS Compliance - 🇺🇸
+  * Firely Prior Authorization - 🇺🇸
 
 In the Firely Server editions mentioned above, Firely Server will execute additional advanced validation rules which are defined on top of the core FHIR specification for more quality control.
 
@@ -139,7 +139,7 @@ Filter validation outcome based on advisor rules
   The features described in this section are available in the following :ref:`Firely Server editions <vonk_overview>`:
 
   * Firely Scale - 🌍 / 🇺🇸
-  * Firely CMS Compliance - 🇺🇸
+  * Firely Prior Authorization - 🇺🇸
 
 Firely Server’s validator includes a powerful Advisor Rules system that enables users to dynamically customize validation behavior. 
 Central to this system is the concept of filtering, which allows targeting specific validation issues or rule types based on precise criteria.

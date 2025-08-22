@@ -8,7 +8,7 @@ Firely Server Custom Plugins
   The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
 
   * Firely Scale - 🌍 / 🇺🇸
-  * Firely CMS Compliance - 🇺🇸
+  * Firely Prior Authorization - 🇺🇸
 
 Firely Server Plugins is the means to adjust a Firely Server to your own special needs, beyond the configuration.
 Please have a look at the :ref:`architecture` to see how plugins fit in the Firely Server.

@@ -21,7 +21,8 @@ Bulk Import via Firely Server Ingest
     * Is unrestricted in the amount of resources that can be loaded in total
     * Is unrestricted in the amount of resources that can be loaded in one go 
     * Supports the Recovery Journal feature
-  #. **Firely Solution for CMS Interoperability & Prior Authorization Final Rule**
+  #. **Firely Prior Authorization**
+
     * Contains the ``http://fire.ly/vonk/plugins/bulk-data-import/unlimited`` token
     * Is unrestricted in the amount of resources that can be loaded in total
     * Is unrestricted in the amount of resources that can be loaded in one go

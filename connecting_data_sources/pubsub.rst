@@ -8,7 +8,7 @@ Firely PubSub
   The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
 
   * Firely Scale - 🌍 / 🇺🇸
-  * Firely CMS Compliance - 🇺🇸
+  * Firely Prior Authorization - 🇺🇸
 
 Firely offers the PubSub feature to enable other services to communicate with Firely Server on data changes asynchronously. Specifically, other applications can send *commands* to update FHIR resources in the database and subscribe to *events* published by the server whenever resources change. Both commands and events get communicated as messages via a message broker (RabbitMQ, Azure Service Bus, or Kafka).
 

@@ -8,7 +8,7 @@ Observation - $lastN
   The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
 
   * Firely Scale - 🌍 / 🇺🇸
-  * Firely CMS Compliance - 🇺🇸
+  * Firely Prior Authorization - 🇺🇸
 
 Description
 -----------

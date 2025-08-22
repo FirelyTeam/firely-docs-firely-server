@@ -27,7 +27,7 @@ Release 6.3.0, July 22th, 2025
 Features
 ^^^^^^^^
 
-#. We introduced the AdvisorRules setting for the validator for CMS and Scale licenses. The implementation of the Advisor Rules system allows users to customize validation behaviour on a more granular level by setting filters with which the outcome of validation or the validation itself can be modified. Note that this feature is still in beta. For meore information see :ref:`feature_advisor_rules`.
+#. We introduced the AdvisorRules setting for the validator for Firely Prior Authorization and Scale licenses. The implementation of the Advisor Rules system allows users to customize validation behaviour on a more granular level by setting filters with which the outcome of validation or the validation itself can be modified. Note that this feature is still in beta. For meore information see :ref:`feature_advisor_rules`.
 #. The validator will now create extensions on validation errors pointing to the profile that caused the error in the http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-source extension. These issues will also be annotated with line numbers in the http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col and http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line extension.
 
 .. _vonk_releasenotes_6_2_0:

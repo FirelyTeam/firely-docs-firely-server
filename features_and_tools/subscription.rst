@@ -8,7 +8,7 @@ Subscriptions
   The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
 
   * Firely Scale - 🌍 / 🇺🇸
-  * Firely CMS Compliance - 🇺🇸
+  * Firely Prior Authorization - 🇺🇸
 
 Subscriptions can be managed in the :ref:`administration_api`, on the ``/administration/Subscription`` endpoint. If you post a Subscription
 to the regular FHIR endpoint, it will be stored but not evaluated. Subscriptions posted to the

@@ -8,7 +8,7 @@ Auditing
   The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
 
   * Firely Scale - 🌍 / 🇺🇸
-  * Firely CMS Compliance - 🇺🇸
+  * Firely Prior Authorization - 🇺🇸
 
 Firely Server can log access through the RESTful API for auditing purposes. It has three main features:
 

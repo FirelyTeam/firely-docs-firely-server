@@ -9,7 +9,7 @@ Bulk Data Export
   The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
 
   * Firely Scale - 🌍 / 🇺🇸
-  * Firely CMS Compliance - 🇺🇸
+  * Firely Prior Authorization - 🇺🇸
 
 Bulk Data Export (BDE) is the process for exporting a substantial amount of data from a system or database in a single operation. 
 This process entails extracting a significant volume of data, usually in a structured format, to support activities like analysis, reporting, backup, or data transfer between systems. 

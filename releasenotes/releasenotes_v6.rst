@@ -8,6 +8,16 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_6_4_0:
+
+Release 6.4.0, August 26th, 2025
+--------------------------------
+
+Fixes
+^^^^^
+
+#. We improved the behavior of the validator for resolving references and applying validation in contained resources and bundle resources. FHIRPath constraints using resolve() statements will now evaluate correctly in these situations.
+
 .. _vonk_releasenotes_6_3_1:
 
 Release 6.3.1, August 11th, 2025

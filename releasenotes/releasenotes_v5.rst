@@ -93,7 +93,8 @@ Feature
     Note: This will have security implications on the network protection of the administration API, due to the interpretation of the X-Forwarded-For header, if the access is not protected on a network layer. In addition, the ASPNETCORE_ENVIRONMENT environment variable needs to be set to "Development".
 
 #. Improved performance of pagination in some scenarios when Firely Server is used with a MongoDB backend.
-  - Note that because of the nature of this improvement, for some searches the ``last`` link in the search results bundle will not be available. This is because the last page is not known until the client requests it. The client can still use the ``next`` link to get the next page. For more information see :ref:`navigational_links`.
+
+  * Note that because of the nature of this improvement, for some searches the ``last`` link in the search results bundle will not be available. This is because the last page is not known until the client requests it. The client can still use the ``next`` link to get the next page. For more information see :ref:`navigational_links`.
 
 Database
 ^^^^^^^^
@@ -319,7 +320,7 @@ Release 5.5.0, February 6th, 2024
 
 Features
 ^^^^^^^^
-#. Upgraded Firely Server to the latest Firely SDK v5.5.1, see its `releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.5.1>`_. Any plugin using the ``ITypedElement`` interface must be recompiled using the Vonk.Core package version 5.5.* due to changes in the SDK.
+#. Upgraded Firely Server to the latest Firely SDK v5.5.1, see the `SDK 5.5.1 release notes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.5.1>`_. Any plugin using the ``ITypedElement`` interface must be recompiled using the Vonk.Core package version 5.5.* due to changes in the SDK.
 #. Added new documentation on how to interact as a client with the PubSub API of Firely Server. See :ref:`pubsub_clients`.
 #. Added new documentation on how to configure PubSub messaging on Azure Service Bus. See :ref:`azure_service_bus`.
 #. Added a new configuration in the namespace ``Vonk.Plugin.Smart`` which enables the usage of SMART on FHIR v1 and v2 combined. The plugins ``Vonk.Smart`` and ``Vonk.Plugin.SoFv2`` are now deprecated. The deprecated plugins will continue to work in the current major version of Firely Server. See :ref:`feature_accesscontrol_config` for more details.
@@ -432,7 +433,7 @@ Features
 #. Improved compartment checks for writing resources to a Patient compartment with a patient-level access token. All compartment references need to refer to the same compartment. This is important for resources that have multiple compartment references which may refer to different Patients (e.g. AllergyIntolerance.recorder and AllergyIntolerance.patient).
 #. Added support for permanently deleting all resources within a Patient compartment using the $purge operation. See :ref:`erase` for more details.
 #. Enable FS to write logs to AWS CloudWatch, see :ref:`configure_log_sinks`.
-#. We upgraded Firely Server to the latest SDK 5.2.0, see its `releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.2.0>`_. 
+#. We upgraded Firely Server to the latest SDK 5.2.0, see the `SDK 5.2.0 release notes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.2.0>`_. 
 
 Fixes
 ^^^^^

@@ -26,7 +26,7 @@ Release 6.3.1, August 11th, 2025
 Fixes
 ^^^^^
 
-#. We updated dependencies of the Elasticsearch sink to fix a security vulnerability in a dependency of the `Elastic.Serilog.Sinks` package. The updated version is now 8.18.2. See the `release notes <https://github.com/elastic/ecs-dotnet/releases>`_ for more information.
+#. We updated dependencies of the Elasticsearch sink to fix a security vulnerability in a dependency of the `Elastic.Serilog.Sinks` package. The updated version is now 8.18.2. See the `Elastic Sink 8.18.2 release notes <https://github.com/elastic/ecs-dotnet/releases>`_ for more information.
 #. We fixed a bug where FSI would take a long time to start up when the MongoDb target database would contain a large number of resources. This was caused by FSI trying to perform a count on the target database, which would take a long time when there were many resources.
 
 .. _vonk_releasenotes_6_3_0:
@@ -69,7 +69,7 @@ Features
 
 #. It is now possible to validate QuestionnaireResponse resources against their original Questionnaire resource. See :ref:`feature_advancedvalidation` for more information.
 #. Message brokers can now be used as a target for Firely Server Ingest. FSI will publish messages to the message broker upon ingesting resources, which can then be consumed by Firely Server. Currently, only Azure Service Bus and RabbitMQ can be configured as message brokers for FSI. The use of a MongoDb source is not supported if the target is set to a message broker, only ingestion from files/folders is supported. See :ref:`fsi_target_pubsub` for more information.
-#. We upgraded the .Net SDK to v5.12.0. See the `release notes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.12.0>`_ for more information.
+#. We upgraded the .Net SDK to v5.12.0. See the `SDK 5.12.0 release notes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.12.0>`_ for more information.
 
 
 .. _vonk_releasenotes_6_1_0:
@@ -215,7 +215,7 @@ Configuration
    * ``Administration.Security.OperationsToBeSecured`` has been replaced by per-operation ``NetworkProtected`` property
    * ``SmartAuthorizationOptions.Protected`` has been replaced by per-operation ``RequireAuthorization`` property
    * Each operation now has granular control over authorization, network protection, tenant requirements, etc.
-   * See :ref:`configure_operations` for detailed information about the new configuration structure and migration guide
+   * See :ref:`disable_interactions` for detailed information about the new configuration structure and migration guide
 
 .. note::
     If MultiTenancy is enabled, the ``history`` and ``vread`` operations are blocked for all resources. This is to prevent the possibility of cross-tenant access to resources. The ``history`` and ``vread`` operations are not supported in a multi-tenant environment.

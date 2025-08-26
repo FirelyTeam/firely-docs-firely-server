@@ -662,7 +662,7 @@ By default, weak bindings (such as those on ``Observation.category`` or ``Observ
             ]
         }
     ]
-}
+  }
 
 **After Applying Advisor Rules:**
 

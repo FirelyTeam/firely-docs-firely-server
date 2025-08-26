@@ -121,7 +121,7 @@ With MongoDb transactions, there are a few things to consider:
 #. MongoDb transactions in Firely Server always use Read Concern `"snapshot"` and Write Concern `"majority"`.
 #. MongoDb imposes a transaction runtime limit of `60s`. For self-hosted MongoDb instances you can modify this limit using `"transactionLifetimeLimitSeconds"`. However, for MongoDb Atlas deployments this limit cannot be changed. 
 #. Although MongoDb transactions are supported as early as v4.0, please be aware of the following issue. In MongoDb v4.0 all write operations are contained in a single oplog entry. The oplog entry for the transaction must be within the BSON document size limit of 16MB. For v4.2+ every write operation gets its own oplog entry. This removes the 16MB total size limit for a transaction imposed by the single oplog entry for all its write operations. Note that each single oplog entry still has a limit of 16 MB. We highly recommend in using MongoDb v4.2 or higher when using transactions.
-#. Please read the official MongoDb documentation for production considerations when using transactions: `MongoDb manual <https://www.mongodb.com/docs/manual/core/transactions-production-consideration/>`_
+#. Please read the official `MongoDb documentation for production considerations when using transactions <https://www.mongodb.com/docs/manual/core/transactions-production-consideration/>`_
 
 .. _configure_mongodb_sharding:
 
@@ -140,6 +140,7 @@ To enable sharding, you need to:
 #. Initialize the sharded cluster with the Firely Server database and collection by running Firely Server once, or by using FSI to initialize the schema (see :ref:`tool_fsi`). For the latter, these are the commands:
 
       .. code-block:: bash
+
           :caption: Bash
  
           COLLECTION_NAME=vonkentries
@@ -171,7 +172,7 @@ To enable sharding, you need to:
  
 #. Shard the ``vonkentries`` collection:
 
-    #. See the `MongoDB manual <https://www.mongodb.com/docs/atlas/atlas-ui/collections/#shard-a-collection/>`_ for more information on sharding collections.
+    #. See the `MongoDB manual on sharding <https://www.mongodb.com/docs/atlas/atlas-ui/collections/#shard-a-collection/>`_ for more information on sharding collections.
     #. Use this as the shard key: ``{ im: 1, type: 1, res_id: "hashed" }``.
     #. With MongoShell you can run the following command to shard the collection:
 
@@ -283,3 +284,4 @@ In this section we offer general guidelines on how to configure and maintain you
 
    db_mongo_security
    db_mongo_auth
+

@@ -56,7 +56,7 @@ Include the plugin in the pipeline
 
 In the ``PipelineOptions`` section of the :ref:`appsettings <configure_appsettings>`, add the namespace of the plugin:
 
-.. code-block:: json
+.. code-block:: JavaScript
 
     "PipelineOptions": {
         "PluginDirectory": "./plugins",
@@ -64,18 +64,18 @@ In the ``PipelineOptions`` section of the :ref:`appsettings <configure_appsettin
           {
             "Path": "/",
             "Include": [
-              ...
+              // ...
               "Vonk.Plugin.MemberMatch",
             ],
             "Exclude": [
-              ...
+              // ...
             ]
-          }, ...etc...
+          }, // ...etc...
 
 Check that the operation is listed as supported
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``$member-match`` should be listed in the ``Operations`` section of the :ref:`appsettings <_disable_interactions>`.
+The ``$member-match`` should be listed in the ``Operations`` section of the :ref:`appsettings <disable_interactions>`.
 That is by default the case, but if you have previously overridden this section, you need to make sure that the operation is listed there.
 
 Set the options for the operation

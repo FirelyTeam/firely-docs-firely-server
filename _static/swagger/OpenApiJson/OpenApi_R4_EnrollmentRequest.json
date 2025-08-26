@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - EnrollmentRequest",
-    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
+    "version": "6.4.0+efc2472f6ac82bd5cb558dbd09c1fa8864f24065"
   },
   "servers": [
     {

@@ -8,7 +8,7 @@ Real World Testing
   The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
 
   * Firely Scale - 🌍 / 🇺🇸
-  * Firely CMS Compliance - 🇺🇸
+  * Firely Prior Authorization - 🇺🇸
 
 The Real World Testing functionality of Firely Server is designed to fulfill the requirements of the ONC Health IT Certification Program defined by the 21st Century Cures Act. See `ONC Health IT Certification Program - Real World Testing Resource Guide <https://www.healthit.gov/sites/default/files/page/2021-08/ONC-Real%20World%20Testing%20Resource%20Guide_Aug%202021.pdf>`_ for background.
 

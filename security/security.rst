@@ -16,10 +16,12 @@ You will also find a section describing the steps to be taken for auditing in Fi
    :maxdepth: 1
    :titlesonly:
 
-   accesscontrol
-   smart
+   intro_accesscontrol
+   intro_smart
    tokens_and_compartments
+   smart
    firely-auth/firely-auth
+   aad
    permissions
    auditing
    security_headers

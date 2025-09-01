@@ -344,12 +344,13 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
           {
               "ClientId": "Jv3nZkaxN36ucP33",
               "ClientName": "Postman",
+              "ClientType": "StandaloneApp",
               "Description": "Postman API testing tool",
               "Enabled": true,
               "RequireConsent": true,
               "RedirectUris": ["https://www.getpostman.com/oauth2/callback", "https://oauth.pstmn.io/v1/callback", "https://oauth.pstmn.io/v1/browser-callback"],
               "ClientSecrets": [{"SecretType": "SharedSecret", "Secret": "re4&ih)+HQu~w"}], // SharedSecret, JWK
-              "AllowedGrantTypes": ["client_credentials", "authorization_code"],
+              "AllowedGrantTypes": ["authorization_code"],
               "AllowedSmartLegacyActions": [],
               "AllowedSmartActions": ["c", "r", "u", "d", "s"],
               "AllowedSmartSubjects": [ "patient", "user", "system"],
@@ -388,6 +389,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
 - ``ClientId``: string: unique identifier for this client. It should be known to the client as well
 - ``ClientName``: string: human readable name for the client, it is shown on the consent page
+- ``ClientType``: string: ``ClientType`` specifies the type of OAuth2 client: ``"BackendService"`` (system-only ``client_credentials``), ``"ManagementApi"`` (``client_credentials`` with ``AllowManagementApiAccess``), or ``"StandaloneApp"`` (``authorization_code``), and helps optimize UI validation during client registration by enforcing different constraints on the workflow.
 - ``Description``: string:  human readable description of the client
 - ``Enabled``: true / false: simple switch to enable or disable a client (instead of removing it from the list)
 - ``RequireConsent``: true / false: when true, Firely Auth will show the user a page for consent to granting the requested scopes to the client, otherwise all requested and valid scopes will be granted automatically.

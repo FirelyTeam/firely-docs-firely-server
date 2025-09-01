@@ -7,7 +7,7 @@ HRex Member Match - $member-match
 
   The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
 
-  * Firely CMS Compliance - 🇺🇸
+  * Firely Prior Authorization - 🇺🇸
 
 The HRex Member Match operation is used to find the identifier of a member of a health plan, with the member's demographic and coverage information as input.
 The retrieved identifier can then be used to perform subsequent queries and operations on the data that the health plan holds for this member.

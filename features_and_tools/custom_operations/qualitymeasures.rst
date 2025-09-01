@@ -56,6 +56,15 @@ Firely Server supports the following parameters:
 |                         |           |                         | ``http://example.org/fhir/     |
 |                         |           |                         | Library/MyLogic|1.0.0``.       |
 +-------------------------+-----------+-------------------------+--------------------------------+
+| ``library``             | ✅        | ``Library`` resource    | In-line logic library that     |
+|                         |           |                         | contains executable CQL logic. |
+|                         |           |                         | This Library will not be       |
+|                         |           |                         | stored in Firely Server. It    |
+|                         |           |                         | MAY only contain CQL and will  |
+|                         |           |                         | be compiled dynamically. If    |
+|                         |           |                         | ELM content is provided, it    |
+|                         |           |                         | will be re-used.               |
++-------------------------+-----------+-------------------------+--------------------------------+
 | ``subject``             | ✅        | ``string``              | Only Patient references are    |
 |                         |           |                         | supported, may be omitted if   |
 |                         |           |                         | no "context Patient" is        |

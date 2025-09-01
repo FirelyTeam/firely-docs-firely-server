@@ -490,6 +490,8 @@ External identity providers
 			"DisplayName": "Login via SSO - <Name of IdentityProvider>",
 			"ClientId": "ClientId for Firely Auth, pre-registered with external service",
 			"ClientSecret": "secret for clientId",
+      "Scope": "openid profile email",
+			"ResponseType": "id_token", // id_token | code
 			"AllowAutoProvision": true,
 			"AutoProvisionFromSecurityGroup": ["<Security Group>"],
 			"UserClaimsFromIdToken": [{
@@ -511,6 +513,12 @@ External identity providers
 - ``DisplayName``: Name that will be displayed in the UI of Firely Auth for users to select which identity provider to use if multiple are configured or if a local login is enabled as well.
 - ``ClientId``: ClientId of Firely Auth that will be used in the implicit token flow in order to retrieve an id token from the external identity provider.
 - ``ClientSecret``: ClientSecret of Firely Auth that will be used in the implicit token flow in order to retrieve an id token from the external identity provider.
+- ``Scope``: Space-separated list of scopes to request from the external identity provider during authentication. Common scopes include ``openid`` (required for OpenID Connect), ``profile`` (for basic user profile information), and ``email``. You can include additional scopes supported by the identity provider if your application requires them. The chosen scopes determine which claims are available in the ID token or via the UserInfo endpoint.
+- ``ResponseType``: The OpenID Connect/OAuth 2.0 response type to be used when requesting authentication. Supported values are:
+  
+  - ``id_token`` – Requests an ID token directly from the authorization endpoint (implicit flow).
+  - ``code`` – Requests an authorization code which is later exchanged for tokens (authorization code flow).
+  
 -	``AllowAutoProvision``: true / false - If true, Firely Auth will automatically create a user in its own database if the user logs in with an external identity provider for the first time. The user will be created with the claims that are provided by the external identity provider. Note that either the ``UserClaimsFromIdToken`` or ``FhirUserLookupClaimsMapping`` setting may be necessary to map a custom user claim from the identity provider to the required ``fhirUser`` claim. A request to Firely Server will attempt to match the user to a ``Patient`` or ``Practitioner`` resource and, if found, the respective resource ID will be used as the ``fhirUser`` claim. 
 - ``AutoProvisionFromSecurityGroup``: When ``AllowAutoProvision`` is true, this setting allows you to specify a security group that the user must be a member of in order to be automatically provisioned. If the user is not a member of this group, the user will not be automatically provisioned.
 - ``UserClaimsFromIdToken``: This setting allows you to map the claims from the token that is received from the external identity provider to the claims that are stored in the Firely Auth database. The key is the claim that is received from the external identity provider. This key can be copied as a value that is recognized by Firely Auth. For intance, Azure is able to provide ``fhirUser`` claim to the token, but will prefix this claim with ``extn.``. The CopyAs field can be used to remove this prefix, so that Firely Auth is able to recognize the ``fhirUser`` claim.

@@ -809,6 +809,52 @@ The Patient $everything operation returns all resources linked to a patient that
 
 See :ref:`feature_patienteverything`.
 
+.. _dqm_appsettings:
+
+Quality Measure Operations
+--------------------------
+
+::
+
+  "LibraryEvaluateOperation": {
+    "DataEndpoint": [
+      //{
+      //    "Endpoint": "<base url>",
+      //    "ClientId": "",
+      //    "ClientSecret": "",
+      //    "TokenEndpoint": "",
+      //    "Audience": "",
+      //    "Scopes": "patient/*.rs"
+      //}
+    ]
+  }
+
+The ``LibraryEvaluateOperation`` section configures external data sources for the
+FHIR ``$evaluate`` operation on ``Library`` resources.
+
+* ``DataEndpoint``: A list of external FHIR endpoints that may be used when
+  ``useServerData`` is set to ``false`` in a request. Each entry defines the
+  connection details for one endpoint.
+
+  The following fields are supported:
+
+  - ``Endpoint``: Base URL of the external FHIR server  
+  - ``ClientId`` / ``ClientSecret``: Credentials for OAuth2 authentication via a shared secret
+  - ``TokenEndpoint``: OAuth2 token URL for a client_credentials auth flow
+  - ``Audience``: Optional audience claim for the access token  
+  - ``Scopes``: Space-separated list of scopes requested by Firely Server for the dataEndpoint, e.g. ``system/*.rs``  
+
+Any ``dataEndpoint`` parameter submitted in a ``$evaluate`` request must match
+one of the pre-registered entries in this configuration.
+
+.. important::
+
+   Authorization using **SMART on FHIR** is **not optional**.  
+   It is expected that every endpoint providing clinical and claims data is
+   protected using OAuth2 with SMART scopes.  
+   This ensures that sensitive health information can only be accessed by
+   authorized clients under proper security controls.
+
 .. _uri_conversion:
 
 URI conversion on import and export

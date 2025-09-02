@@ -8,6 +8,17 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_6_4_1:
+
+Release 6.4.1, August 27th, 2025
+--------------------------------
+
+Programming API changes and plugins
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+#. We upgraded the .Net SDK to v5.12.2. See the `SDK 5.12.2 release notes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.12.2>`_ for more information.
+#. We upgraded the Firely Validator to v2.7.0. See the `Firely Validator 2.7.0 release notes <https://github.com/FirelyTeam/firely-validator-api/releases/tag/v2.7.0>`_ for more information.
+
 .. _vonk_releasenotes_6_4_0:
 
 Release 6.4.0, August 26th, 2025

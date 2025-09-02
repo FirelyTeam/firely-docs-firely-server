@@ -73,6 +73,8 @@ You can control the way Access Control based on `SMART on FHIR <https://fire.ly/
     //"Audience": "https://example.org/base-url-of-firely-server", //Has to match the value the Authority provides in the audience claim.
     //"ClaimsNamespace": "http://smarthealthit.org",
       "RequireHttpsToProvider": false, //You want this set to true (the default) in a production environment!
+      "EnableAnonymousAccess": false, //Enable anonymous access with limited scopes when no token is provided
+      "AnonymousScopes": "", //Space separated list of scopes that are allowed for anonymous access, e.g. "user/Organization.rs user/Location.rs"
       "Protected": {
         "InstanceLevelInteractions": "read, vread, update, delete, history, conditional_delete, conditional_update, $validate",
         "TypeLevelInteractions": "create, search, history, conditional_create",
@@ -113,6 +115,8 @@ To enable SMART on FHIR in Firely Server, the following core settings must be co
 * PatientFilter: Defines how the ``patient`` launch context is translated to a search argument. See :ref:`feature_accesscontrol_compartment` for more background. You can use any supported search parameter defined on Patient. It should contain ``#patient#``, which is substituted by the value of the ``patient`` claim.
 * Authority: The base url of your identity provider, such that ``{{base_url}}/.well-known/openid-configuration`` returns a valid configuration response (`OpenID Connect Discovery documentation <https://openid.net/specs/openid-connect-discovery-1_0.html#rfc.section.4.2>`_). At minimum, the ``jwks_uri``, ``token_endpoint`` and ``authorization_endpoint`` keys are required in addition to the keys required by the specification. See :ref:`Firely Auth<feature_accesscontrol_idprovider>` for more background.
 * Audience: Defines the name of this Firely Server instance as it is known to the Authorization server. The default should be the base url of Firely Server.
+* EnableAnonymousAccess: When set to ``true``, allows limited access to FHIR resources when no valid authorization token is provided. This uses the scopes defined in ``AnonymousScopes``. The default value is ``false``. See :ref:`Anonymous Access Configuration<feature_accesscontrol_anonymous>` for more information.
+* AnonymousScopes: Defines the space-separated list of SMART scopes that are permitted for anonymous (non-authenticated) access. Only ``user/`` scopes are allowed, and they cannot include wildcard access (``user/*``) or access to Patient compartment resources. This setting is only relevant when ``EnableAnonymousAccess`` is ``true``.
 
 Additional advanced configuration can be achieved through the following settings:
 
@@ -136,6 +140,96 @@ Additional advanced configuration can be achieved through the following settings
 
   #. In Firely Server version 5.11.0 and later versions ``vread`` and ``_history`` searches will be disabled when SMART on FHIR is enabled as the authorization cannot be enforced on historic resource instances.
   #. Before version 6.0, Firely Server allowed configuring other compartments than Patient in the SmartOptions. This is no longer supported. If you have configured this, you will need to adjust the configuration to only specify a filter on the Patient compartment.  
+
+.. _feature_accesscontrol_anonymous:
+
+Anonymous Access Configuration
+------------------------------
+
+Firely Server supports anonymous access to specific FHIR resources when properly configured. This feature allows limited, read-only access to non-sensitive resources without requiring authentication tokens.
+
+.. note::
+   Anonymous access should be carefully considered from a security perspective. Only enable this feature if you need to provide public access to specific, non-sensitive FHIR resources.
+
+Configuration
+^^^^^^^^^^^^^
+
+To enable anonymous access, configure the following settings in your ``SmartAuthorizationOptions``::
+
+    "SmartAuthorizationOptions": {
+      "Enabled": true,
+      "EnableAnonymousAccess": true,
+      "AnonymousScopes": "user/Organization.rs user/Location.rs user/Practitioner.r"
+    }
+
+Security Restrictions
+^^^^^^^^^^^^^^^^^^^^^
+
+Anonymous access is subject to several important security restrictions:
+
+* **User scopes only**: Anonymous scopes must use the ``user/`` prefix. ``patient/`` and ``system/`` scopes are not permitted for anonymous access.
+* **No wildcard access**: Wildcard scopes like ``user/*`` are not allowed to prevent unrestricted access.
+* **Patient compartment restriction**: Resources that belong to the Patient compartment (such as Patient, Observation, Condition, etc.) cannot be accessed anonymously.
+* **No sensitive data**: Only resources that do not contain patient-specific or sensitive information should be made available for anonymous access.
+
+Valid Anonymous Scope Examples
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The following are examples of valid anonymous scopes::
+
+    // Allow reading and searching Organizations
+    "AnonymousScopes": "user/Organization.rs"
+    
+    // Allow reading and searching multiple resource types
+    "AnonymousScopes": "user/Organization.rs user/Location.rs user/Practitioner.r"
+    
+    // Allow specific operations with search parameters (SMART v2)
+    "AnonymousScopes": "user/Organization.rs?type=prov user/Location.cruds?status=active"
+
+Invalid Anonymous Scope Examples
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The following scope configurations will result in validation errors::
+
+    // Invalid: Patient compartment resource
+    "AnonymousScopes": "user/Patient.r"
+    
+    // Invalid: Patient compartment resource
+    "AnonymousScopes": "user/Observation.rs"
+    
+    // Invalid: Wildcard access
+    "AnonymousScopes": "user/*.r"
+    
+    // Invalid: Patient scope
+    "AnonymousScopes": "patient/Observation.r"
+    
+    // Invalid: System scope  
+    "AnonymousScopes": "system/Organization.r"
+
+Configuration Validation
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Firely Server automatically validates the anonymous access configuration on startup. If invalid scopes are configured, you will see validation errors in the server logs and the server will fail to start.
+
+Common validation error messages include:
+
+* "Anonymous access scopes must only include user/... scopes."
+* "Anonymous access scopes must not include all resource types (i.e., user/*)."  
+* "Anonymous access scopes must not include resources from the Patient compartment: [resource types]."
+* "Anonymous access is enabled but no scopes are specified for anonymous access."
+
+Behavior
+^^^^^^^^
+
+When anonymous access is enabled and a request is made without an authorization token:
+
+1. Firely Server checks if the requested operation matches any of the configured anonymous scopes
+2. If a matching scope is found, the request is processed with the permissions defined by that scope
+3. If no matching scope is found, the request is denied with a 403 Forbidden response
+4. If an invalid or expired token is provided, the request is denied with a 401 Unauthorized response (anonymous access only applies when no token is provided)
+
+.. note::
+   Anonymous access uses the same authorization evaluation logic as authenticated access, ensuring consistent behavior and security enforcement.  
 
 Other forms of Authorization
 ----------------------------

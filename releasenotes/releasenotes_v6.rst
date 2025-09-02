@@ -13,6 +13,16 @@ Current Firely Server release notes (v6.x)
 Release 6.4.0, August 26th, 2025
 --------------------------------
 
+Improvements
+^^^^^^^^^^^^
+
+#. **CDS Hooks architectural enhancements**: We improved the CDS Hooks implementation with better separation of concerns:
+
+   * Split middleware functionality into separate operation and content handling components for better modularity
+   * Enhanced the CDS Discovery endpoint to work as a proper custom operation (``$cds-discovery``)
+   * Improved error handling with better FHIR R4 version validation and content-type checking
+   * Added comprehensive unit tests for CDS Hooks services, particularly the CRD Order Select Hook implementation
+
 Fixes
 ^^^^^
 

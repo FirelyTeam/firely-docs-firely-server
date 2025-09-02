@@ -20,10 +20,26 @@ CDS Hooks is a specification that allows healthcare applications to integrate wi
 
 Firely Server supports the CDS Hooks specification, allowing you to create and manage CDS Hooks services. This feature is particularly useful for organizations that must conform to regulations based on Implementation Guides using CDS Hooks. Examples include Da Vinci Implementation Guides for CDR, DTR and PAS, contributing to the electronic Prior Authorization workflow.
 
-CDS Hooks services are only available in **FHIR R4**. If Firely Server hosts multiple FHIR versions, the CDS Hooks services will only be available for the R4 version. The services are not available for STU3 or R5.
+CDS Hooks services are only available in **FHIR R4**. If Firely Server hosts multiple FHIR versions, the CDS Hooks services will only be available for the R4 version. The services are not available for STU3 or R5. Firely Server will automatically validate the FHIR version and return appropriate error responses for unsupported versions.
 
-The CDS Hooks endpoint is available at the following URL: ``<base-url>/cds-services``. This endpoint returns a list of available CDS Hooks services in the system.
+The CDS Hooks discovery endpoint is available at the following URL: ``<base-url>/cds-services``. This endpoint returns a list of available CDS Hooks services in the system.
 Any registered CDS Hooks service can be invoked by sending a POST request to ``<base-url>/cds-services/{hook service id}``.
+
+Architecture
+------------
+
+Firely Server implements CDS Hooks using a modular architecture that separates URL handling from content processing:
+
+**URL and Operation Handling**
+  The ``CdsHooksOperationAdapterMiddleware`` transforms incoming CDS Hooks requests (e.g., ``/cds-services/patient-view-test``) into custom FHIR operations (e.g., ``/$cds-patient-view-test``). This allows CDS Hooks services to integrate seamlessly with Firely Server's operation framework.
+
+**Content Processing**  
+  The ``CdsHooksContentAdapterService`` handles the transformation of CDS Hooks JSON payloads into FHIR ``CDSHooksRequest`` resources. This service validates that requests are made against FHIR R4 and ensures proper content-type handling.
+
+**Discovery Service**
+  The CDS Hooks discovery endpoint (``/cds-services``) is now implemented as a custom operation ``$cds-discovery``, providing consistent behavior with other system-level operations in Firely Server.
+
+This architecture provides better error handling, clearer separation of concerns, and improved integration with Firely Server's security and validation framework.
 
 Enabling CDS Hooks
 ------------------
@@ -78,11 +94,19 @@ To configure the example service, add the plugin ``Vonk.Plugin.CdsHooks.PatientV
 
 Furthermore, you have to enable the service as a custom operation in the ``Operations`` section of the :ref:`appsettings <disable_interactions>`. 
 The ``Level`` is always ``System``. The example service is registered as a custom operation with the name ``cds-patient-view-test-hook``.
+Additionally, the CDS Hooks discovery endpoint requires its own operation configuration as ``$cds-discovery``.
 See also the :ref:`CDS Hooks operations <cds_hooks_operations>` section for more information on how to configure CDS Hooks services as custom operations.
 
 .. code-block:: JavaScript
 
   "Operations": {
+    "$cds-discovery": {
+      "Name": "$cds-discovery",
+      "Level": [
+        "System"
+      ],
+      "Enabled": true
+    },
     "$cds-patient-view-test-hook": {
       "Name": "$cds-patient-view-test-hook",
       "Level": [
@@ -461,4 +485,25 @@ CDS Hooks operations in Firely Server
 
 CDS Hooks services are not FHIR interactions. To fit them into the Firely Server programming API, they are transformed internally to custom operations on a system level.
 As such, they must be listed in the ``Operations`` section of the :ref:`appsettings <disable_interactions>`. The naming convention for these operations is ``cds-{service-id}``, where ``{service-id}`` is the id of the CDS Hooks service.
-For example, the example service ``patient-view-test-hook`` will be available as a custom operation ``cds-patient-view-test-hook``.
+
+For example:
+
+* The CDS Hooks discovery endpoint (``/cds-services``) is implemented as the custom operation ``$cds-discovery``
+* The example service ``patient-view-test-hook`` will be available as a custom operation ``$cds-patient-view-test-hook``
+
+Error Handling and Validation
+-----------------------------
+
+Firely Server provides comprehensive error handling for CDS Hooks requests:
+
+**FHIR Version Validation**
+  CDS Hooks services are only supported in FHIR R4. Requests to other FHIR versions will receive a ``400 Bad Request`` response with an appropriate error message.
+
+**Content-Type Validation**
+  CDS Hooks requests must use ``application/json`` as the content-type. Invalid content-types will result in a ``400 Bad Request`` response.
+
+**Malformed JSON Handling**
+  Invalid JSON in request bodies will be caught and returned as ``400 Bad Request`` responses with descriptive error messages.
+
+**Missing Service ID**
+  Requests to ``/cds-services`` without a valid service ID will result in appropriate error responses.

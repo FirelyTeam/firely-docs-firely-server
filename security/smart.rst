@@ -146,7 +146,7 @@ Additional advanced configuration can be achieved through the following settings
 Anonymous Access Configuration
 ------------------------------
 
-Firely Server supports anonymous access to specific FHIR resources when properly configured. This feature allows limited, read-only access to non-sensitive resources without requiring authentication tokens.
+Firely Server supports anonymous access to specific FHIR resources when properly configured. This feature allows limited access to non-sensitive resources without requiring authentication tokens.
 
 .. note::
    Anonymous access should be carefully considered from a security perspective. Only enable this feature if you need to provide public access to specific, non-sensitive FHIR resources.
@@ -157,9 +157,10 @@ Configuration
 To enable anonymous access, configure the following settings in your ``SmartAuthorizationOptions``::
 
     "SmartAuthorizationOptions": {
-      "Enabled": true,
+      // ...
       "EnableAnonymousAccess": true,
       "AnonymousScopes": "user/Organization.rs user/Location.rs user/Practitioner.r"
+      // ...
     }
 
 Security Restrictions
@@ -173,7 +174,7 @@ Anonymous access is subject to several important security restrictions:
 * **No sensitive data**: Only resources that do not contain patient-specific or sensitive information should be made available for anonymous access.
 
 Valid Anonymous Scope Examples
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The following are examples of valid anonymous scopes::
 
@@ -187,7 +188,7 @@ The following are examples of valid anonymous scopes::
     "AnonymousScopes": "user/Organization.rs?type=prov user/Location.cruds?status=active"
 
 Invalid Anonymous Scope Examples
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The following scope configurations will result in validation errors::
 
@@ -207,7 +208,7 @@ The following scope configurations will result in validation errors::
     "AnonymousScopes": "system/Organization.r"
 
 Configuration Validation
-^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Firely Server automatically validates the anonymous access configuration on startup. If invalid scopes are configured, you will see validation errors in the server logs and the server will fail to start.
 
@@ -227,9 +228,6 @@ When anonymous access is enabled and a request is made without an authorization 
 2. If a matching scope is found, the request is processed with the permissions defined by that scope
 3. If no matching scope is found, the request is denied with a 403 Forbidden response
 4. If an invalid or expired token is provided, the request is denied with a 401 Unauthorized response (anonymous access only applies when no token is provided)
-
-.. note::
-   Anonymous access uses the same authorization evaluation logic as authenticated access, ensuring consistent behavior and security enforcement.  
 
 Other forms of Authorization
 ----------------------------

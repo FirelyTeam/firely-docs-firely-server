@@ -17,20 +17,15 @@ The sandbox environment is mostly intended for testing and educational purposes,
 
 If you are interested in Firely Server for commercial use within your organization, we provide professional licensing in different tiers: 
 
-.. list-table:: Firely Server Editions
-   :widths: 25 25
+.. list-table::
+   :widths: 25
    :header-rows: 1
 
-   * - Firely Server US 🇺🇸
-     - Firely Server International 🌍
+   * - Firely Server Editions
    * - Firely Essentials
-     - Firely Essentials
    * - Firely Scale
-     - Firely Scale
    * - Firely dQM (Digital Quality Measures)
-     - Firely dQM (Digital Quality Measures)
-   * - Firely Prior Authorization
-     - /
+   * - Firely Prior Authorization (US-only)
 
 For more information and pricing you can also visit the `product site <https://fire.ly/products/firely-server/>`_.
 

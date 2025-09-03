@@ -82,7 +82,7 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 
 	:Purpose: Returns the data requirements (FHIR resource types, value sets, codes) needed by a CQL Library.
 	:Use Case: Critical for data validation, measure packaging, or generating queries to collect required clinical data.
-	:Input: Reference to a Library.
+	:Input: Canonical reference to a Library.
 	:Output: A list of Library resource of type 'module-definition' describing what input is needed for evaluation of the inital Library.
 
 	See `FHIR Core specification - OperationDefinition Library/$data-requirements <https://www.hl7.org/fhir/R4/library-operation-data-requirements.html>`_ on how to execute this operation.
@@ -95,6 +95,15 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 	:Output: A MeasureReport containing the calculated results for numerator, denominator, exclusions, stratifiers, etc.
 
 	See `FHIR Core specification - OperationDefinition Measure/$evaluate-measure <https://www.hl7.org/fhir/R4/measure-operation-evaluate-measure.html>`_ on how to execute this operation.
+
+* Measure/$data-requirements
+
+  	:Purpose: Returns the data requirements (FHIR resource types, value sets, codes) needed by a CQL-based measure, including dependencies from all referenced Libraries.
+    :Use Case: Used to determine what data is necessary to run a measure, support validation against EHR capabilities or generate queries for patient/population data collection.
+    :Input: Canonical reference to a Measure.
+    :Output: A Library resource of type module-definition describing the complete set of data requirements aggregated from the Measure and its dependent Libraries.
+
+    See `Quality Measure Implementation Guide - OperationDefinition Measure Data Requirements <https://hl7.org/fhir/us/cqfmeasures/OperationDefinition-Measure-data-requirements.html>`_ on how to execute this operation.
 
 ----
 

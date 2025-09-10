@@ -20,6 +20,7 @@ Custom Operations
    docref
    member-match
    versions
+   resource-count
    qualitymeasures
 
 The FHIR Specification `operations framework`_ allows for the definition of custom operations and defines how to offer them in the `FHIR RESTful API`_. Firely Server offers various custom operations out of the box, next to :ref:`$export (Bulk Data Export) <feature_bulkdataexport>`, as well as its :ref:`terminology operations <feature_terminology>`:
@@ -36,6 +37,7 @@ The FHIR Specification `operations framework`_ allows for the definition of cust
 #. :ref:`feature_docref`
 #. :ref:`member-match`
 #. :ref:`versions`
+#. :ref:`resource-count`
 #. :ref:`feature_qualitymeasures`
 
 

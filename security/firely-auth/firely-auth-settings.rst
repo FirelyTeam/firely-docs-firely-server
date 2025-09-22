@@ -264,6 +264,19 @@ Key management
       }
   }
 
+An example of a JWK of type RSA is given below, note that FA expects the JWK to be in a single line without line breaks:
+
+.. code-block:: json
+
+  "JWK": "{'p':'1q7jFmm4ZQh1qW_hfuNmHYaf_7sl16REw2ls8NPY9SKpYiV-3Bx4Vc_woCZFA3c07ARwzRhCr-nnq8EC9p9_EFBxCA-SvAySoA_Xt4e4fyJiFDjLLqRp41Y-WuPzWg4iebjw2nizQ1QiImKPFSpeJb2k0gSJM3qSYEg_a1IYMjE','kty':'RSA','q':'vh232cG5NWodz2V0eVlHXCPUiES7EkvlNO4IxS7x-y3rJVIiHhsHUAveZ2tGZ70sIhLj7hxvh1cOTfDoYNIF-6BUE2tRZ890C3sMSUIJgjOkjfyO8H9QaYa8HH_aQeSgVPU68Ohwvz_uK_fjwOSuKDfJe44osz16VbeOiCStEtk','d':'l3hh6REGUDzsjpPdbFQQ-AKdb-xmv940HoihLcrKFl40Dn4v1hmhcmvp368Q5KjI-8JT0erqGGwGo7eM6uAwfldsfurkoMnaJ42-LWH6lx620eIoBoVQtEd0RpVCusjkL2KBk8V3yyx-EIvfJYmqe-pvgP-FsK4VJSit-k7CPdu6fMZWWapkzGWy0pcuUWMmnxpjxZXYj2S9gOSedwu7jdyyZpQGpMxCL_ytW9zuTzSv-90EmZlg-Tr_hECNSPm09gC3596e29qCp2Um0DdI4Si1Io1toAP6gY9dsa_ZPnaQcF36p-wQz-6-xzwBFSX6vexWQCCdUEqPQrSta4DcAQ','e':'AQAB','use':'enc','qi':'PnkjwEMZj_SkuRgbMpYjNomGP0_DC6wwsGQFwSZ5nlhFeaIxQ4I9qgHM8HYItpxBWK0Nzs8GHwqQXi7ZIu2x3yU4SqPVZ1J9-F9IwLwBOM1gzOcM-s5GpJRVIJI4GXaDQhGO9hrTCF3u2wtFPlS8cFICvg1_C5GnWfmjrM_z3v8','dp':'IFTqYl-9o4monsH4xfFdWakCw7LduiJFMODZxVNCY3i65csb1e57uQC-DoB0-Falo73vdxPmRzQE7fr9hUL0EfLrcvlVcfi6xFxecoeAI7V76-u5veaJA_HjJjEaXz-ttYNC0sRGyycKlP8e6WMeFrT-85o3R4d4MAPxeSo99qE','alg':'RS256','dq':'Gvyu92tHdiydFK6rLPqeZZb0eW-AOqWpYK0Vc6ApW2V2RrL1At8FV7iHlpikwt8Yn7Gcx1UkA8s4zZmP8wZ9MO3eYW9Pe_P33hVWdiO4o9He3wTl6X-5E3G7zDPd8JKaq9SvzDjCoHNbxMQIgX40tqLMqAxS_LaSYg6PXgYOx2k','n':'n264h_0JgtNaI5dSERwtcN4tI3chTfEmLKd8ZE38plZJRS54RYHbRqyrN_yEC2ulf9UsMRHo7GN2T-us28YXN0Iw1o2l_TsWJGlHUrl6oGuuO4GJjtcDXI8umaVSVFFOJytSrxTNcoPviq51fyoij0x0nfHAlazOgrRky0Kohpe8TgoYAI4uKVXcmLlGZCeBXzO2aQqlemYVkrUXc-KZUkqnhIyKOORcEORdneN66UQCBZ9mAmVKo1Mpe_nzuHbLu9Y8TxKcjRckl_secjDjq0n9ZiRHID9s49xNGEXGxFlqjVaRFfoK6qJXlnSUrH_J4TLJCSr_83PTfgcvGSb9iQ'}"
+  
+
+An example of a JWK of type EC is given below, again note that FA expects the JWK to be in a single line without line breaks:
+
+.. code-block:: json
+
+  "JWK_ES256": "{'kty':'EC','d':'4XOQhdFyfOcO1xU5aMw9C1xp2y-LR0oUOKdA0RYNDHI','crv':'P-256','kid':'0R1Uwr8frGfVmi21KD9j-rXyxnsNeaRg2P_9LlrOteI','x':'7DJRyu_KtFzzKIQ6sYON6Lso5dk5-ZkRD66qLxvGbzc','y':'mgkWUd-4uZO5VsNSb8S9prp_YB78q6YlaFHXTBu_73U','alg':'ES256'}"
+
 Firely Auth can work with multiple signature keys, used to sign access and other tokens. 
 
 - ``RSA``: defines the RSA algorithms that are supported. In the config above all available algorithms are listed.

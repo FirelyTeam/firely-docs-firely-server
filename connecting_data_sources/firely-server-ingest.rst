@@ -142,7 +142,7 @@ If you want to specify input parameters in the file, you can use the snippet bel
           "updateExistingResources": true,
           "haltOnError": false,
           "recoveryJournalDirectory": null,
-
+          "extraParameters": null, //path to a ndjson file with custom search parameters to index on load
           "absoluteUrlConversion": {
               "baseEndpoints": [
                   // "http://localhost:4080/R4"
@@ -277,6 +277,13 @@ General
   * **Required**: No
   * **Default**: null
   * **Description**: A directory containing the recovery journal. See :ref:`Recovery Journal<tool_fsi_recovery>`.
+
+* ``--extraParameters <Extra Parameters ndjson file>``: 
+
+  * **Config**: extraParameters
+  * **Required**: No
+  * **Default**: null
+  * **Description**: A file containing additional parameters to be indexed on load directly into SQL or MongoDB target database. See :ref:`Custom Search Parameters <custom_search_parameters>`.
 
 * ``--urlConvBases:index url``: 
 
@@ -656,6 +663,36 @@ If the ingestion procedure gets interrupted at any point, or some of the resourc
 .. note::
   
   Please do not use the source directory or any subdirectories within the source directory as the recovery journal directory.
+
+.. _custom_search_parameters:
+
+Custom Search Parameters
+------------------------
+
+.. important:: FSI only indexes the **Core FHIR Search Parameters** by default when the target is a database. FSI does not automatically recognize custom search parameters added to Firely Server.
+
+If your Firely Server already has data and implemented :ref:`Custom Search Parameters <feature_customsp>`, you can configure FSI to index these parameters at load time. This avoids the need for an administrative reindex after loading resources with FSI.
+
+Use the ``--extraParameters`` option to specify a path to an ``.ndjson`` file containing the custom search parameters to be indexed at load time.
+
+**Example NDJSON file** (extraSearchParameters.ndjson)
+
+.. code-block:: json
+
+  {"resourceType":"SearchParameter","url":"http://example.org/fhir/SearchParameter/Patient-example","name":"example","description":"example description","status":"active","code":"example","base":["Patient"],"type":"string","expression":"Patient.name"}
+
+
+**Example Command** 
+Executing FSI with custom search parameters in ``extraSearchParameters.ndjson`` located in the current directory:
+
+.. code-block:: bash
+
+  fsi -f "<FhirVersion>" -s "<PathToData>" --extraParameters ".\extraSearchParameters.json" --dbType  "<DB Type>" -c "<DB connection string>" --license "<path to license>"
+
+.. note::
+
+  * Custom search parameters that are derived from **Core FHIR Search Parameters** will be ignored. (ex. `derivedFrom.StartsWith("http://hl7.org/fhir")`)
+  * If the target is PubSub, the ``--extraParameters`` option will be ignored, as PubSub will index all the search parameters already loaded to Firely Server.
 
 Monitoring
 ----------

@@ -283,7 +283,7 @@ General
   * **Config**: extraParameters
   * **Required**: No
   * **Default**: null
-  * **Description**: A file containing additional parameters to be indexed on load directly into SQL or MongoDB target database. See :ref:`Custom Search Parameters <custom_search_parameters>`.
+  * **Description**: A file containing additional search parameters to be indexed on load directly into SQL or MongoDB target database. See :ref:`Custom Search Parameters <custom_search_parameters>`.
 
 * ``--urlConvBases:index url``: 
 

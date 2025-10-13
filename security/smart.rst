@@ -66,6 +66,7 @@ You can control the way Access Control based on `SMART on FHIR <https://fire.ly/
     "SmartAuthorizationOptions": {
       "Enabled": true,
       //"ClockSkew": "00:05:00",
+      "EnforceAccessPolicies": true,
       "PatientFilter": "identifier=#patient#", //Filter on a Patient compartment if a 'patient' launch scope is in the auth token, for the Patient that has an identifier matching the value of that 'patient' launch scope
       "Authority": "https://example.org/base-url-to-your-identity-provider",
     //"AdditionalBaseEndpointsInDiscoveryDocument": ["additional-url-to-your-identity-provider"],
@@ -120,6 +121,7 @@ To enable SMART on FHIR in Firely Server, the following core settings must be co
 
 Additional advanced configuration can be achieved through the following settings:
 
+* EnforceAccessPolicies: Global flag that controls whether ``AccessPolicies`` are enforced for all matching ``fhirUsers``. See :ref:`feature_accesscontrol_permissions` for more details.
 * ClockSkew: Allow potential time discrepancies between the authorization server and the FHIR server, allowing for a small tolerance window when checking token expiration and validity times. Defaults to 5 minutes.
 * AdditionalBaseEndpointsInDiscoveryDocument: Optional configuration setting. Add additional base authority endpoints that your identity provider also uses for operations that are listed in the .well-known document. 
 * AdditionalIssuersInToken: Optional configuration setting. The additional issuer setting will extend the list of issuer urls that are valid within the issuer claim in the token passed to Firely Server. The token validation will be adjusted accordingly. Please note that it does not influence which issuer urls are allowed in the .well-known/openid-configuration document of the authorization server.

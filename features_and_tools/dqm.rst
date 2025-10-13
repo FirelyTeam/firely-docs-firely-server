@@ -98,7 +98,7 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 
 * Measure/$data-requirements
 
-  	:Purpose: Returns the data requirements (FHIR resource types, value sets, codes) needed by a CQL-based measure, including dependencies from all referenced Libraries.
+    :Purpose: Returns the data requirements (FHIR resource types, value sets, codes) needed by a CQL-based measure, including dependencies from all referenced Libraries.
     :Use Case: Used to determine what data is necessary to run a measure, support validation against EHR capabilities or generate queries for patient/population data collection.
     :Input: Canonical reference to a Measure.
     :Output: A Library resource of type module-definition describing the complete set of data requirements aggregated from the Measure and its dependent Libraries.

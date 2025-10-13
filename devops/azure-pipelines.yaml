@@ -1,0 +1,139 @@
+# Azure Pipelines configuration for Firely Server Documentation
+# This pipeline builds the documentation using Sphinx and fails if there are any warnings or errors
+
+trigger:
+  branches:
+    include:
+    - main
+    - develop
+    # - feature/*
+
+pr:
+  branches:
+    include:
+    - main
+    - develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  pythonVersion: '3.9'
+
+stages:
+- stage: Build
+  displayName: 'Build Documentation'
+  jobs:
+  - job: SphinxBuild
+    displayName: 'Build with Sphinx'
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Set Python version'
+      inputs:
+        versionSpec: '$(pythonVersion)'
+        addToPath: true
+
+    - script: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+      displayName: 'Install dependencies'
+
+    - script: |
+        # Build with Sphinx and treat warnings as errors
+        # -W: turn warnings into errors
+        # -T: show full traceback on exception
+        # --keep-going: continue building when warnings are encountered
+        echo "Building documentation with Sphinx..."
+        sphinx-build -W -T --keep-going -b html . ./_build/html 2>&1 | tee sphinx-build.log
+        
+        # Check exit code
+        exit_code=$?
+        
+        if [ $exit_code -eq 0 ]; then
+          echo "✅ Documentation built successfully with no warnings or errors!"
+        else
+          echo "❌ Documentation build failed with warnings or errors:"
+          echo "Full build log:"
+          cat sphinx-build.log
+          exit $exit_code
+        fi
+      displayName: 'Build documentation with Sphinx'
+      failOnStderr: false
+
+    - script: |
+        # Additional check for common documentation issues
+        echo "Checking for broken internal references..."
+        
+        # Look for common warning patterns in the log
+        if grep -i "WARNING\|ERROR" sphinx-build.log; then
+          echo "❌ Found warnings or errors in build log"
+          exit 1
+        fi
+        
+        # Check if _build directory was created and contains files
+        if [ ! -d "_build/html" ] || [ -z "$(ls -A _build/html)" ]; then
+          echo "❌ Build output directory is empty or missing"
+          exit 1
+        fi
+        
+        echo "✅ Additional checks passed"
+      displayName: 'Additional validation checks'
+      condition: succeededOrFailed()
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish build artifacts'
+      inputs:
+        pathToPublish: '_build/html'
+        artifactName: 'documentation'
+        publishLocation: 'Container'
+      condition: succeeded()
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish build log'
+      inputs:
+        pathToPublish: 'sphinx-build.log'
+        artifactName: 'build-log'
+        publishLocation: 'Container'
+      condition: always()
+
+- stage: Validate
+  displayName: 'Validate Documentation'
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - job: LinkCheck
+    displayName: 'Check External Links'
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Set Python version'
+      inputs:
+        versionSpec: '$(pythonVersion)'
+        addToPath: true
+
+    - script: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+      displayName: 'Install dependencies'
+
+    - script: |
+        # Run linkcheck builder to validate external links
+        echo "Checking external links..."
+        sphinx-build -b linkcheck . ./_build/linkcheck 2>&1 | tee linkcheck.log
+        
+        # Check for broken links
+        if grep -i "broken\|redirect" linkcheck.log; then
+          echo "⚠️  Found broken or redirected links - please review"
+          # Don't fail the build for link issues, just warn
+        fi
+        
+        echo "✅ Link check completed"
+      displayName: 'Check external links'
+      continueOnError: true
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish link check results'
+      inputs:
+        pathToPublish: 'linkcheck.log'
+        artifactName: 'linkcheck-log'
+        publishLocation: 'Container'
+      condition: always()

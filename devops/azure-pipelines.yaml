@@ -31,4 +31,4 @@ stages:
   jobs:
   - template: buildDocumentation.yml@templates
     parameters:
-      pythonVersion: '3.9.23'
+      pythonVersion: '3.9'

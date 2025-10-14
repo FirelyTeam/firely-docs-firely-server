@@ -26,6 +26,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 stages:
-- template: buildDocumentation.yaml@templates
+- template: buildDocumentation.yml@templates
   parameters:
     pythonVersion: '3.9'

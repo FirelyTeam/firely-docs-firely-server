@@ -112,7 +112,20 @@ Firely Server supports the following parameters:
 |                         |           |                         | This is a proprietary          |
 |                         |           |                         | parameter of Firely Server.    |
 +-------------------------+-----------+-------------------------+--------------------------------+
-| ``useServerData``       | ❌        | ``boolean``             |                                |
+| ``useServerData``       | ✅        | ``boolean``             | When ``true``, claims and      |
+|                         |           |                         | clinical data are retrieved    |
+|                         |           |                         | from the Firely Server         |
+|                         |           |                         | database where the operation   |
+|                         |           |                         | is executed.                   |
+|                         |           |                         |                                |
+|                         |           |                         | When ``false``, claims and     |
+|                         |           |                         | clinical data are retrieved    |
+|                         |           |                         | from the ``dataEndpoint``      |
+|                         |           |                         | parameter.                     |
+|                         |           |                         |                                |
+|                         |           |                         | In both cases, any data passed |
+|                         |           |                         | via the ``data`` parameter     |
+|                         |           |                         | takes precedence.              |
 +-------------------------+-----------+-------------------------+--------------------------------+
 | ``data``                | ✅        | ``Bundle``              | Inline FHIR data bundle to use |
 |                         |           |                         | as the data context during     |
@@ -123,9 +136,23 @@ Firely Server supports the following parameters:
 |                         |           |                         | ``searchset`` (as the output   |
 |                         |           |                         | of a $everything operation).   |
 +-------------------------+-----------+-------------------------+--------------------------------+
-| ``prefetchData``        | ❌        | Complex                 |                                |
+| ``dataEndpoint``        | ✅        | ``Endpoint`` resource   | Used only when                 |
+|                         |           |                         | ``useServerData`` is ``false``.|
+|                         |           |                         | Defines the external FHIR      |
+|                         |           |                         | endpoint from which claims and |
+|                         |           |                         | clinical data are retrieved.   |
+|                         |           |                         |                                |
+|                         |           |                         | The endpoint must be           |
+|                         |           |                         | pre-registered in              |
+|                         |           |                         | ``LibraryEvaluateOperation``   |
+|                         |           |                         | via the ``DataEndpoint``       |
+|                         |           |                         | option.                        |
+|                         |           |                         | See :ref:`dqm_appsettings`.    |
+|                         |           |                         | Data supplied via the ``data`` |
+|                         |           |                         | parameter always takes         |
+|                         |           |                         | precedence.                    |
 +-------------------------+-----------+-------------------------+--------------------------------+
-| ``dataEndpoint``        | ❌        | ``Endpoint`` resource   |                                |
+| ``prefetchData``        | ❌        | Complex                 |                                |
 +-------------------------+-----------+-------------------------+--------------------------------+
 | ``contentEndpoint``     | ❌        | ``Endpoint`` resource   |                                |
 +-------------------------+-----------+-------------------------+--------------------------------+

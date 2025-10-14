@@ -105,6 +105,15 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 
     See `Quality Measure Implementation Guide - OperationDefinition Measure Data Requirements <https://hl7.org/fhir/us/cqfmeasures/OperationDefinition-Measure-data-requirements.html>`_ on how to execute this operation.
 
+* $cql
+
+	:Purpose: Executes Clinical Quality Language (CQL) expressions dynamically.
+	:Use Case: Useful for ad hoc evaluation of CQL expressions, such as testing logic during measure development or decision support prototyping.
+	:Input: A CQL expression and the relevant data context (e.g., patient data).
+	:Output: The evaluated result of the expression (e.g., Boolean, date, quantity) encoded in a FHIR Parameters resource.
+
+	See `Using CQL with FHR - OperationDefinition $cql <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_ on how to execute this operation.
+
 ----
 
 FHIR Measures

@@ -25,6 +25,9 @@ For the preperation of the execution data-requirements can be gathered using the
 
 * ``Measure/$data-requirements`` functions identically, but aggregates the data requirements across all libraries referenced by the measure, providing a complete picture of the inputs needed for measure evaluation.
 
+* ``$cql`` allows direct execution of CQL expressions, either inline or from referenced libraries. It is useful for rapid testing or prototyping when measure logic needs to be validated independently of a ``Measure`` resource.
+
+
 ----
 
 .. _feature_library_evaluate:
@@ -140,7 +143,7 @@ The ``Library/$evaluate`` operation is supported as a ``POST`` request on both t
 Additionally, the instance-level operation may also be invoked using ``GET``.
 
 Example: Type-Level Library/$evaluate Invocation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This example evaluates the ``bp-check-logic`` library (version 1.0.0) against a specific patient
 and a defined measurement period using a ``POST`` request to the type-level operation.
@@ -184,6 +187,8 @@ and a defined measurement period using a ``POST`` request to the type-level oper
        }
      ]
    }
+
+**Response Body**
 
 Given matching input data, specifically, a ``Patient`` resource and an ``Observation`` with a ``code`` of ``8480-6`` from the LOINC CodeSystem, and an ``effectiveDateTime`` that falls within the measurement period — the following output will be returned:
 
@@ -232,3 +237,102 @@ Given matching input data, specifically, a ``Patient`` resource and an ``Observa
         }
       ]
     }
+
+.. _feature_cql_operation:
+
+$cql
+----
+
+Firely Server's implementation of ``$cql`` is based on version 2.0.0 of the 
+`Using CQL with FHIR Implementation Guide <https://build.fhir.org/ig/HL7/cql-ig/>`_. For the formal specification of this operation, refer to the 
+`$cql OperationDefinition <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_.
+
+Supported parameters
+^^^^^^^^^^^^^^^^^^^^
+
+Firely Server supports the following parameters:
+
++-------------------------+-----------+-------------------------+--------------------------------+
+| Parameter               | Supported | Type                    | Additional Notes               |
++=========================+===========+=========================+================================+
+| ``expression``          | ✅        | ``string``              | Specifies an inline CQL        |
+|                         |           |                         | expression to be executed.     |
+|                         |           |                         | Only a single statement is     |
+|                         |           |                         | supported per request. It      |
+|                         |           |                         | cannot operate within a        |
+|                         |           |                         | context (e.g., Patient) and    |
+|                         |           |                         | will not execute correctly if  |
+|                         |           |                         | input parameters are needed.   |
++-------------------------+-----------+-------------------------+--------------------------------+
+| ``subject``             | ❌        | ``string``              |                                |
++-------------------------+-----------+-------------------------+--------------------------------+
+| ``parameters``          | ❌        | ``Parameters`` resource |                                |
++-------------------------+-----------+-------------------------+--------------------------------+
+| ``library``             | ❌        | Complex                 |                                |
++-------------------------+-----------+-------------------------+--------------------------------+
+| ``useServerData``       | ❌        | ``boolean``             |                                |
++-------------------------+-----------+-------------------------+--------------------------------+
+| ``data``                | ❌        | ``Bundle``              |                                |
++-------------------------+-----------+-------------------------+--------------------------------+
+| ``prefetchData``        | ❌        | Complex                 |                                |
++-------------------------+-----------+-------------------------+--------------------------------+
+| ``dataEndpoint``        | ❌        | ``Endpoint`` resource   |                                |
++-------------------------+-----------+-------------------------+--------------------------------+
+| ``contentEndpoint``     | ❌        | ``Endpoint`` resource   |                                |
++-------------------------+-----------+-------------------------+--------------------------------+
+| ``terminologyEndpoint`` | ❌        | ``Endpoint`` resource   |                                |
++-------------------------+-----------+-------------------------+--------------------------------+
+| ``raw``                 | ✅        | ``boolean``             | Return the execution results as|
+|                         |           |                         | a string without mapping the   |
+|                         |           |                         | CQL result data types back to  |
+|                         |           |                         | FHIR.                          |
+|                         |           |                         |                                |
+|                         |           |                         | This is a proprietary          |
+|                         |           |                         | parameter of Firely Server.    |
++-------------------------+-----------+-------------------------+--------------------------------+
+
+Example: System-Level $cql Invocation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This examples demonstrates a simple calculation executed via the dQM engine.
+
+**Request**
+
+.. code-block:: http
+
+   POST [base]/$cql HTTP/1.1
+   Content-Type: application/fhir+json
+
+**Request Body**
+
+.. code-block:: json
+
+   {
+    "resourceType": "Parameters",
+    "parameter": [
+        {
+            "name": "expression",
+            "valueString": "'Hello'&' '&'World'"
+        }
+    ]
+  }
+
+**Response Body**
+
+.. code-block:: json
+
+   {
+    "resourceType": "Parameters",
+    "parameter": [
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/cqf-cqlType",
+                    "valueString": "String"
+                }
+            ],
+            "name": "return",
+            "valueString": "Hello World"
+        }
+    ]
+  }

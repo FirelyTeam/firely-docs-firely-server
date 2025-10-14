@@ -14,84 +14,21 @@ pr:
     - main
     - develop
 
+resources:
+  repositories:
+  - repository: templates
+    type: github
+    name: FirelyTeam/azure-pipeline-templates
+    endpoint: FirelyTeam
+    ref: feature/add-documentation-build-template  
+
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  pythonVersion: '3.9'
-
 stages:
-- stage: Build
+- stage: BuildDocumentation
   displayName: 'Build Documentation'
   jobs:
-  - job: SphinxBuild
-    displayName: 'Build with Sphinx'
-    steps:
-    - task: UsePythonVersion@0
-      displayName: 'Set Python version'
-      inputs:
-        versionSpec: '$(pythonVersion)'
-        addToPath: true
-
-    - script: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-      displayName: 'Install dependencies'
-
-    - script: |
-        # Build with Sphinx and treat warnings as errors
-        # -W: turn warnings into errors
-        # -T: show full traceback on exception
-        # --keep-going: continue building when warnings are encountered
-        echo "Building documentation with Sphinx..."
-        sphinx-build -W -T --keep-going -b html . ./_build/html 2>&1 | tee sphinx-build.log
-        
-        # Check exit code
-        exit_code=$?
-        
-        if [ $exit_code -eq 0 ]; then
-          echo "✅ Documentation built successfully with no warnings or errors!"
-        else
-          echo "❌ Documentation build failed with warnings or errors:"
-          echo "Full build log:"
-          cat sphinx-build.log
-          exit $exit_code
-        fi
-      displayName: 'Build documentation with Sphinx'
-      failOnStderr: false
-
-    - script: |
-        # Additional check for common documentation issues
-        echo "Checking for broken internal references..."
-        
-        # Look for common warning patterns in the log
-        if grep -i "WARNING\|ERROR" sphinx-build.log; then
-          echo "❌ Found warnings or errors in build log"
-          exit 1
-        fi
-        
-        # Check if _build directory was created and contains files
-        if [ ! -d "_build/html" ] || [ -z "$(ls -A _build/html)" ]; then
-          echo "❌ Build output directory is empty or missing"
-          exit 1
-        fi
-        
-        echo "✅ Additional checks passed"
-      displayName: 'Additional validation checks'
-      condition: succeededOrFailed()
-
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish build artifacts'
-      inputs:
-        pathToPublish: '_build/html'
-        artifactName: 'documentation'
-        publishLocation: 'Container'
-      condition: succeeded()
-
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish build log'
-      inputs:
-        pathToPublish: 'sphinx-build.log'
-        artifactName: 'build-log'
-        publishLocation: 'Container'
-      condition: always()
+  - template: buildDocumentation.yml@templates
+    parameters:
+      pythonVersion: '3.9'

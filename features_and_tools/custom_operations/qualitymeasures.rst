@@ -19,7 +19,11 @@ FHIR provides several mechanisms for executing dQMs, either in full or in part. 
 
 * ``Measure/$measure-evaluate`` is the primary operation for executing a digital quality measure (dQM) as a whole. This operation evaluates a ``Measure`` resource against a specified subject (such as a patient, group) using the measurement period and any associated ``Library`` parameters. ``Measure/$evaluate-measure`` is typically used in production or formal testing scenarios to generate actual measure scores. It is also suitable for automated execution in quality reporting workflows. Unlike ``Library/$evaluate``, which targets specific expressions, ``Measure/$evaluate-measure`` executes the full population logic and scoring methodology defined in the measure, making it the most comprehensive method for end-to-end dQM evaluation.
 
+For the preperation of the execution data-requirements can be gathered using the following operations:
+
 * ``Library/$data-requirements`` retrieves a structured representation of the data required to evaluate a measure, making it a supporting operation for both ``Library/$evaluate`` and ``Measure/$evaluate-measure``. This operation identifies the necessary FHIR data types and elements, including value sets, code filters, and date constraints. It returns a ``Library`` resource containing ``DataRequirement`` elements, which describe the expected inputs for measure evaluation. This operation is particularly useful during implementation, data mapping, and integration planning, as it helps clarify what data must be available for successful execution of a digital quality measure.
+
+* ``Measure/$data-requirements`` functions identically, but aggregates the data requirements across all libraries referenced by the measure, providing a complete picture of the inputs needed for measure evaluation.
 
 * ``$cql`` allows direct execution of CQL expressions, either inline or from referenced libraries. It is useful for rapid testing or prototyping when measure logic needs to be validated independently of a ``Measure`` resource.
 

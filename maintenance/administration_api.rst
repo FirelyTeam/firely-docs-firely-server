@@ -51,9 +51,11 @@ You can configure the Administration API, including restricting access to functi
 
 Choosing your storage
 ---------------------
-The Administration API uses a database separately from the main 'Firely Server Data' database. Historically, SQL Server, MongoDB and Memory are supported as databases for the Administration API.
-|br| As of Firely Server (Vonk) version 0.7.1, SQLite is advised for this, and we have made that the default configuration. See :ref:`configure_sqlite` on how to configure for this.
+The Administration API uses its own database, separate from the main **Firely Server Data** database. It supports SQLite, SQL Server, MongoDB, and in-memory storage as database options.
 
+.. note::
+
+   SQLite is recommended in most deployments and is the default configuration. However, note that SQLite has limitations in auto-scaling environments like Kubernetes and Azure Web Apps. For details on configuration, see :ref:`sqlite_admin_reasons` on how to configure for this.
 
 #. ``Repository``: Choose which type of repository you want. Valid values are:
 

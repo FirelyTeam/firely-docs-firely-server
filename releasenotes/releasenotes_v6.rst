@@ -8,6 +8,21 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_6_5_0:
+
+Release 6.5.0, TBD, 2025
+--------------------------------
+
+Features
+^^^^^^^^
+
+#. We migrated to Firely .NET SDK v6.0.1. 
+
+Known behavioral changes
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+#. You may encounter issues ingesting same resources if they contain elements unknown to the StructureDefinition. Previous versions of SDK would discard unknown elements, but as we try to keep unknown data whenever possible, the new SDK will now report these as validation issues.
+
 .. _vonk_releasenotes_6_4_0:
 
 Release 6.4.0, August 26th, 2025

@@ -8,6 +8,31 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+
+.. _vonk_releasenotes_6_5_0:
+
+Release 6.5.0, October 31st, 2025
+---------------------------------
+
+Improvements
+^^^^^^^^^^^^
+
+#. We improved the behavior of the ``$purge`` operation with regard to Group resources. Purged Patient references are now removed without deleting the entire Group.
+#. We updated the MassTransit libraries to enhance SASL authentication with Kafka, improving message passing security.
+
+
+Features
+^^^^^^^^
+
+#. We have implemented a configurable file retention period for Bulk Data Export task files. You can now specify how long the exported files should be retained before they are automatically deleted. For more information see :ref:`feature_bulkdataexport_configuration`.
+#. We introduced SSL configuration support for RabbitMQ in Firely Server PubSub. You can now configure SSL settings to secure the connection between Firely Server and RabbitMQ. For more information see :ref:`pubsub_configuration_rabbitmq`.
+#. To support quick and easy debugging, we introduced Serilog Log Level hot reloading capabilities. You can now change the log level of Serilog at runtime without restarting Firely Server. For more information see :ref:`hot_reload_log_level`.
+
+Programming API changes and plugins
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+#. We upgraded the Firely .NET SDK to v6.0.1. For those implementing custom plugins or facades, we recommend updating these to use the .NET SDK v6.1.0 when upgrading to this verions of Firely Server. Please check out the release notes `here <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v6.0.1>`_ for more information.
+
 .. _vonk_releasenotes_6_4_0:
 
 Release 6.4.0, August 26th, 2025

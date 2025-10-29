@@ -31,7 +31,13 @@ Features
 Programming API changes and plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. We upgraded the Firely .NET SDK to v6.0.1. For those implementing custom plugins or facades, we recommend updating these to use the .NET SDK v6.1.0 when upgrading to this verions of Firely Server. Please check out the release notes `here <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v6.0.1>`_ for more information.
+#. We upgraded the Firely .NET SDK to v6.0.1. For those implementing custom plugins or facades, we recommend updating these to use the .NET SDK v6.0.1 when upgrading to this version of Firely Server. Please check out the release notes `here <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v6.0.1>`_ for more information.
+#. It is likely all custom plugins need to be recompiled against new version of `Vonk.Core` package due to SDK changes
+
+Known behavioral changes
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+#. You may encounter issues ingesting same resources if they contain elements unknown to the StructureDefinition. Previous versions of SDK would discard unknown elements, but as we try to keep unknown data whenever possible, the new SDK will now report these as validation issues.
 
 .. _vonk_releasenotes_6_4_0:
 

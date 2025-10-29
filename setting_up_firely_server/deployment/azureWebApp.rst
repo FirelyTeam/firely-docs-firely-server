@@ -62,7 +62,7 @@ Deployment
          --type zip
 
 
-   Please make sure that after you have uploaded the .zip file, all content is extracted into the top-level webroot directory.
+   After deploying the .zip file using the Azure CLI, verify that all content has been extracted into the top-level webroot directory.
    
    .. image:: ../../images/Azure_03_WebRoot.png
       :align: center

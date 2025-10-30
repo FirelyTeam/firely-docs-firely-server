@@ -20,7 +20,7 @@ resources:
     type: github
     name: FirelyTeam/azure-pipeline-templates
     endpoint: FirelyTeam
-    ref: feature/add-documentation-build-template  
+    ref: refs/tags/v1
 
 pool:
   vmImage: 'ubuntu-latest'

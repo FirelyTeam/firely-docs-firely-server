@@ -5,6 +5,7 @@ Firely Server deployment on Azure App Service
 
 In this section we explain how you can deploy Firely Server in the Azure cloud. 
 
+
 Getting started
 ---------------
 
@@ -50,4 +51,12 @@ with the settings for either :ref:`SQL Server<configure_sql>` or :ref:`MongoDB<c
 More information
 ----------------
 About Azure zip deployment: https://docs.microsoft.com/en-us/azure/app-service/app-service-deploy-zip#deploy-zip-file
+
+.. important::
+
+   * We recommend using either SQL Server or MongoDB as both the data and administration repositories when deploying Firely Server as an Azure Web App in Production due to autoscaling and file handling. See :ref:`Database configuration<configure_db_vonk>` for details on configuring these databases.
+
+   * It's important to configure `Azure App Service Health Checks <https://learn.microsoft.com/en-us/azure/app-service/monitor-instances-health-check?tabs=dotnet#enable-health-check>`_ to target the /$liveness endpoint. This ensures the app has enough time to load conformance resources and start properly. Otherwise, Azure may automatically restart the app before initialization completes. See :ref:`$Liveness <feature_healthcheck>` for more information.
+  
+
 

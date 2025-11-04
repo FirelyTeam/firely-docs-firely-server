@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - FamilyMemberHistory",
-    "version": "6.4.0+efc2472f6ac82bd5cb558dbd09c1fa8864f24065"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1809,7 +1809,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "ok | transient-error | fatal-error",
+        "description": "The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1818,7 +1818,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The date of the measure report",
+        "description": "The evidence variable publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1827,7 +1827,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1854,7 +1854,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The identity of a patient to search for individual measure report results for",
+        "description": "The reference to the patient",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1863,7 +1863,7 @@
       "relationship": {
         "name": "relationship",
         "in": "query",
-        "description": "Combination of relation and relatesTo",
+        "description": "The relationship between the patient and the relatedperson",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1880,7 +1880,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The status of the measure report",
+        "description": "The current status of the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"

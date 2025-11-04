@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Provenance",
-    "version": "6.4.0+efc2472f6ac82bd5cb558dbd09c1fa8864f24065"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1822,7 +1822,8 @@
       "agent": {
         "name": "agent",
         "in": "query",
-        "description": "Who participated",
+        "description": "Identifier of who",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1830,7 +1831,8 @@
       "agent-role": {
         "name": "agent-role",
         "in": "query",
-        "description": "What the agents role was",
+        "description": "Agent role in the event",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1846,7 +1848,8 @@
       "entity": {
         "name": "entity",
         "in": "query",
-        "description": "Identity of entity",
+        "description": "Specific instance of resource",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1854,7 +1857,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "This location is listed in the participants of the appointment",
+        "description": "Location where adverse event occurred",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1863,7 +1866,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The identity of a patient to search for individual measure report results for",
+        "description": "The reference to the patient",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1888,7 +1891,7 @@
       "target": {
         "name": "target",
         "in": "query",
-        "description": "Particular delivery destination within the destination",
+        "description": "The target value set which provides context for the mappings",
         "style": "form",
         "schema": {
           "type": "string"

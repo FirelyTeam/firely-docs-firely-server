@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Specimen",
-    "version": "6.4.0+efc2472f6ac82bd5cb558dbd09c1fa8864f24065"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1856,7 +1856,8 @@
       "bodysite": {
         "name": "bodysite",
         "in": "query",
-        "description": "The code for the body site from where the specimen originated",
+        "description": "The body site studied",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1897,7 +1898,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1906,7 +1907,7 @@
       "parent": {
         "name": "parent",
         "in": "query",
-        "description": "A resource that is the parent of the definition",
+        "description": "The parent DeviceDefinition resource",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1915,7 +1916,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The identity of a patient to search for individual measure report results for",
+        "description": "The reference to the patient",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1924,7 +1925,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The status of the measure report",
+        "description": "The current status of the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1933,7 +1934,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "The identity of a subject to search for individual measure report results for",
+        "description": "Who this goal is intended for",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1942,7 +1943,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "The type of collected specimen",
+        "description": "Amino Acid Sequence/ DNA Sequence / RNA Sequence",
         "style": "form",
         "schema": {
           "type": "string"

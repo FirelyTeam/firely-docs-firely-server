@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MessageHeader",
-    "version": "6.4.0+efc2472f6ac82bd5cb558dbd09c1fa8864f24065"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1874,7 +1874,8 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "The source of the decision",
+        "description": "Who and/or what authored the composition",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1882,7 +1883,8 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "ok | transient-error | fatal-error",
+        "description": "The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1890,7 +1892,8 @@
       "destination": {
         "name": "destination",
         "in": "query",
-        "description": "Name of system",
+        "description": "Returns dispenses that should be sent to a specific destination",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1906,7 +1909,8 @@
       "enterer": {
         "name": "enterer",
         "in": "query",
-        "description": "The source of the data entry",
+        "description": "The party responsible for the entry of the Claim",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1914,7 +1918,8 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "Code for the event this message represents or link to event definition",
+        "description": "Type of the event itself in relation to the subject",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1922,7 +1927,8 @@
       "focus": {
         "name": "focus",
         "in": "query",
-        "description": "The actual content of the message",
+        "description": "Drugs, devices, etc. under study",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1930,7 +1936,8 @@
       "receiver": {
         "name": "receiver",
         "in": "query",
-        "description": "Intended \"real-world\" recipient for the data",
+        "description": "The identity of a receiver to list dispenses for",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1954,7 +1961,8 @@
       "sender": {
         "name": "sender",
         "in": "query",
-        "description": "Real world sender of the message",
+        "description": "Message sender",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1962,7 +1970,8 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Name of system",
+        "description": "The source value set that contains the concepts that are being mapped",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1970,7 +1979,8 @@
       "source-uri": {
         "name": "source-uri",
         "in": "query",
-        "description": "Actual message source address or id",
+        "description": "The source value set that contains the concepts that are being mapped",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1978,7 +1988,8 @@
       "target": {
         "name": "target",
         "in": "query",
-        "description": "Particular delivery destination within the destination",
+        "description": "The target value set which provides context for the mappings",
+        "style": "form",
         "schema": {
           "type": "string"
         }

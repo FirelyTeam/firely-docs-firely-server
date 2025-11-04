@@ -273,6 +273,25 @@ On top of the requirements for storing the resources and indexes, we allow Mongo
 
 We recommend to monitor the health of your MongoDB cluster actively to avoid disk space issues.
 
+
+Azure Cosmos DB for MongoDB
+---------------------------
+
+.. caution:: 
+    **Limited Support for Azure Cosmos DB for MongoDB**
+
+    Firely Server does not support the MongoDB API in CosmosDB due to several critical limitations:
+
+    * The `$lookup` operator with `let` and `pipeline` fields is not supported.
+    * Partial indexes are only supported for unique indexes, while Firely Server requires non-unique partial indexes.
+    * Multi-document transactions are not supported across collections or in sharded collections.
+    * Write Concerns such as `'majority'` are ignored by Cosmos DB, but required by Firely Server.
+    * Other limitations may apply.     
+    * See the `CosmosDB - MongoDB Query Language (MQL) features and compatibility documentation <https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/compatibility>`_ for details.
+
+    **Recommendation:** Use native MongoDB for Firely Server deployments. Cosmos DB for MongoDB is not compatible.
+
+
 MongoDB Security
 ----------------
 

@@ -278,9 +278,7 @@ Azure Cosmos DB for MongoDB
 ---------------------------
 
 .. caution:: 
-    **Limited Support for Azure Cosmos DB for MongoDB**
-
-    Firely Server does not support the MongoDB API in CosmosDB due to several critical limitations:
+    **Firely Server does not support the MongoDB API in CosmosDB due to several critical limitations:**
 
     * The `$lookup` operator with `let` and `pipeline` fields is not supported.
     * Partial indexes are only supported for unique indexes, while Firely Server requires non-unique partial indexes.
@@ -290,6 +288,8 @@ Azure Cosmos DB for MongoDB
     * See the `CosmosDB - MongoDB Query Language (MQL) features and compatibility documentation <https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/compatibility>`_ for details.
 
     **Recommendation:** Use native MongoDB for Firely Server deployments. Cosmos DB for MongoDB is not compatible.
+
+    *Last Updated: October 2025* - `Cosmos MongoDB API version 7.0 <https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/feature-support-70>`_
 
 
 MongoDB Security

@@ -26,7 +26,8 @@ Features
 #. It is now possible to configure the file retention period for Bulk Data Export task files. It specifies how long the exported files should be retained on the servr before they are automatically deleted. For more information see :ref:`feature_bulkdataexport_configuration`.
 #. SSL configuration details are now supported for RabbitMQ in Firely Server PubSub. It enables configuring SSL settings to secure the connection between Firely Server and RabbitMQ. For more information see :ref:`pubsub_configuration_rabbitmq`.
 #. To support quick and easy debugging, Serilog Log Level hot reloading capabilities can now be leverages. The log level of Serilog can now be changed in the logsettings at runtime without restarting Firely Server. For more information see :ref:`hot_reload_log_level`.
-* Added support for indexing custom search parameters in FSI. See :ref:`custom_search_parameters` for more information.
+#. Added support for indexing custom search parameters in FSI. See :ref:`custom_search_parameters` for more information.
+#. We provide a beta release of CDS hooks services. For more information see :ref:`feature_cds_hooks`.
 
 Programming API changes and plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

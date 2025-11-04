@@ -13,6 +13,8 @@ Firely Server Custom Plugins
 Firely Server Plugins is the means to adjust a Firely Server to your own special needs, beyond the configuration.
 Please have a look at the :ref:`architecture` to see how plugins fit in the Firely Server.
 
+A working example of a custom plugin is the :ref:`$document operation <feature_documentoperation>`, which generates a document bundle from a resource.
+
 .. toctree::
    :maxdepth: 1
    :titlesonly:
@@ -24,4 +26,5 @@ Please have a look at the :ref:`architecture` to see how plugins fit in the Fire
    plugins_classes
    plugins_template
    plugins_directhttp
-   Example: $document <../../../../features_and_tools/custom_operations/documentoperation>
+ 
+ 

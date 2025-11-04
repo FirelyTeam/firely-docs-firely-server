@@ -29,6 +29,7 @@ All the methods below are in the namespace ``Vonk.Core.ElementModel.ISourceNodeE
    Add the ``newChild`` as a child node to the ``original``. It will be added at the end of the Children.
 
 .. function:: Add(this ISourceNode original, ITypedElement newChild) -> ISourceNode
+   :no-index:
 
    Overload of Add(ISourceNode newChild) that lets you add an ITypedElement as new child.
 
@@ -37,6 +38,7 @@ All the methods below are in the namespace ``Vonk.Core.ElementModel.ISourceNodeE
    Add the ``newChild`` as a child node to the ``original`` if the ``addIf`` predicate on ``original`` is met. It will be added at the end of the Children.
 
 .. function:: Add(this ISourceNode original, TypedElement newChild, Func<ISourceNode, bool> addIf) -> ISourceNode
+   :no-index:
 
    Similar to AddIf(ISourceNode newChild, Func<ISourceNode, bool> addIf) that lets you add an ITypedElement as new child.
 
@@ -45,14 +47,17 @@ All the methods below are in the namespace ``Vonk.Core.ElementModel.ISourceNodeE
    Add the ``newChild`` as a child node to the ``original`` if there is no child with the same name yet. It will be added at the end of the Children.
 
 .. function:: AddIfNotExists(this ISourceNode original, ISourceNode newChild, Func<ISourceNode, bool> exists) -> ISourceNode
+   :no-index:
 
    Add the ``newChild`` as a child node to the ``original`` if the ``exists`` predicate on ``original`` is not satisfied. This is like ``AddIfNotExist(ISourceNode newChild)``, but here you get to specify what 'exists' means. It will be added at the end of the Children.
 
 .. function:: AddIfNotExists(this ISourceNode original, string location, ISourceNode newChild) -> ISourceNode
+   :no-index:
 
    Navigate to ``location``. Then add the ``newChild`` as a child node to the ``original`` if there is no child with the same name yet.
 
 .. function:: AddIfNotExists(this ISourceNode original, ISourceNode newChild, string location, Func<ISourceNode, bool> exists) -> ISourceNode
+   :no-index:
 
    Navigate to ``location``. Then add the ``newChild`` as a child node if the ``exists`` predicate on the current node is not satisfied.
 
@@ -70,6 +75,7 @@ All the methods below are in the namespace ``Vonk.Core.ElementModel.ISourceNodeE
    Remove any nodes that have no value or children. This happens recursively: if a node has only children with empty values, it will be removed as well. This way the returned ISourceNode conforms to the invariant in the FHIR specification that an element either has a value or children.
 
 .. function:: RemoveEmptyNodes(this ISourceNode original, ISourceNode newChild, string location) -> ISourceNode
+   :no-index:
 
    Remove any nodes that have no value or children, from the specified ``location`` downwards. This happens recursively: if a node has only children with empty values, it will be removed as well.
 
@@ -91,6 +97,7 @@ All the methods below are in the namespace ``Vonk.Core.ElementModel.ISourceNodeE
    If none are found, add ``toAdd`` as new child.
 
 .. function:: AddOrReplace(this ISourceNode original, ISourceNode toAdd, Func<ISourceNode, ISourceNode> replace) -> ISourceNode
+    :no-index:
 
     Optimized overload of the previous method for matching on the node name.
     It will perform ``replace`` on any child node of ``original`` with the same name as ``toAdd``.
@@ -119,6 +126,7 @@ All the methods below are in the namespace ``Vonk.Core.ElementModel.ISourceNodeE
    Find any nodes at ``location`` and apply ``patch`` to them. For ``patch`` you can use other methods listed here like ``Rename``, ``Add`` or ``Revalue``. ``location`` is evaluated as a fhirpath statement, with the limitations of untyped nodes.
 
 .. function:: Patch(this ISourceNode original, string[] locations, Func<ISourceNode, ISourceNode> patch) -> ISourceNode
+   :no-index:
 
    Find any nodes having one of the ``locations`` as their Location and apply ``patch`` to them.
    If you don't know exact locations, use ``original.Patch(location, patch)``, see above.
@@ -146,6 +154,7 @@ All the methods below are in the namespace ``Vonk.Core.ElementModel.ISourceNodeE
    Set ``original.Text`` to ``newValue``.
 
 .. function:: Revalue(this ISourceNode original, Dictionary<string, string> replacements) -> ISourceNode
+   :no-index:
 
    ``replacements`` is a dictionary of location + newValue. On each matching location under ``original``, the value will be set to the according newValue from ``replacements``.
 
@@ -161,29 +170,35 @@ ITypedElement manipulation
 All the methods below are in the namespace ``Vonk.Core.ElementModel.ITypedElementExtensions``:
 
 .. function:: Add(this ITypedElement original, ITypedElement newChild, Func<ITypedElement, bool> addIf) -> ISourceNode
+   :no-index:
 
    Add ``newChild`` as child to ``original`` if ``addIf`` on ``original`` evaluates to true.
    Convenience overload of ``ISourceNodeExtensions.Add(ISourceNode, ITypedElement, Func<ISourceNode, bool>)``
 
 .. function:: Add(this ITypedElement original, ITypedElement newChild) -> ISourceNode
+   :no-index:
 
    Add ``newChild`` as child to ``original``.
    Convenience overload of ``ISourceNodeExtensions.Add(ISourceNode, ITypedElement)``
 
 .. function:: AddIfNotExists(this ITypedElement original, ITypedElement newChild) -> ISourceNode
+   :no-index:
 
    Add ``newChild`` as child to ``original`` if no child with the same name exists yet.
    Convenience overload of ``ISourceNodeExtensions.AddIfNotExists(ISourceNode, ITypedElement)``
 
 .. function:: AddIf(this ITypedElement original, ISourceNode newChild, Func<ITypedElement, bool> addIf) -> ISourceNode
+   :no-index:
 
    Add ``newChild`` as child to ``original`` if ``addIf`` on ``original`` evaluates to true.
    Convenience overload of ``ISourceNodeExtensions.AddIf(ISourceNode, ISourceNode, Func<ISourceNode, bool>)``
 
-:method: Add(this ITypedElement original, ISourceNode newChild)
+.. :function:: Add(this ITypedElement original, ISourceNode newChild)
+
    Add ``newChild`` as child to ``original``.
 
-:method: AddIfNotExists(this ITypedElement original, ISourceNode newChild)
+.. :function:: AddIfNotExists(this ITypedElement original, ISourceNode newChild)
+
    Add ``newChild`` as child to ``original`` if no child with the same name exists yet.
    Convenience overload of ``AddIfNotExists(ITypedElement, ITypedElement)``
 
@@ -192,10 +207,12 @@ All the methods below are in the namespace ``Vonk.Core.ElementModel.ITypedElemen
    Prevent recalculation of the Children upon every access.
 
 .. function:: Child(this ITypedElement element, string name, int arrayIndex = 0) -> ITypedElement
+   :no-index:
 
    Returns n-th child with the specified ``name``, if any.
 
 .. function:: ChildString(this ITypedElement element, string name, int arrayIndex = 0) -> string
+   :no-index:
 
    Returns the value of the n-th child with the specified ``name`` as string, if any.
 

@@ -12,15 +12,19 @@ Bulk Import via Firely Server Ingest
   Your license already permits the usage of FSI if it contains ``http://fire.ly/vonk/plugins/bulk-data-import``. You can also try out Firely Server Ingest with an Evaluation license. It is limited to a maximum of 10000 resources in total in the connected Firely Server database with a maximum number of 1000 resources that can be loaded per run, in addition to the Recovery Journal feature being disabled. For the production licenses the following behavior applies:
   
   #. **Firely Essentials**
+
     * Contains the ``http://fire.ly/vonk/plugins/bulk-data-import`` token
     * Is unrestricted in the amount of resources that can be loaded in total
     * Restricts the amount of resources that can be loaded in one go to 1000
     * Does not support the Recovery Journal feature
+
   #. **Firely Scale**
+
     * Contains the ``http://fire.ly/vonk/plugins/bulk-data-import/unlimited`` token
     * Is unrestricted in the amount of resources that can be loaded in total
     * Is unrestricted in the amount of resources that can be loaded in one go 
     * Supports the Recovery Journal feature
+
   #. **Firely Prior Authorization**
 
     * Contains the ``http://fire.ly/vonk/plugins/bulk-data-import/unlimited`` token
@@ -138,7 +142,7 @@ If you want to specify input parameters in the file, you can use the snippet bel
           "updateExistingResources": true,
           "haltOnError": false,
           "recoveryJournalDirectory": null,
-
+          "extraParameters": null, //path to a ndjson file with custom search parameters to index on load
           "absoluteUrlConversion": {
               "baseEndpoints": [
                   // "http://localhost:4080/R4"
@@ -273,6 +277,13 @@ General
   * **Required**: No
   * **Default**: null
   * **Description**: A directory containing the recovery journal. See :ref:`Recovery Journal<tool_fsi_recovery>`.
+
+* ``--extraParameters <Extra Parameters ndjson file>``: 
+
+  * **Config**: extraParameters
+  * **Required**: No
+  * **Default**: null
+  * **Description**: A file containing additional search parameters to be indexed on load directly into SQL or MongoDB target database. See :ref:`Custom Search Parameters <custom_search_parameters>`.
 
 * ``--urlConvBases:index url``: 
 
@@ -653,6 +664,36 @@ If the ingestion procedure gets interrupted at any point, or some of the resourc
   
   Please do not use the source directory or any subdirectories within the source directory as the recovery journal directory.
 
+.. _custom_search_parameters:
+
+Custom Search Parameters
+------------------------
+
+.. important:: FSI only indexes the **Core FHIR Search Parameters** by default when the target is a database. FSI does not automatically recognize custom search parameters added to Firely Server.
+
+If your Firely Server already has data and implemented :ref:`Custom Search Parameters <feature_customsp>`, you can configure FSI to index these parameters at load time. This avoids the need for an administrative reindex after loading resources with FSI.
+
+Use the ``--extraParameters`` option to specify a path to an ``.ndjson`` file containing the custom search parameters to be indexed at load time.
+
+**Example NDJSON file** (extraSearchParameters.ndjson)
+
+.. code-block:: json
+
+  {"resourceType":"SearchParameter","url":"http://example.org/fhir/SearchParameter/Patient-example","name":"example","description":"example description","status":"active","code":"example","base":["Patient"],"type":"string","expression":"Patient.name"}
+
+
+**Example Command** 
+Executing FSI with custom search parameters in ``extraSearchParameters.ndjson`` located in the current directory:
+
+.. code-block:: bash
+
+  fsi -f "<FhirVersion>" -s "<PathToData>" --extraParameters ".\extraSearchParameters.json" --dbType  "<DB Type>" -c "<DB connection string>" --license "<path to license>"
+
+.. note::
+
+  * Custom search parameters that are derived from **Core FHIR Search Parameters** will be ignored. (ex. `derivedFrom.StartsWith("http://hl7.org/fhir")`)
+  * If the target is PubSub, the ``--extraParameters`` option will be ignored, as PubSub will index all the search parameters already loaded to Firely Server.
+
 Monitoring
 ----------
 
@@ -692,9 +733,10 @@ Known issues
 * When importing STU3 resources, the field ``Patient.deceased`` will always be set to ``true`` if it exists. This is caused by an error in the FHIR STU3 specification. In case you would like to use FSI with STU3 resources, please :ref:`contact us<vonk-contact>`.
 * If a resource is present in a workload more than once, the entries may get processed in parallel and a version that is different from the latest may be set as current.
 
-
 Release notes
 -------------
+
+.. _fsi_releasenotes_5.5.0-plus:
 
 Release 5.5.0+
 ^^^^^^^^^^^^^^
@@ -709,6 +751,8 @@ Please refer to the :ref:`Firely Server release notes <vonk_releasenotes>` for t
 
       Changelog before Firely Server 5.5.0
 
+    .. _fsi_releasenotes_2.3.0:
+
     **Release 2.3.0, November 23rd, 2023**
 
     * Feature: the mode ``--update-existing-resources onlyIfNewer`` is now supported for MongoDB.
@@ -716,6 +760,8 @@ Please refer to the :ref:`Firely Server release notes <vonk_releasenotes>` for t
     * Fix: the ``SqlClient`` dependency package has been updated to version v5.1.1 to address the vulnerability: CVE-2022-41064.
     * Fix: the rare exception ``System.InvalidOperationException: Cannot change state from Skipped to Error`` does not get thrown anymore.
     * Internal: the way of handling command line arguments has been refactored.
+
+    .. _fsi_releasenotes_2.2.1:
 
     **Release 2.2.1, September 19th, 2023**
 
@@ -732,6 +778,8 @@ Please refer to the :ref:`Firely Server release notes <vonk_releasenotes>` for t
           ]
         }
 
+    .. _fsi_releasenotes_1.4.1:
+
     **Release 1.4.1, August 28th, 2023**
 
     .. note::
@@ -739,25 +787,35 @@ Please refer to the :ref:`Firely Server release notes <vonk_releasenotes>` for t
 
     * Added support for running FSI without the internet connection (see :ref:`tool_fsi_packages_cache`)
 
+    .. _fsi_releasenotes_2.2.0:
+
     **Release 2.2.0, June 20th, 2023**
 
     * Fix: Composite parameters are more accurately indexed for SQL Server, to align with Firely Server 5.1.0. See :ref:`vonk_releasenotes_5_1_0` and the accompanying warnings.
     * Feature: FSI is now open to evaluation, just like Firely Server itself. It is limited though, to a maximum of 10.000 resources in the database, including history.
     * Feature: FSI is updated to Firely .NET SDK 5.1.0, see `its releasenotes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.1.0>`_
 
+    .. _fsi_releasenotes_2.1.0:
+
     **Release 2.1.0, March 9th, 2023**
 
     * Fix: Eliminated deadlocks in FSI when writing data in parallel.
     * Settings: The setting ``maxActiveResources`` and the related CLI argument ``--maxActiveRes`` are no longer needed and have been removed.
 
+    .. _fsi_releasenotes_2.0.1:
+
     **Release 2.0.1, February 12th, 2023**
 
     * Fix: Add support for schema version 25 for MongoDb
+
+    .. _fsi_releasenotes_2.0.0:
 
     **Release 2.0.0, January 26th, 2023**
 
     * Upgraded to work with the database schemas for :ref:`Firely Server 5.0.0-beta1<vonk_releasenotes_5_0_0-beta1>`
     * Indexing has been updated to support searching for version-specific references.
+
+    .. _fsi_releasenotes_1.4.0:
 
     **Release 1.4.0, October 6th, 2022**
 
@@ -781,10 +839,14 @@ Please refer to the :ref:`Firely Server release notes <vonk_releasenotes>` for t
       .. note::
 
         Please note that due to a mistake in the official STU3 specification, search parameters `ConceptMap-source-uri`, `ConceptMap-target-uri` still do not work as expected. The correct search parameter expressions would be `ConceptMap.source.as(uri)` and `ConceptMap.target.as(uri)` while the specification contains `ConceptMap.source.as(Uri)` and `ConceptMap.target.as(Uri)` respectively. The issue has been addressed in R4.
-        
+   
+    .. _fsi_releasenotes_1.3.1:
+
     **Release 1.3.1**
 
     * Corrected an exception when multiple batch threads are processing and saving in parallel to SQL Server.
+
+    .. _fsi_releasenotes_1.3.0:
 
     **Release 1.3.0**
 
@@ -792,10 +854,14 @@ Please refer to the :ref:`Firely Server release notes <vonk_releasenotes>` for t
     * Changed the serialization format of decimal from string to use the native decimal type in MongoDB to improve performance.
     * Bugfix: Fixed Money.currency indexing for FHIR STU3 and R4
 
+    .. _fsi_releasenotes_1.2.0:
+
     **Release 1.2.0**
 
     * Ability to provide a path to a custom ``appsettings.json`` file via a command-line argument (see :ref:`examples<tool_fsi_examples>` above)
     * Bugfix: ensure FSI uses all available values from the SQL PK-generating sequences when inserting data to the vonk.entry and component tables
+
+    .. _fsi_releasenotes_1.1.0:
 
     **Release 1.1.0**
 
@@ -804,6 +870,8 @@ Please refer to the :ref:`Firely Server release notes <vonk_releasenotes>` for t
     * FSI has been upgraded to .NET 6. To install the tool, you first need to have .NET Core SDK v6.x installed on your computer. See :ref:`tool_fsi_installation` for more information.
     * The Firely .NET SDK that FSI uses has been upgraded to 3.7.0. The release notes for the SDK v3.7.0 can be found `here <https://github.com/FirelyTeam/firely-net-sdk/releases>`_.
     * Multiple smaller fixes to improve reliability and performance of the tool.
+
+    .. _fsi_releasenotes_1.0.0:
 
     **Release 1.0.0**
 

@@ -113,7 +113,7 @@ This will result in Firely Server generating urls using the correct virtual base
 .. _reverse_proxy_security:
 
 Reverse Proxy Security Configurations
-------------------------------------
+-------------------------------------
 
 The ``ReverseProxySupport`` section provides options to configure how Firely Server handles requests from reverse proxies, including security settings:
 
@@ -136,7 +136,7 @@ The ``AllowAnyNetworkOrigins`` setting is a boolean property that allows you to 
 - When set to ``true``: Firely Server will allow any network origin configuration in any environment, with a warning about security implications
 
 Security Considerations
-^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Using ``0.0.0.0/0`` or ``0.0.0.0`` in ``TrustedProxyIPNetworks`` means that Firely Server will trust all incoming requests as valid reverse proxy traffic. This has important security implications:
 
@@ -146,7 +146,7 @@ Using ``0.0.0.0/0`` or ``0.0.0.0`` in ``TrustedProxyIPNetworks`` means that Fire
 - The recommended approach is to specify exact IP addresses or specific IP networks that should be trusted
 
 Example Configurations
-^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^
 
 For Development/Testing:
 

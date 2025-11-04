@@ -104,7 +104,7 @@ Configuration
 
 #. With this release, it is possible to restrict auto provisioning of SSO users by their security groups. For this we added a new setting: ``AutoProvisionFromSecurityGroup``. For more information, see :ref:`firely_auth_settings_externalidp`.
 #. It is now possible to derive the FhirUser claim for SSO auto-provisioning from existing users in the Firely Server database using the ``FhirUserLookupClaimsMapping`` setting. For more information, see :ref:`firely_auth_settings_externalidp`.
-#. It is now possible to set ``ConsentLifetime`` settings to control the lifetime of consent to clients. After this period has expired, users will be prompted again to give consent to this client. For more information, see :ref:`_firely_auth_settings_clients`.  
+#. It is now possible to set ``ConsentLifetime`` settings to control the lifetime of consent to clients. After this period has expired, users will be prompted again to give consent to this client. For more information, see :ref:`firely_auth_settings_clients`.  
 #. Added the option ``ShowDisclaimerFor`` to the disclaimer section to control when a disclaimer should be shown to the user. For more information, see :ref:`firely_auth_settings_disclaimers`.
 
 

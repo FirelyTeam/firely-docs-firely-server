@@ -154,6 +154,8 @@ Please refer to :ref:`pubsub_clients` to see how to use the claim check pattern 
   
   One effective approach is to use `Azure Blob Storage lifecycle management <https://learn.microsoft.com/en-us/azure/storage/blobs/storage-lifecycle-management-concepts>`_.
 
+.. _pubsub_configuration_rabbitmq:
+
 RabbitMQ Configuration
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -168,7 +170,14 @@ RabbitMQ Configuration
             "PrefetchCount": 1,
             "ConcurrencyNumber": 1,
             "ApplicationQueueName": "FirelyServer", // The name of the message queue used by Firely Server
-            "VirtualHost": "/"
+            "VirtualHost": "/",
+            "RabbitMQ": {
+                "Port": 5672, // Or 5671 for SSL
+                "UseSsl": false,
+                "ClientCertificatePath": "", // Path to client certificate file (.pfx format), if using SSL
+                "ClientCertificatePassphrase": "", // Passphrase for the client certificate, if using SSL
+                "ServerName": "" // Server name for SSL validation, if not set, the host name defined in the Host property will be used
+            }
         }
     },
     
@@ -177,6 +186,16 @@ RabbitMQ Configuration
 - ConcurrencyNumber: Number of concurrent messages that can be consumed. Sets the `ConcurrentMessageLimit` MassTransit parameter https://masstransit.io/documentation/configuration#receive-endpoints
 - ApplicationQueueName: The name of the message queue used by Firely Server
 - VirtualHost: RabbitMQ virtual host; see https://www.rabbitmq.com/vhosts.html for details
+- RabbitMQ: Configuration specific to RabbitMQ:
+
+  - Port: The port number for RabbitMQ (default is 5672, or 5671 for SSL)
+  - UseSsl: Set to true to enable SSL/TLS for secure connections
+  - ClientCertificatePath: (Optional) Path to the client certificate file (.pfx format) when using mutual SSL (mSSL)
+  - ClientCertificatePassphrase: (Optional) Password for the client certificate when using mutual SSL
+  - ServerName: Server name for SSL validation (if not set, the host name from the Host property will be used)
+
+.. note::
+  When using SSL/TLS with RabbitMQ, the Certificate Authority (CA) certificate must be installed on the system that runs Firely Server. For mutual SSL (mSSL), both ClientCertificatePath and ClientCertificatePassphrase are required only if the RabbitMQ server is configured to verify client certificates.
 
 Azure Service Bus Configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -668,19 +687,6 @@ RabbitMQ
 ^^^^^^^^
 
 All applications involved in message exchange are connected to the same message broker. Hypothetically, every party can publish and consume messages of any type. However, in practice, it is far more common that applications are only interested in consuming specific types of messages. Scenarios covered by PubSub are no exception. RabbitMQ allows for flexible configuration of message routing by decoupling message producers from message consumers using primitives such as `exchanges` and `queues`. You can read more about them in the `RabbitMQ documentation <https://www.rabbitmq.com/tutorials/amqp-concepts.html#amqp-model>`_.
-
-**Additional configuration**
-
-RabbitMQ has inbuilt support for `TLS <https://www.rabbitmq.com/docs/ssl#overview>`_. By default Firely Server PubSub assumes that TLS support is disabled for the message broker and connects to port `5672`. It is possible to change the port to `5671` in order to automatically enable TLS support.
-
-      "PubSub": {
-        "MessageBroker": {
-            "Host": "Endpoint=sb://<Service Bus Namespace>.servicebus.windows.net/;SharedAccessKeyName=<Shared Access Key name>;SharedAccessKey=<Shared Access Key>",
-            // "Username": "guest",
-            // "Password": "guest",
-            // "RabbitMQ": {
-            //   "Port": 5672
-            // },
 
 **Events**
 

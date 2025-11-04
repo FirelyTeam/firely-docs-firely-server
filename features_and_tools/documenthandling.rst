@@ -12,7 +12,7 @@ Firely Server supports submitting `FHIR document bundles <https://www.hl7.org/fh
 Please make sure that ``Vonk.Plugin.DocumentHandling.DocumentHandlingConfiguration`` is enabled in the pipeline options to use this feature.
 
 Retrieving the DocumentReference
--------------------------------
+--------------------------------
 
 When a document bundle is submitted to the base endpoint, Firely Server creates a DocumentReference with a predictable identifier derived from the document bundle's identifier. To retrieve this DocumentReference afterward:
 

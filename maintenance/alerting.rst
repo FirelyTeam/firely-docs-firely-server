@@ -1,4 +1,4 @@
-.. _upgrade:
+.. _error_alerting:
 
 Alerting for critical errors
 ============================

@@ -14,6 +14,7 @@ Firely Server by default does nog log any Patient Health Information data, regar
 
 Changing the log event level
 ----------------------------
+
 Serilog defines several levels of log events. From low to high, these are ``Verbose``, ``Debug``, ``Information``,
 ``Warning``, ``Error`` and ``Fatal``. You can set the minimum level you want to log, meaning that events for that
 level or higher will be logged. By default, Firely Server uses ``Error`` as the minimum level of recording information.
@@ -73,6 +74,23 @@ But in this (purposefully incorrect) example the ``Warning`` level on the ``Vonk
 			"Vonk.Repository.Sql.Raw": "Information"
 		}
 	},
+
+.. _hot_reload_log_level:
+
+Hot-reloading log event level
+-----------------------------
+
+Firely Server supports hot-reloading of log levels. This means that you can change the log level without restarting Firely Server.
+
+When Firely Server is running, you can change the minimum default level or adjust the minimum level for any already configured namespace by editing the corresponding value in your logsettings file. These changes will take effect, no need to restart Firely Server. One example of using this is to temporarily increase the log level for a specific namespace to ``Verbose`` to troubleshoot an issue, and then set it back to ``Error`` when done.
+
+**Limitations:**
+
+- You cannot add new namespace overrides or remove existing ones during runtime, only changes to the value of the default or existing overrides are hot-reloaded.
+
+**Docker note:**
+
+If you run Firely Server in a Docker container, set the environment variable ``DOTNET_USE_POLLING_FILE_WATCHER=1`` to ensure file changes are detected.
 
 .. _logging_individual_requests:
 
@@ -324,8 +342,8 @@ AWS Cloudwatch
 ^^^^^^^^^^^^^^
 Firely Server can also log to AWS Cloudwatch. What you need to do:
 
-#. Create a user with restricted privilages in AWS that can write to Cloudwatch as described `here <https://docs.aws.amazon.com/sdkref/latest/guide/access-iam-users.html>`_
-#. Specify the credentials and the region in configuration files or through environment variables as described `here <https://docs.aws.amazon.com/sdkref/latest/guide/creds-config-files.html>`_
+#. Create a user with restricted privilages in AWS that can write to Cloudwatch as described in the `IAM docs <https://docs.aws.amazon.com/sdkref/latest/guide/access-iam-users.html>`_
+#. Specify the credentials and the region in configuration files or through environment variables as described in the `configuration docs <https://docs.aws.amazon.com/sdkref/latest/guide/creds-config-files.html>`_
 #. Add the correct sink to the logsettings.json::
 
 		"WriteTo": [

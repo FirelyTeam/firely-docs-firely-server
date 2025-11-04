@@ -3,23 +3,40 @@
 Tokens and Compartments
 =======================
 
-:ref:`feature_accesscontrol_config` outlines that SMART scopes can be defined on multiple levels: patient, user, and system. For each of these levels, different workflows apply to how the access control engine in Firely Server evaluates these scopes internally.
+:ref:`feature_accesscontrol_authorization` outlines that SMART scopes can be defined on multiple levels: patient, user, and system. For each of these levels, different workflows apply to how the access control engine in Firely Server evaluates these scopes internally.
 The following page gives context about the most important terms that are relevant for the decision if a user or system is granted access.
 
 Launch Context and Patient Compartment
 --------------------------------------
 
-In FHIR a `CompartmentDefinition <http://www.hl7.org/implement/standards/fhir/compartmentdefinition.html>`_ defines a set of resources 'around' a focus resource.
-The `Patient CompartmentDefinition <https://hl7.org/implement/standards/fhir/compartmentdefinition-patient.html>`_ in the FHIR specification defines a set of resources belonging to the patients' record. 'Belonging to' is expressed in terms of reference search parameters. As an example: One of the resource types in the Patient compartment is Observation. Its params are subject and performer, so any Observation resource is in the compartment of a specific Patient if that Patient is either the subject or the performer of the Observation.
+Before exploring how patient-level scopes are enforced, it's essential to understand two key concepts that underpin access control in Firely Server: Launch Contexts and FHIR Compartments. Together, they determine how Firely Server interprets SMART on FHIR scopes and restricts access to data based on the context of the request.
 
-FHIR defines CompartmentDefinitions for Patient, Encounter, RelatedPerson, Practitioner and Device. Although Firely Server is functionally not limited to these five, the specification does not allow you to define your own. For authorization purposes, Firely Server will only evaluate the Patient compartment. Other types of compartment have not seen enough real world usage to be used safely in a production scenario.
+In FHIR a `CompartmentDefinition <http://www.hl7.org/implement/standards/fhir/compartmentdefinition.html>`_ defines a group of resources associated with a specific focus resource.
+The `Patient CompartmentDefinition <https://hl7.org/implement/standards/fhir/compartmentdefinition-patient.html>`_ defines which resources are considered part of a patient's health record. This is determined by *reference search parameters*. For example:
 
-In SMART on FHIR, the ``launch/patient`` claim expresses that the session is launched in the context of a specific patient. Then the ``patient`` claim specifies which Patient. Firely Server translates this to the correct patient compartment, and limits access only to that compartment. How the value of the claim is matched against a Patient is detailed in the paragraph on Patient-level scopes below. 
+- The resource type ``Observation`` is part of the Patient compartment.
+- Its compartment-defining parameters are ``subject`` and ``performer``.
+- An ``Observation`` belongs to a given Patient’s compartment if that Patient is referenced in either the ``subject`` or the ``performer`` field.
 
-It is up to the authorization server and the EHR to establish and exchange the launch context ahead of time, so the authorization server can include it in the access token. See :ref:`firely_auth_endpoints_launchcontext` on how this can be achieved in Firely Auth.
+FHIR includes predefined CompartmentDefinitions for five types of focus resources:
 
-.. note::
-    Before version 6.0, Firely Server allowed configuring other compartments than Patient in the SmartOptions. This is no longer supported. If you have configured this, you will need to adjust the configuration to only specify a filter on the Patient compartment. 
+- ``Patient``
+- ``Encounter``
+- ``RelatedPerson``
+- ``Practitioner``
+- ``Device`` 
+
+Although Firely Server is functionally not limited to these five, the specification does not allow you to define your own. For authorization purposes, Firely Server will only evaluate the Patient compartment. Other types of compartment have not seen enough real world usage to be used safely in a production scenario.
+To enforce a Patient compartment, meaning to restrict all requests to resources that belong to a specific patient and prevent access to data associated with other patients, Firely Server requires a patient identifier or resource ID to be present in the access token. SMART on FHIR does not specify how this information should be communicated between the authorization server and the FHIR server.
+
+Firely Server uses the ``patient`` claim in the access token to identify the relevant patient. This value can originate either from:
+
+- an EHR launch context, such as launching an app from within a patient portal
+- a standalone launch, where the ``launch/patient`` scope is requested and the patient is inferred from attributes of the authenticated user
+
+It is the responsibility of the authorization server and the EHR to establish and exchange the launch context before issuing the access token, so that the ``patient`` claim can be included. See :ref:`firely_auth_endpoints_launchcontext` for how this can be implemented using Firely Auth.
+
+Firely Server then maps the value of the ``patient`` claim to the appropriate Patient compartment and restricts access accordingly. The details of how the claim value is matched to a Patient resource are provided in the section on Patient-level scopes.
 
 .. _accesstokens:
 
@@ -49,25 +66,26 @@ Firely Server is not bound to any specific authorization server, as long as the 
       ...
    }
 
-.. warning:: Firely Server will not enforce any access control for resource types that are not listed in the applicable compartment definition. Some compartment definitions do not include crucial resource types like 'Patient', i.e. all resources of this type regardless of any claims in the access token will be returned if requested. Please use compartments other than Patient with caution! Additional custom access control, like :ref:`feature_accesscontrol_permissions` is highly recommended.
-
 Patient-level scopes
 --------------------
-For Patient-level scopes the access control engine in Firely Server evaluates two types of authorization:
+For patient-level scopes, the access control engine in Firely Server evaluates two types of authorization:
 
-#. Type-Access: Is the user allowed to read or write resource(s) of a specific resourcetype?
-#. Compartment: Is the data to be read or written within the current compartment (if any)?
+1. **Type access**: Determines whether the user is allowed to create, read, update, or delete resources of a specific resource type.
+2. **Compartment access**: Determines whether the data being accessed falls within the current patient compartment.
 
-As you may have noticed, Type-Access aligns with the concept of scopes, and Compartment aligns with the concept of launch context in SMART on FHIR.
-Scopes are evaluated by checking if the application has been granted the correct rights to execute a certain CRUD operation.
-The compartment access is evaluated by the ``PatientFilter`` defined in the SMART appsettings. See :ref:`feature_accesscontrol_config`::
+Type access corresponds to the scopes granted to the application in the access token. These scopes define whether the application is permitted to perform specific CRUD operations on certain resource types.
+Compartment access is evaluated using the ``PatientFilter`` configuration, which defines how the value of the ``patient`` claim is transformed into an implicit search argument. This argument is used to identify a single Patient resource, and all RESTful interactions are then restricted to that patient's compartment.
+Scope evaluation ensures that the access token grants the appropriate rights for the requested operation. Compartment evaluation ensures that the request targets data belonging to the identified patient.
+
+The ``PatientFilter`` is defined in the SMART authorization settings.  See :ref:`feature_accesscontrol_config`::
 
     "PatientFilter": "_id=#patient#" //ALlow access to the compartment of the Patient that has an id matching the value of the 'patient' claim
 
-For example, the authorization server provides a patient launch context with the value ``123``. This is to be interpreted by the application as "the user instructs the application to work in the context of the resource ``Patient/123``".
+For example, the authorization server provides a patient claim with the value ``123``. This is to be interpreted by the application as "the user instructs the application to work in the context of the resource ``Patient/123``".
 Firely Server internally forms a compartment around all resources that are linked to ``Patient/123`` according to the Patient CompartmentDefinition.
 
 .. note::
+
   To enable access to resources outside the compartment, the client must request additional scopes for these resources specifically.
 
 There may be cases where the logical id of the focus resource is not known to the authorization server. Let's assume it does know one of the identifiers of a Patient. The Filters in the :ref:`feature_accesscontrol_config` allow you to configure Firely Server to use the identifier search parameter as a filter instead of _id::
@@ -171,7 +189,7 @@ These are not included in the examples, to keep those readable.
 #. Delete: Allowed if the user can Read the current version of the resource, and has write access to the type of resource.
 #. History: Allowed on the resources that the user is allowed to Read the current versions of (although it is theoretically possible that an older version would not match the compartment). 
 
-.. note:: A conditional create, update or delete (see the `FHIR http specification <https://hl7.org/fhir/http.html>`_), requires read permissions on the condition. Therefore, ``user/*.write`` will usually require additional ``read`` scopes.
+.. note:: A conditional create, update or delete (see the `FHIR http specification <https://hl7.org/fhir/http.html>`_), requires read permissions on the condition. Therefore, ``patient/*.write`` will usually require additional ``read`` scopes.
 
 User-level scopes
 -----------------
@@ -182,10 +200,12 @@ But Firely Server will still apply the restrictions expressed in the user-level 
 - It checks the syntax of the SMART on FHIR scopes within the access token. 
 - It enforces that only allowed resources types are accessed and only allowed actions are executed.
 - It enforces search arguments that may be part of a scope in SMART v2 syntax.
-- It will evaluate AccessPolicies connected to the ``fhirUser``.
 
 .. warning::
   Requests using a user-level scope are not limited to a pre-defined context, e.g. a Patient compartment. Therefore all matching resources are returned to the client. It is highly advised to implement additional security measures using a custom plugin or :ref:`access policies <feature_accesscontrol_permissions>`, e.g. by enforcing a certain Practitioner or Encounter context.
+
+The SMART on FHIR specification defines that the authorization server can communicate to the application which user (for example, a Practitioner) logged in during the authorization flow. This is exposed as the ``fhirUser`` claim in the access token response document.
+Note that this refers to the JSON document returned from the token endpoint. Firely Auth will also embed this claim in the access token itself. Based on this verified claim, Firely Server identifies the user and enforces the configured ``AccessPolicy`` for that user.
 
 .. _system_level_scopes:  
 

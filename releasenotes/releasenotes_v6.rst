@@ -8,6 +8,46 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+
+.. _vonk_releasenotes_6_5_0:
+
+Release 6.5.0, November 4th, 2025
+---------------------------------
+
+Improvements
+^^^^^^^^^^^^
+
+#. The behavior of the ``$purge`` operation has been adjusted with regard to Group resources. Purged Patient references are now removed without deleting the entire Group, as Groups may contain additional references to other Patient instances.
+#. Firely Server MassTransit dependencies were updated to enhance SASL authentication with Kafka, improving message passing security.
+
+Features
+^^^^^^^^
+
+#. It is now possible to configure the file retention period for Bulk Data Export task files. It specifies how long the exported files should be retained on the servr before they are automatically deleted. For more information see :ref:`feature_bulkdataexport_configuration`.
+#. SSL configuration details are now supported for RabbitMQ in Firely Server PubSub. It enables configuring SSL settings to secure the connection between Firely Server and RabbitMQ. For more information see :ref:`pubsub_configuration_rabbitmq`.
+#. To support quick and easy debugging, Serilog Log Level hot reloading capabilities can now be leverages. The log level of Serilog can now be changed in the logsettings at runtime without restarting Firely Server. For more information see :ref:`hot_reload_log_level`.
+#. Added support for indexing custom search parameters in FSI. See :ref:`custom_search_parameters` for more information.
+#. We provide a beta release of CDS hooks services. For more information see :ref:`feature_cds_hooks`.
+
+Programming API changes and plugins
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+#. Firely Server was updated to use the Firely .NET SDK v6.0.1. For those implementing custom plugins or facades, we recommend updating these to use the .NET SDK v6.0.1 when upgrading to this version of Firely Server. Please check out the release notes `here <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v6.0.1>`_ for more information.
+#. It is likely all custom plugins need to be recompiled against new version of `Vonk.Core` package due to SDK changes.
+
+Fix
+^^^
+
+* Fixed an issue that resulted references not being resolved using the ``resolve()`` function in FHIRPath when validating constraints against resources wrap inside a Bundle.
+* The default appsettings missed the ``EnforceAccessPolicies`` element in the ``SmartAuthorizationOptions`` section.
+* ``$liveness`` and ``$readiness`` contained invalid values for the ``RequireTenant`` settings in their respective ``Operations`` configuration section.
+* Fixed a FHIRPath-related issue when validating the ``ctm-1`` constraint against CarePlan resources.
+
+Known behavioral changes
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+#. You may encounter issues ingesting same resources if they contain elements unknown to the StructureDefinition. Previous versions of SDK would discard unknown elements, however, the new SDK will now report these as validation issues.
+
 .. _vonk_releasenotes_6_4_0:
 
 Release 6.4.0, August 26th, 2025
@@ -26,7 +66,7 @@ Release 6.3.1, August 11th, 2025
 Fixes
 ^^^^^
 
-#. We updated dependencies of the Elasticsearch sink to fix a security vulnerability in a dependency of the `Elastic.Serilog.Sinks` package. The updated version is now 8.18.2. See the `release notes <https://github.com/elastic/ecs-dotnet/releases>`_ for more information.
+#. We updated dependencies of the Elasticsearch sink to fix a security vulnerability in a dependency of the `Elastic.Serilog.Sinks` package. The updated version is now 8.18.2. See the `Elastic Sink 8.18.2 release notes <https://github.com/elastic/ecs-dotnet/releases>`_ for more information.
 #. We fixed a bug where FSI would take a long time to start up when the MongoDb target database would contain a large number of resources. This was caused by FSI trying to perform a count on the target database, which would take a long time when there were many resources.
 
 .. _vonk_releasenotes_6_3_0:
@@ -69,7 +109,7 @@ Features
 
 #. It is now possible to validate QuestionnaireResponse resources against their original Questionnaire resource. See :ref:`feature_advancedvalidation` for more information.
 #. Message brokers can now be used as a target for Firely Server Ingest. FSI will publish messages to the message broker upon ingesting resources, which can then be consumed by Firely Server. Currently, only Azure Service Bus and RabbitMQ can be configured as message brokers for FSI. The use of a MongoDb source is not supported if the target is set to a message broker, only ingestion from files/folders is supported. See :ref:`fsi_target_pubsub` for more information.
-#. We upgraded the .Net SDK to v5.12.0. See the `release notes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.12.0>`_ for more information.
+#. We upgraded the .Net SDK to v5.12.0. See the `SDK 5.12.0 release notes <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v5.12.0>`_ for more information.
 
 
 .. _vonk_releasenotes_6_1_0:
@@ -215,7 +255,7 @@ Configuration
    * ``Administration.Security.OperationsToBeSecured`` has been replaced by per-operation ``NetworkProtected`` property
    * ``SmartAuthorizationOptions.Protected`` has been replaced by per-operation ``RequireAuthorization`` property
    * Each operation now has granular control over authorization, network protection, tenant requirements, etc.
-   * See :ref:`configure_operations` for detailed information about the new configuration structure and migration guide
+   * See :ref:`disable_interactions` for detailed information about the new configuration structure and migration guide
 
 .. note::
     If MultiTenancy is enabled, the ``history`` and ``vread`` operations are blocked for all resources. This is to prevent the possibility of cross-tenant access to resources. The ``history`` and ``vread`` operations are not supported in a multi-tenant environment.

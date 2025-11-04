@@ -78,6 +78,7 @@ especially on first startup when the :ref:`conformance_specification_zip` have t
 During the import Firely Server will respond with 423 'Locked' to every request to avoid storing or retrieving inconsistent data.
 To monitor for conformance resources to be fully loaded and server being responsive, the :ref:`$readiness<feature_healthcheck>` endpoint can be queried for 200 'Success' response.
 Alternatively, the following log line is being written once the process is finished::
+
    Conformance resource loading finished successfully. Server is ready to receive requests.
 
 The read history keeps a record of files that have been read, with an MD5 hash of each.

@@ -154,6 +154,8 @@ Please refer to :ref:`pubsub_clients` to see how to use the claim check pattern 
   
   One effective approach is to use `Azure Blob Storage lifecycle management <https://learn.microsoft.com/en-us/azure/storage/blobs/storage-lifecycle-management-concepts>`_.
 
+.. _pubsub_configuration_rabbitmq:
+
 RabbitMQ Configuration
 ^^^^^^^^^^^^^^^^^^^^^^
 

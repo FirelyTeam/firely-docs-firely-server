@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - List",
-    "version": "6.4.0+efc2472f6ac82bd5cb558dbd09c1fa8864f24065"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1848,7 +1848,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "ok | transient-error | fatal-error",
+        "description": "The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1857,7 +1857,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The date of the measure report",
+        "description": "The evidence variable publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1874,7 +1874,7 @@
       "encounter": {
         "name": "encounter",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [Composition](composition.html): Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter during which request was created\r\n* [DiagnosticReport](diagnosticreport.html): The Encounter when the order was made\r\n* [DocumentReference](documentreference.html): Context of the document  content\r\n* [Flag](flag.html): Alert relevant during encounter\r\n* [List](list.html): Context in which list created\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this encounter identifier\r\n* [Observation](observation.html): Encounter related to the observation\r\n* [Procedure](procedure.html): Encounter created as part of\r\n* [RiskAssessment](riskassessment.html): Where was assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter in which this request is made\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this encounter identifier\r\n",
+        "description": "Encounter created as part of",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1883,7 +1883,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1892,8 +1892,7 @@
       "item": {
         "name": "item",
         "in": "query",
-        "description": "Matches on any item in the Linkage",
-        "style": "form",
+        "description": "Actual entry",
         "schema": {
           "type": "string"
         }
@@ -1909,7 +1908,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The identity of a patient to search for individual measure report results for",
+        "description": "The reference to the patient",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1918,7 +1917,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Name of system",
+        "description": "The source value set that contains the concepts that are being mapped",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1927,7 +1926,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The status of the measure report",
+        "description": "The current status of the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1936,7 +1935,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "The identity of a subject to search for individual measure report results for",
+        "description": "Who this goal is intended for",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1945,7 +1944,7 @@
       "title": {
         "name": "title",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The human-friendly name of the capability statement\r\n* [CodeSystem](codesystem.html): The human-friendly name of the code system\r\n* [ConceptMap](conceptmap.html): The human-friendly name of the concept map\r\n* [ImplementationGuide](implementationguide.html): The human-friendly name of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The human-friendly name of the message definition\r\n* [OperationDefinition](operationdefinition.html): The human-friendly name of the operation definition\r\n* [StructureDefinition](structuredefinition.html): The human-friendly name of the structure definition\r\n* [StructureMap](structuremap.html): The human-friendly name of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The human-friendly name of the terminology capabilities\r\n* [ValueSet](valueset.html): The human-friendly name of the value set\r\n",
+        "description": "The human-friendly name of the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"

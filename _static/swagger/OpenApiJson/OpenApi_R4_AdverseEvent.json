@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - AdverseEvent",
-    "version": "6.4.0+efc2472f6ac82bd5cb558dbd09c1fa8864f24065"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1856,7 +1856,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Classification of service",
+        "description": "E.g. Treatment, dietary, behavioral, etc.",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1865,7 +1865,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The date of the measure report",
+        "description": "The evidence variable publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1874,8 +1874,7 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "Code for the event this message represents or link to event definition",
-        "style": "form",
+        "description": "Type of the event itself in relation to the subject",
         "schema": {
           "type": "string"
         }
@@ -1883,8 +1882,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "This location is listed in the participants of the appointment",
-        "style": "form",
+        "description": "Location where adverse event occurred",
         "schema": {
           "type": "string"
         }
@@ -1916,8 +1914,7 @@
       "severity": {
         "name": "severity",
         "in": "query",
-        "description": "The severity of the condition",
-        "style": "form",
+        "description": "mild | moderate | severe",
         "schema": {
           "type": "string"
         }
@@ -1925,8 +1922,7 @@
       "study": {
         "name": "study",
         "in": "query",
-        "description": "Study subject is part of",
-        "style": "form",
+        "description": "AdverseEvent.study",
         "schema": {
           "type": "string"
         }
@@ -1934,7 +1930,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "The identity of a subject to search for individual measure report results for",
+        "description": "Who this goal is intended for",
         "style": "form",
         "schema": {
           "type": "string"

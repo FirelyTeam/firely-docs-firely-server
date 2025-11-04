@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Appointment",
-    "version": "6.4.0+efc2472f6ac82bd5cb558dbd09c1fa8864f24065"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1913,7 +1913,8 @@
       "actor": {
         "name": "actor",
         "in": "query",
-        "description": "Any one of the individuals participating in the appointment",
+        "description": "The individual(HealthcareService, Practitioner, Location, ...) to find a Schedule for",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1921,7 +1922,8 @@
       "appointment-type": {
         "name": "appointment-type",
         "in": "query",
-        "description": "The style of appointment or patient that has been booked in the slot (not service type)",
+        "description": "The style of appointment or patient that may be booked in the slot (not service type)",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1929,7 +1931,8 @@
       "based-on": {
         "name": "based-on",
         "in": "query",
-        "description": "The service request this appointment is allocated to assess",
+        "description": "Fulfills CarePlan",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1937,7 +1940,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The date of the measure report",
+        "description": "The evidence variable publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1946,7 +1949,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1955,7 +1958,8 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "This location is listed in the participants of the appointment",
+        "description": "Location where adverse event occurred",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1963,7 +1967,8 @@
       "part-status": {
         "name": "part-status",
         "in": "query",
-        "description": "The Participation status of the subject, or other participant on the appointment. Can be used to locate participants that have not responded to meeting requests.",
+        "description": "The participants acceptance status for this appointment",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1971,7 +1976,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The identity of a patient to search for individual measure report results for",
+        "description": "The reference to the patient",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1980,7 +1985,8 @@
       "practitioner": {
         "name": "practitioner",
         "in": "query",
-        "description": "One of the individuals of the appointment is this practitioner",
+        "description": "The Person links to this Practitioner",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1988,7 +1994,8 @@
       "reason-code": {
         "name": "reason-code",
         "in": "query",
-        "description": "Coded reason this appointment is scheduled",
+        "description": "Reason why the vaccine was administered",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1996,7 +2003,8 @@
       "reason-reference": {
         "name": "reason-reference",
         "in": "query",
-        "description": "Reason the appointment is to take place (resource)",
+        "description": "Why immunization occurred",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2004,7 +2012,8 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "A broad categorization of the service that is to be performed during this appointment",
+        "description": "High-level category",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2012,7 +2021,8 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The specific service that is to be performed during this appointment",
+        "description": "The type of appointments that can be booked into associated slot(s)",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2028,7 +2038,8 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
+        "description": "Type of specialty needed",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2036,7 +2047,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The status of the measure report",
+        "description": "The current status of the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2045,7 +2056,8 @@
       "supporting-info": {
         "name": "supporting-info",
         "in": "query",
-        "description": "Additional information to support the appointment",
+        "description": "Information supporting the clinical impression",
+        "style": "form",
         "schema": {
           "type": "string"
         }

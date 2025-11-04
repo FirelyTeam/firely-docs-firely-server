@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Condition",
-    "version": "6.4.0+efc2472f6ac82bd5cb558dbd09c1fa8864f24065"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1989,7 +1989,8 @@
       "asserter": {
         "name": "asserter",
         "in": "query",
-        "description": "Person who asserts this condition",
+        "description": "Source of the information about the allergy",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1997,8 +1998,7 @@
       "body-site": {
         "name": "body-site",
         "in": "query",
-        "description": "Where procedure is going to be done",
-        "style": "form",
+        "description": "Anatomical location, if relevant",
         "schema": {
           "type": "string"
         }
@@ -2006,7 +2006,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Classification of service",
+        "description": "E.g. Treatment, dietary, behavioral, etc.",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2015,7 +2015,8 @@
       "clinical-status": {
         "name": "clinical-status",
         "in": "query",
-        "description": "The clinical status of the condition\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
+        "description": "active | inactive | resolved\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2023,7 +2024,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "ok | transient-error | fatal-error",
+        "description": "The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2032,7 +2033,7 @@
       "encounter": {
         "name": "encounter",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [Composition](composition.html): Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter during which request was created\r\n* [DiagnosticReport](diagnosticreport.html): The Encounter when the order was made\r\n* [DocumentReference](documentreference.html): Context of the document  content\r\n* [Flag](flag.html): Alert relevant during encounter\r\n* [List](list.html): Context in which list created\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this encounter identifier\r\n* [Observation](observation.html): Encounter related to the observation\r\n* [Procedure](procedure.html): Encounter created as part of\r\n* [RiskAssessment](riskassessment.html): Where was assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter in which this request is made\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this encounter identifier\r\n",
+        "description": "Encounter created as part of",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2057,7 +2058,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2090,7 +2091,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The identity of a patient to search for individual measure report results for",
+        "description": "The reference to the patient",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2107,7 +2108,8 @@
       "severity": {
         "name": "severity",
         "in": "query",
-        "description": "The severity of the condition",
+        "description": "mild | moderate | severe",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2123,7 +2125,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "The identity of a subject to search for individual measure report results for",
+        "description": "Who this goal is intended for",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2132,7 +2134,8 @@
       "verification-status": {
         "name": "verification-status",
         "in": "query",
-        "description": "unconfirmed | provisional | differential | confirmed | refuted | entered-in-error",
+        "description": "unconfirmed | confirmed | refuted | entered-in-error",
+        "style": "form",
         "schema": {
           "type": "string"
         }

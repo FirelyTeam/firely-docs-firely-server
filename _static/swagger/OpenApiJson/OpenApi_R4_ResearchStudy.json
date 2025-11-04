@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - ResearchStudy",
-    "version": "6.4.0+efc2472f6ac82bd5cb558dbd09c1fa8864f24065"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1861,7 +1861,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Classification of service",
+        "description": "E.g. Treatment, dietary, behavioral, etc.",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1870,7 +1870,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The date of the measure report",
+        "description": "The evidence variable publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1879,8 +1879,7 @@
       "focus": {
         "name": "focus",
         "in": "query",
-        "description": "The actual content of the message",
-        "style": "form",
+        "description": "Drugs, devices, etc. under study",
         "schema": {
           "type": "string"
         }
@@ -1888,7 +1887,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1906,7 +1905,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "This location is listed in the participants of the appointment",
+        "description": "Location where adverse event occurred",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1940,7 +1939,8 @@
       "site": {
         "name": "site",
         "in": "query",
-        "description": "Facility where study activities are conducted",
+        "description": "Logical source location within the enterprise",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1956,7 +1956,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The status of the measure report",
+        "description": "The current status of the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1965,7 +1965,7 @@
       "title": {
         "name": "title",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The human-friendly name of the capability statement\r\n* [CodeSystem](codesystem.html): The human-friendly name of the code system\r\n* [ConceptMap](conceptmap.html): The human-friendly name of the concept map\r\n* [ImplementationGuide](implementationguide.html): The human-friendly name of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The human-friendly name of the message definition\r\n* [OperationDefinition](operationdefinition.html): The human-friendly name of the operation definition\r\n* [StructureDefinition](structuredefinition.html): The human-friendly name of the structure definition\r\n* [StructureMap](structuremap.html): The human-friendly name of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The human-friendly name of the terminology capabilities\r\n* [ValueSet](valueset.html): The human-friendly name of the value set\r\n",
+        "description": "The human-friendly name of the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"

@@ -56,22 +56,6 @@ Deployment
    .. note::
       If you want to use another kind of repository than the SQLite repository, you can add the settings for either :ref:`SQL Server<configure_sql>` or :ref:`MongoDB<configure_mongodb>` in this appsettings.json file.
 
-#. If the available resources are not sufficient for Firely Server to be responding to healthcheck requests within the default startup time (240 seconds), you might have to modify the `web.config` file by adding a `startupTimeLimit` attribute to the `aspNetCore` element to increase the startup time limit. For example, to set the limit to 600 seconds, modify the `web.config` file as follows:
-
-   .. code-block:: xml
-
-      <configuration>
-        ...
-        <aspNetCore processPath="dotnet" arguments=".\Firely.Server.dll" 
-        stdoutLogEnabled="false" stdoutLogFile=".\logs\stdout" forwardWindowsAuthToken="false" 
-        hostingModel="InProcess" startupTimeLimit="600">
-          ...
-        </aspNetCore>
-        ...
-      </configuration>
-
-   This change allows Firely Server more time to initialize, which is especially useful when connecting to external databases that may take longer to establish a connection.
-
 #. Open a terminal and use the Azure CLI to deploy the zip file to the web app. Use the following command (replace the placeholders with your own values):
 
    .. code-block:: bash

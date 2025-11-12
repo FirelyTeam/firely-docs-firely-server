@@ -25,8 +25,12 @@ Deployment
       :align: center
       :width: 760px
 
+#. Configure `Azure App Service Health Checks <https://learn.microsoft.com/en-us/azure/app-service/monitor-instances-health-check?tabs=dotnet#enable-health-check>`_ to target the /$liveness endpoint. This ensures the app has enough time to load conformance resources and start properly. Otherwise, Azure may automatically restart the app before initialization completes. See :ref:`$Liveness <feature_healthcheck>` for more information.
 
-#. Add the trial license file (firelyserver-trial-license.json) to the firely-server-latest.zip by dragging the license file into the zipfile.
+#. Download the latest Firely Server release from https://fire.ly/products/firely-server/.
+
+#. Add the trial license file (firelyserver-trial-license.json) to the downloaded firely-server-latest.zip by dragging the license file into the zipfile.
+
 #. Create a file called appsettings.json with the following content and add it to the zip file:
 
    .. code-block:: json
@@ -52,13 +56,15 @@ Deployment
    .. note::
       If you want to use another kind of repository than the SQLite repository, you can add the settings for either :ref:`SQL Server<configure_sql>` or :ref:`MongoDB<configure_mongodb>` in this appsettings.json file.
 
-#. If not using the embedded SQLite database or if loading additional conformance resources, you might have to modify the `web.config` file by adding a `startupTimeLimit` attribute to the `aspNetCore` element to increase the startup time limit. For example, to set the limit to 600 seconds, modify the `web.config` file as follows:
+#. If the available resources are not sufficient for Firely Server to be responding to healthcheck requests within the default startup time (240 seconds), you might have to modify the `web.config` file by adding a `startupTimeLimit` attribute to the `aspNetCore` element to increase the startup time limit. For example, to set the limit to 600 seconds, modify the `web.config` file as follows:
 
    .. code-block:: xml
 
       <configuration>
         ...
-        <aspNetCore processPath="dotnet" arguments=".\Firely.Server.dll" stdoutLogEnabled="false" stdoutLogFile=".\logs\stdout" forwardWindowsAuthToken="false" hostingModel="InProcess" startupTimeLimit="600">
+        <aspNetCore processPath="dotnet" arguments=".\Firely.Server.dll" 
+        stdoutLogEnabled="false" stdoutLogFile=".\logs\stdout" forwardWindowsAuthToken="false" 
+        hostingModel="InProcess" startupTimeLimit="600">
           ...
         </aspNetCore>
         ...
@@ -74,7 +80,7 @@ Deployment
          --resource-group <resource-group> \
          --name <firely-server-app> \
          --src-path <path-to-zip-file> \
-         --type zip
+         --type zip --clean true --restart true
 
 
    After deploying the .zip file using the Azure CLI, verify that all content has been extracted into the top-level webroot directory.
@@ -103,7 +109,7 @@ About Azure zip deployment: https://learn.microsoft.com/en-us/azure/app-service/
 
    * We recommend using either SQL Server or MongoDB as both the data and administration repositories when deploying Firely Server as an Azure Web App in Production due to autoscaling and file handling. See :ref:`Database configuration<configure_db_vonk>` for details on configuring these databases.
 
-   * It's important to configure `Azure App Service Health Checks <https://learn.microsoft.com/en-us/azure/app-service/monitor-instances-health-check?tabs=dotnet#enable-health-check>`_ to target the /$liveness endpoint. This ensures the app has enough time to load conformance resources and start properly. Otherwise, Azure may automatically restart the app before initialization completes. See :ref:`$Liveness <feature_healthcheck>` for more information.
+   * We recommend using slots for deploying new versions of Firely Server to minimize downtime. See `Azure App Service Deployment Slots <https://learn.microsoft.com/en-us/azure/app-service/deploy-staging-slots?tabs=dotnet>`_ for more information on how to set this up.
   
 
 

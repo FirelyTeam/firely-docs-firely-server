@@ -8,6 +8,15 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_6_5_1:
+
+Release 6.5.1, November 25th, 2025
+----------------------------------
+
+Fix
+^^^
+
+#. We updated the dependencies of the docker image to address security vulnerabilities in some of the base layers. The updated base image is now ``mcr.microsoft.com/dotnet/aspnet:8.0.22-alpine3.22``.
 
 .. _vonk_releasenotes_6_5_0:
 

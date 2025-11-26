@@ -45,7 +45,16 @@ If you don't have this in your license file yet, you probably need to acquire Fi
 By default Firely Auth will look for a license file named ``firely-auth-license.json``, adjacent to the ``Firely.Auth.Core.exe`` 
 You can adjust the location of the license file in the configuration settings, see :ref:`firely_auth_settings_license`.
 
-Additionally you will have to place a file called ``Duende_License.key`` also adjacent to the ``Firely.Auth.Core.exe``. This is required for production use but not testing or development. Firely will provide this key with purchase of Firely Auth. Please note that the path to this file cannot be configured. 
+Additionally you will have to place a file called ``Duende_License.key`` also adjacent to the ``Firely.Auth.Core.exe``. This is required for production use but not testing or development. Firely will provide this key with purchase of Firely Auth. Please note that the path to this file cannot be configured. Alternatively, you can specify the value of the Duende license key with the environment variable ``FIRELY_AUTH_License__DuendeLicenseString`` or place this value in the appsettings.json file under the section ``FirelyAuth.License:DuendeLicenseString``:
+
+  .. code-block:: json
+
+    "License": {
+      "LicenseFile": "firely-auth-license.json",
+      "DuendeLicenseString": "<your duende license string here>"
+    } 
+
+
 
 Step 3 - Ssl certificate
 ^^^^^^^^^^^^^^^^^^^^^^^^

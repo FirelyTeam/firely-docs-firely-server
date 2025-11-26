@@ -3,10 +3,21 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.5.0:
+
+Release 4.5.0, December xnd, 2025
+---------------------------------
+
+Feature
+^^^^^^^
+
+#. Added support for configuring the Duende IdentityServer license key via environment variable or appsettings.json file. This provides more flexibility in managing the license key, especially in containerized or cloud environments. See :ref:`firely_auth_deploy` for more details.
+
+
 .. _firelyauth_releasenotes_4.4.0:
 
-Release 4.4.0, 19-08-2025
--------------------------
+Release 4.4.0, August 19th, 2025
+--------------------------------
 
 Feature
 ^^^^^^^
@@ -37,8 +48,8 @@ Fix
 
 .. _firelyauth_releasenotes_4.3.0:
 
-Release 4.3.0, 18-02-2025
--------------------------
+Release 4.3.0, February 18th, 2025
+----------------------------------
 
 Feature
 ^^^^^^^

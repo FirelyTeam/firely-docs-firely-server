@@ -156,7 +156,7 @@ Infrastructural plugins
 :Configuration: ``Vonk.Plugin.SearchAnonymization.SearchAnonymizationRequestHandlingConfiguration`` and ``Vonk.Plugin.SearchAnonymization.SearchAnonymizationResponseHandlingConfiguration``
 :License token: http://fire.ly/vonk/plugins/infra
 :Order: 1100 & 1238
-:Description: Removes privacy-sensitive information from the navigational links of a searchset bundle
+:Description: Removes privacy-sensitive information from the navigational links of a searchset bundle. See :ref:`restful_search_anonymization` for details.
 
 .. _vonk_plugins_httptovonk:
 

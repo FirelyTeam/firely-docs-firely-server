@@ -61,7 +61,7 @@ Configuration of the pipeline in Firely Server is done with ``PipelineOptions`` 
 
 PluginDirectory:
    You can put plugins of your own (or third party) into this directory for Firely Server to pick them up, without polluting the Firely Server binaries directory itself. For a list of available plugins in Firely Server, see :ref:`vonk_available_plugins`. The directory in the default setting of ``./plugins`` is not created upon install, you may do this yourself if you want to add a plugin.
-PluginDirectory.Branches:
+PipelineOptions.Branches:
    A web application can branch into different paths, and Firely Server has two by default:
 
    * ``/``: the root branch, where the main :ref:`restful` is hosted;

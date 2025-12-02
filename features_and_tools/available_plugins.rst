@@ -95,7 +95,7 @@ PipelineOptions.Branches:
       (Prefixes of) :ref:`vonk_plugins_configclass` that may not be executed. ``Exclude`` overrides ``Include`` and is useful if you want to use all but one configuration class from a namespace.
 
 Features can be identified by their corresponding Configuration namespace in the list below. To disable a feature, add the namespace to the ``Excluded`` section or commented it out.
-Custom REST operations can additionally be enabled on a system-, type-, or instance-level using the ``Operations`` setting, see :ref:`_disable_interactions` for more details.
+Custom REST operations can additionally be enabled on a system-, type-, or instance-level using the ``Operations`` setting, see :ref:`disable_interactions` for more details.
 
 .. _vonk_plugins_infra:
 

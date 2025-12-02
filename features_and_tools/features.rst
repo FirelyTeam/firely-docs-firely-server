@@ -14,6 +14,8 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    :maxdepth: 1
    :titlesonly:
 
+   available_plugins
+   features-availability
    restful_api
    documenthandling
    binarywrapper
@@ -30,8 +32,6 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    realworldtesting
    multi-tenancy
    cds-hooks
-   available_plugins
-   features-availability
    
 
 

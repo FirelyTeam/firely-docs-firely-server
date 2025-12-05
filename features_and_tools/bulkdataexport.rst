@@ -183,6 +183,12 @@ Also make sure you fill in the account details for Azure in ``AzureServices`` as
 $export
 -------
 
+The $export operation can be finetuned using the following optional query parameters:
+
+* _since: Get only resources changed since this moment
+* _until: Get only resources changed until this moment
+* _type: Limit the returned resource types to only the types in this list
+
 There are three different levels for which the $export operation can be called:
 
 System

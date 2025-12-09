@@ -1,7 +1,7 @@
 .. _feature_qualitymeasures:
 
-Executing Digital Quality Measures (dQMs) - $evaluate and $evaluate-measure
-===========================================================================
+Executing Digital Quality Measures (dQMs) - $cql, $evaluate, $evaluate-measure, $data-requirements
+==================================================================================================
 
 .. note::
 
@@ -291,9 +291,9 @@ Firely Server supports the following parameters:
 |                         |           |                         | will not execute correctly if  |
 |                         |           |                         | input parameters are needed.   |
 +-------------------------+-----------+-------------------------+--------------------------------+
-| ``subject``             | ❌        | ``string``              |                                |
+| ``subject``             | ✅        | ``string``              |                                |
 +-------------------------+-----------+-------------------------+--------------------------------+
-| ``parameters``          | ❌        | ``Parameters`` resource |                                |
+| ``parameters``          | ✅        | ``Parameters`` resource |                                |
 +-------------------------+-----------+-------------------------+--------------------------------+
 | ``library``             | ❌        | Complex                 |                                |
 +-------------------------+-----------+-------------------------+--------------------------------+

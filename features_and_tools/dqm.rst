@@ -112,7 +112,7 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 	:Input: A CQL expression and the relevant data context (e.g., patient data).
 	:Output: The evaluated result of the expression (e.g., Boolean, date, quantity) encoded in a FHIR Parameters resource.
 
-	See `Using CQL with FHR - OperationDefinition $cql <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_ on how to execute this operation.
+	See `Using CQL with FHR - OperationDefinition $cql <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_ and :ref:`feature_cql_operation` on how to execute this operation.
 
 ----
 

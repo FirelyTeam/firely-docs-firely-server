@@ -239,7 +239,7 @@ Authorized representatives
 
 .. warning::
 
-    This feature is still in its developmental phase and as such is not yet working correctly together with all of Firely Auths features, mainly :ref: `firely_auth_settings_launchcontext` and :ref:`_firely_auth_settings_disclaimers`. On launch context registration, the Authorized Representative feature will be blocked if launch scopes are included in the token request. For disclaimer registration we recommend not to use it in combination with the Authorized Representative feature. Due to the experimental nature of this feature, it is recommended to thoroughly test its functionality in a development or staging environment before deploying it to production.
+    This feature is still in its developmental phase and as such is not yet working correctly together with all of Firely Auths features, mainly :ref: `firely_auth_settings_launchcontext` and :ref:`_firely_auth_settings_disclaimers`. On launch context registration, the Authorized Representative feature will be blocked if launch scopes are included in the token request. For disclaimer registration, disclaimers can be accepted once for each representee, but disclaimers that were agreed to in the authorized representative flow will not be visible in the users overview of accepted disclaimers. Due to the experimental nature of this feature, it is recommended to thoroughly test its functionality in a development or staging environment before deploying it to production.
 
 Firely Auth can be configured to allow users to login on behalf of other users for whom they are authorized representatives (e.g., caregivers). This requires support from a custom plugin in Firely Server to manage and expose these relationships.
 

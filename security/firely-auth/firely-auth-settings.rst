@@ -228,6 +228,43 @@ To make Firely Server known to Firely Auth, fill in the ``FhirServer``:
 
 - ``IntrospectionSecret``: When using a :term:`reference token`, Firely Server must verify the token with Firely Auth and the communication needs to be authenticated by providing the name and the secret. This configuration is only needed if at least one :term:`client` is configured to use reference tokens, see :ref:`firely_auth_settings_tokentypes` for the configuration.
 
+.. _firely_auth_settings_representatives:
+
+Authorized representatives
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. note::
+
+    This is a beta feature and is subject to change in future releases. It is also dependent on a custom plugin in Firely Server to manage and expose the authorized representative relationships. For more information on the specifics of this plugin, please contact Firely support.
+
+.. warning::
+
+    This feature is still in its developmental phase and as such is not yet working correctly together with all of Firely Auths features, mainly :ref: `firely_auth_settings_launchcontext` and :ref:`_firely_auth_settings_disclaimers`. On launch context registration, the Authorized Representative feature will be blocked if launch scopes are included in the token request. For disclaimer registration we recommend not to use it in combination with the Authorized Representative feature. Due to the experimental nature of this feature, it is recommended to thoroughly test its functionality in a development or staging environment before deploying it to production.
+
+Firely Auth can be configured to allow users to login on behalf of other users for whom they are authorized representatives (e.g., caregivers). This requires support from a custom plugin in Firely Server to manage and expose these relationships.
+
+.. code-block:: json
+
+  "AuthorizedRepresentatives": {
+    "LookupOnLogin": false,
+    "LookupRequestScopes": "https://fire.ly/fhir/OperationDefinition/has-authorized-representative-relationships",
+    "CheckAuthorizedRepresentativeTimeout": 5000, // in ms
+    "TitleOnLogin": "Who Are You Signing In As?",
+    "TitleOwnProfileOnLogin": "Continue as Yourself",
+    "TitleAuthorizedProfilesOnLogin": "Continue On Behalf Of ...",
+    "HelpMessageTitleOnFail": "Couldn't load authorized profiles",
+    "HelpMessageOnFail": "A technical error prevented loading the user profiles of all authorized users. Please try again by reloading or continue as yourself."
+  },
+
+- ``LookupOnLogin``: true / false - Whether to look up authorized representatives during login. If set to false, users will not be able to retrieve an access token on behalf of other users.
+- ``LookupRequestScopes``: The scope to use when looking up authorized representatives in Firely Server. This requires a custom plugin in Firely Server to expose the relationships that utilizes this scope.
+- ``CheckAuthorizedRepresentativeTimeout``: Timeout in milliseconds for the lookup request to Firely Server.
+- ``TitleOnLogin``: Title text to display on the login page when selecting a profile to sign in as.
+- ``TitleOwnProfileOnLogin``: Text for the button to continue as oneself.
+- ``TitleAuthorizedProfilesOnLogin``: Title text to display above the list of authorized profiles.
+- ``HelpMessageTitleOnFail``: Title text for the help message displayed when the lookup of authorized profiles fails.
+- ``HelpMessageOnFail``: Help message text displayed when the lookup of authorized profiles fails.
+
 .. _firely_auth_settings_tokentypes:
 
 Token types
@@ -505,6 +542,8 @@ External identity providers
 			"ClientSecret": "secret for clientId",
       "Scope": "openid profile email",
 			"ResponseType": "id_token", // id_token | code
+      "IdTokenRequiresDecryption": false,
+      "IdTokenDecryptionKey": "<JWK>",
 			"AllowAutoProvision": true,
 			"AutoProvisionFromSecurityGroup": ["<Security Group>"],
 			"UserClaimsFromIdToken": [{
@@ -531,7 +570,8 @@ External identity providers
   
   - ``id_token`` – Requests an ID token directly from the authorization endpoint (implicit flow).
   - ``code`` – Requests an authorization code which is later exchanged for tokens (authorization code flow).
-  
+- ``IdTokenRequiresDecryption``: true / false - Indicates whether the ID token received from the external identity provider is encrypted and requires decryption.
+- ``IdTokenDecryptionKey``: "<JWK>" - The key for decrypting the the ID token, assessed when ``IdTokenRequiresDecryption`` is set to true.
 -	``AllowAutoProvision``: true / false - If true, Firely Auth will automatically create a user in its own database if the user logs in with an external identity provider for the first time. The user will be created with the claims that are provided by the external identity provider. Note that either the ``UserClaimsFromIdToken`` or ``FhirUserLookupClaimsMapping`` setting may be necessary to map a custom user claim from the identity provider to the required ``fhirUser`` claim. A request to Firely Server will attempt to match the user to a ``Patient`` or ``Practitioner`` resource and, if found, the respective resource ID will be used as the ``fhirUser`` claim. 
 - ``AutoProvisionFromSecurityGroup``: When ``AllowAutoProvision`` is true, this setting allows you to specify a security group that the user must be a member of in order to be automatically provisioned. If the user is not a member of this group, the user will not be automatically provisioned.
 - ``UserClaimsFromIdToken``: This setting allows you to map the claims from the token that is received from the external identity provider to the claims that are stored in the Firely Auth database. The key is the claim that is received from the external identity provider. This key can be copied as a value that is recognized by Firely Auth. For intance, Azure is able to provide ``fhirUser`` claim to the token, but will prefix this claim with ``extn.``. The CopyAs field can be used to remove this prefix, so that Firely Auth is able to recognize the ``fhirUser`` claim.

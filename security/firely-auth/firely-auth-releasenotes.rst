@@ -12,6 +12,8 @@ Feature
 ^^^^^^^
 
 #. Added support for configuring the Duende IdentityServer license key via environment variable or appsettings.json file. This provides more flexibility in managing the license key, especially in containerized or cloud environments. See :ref:`firely_auth_deploy` for more details.
+#. Added extra settings to the ExternalIdentityProviders section to support additional IdentityProviders, specifically ID.me. For more information, see :ref:`firely_auth_settings_externalidp`.
+#. The user creation form was updated to perform a fhirUser lookup in Firely Server for the creation of local users. Users will be looked up based on their name and email, and the resulting Patient or Practitioner id will be used as a value for the fhirUser claim. Note that for this lookup to work, the patients name as registered in Firely Auth should be listed in the ``name.text`` element of the Patient resource in Firely Server.
 
 
 .. _firelyauth_releasenotes_4.4.0:

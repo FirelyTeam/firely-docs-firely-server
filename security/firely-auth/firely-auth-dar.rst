@@ -1,4 +1,4 @@
-.. _firely_auth_dar:
+.. _firely_auth_settings_representatives:
 
 Designated Authorized Representative
 ====================================

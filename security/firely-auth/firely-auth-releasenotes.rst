@@ -12,7 +12,14 @@ Feature
 ^^^^^^^
 
 #. Added support for configuring the Duende IdentityServer license key via environment variable or appsettings.json file. This provides more flexibility in managing the license key, especially in containerized or cloud environments. See :ref:`firely_auth_deploy` for more details.
-#. Added extra settings to the ExternalIdentityProviders section to support additional IdentityProviders, specifically ID.me. For more information, see :ref:`firely_auth_settings_externalidp`.
+#. Added additional settings to the ``ExternalIdentityProviders`` section:
+
+   - Support requesting specific scopes during the SSO login process.
+   - Clarify whether Firely Auth should expect an ``id_token`` directly or an authorization code that still needs to be redeemed.
+   - Support displaying an SVG image instead of static text for the login button on the Firely Auth login page.
+   - Enable decryption of the ``id_token`` in case the SSO provider returns a JWE payload to further protect the claims it contains.
+
+   For more information, see :ref:`firely_auth_settings_externalidp`.
 #. The user creation form was updated to perform a fhirUser lookup in Firely Server for the creation of local users. Users will be looked up based on their name and email, and the resulting Patient or Practitioner id will be used as a value for the fhirUser claim. Note that for this lookup to work, the patients name as registered in Firely Auth should be listed in the ``name.text`` element of the Patient resource in Firely Server.
 #. We implemented support for the letting authorized representatives (e.g., caregivers) retrieve access tokens on behalf of a patient. For more information, see :ref:`firely_auth_settings_representatives`.
 

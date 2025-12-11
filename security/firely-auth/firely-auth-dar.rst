@@ -21,7 +21,7 @@ Configuration Guide: Enabling Designated Authorized Representatives
 Step 1 - Configure Firely Auth Authorized Representatives in the appsettings
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can enable DAR functionality by configuring it in the Firely Auth App Settings be setting LookupOnLogin to true.
+You can enable DAR functionality by configuring it in the Firely Auth App Settings be setting ``LookupOnLogin`` to true.
 
 .. code-block:: json
 
@@ -36,6 +36,14 @@ You can enable DAR functionality by configuring it in the Firely Auth App Settin
       "HelpMessageOnFail": "A technical error prevented loading the user profiles of all authorized users. Please try again by reloading or continue as yourself."
     }
 
+Additionally, the screen for selecting authorized representatives can be customized through various static text settings:
+
+- TitleOnLogin: Main title displayed on the page.
+- TitleOwnProfileOnLogin / TitleAuthorizedProfilesOnLogin:  
+  The screen is divided into two sections — one for the user's own profile and one for authorized profiles.  
+  Separate titles can be defined for each section.
+- HelpMessageTitleOnFail and HelpMessageOnFail:  
+  These messages are shown when Firely Auth does not retrieve data in a timely manner, despite the FHIR server returning `true` for the ``$check-authorized-representative-relationships`` operation (see below).
 
 Step 2 - Building the $check-authorized-representative-relationships operation on Firely Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -16,6 +16,11 @@ Feature
 #. The user creation form was updated to perform a fhirUser lookup in Firely Server for the creation of local users. Users will be looked up based on their name and email, and the resulting Patient or Practitioner id will be used as a value for the fhirUser claim. Note that for this lookup to work, the patients name as registered in Firely Auth should be listed in the ``name.text`` element of the Patient resource in Firely Server.
 #. We implemented support for the letting authorized representatives (e.g., caregivers) retrieve access tokens on behalf of a patient. For more information, see :ref:`firely_auth_settings_representatives`.
 
+Fix
+^^^
+
+#. Fixed a bug that would prevent custom favicons configured in the appsettings from being displayed to the user.
+
 .. _firelyauth_releasenotes_4.4.0:
 
 Release 4.4.0, August 19th, 2025

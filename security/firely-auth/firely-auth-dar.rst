@@ -14,6 +14,9 @@ When the Authorized Representatives feature is enabled, user authentication trig
     
     *The operation can post relationship details to the Firely Auth Administrative API either synchronously (before returning the response) or asynchronously (after returning the response).*
 
+.. important::
+
+    The DAR feature does currently not work in combination with ``launch``-Context scopes. Requesting such a scope will skip the DAR selection UI.
 
 Configuration Guide: Enabling Designated Authorized Representatives
 -------------------------------------------------------------------

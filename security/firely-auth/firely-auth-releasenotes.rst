@@ -5,8 +5,8 @@ Release notes
 
 .. _firelyauth_releasenotes_4.5.0:
 
-Release 4.5.0, December xnd, 2025
----------------------------------
+Release 4.5.0, December 15th, 2025
+----------------------------------
 
 Feature
 ^^^^^^^
@@ -21,7 +21,7 @@ Feature
 
    For more information, see :ref:`firely_auth_settings_externalidp`.
 #. The user creation form was updated to perform a fhirUser lookup in Firely Server for the creation of local users. Users will be looked up based on their name and email, and the resulting Patient or Practitioner id will be used as a value for the fhirUser claim. Note that for this lookup to work, the patients name as registered in Firely Auth should be listed in the ``name.text`` element of the Patient resource in Firely Server.
-#. We implemented support for the letting authorized representatives (e.g., caregivers) retrieve access tokens on behalf of a patient. For more information, see :ref:`firely_auth_settings_representatives`.
+#. As a beta feature we implemented support for letting authorized representatives (e.g., caregivers) retrieve access tokens on behalf of a patient. For more information, see :ref:`firely_auth_settings_representatives` and :ref:`firely_auth_dar`.
 
 Fix
 ^^^

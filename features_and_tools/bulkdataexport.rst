@@ -44,9 +44,10 @@ The Bulk Data Export Service enables the $export operation from the Fhir specifi
 
   The Administration database can be configured to any of the three supported databases.
 
+.. _feature_bulkdataexport_configuration:
 
-Appsettings
------------
+BDE Configuration
+-----------------
 To start using the Bulk Data Export Service (BDE) you will first have to add the relevant plugins (Vonk.Plugin.BulkDataExport.[Level]BulkDataExportConfiguration) to the PipelineOptions in the appsettings. 
 In the example below we have enabled all three levels: Patient, Group and System.
 
@@ -135,7 +136,10 @@ BDE introduces several new parts to the appsettings:
   "BulkDataExport": {
       "RepeatPeriod" : 60000, //ms
       "AdditionalResourcesMaxRecursionDepth": 1,
-      "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "BodyStructure", "Medication", "Coverage" ] 
+      "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "BodyStructure", "Medication", "Coverage" ],
+      "FileRetentionPeriod": "7.00:00:00", // Optional: retention period for export files and snapshots (format: d.hh:mm:ss). After this period, tasks will be purged and return 410 GONE. If not set, retention cleanup is disabled.
+      "CleanupCheckInterval": "01:00:00" // Optional: how often to check for expired tasks (format: hh:mm:ss). Default is 1 hour if not specified.
+
   },
   "SqlDbOptions": {
       // ...
@@ -151,6 +155,9 @@ These resources may reference resources outside the compartment as well, such as
 Furthermore, additional resources may reference other resources that can also be exported. The depth of this inclusion can be configured using the setting ``AdditionalResourcesMaxRecursionDepth``.
 
 Resources of type ``Group`` and ``Patient`` never get exported as Additional resources.
+
+With ``FileRetentionPeriod`` you can configure how long the exported files and snapshots will be retained. After this period, the export task will be purged and return a 410 GONE status when requesting the $exportstatus. If this setting is not configured, the cleanup process is disabled and the exported files and snapshots will be retained indefinitely. This works when saving taskfiles to local disk as well as when using Azure Blob or Azure Files.
+With ``CleanupCheckInterval`` you can configure how often the cleanup process checks for expired tasks. The default is 1 hour if this setting is not configured.
 
 .. note::
 

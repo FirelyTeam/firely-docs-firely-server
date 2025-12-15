@@ -1,7 +1,101 @@
 .. _vonk_available_plugins:
 
-Available plugins and services
-==============================
+Available features and configuration
+====================================
+
+Features and services can be disabled in Firely Server by adjusting the so-called ``PipelineOptions`` in combination with ``Operations`` setting. A default setup of the pipeline is installed with Firely Server in appsettings.default.json, and it looks like this:
+::
+
+  "PipelineOptions": {
+    "PluginDirectory": "./plugins",
+    "Branches": [
+      {
+        "Path": "/",
+        "Include": [
+          "Vonk.Core",
+          "Vonk.Plugin.Operations",
+          "Vonk.Fhir.R3",
+          "Vonk.Fhir.R4",
+          //"Vonk.Fhir.R5",
+          "Vonk.Repository.Sql.Raw.KSearchConfiguration",
+          "Vonk.Repository.Sqlite.SqliteVonkConfiguration",
+          "Vonk.Repository.MongoDb.MongoDbVonkConfiguration",
+          "Vonk.Repository.Memory.MemoryVonkConfiguration",
+          "Vonk.Subscriptions",
+          "Vonk.Plugin.Smart",
+          "Vonk.UI.Demo",
+          "Vonk.Plugin.DocumentOperation.DocumentOperationConfiguration",
+          //"Vonk.Plugin.DocumentHandling.DocumentHandlingConfiguration",
+          //"Vonk.Plugin.DocRefOperation.DocRefOperationConfiguration",
+          "Vonk.Plugin.ConvertOperation.ConvertOperationConfiguration",
+          "Vonk.Plugin.BinaryWrapper",
+          "Vonk.Plugin.Audit",
+          //"Vonk.Plugin.BulkDataExport.SystemBulkDataExportConfiguration",
+          //"Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration",
+          //"Vonk.Plugin.BulkDataExport.PatientBulkDataExportConfiguration",
+          //"Vonk.Plugin.PatientEverything",
+          //"Vonk.Plugin.LastN",
+          "Vonk.Plugin.UpdateNoOp.UpdateNoOpConfiguration",
+          "Vonk.Plugin.UpdateNoOp.PatchNoOpConfiguration",
+          "Vonk.Plugin.UpdateNoOp.ConditionalUpdateNoOpConfiguration",
+          //"Vonk.Plugin.EraseOperation.EraseOperationConfiguration",
+          //"Vonk.Plugin.EraseOperation.PurgeOperationConfiguration",
+          "Vonk.Plugin.SearchAnonymization",
+          //"Vonk.Plugin.MemberMatch",
+          //"Vonk.Plugin.Services.Azure",
+          //"Vonk.Plugin.PubSub.Pub.MongoDb",
+          //"Vonk.Plugin.PubSub.Pub.Sql",
+          //"Vonk.Plugin.PubSub.Sub",
+          //"Vonk.Plugin.VirtualTenants",
+          "Vonk.Plugins.Terminology"
+        ],
+        "Exclude": [
+          "Vonk.Subscriptions.Administration",
+          "Vonk.Plugin.Audit.Integrity"
+        ]
+      },
+      {
+        "Path": "/administration",
+        "Include": [
+          "Vonk.Core",
+          "Vonk.Fhir.R3",
+          "Vonk.Fhir.R4",
+          //"Vonk.Fhir.R5",
+          //"Vonk.Repository.Sql.SqlTaskConfiguration",
+          "Vonk.Repository.Sql.Raw.KAdminSearchConfiguration",
+          "Vonk.Repository.Sqlite.SqliteTaskConfiguration",
+          "Vonk.Repository.Sqlite.SqliteAdministrationConfiguration",
+          //"Vonk.Repository.MongoDb.MongoDbTaskConfiguration",
+          "Vonk.Repository.MongoDb.MongoDbAdminConfiguration",
+          "Vonk.Repository.Memory.MemoryAdministrationConfiguration",
+          "Vonk.Subscriptions.Administration",
+          "Vonk.Plugins.Terminology",
+          //"Vonk.Plugin.RealWorldTesting",
+          //"Vonk.Plugin.UpdateNoOp.UpdateNoOpConfiguration",
+          "Vonk.Administration",
+          "Vonk.Plugin.BinaryWrapper"
+        ]
+      }
+    ]
+  }
+
+PipelineOptions.Branches:
+   Firely Server has two logical paths, called branches, by default on which the RESTful API interactions and operations are exposed:
+
+   * ``/``: the root branch, where the main :ref:`restful` is hosted;
+   * ``/administration``: where the :ref:`administration_api` is hosted.
+ 
+   ``Branches`` contains a subdocument for each of the defined paths:
+   
+   Path
+      The path for this branch. This is the part after the base URL that Firely Server is hosted on.
+   Include
+      (Prefixes of) :ref:`vonk_plugins_configclass` that add services and middleware to Firely Server.
+   Exclude
+      (Prefixes of) :ref:`vonk_plugins_configclass` that may not be executed. ``Exclude`` overrides ``Include`` and is useful if you want to use all but one configuration class from a namespace.
+
+Features can be identified by their corresponding Configuration namespace in the list below. To disable a feature, add the namespace to the ``Excluded`` section or commented it out.
+Custom REST operations can additionally be enabled on a system-, type-, or instance-level using the ``Operations`` setting, see :ref:`disable_interactions` for more details.
 
 .. _vonk_plugins_infra:
 
@@ -62,7 +156,7 @@ Infrastructural plugins
 :Configuration: ``Vonk.Plugin.SearchAnonymization.SearchAnonymizationRequestHandlingConfiguration`` and ``Vonk.Plugin.SearchAnonymization.SearchAnonymizationResponseHandlingConfiguration``
 :License token: http://fire.ly/vonk/plugins/infra
 :Order: 1100 & 1238
-:Description: Removes privacy-sensitive information from the navigational links of a searchset bundle
+:Description: Removes privacy-sensitive information from the navigational links of a searchset bundle. See :ref:`restful_search_anonymization` for details.
 
 .. _vonk_plugins_httptovonk:
 

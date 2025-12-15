@@ -28,6 +28,16 @@ Fix
 
 #. Fixed a bug that would prevent custom favicons configured in the appsettings from being displayed to the user.
 
+.. _firelyauth_releasenotes_4.4.1:
+
+Release 4.4.1, September 24th, 2025
+-----------------------------------
+
+Fix
+^^^
+
+#. We upgraded to IdentityServer 7.3.2 to address an issue where Firely Auth would not start with the provided Duende license key.
+
 .. _firelyauth_releasenotes_4.4.0:
 
 Release 4.4.0, August 19th, 2025

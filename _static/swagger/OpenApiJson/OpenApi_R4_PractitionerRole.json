@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - PractitionerRole",
-    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1870,7 +1870,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The date of the measure report",
+        "description": "The evidence variable publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1897,7 +1897,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1906,7 +1906,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "This location is listed in the participants of the appointment",
+        "description": "Location where adverse event occurred",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1933,7 +1933,7 @@
       "practitioner": {
         "name": "practitioner",
         "in": "query",
-        "description": "One of the individuals of the appointment is this practitioner",
+        "description": "The Person links to this Practitioner",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1960,7 +1960,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
+        "description": "Type of specialty needed",
         "style": "form",
         "schema": {
           "type": "string"

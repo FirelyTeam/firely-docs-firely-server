@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - PaymentReconciliation",
-    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1796,7 +1796,7 @@
       "created": {
         "name": "created",
         "in": "query",
-        "description": "The creation date for the EOB",
+        "description": "The creation date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1814,7 +1814,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1858,7 +1858,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The status of the measure report",
+        "description": "The current status of the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"

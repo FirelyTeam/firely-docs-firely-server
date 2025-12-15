@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - CommunicationRequest",
-    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1900,8 +1900,7 @@
       "authored": {
         "name": "authored",
         "in": "query",
-        "description": "Date request signed",
-        "style": "form",
+        "description": "When request transitioned to being actionable",
         "schema": {
           "type": "string"
         }
@@ -1909,7 +1908,7 @@
       "based-on": {
         "name": "based-on",
         "in": "query",
-        "description": "The service request this appointment is allocated to assess",
+        "description": "Fulfills CarePlan",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1918,7 +1917,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "Classification of service",
+        "description": "E.g. Treatment, dietary, behavioral, etc.",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1927,7 +1926,7 @@
       "encounter": {
         "name": "encounter",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [Composition](composition.html): Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter during which request was created\r\n* [DiagnosticReport](diagnosticreport.html): The Encounter when the order was made\r\n* [DocumentReference](documentreference.html): Context of the document  content\r\n* [Flag](flag.html): Alert relevant during encounter\r\n* [List](list.html): Context in which list created\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this encounter identifier\r\n* [Observation](observation.html): Encounter related to the observation\r\n* [Procedure](procedure.html): Encounter created as part of\r\n* [RiskAssessment](riskassessment.html): Where was assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter in which this request is made\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this encounter identifier\r\n",
+        "description": "Encounter created as part of",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1944,7 +1943,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1961,8 +1960,7 @@
       "occurrence": {
         "name": "occurrence",
         "in": "query",
-        "description": "When service should occur",
-        "style": "form",
+        "description": "When scheduled",
         "schema": {
           "type": "string"
         }
@@ -1970,7 +1968,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The identity of a patient to search for individual measure report results for",
+        "description": "The reference to the patient",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1980,7 +1978,6 @@
         "name": "priority",
         "in": "query",
         "description": "routine | urgent | asap | stat",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1996,7 +1993,7 @@
       "replaces": {
         "name": "replaces",
         "in": "query",
-        "description": "What request replaces",
+        "description": "CarePlan replaced by this CarePlan",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2006,7 +2003,6 @@
         "name": "requester",
         "in": "query",
         "description": "Who/what is requesting service",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2014,8 +2010,7 @@
       "sender": {
         "name": "sender",
         "in": "query",
-        "description": "Real world sender of the message",
-        "style": "form",
+        "description": "Message sender",
         "schema": {
           "type": "string"
         }
@@ -2023,7 +2018,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The status of the measure report",
+        "description": "The current status of the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2032,7 +2027,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "The identity of a subject to search for individual measure report results for",
+        "description": "Who this goal is intended for",
         "style": "form",
         "schema": {
           "type": "string"

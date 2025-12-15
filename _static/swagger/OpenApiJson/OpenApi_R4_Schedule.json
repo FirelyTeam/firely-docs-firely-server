@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Schedule",
-    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1792,8 +1792,7 @@
       "actor": {
         "name": "actor",
         "in": "query",
-        "description": "Any one of the individuals participating in the appointment",
-        "style": "form",
+        "description": "The individual(HealthcareService, Practitioner, Location, ...) to find a Schedule for",
         "schema": {
           "type": "string"
         }
@@ -1801,7 +1800,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The date of the measure report",
+        "description": "The evidence variable publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1810,7 +1809,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1819,8 +1818,7 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "A broad categorization of the service that is to be performed during this appointment",
-        "style": "form",
+        "description": "High-level category",
         "schema": {
           "type": "string"
         }
@@ -1828,8 +1826,7 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The specific service that is to be performed during this appointment",
-        "style": "form",
+        "description": "The type of appointments that can be booked into associated slot(s)",
         "schema": {
           "type": "string"
         }
@@ -1837,8 +1834,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
-        "style": "form",
+        "description": "Type of specialty needed",
         "schema": {
           "type": "string"
         }

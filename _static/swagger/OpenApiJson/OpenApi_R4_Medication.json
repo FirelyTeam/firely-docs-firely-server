@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Medication",
-    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1809,7 +1809,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "ok | transient-error | fatal-error",
+        "description": "The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1834,7 +1834,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1843,7 +1843,8 @@
       "ingredient": {
         "name": "ingredient",
         "in": "query",
-        "description": "Returns medications for this ingredient reference",
+        "description": "Medication(s) or substance(s) contained in the medication",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1851,7 +1852,8 @@
       "ingredient-code": {
         "name": "ingredient-code",
         "in": "query",
-        "description": "Returns medications for this ingredient code",
+        "description": "Medication(s) or substance(s) contained in the medication",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1859,7 +1861,8 @@
       "lot-number": {
         "name": "lot-number",
         "in": "query",
-        "description": "Returns medications in a batch with this lot number",
+        "description": "Vaccine Lot Number",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1867,7 +1870,8 @@
       "manufacturer": {
         "name": "manufacturer",
         "in": "query",
-        "description": "Returns medications made or sold for this manufacturer",
+        "description": "Vaccine Manufacturer",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1875,7 +1879,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The status of the measure report",
+        "description": "The current status of the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"

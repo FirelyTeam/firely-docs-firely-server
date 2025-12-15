@@ -8,6 +8,55 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_6_5_1:
+
+Release 6.5.1, November 25th, 2025
+----------------------------------
+
+Fix
+^^^
+
+#. We updated the dependencies of the docker image to address security vulnerabilities in some of the base layers. The updated base image is now ``mcr.microsoft.com/dotnet/aspnet:8.0.22-alpine3.22``.
+
+.. _vonk_releasenotes_6_5_0:
+
+Release 6.5.0, November 4th, 2025
+---------------------------------
+
+Improvements
+^^^^^^^^^^^^
+
+#. The behavior of the ``$purge`` operation has been adjusted with regard to Group resources. Purged Patient references are now removed without deleting the entire Group, as Groups may contain additional references to other Patient instances.
+#. Firely Server MassTransit dependencies were updated to enhance SASL authentication with Kafka, improving message passing security.
+
+Features
+^^^^^^^^
+
+#. It is now possible to configure the file retention period for Bulk Data Export task files. It specifies how long the exported files should be retained on the servr before they are automatically deleted. For more information see :ref:`feature_bulkdataexport_configuration`.
+#. SSL configuration details are now supported for RabbitMQ in Firely Server PubSub. It enables configuring SSL settings to secure the connection between Firely Server and RabbitMQ. For more information see :ref:`pubsub_configuration_rabbitmq`.
+#. To support quick and easy debugging, Serilog Log Level hot reloading capabilities can now be leverages. The log level of Serilog can now be changed in the logsettings at runtime without restarting Firely Server. For more information see :ref:`hot_reload_log_level`.
+#. Added support for indexing custom search parameters in FSI. See :ref:`custom_search_parameters` for more information.
+#. We provide a beta release of CDS hooks services. For more information see :ref:`feature_cds_hooks`.
+
+Programming API changes and plugins
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+#. Firely Server was updated to use the Firely .NET SDK v6.0.1. For those implementing custom plugins or facades, we recommend updating these to use the .NET SDK v6.0.1 when upgrading to this version of Firely Server. Please check out the release notes `here <https://github.com/FirelyTeam/firely-net-sdk/releases/tag/v6.0.1>`_ for more information.
+#. It is likely all custom plugins need to be recompiled against new version of `Vonk.Core` package due to SDK changes.
+
+Fix
+^^^
+
+* Fixed an issue that resulted references not being resolved using the ``resolve()`` function in FHIRPath when validating constraints against resources wrap inside a Bundle.
+* The default appsettings missed the ``EnforceAccessPolicies`` element in the ``SmartAuthorizationOptions`` section.
+* ``$liveness`` and ``$readiness`` contained invalid values for the ``RequireTenant`` settings in their respective ``Operations`` configuration section.
+* Fixed a FHIRPath-related issue when validating the ``ctm-1`` constraint against CarePlan resources.
+
+Known behavioral changes
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+#. You may encounter issues ingesting same resources if they contain elements unknown to the StructureDefinition. Previous versions of SDK would discard unknown elements, however, the new SDK will now report these as validation issues.
+
 .. _vonk_releasenotes_6_4_0:
 
 Release 6.4.0, August 26th, 2025

@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Slot",
-    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1796,8 +1796,7 @@
       "appointment-type": {
         "name": "appointment-type",
         "in": "query",
-        "description": "The style of appointment or patient that has been booked in the slot (not service type)",
-        "style": "form",
+        "description": "The style of appointment or patient that may be booked in the slot (not service type)",
         "schema": {
           "type": "string"
         }
@@ -1805,7 +1804,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1822,7 +1821,7 @@
       "service-category": {
         "name": "service-category",
         "in": "query",
-        "description": "A broad categorization of the service that is to be performed during this appointment",
+        "description": "High-level category",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1831,7 +1830,7 @@
       "service-type": {
         "name": "service-type",
         "in": "query",
-        "description": "The specific service that is to be performed during this appointment",
+        "description": "The type of appointments that can be booked into associated slot(s)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1840,7 +1839,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "The specialty of a practitioner that would be required to perform the service requested in this appointment",
+        "description": "Type of specialty needed",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1849,8 +1848,7 @@
       "start": {
         "name": "start",
         "in": "query",
-        "description": "Type of resource at which the graph starts",
-        "style": "form",
+        "description": "Appointment date/time.",
         "schema": {
           "type": "string"
         }
@@ -1858,7 +1856,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The status of the measure report",
+        "description": "The current status of the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"

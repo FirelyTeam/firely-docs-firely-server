@@ -1,4 +1,4 @@
-.. _firely_auth_settings_representatives:
+.. _firely_auth_dar:
 
 Designated Authorized Representative
 ====================================
@@ -15,13 +15,16 @@ When the Authorized Representatives feature is enabled, user authentication trig
 
 
 
+.. warning::
+
+    This is a beta feature and as such it is subject to change in future releases. Currently, this implementation is not yet working correctly together with all of Firely Auths features, mainly :ref:`firely_auth_settings_launchcontext` and :ref:`firely_auth_settings_disclaimers`. On launch context registration, the Authorized Representative feature will be skipped if launch scopes are included in the token request. For disclaimer registration, disclaimers can be accepted once for each representee, but disclaimers that were agreed to in the authorized representative flow will not be visible in the users overview of accepted disclaimers. Due to the experimental nature of this feature, it is recommended to thoroughly test its functionality in a development or staging environment before deploying it to production.
+
 .. note::
 
     The custom operation ``$check-authorized-representative-relationships`` must be implemented on your Firely Server instance to enable Authorized Representative functionality.
     This operation must return a Parameters resource with a ``result`` parameter set to ``true`` if authorized representative relationships exist, which directs the user to a selection screen.
     
     *The DAR Selection Screen is only shown if the operation returns* ``true`` *during the authorized code flow. The operation can post relationship details to the Firely Auth Administrative API either synchronously (before returning the response) or asynchronously (after returning the response). The relationship(s) will live in memory for 5 minutes.*
-
 
 Configuration Guide: Enabling Designated Authorized Representatives
 -------------------------------------------------------------------
@@ -105,7 +108,7 @@ This code block demonstrates an example of a parameter resource response for the
 Posting Relationship Details to Firely Auth Administrative API
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Posts relationship details to Firely Auth.
+Posts relationship details to Firely Auth. Note that for this to work, a designated management API client must be configured in Firely Auth that can be used by Firely Server to post the relationship details. In the ``AuthorizedRepresentativeExampleConfiguration.cs`` example below, the name and secret for this client are configured statically as ``firely-server-dar-plugin``.
 
 **Request:** POST to ``/api/external/authorized-representative``
 
@@ -420,7 +423,9 @@ The following diagram illustrates the flow of the Designated Authorized Represen
          │                              │                                │
 
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
 
 
 

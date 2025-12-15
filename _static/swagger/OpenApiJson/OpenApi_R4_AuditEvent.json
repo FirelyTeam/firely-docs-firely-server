@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - AuditEvent",
-    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1944,8 +1944,7 @@
       "agent": {
         "name": "agent",
         "in": "query",
-        "description": "Who participated",
-        "style": "form",
+        "description": "Identifier of who",
         "schema": {
           "type": "string"
         }
@@ -1961,8 +1960,7 @@
       "agent-role": {
         "name": "agent-role",
         "in": "query",
-        "description": "What the agents role was",
-        "style": "form",
+        "description": "Agent role in the event",
         "schema": {
           "type": "string"
         }
@@ -1978,7 +1976,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The date of the measure report",
+        "description": "The evidence variable publication date",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1987,8 +1985,7 @@
       "entity": {
         "name": "entity",
         "in": "query",
-        "description": "Identity of entity",
-        "style": "form",
+        "description": "Specific instance of resource",
         "schema": {
           "type": "string"
         }
@@ -2029,7 +2026,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The identity of a patient to search for individual measure report results for",
+        "description": "The reference to the patient",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2046,8 +2043,7 @@
       "site": {
         "name": "site",
         "in": "query",
-        "description": "Facility where study activities are conducted",
-        "style": "form",
+        "description": "Logical source location within the enterprise",
         "schema": {
           "type": "string"
         }
@@ -2055,7 +2051,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Name of system",
+        "description": "The source value set that contains the concepts that are being mapped",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2072,7 +2068,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "The type of collected specimen",
+        "description": "Amino Acid Sequence/ DNA Sequence / RNA Sequence",
         "style": "form",
         "schema": {
           "type": "string"

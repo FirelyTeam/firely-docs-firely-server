@@ -5,7 +5,15 @@ Designated Authorized Representative
 
 Firely Auth supports Designated Authorized Representatives (DAR), enabling users to access and manage patient data on behalf of others through delegated access tokens.
 
-When the Authorized Representatives feature is enabled, user authentication triggers a call to Firely Server's custom operation to verify existing patient relationships. If relationships are found, users are presented with a selection screen to choose their acting capacity—either as themselves or on behalf of an authorized patient. The issued access token preserves the original user's ``fhirUser`` identity for audit purposes while setting the ``patient`` claim to the selected patient, ensuring access is restricted to that patient's compartment data.
+When the Authorized Representatives feature is enabled, user authentication triggers a call to Firely Server's custom operation to verify existing patient relationships. If relationships are found, users are presented with a selection screen to choose their acting capacity as themselves or on behalf of an authorized patient. The issued access token preserves the original user's ``fhirUser`` identity for audit purposes while setting the ``patient`` claim to the selected patient, ensuring access is restricted to that patient's compartment data.
+
+
+.. image:: /images/fa_dar_selection.png
+    :align: center
+    :class: bordered-image
+    :alt: Designated Authorized Representative Selection Screen        
+
+
 
 .. warning::
 
@@ -16,7 +24,7 @@ When the Authorized Representatives feature is enabled, user authentication trig
     The custom operation ``$check-authorized-representative-relationships`` must be implemented on your Firely Server instance to enable Authorized Representative functionality.
     This operation must return a Parameters resource with a ``result`` parameter set to ``true`` if authorized representative relationships exist, which directs the user to a selection screen.
     
-    *The operation can post relationship details to the Firely Auth Administrative API either synchronously (before returning the response) or asynchronously (after returning the response).*
+    The DAR Selection Screen is only shown if the operation returns ``true`` during the authorized code flow. The operation can post relationship details to the Firely Auth Administrative API either synchronously (before returning the response) or asynchronously (after returning the response). The relationship(s) will live in memory for 5 minutes.
 
 Configuration Guide: Enabling Designated Authorized Representatives
 -------------------------------------------------------------------
@@ -42,13 +50,26 @@ You can enable DAR functionality by configuring it in the Firely Auth App Settin
 Additionally, the screen for selecting authorized representatives can be customized through various static text settings:
 
 - TitleOnLogin: Main title displayed on the page.
-- TitleOwnProfileOnLogin / TitleAuthorizedProfilesOnLogin:  
+- TitleOwnProfileOnLogin /  TitleAuthorizedProfilesOnLogin:  
   The screen is divided into two sections — one for the user's own profile and one for authorized profiles.  
   Separate titles can be defined for each section.
-- HelpMessageTitleOnFail and HelpMessageOnFail:  
+- HelpMessageTitleOnFail and HelpMessageOnFail:
   These messages are shown when Firely Auth does not retrieve data in a timely manner, despite the FHIR server returning `true` for the ``$check-authorized-representative-relationships`` operation (see below).
 
-Step 2 - Building the $check-authorized-representative-relationships operation on Firely Server
+Step 2 - Register Firely Server DAR Plugin Client in Firely Auth
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+1. Log in as an Administrator to the Firely Auth
+   
+2. Navigate to the Clients section and create a new Client for the Firely Server DAR Plugin with the following settings to update the relationships:
+
+   - Client ID: firely-server-dar-plugin
+   - Client Secret: (a strong secret of your choice)
+   - Client Type: Management API
+   - Allowed Grant Types: Client Credentials
+   
+
+Step 3 - Building the $check-authorized-representative-relationships operation on Firely Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The custom operation ``$check-authorized-representative-relationships`` must be implemented as a plugin on your Firely Server instance. This operation receives the patient parameter from Firely Auth and returns a Parameters resource indicating whether authorized representative relationships exist.
@@ -118,97 +139,100 @@ Designated Authorized Representative Example Implementation
 
     .. code-block:: csharp
         
-        extern alias @base;
         using System.Net.Http.Headers;
         using System.Text.Json;
         using Duende.AccessTokenManagement;
         using Duende.IdentityModel.Client;
-        using @base::Hl7.Fhir.ElementModel;
-        using @base::Hl7.Fhir.Model;
-        using @base::Hl7.Fhir.Utility;
+        using Hl7.Fhir.ElementModel;
+        using Hl7.Fhir.Model;
+        using Hl7.Fhir.Utility;
         using Microsoft.Extensions.Logging;
         using Vonk.Core.Common;
         using Vonk.Core.Context;
-        using Vonk.Core.Model;
         using Vonk.Core.Support;
-        using Parameters = @base::Hl7.Fhir.Model.Parameters;
+        using Parameters = Hl7.Fhir.Model.Parameters;
+        using ST = System.Threading.Tasks;
 
-        namespace Vonk.Plugin.AuthorizedRepresentativeExample;
-
-        public class CheckAuthorizedRepresentativeRelationshipsExampleService
+        namespace Firely.Server.Plugin.CheckAuthorizedRepresentativeRelationships
         {
-            private readonly IPocoHelper _pocoHelper;
-            private readonly IHttpClientFactory _httpClientFactory;
-            private readonly IClientCredentialsTokenManager _clientCredentialsTokenManagementService;
-            private readonly ILogger<CheckAuthorizedRepresentativeRelationshipsExampleService> _logger;
+            public class CheckAuthorizedRepresentativeRelationshipsExampleService
+            {
+                private readonly ILogger<CheckAuthorizedRepresentativeRelationshipsExampleService> _logger;
+                private readonly IHttpClientFactory _httpClientFactory;
+                private readonly IClientCredentialsTokenManagementService _clientCredentialsTokenManagementService;
 
-            public CheckAuthorizedRepresentativeRelationshipsExampleService(IPocoHelper pocoHelper,
-                IHttpClientFactory httpClientFactory,
-                IClientCredentialsTokenManager clientCredentialsTokenManagementService,
-                ILogger<CheckAuthorizedRepresentativeRelationshipsExampleService> logger)
-            {
-                Check.NotNull(pocoHelper, nameof(pocoHelper));
-                Check.NotNull(httpClientFactory, nameof(httpClientFactory));
-                Check.NotNull(clientCredentialsTokenManagementService, nameof(clientCredentialsTokenManagementService));
-                Check.NotNull(logger, nameof(logger));
-                _pocoHelper = pocoHelper;
-                _httpClientFactory = httpClientFactory;
-                _clientCredentialsTokenManagementService = clientCredentialsTokenManagementService;
-                _logger = logger;
-            }
-            
-            public async Task CheckAuthorizedRepresentativeRelationshipsOnPost(IVonkContext vonkContext)
-            {
-                _logger.LogDebug("CheckAuthorizedRepresentativeRelationshipsExampleService - About to start $check-authorized-representative-relationships");
-                
-                if (TryGetParameters(vonkContext, out var checkAuthorizedRepresentativeRelationshipsParameters))
-                {
-                    _logger.LogDebug("CheckAuthorizedRepresentativeRelationshipsExampleService - Successfully extracted parameters for $check-authorized-representative-relationships");
-                    vonkContext.Arguments.ResourceTypeArguments().Handled();
-                    await CheckAuthorizedRepresentativeRelationshipsInternal(vonkContext, checkAuthorizedRepresentativeRelationshipsParameters!);
-                }
-                else
-                {
-                    _logger.LogDebug("CheckAuthorizedRepresentativeRelationshipsExampleService - Failed to extract parameters for $check-authorized-representative-relationships");
-                    vonkContext.Arguments.ResourceTypeArguments().Handled();
-                }
-                
-                _logger.LogDebug("CheckAuthorizedRepresentativeRelationshipsExampleService - Finished $check-authorized-representative-relationships");
-            }
 
-            private async Task CheckAuthorizedRepresentativeRelationshipsInternal(IVonkContext vonkContext,
-                Parameters checkAuthorizedRepresentativeRelationshipsParameters)
-            {
-                var fhirUser = checkAuthorizedRepresentativeRelationshipsParameters.GetSingleValue<FhirString>("patient");
-                if (fhirUser.IsNullOrEmpty())
+                public CheckAuthorizedRepresentativeRelationshipsExampleService(ILogger<CheckAuthorizedRepresentativeRelationshipsExampleService> logger,
+                    IHttpClientFactory httpClientFactory,
+                    IClientCredentialsTokenManagementService clientCredentialsTokenManagementService
+                    )
                 {
-                    vonkContext.Response.HttpResult = 400;
-                    vonkContext.Response.Outcome.AddIssue(VonkOutcome.IssueSeverity.Error, VonkOutcome.IssueType.Invalid,
-                        "Missing 'patient' parameter. Cannot proceed check of authorized representative relationships.");
-                    return;
+                    Check.NotNull(logger, nameof(logger));
+                    Check.NotNull(httpClientFactory, nameof(httpClientFactory));
+                    Check.NotNull(clientCredentialsTokenManagementService, nameof(clientCredentialsTokenManagementService));
+
+                    _logger = logger;
+                    _httpClientFactory = httpClientFactory;
+                    _clientCredentialsTokenManagementService = clientCredentialsTokenManagementService;
                 }
 
-                if (!fhirUser!.Value?.StartsWith("Patient/") ?? false)
+                public async ST.Task CheckAuthorizedRepresentativeRelationshipsOnPost(IVonkContext vonkContext)
                 {
-                    vonkContext.Response.HttpResult = 400;
-                    vonkContext.Response.Outcome.AddIssue(VonkOutcome.IssueSeverity.Error, VonkOutcome.IssueType.Invalid,
-                        "Invalid 'patient' parameter value. The 'patient' parameter must point to a fhirUser of type 'Patient'. Cannot proceed check of authorized representative relationships.");
-                    return;
-                }
-                
-                // Do something with the patient id here
-                // Fake for "test" patient
-                var response = new Parameters();
-                
-                var patientId = fhirUser.Value!.Substring(8);
-                if (patientId == "test")
-                {
-                    response.Add("result", new FhirBoolean(true));
-                    
-                    // Sent the relationships async to FA
-                    // Do not use this in production, need to switch to a proper background service instead!
-                    _ = Task.Run((Func<Task>)(async () =>
+                    _logger.LogInformation("Processing Custom $check-authorized-representative-relationships example.");
+
+                    try
                     {
+                        var requestResource = vonkContext.Request.Payload.Resource;
+                        if (TryGetParameters(vonkContext, out var checkAuthorizedRepresentativeRelationshipsParameters))
+                        {
+                            _logger.LogDebug("CheckAuthorizedRepresentativeRelationshipsExampleService - Successfully extracted parameters for $check-authorized-representative-relationships");
+                            vonkContext.Arguments.ResourceTypeArguments().Handled();
+                            await CheckAuthorizedRepresentativeRelationshipsInternal(vonkContext, checkAuthorizedRepresentativeRelationshipsParameters!);          
+                        }
+                        else
+                        {
+                            _logger.LogDebug("CheckAuthorizedRepresentativeRelationshipsExampleService - Failed to extract parameters for $check-authorized-representative-relationships");
+                            vonkContext.Arguments.ResourceTypeArguments().Handled();
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogDebug("CheckAuthorizedRepresentativeRelationshipsExampleService - Failed to extract parameters for $check-authorized-representative-relationships. Error: {0}", ex.Message);
+                        vonkContext.Arguments.ResourceTypeArguments().Handled();
+                    }
+                }
+
+                private async ST.Task CheckAuthorizedRepresentativeRelationshipsInternal(IVonkContext vonkContext,
+                Parameters checkAuthorizedRepresentativeRelationshipsParameters)
+                {
+                    var fhirUser = checkAuthorizedRepresentativeRelationshipsParameters.GetSingleValue<FhirString>("patient");
+                    if (fhirUser.IsNullOrEmpty())
+                    {
+                        vonkContext.Response.HttpResult = 400;
+                        vonkContext.Response.Outcome.AddIssue(VonkOutcome.IssueSeverity.Error, VonkOutcome.IssueType.Invalid,
+                            "Missing 'patient' parameter. Cannot proceed check of authorized representative relationships.");
+                        return;
+                    }
+
+                    if (!fhirUser!.Value?.StartsWith("Patient/") ?? false)
+                    {
+                        vonkContext.Response.HttpResult = 400;
+                        vonkContext.Response.Outcome.AddIssue(VonkOutcome.IssueSeverity.Error, VonkOutcome.IssueType.Invalid,
+                            "Invalid 'patient' parameter value. The 'patient' parameter must point to a fhirUser of type 'Patient'. Cannot proceed check of authorized representative relationships.");
+                        return;
+                    }
+
+                    // Do something with the patient id here
+                    // Fake for "test" patient
+                    var response = new Parameters();
+
+                    var patientId = fhirUser.Value!.Substring(8);
+
+                    if (patientId == "test")
+                    {
+                        response.Add("result", new FhirBoolean(true));
+                        
                         _logger.LogDebug("CheckAuthorizedRepresentativeRelationshipsExampleService - Sending relationships to FA");
 
                         var json = JsonSerializer.Serialize(new
@@ -217,60 +241,65 @@ Designated Authorized Representative Example Implementation
                             PatientId = "test",
                             Relationships = new[]
                             {
-                                new { Id = "1234", FullName = "Test Related Person", Relationship = "Mother" },
-                                new { Id = "0987", FullName = "Test Related Person", Relationship = "Father" }
+                            new { Id = "1234", FullName = "Son Test", Relationship = "Son" },
+                            new { Id = "0987", FullName = "Daughter Test", Relationship = "Daughter" }
                             }
                         }, new JsonSerializerOptions { WriteIndented = true });
-                        
-                        var firelyAuthEndpoint = "https://localhost:5001/api/external/authorized-representative";
+
+                        var firelyAuthEndpoint = "http://localhost:5100/api/external/authorized-representative";
                         var httpClient = _httpClientFactory.CreateClient(firelyAuthEndpoint);
-                        var token = await _clientCredentialsTokenManagementService.GetAccessTokenAsync(ClientCredentialsClientName.Parse(firelyAuthEndpoint));
-                        if (token.Succeeded)
-                            httpClient.SetBearerToken(token.Token.AccessToken);
-                        
+                        var token = await _clientCredentialsTokenManagementService.GetAccessTokenAsync(firelyAuthEndpoint);
+                        if (!token.IsError)
+                            httpClient.SetBearerToken(token.AccessToken!);
+
                         HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, firelyAuthEndpoint)
                         {
                             Content = new StringContent(json)
                         };
                         request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                        await httpClient.SendAsync(request);
-                    }));
-                }
-                else
-                {
-                    response.Add("result", new FhirBoolean(false));    
-                }
-                
-                vonkContext.Response.HttpResult = 200;
-                vonkContext.Response.Payload = response.ToTypedElement().ToIResource(vonkContext.InformationModel);
-                
-                await Task.CompletedTask;
-            }
-            
-            private bool TryGetParameters(IVonkContext vonkContext, out Parameters? checkAuthorizedRepresentativeRelationshipsParameters)
-            {
-                checkAuthorizedRepresentativeRelationshipsParameters = null;
+                        var res = await httpClient.SendAsync(request);
 
-                var (request, _, response) = vonkContext.Parts();
-                if (!request.GetRequiredPayload(response, out var resource))
-                {
-                    return false;
+                        _logger.LogDebug($"Relationships Sent to FA Mgmt API. Response {res.StatusCode} received.");
+
+                    }
+                    else
+                    {
+                        response.Add("result", new FhirBoolean(false));
+                    }
+
+                    vonkContext.Response.HttpResult = 200;
+                    vonkContext.Response.Payload = response.ToTypedElement().ToIResource(vonkContext.InformationModel);
+
+                    await ST.Task.CompletedTask;
                 }
 
-                try
+                private bool TryGetParameters(IVonkContext vonkContext, out Parameters? checkAuthorizedRepresentativeRelationshipsParameters)
                 {
-                    checkAuthorizedRepresentativeRelationshipsParameters = _pocoHelper.ToPoco<Parameters>(resource);
-                }
-                catch (StructuralTypeException e)
-                {
-                    vonkContext.Response.HttpResult = 400;
-                    vonkContext.Response.Outcome.AddIssue(VonkOutcome.IssueSeverity.Error, VonkOutcome.IssueType.Invalid, details: e.Message);
-                    return false;
-                }
+                    checkAuthorizedRepresentativeRelationshipsParameters = null;
 
-                return true;
+                    var (request, _, response) = vonkContext.Parts();
+                    if (!request.GetRequiredPayload(response, out var resource))
+                    {
+                        return false;
+                    }
+
+                    try
+                    {
+                        checkAuthorizedRepresentativeRelationshipsParameters = resource.ToPoco<Parameters>();
+                    }
+                    catch (Exception e)
+                    {
+                        vonkContext.Response.HttpResult = 400;
+                        vonkContext.Response.Outcome.AddIssue(VonkOutcome.IssueSeverity.Error, VonkOutcome.IssueType.Invalid, details: e.Message);
+                        return false;
+                    }
+
+                    return true;
+                }
             }
         }
+
+
     
        
 .. container:: toggle
@@ -283,7 +312,6 @@ Designated Authorized Representative Example Implementation
 
     .. code-block:: csharp
 
-        using Duende.AccessTokenManagement;
         using Duende.IdentityModel.Client;
         using Microsoft.AspNetCore.Builder;
         using Microsoft.Extensions.DependencyInjection;
@@ -291,45 +319,48 @@ Designated Authorized Representative Example Implementation
         using Vonk.Core.Context;
         using Vonk.Core.Pluggability;
 
-        namespace Vonk.Plugin.AuthorizedRepresentativeExample;
+        namespace Firely.Server.Plugin.CheckAuthorizedRepresentativeRelationships;
 
-        [VonkConfiguration (order: 5600)]
-        public class AuthorizedRepresentativeExampleConfiguration
+        [VonkConfiguration(order: 5600)]
+        public static class AuthorizedRepresentativeExampleConfiguration
         {
-            public static IServiceCollection ConfigureServices(IServiceCollection services)
+            public static IServiceCollection ConfigureServices(this IServiceCollection services)
             {
                 var clientCredentialsTokenManagementBuilder = services.AddClientCredentialsTokenManagement();
 
-                var firelyAuthEndpoint = "https://localhost:5101/api/external/authorized-representative";
+                var firelyAuthEndpoint = "http://localhost:5100/api/external/authorized-representative";
                 clientCredentialsTokenManagementBuilder.AddClient(firelyAuthEndpoint, client =>
                 {
-                    client.ClientId = ClientId.Parse("firely-server-dar-plugin");
-                    client.ClientSecret = ClientSecret.Parse("firely-server-dar-plugin");
-                    client.Scope = Scope.Parse("http://server.fire.ly/auth/scope/authmanagement");
-                    client.TokenEndpoint = new Uri("https://localhost:5101/connect/token");
+                    client.ClientId = "firely-server-dar-plugin";
+                    client.ClientSecret = "firely-server-dar-plugin";
+                    client.Scope = "http://server.fire.ly/auth/scope/authmanagement";
+                    client.TokenEndpoint = "http://localhost:5100/connect/token";
                     client.Parameters = new Parameters([
                         new KeyValuePair<string, string>("aud", "Firely Server")
                     ]);
                 });
 
-                services.AddClientCredentialsHttpClient(firelyAuthEndpoint, ClientCredentialsClientName.Parse(firelyAuthEndpoint), client =>
+                services.AddClientCredentialsHttpClient(firelyAuthEndpoint, firelyAuthEndpoint, client =>
                 {
                     client.BaseAddress = new Uri(firelyAuthEndpoint);
                 });
 
+                Console.WriteLine("Setting up Auth Rep Plugin Services");
                 services.TryAddScoped<CheckAuthorizedRepresentativeRelationshipsExampleService>();
                 return services;
             }
 
-            public static IApplicationBuilder Configure(IApplicationBuilder builder)
+            public static IApplicationBuilder ConfigureHandlers(this IApplicationBuilder app)
             {
-                builder.OnCustomInteraction(VonkInteraction.type_custom, "check-authorized-representative-relationships")
-                    .AndMethod("POST").AndResourceTypes(new[] {"Patient"})
-                    .HandleAsyncWith<CheckAuthorizedRepresentativeRelationshipsExampleService>((svc, context) =>
+                return app
+                    .OnCustomInteraction(VonkInteraction.type_custom, "check-authorized-representative-relationships")
+                    .AndMethod("POST").AndResourceTypes(new[] { "Patient" })            
+                    .HandleAsyncWith<CheckAuthorizedRepresentativeRelationshipsExampleService>((svc, context) => 
                         svc.CheckAuthorizedRepresentativeRelationshipsOnPost(context));
-                return builder;
             }
         }
+
+
 
 
 Designated Authorized Representative Workflow and Diagram

@@ -24,7 +24,7 @@ When the Authorized Representatives feature is enabled, user authentication trig
     The custom operation ``$check-authorized-representative-relationships`` must be implemented on your Firely Server instance to enable Authorized Representative functionality.
     This operation must return a Parameters resource with a ``result`` parameter set to ``true`` if authorized representative relationships exist, which directs the user to a selection screen.
     
-    *The DAR Selection Screen is only shown if the operation returns* ``true`` *during the authorized code flow. The operation can post relationship details to the Firely Auth Administrative API either synchronously (before returning the response) or asynchronously (after returning the response). The relationship(s) will live in memory for 5 minutes.*
+    The DAR Selection Screen is only shown if the operation returns ``true`` during the authorized code flow. The operation can post relationship details to the Firely Auth Administrative API either synchronously (before returning the response) or asynchronously (after returning the response). The relationship(s) will live in memory for 5 minutes.*
 
 Configuration Guide: Enabling Designated Authorized Representatives
 -------------------------------------------------------------------
@@ -49,11 +49,11 @@ You can enable DAR functionality by configuring it in the Firely Auth App Settin
 
 Additionally, the screen for selecting authorized representatives can be customized through various static text settings:
 
-- **TitleOnLogin**: Main title displayed on the page.
-- **TitleOwnProfileOnLogin** / **TitleAuthorizedProfilesOnLogin**:  
+- TitleOnLogin: Main title displayed on the page.
+- TitleOwnProfileOnLogin /  TitleAuthorizedProfilesOnLogin:  
   The screen is divided into two sections — one for the user's own profile and one for authorized profiles.  
   Separate titles can be defined for each section.
-- **HelpMessageTitleOnFail** and **HelpMessageOnFail**:
+- HelpMessageTitleOnFail and HelpMessageOnFail:
   These messages are shown when Firely Auth does not retrieve data in a timely manner, despite the FHIR server returning `true` for the ``$check-authorized-representative-relationships`` operation (see below).
 
 Step 2 - Register Firely Server DAR Plugin Client in Firely Auth

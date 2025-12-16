@@ -24,7 +24,7 @@ When the Authorized Representatives feature is enabled, user authentication trig
     The custom operation ``$check-authorized-representative-relationships`` must be implemented on your Firely Server instance to enable Authorized Representative functionality.
     This operation must return a Parameters resource with a ``result`` parameter set to ``true`` if authorized representative relationships exist, which directs the user to a selection screen.
     
-    The DAR Selection Screen is only shown if the operation returns ``true`` during the authorized code flow. The operation can post relationship details to the Firely Auth Administrative API either synchronously (before returning the response) or asynchronously (after returning the response). The relationship(s) will live in memory for 5 minutes.*
+    The DAR Selection Screen is only shown if the operation returns ``true`` during the authorized code flow. The operation can post relationship details to the Firely Auth Administrative API either synchronously (before returning the response) or asynchronously (after returning the response). The relationship(s) will live in memory for 5 minutes.
 
 Configuration Guide: Enabling Designated Authorized Representatives
 -------------------------------------------------------------------
@@ -63,10 +63,10 @@ Step 2 - Register Firely Server DAR Plugin Client in Firely Auth
    
 2. Navigate to the Clients section and create a new Client for the Firely Server DAR Plugin with the following settings to update the relationships:
 
-   - **Client ID**: firely-server-dar-plugin
-   - **Client Secret**: (a strong secret of your choice)
-   - **Client Type**: Management API
-   - **Allowed Grant Types**: Client Credentials
+   - Client ID: firely-server-dar-plugin
+   - Client Secret: (a strong secret of your choice)
+   - Client Type: Management API
+   - Allowed Grant Types: Client Credentials
    
 
 Step 3 - Building the $check-authorized-representative-relationships operation on Firely Server

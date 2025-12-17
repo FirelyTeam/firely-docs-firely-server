@@ -292,6 +292,23 @@ Azure Cosmos DB for MongoDB
     *Last Updated: October 2025* - `Cosmos MongoDB API version 7.0 <https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/feature-support-70>`_
 
 
+Google Cloud Firestore with MongoDB API
+---------------------------------------
+
+.. caution::
+    Firely Server does not support Google Cloud Firestore with MongoDB API due to several critical limitations:
+
+    * The `$lookup` operator does not support the `let` and `pipeline` fields, which are used by Firely Server for chained search parameters.
+    * Partial indexes are not supported.
+    * The `$group` aggregation step has limited support (not available in `$lastN` and potentially other operations).
+    * Future MongoDB features used by Firely Server may not be compatible with Firestore's MongoDB API.
+    * Other limitations may apply.
+
+    Recommendation: Use native MongoDB for Firely Server deployments. Firestore with MongoDB API is not compatible.
+
+    *Last Updated: December 2024* - `Firestore MongoDB API version 8.0 <https://docs.cloud.google.com/firestore/mongodb-compatibility/docs/supported-features-80>`_
+
+
 MongoDB Security
 ----------------
 

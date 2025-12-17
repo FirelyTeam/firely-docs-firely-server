@@ -306,7 +306,7 @@ Google Cloud Firestore with MongoDB API
 
     Recommendation: Use native MongoDB for Firely Server deployments. Firestore with MongoDB API is not compatible.
 
-    *Last Updated: December 2024* - `Firestore MongoDB API version 8.0 <https://docs.cloud.google.com/firestore/mongodb-compatibility/docs/supported-features-80>`_
+    *Last Updated: December 2025* - `Firestore MongoDB API version 8.0 <https://docs.cloud.google.com/firestore/mongodb-compatibility/docs/supported-features-80>`_
 
 
 MongoDB Security

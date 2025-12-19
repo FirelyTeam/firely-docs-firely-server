@@ -38,14 +38,10 @@ These features can be enabled by including ``Vonk.Plugin.Audit`` in the pipeline
 
 See :ref:`vonk_plugins_config` for more details on pipeline configuration.
 
-At present, you can choose either to enable both file and database logging, or only database logging.
-To enable only database logging, replace Vonk.Plugin.Audit with Vonk.Plugin.Audit.AuditEventConfiguration.
-In addition, you can choose to log every call or only transaction batches.
-When you include a specific configuration class and want to enable username logging, you have to include Vonk.Plugin.Audit.UsernameLoggingConfiguration.
+There are configuration values for enabling/disabling audit features. 
+Keep in mind that those are disregarded if the pipeline is not configured to enable audit event logging, i.e. ``Vonk.Plugin.Audit`` is disabled.
+To enable username logging, you have to include Vonk.Plugin.Audit.UsernameLoggingConfiguration in the pipeline options.
 Please see :ref:`vonk_plugins_audit` for the available options.
-
-Additionally there are configuration values for enabling/disabling audit features. 
-Keep in mind that those are disregarded if the pipeline is not configured to enable logging.
 
 .. code-block:: javascript
 

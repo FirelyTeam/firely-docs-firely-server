@@ -8,7 +8,7 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
-.. _vonk_releasenotes_6_5_1:
+.. _vonk_releasenotes_6_5_2:
 
 Release 6.5.2, January 15th, 2026
 ---------------------------------

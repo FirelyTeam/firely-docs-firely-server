@@ -10,6 +10,18 @@ Current Firely Server release notes (v6.x)
 
 .. _vonk_releasenotes_6_5_1:
 
+Release 6.5.2, January 15th, 2026
+---------------------------------
+
+Fix
+^^^
+
+#. We updated our SQLite dependencies to address `CVE-2025-6965 <https://nvd.nist.gov/vuln/detail/CVE-2025-6965>`_. The package ``SQLitePCLRaw.provider.e_sqlite3`` has been updated to the latest version 3.0.2, and the SQLite version that is used is updated to version 3.50.4.2
+#. We upgraded our ``AWSSDK.Core`` dependency to version 4.0.3.8.
+
+
+.. _vonk_releasenotes_6_5_1:
+
 Release 6.5.1, November 25th, 2025
 ----------------------------------
 

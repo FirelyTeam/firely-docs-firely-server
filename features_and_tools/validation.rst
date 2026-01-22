@@ -124,6 +124,10 @@ If validation is set to ``Full`` the following validation rules will be checked:
 +--------------------------------+---------------------------------------------------------------------------------------------------------------+
 | QuestionnaireResponseValidator | Validates a QuestionnaireResponse against a Questionnaire (can be stored in the Firely Server admin database) |
 +--------------------------------+---------------------------------------------------------------------------------------------------------------+
+| MinLengthValidator             | Enforces minimum string length constraints                                                                    |
++--------------------------------+---------------------------------------------------------------------------------------------------------------+
+| MaxDecimalPlacesValidator      | Enforces maximum decimal places for numeric values                                                            |
++--------------------------------+---------------------------------------------------------------------------------------------------------------+
 
 .. _feature_advisor_rules:
 
@@ -433,6 +437,45 @@ Fields:
   - ``concepts`` – Validate only the system/code pair and ignore the ``display`` field
   - ``display`` - Validate both system/code, and warn if display is not correct
 - ``valueSet``: Canonical of the ValueSet with an existing binding to the element with logical ID ``id``
+
+Reference Rule
+^^^^^^^^^^^^^^
+
+The ``reference`` rule allows you to customize validation behavior for references and canonical elements.
+By default, the validator checks both that a reference resolves and that it resolves to one of the allowed types.
+This rule lets you relax that behavior to only check resolution, or target specific reference URLs.
+
+Each ``reference`` rule is defined using the following structure inside a FHIR ``Parameters`` resource:
+
+.. code-block:: json
+
+  {
+    "name": "rules",
+    "part": [
+      {
+        "name": "reference",
+        "part": [
+          {
+            "name": "filter",
+            "part": [
+              { "name": "id", "valueString": "<element-id>" },
+              { "name": "url", "valueString": "<reference-url>" }
+            ]
+          },
+          { "name": "options", "valueString": "<option>" }
+        ]
+      }
+    ]
+  }
+
+Fields:
+
+- ``id``: The logical ID or FHIRPath of the reference element to apply the rule to (e.g., ``Patient.managingOrganization``)
+- ``url``: (Optional) Specific reference URL to filter by - if provided, the rule only applies when this specific URL is referenced
+- ``options``: Must be one of:
+
+  - ``exists`` – Only validate that the reference resolves to something, skip type checking
+  - ``type`` – Validate that the reference resolves to one of the allowed types (default behavior)
 
 Advisor Rules Example: Override, Suppress, and Coded Validation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

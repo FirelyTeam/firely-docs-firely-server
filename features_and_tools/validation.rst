@@ -113,21 +113,37 @@ Advanced Validation
 
 In the Firely Server editions mentioned above, Firely Server will execute additional advanced validation rules which are defined on top of the core FHIR specification for more quality control.
 
-If validation is set to ``Full`` the following validation rules will be checked:
+If validation is set to ``Full`` the following validation rules will be checked by default:
 
-+--------------------------------+---------------------------------------------------------------------------------------------------------------+
-| Validation Rule                | Description                                                                                                   |
-+================================+===============================================================================================================+
-| ElementDefinitionValidator     | Validates that ElementDefinitions paths are valid                                                             |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------+
-| StructureDefinitionValidator   | Validates slicing and invariant definitions in StructureDefinitions                                           |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------+
-| QuestionnaireResponseValidator | Validates a QuestionnaireResponse against a Questionnaire (can be stored in the Firely Server admin database) |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------+
-| MinLengthValidator             | Enforces minimum string length constraints                                                                    |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------+
-| MaxDecimalPlacesValidator      | Enforces maximum decimal places for numeric values                                                            |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------+
++--------------------------------+--------------------------------------------------------------------+
+| Validation Rule                | Description                                                        |
++================================+====================================================================+
+| ElementDefinitionValidator     | Validates ElementDefinition paths for: illegal characters, length  |
+|                                | (max 64 chars), correct casing (first part uppercase, others       |
+|                                | lowercase), polymorphic paths ending with [x] (R4+), and type      |
+|                                | compatibility of fixed, pattern, example, minValue, maxValue with  |
+|                                | element types                                                      |
++--------------------------------+--------------------------------------------------------------------+
+| StructureDefinitionValidator   | Validates StructureDefinition for: unique invariant keys across    |
+|                                | element definitions, proper slicing on repeating or choice         |
+|                                | elements only                                                      |
++--------------------------------+--------------------------------------------------------------------+
+| QuestionnaireResponseValidator | Comprehensive validation of QuestionnaireResponse against          |
+|                                | Questionnaire including: item ordering, required items, enableWhen |
+|                                | conditions, answer types and constraints, ValueSet bindings,       |
+|                                | repeating questions, maxLength/minLength/minValue/maxValue/        |
+|                                | maxDecimalPlaces/regex constraints, and targetConstraint           |
+|                                | extensions. Warns on retired Questionnaire usage                   |
++--------------------------------+--------------------------------------------------------------------+
+| MinLengthValidator             | Enforces minimum string length constraints (used by                |
+|                                | QuestionnaireResponseValidator when minLength extension is         |
+|                                | present, but can be used standalone)                               |
++--------------------------------+--------------------------------------------------------------------+
+| MaxDecimalPlacesValidator      | Enforces maximum decimal places for numeric values (used by        |
+|                                | QuestionnaireResponseValidator when maxDecimalPlaces extension is  |
+|                                | present, but can be used standalone)                               |
++--------------------------------+--------------------------------------------------------------------+
+
 
 .. _feature_advisor_rules:
 

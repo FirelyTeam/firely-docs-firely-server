@@ -491,7 +491,7 @@ Fields:
 - ``options``: Must be one of:
 
   - ``exists`` – Only validate that the reference resolves to something, skip type checking
-  - ``type`` – Validate that the reference resolves to one of the allowed types (default behavior)
+  - ``type`` – Validate that the reference resolves to one of the allowed types
 
 Advisor Rules Example: Override, Suppress, and Coded Validation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

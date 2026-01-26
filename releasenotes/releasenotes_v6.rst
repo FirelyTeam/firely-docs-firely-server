@@ -8,6 +8,28 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_6_6_0:
+
+Release 6.6.0, January xth, 2026
+--------------------------------
+
+Improvements
+^^^^^^^^^^^^
+
+#. Replaced the technical UI framework for the Firely Server Demo Homepage to simply the deployment using subdomains
+
+Features
+^^^^^^^^
+
+#. Add support for the _until parameter in the Bulk Data Export operations on all levels and Patient/$everything.
+#. Added support for dedicated OpenTelemetry metrics for counting the Patient Access API metrics according to the CMS definition of the `reporting requirements for CMS-0057-F <https://www.cms.gov/priorities/burden-reduction/overview/interoperability/frequently-asked-questions/patient-access-api>`_. The expoeter metric is called "firely.server.cms0057.patient.count".
+
+Fix
+^^^
+
+#. Tenant labels are now also applied on contained resources.
+#. Posting a Bundle with type=collection returns now a correct OperationOutcome instead of a success message with status code HTTP 501.
+#. Fixed an issue due to which $licenses was blocked longer than necessary when loading conformance resources.
 
 .. _vonk_releasenotes_6_5_0:
 

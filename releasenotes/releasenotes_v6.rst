@@ -29,7 +29,7 @@ Fix
 
 #. Tenant labels are now also applied on contained resources.
 #. Posting a Bundle with type=collection returns now a correct OperationOutcome instead of a success message with status code HTTP 501.
-#. Fixed an issue due to which $licenses was blocked longer than necessary when loading conformance resources.
+#. Fixed an issue due to which $liveness was blocked longer than necessary when loading conformance resources.
 
 .. _vonk_releasenotes_6_5_0:
 

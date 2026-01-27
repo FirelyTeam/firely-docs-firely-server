@@ -167,7 +167,7 @@ Exporting a large number of resources from a SQL Server database can cause a tim
 
 Writing to a local disk
 ^^^^^^^^^^^^^^^^^^^^^^^
-Set the ``StorageType`` to ``LocalDisk``.
+Set the ``StorageType`` to ``LocalFile``.
 
 In ``StoragePath`` you can configure the folder where the exported files will be saved to. Make sure the server has write access to this folder.
 
@@ -183,11 +183,13 @@ Also make sure you fill in the account details for Azure in ``AzureServices`` as
 $export
 -------
 
-The $export operation can be finetuned using the following optional query parameters:
+The $export operation (GET and POST) can be finetuned using the following optional parameters:
 
 * _since: Get only resources changed since this moment
 * _until: Get only resources changed until this moment
 * _type: Limit the returned resource types to only the types in this list
+* _elements: Limit the resource elements returned in the result set
+* patient: Limit the results to a selection of patients (only valid in POST requests)
 
 There are three different levels for which the $export operation can be called:
 
@@ -213,7 +215,10 @@ This will create an instance level export task. For each Patient in the Group, t
 .. note:: 
   For now we only support inclusion in a Group export through Group.member.
 
-  A group member will be excluded from the export if and only if it is marked as inactive (`Group.member.inactive = true`) or has a flag indicating that it previously belonged to the group (based on `Group.member.period`).
+  A group member will be excluded from the export if **any** of the following conditions are met:
+  - The member is marked as inactive (``Group.member.inactive = true``)
+  - The membership period has not yet started (``Group.member.period.start`` is in the future)
+  - The membership period has already ended (``Group.member.period.end`` is in the past)
   
   In the `Da Vinci Member Attribution (ATR) List <https://hl7.org/fhir/us/davinci-atr/index.html>`_ use case, we make an exception to this.
   All group members, including inactive members, are included in a Group export if the Group has ``http://hl7.org/fhir/us/davinci-atr/StructureDefinition/atr-group`` in its `meta.profile <https://hl7.org/fhir/resource-definitions.html#meta>`_ element.
@@ -378,10 +383,6 @@ We support BDE for a facade. As always with a facade implementation, the parts d
 IBulkDataExportSnapshotRepository
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The class implementing this interface is responsible for creating (and eventually deleting) a snapshot of the relevant data. This snapshot will be used at a later time for retrieving the data, mapping it to FHIR and writing the resources to the output files. How you store this snapshot is up to you. 
-
-.. attention::
-
-  The current implementation of the Bulk Data Export plugin for facades does not trigger IBulkDataExportSnapshotRepository.DeleteSnapshot(string taskId). This will be resolved in the upcoming release of Firely Server.
 
 IPatientBulkDataExportRepository
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

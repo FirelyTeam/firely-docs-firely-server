@@ -1,4 +1,4 @@
-REM You can install sphinx-autobuild using 'py -m pip install sphinx-autobuild'
-REM Serving the generated documents on localhost:7000, this can be changed using the -p parameter
+REM You can install Sphinx using 'py -m pip install sphinx'
+REM Build the HTML documentation into the .\_build\html directory
 
 py -m sphinx -b html . .\_build\html

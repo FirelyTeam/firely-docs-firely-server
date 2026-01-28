@@ -222,7 +222,8 @@ Firely Server supports the following parameters:
 |                           |          |            |                           |                                               |
 |                           |          |            |                           | As specified in the FHIR '$export' operation  |
 |                           |          |            |                           | specification, GET is not supported for this  |
-|                           |          |            |                           | parameter.                                    |
+|                           |          |            |                           | parameter to avoid issues with url length     |
+|                           |          |            |                           | restricitions.                                |
 +---------------------------+----------+------------+---------------------------+-----------------------------------------------+
 | ``includeAssociatedData`` | ❌       | ❌         | ``string``                |                                               |
 +---------------------------+----------+------------+---------------------------+-----------------------------------------------+

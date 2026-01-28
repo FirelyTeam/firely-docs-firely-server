@@ -203,7 +203,7 @@ Firely Server supports the following parameters:
 |                           |          |            |                           | resources in the result, not to any           |
 |                           |          |            |                           | referenced resources.                         |
 +---------------------------+----------+------------+---------------------------+-----------------------------------------------+
-| ``_until``                | ✅       | ✅         | ``instant``               | Get only resources changed before this        |
+| ``_until``                | ✅       | ✅         | ``instant``               | Get only resources changed until this         |
 |                           |          |            |                           | moment.                                       |
 |                           |          |            |                           |                                               |
 |                           |          |            |                           | This filter is only applied to the primary    |

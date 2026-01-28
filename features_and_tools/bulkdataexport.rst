@@ -183,13 +183,55 @@ Also make sure you fill in the account details for Azure in ``AzureServices`` as
 $export
 -------
 
-The $export operation (GET and POST) can be finetuned using the following optional parameters:
+Supported parameters
+^^^^^^^^^^^^^^^^^^^^
 
-* _since: Get only resources changed since this moment
-* _until: Get only resources changed until this moment
-* _type: Limit the returned resource types to only the types in this list
-* _elements: Limit the resource elements returned in the result set
-* patient: Limit the results to a selection of patients (only valid in POST requests)
+Firely Server supports the following parameters:
+
++---------------------------+-----------------------+---------------------------+-----------------------------------------------+
+|                           |      Supported        |                           |                                               |
+| Parameter                 +----------+------------+ Type                      | Additional Notes                              |
+|                           | GET      | POST       |                           |                                               |
++===========================+==========+============+===========================+===============================================+
+| ``_outputFormat``         | ✅       | ✅         | ``string``                | The format of the output.                     |
+|                           |          |            |                           |                                               |
+|                           |          |            |                           | Only ``application/ndjson`` is supported.     |
++---------------------------+----------+------------+---------------------------+-----------------------------------------------+
+| ``_since``                | ✅       | ✅         | ``instant``               | Get only resources changed since this moment. |
+|                           |          |            |                           |                                               |
+|                           |          |            |                           | This filter is only applied to the primary    |
+|                           |          |            |                           | resources in the result, not to any           |
+|                           |          |            |                           | referenced resources.                         |
++---------------------------+----------+------------+---------------------------+-----------------------------------------------+
+| ``_until``                | ✅       | ✅         | ``instant``               | Get only resources changed before this        |
+|                           |          |            |                           | moment.                                       |
+|                           |          |            |                           |                                               |
+|                           |          |            |                           | This filter is only applied to the primary    |
+|                           |          |            |                           | resources in the result, not to any           |
+|                           |          |            |                           | referenced resources.                         |
++---------------------------+----------+------------+---------------------------+-----------------------------------------------+
+| ``_type``                 | ✅       | ✅         | FHIR resource type        | Limit the returned resource types to only the |
+|                           |          |            |                           | types in this comma-delimited list.           |
++---------------------------+----------+------------+---------------------------+-----------------------------------------------+
+| ``_elements``             | ✅       | ✅         | FHIR element              | Limit the resource elements returned in the   |
+|                           |          |            |                           | result set to the elements in this            |
+|                           |          |            |                           | comma-delimited list.                         |
++---------------------------+----------+------------+---------------------------+-----------------------------------------------+
+| ``patient``               | ❌       | ✅         | ``reference``             | Limit the results to the selection of         |
+|                           |          |            |                           | patients in this comma-delimited list.        |
+|                           |          |            |                           |                                               |
+|                           |          |            |                           | As specified in the FHIR '$export' operation  |
+|                           |          |            |                           | specification, GET is not supported for this  |
+|                           |          |            |                           | parameter.                                    |
++---------------------------+----------+------------+---------------------------+-----------------------------------------------+
+| ``includeAssociatedData`` | ❌       | ❌         | ``string``                |                                               |
++---------------------------+----------+------------+---------------------------+-----------------------------------------------+
+| ``_typeFilter``           | ❌       | ❌         | ``string``                |                                               |
++---------------------------+----------+------------+---------------------------+-----------------------------------------------+
+| ``organizeOutputBy``      | ❌       | ❌         | ``string``                |                                               |
++---------------------------+----------+------------+---------------------------+-----------------------------------------------+
+| ``allowPartialManifests`` | ❌       | ❌         | ``boolean``               |                                               |
++---------------------------+----------+------------+---------------------------+-----------------------------------------------+
 
 There are three different levels for which the $export operation can be called:
 

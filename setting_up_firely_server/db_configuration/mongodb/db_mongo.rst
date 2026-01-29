@@ -273,6 +273,42 @@ On top of the requirements for storing the resources and indexes, we allow Mongo
 
 We recommend to monitor the health of your MongoDB cluster actively to avoid disk space issues.
 
+
+Azure Cosmos DB for MongoDB
+---------------------------
+
+.. caution:: 
+    Firely Server does not support the MongoDB API in CosmosDB due to several critical limitations:
+
+    * The `$lookup` operator with `let` and `pipeline` fields is not supported.
+    * Partial indexes are only supported for unique indexes, while Firely Server requires non-unique partial indexes.
+    * Multi-document transactions are not supported across collections or in sharded collections.
+    * Write Concerns such as `'majority'` are ignored by Cosmos DB, but required by Firely Server.
+    * Other limitations may apply.     
+    * See the `CosmosDB - MongoDB Query Language (MQL) features and compatibility documentation <https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/compatibility>`_ for details.
+
+    Recommendation: Use native MongoDB for Firely Server deployments. Cosmos DB for MongoDB is not compatible.
+
+    *Last Updated: October 2025* - `Cosmos MongoDB API version 7.0 <https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/feature-support-70>`_
+
+
+Google Cloud Firestore with MongoDB API
+---------------------------------------
+
+.. caution::
+    Firely Server does not support Google Cloud Firestore with MongoDB API due to several critical limitations:
+
+    * The `$lookup` operator does not support the `let` and `pipeline` fields, which are used by Firely Server for chained search parameters.
+    * Partial indexes are not supported.
+    * The `$group` aggregation step has limited support (not available in `$lastN` and potentially other operations).
+    * Future MongoDB features used by Firely Server may not be compatible with Firestore's MongoDB API.
+    * Other limitations may apply.
+
+    Recommendation: Use native MongoDB for Firely Server deployments. Firestore with MongoDB API is not compatible.
+
+    *Last Updated: December 2025* - `Firestore MongoDB API version 8.0 <https://docs.cloud.google.com/firestore/mongodb-compatibility/docs/supported-features-80>`_
+
+
 MongoDB Security
 ----------------
 

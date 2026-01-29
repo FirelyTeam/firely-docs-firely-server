@@ -23,6 +23,7 @@ This plugin implements the Patient $everything operation, as described in https:
 Optional parameters:
 
 * _since: Get only resources changed since this moment
+* _until: Get only resources changed until this moment
 * _type: Limit the returned resource types to only the types in this list
 
 Please note that other defined operation parameters have not been implemented (yet).

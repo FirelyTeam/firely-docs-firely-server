@@ -16,13 +16,13 @@ Release 6.6.0, January 29th, 2026
 Improvements
 ^^^^^^^^^^^^
 
-#. Replaced the technical UI framework for the Firely Server Demo Homepage to simply the deployment using subdomains
+#. Replaced the technical UI framework for the Firely Server Demo Homepage to simply the deployment using subdomains.
 
 Features
 ^^^^^^^^
 
 #. Add support for the _until parameter in the Bulk Data Export operations on all levels and Patient/$everything.
-#. Added support for dedicated OpenTelemetry metrics for counting the Patient Access API metrics according to the CMS definition of the `reporting requirements for CMS-0057-F <https://www.cms.gov/priorities/burden-reduction/overview/interoperability/frequently-asked-questions/patient-access-api>`_. The expoeter metric is called "firely.server.cms0057.patient.count".
+#. Added support for dedicated OpenTelemetry metrics for counting the Patient Access API metrics according to the CMS definition of the `reporting requirements for CMS-0057-F <https://www.cms.gov/priorities/burden-reduction/overview/interoperability/frequently-asked-questions/patient-access-api>`_. The exporter metric is called "firely.server.cms0057.patient.count".
 
 Fix
 ^^^

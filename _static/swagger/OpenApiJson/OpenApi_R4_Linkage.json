@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Linkage",
-    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1731,7 +1731,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "The source of the decision",
+        "description": "Who and/or what authored the composition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1740,7 +1740,8 @@
       "item": {
         "name": "item",
         "in": "query",
-        "description": "Matches on any item in the Linkage",
+        "description": "Actual entry",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1748,7 +1749,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "Name of system",
+        "description": "The source value set that contains the concepts that are being mapped",
         "style": "form",
         "schema": {
           "type": "string"

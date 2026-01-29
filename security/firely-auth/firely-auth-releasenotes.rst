@@ -3,10 +3,45 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.5.0:
+
+Release 4.5.0, December 15th, 2025
+----------------------------------
+
+Feature
+^^^^^^^
+
+#. Added support for configuring the Duende IdentityServer license key via environment variable or appsettings.json file. This provides more flexibility in managing the license key, especially in containerized or cloud environments. See :ref:`firely_auth_deploy` for more details.
+#. Added additional settings to the ``ExternalIdentityProviders`` section:
+
+   - Support requesting specific scopes during the SSO login process.
+   - Clarify whether Firely Auth should expect an ``id_token`` directly or an authorization code that still needs to be redeemed.
+   - Support displaying an SVG image instead of static text for the login button on the Firely Auth login page.
+   - Enable decryption of the ``id_token`` in case the SSO provider returns a JWE payload to further protect the claims it contains.
+
+   For more information, see :ref:`firely_auth_settings_externalidp`.
+#. The user creation form was updated to perform a fhirUser lookup in Firely Server for the creation of local users. Users will be looked up based on their name and email, and the resulting Patient or Practitioner id will be used as a value for the fhirUser claim. Note that for this lookup to work, the patients name as registered in Firely Auth should be listed in the ``name.text`` element of the Patient resource in Firely Server.
+#. As a beta feature we implemented support for letting authorized representatives (e.g., caregivers) retrieve access tokens on behalf of a patient. For more information, see :ref:`firely_auth_settings_representatives` and :ref:`firely_auth_dar`.
+
+Fix
+^^^
+
+#. Fixed a bug that would prevent custom favicons configured in the appsettings from being displayed to the user.
+
+.. _firelyauth_releasenotes_4.4.1:
+
+Release 4.4.1, September 24th, 2025
+-----------------------------------
+
+Fix
+^^^
+
+#. We upgraded to IdentityServer 7.3.2 to address an issue where Firely Auth would not start with the provided Duende license key.
+
 .. _firelyauth_releasenotes_4.4.0:
 
-Release 4.4.0, 19-08-2025
--------------------------
+Release 4.4.0, August 19th, 2025
+--------------------------------
 
 Feature
 ^^^^^^^
@@ -37,8 +72,8 @@ Fix
 
 .. _firelyauth_releasenotes_4.3.0:
 
-Release 4.3.0, 18-02-2025
--------------------------
+Release 4.3.0, February 18th, 2025
+----------------------------------
 
 Feature
 ^^^^^^^

@@ -57,7 +57,7 @@ The dashboard displays a curated set of server-level and instance-level metrics 
 
 Installing the dashboard
 ------------------------
-The dashboard can be downloaded either as a docker image or as a collection of binaries. Regardless of the form, the dashboard use the following ports:
+The dashboard can be downloaded either as a docker image or as a collection of binaries. Regardless of the form, the dashboard uses the following ports by default:
 
 +-------+---------------------------------+-----------------------------------------------------------------------------+
 | Port  | Service                         | Remarks                                                                     |
@@ -74,8 +74,8 @@ Docker
    ``> docker pull firely/dashboard``
 
 2. Start the container (where FirelyServerUrl is the URL Firely Server runs on):
-  - in cmd.exe: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl="http://host.docker.internal:4080" --name firely.dashboard``
-  - in Powershell / Bash on macOS: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl="http://host.docker.internal:4080" --name firely.dashboard``
+   - in cmd.exe: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl="http://host.docker.internal:4080" --name firely.dashboard``
+   - in Powershell / Bash on macOS: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl="http://host.docker.internal:4080" --name firely.dashboard``
 
 3. Open a browser and use the address ``http://localhost:7174/``. This will show the landing page of Firely Server Dashboard. It does not show any data yet.
 
@@ -87,7 +87,7 @@ Binaries
 2. Extract the zip into a folder on your system
 
 3. Start the dashboard by navigating to your working folder and executing
-  ``> dotnet .\FirelyServerDashboard.dll``
+   ``> dotnet .\FirelyServerDashboard.dll``
 
 4. Open a browser and use the address ``http://localhost:7174/``. This will show the landing page of Firely Server Dashboard. It does not show any data yet.
 
@@ -107,30 +107,31 @@ Connecting Firely Server
 
 Settings
 ^^^^^^^^
-You can change the URLs the dashboard is listening on in appsettings.json. If you select a https-URL, you have to provide information on the server-side certificate (in line with: :ref:`_configure_hosting`) you want to use to secure the connection:
+You can change the URLs the dashboard is listening on in appsettings.json. If you select a https-URL, you have to provide information on the server-side certificate (in line with: :ref:`configure_hosting`) you want to use to secure the connection:
 
 .. code-block:: json
-  {
-    "Kestrel": {
-      "Endpoints": {
-        "DashboardUI": {
-          "Url": "https://0.0.0.0:7174",
-          "Certificate": {
-            "Path": "<path to your .pfx certificate>",
-            "Password": "<password of your .pfx certificate>"
-          }
-        },
-        "OpenTelemetry": {
-          "Url": "https://0.0.0.0:4317",
-          "Protocols": "Http2",
-          "Certificate": {
-            "Path": "<path to your .pfx certificate>",
-            "Password": "<password of your .pfx certificate>"
-          }
-        }
-      }
-    }
-  }
+
+   {
+     "Kestrel": {
+       "Endpoints": {
+         "DashboardUI": {
+           "Url": "https://0.0.0.0:7174",
+           "Certificate": {
+             "Path": "<path to your .pfx certificate>",
+             "Password": "<password of your .pfx certificate>"
+           }
+         },
+         "OpenTelemetry": {
+           "Url": "https://0.0.0.0:4317",
+           "Protocols": "Http2",
+           "Certificate": {
+             "Path": "<path to your .pfx certificate>",
+             "Password": "<password of your .pfx certificate>"
+           }
+         }
+       }
+     }
+   }
 
 
 Example Use Cases

@@ -64,7 +64,7 @@ The dashboard can be downloaded either as a docker image or as a collection of b
 +=======+=================================+=============================================================================+
 | 7174  | Dashboard web UI                | Open in your browser to view the Dashboard                                  |
 +-------+---------------------------------+-----------------------------------------------------------------------------+
-| 4317  | Open telemetry ingestion (GRPC) | Include in Firely Server settings as a destination for open telemetry data  |
+| 4317  | OpenTelemetry ingestion (GRPC)  | Include in Firely Server settings as a destination for OpenTelemetry data   |
 +-------+---------------------------------+-----------------------------------------------------------------------------+
 
 Docker

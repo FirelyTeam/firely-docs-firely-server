@@ -25,7 +25,7 @@ The dashboard is intended for:
 
 .. important::
 
-  Full support for the metrics dashboard requires Firely Server and Firely Server Ingest v6.5.0, and Firely Auth v4.5.0.
+   Full support for the metrics dashboard requires Firely Server and Firely Server Ingest v6.5.0, and Firely Auth v4.5.0.
 
 Available Metrics
 -----------------
@@ -74,8 +74,8 @@ Docker
    ``> docker pull firely/dashboard``
 
 2. Start the container (where FirelyServerUrl is the URL Firely Server runs on):
-   - in cmd.exe: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl="http://host.docker.internal:4080" --name firely.dashboard``
-   - in Powershell / Bash on macOS: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl="http://host.docker.internal:4080" --name firely.dashboard``
+   - in cmd.exe: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl="http://host.docker.internal:4080" --name firely/dashboard``
+   - in Powershell / Bash on macOS: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl='http://host.docker.internal:4080' --name firely/dashboard``
 
 3. Open a browser and use the address ``http://localhost:7174/``. This will show the landing page of Firely Server Dashboard. It does not show any data yet.
 
@@ -132,6 +132,10 @@ You can change the URLs the dashboard is listening on in appsettings.json. If yo
        }
      }
    }
+
+.. important::
+
+   If you choose to expose the dashboard to the internet, we urge you to use a reverse proxy with a layer of authentication enabled
 
 
 Example Use Cases

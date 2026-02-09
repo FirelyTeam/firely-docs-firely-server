@@ -10,6 +10,9 @@ Metrics Dashboard
 Firely Server offers a Metrics Dashboard that provides an out-of-the-box observability experience.
 The dashboard visualizes key metrics collected via OpenTelemetry without requiring external tools or additional setup.
 
+.. image:: ../images/maintenance_metrics_dashboard.png
+   :alt: Metrics Dashboard
+
 The dashboard is intended for:
 
 - Quick validation that Firely Server is operating correctly.

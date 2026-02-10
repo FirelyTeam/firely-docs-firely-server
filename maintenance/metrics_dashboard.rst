@@ -7,8 +7,11 @@ Metrics Dashboard
 
   The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
 
-Firely Server includes a built-in Metrics Dashboard that provides an out-of-the-box observability experience.
+Firely Server offers a Metrics Dashboard that provides an out-of-the-box observability experience.
 The dashboard visualizes key metrics collected via OpenTelemetry without requiring external tools or additional setup.
+
+.. image:: ../images/maintenance_metrics_dashboard.png
+   :alt: Metrics Dashboard
 
 The dashboard is intended for:
 
@@ -18,14 +21,14 @@ The dashboard is intended for:
 
 .. note::
 
-   The built-in dashboard is not designed to replace production-grade monitoring
+   The dashboard is not designed to replace production-grade monitoring
    solutions such as Grafana or Application Insights. For long-term monitoring,
    analytics, and alerting, it is recommended to export telemetry data to an
    OpenTelemetry Collector and visualize it in a dedicated monitoring stack.
 
 .. important::
 
-  Full support for the metrics dashboard requires Firely Server and Firely Server Ingest v6.5.0, and Firely Auth v4.5.0.
+   Full support for the metrics dashboard requires Firely Server and Firely Server Ingest v6.5.0, and Firely Auth v4.5.0.
 
 Available Metrics
 -----------------
@@ -55,20 +58,88 @@ The dashboard displays a curated set of server-level and instance-level metrics 
    * - Resources
      - Current ingestion rate via REST API, FSI, or PubSub
 
-Accessing the Dashboard
------------------------
+Installing the dashboard
+------------------------
+The dashboard can be downloaded either as a docker image or as a collection of binaries. Regardless of the form, the dashboard uses the following ports by default:
 
-To access the Metrics Dashboard:
++-------+---------------------------------+-----------------------------------------------------------------------------+
+| Port  | Service                         | Remarks                                                                     |
++=======+=================================+=============================================================================+
+| 7174  | Dashboard web UI                | Open in your browser to view the Dashboard                                  |
++-------+---------------------------------+-----------------------------------------------------------------------------+
+| 4317  | OpenTelemetry ingestion (GRPC)  | Include in Firely Server settings as a destination for OpenTelemetry data   |
++-------+---------------------------------+-----------------------------------------------------------------------------+
 
-#. Enable metrics in the configuration. See :ref:`feature_opentelemetry` for details. The metrics dashboard ingests OTLP metrics from Firely Server, Firely Auth, and Firely Server Ingest. Each application must be configured separately.
-#. Configure the OpenTelemetry endpoint to point to the Firely Server Metrics Dashboard backend on port ``7174`` and start the backend service. Alternatively, configure the OpenTelemetry Collector to forward metrics to both the dashboard and Prometheus endpoints.
-#. Start Firely Server.
-#. Open the dashboard endpoint at ``https://example.org:7174/``.
+Docker
+^^^^^^
+
+1. Open your favorite command line tool and execute this command:
+   ``> docker pull firely/dashboard``
+
+2. Start the container (where FirelyServerUrl is the URL Firely Server runs on):
+   - in cmd.exe: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl="http://host.docker.internal:4080" --name firely/dashboard``
+   - in Powershell / Bash on macOS: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl='http://host.docker.internal:4080' --name firely/dashboard``
+
+3. Open a browser and use the address ``http://localhost:7174/``. This will show the landing page of Firely Server Dashboard. It does not show any data yet.
+
+Binaries
+^^^^^^^^
+
+1. Download the binaries from `Firely Downloads <https://downloads.fire.ly/>`_
+
+2. Extract the zip into a folder on your system
+
+3. Start the dashboard by navigating to your working folder and executing
+   ``> dotnet .\FirelyServerDashboard.dll``
+
+4. Open a browser and use the address ``http://localhost:7174/``. This will show the landing page of Firely Server Dashboard. It does not show any data yet.
+
+Connecting Firely Server
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+1. Enable metrics in the configuration. See :ref:`feature_opentelemetry` for details. The metrics dashboard ingests OTLP metrics from Firely Server, Firely Auth, and Firely Server Ingest. Each application must be configured separately.
+
+2. Configure the OpenTelemetry endpoint to point to the Firely Server Metrics Dashboard backend on port ``4317`` and start the backend service. Alternatively, configure the OpenTelemetry Collector to forward metrics to both the dashboard and Prometheus endpoints.
+
+3. (Re)start Firely Server.
 
 .. note::
 
    Metrics become visible in the dashboard after approximately one minute.
    Metrics are cached for five minutes and discarded afterwards.
+
+Settings
+^^^^^^^^
+You can change the URLs the dashboard is listening on in appsettings.json. If you select a https-URL, you have to provide information on the server-side certificate (in line with: :ref:`configure_hosting`) you want to use to secure the connection:
+
+.. code-block:: json
+
+   {
+     "Kestrel": {
+       "Endpoints": {
+         "DashboardUI": {
+           "Url": "https://0.0.0.0:7174",
+           "Certificate": {
+             "Path": "<path to your .pfx certificate>",
+             "Password": "<password of your .pfx certificate>"
+           }
+         },
+         "OpenTelemetry": {
+           "Url": "https://0.0.0.0:4317",
+           "Protocols": "Http2",
+           "Certificate": {
+             "Path": "<path to your .pfx certificate>",
+             "Password": "<password of your .pfx certificate>"
+           }
+         }
+       }
+     }
+   }
+
+.. important::
+
+   If you choose to expose the dashboard to the internet, we urge you to use a reverse proxy with a layer of authentication enabled
+
 
 Example Use Cases
 -----------------

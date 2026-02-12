@@ -110,7 +110,7 @@ Connecting Firely Server
 
 Settings
 ^^^^^^^^
-You can change the URLs the dashboard is listening on in appsettings.json. If you select a https-URL, you have to provide information on the server-side certificate (in line with: :ref:`configure_hosting`) you want to use to secure the connection:
+You can change the URLs the dashboard is listening on by adding appsettings.instance.json and specifying only the settings you want to override (similar to :ref:`configure_appsettings`). If you select a https-URL, you have to provide information on the server-side certificate (similar to :ref:`configure_hosting`) you want to use to secure the connection:
 
 .. code-block:: json
 

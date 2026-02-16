@@ -113,17 +113,37 @@ Advanced Validation
 
 In the Firely Server editions mentioned above, Firely Server will execute additional advanced validation rules which are defined on top of the core FHIR specification for more quality control.
 
-If validation is set to ``Full`` the following validation rules will be checked:
+If validation is set to ``Full`` the following validation rules will be checked by default:
 
-+--------------------------------+---------------------------------------------------------------------------------------------------------------+
-| Validation Rule                | Description                                                                                                   |
-+================================+===============================================================================================================+
-| ElementDefinitionValidator     | Validates that ElementDefinitions paths are valid                                                             |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------+
-| StructureDefinitionValidator   | Validates slicing and invariant definitions in StructureDefinitions                                           |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------+
-| QuestionnaireResponseValidator | Validates a QuestionnaireResponse against a Questionnaire (can be stored in the Firely Server admin database) |
-+--------------------------------+---------------------------------------------------------------------------------------------------------------+
++--------------------------------+--------------------------------------------------------------------+
+| Validation Rule                | Description                                                        |
++================================+====================================================================+
+| ElementDefinitionValidator     | Validates ElementDefinition paths for: illegal characters, length  |
+|                                | (max 64 chars), correct casing (first part uppercase, others       |
+|                                | lowercase), polymorphic paths ending with [x] (R4+), and type      |
+|                                | compatibility of fixed, pattern, example, minValue, maxValue with  |
+|                                | element types                                                      |
++--------------------------------+--------------------------------------------------------------------+
+| StructureDefinitionValidator   | Validates StructureDefinition for: unique invariant keys across    |
+|                                | element definitions, proper slicing on repeating or choice         |
+|                                | elements only                                                      |
++--------------------------------+--------------------------------------------------------------------+
+| QuestionnaireResponseValidator | Comprehensive validation of QuestionnaireResponse against          |
+|                                | Questionnaire including: item ordering, required items, enableWhen |
+|                                | conditions, answer types and constraints, ValueSet bindings,       |
+|                                | repeating questions, maxLength/minLength/minValue/maxValue/        |
+|                                | maxDecimalPlaces/regex constraints, and targetConstraint           |
+|                                | extensions. Warns on retired Questionnaire usage                   |
++--------------------------------+--------------------------------------------------------------------+
+| MinLengthValidator             | Enforces minimum string length constraints (used by                |
+|                                | QuestionnaireResponseValidator when minLength extension is         |
+|                                | present, but can be used standalone)                               |
++--------------------------------+--------------------------------------------------------------------+
+| MaxDecimalPlacesValidator      | Enforces maximum decimal places for numeric values (used by        |
+|                                | QuestionnaireResponseValidator when maxDecimalPlaces extension is  |
+|                                | present, but can be used standalone)                               |
++--------------------------------+--------------------------------------------------------------------+
+
 
 .. _feature_advisor_rules:
 
@@ -433,6 +453,45 @@ Fields:
   - ``concepts`` – Validate only the system/code pair and ignore the ``display`` field
   - ``display`` - Validate both system/code, and warn if display is not correct
 - ``valueSet``: Canonical of the ValueSet with an existing binding to the element with logical ID ``id``
+
+Reference Rule
+^^^^^^^^^^^^^^
+
+The ``reference`` rule allows you to customize validation behavior for references and canonical elements.
+By default, the validator checks both that a reference resolves and that it resolves to one of the allowed types.
+This rule lets you relax that behavior to only check resolution, or target specific reference URLs.
+
+Each ``reference`` rule is defined using the following structure inside a FHIR ``Parameters`` resource:
+
+.. code-block:: json
+
+  {
+    "name": "rules",
+    "part": [
+      {
+        "name": "reference",
+        "part": [
+          {
+            "name": "filter",
+            "part": [
+              { "name": "id", "valueString": "<element-id>" },
+              { "name": "url", "valueString": "<reference-url>" }
+            ]
+          },
+          { "name": "options", "valueString": "<option>" }
+        ]
+      }
+    ]
+  }
+
+Fields:
+
+- ``id``: The logical ID or FHIRPath of the reference element to apply the rule to (e.g., ``Patient.managingOrganization``)
+- ``url``: (Optional) Specific reference URL to filter by - if provided, the rule only applies when this specific URL is referenced
+- ``options``: Must be one of:
+
+  - ``exists`` – Only validate that the reference resolves to something, skip type checking
+  - ``type`` – Validate that the reference resolves to one of the allowed types
 
 Advisor Rules Example: Override, Suppress, and Coded Validation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

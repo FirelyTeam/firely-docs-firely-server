@@ -147,3 +147,13 @@ Example Use Cases
 - Health check: Verify responsiveness and request handling.
 - Development and testing: Monitor latency and error spikes without additional tooling.
 - Resource ingestion insights: Monitor Firely Server performance and ensure data ingestion without failures.
+
+Release Notes
+-------------
+
+.. _dashboard_releasenotes_0_1_0:
+
+Release 0.1.0, February 18th, 2026
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This is a beta release of the dashboard, which is not yet intended for production use, but can be used for testing and feedback purposes. The dashboard is available as a docker image and as a collection of binaries. It supports metrics from Firely Server (v6.5.0 and up), Firely Auth (v4.5.0 and up), and Firely Server Ingest (v6.5.0 and up).

@@ -27,6 +27,12 @@ Feature
    - Previously, bypassing IP restrictions was only possible by setting ``ASPNETCORE_ENVIRONMENT=Development``.  
    - With this release, the same behavior can be achieved explicitly via ``AllowAnyNetworkOrigins``.  
    - **Note:** This setting is disabled by default and should only be enabled in trusted, secure environments.
+#. Firely Auth now includes an App Developer Portal that allows external application developers to self-register for an account and request OAuth2 client registrations, subject to administrator approval. For more information, see :ref:`firely_auth_app_developer`.
+
+Configuration
+^^^^^^^^^^^^^
+
+#. Added the ``AppDeveloperPortal`` configuration section to control the self-service portal for external app developers. For more information, see :ref:`firely_auth_settings_appdeveloperportal`.
 
 Fix
 ^^^

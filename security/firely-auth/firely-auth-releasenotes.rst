@@ -3,6 +3,27 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.6.0:
+
+Release 4.6.0, March 5th, 2026
+------------------------------
+
+Feature
+^^^^^^^
+
+#. Added support for a new user type called App Developer. This user type is intended for developers that need to create test clients in Firely Auth, but do not need access to the admin dashboard. App Developers can only create and manage clients that they own, and they do not have access to any other functionality in the admin dashboard. They are also blocked from obtaining access tokens. For more information, see :ref:`firely_auth_user_types`.
+#. Added support for retrieving the fhirUser claim based on a lookup in a Master Patient Index. Note that this feature can only be used together with Firely Server v6.7.0, which is yet to be released. More documentation on this feature will follow.
+#. We improved viewer experience of the Firely Auth UI in mobile devices by making the UI responsive.
+#. We added support for serilog hot reloading of the log settings similar to Firely Server. This allows you to change the log level without needing to restart Firely Auth. See also :ref:`hot_reload_log_level` for more details.
+#. We adjusted our API to be able to adjust and delete Admin users. Admin users can now be viewed in the user overview in the UI and can be edited and deleted by the viewing admin user. These APIs are public as well and can checked out in our swagger documentation at the ``/swagger`` endpoint. Note that the last remaining Admin user cannot be deleted to prevent being locked out of the admin dashboard.
+
+Fix
+^^^
+
+#. We fixed an issue were databse creation would fail if the user specified in the connection string did not have permissions to the master database. This is especially relevant for users using Azure SQL, where it is common to have a user with permissions only to a specific database.
+#. We updated the SQLite dependencies of Firely Server to address `CVE-2025-6965 <https://nvd.nist.gov/vuln/detail/CVE-2025-6965>`_. The package ``SQLitePCLRaw.provider.e_sqlite3`` has been updated to the latest version 3.0.2, and the SQLite version that is used is updated to version 3.50.4.2
+#. The Firely Auth version will now also be visible in the :ref:`feature_metrics_dashboard` when metrics are enabled. This allows you to monitor which version of Firely Auth you are running in your environment.
+
 .. _firelyauth_releasenotes_4.5.0:
 
 Release 4.5.0, December 15th, 2025

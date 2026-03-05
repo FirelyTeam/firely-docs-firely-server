@@ -527,6 +527,35 @@ AllowedOrigins
 By default CORS is enabled for all origins communicating over https. To adjust this, change the allowed origins in the ``AllowedOrigins`` setting.
 Wildcards can be used, for example to allow all ports: ``"https://localhost:*"``, or to allow all subdomains ``"https://*.fire.ly"``.
 
+.. _firely_auth_settings_appdeveloperportal:
+
+AppDeveloperPortal
+^^^^^^^^^^^^^^^^^^
+
+The ``AppDeveloperPortal`` section controls the self-service portal that allows external application developers to request user accounts and OAuth2 client registrations. For a full description of the feature, see :ref:`firely_auth_app_developer`.
+
+.. code-block:: json
+
+  "AppDeveloperPortal": {
+    "Enabled": false,
+    "Fields": {
+      "CompanyName": "Required",
+      "CompanyId": "Optional",
+      "CompanyBusinessAddress": "Optional",
+      "CompanyWebsite": "Required",
+      "Reason": "Optional"
+    }
+  }
+
+- ``Enabled``: Set to ``true`` to activate the App Developer Portal. Default is ``false``.
+- ``Fields``: Controls which company-related fields are shown on the registration form and whether each field is ``Required``, ``Optional``, or ``Disabled``.
+
+  - ``CompanyName``: The legal name of the developer's company.
+  - ``CompanyId``: A company registration or identification number.
+  - ``CompanyBusinessAddress``: The company's registered business address.
+  - ``CompanyWebsite``: The company's website URL. When set to ``Required`` or ``Optional`` and a value is provided, Firely Auth validates that the email domain of the requesting user matches the company website domain.
+  - ``Reason``: A free-text field for the developer to explain why they are requesting access.
+
 .. _firely_auth_settings_disclaimers:
 
 Disclaimer Registration

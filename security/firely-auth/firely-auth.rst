@@ -35,5 +35,6 @@ To allow you to test :ref:`access control <feature_accesscontrol>`, we provide y
    firely-auth-sso
    firely-auth-mfa
    firely-auth-management-app
+   firely-auth-app-developer
    firely-auth-glossary
    firely-auth-BOM

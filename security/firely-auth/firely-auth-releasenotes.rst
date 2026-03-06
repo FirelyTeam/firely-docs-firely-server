@@ -20,7 +20,7 @@ Feature
 Fix
 ^^^
 
-#. We fixed an issue were databse creation would fail if the user specified in the connection string did not have permissions to the master database. This is especially relevant for users using Azure SQL, where it is common to have a user with permissions only to a specific database.
+#. We fixed an issue were database creation would fail if the user specified in the connection string did not have permissions to the master database. This is especially relevant for users using Azure SQL, where it is common to have a user with permissions only to a specific database.
 #. We updated the SQLite dependencies of Firely Server to address `CVE-2025-6965 <https://nvd.nist.gov/vuln/detail/CVE-2025-6965>`_. The package ``SQLitePCLRaw.provider.e_sqlite3`` has been updated to the latest version 3.0.2, and the SQLite version that is used is updated to version 3.50.4.2
 #. The Firely Auth version will now also be visible in the :ref:`feature_metrics_dashboard` when metrics are enabled. This allows you to monitor which version of Firely Auth you are running in your environment.
 

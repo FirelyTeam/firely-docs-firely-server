@@ -12,8 +12,8 @@ Feature
 ^^^^^^^
 
 #. Added support for a new user type called App Developer. This user type is intended for developers that need to create test clients in Firely Auth, but do not need access to the admin dashboard. App Developers can only create and view clients that they own, and they do not have access to any other functionality in the admin dashboard. They will not be able to edit or delete clients. They are also blocked from obtaining access tokens.
-#. Added support for retrieving the fhirUser claim based on a lookup in a Master Patient Index. Note that this feature can only be used together with Firely Server v6.7.0, which is yet to be released. More documentation on this feature will follow.
-#. We improved viewer experience of the Firely Auth UI in mobile devices by making the UI responsive.
+#. Added support for retrieving the users fhirUser claim based on a lookup in a Master Patient Index. Note that this feature can only be used together with Firely Server v6.7.0, which is yet to be released. More documentation on this feature will follow.
+#. We improved the mobile viewing experience of the Firely Auth UI by making key pages responsive.
 #. We added support for serilog hot reloading of the log settings similar to Firely Server. This allows you to change the log level without needing to restart Firely Auth. See also :ref:`hot_reload_log_level` for more details.
 #. We adjusted our API to be able to adjust and delete Admin users. Admin users can now be viewed in the user overview in the UI and can be edited and deleted by the viewing admin user. These APIs are public as well and can checked out in our swagger documentation at the ``/swagger`` endpoint. Note that the last remaining Admin user cannot be deleted to prevent being locked out of the admin dashboard.
 

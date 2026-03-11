@@ -57,7 +57,7 @@ A new user type, ``AppDeveloper``, is available alongside the existing ``Patient
 Key characteristics of App Developer users:
 
 - They **cannot be external** (SSO-only) users — they must be registered locally in Firely Auth with a password.
-- They **do not require** a ``fhirUser`` claim (unlike Patient and Practitioner users).
+- They **do not require** - and cannot even have - a ``fhirUser`` claim (unlike Patient and Practitioner users). This implies that the app developer cannot use this account to get an access token for its clients. A separate test account for a Patient or Practitioner is then needed.
 - They have **company information** associated with their account (name, address, registration ID, website).
 - Upon approval, they receive an **account activation email** to set their password.
 
@@ -173,7 +173,8 @@ App developers have limited control over certain client settings compared to adm
 +----------------------------+-------------------------------------------+
 | Section                    | App Developer Access                      |
 +============================+===========================================+
-| General Info               | Tags are disabled; enabled fields only.   |
+| General Info               | Client Name, Id, Type and Description;    |
+|                            | Tags are disabled;                        |
 |                            | "Management API" client type cannot be    |
 |                            | selected.                                 |
 +----------------------------+-------------------------------------------+
@@ -196,9 +197,6 @@ App developers have limited control over certain client settings compared to adm
 App Developer Dashboard
 -----------------------
 
-Once logged in, an App Developer user has access to a dedicated dashboard providing:
-
-- **Client requests** — List and view clients that they have requested to create, along with their approval status.
-- **Firely Server status** — View current Firely Server availability and connected endpoint information.
-- **Available resource types** — View the FHIR resource types supported by the connected Firely Server for use in scope configuration.
+Once logged in, an App Developer user has access to a dedicated dashboard providing a list of their own approved clients.
+Via the notification icon they can access the request overview page, where they can see the status of their client requests, and inspect and close them.
 

@@ -227,6 +227,11 @@ Impacted payers (see `CMS definition <https://www.cms.gov/priorities/key-initiat
 
 Additionally, payers are required to support the submission of Prior Authorization requests from providers entirely through the API and facilitate the exchange of all Prior Authorization decisions via the API.
 
+.. note::
+
+   See the `Electronic Prior Authorization (ePA) use case <https://fire.ly/use-case-electronic-prior-authorization-epa/>`_
+   to learn more about the business requirements around the Prior Authorization API.
+
 To implement a Prior Authorization API it is necessary to:
   #. Collect a computable representation of the details regarding which medical items and services are covered by a plan and whether prior authorization is required for them. Firely is recommending to store this information via `Clinical Quality Language (CQL) <https://fire.ly/cql/>`_.
   #. For any covered medical item or service requiring Prior Authorization, additionally create a computable overview of all documentation requirements necessary to support the decision.. Information that can not be derived from the Patients EHR/EMR record may be collected via `FHIR Structured Data Capture <https://hl7.org/fhir/uv/sdc/>`_. Note that the CMS final rule does not specify any requirements around the representation of the documentation requirements.

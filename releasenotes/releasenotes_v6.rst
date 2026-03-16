@@ -16,13 +16,13 @@ Release 6.6.0, January 29th, 2026
 Improvements
 ^^^^^^^^^^^^
 
-#. Replaced the technical UI framework for the Firely Server Demo Homepage to simply the deployment using subdomains
+#. Replaced the technical UI framework for the Firely Server Demo Homepage to simply the deployment using subdomains.
 
 Features
 ^^^^^^^^
 
 #. Add support for the _until parameter in the Bulk Data Export operations on all levels and Patient/$everything.
-#. Added support for dedicated OpenTelemetry metrics for counting the Patient Access API metrics according to the CMS definition of the `reporting requirements for CMS-0057-F <https://www.cms.gov/priorities/burden-reduction/overview/interoperability/frequently-asked-questions/patient-access-api>`_. The expoeter metric is called "firely.server.cms0057.patient.count".
+#. Added support for dedicated OpenTelemetry metrics for counting the Patient Access API metrics according to the CMS definition of the `reporting requirements for CMS-0057-F <https://www.cms.gov/priorities/burden-reduction/overview/interoperability/frequently-asked-questions/patient-access-api>`_. The exporter metric is called "firely.server.cms0057.patient.count".
 
 Fix
 ^^^
@@ -30,6 +30,27 @@ Fix
 #. Tenant labels are now also applied on contained resources.
 #. Posting a Bundle with type=collection returns now a correct OperationOutcome instead of a success message with status code HTTP 501.
 #. Fixed an issue due to which $liveness was blocked longer than necessary when loading conformance resources.
+
+.. _vonk_releasenotes_6_5_2:
+
+Release 6.5.2, January 15th, 2026
+---------------------------------
+
+Fix
+^^^
+
+#. Updated the SQLite dependencies of Firely Server to address `CVE-2025-6965 <https://nvd.nist.gov/vuln/detail/CVE-2025-6965>`_. The package ``SQLitePCLRaw.provider.e_sqlite3`` has been updated to the latest version 3.0.2, and the SQLite version that is used is updated to version 3.50.4.2
+#. Updated ``AWSSDK.Core`` dependency to version 4.0.3.8 to address `CVE-2026-22611 <https://nvd.nist.gov/vuln/detail/CVE-2026-22611>`_.
+
+.. _vonk_releasenotes_6_5_1:
+
+Release 6.5.1, November 25th, 2025
+----------------------------------
+
+Fix
+^^^
+
+#. We updated the dependencies of the docker image to address security vulnerabilities in some of the base layers. The updated base image is now ``mcr.microsoft.com/dotnet/aspnet:8.0.22-alpine3.22``.
 
 .. _vonk_releasenotes_6_5_0:
 

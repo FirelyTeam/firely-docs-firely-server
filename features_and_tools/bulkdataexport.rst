@@ -139,7 +139,7 @@ BDE introduces several new parts to the appsettings:
       "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "BodyStructure", "Medication", "Coverage" ],
       "FileRetentionPeriod": "7.00:00:00", // Optional: retention period for export files and snapshots (format: d.hh:mm:ss). After this period, tasks will be purged and return 410 GONE. If not set, retention cleanup is disabled.
       "CleanupCheckInterval": "01:00:00" // Optional: how often to check for expired tasks (format: hh:mm:ss). Default is 1 hour if not specified.
-
+      "RetryLimit": 3 // Optional: number of times to retry an abandoned export task before marking it as Failed. Default is 3 if not specified. A task is considered abandoned when an instance of Firely Server is shut down, even if that is unexpected.
   },
   "SqlDbOptions": {
       // ...

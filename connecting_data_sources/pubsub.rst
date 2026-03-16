@@ -177,6 +177,10 @@ RabbitMQ Configuration
                 "ClientCertificatePath": "", // Path to client certificate file (.pfx format), if using SSL
                 "ClientCertificatePassphrase": "", // Passphrase for the client certificate, if using SSL
                 "ServerName": "" // Server name for SSL validation, if not set, the host name defined in the Host property will be used
+                "QueueArguments": { // Define extra arguments that should be applied on the queue here, they will be passed as-is to RabbitMQ
+                  "x-message-ttl": 120000, // Time in milliseconds
+                  "x-dead-letter-exchange": "DeadLetterExchange", // Name of dead letter exchange
+                }
             }
         }
     },
@@ -192,7 +196,9 @@ RabbitMQ Configuration
   - UseSsl: Set to true to enable SSL/TLS for secure connections
   - ClientCertificatePath: (Optional) Path to the client certificate file (.pfx format) when using mutual SSL (mSSL)
   - ClientCertificatePassphrase: (Optional) Password for the client certificate when using mutual SSL
-  - ServerName: Server name for SSL validation (if not set, the host name from the Host property will be used)
+  - ServerName: (Optional) Server name for SSL validation (if not set, the host name from the Host property will be used)
+  - QueueArguments: (Optional) Those are custom arguments able to be specified on a queue to drive behavior of the server.
+    - for an existing queue, you need to match exactly the arguments that are already set on it for connection to be successful
 
 .. note::
   When using SSL/TLS with RabbitMQ, the Certificate Authority (CA) certificate must be installed on the system that runs Firely Server. For mutual SSL (mSSL), both ClientCertificatePath and ClientCertificatePassphrase are required only if the RabbitMQ server is configured to verify client certificates.

@@ -640,7 +640,7 @@ FHIR RESTful interactions
 :Name: FHIR User Lookup
 :Configuration: ``Vonk.Plugin.FhirUserLookupOperation.FhirUserLookupConfiguration``
 :Order: 5007
-:Description: Implements the system-level ``$fhirUser-lookup`` operation via POST. Allows looking up the FHIR user associated with the current request context.
+:Description: Implements the system-level ``$fhirUser-lookup`` operation via POST. Allows looking up the FHIR user associated with the current request context. See :ref:`fhiruserlookup` for more information.
 
 .. _vonk_plugins_erase:
 

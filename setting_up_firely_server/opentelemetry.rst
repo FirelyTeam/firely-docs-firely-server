@@ -101,4 +101,4 @@ Firely Server's OpenTelemetry integration provides the following usages:
     It is recommended to use a service like `OpenTelemetry Collector <https://opentelemetry.io/docs/collector/>`_ to filter, process, and dispatch traces and metrics to different endpoints. The collector acts as a central hub for telemetry data, enabling flexible routing and aggregation of data to various backends.
 
 4. **Real-World Testing**:
-    The `Real-World Testing <feature_realworldtesting>`_ feature relies on OpenTelemetry traces to analyze server activities.
+    The :ref:`Real-World Testing <feature_realworldtesting>` feature relies on OpenTelemetry traces to analyze server activities.

@@ -17,28 +17,30 @@ Improvements
 ^^^^^^^^^^^^
 
 #. We improved the performance of SQL server repositories by restructuring and optimizing several indexes.
+#. We improved the operation outcome of disabled operations. In case of a disabled delete operation, the outcome would incorrectly indicate that the operation was successful even though the operation was disabled. In the current situation a ``501 Not Implemented`` response is returned with an empty response body..
+#. ``BundleOptions`` in the appsettings were not validated upon startup for consistency. This could lead to misconfigurations that would only be noticed when executing a bundle operation. We now validate the ``BundleOptions`` upon startup to prevent this from happening.
+#. We improved the resolving of index files in the UI when the server is running in a virtual directory. Before, the UI would not be able to find the index files when running in a virtual directory, which would lead to missing styles and images. This has now been fixed by adjusting the paths to the index files in the UI.
+#. We improved handling of Patient Access Metrics sent via OpenTelemetry when no fhirUser could be derived from the access token.
+#. We clarified the logs when the ``lastN`` operation would be used together with a SQLite DB. This log message would suggest that only SQL Server repositories support the ``lastN`` operation, which is not the case. The log message has now been updated to clarify that the ``lastN`` operation is supported for MongoDb and SQL Server repositories, but not for SQLite repositories.
 
 
 Features
 ^^^^^^^^
 
+#. We introduced advanced terminology validation with Conformance ARchives (CAR files), allowing for validation against large and complex terminology systems such as LOINC, ICD10, and SNOMED CT. We provide pre-built CAR files for SCT and LOINC on request.For more information see :ref:`feature_advanced_terminology`. This feature requires a separate license plugin.
 #. PubSub users that utilize RabbitMQ ad a message broker can now specify custom queue arguments when creating queues. For more information see :ref:`pubsub_configuration_rabbitmq`.
 #. We introduced the ``$fhirUser-lookup`` operation to look up the fhirUser claim of a patient or practitioner user in Firely Auth. This operation already existed under water in Firely Server to support fhirUser look ups for Firely Auth. It is now also exposed as a public operation that can be called by custom plugins or external systems. For more information see :ref:`fhiruser_lookup`.
 #. FSI now supports ingestion of bundles of type ``collection``, ``transaction``, and ``batch`` in ndjson format.
+#. We introduced the ``$questionnaire-package`` operation with support for the ``coverage``, ``questionnaire``, ``changedsince``, and ``packagebundle`` parameters following tha specification of the `DTR Questionnaire Package Operation <https://build.fhir.org/ig/HL7/davinci-dtr/en/OperationDefinition-questionnaire-package.html#parameters>`_. This operation requires a separate license plugin.More documentation will follow.
 
 Fix
 ^^^
 
 #. We fixed an issue with BDE in multi-instance deployments of Firely Server where the same BDE task could be picked up by multiple instances at the same time, which could lead to duplicate processing of the same task. This was caused by that task not getting the correct status update. We have improved handling of these tasks in multi-instance deployments to prevent this from happening and to ensure the process is more robust in case of unexpected crashes or shutdowns of instances.
-#. We fixed the operation outcome of disabled operations. In case of a disabled delete operation, the outcome would incorrectly indicate that the operation was successful even though the operation was disabled. In the current situation a ``501 Not Implemented`` response is returned with an empty response body..
-#. ``BundleOptions`` in the appsettings were not validated upon startup for consistency. This could lead to misconfigurations that would only be noticed when executing a bundle operation. We now validate the ``BundleOptions`` upon startup to prevent this from happening.
 #. We fixed an issue where the ``_summary`` parameter was applied in searches but not in direct reads.
 #. We consolidated the behavior of the ``_since`` filter for ``$PatientEverything`` in SQL and MongoDB repositories. Before, the ``_since`` filter would return additional results in MongoDB repositories due to the way the filter was applied. Now, the behavior of the ``_since`` filter is consistent across both repository types.
-#. We improved the resolving of index files in the UI when the server is running in a virtual directory. Before, the UI would not be able to find the index files when running in a virtual directory, which would lead to missing styles and images. This has now been fixed by adjusting the paths to the index files in the UI.
-#. We clarified the logs when the ``lastN`` operation would be used together with a SQLite DB. This log message would suggest that only SQL Server repositories support the ``lastN`` operation, which is not the case. The log message has now been updated to clarify that the ``lastN`` operation is supported for MongoDb and SQL Server repositories, but not for SQLite repositories.
 #. The ``_summary`` and ``_elements`` parameters would not be applied in when used in ``batch`` or ``transaction`` bundles. This has now been fixed so that these parameters are applied correctly in these types of bundles.
-#. We fixed an issue where Firely Server would not handle a ``RetrievePlanCommand`` from RabbitMQ  correctly.
-#. We improved handling of Patient Access Metrics sent via OpenTelemetry when no fhirUser could be derived from the access token.
+#. We fixed an issue where Firely Server would throw an error when handling a ``RetrievePlanCommand`` from RabbitMQ.
 
 Database
 ^^^^^^^^

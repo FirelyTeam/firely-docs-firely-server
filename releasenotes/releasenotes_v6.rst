@@ -21,7 +21,7 @@ Improvements
 #. ``BundleOptions`` in the appsettings were not validated upon startup for consistency. This could lead to misconfigurations that would only be noticed when executing a bundle operation. We now validate the ``BundleOptions`` upon startup to prevent this from happening.
 #. We improved the resolving of index files in the UI when the server is running in a virtual directory. Before, the UI would not be able to find the index files when running in a virtual directory, which would lead to missing styles and images. This has now been fixed by adjusting the paths to the index files in the UI.
 #. We improved handling of Patient Access Metrics sent via OpenTelemetry when no fhirUser could be derived from the access token.
-#. We clarified the logs when the ``lastN`` operation would be used together with a SQLite DB. This log message would suggest that only SQL Server repositories support the ``lastN`` operation, which is not the case. The log message has now been updated to clarify that the ``lastN`` operation is supported for MongoDb and SQL Server repositories, but not for SQLite repositories.
+#. We clarified the logs when the ``lastN`` operation would be used together with a SQLite DB. This log message would suggest that only SQL Server repositories support the ``lastN`` operation, which is not the case. The log message has now been updated to clarify that the ``lastN`` operation is supported for MongoDB and SQL Server repositories, but not for SQLite repositories.
 
 
 Features

@@ -39,7 +39,7 @@ Fix
 #. We fixed an issue with BDE in multi-instance deployments of Firely Server where the same BDE task could be picked up by multiple instances at the same time, which could lead to duplicate processing of the same task. This was caused by that task not getting the correct status update. We have improved handling of these tasks in multi-instance deployments to prevent this from happening and to ensure the process is more robust in case of unexpected crashes or shutdowns of instances.
 #. We fixed an issue where the ``_summary`` parameter was applied in searches but not in direct reads.
 #. We consolidated the behavior of the ``_since`` filter for ``$PatientEverything`` in SQL and MongoDB repositories. Before, the ``_since`` filter would return additional results in MongoDB repositories due to the way the filter was applied. Now, the behavior of the ``_since`` filter is consistent across both repository types.
-#. The ``_summary`` and ``_elements`` parameters would not be applied in when used in ``batch`` or ``transaction`` bundles. This has now been fixed so that these parameters are applied correctly in these types of bundles.
+#. The ``_summary`` and ``_elements`` parameters would not be applied when used in ``batch`` or ``transaction`` bundles. This has now been fixed so that these parameters are applied correctly in these types of bundles.
 #. We fixed an issue where Firely Server would throw an error when handling a ``RetrievePlanCommand`` from RabbitMQ.
 
 Database

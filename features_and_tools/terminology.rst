@@ -233,3 +233,95 @@ License
 The Terminology plugin itself is licensed with the license token ``http://fire.ly/vonk/plugins/terminology``.
 
 When you configure Remote Terminology Services it is your responsibility to check whether you are licensed to use those services.
+
+.. _feature_advanced_terminology:
+
+Advanced Terminology with Conformance Archives (CAR files)
+==========================================================
+
+.. note::
+
+   The features described in this section require the **Advanced Terminology** license token ``http://fire.ly/advanced-terminology``, which is separate from the base terminology license.
+
+The local terminology service built into Firely Server works well for simple ValueSets and CodeSystems such as those shipped with the FHIR specification. However, large and complex terminologies like **SNOMED CT** and **LOINC** cannot be stored as plain FHIR resources in the Administration database — they are too large, have rich hierarchical relationships, and require specialised subsumption logic.
+
+**Conformance Archive (CAR) files** solve this problem. A CAR file is a representation of a CodeSystem produced by the `Firely.Car` library. It stores the full concept inventory together with all required relationship data in a format that can be loaded and queried efficiently at runtime from the local filesystem — without requiring an external terminology server.
+
+How it works
+------------
+
+When ``AdvancedTerminologyConfiguration`` is active and at least one CAR file is configured, Firely Server registers a **CAR Terminology Host** alongside the existing local and remote terminology hosts. In addition, the default terminology implementation is replaced by the **Delegated Terminology**, which contains the following logic:
+
+1. For every incoming terminology request, the proxy first checks whether the CAR Terminology Host can handle the request (i.e. whether the requested CodeSystem URL is present in one of the configured CAR files).
+2. If the CAR host can handle the request, it serves it directly.
+3. For **ValueSet/$validate-code** requests that involve complex filter criteria (e.g. ``is-a`` or ``descendent-of`` filters referencing a CAR-backed CodeSystem), the proxy decomposes the request into a series of lower-level CodeSystem operations (``CodeSystem/$validate-code``, ``CodeSystem/$subsumes``, and ``CodeSystem/$lookup``) and aggregates the results.
+4. If the CAR host cannot handle a request (either because the CodeSystem is not in a CAR file, or because the operation is not supported), the request falls back to the standard terminology proxy and the configured local/remote services.
+
+Supported operations via CAR files
+-----------------------------------
+
+The following FHIR terminology operations are directly supported when the requested CodeSystem is backed by a CAR file:
+
+* ``CodeSystem/$validate-code``
+* ``CodeSystem/$subsumes``
+* ``CodeSystem/$lookup``
+
+Operations that are **not** directly supported by CAR files (such as ``ValueSet/$expand``, ``ConceptMap/$translate``) will be handled by the fallback services (local or remote), just as before.
+
+``ValueSet/$validate-code`` is supported indirectly: if the included CodeSystem concepts are backed by a CAR file, the proxy automatically decomposes the validation into the supported CodeSystem-level operations listed above.
+
+Configuration
+-------------
+
+ConformanceArchives
+^^^^^^^^^^^^^^^^^^^
+
+Configure one or more CAR files in the ``Terminology:ConformanceArchives`` array in your ``appsettings.json``:
+
+.. code-block:: JSON
+
+   "Terminology": {
+     "MaxExpansionSize": 650,
+     "ConformanceArchives": [
+       {
+         "Path": "/data/terminology/SCT.cs.car"
+       },
+       {
+         "Path": "/data/terminology/LOINC.cs.car"
+       }
+     ],
+     "LocalTerminologyService": {
+       "Order": 10,
+       "PreferredSystems": [ "http://hl7.org/fhir" ],
+       "SupportedInteractions": [ "ValueSetValidateCode", "Expand", "FindMatches", "Lookup" ],
+       "SupportedInformationModels": [ "Fhir3.0", "Fhir4.0", "Fhir5.0" ]
+     }
+   }
+
+:Path: Absolute or relative path to the ``.car`` file on the local filesystem. All configured paths are validated at startup; Firely Server will refuse to start if a CAR file cannot be opened.
+
+.. note::
+
+   If ``ConformanceArchives`` is empty or not configured, the ``CarTerminologyHost`` is not registered and no CAR-related behaviour is active. The standard local and remote terminology services continue to work normally.
+
+Priority and fallback
+^^^^^^^^^^^^^^^^^^^^^
+
+The CAR Terminology Host is always consulted **before** other hosts for any CodeSystem that is present in a configured CAR file. If the CAR host cannot serve the request (unsupported operation or unrecognised system), the request is passed to the remaining terminology services in their configured order.
+
+Startup validation
+^^^^^^^^^^^^^^^^^^
+
+All configured CAR files are validated when Firely Server starts. A ``VonkConfigurationException`` is raised if any file is missing or cannot be read, preventing the server from starting with an invalid terminology configuration.
+
+License
+-------
+
+The Advanced Terminology feature requires its own license token, separate from the base terminology plugin:
+
+* **Base Terminology** (local + remote services): ``http://fire.ly/vonk/plugins/terminology``
+* **Advanced Terminology** (CAR file support): ``http://fire.ly/advanced-terminology``
+
+Both tokens must be present in your Firely Server license to use CAR-backed terminology together with the standard local and remote services.
+
+When you configure CAR files it is your responsibility to ensure you hold the appropriate distribution license for the terminology content (e.g. a SNOMED CT National Release Centre license or a LOINC license).

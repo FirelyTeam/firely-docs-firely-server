@@ -17,7 +17,7 @@ Improvements
 ^^^^^^^^^^^^
 
 #. We improved the performance of SQL Server repositories by restructuring and optimizing several indexes.
-#. We improved the operation outcome of disabled operations. In case of a disabled delete operation, the outcome would incorrectly indicate that the operation was successful even though the operation was disabled. In the current situation a ``501 Not Implemented`` response is returned with an empty response body..
+#. We improved the operation outcome of disabled operations. In case of a disabled delete operation, the outcome would incorrectly indicate that the operation was successful even though the operation was disabled. In the current situation a ``501 Not Implemented`` response is returned with an empty response body.
 #. ``BundleOptions`` in the appsettings were not validated upon startup for consistency. This could lead to misconfigurations that would only be noticed when executing a bundle operation. We now validate the ``BundleOptions`` upon startup to prevent this from happening.
 #. We improved the resolving of index files in the UI when the server is running in a virtual directory. Before, the UI would not be able to find the index files when running in a virtual directory, which would lead to missing styles and images. This has now been fixed by adjusting the paths to the index files in the UI.
 #. We improved handling of Patient Access Metrics sent via OpenTelemetry when no fhirUser could be derived from the access token.

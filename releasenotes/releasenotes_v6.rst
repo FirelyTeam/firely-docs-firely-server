@@ -46,7 +46,7 @@ Database
 ^^^^^^^^
 
 #. We have optimized several indexes in the SQL Server repository database to improve query performance. This requires an update of the SQL database schema to version v29. The migration will be done automatically upon startup when upgrading from FS 6.x.x. If you are upgrading from FS 5.x.x, please check the previous release notes for the required migration steps. The following changes were made to the indexes:
-    - Updated the vonk.ref.ref_name_relativereference index to include the Version column if not already present.
+    - Updated the vonk.ref.ref_name_relativereference index to include the ``Version`` column if not already present.
     - Replaced the vonk.tkn.ix_tkn_code_name_systemhash index with a new tkn_name_code_systemhash index, reordering the columns to ``Name``, ``Code``, ``SystemHash``.
     - Updated the vonk.ref.ref_name_urlhash index to include additional columns ``EntryId``, ``Id``, ``Url``, ``Version``.
     - Updated the vonk.uri.uri_name_hash index to include the ``UriValue`` column in the INCLUDE clause.

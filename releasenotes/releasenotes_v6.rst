@@ -16,7 +16,7 @@ Release 6.7.0, March 26th, 2026
 Improvements
 ^^^^^^^^^^^^
 
-#. Improved the performance of SQL Server repositories by restructuring and optimizing several indexes.
+#. Improved the performance of SQL Server repositories by restructuring and optimizing several indexes. See the Database section of the release notes for more information about the index changes. 
 #. Improved the operation outcome of disabled operations. In case of a disabled delete operation, the outcome would incorrectly indicate that the operation was successful even though the operation was disabled. In the current situation a ``501 Not Implemented`` response is returned with an empty response body.
 #. ``BundleOptions`` in the appsettings were not validated upon startup for consistency. This could lead to misconfigurations that would only be noticed when executing a bundle operation. We now validate the ``BundleOptions`` upon startup to prevent this from happening.
 #. We improved the resolving of index files in the UI when the server is running in a virtual directory. Before, the UI would not be able to find the index files when running in a virtual directory, which would lead to missing styles and images. This has now been fixed by adjusting the paths to the index files in the UI.
@@ -27,9 +27,9 @@ Improvements
 Features
 ^^^^^^^^
 
-#. Introduced advanced terminology validation with Conformance Archives (CAR files), allowing for validation against large and complex terminology systems such as LOINC, ICD10, and SNOMED CT. We provide pre-built CAR files for SCT and LOINC on request. For more information see :ref:`feature_advanced_terminology`. This feature requires a separate license plugin.
+#. Introduced advanced terminology validation with Conformance Archives (CAR files), allowing for validation against large and complex terminology systems such as LOINC, ICD10, and SNOMED CT. We provide pre-built CAR files for SCT and LOINC on request. For more information see :ref:`feature_advanced_terminology`. This feature requires a separate license plugin, licenses can be updated upon request.
 #. PubSub users that utilize RabbitMQ as a message broker can now specify custom queue arguments when creating queues. For more information see :ref:`pubsub_configuration_rabbitmq`.
-#. Introduced the ``$fhirUser-lookup`` operation to look up the fhirUser claim of a patient or practitioner user in Firely Auth. This operation already existed internally in Firely Server to support fhirUser lookups for Firely Auth. It is now also exposed as a public operation that can be called by custom plugins or external systems. For more information see :ref:`fhiruser_lookup`.
+#. Introduced the ``$fhirUser-lookup`` operation to look up the fhirUser claim of a patient or practitioner user in Firely Auth. This operation replaces the, now deprecated, fhirUser lookup in FA. It is now exposed as a public operation that can be called by custom plugins or external systems. For more information see :ref:`fhiruser_lookup`.
 #. FSI now supports ingestion of bundles of type ``collection``, ``transaction``, and ``batch`` in ndjson format.
 #. We introduced the ``$questionnaire-package`` operation with support for the ``coverage``, ``questionnaire``, ``changedsince``, and ``packagebundle`` parameters following the specification of the `DTR Questionnaire Package Operation <https://build.fhir.org/ig/HL7/davinci-dtr/en/OperationDefinition-questionnaire-package.html#parameters>`_. This operation requires a separate license plugin. More documentation will follow.
 
@@ -45,7 +45,7 @@ Fix
 Database
 ^^^^^^^^
 
-#. Optimized several indexes in the SQL Server repository database to improve query performance. This requires an update of the SQL database schema to version v29. The migration will be done automatically upon startup when upgrading from FS 6.x.x. If you are upgrading from FS 5.x.x, please check the previous release notes for the required migration steps. The following changes were made to the indexes:
+#. Optimized several indexes in the SQL Server repository database to improve query performance. This requires an update of the SQL database schema to version v29. The migration will be done automatically upon startup when upgrading from FS 6.x.x, please be aware that this migration can be time-consuming when done on large databases. If you are upgrading from FS 5.x.x, please check the previous release notes for the required migration steps. The following changes were made to the indexes:
     - Updated the vonk.ref.ref_name_relativereference index to include the ``Version`` column if not already present.
     - Replaced the vonk.tkn.ix_tkn_code_name_systemhash index with a new tkn_name_code_systemhash index, reordering the columns to ``Name``, ``Code``, ``SystemHash``.
     - Updated the vonk.ref.ref_name_urlhash index to include additional columns ``EntryId``, ``Id``, ``Url``, ``Version``.

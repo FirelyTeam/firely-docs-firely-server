@@ -27,7 +27,7 @@ Improvements
 Features
 ^^^^^^^^
 
-#. We introduced advanced terminology validation with Conformance ARchives (CAR files), allowing for validation against large and complex terminology systems such as LOINC, ICD10, and SNOMED CT. We provide pre-built CAR files for SCT and LOINC on request.For more information see :ref:`feature_advanced_terminology`. This feature requires a separate license plugin.
+#. We introduced advanced terminology validation with Conformance Archives (CAR files), allowing for validation against large and complex terminology systems such as LOINC, ICD10, and SNOMED CT. We provide pre-built CAR files for SCT and LOINC on request. For more information see :ref:`feature_advanced_terminology`. This feature requires a separate license plugin.
 #. PubSub users that utilize RabbitMQ as a message broker can now specify custom queue arguments when creating queues. For more information see :ref:`pubsub_configuration_rabbitmq`.
 #. We introduced the ``$fhirUser-lookup`` operation to look up the fhirUser claim of a patient or practitioner user in Firely Auth. This operation already existed under water in Firely Server to support fhirUser look ups for Firely Auth. It is now also exposed as a public operation that can be called by custom plugins or external systems. For more information see :ref:`fhiruser_lookup`.
 #. FSI now supports ingestion of bundles of type ``collection``, ``transaction``, and ``batch`` in ndjson format.

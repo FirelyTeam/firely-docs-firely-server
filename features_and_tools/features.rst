@@ -24,6 +24,7 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
    openapi
    Custom Operations <custom_operations/customoperations>
    bulkdataexport
+   davinci_data_export
    dqm
    subscription
    x-provenance

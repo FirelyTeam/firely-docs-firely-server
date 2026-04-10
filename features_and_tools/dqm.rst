@@ -461,17 +461,16 @@ These extensions must be added manually to the administration database:
 
 * ``http://hl7.org/fhir/StructureDefinition/cqf-cqlType`` - `Download here <https://simplifier.net/packages/hl7.fhir.uv.extensions.r4/5.2.0/files/2729975>`_
 
-  This extension is used for mapping FHIR parameter value types to CQL types
-  for Library input parameters.
+  This extension maps FHIR parameter value types to CQL types for Library input parameters. Firely Server uses it to determine the FHIR type representation of calculation results in the Parameters resource.
 
 * ``http://hl7.org/fhir/StructureDefinition/cqf-cqlOptions`` - `Download here <https://simplifier.net/packages/hl7.fhir.uv.extensions.r4/5.2.0/files/2729842>`_
 
   This extension documents the detailed options and parameters used when
-  translating the Library’s underlying CQL into ELM.
+  translating the Library’s underlying CQL into ELM. Note that these values exist for documentation purposes only, they do not influence the execution of the dQM content.
 
 * ``http://hl7.org/fhir/StructureDefinition/cqf-cqlAccessModifier`` - `Download here <https://simplifier.net/packages/hl7.fhir.uv.extensions.r4/5.2.0/files/2729900>`_
 
-  This extension indicates if a named expression is classified as "private" in CQL.
+  This extension indicates if a named expression is classified as "private" in CQL. Note that Firely Server does currently not checks this extension when executing Library/$evaluate.
 
 .. attention::
 

@@ -44,6 +44,30 @@ Use the same setup described in :ref:`feature_bulkdataexport_configuration`, inc
 
 Because DaVinci export reuses the BDE task pipeline, there is no separate task storage or file storage configuration specific to ``$davinci-data-export``.
 
+Prerequisites
+-------------
+
+There are a few prerequisites specifically for this export.
+
+1. A search parameter for the PDex provider access use case flag on ``Consent.provision.action`` must be defined on the server. This is required for the ATR export use case, which filters ``Consent`` resources based on this flag. Add the search parameter and refresh the actual index as described in :ref:`the search parameter re-indexing documentation <feature_customsp_reindex_specific>`:
+
+	 .. code-block:: json
+
+			{
+				"resourceType": "SearchParameter",
+				"id": "consent-pdex-provider-access-use-case",
+				"url": "http://hl7.org/fhir/us/davinci-pdex/SearchParameter/consent-pdex-provider-access-use-case",
+				"version": "4.0.1",
+				"name": "ConsentPdexProviderAccessUseCase",
+				"status": "active",
+				"publisher": "Firely",
+				"description": "Search Consent resources by the PDex provider access use case flag on provision.action",
+				"code": "pdex-provider-access-use-case",
+				"base": ["Consent"],
+				"type": "token",
+				"expression": "Consent.provision.action.extension.where(url='http://hl7.org/fhir/us/davinci-pdex/StructureDefinition/pdex-provider-access-use-case').value.ofType(boolean)"
+			}
+
 
 $davinci-data-export
 --------------------
@@ -127,7 +151,7 @@ Request examples
 
 Example POST kickoff:
 
-.. code-block:: http
+.. code-block:: text
 
 	POST {{BASE_URL}}/Group/{{GROUP_ID}}/$davinci-data-export
 	Content-Type: application/fhir+json

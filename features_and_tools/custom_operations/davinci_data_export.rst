@@ -10,18 +10,42 @@ DaVinci Data Export
 
 	* Firely Prior Authorization - 🇺🇸
 
-DaVinci Data Export (``$davinci-data-export``) is a Da Vinci specific wrapper around Bulk Data Export (BDE).
-In Firely Server, the export processing pipeline is the same as BDE. The key functional difference is the REST operation that initiates the export.
-
-This operation is defined by the Da Vinci ATR implementation guide as a profiled version of Bulk Data Export:
+This operation is defined by the Da Vinci ATR implementation guide as a specialized version of Bulk Data Export:
 `OperationDefinition: davinci-data-export <https://build.fhir.org/ig/HL7/davinci-atr/OperationDefinition-davinci-data-export.html>`_.
+
+Relationship to Bulk Data Export
+--------------------------------
+
+Summary of how ``$davinci-data-export`` relates to BDE in Firely Server:
+
+* Same asynchronous export pipeline and task handling
+* Same export status and file retrieval endpoints
+* Same storage and retention behavior
+* Same filtering behavior for shared parameters
+* Different kickoff operation name (``$davinci-data-export``)
+* DaVinci specific ``exportType`` parameter
 
 
 Introduction
 ------------
 
-DaVinci Data Export enables export use cases where the request semantics are defined by Da Vinci implementation guides (for example ATR member attribution workflows).
-For Firely Server, kickoff is done through ``$davinci-data-export``, while task lifecycle and output retrieval remain aligned with BDE.
+**Background and Purpose**
+
+The Da Vinci Data Export specification was developed to address a critical need in health information exchange: enabling safe, controlled data sharing between providers and payers without exposing sensitive patient clinical details. Traditional bulk data export mechanisms include all clinical data (encounters, observations, procedures, etc.), which may not be appropriate or necessary for certain provider-to-payer workflows. The DaVinci export IG constrains what data is exported to only what is essential for specific use cases, creating a more secure and efficient exchange pattern.
+
+**Key Characteristics**
+
+A critical distinction of DaVinci Data Export is what it **does not** include:
+
+* Patient-specific clinical data such as **Encounters**, **Observations**, **Procedures**, and other detailed clinical records are **not exported**
+* The export focuses on structural data (Patients, Groups, Coverage, Practitioners, and Organizations) that is necessary for reference and attribution purposes
+* This makes DaVinci export a safe option for provider-to-payer data sharing, as sensitive clinical information remains protected at the originating system
+
+**Supported Use Cases**
+
+DaVinci Data Export currently supports:
+
+* **Member Attribution** (ATR - Attribution via Terms and Rules): Enables providers to share member/patient attribution data with payers for care coordination and quality reporting purposes, without exposing detailed clinical information
 
 Use this page for DaVinci specific behavior.
 For shared export behavior and operational concepts, see :ref:`feature_bulkdataexport`.
@@ -34,9 +58,10 @@ DaVinci Data Export builds on the same plugin and infrastructure configuration a
 
 Use the same setup described in :ref:`feature_bulkdataexport_configuration`, including:
 
-* BDE plugin enablement on the root branch:
-	* including: ``Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration`` 
-    * and additionally (for DaVinci): ``Vonk.Plugin.BulkDataExport.DaVinci.DaVinciDataExportConfiguration``
+* BDE plugin enablement in the PipelineOptions:
+
+	* including: ``Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration``
+	* and additionally (for DaVinci): ``Vonk.Plugin.BulkDataExport.DaVinci.DaVinciDataExportConfiguration``
 
 * task repository configuration on the ``/administration`` branch
 * ``TaskFileManagement`` storage configuration
@@ -92,7 +117,9 @@ The DaVinci operation also defines the ``exportType`` parameter to identify the 
 +-------------------+-----------+--------------------+---------------------------------------------------------------+
 | Parameter         | Supported | Type               | Additional Notes                                              |
 +===================+===========+====================+===============================================================+
-| ``exportType``    | ✅        | ``canonical``      | Indicates the type of export to perform. This parameter is DaVinci-specific and is not part of the base Bulk Data Export operation. |
+| ``exportType``    | ✅        | ``canonical``      | Indicates the type of export to perform. This parameter       |
+|                   |           |                    | is DaVinci-specific and is not part of the base Bulk Data     |
+|                   |           |                    | Export operation.                                             |
 +-------------------+-----------+--------------------+---------------------------------------------------------------+
 | ``patient``       | ✅        | ``reference``      | Same behavior as BDE for POST requests.                       |
 +-------------------+-----------+--------------------+---------------------------------------------------------------+
@@ -100,7 +127,11 @@ The DaVinci operation also defines the ``exportType`` parameter to identify the 
 +-------------------+-----------+--------------------+---------------------------------------------------------------+
 | ``_until``        | ✅        | ``instant``        | Same behavior as BDE.                                         |
 +-------------------+-----------+--------------------+---------------------------------------------------------------+
-| ``_type``         | ✅        | FHIR resource type | Specifies resource types to export. Must include ``Group``, ``Patient``, and ``Coverage``. If omitted, defaults to exactly these three required types. Optional types: ``RelatedPerson``, ``Practitioner``, ``PractitionerRole``, ``Organization``, ``Location``. |
+| ``_type``         | ✅        | FHIR resource type | Specifies resource types to export. Must include              |
+|                   |           |                    | ``Group``, ``Patient``, and ``Coverage``. If omitted,         |
+|                   |           |                    | defaults to exactly these three required types.               |
+|                   |           |                    | Optional types: ``RelatedPerson``, ``Practitioner``,          |
+|                   |           |                    | ``PractitionerRole``, ``Organization``, ``Location``.         |
 +-------------------+-----------+--------------------+---------------------------------------------------------------+
 | ``_typeFilter``   | ❌        | ``string``         | Not supported.                                                |
 +-------------------+-----------+--------------------+---------------------------------------------------------------+
@@ -110,7 +141,7 @@ The DaVinci operation also defines the ``exportType`` parameter to identify the 
 +-------------------+-----------+--------------------+---------------------------------------------------------------+
 
 Supported ``exportType`` values (examples)
-""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""
 
 +--------------------------------------+----------------------------------------------------------+
 | ``exportType`` value                 | Use case                                                 |
@@ -123,25 +154,25 @@ Servers are expected to provide detailed export guidance in the applicable imple
 Supported ``_type`` values for ATR
 """"""""""""""""""""""""""""""""""
 
-+--------------------+---------------------------+
-| Resource Type      | Requirement               |
-+====================+===========================+
-| ``Group``          | Required                  |
-+--------------------+---------------------------+
-| ``Patient``        | Required                  |
-+--------------------+---------------------------+
-| ``Coverage``       | Required                  |
-+--------------------+---------------------------+
-| ``RelatedPerson``  | Optional                  |
-+--------------------+---------------------------+
-| ``Practitioner``   | Optional                  |
-+--------------------+---------------------------+
++----------------------+---------------------------+
+| Resource Type        | Requirement               |
++======================+===========================+
+| ``Group``            | Required                  |
++----------------------+---------------------------+
+| ``Patient``          | Required                  |
++----------------------+---------------------------+
+| ``Coverage``         | Required                  |
++----------------------+---------------------------+
+| ``RelatedPerson``    | Optional                  |
++----------------------+---------------------------+
+| ``Practitioner``     | Optional                  |
++----------------------+---------------------------+
 | ``PractitionerRole`` | Optional                  |
-+--------------------+---------------------------+
-| ``Organization``   | Optional                  |
-+--------------------+---------------------------+
-| ``Location``       | Optional                  |
-+--------------------+---------------------------+
++----------------------+---------------------------+
+| ``Organization``     | Optional                  |
++----------------------+---------------------------+
+| ``Location``         | Optional                  |
++----------------------+---------------------------+
 
 If the ``_type`` parameter is omitted, Firely Server defaults to exporting exactly the three required types: ``Group``, ``Patient``, and ``Coverage``.
 
@@ -190,8 +221,11 @@ For response examples and status details, see:
 Group membership handling
 -------------------------
 
-DaVinci exports inherit the same Group-based export handling used by BDE.
-This includes ATR-specific Group member inclusion behavior documented on the BDE page.
+The Group targeted by ``$davinci-data-export`` is the Member Attribution List defined by the Da Vinci ATR IG, not an arbitrary Group. This Group conforms to the ATR Group profile 'http://hl7.org/fhir/us/davinci-atr/StructureDefinition/atr-group'
+Per the ATR specification, the Group represents a contract-specific attribution list and is expected to conform to the ATR Group profile, with member entries identifying the attributed patients and their associated attribution details.
+
+When the optional ``patient`` parameter is supplied, only patients that are already members of the identified Group are exported.
+When ``patient`` is omitted, Firely Server exports data for all members in the Group.
 
 See :ref:`feature_bulkdataexport` for full details.
 
@@ -199,18 +233,8 @@ See :ref:`feature_bulkdataexport` for full details.
 Security and authorization
 --------------------------
 
-When SMART on FHIR is enabled, the same token and scope behavior used by BDE applies to DaVinci export task initiation and retrieval endpoints.
+When SMART on FHIR is enabled, the same token and scope behavior used by BDE applies to DaVinci export task initiation and retrieval endpoints. There is one additional requirement: as the DaVinci export checks for consent (a Patient can opt-out) the DaVinci export requires read access to Consent resources.
 See the section "Filtering export results with SMART scopes" on :ref:`feature_bulkdataexport`.
 
 
-Relationship to Bulk Data Export
---------------------------------
 
-Summary of how ``$davinci-data-export`` relates to BDE in Firely Server:
-
-* Same asynchronous export pipeline and task handling
-* Same export status and file retrieval endpoints
-* Same storage and retention behavior
-* Same filtering behavior for shared parameters
-* Different kickoff operation name (``$davinci-data-export``)
-* DaVinci specific ``exportType`` parameter

@@ -170,6 +170,15 @@ Terminology
 
       "Terminology": {
       "MaxExpansionSize": 650,
+      // Optional: configure one or more CAR files for advanced terminology support (requires http://fire.ly/advanced-terminology license)
+      //"ConformanceArchives": [
+      //  {
+      //    "Path": "/data/terminology/SCT.cs.car"
+      //  },
+      //  {
+      //    "Path": "/data/terminology/LOINC.cs.car"
+      //  }
+      //],
       "LocalTerminologyService": {
         "Order": 10,
         "PreferredSystems": [ "http://hl7.org/fhir" ],
@@ -204,7 +213,7 @@ Terminology
       //]
     },
 
-Refer to :ref:`feature_terminology`.
+Refer to :ref:`feature_terminology` and :ref:`feature_advanced_terminology`.
 
 .. _configure_cache:
 

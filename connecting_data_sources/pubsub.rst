@@ -74,6 +74,8 @@ You can configure the notifications sent by ``Vonk.Plugin.PubSub.Pub``:
         }
     },
 
+When ``Vonk.Plugin.PubSub.Sub`` is enabled, ``Update`` and ``Upsert`` commands that carry a resource identical to the one already stored are silently skipped by default — no new version is written and no AuditEvent or Provenance is created. This behaviour is controlled by the ``UpdateNoOp.EnableForPubSub`` setting (default: ``true``). See :ref:`restful_noop` for the full configuration reference.
+
 .. _pubsub_claimcheck:
 
 Claim Check Pattern

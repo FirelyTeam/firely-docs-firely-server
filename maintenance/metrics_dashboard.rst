@@ -74,11 +74,12 @@ Docker
 ^^^^^^
 
 1. Open your favorite command line tool and execute this command:
-   ``> docker pull firely/dashboard``
+   ``> docker pull firely/server-dashboard``
 
 2. Start the container (where FirelyServerUrl is the URL Firely Server runs on):
-   - in cmd.exe: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl="http://host.docker.internal:4080" --name firely/dashboard``
-   - in Powershell / Bash on macOS: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl='http://host.docker.internal:4080' --name firely/dashboard``
+   - in cmd.exe: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl="http://host.docker.internal:4080" --name firely-server-dashboard firely/server-dashboard``
+   - in Powershell / Bash on macOS: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl='http://host.docker.internal:4080' --name firely-server-dashboard firely/server-dashboard``
+
 
 3. Open a browser and use the address ``http://localhost:7174/``. This will show the landing page of Firely Server Dashboard. It does not show any data yet.
 
@@ -147,3 +148,13 @@ Example Use Cases
 - Health check: Verify responsiveness and request handling.
 - Development and testing: Monitor latency and error spikes without additional tooling.
 - Resource ingestion insights: Monitor Firely Server performance and ensure data ingestion without failures.
+
+Release Notes
+-------------
+
+.. _dashboard_releasenotes_1_0_0_beta:
+
+Release 1.0.0-beta, February 18th, 2026
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This is a beta release of the dashboard, which is not yet intended for production use, but can be used for testing and feedback purposes. The dashboard is available as a docker image and as a collection of binaries. It supports metrics from Firely Server (v6.5.0 and up), Firely Auth (v4.5.0 and up), and Firely Server Ingest (v6.5.0 and up).

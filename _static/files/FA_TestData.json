@@ -5,7 +5,7 @@
         {
             "resource": {
                 "resourceType": "Patient",
-                "id": "example_fred",
+                "id": "example-fred",
                 "identifier": [
                     {
                         "system": "http://hospital.org/mrn",
@@ -25,13 +25,13 @@
             },
             "request": {
                 "method": "PUT",
-                "url": "Patient/example_fred"
+                "url": "Patient/example-fred"
             }
         },
         {
             "resource": {
                 "resourceType": "Patient",
-                "id": "example_eddie",
+                "id": "example-eddie",
                 "identifier": [
                     {
                         "system": "http://hospital.org/mrn",
@@ -51,7 +51,7 @@
             },
             "request": {
                 "method": "PUT",
-                "url": "Patient/example_eddie"
+                "url": "Patient/example-eddie"
             }
         },
         {

@@ -3,10 +3,66 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.6.0:
+
+Release 4.6.0, March 5th, 2026
+------------------------------
+
+Feature
+^^^^^^^
+
+#. Added support for a new user type called App Developer. This user type is intended for developers that need to create test clients in Firely Auth, but do not need access to the admin dashboard. App Developers can only create and view clients that they own, and they do not have access to any other functionality in the admin dashboard. They will not be able to edit or delete clients. They are also blocked from obtaining access tokens. Clients created by App Developers must be reviewed and approved by an Admin before they can be used. See :ref:`firely_auth_app_developer` for more information.
+#. Added support for retrieving the users fhirUser claim based on a lookup in a Master Patient Index. Note that this feature can only be used together with Firely Server v6.7.0. For more information, see :ref:`fhiruserlookup`.
+#. We improved the mobile viewing experience of the Firely Auth UI by making key pages responsive.
+#. We added support for serilog hot reloading of the log settings similar to Firely Server. This allows you to change the log level without needing to restart Firely Auth. See also :ref:`hot_reload_log_level` for more details.
+#. We updated our API to support editing and deleting Admin users. Admin users can now be managed from the User Management page in the UI. These APIs are public as well and can checked out in our swagger documentation at the ``/swagger`` endpoint. Note that the last remaining Admin user cannot be deleted to prevent being locked out of the admin dashboard.
+
+Fix
+^^^
+
+#. We fixed an issue were database creation would fail if the user specified in the connection string did not have permissions to the master database. This is especially relevant for users using Azure SQL, where it is common to have a user with permissions only to a specific database.
+#. We updated the SQLite dependencies of Firely Server to address `CVE-2025-6965 <https://nvd.nist.gov/vuln/detail/CVE-2025-6965>`_. The package ``SQLitePCLRaw.provider.e_sqlite3`` has been updated to the latest version 3.0.2, and the SQLite version that is used is updated to version 3.50.4.2
+#. The Firely Auth version will now also be visible in the :ref:`feature_metrics_dashboard` when metrics are enabled. This allows you to monitor which version of Firely Auth you are running in your environment.
+
+.. _firelyauth_releasenotes_4.5.0:
+
+Release 4.5.0, December 15th, 2025
+----------------------------------
+
+Feature
+^^^^^^^
+
+#. Added support for configuring the Duende IdentityServer license key via environment variable or appsettings.json file. This provides more flexibility in managing the license key, especially in containerized or cloud environments. See :ref:`firely_auth_deploy` for more details.
+#. Added additional settings to the ``ExternalIdentityProviders`` section:
+
+   - Support requesting specific scopes during the SSO login process.
+   - Clarify whether Firely Auth should expect an ``id_token`` directly or an authorization code that still needs to be redeemed.
+   - Support displaying an SVG image instead of static text for the login button on the Firely Auth login page.
+   - Enable decryption of the ``id_token`` in case the SSO provider returns a JWE payload to further protect the claims it contains.
+
+   For more information, see :ref:`firely_auth_settings_externalidp`.
+#. The user creation form was updated to perform a fhirUser lookup in Firely Server for the creation of local users. Users will be looked up based on their name and email, and the resulting Patient or Practitioner id will be used as a value for the fhirUser claim. Note that for this lookup to work, the patients name as registered in Firely Auth should be listed in the ``name.text`` element of the Patient resource in Firely Server.
+#. As a beta feature we implemented support for letting authorized representatives (e.g., caregivers) retrieve access tokens on behalf of a patient. For more information, see :ref:`firely_auth_settings_representatives` and :ref:`firely_auth_dar`.
+
+Fix
+^^^
+
+#. Fixed a bug that would prevent custom favicons configured in the appsettings from being displayed to the user.
+
+.. _firelyauth_releasenotes_4.4.1:
+
+Release 4.4.1, September 24th, 2025
+-----------------------------------
+
+Fix
+^^^
+
+#. We upgraded to IdentityServer 7.3.2 to address an issue where Firely Auth would not start with the provided Duende license key.
+
 .. _firelyauth_releasenotes_4.4.0:
 
-Release 4.4.0, 19-08-2025
--------------------------
+Release 4.4.0, August 19th, 2025
+--------------------------------
 
 Feature
 ^^^^^^^
@@ -27,6 +83,12 @@ Feature
    - Previously, bypassing IP restrictions was only possible by setting ``ASPNETCORE_ENVIRONMENT=Development``.  
    - With this release, the same behavior can be achieved explicitly via ``AllowAnyNetworkOrigins``.  
    - **Note:** This setting is disabled by default and should only be enabled in trusted, secure environments.
+#. Firely Auth now includes an App Developer Portal that allows external application developers to self-register for an account and request OAuth2 client registrations, subject to administrator approval. For more information, see :ref:`firely_auth_app_developer`.
+
+Configuration
+^^^^^^^^^^^^^
+
+#. Added the ``AppDeveloperPortal`` configuration section to control the self-service portal for external app developers. For more information, see :ref:`firely_auth_settings_appdeveloperportal`.
 
 Fix
 ^^^
@@ -37,8 +99,8 @@ Fix
 
 .. _firelyauth_releasenotes_4.3.0:
 
-Release 4.3.0, 18-02-2025
--------------------------
+Release 4.3.0, February 18th, 2025
+----------------------------------
 
 Feature
 ^^^^^^^

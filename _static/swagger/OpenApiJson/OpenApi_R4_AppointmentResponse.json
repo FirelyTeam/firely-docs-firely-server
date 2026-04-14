@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - AppointmentResponse",
-    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1783,7 +1783,7 @@
       "actor": {
         "name": "actor",
         "in": "query",
-        "description": "Any one of the individuals participating in the appointment",
+        "description": "The individual(HealthcareService, Practitioner, Location, ...) to find a Schedule for",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1792,7 +1792,8 @@
       "appointment": {
         "name": "appointment",
         "in": "query",
-        "description": "The appointment that the response is attached to",
+        "description": "The appointment that scheduled this encounter",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1800,7 +1801,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1809,7 +1810,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "This location is listed in the participants of the appointment",
+        "description": "Location where adverse event occurred",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1818,8 +1819,7 @@
       "part-status": {
         "name": "part-status",
         "in": "query",
-        "description": "The Participation status of the subject, or other participant on the appointment. Can be used to locate participants that have not responded to meeting requests.",
-        "style": "form",
+        "description": "The participants acceptance status for this appointment",
         "schema": {
           "type": "string"
         }
@@ -1827,7 +1827,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The identity of a patient to search for individual measure report results for",
+        "description": "The reference to the patient",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1836,7 +1836,7 @@
       "practitioner": {
         "name": "practitioner",
         "in": "query",
-        "description": "One of the individuals of the appointment is this practitioner",
+        "description": "The Person links to this Practitioner",
         "style": "form",
         "schema": {
           "type": "string"

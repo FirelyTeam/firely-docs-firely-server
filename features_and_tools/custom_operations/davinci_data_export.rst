@@ -74,7 +74,8 @@ Prerequisites
 
 There are a few prerequisites specifically for this export.
 
-1. A search parameter for the PDex provider access use case flag on ``Consent.provision.action`` must be defined on the server. This is required for the ATR export use case, which filters ``Consent`` resources based on this flag. Add the search parameter and refresh the actual index as described in :ref:`the search parameter re-indexing documentation <feature_customsp_reindex_specific>`:
+1. The DaVinci ATR conformance resources package must be installed on the server
+2. A search parameter for the PDex provider access use case flag on ``Consent.provision.action`` must be defined on the server. This is required for the ATR export use case, which filters ``Consent`` resources based on this flag. Add the search parameter and refresh the actual index as described in :ref:`the search parameter re-indexing documentation <feature_customsp_reindex_specific>`:
 
 	 .. code-block:: json
 
@@ -100,18 +101,16 @@ $davinci-data-export
 Kickoff endpoint
 ^^^^^^^^^^^^^^^^
 
-DaVinci Data Export is initiated as a Group-level operation:
+DaVinci Data Export is initiated as a Group-level operation (Patient and System level exports are not supported). Both GET and POST methods are supported on this endpoint:
 
 **url:** ``[firely-server-base]/Group/<group-id>/$davinci-data-export``
 
-In contrast to standard Group BDE kickoff (``/Group/<group-id>/$export``), this operation name is DaVinci specific.
-For DaVinci kickoff, Firely Server supports POST requests only.
-
+In case of a POST request, a FHIR Parameters resource must be provided as the payload
 
 Supported parameters
 ^^^^^^^^^^^^^^^^^^^^
 
-Firely Server handles DaVinci kickoff using the same filtering semantics as BDE for shared parameters.
+Firely Server handles DaVinci using the same filtering semantics as BDE for shared parameters.
 The DaVinci operation also defines the ``exportType`` parameter to identify the requested Da Vinci use case.
 
 +-------------------+-----------+--------------------+---------------------------------------------------------------+
@@ -119,9 +118,9 @@ The DaVinci operation also defines the ``exportType`` parameter to identify the 
 +===================+===========+====================+===============================================================+
 | ``exportType``    | ✅        | ``canonical``      | Indicates the type of export to perform. This parameter       |
 |                   |           |                    | is DaVinci-specific and is not part of the base Bulk Data     |
-|                   |           |                    | Export operation.                                             |
+|                   |           |                    | Export operation (see below)                                        |
 +-------------------+-----------+--------------------+---------------------------------------------------------------+
-| ``patient``       | ✅        | ``reference``      | Same behavior as BDE for POST requests.                       |
+| ``patient``       | ✅        | ``reference``      | Same behavior as BDE for POST requests (not allowed in GET)   |
 +-------------------+-----------+--------------------+---------------------------------------------------------------+
 | ``_since``        | ✅        | ``instant``        | Same behavior as BDE.                                         |
 +-------------------+-----------+--------------------+---------------------------------------------------------------+
@@ -142,6 +141,8 @@ The DaVinci operation also defines the ``exportType`` parameter to identify the 
 
 Supported ``exportType`` values (examples)
 """"""""""""""""""""""""""""""""""""""""""
+
+Currently, Firely Server only supports the following exportType
 
 +--------------------------------------+----------------------------------------------------------+
 | ``exportType`` value                 | Use case                                                 |
@@ -174,7 +175,7 @@ Supported ``_type`` values for ATR
 | ``Location``         | Optional                  |
 +----------------------+---------------------------+
 
-If the ``_type`` parameter is omitted, Firely Server defaults to exporting exactly the three required types: ``Group``, ``Patient``, and ``Coverage``.
+If the ``_type`` parameter is omitted, Firely Server defaults to exporting only the three required types: ``Group``, ``Patient``, and ``Coverage``.
 
 
 Request examples

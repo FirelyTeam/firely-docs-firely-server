@@ -90,6 +90,8 @@ To make sure Firely server uses the No-Op scenario, the `UpdateNoOp` plugins nee
     ]
 
     "UpdateNoOp": {
+      "EnableForHttp": true,
+      "EnableForPubSub": true,
       "AdditionalMetaToBeIgnored": [
         "security",
         "tag",
@@ -104,6 +106,8 @@ There are three No-Op plugins available:
 * ``Vonk.Plugin.UpdateNoOp.ConditionalUpdateNoOpConfiguration`` - For conditional updates
 
 By default the following meta elements are ignored during resource comparison: ``versionId``, ``lastUpdated`` and ``source``. You can also add ``security``, ``tag`` and ``profile`` or any other meta element to be ignored, but it depends on your specific usage of meta. For more information see `the hl7 specification <https://www.hl7.org/fhir/resource.html#tag-updates>`__.
+
+The ``EnableForHttp`` setting (default: ``true``) controls whether the No-Op behaviour applies to regular HTTP update requests. The ``EnableForPubSub`` setting (default: ``true``) controls whether it applies to ``Update`` and ``Upsert`` commands received via the PubSub subscriber (``Vonk.Plugin.PubSub.Sub``). Both can be set to ``false`` independently to disable No-Op for that channel while keeping it active for the other.
 
 To determine if your action resulted in a No-Op scenario, you can configure Firely Server to return an OperationOutcome. For this it is necessary to configure the Prefer Header as Firely Server does not return this response by default.
 The Prefer Header can be set in three ways, as per `the hl7 specification <https://build.fhir.org/http.html#ops>`__:

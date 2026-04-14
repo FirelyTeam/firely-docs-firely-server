@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - DetectedIssue",
-    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1770,7 +1770,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "The source of the decision",
+        "description": "Who and/or what authored the composition",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1779,7 +1779,7 @@
       "code": {
         "name": "code",
         "in": "query",
-        "description": "ok | transient-error | fatal-error",
+        "description": "The code for the report, as opposed to codes for the atomic results, which are the names on the observation resource referred to from the result\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1796,7 +1796,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1813,7 +1813,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The identity of a patient to search for individual measure report results for",
+        "description": "The reference to the patient",
         "style": "form",
         "schema": {
           "type": "string"

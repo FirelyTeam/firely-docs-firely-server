@@ -21,6 +21,8 @@ Custom Operations
    member-match
    versions
    qualitymeasures
+   fhiruserlookup
+   questionnaire-package
 
 The FHIR Specification `operations framework`_ allows for the definition of custom operations and defines how to offer them in the `FHIR RESTful API`_. Firely Server offers various custom operations out of the box, next to :ref:`$export (Bulk Data Export) <feature_bulkdataexport>`, as well as its :ref:`terminology operations <feature_terminology>`:
 
@@ -37,6 +39,8 @@ The FHIR Specification `operations framework`_ allows for the definition of cust
 #. :ref:`member-match`
 #. :ref:`versions`
 #. :ref:`feature_qualitymeasures`
+#. :ref:`fhiruserlookup`
+#. :ref:`questionnaire-package`
 
 
 .. _operations framework: http://www.hl7.org/implement/standards/fhir/operations.html

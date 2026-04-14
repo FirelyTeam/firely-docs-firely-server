@@ -6,7 +6,11 @@ Upgrading Firely Server
 The process for upgrading Firely Server depends on whether you have a vanilla Firely Server, you added your own plugins or are running a Facade.
 This page describes the general process for each situation. Please refer to the :ref:`vonk_releasenotes` for details per each released version of Firely Server.
 
-.. attention:
+.. attention::
+
+    Always make a backup of your databases before starting the upgrade process. See :ref:`configure_repository` to find the details on your configured database connection. 
+
+.. attention::
 
    In all cases, pay attention to the import of new conformance resources - especially if you have multiple instances of Firely Server running. See :ref:`vonk_conformance_instances` for details.
 
@@ -205,3 +209,5 @@ SQL Server
 #. Check the messages. A successful upgrade should end with ``Upgraded to Firely Server database schema <new database schema number> in <database name>``.
 #. Now you can start Firely Server again. 
 
+If you encounter an error stating that the Transaction log is full, you can consider temporarily setting the recovery model to ``SIMPLE``.
+Note that you first have to make a Transaction Log backup before doing so.

@@ -8,6 +8,50 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_6_7_0:
+
+Release 6.7.0, March 26th, 2026
+-------------------------------
+
+Improvements
+^^^^^^^^^^^^
+
+#. Improved the performance of SQL Server repositories by restructuring and optimizing several indexes. See the Database section of the release notes for more information about the index changes. 
+#. Improved the operation outcome of disabled operations. In case of a disabled delete operation, the outcome would incorrectly indicate that the operation was successful even though the operation was disabled. In the current situation a ``501 Not Implemented`` response is returned with an empty response body.
+#. ``BundleOptions`` in the appsettings were not validated upon startup for consistency. This could lead to misconfigurations that would only be noticed when executing a bundle operation. We now validate the ``BundleOptions`` upon startup to prevent this from happening.
+#. We improved the resolving of index files in the UI when the server is running in a virtual directory. Before, the UI would not be able to find the index files when running in a virtual directory, which would lead to missing styles and images. This has now been fixed by adjusting the paths to the index files in the UI.
+#. We improved handling of Patient Access Metrics sent via OpenTelemetry when no fhirUser could be derived from the access token.
+#. We clarified the logs when the ``lastN`` operation would be used together with a SQLite DB. This log message would suggest that only SQL Server repositories support the ``lastN`` operation, which is not the case. The log message has now been updated to clarify that the ``lastN`` operation is supported for MongoDB and SQL Server repositories, but not for SQLite repositories.
+
+
+Features
+^^^^^^^^
+
+#. Introduced advanced terminology validation with Conformance Archives (CAR files), allowing for validation against large and complex terminology systems such as LOINC, ICD10, and SNOMED CT. We provide pre-built CAR files for SCT and LOINC on request. For more information see :ref:`feature_advanced_terminology`. This feature requires a separate license plugin, licenses can be updated upon request.
+#. PubSub users that utilize RabbitMQ as a message broker can now specify custom queue arguments when creating queues. For more information see :ref:`pubsub_configuration_rabbitmq`.
+#. Introduced the ``$fhirUser-lookup`` operation to look up the fhirUser claim of a patient or practitioner user in Firely Auth. This operation replaces the old fhirUser lookup in FA that existed internally.. It is now exposed as a public operation that can be called by custom plugins or external systems. For more information see :ref:`fhiruserlookup`.
+#. FSI now supports ingestion of bundles of type ``collection``, ``transaction``, and ``batch`` in ndjson format.
+#. We introduced the ``$questionnaire-package`` operation with support for the ``coverage``, ``questionnaire``, ``changedsince``, and ``packagebundle`` parameters following the specification of the `DTR Questionnaire Package Operation <https://build.fhir.org/ig/HL7/davinci-dtr/en/OperationDefinition-questionnaire-package.html#parameters>`_. This operation requires a separate license plugin. More documentation will follow.
+
+Fix
+^^^
+
+#. Fixed an issue with BDE in multi-instance deployments of Firely Server where the same BDE task could be picked up by multiple instances at the same time, which could lead to duplicate processing of the same task. This was caused by that task not getting the correct status update. We have improved handling of these tasks in multi-instance deployments to prevent this from happening and to ensure the process is more robust in case of unexpected crashes or shutdowns of instances.
+#. Fixed an issue where the ``_summary`` parameter was applied in searches but not in direct reads.
+#. Consolidated the behavior of the ``_since`` filter for ``$PatientEverything`` in SQL and MongoDB repositories. Before, the ``_since`` filter would return additional results in MongoDB repositories due to the way the filter was applied. Now, the behavior of the ``_since`` filter is consistent across both repository types.
+#. The ``_summary`` and ``_elements`` parameters would not be applied when used in ``batch`` or ``transaction`` bundles. This has now been fixed so that these parameters are applied correctly in these types of bundles.
+#. Fixed an issue where Firely Server would throw an error when handling a ``RetrievePlanCommand`` from RabbitMQ.
+
+Database
+^^^^^^^^
+
+#. Optimized several indexes in the SQL Server repository database to improve query performance. This requires an update of the SQL database schema to version v29. The migration will be done automatically upon startup when upgrading from FS 6.x.x, please be aware that this migration can be time-consuming when done on large databases. If you are upgrading from FS 5.x.x, please check the previous release notes for the required migration steps. The following changes were made to the indexes:
+    - Updated the vonk.ref.ref_name_relativereference index to include the ``Version`` column if not already present.
+    - Replaced the vonk.tkn.ix_tkn_code_name_systemhash index with a new tkn_name_code_systemhash index, reordering the columns to ``Name``, ``Code``, ``SystemHash``.
+    - Updated the vonk.ref.ref_name_urlhash index to include additional columns ``EntryId``, ``Id``, ``Url``, ``Version``.
+    - Updated the vonk.uri.uri_name_hash index to include the ``UriValue`` column in the INCLUDE clause.
+
+
 .. _vonk_releasenotes_6_6_0:
 
 Release 6.6.0, January 29th, 2026
@@ -16,13 +60,13 @@ Release 6.6.0, January 29th, 2026
 Improvements
 ^^^^^^^^^^^^
 
-#. Replaced the technical UI framework for the Firely Server Demo Homepage to simply the deployment using subdomains
+#. Replaced the technical UI framework for the Firely Server Demo Homepage to simply the deployment using subdomains.
 
 Features
 ^^^^^^^^
 
 #. Add support for the _until parameter in the Bulk Data Export operations on all levels and Patient/$everything.
-#. Added support for dedicated OpenTelemetry metrics for counting the Patient Access API metrics according to the CMS definition of the `reporting requirements for CMS-0057-F <https://www.cms.gov/priorities/burden-reduction/overview/interoperability/frequently-asked-questions/patient-access-api>`_. The expoeter metric is called "firely.server.cms0057.patient.count".
+#. Added support for dedicated OpenTelemetry metrics for counting the Patient Access API metrics according to the CMS definition of the `reporting requirements for CMS-0057-F <https://www.cms.gov/priorities/burden-reduction/overview/interoperability/frequently-asked-questions/patient-access-api>`_. The exporter metric is called "firely.server.cms0057.patient.count".
 
 Fix
 ^^^
@@ -30,6 +74,27 @@ Fix
 #. Tenant labels are now also applied on contained resources.
 #. Posting a Bundle with type=collection returns now a correct OperationOutcome instead of a success message with status code HTTP 501.
 #. Fixed an issue due to which $liveness was blocked longer than necessary when loading conformance resources.
+
+.. _vonk_releasenotes_6_5_2:
+
+Release 6.5.2, January 15th, 2026
+---------------------------------
+
+Fix
+^^^
+
+#. Updated the SQLite dependencies of Firely Server to address `CVE-2025-6965 <https://nvd.nist.gov/vuln/detail/CVE-2025-6965>`_. The package ``SQLitePCLRaw.provider.e_sqlite3`` has been updated to the latest version 3.0.2, and the SQLite version that is used is updated to version 3.50.4.2
+#. Updated ``AWSSDK.Core`` dependency to version 4.0.3.8 to address `CVE-2026-22611 <https://nvd.nist.gov/vuln/detail/CVE-2026-22611>`_.
+
+.. _vonk_releasenotes_6_5_1:
+
+Release 6.5.1, November 25th, 2025
+----------------------------------
+
+Fix
+^^^
+
+#. We updated the dependencies of the docker image to address security vulnerabilities in some of the base layers. The updated base image is now ``mcr.microsoft.com/dotnet/aspnet:8.0.22-alpine3.22``.
 
 .. _vonk_releasenotes_6_5_0:
 

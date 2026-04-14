@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - TestReport",
-    "version": "6.3.1+a99bc45eacadcb7b1c5a780b8eb667b8937d5938"
+    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
   },
   "servers": [
     {
@@ -1770,7 +1770,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "The unique identifier associated with the specimen",
+        "description": "External identifier for the evidence variable",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1779,7 +1779,8 @@
       "issued": {
         "name": "issued",
         "in": "query",
-        "description": "The test report generation date",
+        "description": "When the report was issued",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1787,8 +1788,7 @@
       "participant": {
         "name": "participant",
         "in": "query",
-        "description": "Individual who was involved",
-        "style": "form",
+        "description": "The reference to a participant in the test execution",
         "schema": {
           "type": "string"
         }
@@ -1796,7 +1796,8 @@
       "result": {
         "name": "result",
         "in": "query",
-        "description": "The result disposition of the test execution",
+        "description": "Link to an atomic result (observation resource)",
+        "style": "form",
         "schema": {
           "type": "string"
         }

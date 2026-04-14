@@ -1,9 +1,11 @@
 .. _vonk_features:
 
-Features
-========
+Features - Overview
+===================
 
-Firely Server offers many features as defined in the FHIR Specification and beyond. Below pages provide you with an overview of these features and tools. Note that for some tools, such as Firely Server Ingest and Bulk Data Export, separate licensing applies. You can always reach out to us at server@fire.ly if you have questions.
+Firely Server offers a wide range of features, both defined by the FHIR specification and extending beyond it. 
+The pages below provide an overview of these capabilities and associated tools.
+Each feature page indicates the required license. If you have any questions, feel free to contact us at server@fire.ly.
 
 .. image:: ../images/FirelyPlugins.png
   :align: right
@@ -16,22 +18,7 @@ Firely Server offers many features as defined in the FHIR Specification and beyo
 
    available_plugins
    features-availability
-   restful_api
-   documenthandling
-   binarywrapper
-   terminology
-   validation
-   customresources
-   customsearchparameters
-   openapi
    Custom Operations <custom_operations/customoperations>
-   bulkdataexport
-   dqm
-   subscription
-   x-provenance
-   realworldtesting
-   multi-tenancy
-   cds-hooks
    
 
 

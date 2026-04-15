@@ -276,6 +276,8 @@ When executing any REST API request against Firely Server, corresponding traces 
     for the influxdb2, telegraf and opentelemetry collector charts. 
     However, we highly recommend deploying and configuring independently InfluxDB, Telegraf and OpenTelemetry collector.  
 
+.. _feature_realworldtesting_operation:
+
 Using Real World Testing
 ------------------------
 

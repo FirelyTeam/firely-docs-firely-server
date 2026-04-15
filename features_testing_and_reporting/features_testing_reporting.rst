@@ -1,4 +1,4 @@
-.. _features_core_platform:
+.. _features_testing_reporting:
 
 Features - Clinical & Quality Workflows
 =======================================

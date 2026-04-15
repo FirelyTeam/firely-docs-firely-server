@@ -470,7 +470,7 @@ These extensions must be added manually to the administration database:
 
 * ``http://hl7.org/fhir/StructureDefinition/cqf-cqlAccessModifier`` - `Download here <https://simplifier.net/packages/hl7.fhir.uv.extensions.r4/5.2.0/files/2729900>`_
 
-  This extension indicates if a named expression is classified as "private" in CQL. Note that Firely Server does currently not checks this extension when executing Library/$evaluate.
+  This extension indicates if a named expression is classified as "private" in CQL. Note that Firely Server currently does not check this extension when executing Library/$evaluate.
 
 .. attention::
 

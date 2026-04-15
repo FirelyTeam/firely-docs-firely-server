@@ -1,4 +1,4 @@
-.. _features_core_platform:
+.. _features_data_exchange:
 
 Features - Data Exchange
 ========================

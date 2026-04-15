@@ -1,7 +1,7 @@
 .. _features_testing_reporting:
 
-Features - Clinical & Quality Workflows
-=======================================
+Features - Testing & Reporting
+==============================
 
 Firely Server supports Real World Testing to help meet regulatory requirements such as the ONC Health IT Certification Program. 
 It enables the collection and analysis of usage metrics from FHIR API interactions, providing insights into system behavior in real-world deployments.

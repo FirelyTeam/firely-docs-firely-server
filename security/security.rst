@@ -24,6 +24,8 @@ You will also find a section describing the steps to be taken for auditing in Fi
    aad
    permissions
    auditing
+   x-provenance
+   multi-tenancy
    security_headers
 
 .. add files here

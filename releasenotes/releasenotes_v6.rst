@@ -8,6 +8,17 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_6_8_0:
+
+Release 6.8.0, May X, 2026
+--------------------------
+
+Improvements
+^^^^^^^^^^^^
+
+#. Updated conformance cache configuration to ``ConformanceCache`` and added ``SlidingExpirationSeconds`` to control cache entry lifetime. This improves stability for scenarios that resolve or compile conformance resources over longer periods, such as CQL library dependency chains.
+
+
 .. _vonk_releasenotes_6_7_0:
 
 Release 6.7.0, March 26th, 2026

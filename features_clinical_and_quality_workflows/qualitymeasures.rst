@@ -561,8 +561,8 @@ Firely Server supports the following parameters:
 | ``lastReceivedOn``| ❌        | ``dateTime``            | 0..1        |                                             |
 +-------------------+-----------+-------------------------+-------------+---------------------------------------------+
 
-Output
-~~~~~~
+Output parameters
+~~~~~~~~~~~~~~~~~
 
 The operation returns a ``MeasureReport`` resource containing the evaluation results.
 
@@ -692,10 +692,8 @@ Overview
 **Operation name**
   ``$cql``
 
-
 **FHIR specification**
   `Using CQL with FHIR Implementation Guide - v2.0.0 <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_
-
 
 **OperationDefinition**
   ``http://hl7.org/fhir/uv/cql/OperationDefinition/cql-cql``
@@ -757,8 +755,8 @@ Firely Server supports the following parameters:
 | ``terminologyEndpoint`` | ❌        | ``Endpoint``            | 0..1        |                                |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 
-Output
-~~~~~~
+Output parameters
+~~~~~~~~~~~~~~~~~
 
 The operation returns a ``Parameters`` resource containing the result of the
 evaluated CQL expression.

@@ -8,8 +8,8 @@ Bulk Import via Firely Server Ingest
   The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
 
 .. note::
-  This application is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
-  Your license already permits the usage of FSI if it contains ``http://fire.ly/vonk/plugins/bulk-data-import``. You can also try out Firely Server Ingest with an Evaluation license. It is limited to a maximum of 10000 resources in total in the connected Firely Server database with a maximum number of 1000 resources that can be loaded per run, in addition to the Recovery Journal feature being disabled. For the production licenses the following behavior applies:
+  This application is not licensed as a separate product. Instead, its availability and feature set depend on the Firely Server edition you are using, as outlined below. 
+  Your license already permits the usage of FSI if it contains ``http://fire.ly/vonk/plugins/bulk-data-import``. Please :ref:`contact<vonk-contact>` Firely to get the updated license in case it is missing. You can also try out Firely Server Ingest with an Evaluation license. It is limited to a maximum of 10000 resources in total in the connected Firely Server database with a maximum number of 1000 resources that can be loaded per run, in addition to the Recovery Journal feature being disabled. For the production licenses the following behavior applies:
   
   #. **Firely Essentials**
 
@@ -71,15 +71,18 @@ General usage
   * Only one instance of FSI per database should be run at a time. FSI can utilize all the cores on the machine it is run on, and insert data over several connections to the database in parallel. Multiple instances would probably cause congestion in the database.
   * FSI does not add tenant security labels, see :ref:`feature_multitenancy`.
 
-Prerequisites
-^^^^^^^^^^^^^
+Initializing Firely Server database
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note::
+
+The tool requires that the target database already exists and contains all required indexes and tables (for SQL Server). If you don't have a database with the schema yet, you first need to run the Firely Server at least once as described in the articles :ref:`configure_sql` and :ref:`configure_mongodb`.
 
   This prerequisite does not apply to FSI v6+ targeting a MongoDB database. In this case you can instruct FSI to provision the database automatically by setting the ``--provisionTargetDatabase`` flag to ``true``.
   This prerequisite also does not apply to FSI using PubSub as a target. In this case the consuming Firely Server instance(s) will take care of the database setup.
 
-The tool requires that the target database already exists and contains all required indexes and tables (for SQL Server). If you don't have a database with the schema yet, you first need to run the Firely Server at least once as described in the articles :ref:`configure_sql` and :ref:`configure_mongodb`.
+Using the correct FSI version
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Each version of Firely Server Ingest is bound to a specific version of Firely Server.
 Starting from FS version 5.5.0, the FSI version number aligns with the FS version number.
@@ -110,6 +113,7 @@ FSI supports the following input file formats:
 * FHIR *collection* bundles stored in ``*.json`` files, and
 * ``*.ndjson`` files where each line contains a separate FHIR resource in JSON format.
 
+*Transaction* bundles can also be imported; however, they are processed as collection bundles.
 
 After the import
 ^^^^^^^^^^^^^^^^

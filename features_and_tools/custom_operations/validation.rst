@@ -51,6 +51,28 @@ Overview
   - ``POST`` (system and type level)
   - ``GET`` (instance level)
 
+Configuration
+-------------
+
+The ``$validate`` operation is provided by the
+``Vonk.Plugin.Operations.Validation`` namespace.
+
+You can enable or disable this operation by including or excluding this namespace
+in the Firely Server pipeline options. For more information about configuring available plugins in the pipeline options,
+see :ref:`vonk_available_plugins`.
+
+The validation settings described in :ref:`feature_prevalidation` also apply to
+the ``$validate`` operation. This means you can use the ``Validation`` settings
+to adjust validation behavior for both pre-validation and explicit
+``$validate`` calls.
+
+For example, these settings can be used to:
+
+- adjust the strictness of parsing by configuring ``Validation:Parsing``
+- control the validation level with ``Validation:Level``
+- suppress, override, or selectively apply validation rules using
+  ``Validation:AdvisorRules``
+
 Input parameters
 ~~~~~~~~~~~~~~~~
 
@@ -78,13 +100,11 @@ The following input parameters are supported for the ``$validate`` operation.
 |                         |           |                         |             | ``delete``). Indicates how the |
 |                         |           |                         |             | resource is intended to be     |
 |                         |           |                         |             | used and influences validation |
-|                         |           |                         |             | rules. Not supported by        |
-|                         |           |                         |             | Firely Server.                 |
+|                         |           |                         |             | rules.                         |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``usageContext``        | ❌        | UsageContext            | 0..*        | Indicates the implementation   |
 |                         |           |                         |             | context for validation and may |
 |                         |           |                         |             | influence additional bindings. |
-|                         |           |                         |             | Not supported by Firely Server.|
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 
 Output parameters

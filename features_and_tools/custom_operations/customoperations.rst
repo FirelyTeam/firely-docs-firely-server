@@ -20,6 +20,7 @@ Custom Operations
    docref
    member-match
    versions
+   resource-count
    qualitymeasures
    fhiruserlookup
    questionnaire-package
@@ -38,6 +39,7 @@ The FHIR Specification `operations framework`_ allows for the definition of cust
 #. :ref:`feature_docref`
 #. :ref:`member-match`
 #. :ref:`versions`
+#. :ref:`resource-count`
 #. :ref:`feature_qualitymeasures`
 #. :ref:`fhiruserlookup`
 #. :ref:`questionnaire-package`

@@ -144,7 +144,14 @@ Each ``DataEndpoint`` entry supports the following fields:
 - ``Scopes``: Space-separated list of **SMART on FHIR scopes**. Since Firely Server uses a ``client_credentials``
   flow, only system-level scopes should be used (e.g. ``system/*.rs``). 
 - ``RemoteDataEndpointAuthentication``: Defines how Firely Server authenticates
-  against the endpoint. Supported values include ``JWT`` and ``None`` 
+  against the endpoint. Supported values include ``JWT`` and ``None``
+
+.. important::
+  
+   Firely Server expects that the response of the remote ``$everything`` operation
+   is returned as a single Bundle page. Pagination is not supported in this context,
+   and Firely Server will not follow additional pages (e.g. via ``link[relation="next"]``)
+   returned by the remote endpoint.  
 
 The ``ForwardedHeaders`` setting can be used to forward custom HTTP headers
 from the incoming request to external data endpoints.

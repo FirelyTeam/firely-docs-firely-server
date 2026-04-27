@@ -414,67 +414,365 @@ Given matching input data (see :ref:`feature_qdm_example_library` for context), 
       ]
     }
 
-.. _feature_cql_operation:
+.. _feature_measure_evaluate:
 
-$cql
-----
+Measure/$evaluate-measure
+-------------------------
 
-Firely Server's implementation of ``$cql`` is based on version 2.0.0 of the 
-`Using CQL with FHIR Implementation Guide <https://build.fhir.org/ig/HL7/cql-ig/>`_. For the formal specification of this operation, refer to the 
-`$cql OperationDefinition <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_.
+The ``Measure/$evaluate-measure`` operation executes a complete digital quality measure (dQM) and returns the calculated results for a given subject or population. It evaluates all referenced ``Library`` resources, applies the defined population criteria (e.g. initial population, denominator, numerator), and computes the final measure score.
+
+This operation is the primary mechanism for **end-to-end measure evaluation** and is typically used in production or formal testing scenarios.
+
+Overview
+~~~~~~~~
+
+**Operation name**
+  ``Measure/$evaluate-measure``
+
+**FHIR specification**
+  `FHIR Core Measure Evaluation <https://hl7.org/fhir/measure-operation-evaluate-measure.html>`_  
+
+**OperationDefinition**
+  ``http://hl7.org/fhir/OperationDefinition/Measure-evaluate-measure``
+
+**Scope**
+  - Invocation level: ``type`` / ``instance``
+  - Supported resource type(s): ``Measure``
+  - Idempotent: ``yes``
+  - Affects server state: **conditional**
+
+**HTTP methods**
+  - ``POST`` (type level)
+  - ``GET`` (type level, when all parameters can be provided as query parameters)
+
+.. important::
+
+   Invocation at the instance level (``[base]/Measure/[id]/$evaluate-measure``)
+   is not currently supported. Use the type-level operation with the
+   ``measure`` parameter instead.
+
+
+.. note::
+
+   The operation can optionally affect server state depending on the ``persist`` parameter.
+
+   When ``persist`` is set to ``true``, the generated ``MeasureReport`` is stored
+   on the server. By default (``persist = false``), the report is returned in the
+   response only and is not persisted.
+
+Configuration
+~~~~~~~~~~~~~
+
+The ``Measure/$evaluate-measure`` operation is provided by the
+``Vonk.Plugin.Cql.Operations.Measure.EvaluateMeasure`` namespace.
+
+You can enable or disable this operation by including or excluding this
+namespace in the Firely Server pipeline options. See :ref:`vonk_available_plugins`
+for more information.
 
 Supported parameters
 ^^^^^^^^^^^^^^^^^^^^
 
 Firely Server supports the following parameters:
 
-+-------------------------+-----------+-------------------------+--------------------------------+
-| Parameter               | Supported | Type                    | Additional Notes               |
-+=========================+===========+=========================+================================+
-| ``expression``          | ✅        | ``string``              | Specifies an inline CQL        |
-|                         |           |                         | expression to be executed.     |
-|                         |           |                         | Only a single statement is     |
-|                         |           |                         | supported per request. It      |
-|                         |           |                         | cannot operate within a        |
-|                         |           |                         | context (e.g., Patient) and    |
-|                         |           |                         | will not execute correctly if  |
-|                         |           |                         | input parameters are needed.   |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``subject``             | ✅        | ``string``              | Only Patient references are    |
-|                         |           |                         | supported.                     |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``parameters``          | ✅        | ``Parameters`` resource | Input parameters passed into   |
-|                         |           |                         | the evaluation context.        |
-|                         |           |                         |                                |
-|                         |           |                         | These will be mapped from FHIR |
-|                         |           |                         | data types to CQL data types   |
-|                         |           |                         | according to the `FHIR Type    |
-|                         |           |                         | Mapping <https://build.fhir.or |
-|                         |           |                         | g/ig/HL7/cql-ig/conformance.ht |
-|                         |           |                         | ml#fhir-type-mapping>`_.       |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``library``             | ❌        | Complex                 |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``useServerData``       | ❌        | ``boolean``             |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``data``                | ❌        | ``Bundle``              |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``prefetchData``        | ❌        | Complex                 |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``dataEndpoint``        | ❌        | ``Endpoint`` resource   |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``contentEndpoint``     | ❌        | ``Endpoint`` resource   |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``terminologyEndpoint`` | ❌        | ``Endpoint`` resource   |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``raw``                 | ✅        | ``boolean``             | Return the execution results as|
-|                         |           |                         | a string without mapping the   |
-|                         |           |                         | CQL result data types back to  |
-|                         |           |                         | FHIR.                          |
-|                         |           |                         |                                |
-|                         |           |                         | This is a proprietary          |
-|                         |           |                         | parameter of Firely Server.    |
-+-------------------------+-----------+-------------------------+--------------------------------+
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| Parameter         | Supported | Type                    | Cardinality | Additional Notes                            |
++===================+===========+=========================+=============+=============================================+
+| ``url``           | ✅        | ``canonical``           | 0..1        | Canonical URL of the Measure to evaluate.   |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | Required for type-level invocation.         |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | Versioned canonical references are allowed, |
+|                   |           |                         |             | e.g.,                                       |
+|                   |           |                         |             | ``http://example.org/fhir/Measure/          |
+|                   |           |                         |             | ExampleMeasure|1.0.0``.                     |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``subject``       | ✅        | ``string``              | 1..1        | Reference to the subject for which the      |
+|                   |           |                         |             | measure is evaluated.                       |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | Supported resource types are ``Patient``    |
+|                   |           |                         |             | and ``Group``.                              |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | When a ``Patient`` is provided, the measure |
+|                   |           |                         |             | is evaluated for that single subject.       |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | When a ``Group`` is provided, the measure   |
+|                   |           |                         |             | is evaluated for all ``Patient`` references |
+|                   |           |                         |             | contained in the Group.                     |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``periodStart``   | ✅        | ``date``                | 1..1        | Start of the measurement period.            |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``periodEnd``     | ✅        | ``date``                | 1..1        | End of the measurement period.              |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``reportType``    | ✅        | ``code``                | 0..1        | The type of measure report:                 |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | - ``individual``: Evaluates the measure for |
+|                   |           |                         |             |   a single subject (e.g. Patient or Group)  |
+|                   |           |                         |             |   and returns population membership and     |
+|                   |           |                         |             |   score for that subject.                   |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | - ``summary``: Evaluates the measure across |
+|                   |           |                         |             |   a population of subjects and returns      |
+|                   |           |                         |             |   aggregated counts (e.g. numerator,        |
+|                   |           |                         |             |   denominator).                             |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | The ``subject-list`` report type defined in |
+|                   |           |                         |             | the FHIR specification is not supported.    |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | If not specified, the default is            |
+|                   |           |                         |             | ``individual``.                             |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``parameters``    | ✅        | ``Parameters`` resource | 0..1        | See ``Library/$evaluate`` configuration     |
+|                   |           |                         |             | for details.                                |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``useServerData`` | ✅        | ``boolean``             | 0..1        | See ``Library/$evaluate`` configuration     |
+|                   |           |                         |             | for details.                                |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``data``          | ✅        | ``Bundle``              | 0..1        | See ``Library/$evaluate`` configuration     |
+|                   |           |                         |             | for details.                                |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``dataEndpoint``  | ✅        | ``Endpoint``            | 0..1        | See ``Library/$evaluate`` configuration     |
+|                   |           |                         |             | for details.                                |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``persist``       | ✅        | ``boolean``             | 0..1        | When ``true``, the generated                |
+|                   |           |                         |             | ``MeasureReport`` is stored on the server.  |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | When ``false`` (default), the result is     |
+|                   |           |                         |             | returned in the response only.              |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | This is a proprietary parameter of Firely   |
+|                   |           |                         |             | Server.                                     |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``raw``           | ✅        | ``boolean``             | 0..1        | Return the results as a string without      |
+|                   |           |                         |             | mapping the CQL result data types back to   |
+|                   |           |                         |             | FHIR.                                       |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | This is a proprietary parameter of Firely   |
+|                   |           |                         |             | Server.                                     |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``measure``       | ❌        | ``Measure``             | 0..1        |                                             |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``version``       | ❌        | ``string``              | 0..1        |                                             |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``provider``      | ❌        | ``string``              | 0..1        |                                             |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``location``      | ❌        | ``string``              | 0..1        |                                             |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``lastReceivedOn``| ❌        | ``dateTime``            | 0..1        |                                             |
++-------------------+-----------+-------------------------+-------------+---------------------------------------------+
+
+Output parameters
+~~~~~~~~~~~~~~~~~
+
+The operation returns a ``MeasureReport`` resource containing the evaluation results.
+
+The report includes:
+
+- population counts (e.g. initial population, denominator, numerator)
+- measure score (if applicable)
+- subject-level or population-level results depending on ``reportType``
+
+When to use this operation
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use ``Measure/$evaluate-measure`` when you want to:
+
+- execute a full digital quality measure
+- calculate population membership and scores
+- generate results for reporting or submission
+- validate measure behavior in end-to-end scenarios
+
+Example: Type-Level Measure Evaluation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Request**
+
+.. code-block::
+
+   POST [base]/Measure/$evaluate-measure
+
+**Request Body**
+
+.. code-block:: json
+
+   {
+     "resourceType": "Parameters",
+     "parameter": [
+       {
+         "name": "url",
+         "valueCanonical": "http://example.org/fhir/Measure/ExampleMeasure|1.0.0"
+       },
+       {
+         "name": "subject",
+         "valueString": "Patient/cql-patient-test"
+       },
+       {
+         "name": "periodStart",
+         "valueDate": "2023-01-01"
+       },
+       {
+         "name": "periodEnd",
+         "valueDate": "2023-12-31"
+       }
+     ]
+   }
+
+**Response Body**
+
+.. code-block:: json
+
+   {
+     "resourceType": "MeasureReport",
+     "status": "complete",
+     "type": "individual",
+     "measure": "http://example.org/fhir/Measure/ExampleMeasure|1.0.0",
+     "subject": {
+       "reference": "Patient/cql-patient-test"
+     },
+     "period": {
+       "start": "2023-01-01",
+       "end": "2023-12-31"
+     },
+     "group": [
+       {
+         "population": [
+           {
+             "code": {
+               "coding": [
+                 {
+                   "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                   "code": "initial-population"
+                 }
+               ]
+             },
+             "count": 1
+           },
+           {
+             "code": {
+               "coding": [
+                 {
+                   "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                   "code": "denominator"
+                 }
+               ]
+             },
+             "count": 1
+           },
+           {
+             "code": {
+               "coding": [
+                 {
+                   "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                   "code": "numerator"
+                 }
+               ]
+             },
+             "count": 1
+           }
+         ],
+         "measureScore": {
+           "value": 1.0
+         }
+       }
+     ]
+   }
+
+.. _feature_cql_operation:
+
+$cql
+----
+
+The ``$cql`` operation executes a CQL expression directly and returns the
+evaluated result. It is useful for rapid testing or prototyping when CQL logic
+needs to be validated independently of a ``Library`` or ``Measure`` resource.
+
+Overview
+~~~~~~~~
+
+**Operation name**
+  ``$cql``
+
+**FHIR specification**
+  `Using CQL with FHIR Implementation Guide - v2.0.0 <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_
+
+**OperationDefinition**
+  ``http://hl7.org/fhir/uv/cql/OperationDefinition/cql-cql``
+
+**Scope**
+  - Invocation level: ``system``
+  - Idempotent: ``yes``
+  - Affects server state: ``no``
+
+**HTTP methods**
+  - ``POST``
+
+Supported parameters
+^^^^^^^^^^^^^^^^^^^^
+
+Firely Server supports the following parameters:
+
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| Parameter               | Supported | Type                    | Cardinality | Additional Notes               |
++=========================+===========+=========================+=============+================================+
+| ``expression``          | ✅        | ``string``              | 1..1        | Specifies an inline CQL        |
+|                         |           |                         |             | expression to be executed.     |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | Only a single statement is     |
+|                         |           |                         |             | supported per request. It      |
+|                         |           |                         |             | cannot operate within a        |
+|                         |           |                         |             | context (e.g. Patient) and     |
+|                         |           |                         |             | will not execute correctly if  |
+|                         |           |                         |             | input parameters are needed.   |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``subject``             | ✅        | ``string``              | 0..1        | Only Patient references are    |
+|                         |           |                         |             | supported.                     |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``parameters``          | ✅        | ``Parameters``          | 0..1        | Input parameters passed into   |
+|                         |           |                         |             | the evaluation context. See    |
+|                         |           |                         |             | ``Library/$evaluate``          |
+|                         |           |                         |             | configuration for details.     |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``raw``                 | ✅        | ``boolean``             | 0..1        | Return the execution results   |
+|                         |           |                         |             | as a string without mapping    |
+|                         |           |                         |             | the CQL result data types back |
+|                         |           |                         |             | to FHIR.                       |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | This is a proprietary          |
+|                         |           |                         |             | parameter of Firely Server.    |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``library``             | ❌        | Complex                 | 0..*        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``useServerData``       | ❌        | ``boolean``             | 0..1        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``data``                | ❌        | ``Bundle``              | 0..1        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``prefetchData``        | ❌        | Complex                 | 0..*        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``dataEndpoint``        | ❌        | ``Endpoint``            | 0..1        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``contentEndpoint``     | ❌        | ``Endpoint``            | 0..1        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``terminologyEndpoint`` | ❌        | ``Endpoint``            | 0..1        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+
+Output parameters
+~~~~~~~~~~~~~~~~~
+
+The operation returns a ``Parameters`` resource containing the result of the
+evaluated CQL expression.
+
+The result is returned in a parameter named ``return``. The value is mapped back
+to a FHIR data type, unless the proprietary ``raw`` parameter is set to ``true``.
+
+When to use this operation
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use ``$cql`` when you want to:
+
+- quickly test a simple CQL expression
+- validate basic CQL syntax or behavior
+- prototype logic before moving it into a ``Library``
+- execute logic that does not require a full ``Measure`` evaluation
 
 Example: System-Level $cql Invocation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -483,10 +781,9 @@ This examples demonstrates a simple calculation executed via the dQM engine.
 
 **Request**
 
-.. code-block:: http
+.. code-block::
 
-   POST [base]/$cql HTTP/1.1
-   Content-Type: application/fhir+json
+   POST [base]/$cql
 
 **Request Body**
 

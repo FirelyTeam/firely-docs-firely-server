@@ -221,11 +221,17 @@ Cache of Conformance Resources
 ------------------------------
 ::
 
-   "Cache": {
-      "MaxConformanceResources": 5000
+  "ConformanceCache": {
+    "MaxConformanceResources": 5000,
+    "SlidingExpirationSeconds": 3600
    }
 
-Firely Server caches StructureDefinitions and other conformance resources that are needed for (de)serialization and validation in memory. If more than ``MaxConformanceResources`` get cached, the ones that have not been used for the longest time are discarded. If you frequently encounter a delay when requesting less used resource types, a larger value may help. If you are very restricted on memory, you can lower the value.
+Firely Server caches StructureDefinitions and other conformance resources that are needed for (de)serialization and validation in memory.
+
+* ``MaxConformanceResources`` sets the maximum number of cached conformance resources. If more entries are added, the least recently used entries are discarded.
+* ``SlidingExpirationSeconds`` sets the sliding expiration time for cached conformance resources. Every read resets the timer. Increase this value when dependent resources (for example CQL libraries and their dependencies) are compiled or resolved over a longer period.
+
+If you frequently encounter a delay when requesting less used resource types, a larger value for these settings may help. If you are very restricted on memory, lower ``MaxConformanceResources``.
 
 
 .. _bundle_options:

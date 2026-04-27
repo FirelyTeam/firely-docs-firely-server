@@ -3,8 +3,6 @@ Ingesting FHIR resources - Overview
 
 Firely Server offers several advanced integration mechanisms to support scalable, real-time, and legacy-compatible use cases. This section details the differences between **Bulk Import (Ingest)**, **PubSub**, and **Facade** capabilities.
 
-.. contents::
-
 Bulk Import via Firely Server Ingest
 ------------------------------------
 

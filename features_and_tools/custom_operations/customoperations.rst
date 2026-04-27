@@ -70,6 +70,7 @@ Clinical Reasoning & Quality Measurement
 Execution of clinical logic and quality measures enables evaluation of FHIR data using CQL expressions and measure calculations, supporting decision support and quality reporting workflows.
 
 - :ref:`feature_qualitymeasures`
+- :ref:`questionnaire-package`
 
 Testing & Reporting
 -------------------

@@ -638,19 +638,34 @@ Example: Type-Level Measure Evaluation
          "population": [
            {
              "code": {
-               "text": "Initial Population"
+               "coding": [
+                 {
+                   "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                   "code": "initial-population"
+                 }
+               ]
              },
              "count": 1
            },
            {
              "code": {
-               "text": "Denominator"
+               "coding": [
+                 {
+                   "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                   "code": "denominator"
+                 }
+               ]
              },
              "count": 1
            },
            {
              "code": {
-               "text": "Numerator"
+               "coding": [
+                 {
+                   "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                   "code": "numerator"
+                 }
+               ]
              },
              "count": 1
            }

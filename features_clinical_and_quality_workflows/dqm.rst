@@ -1,7 +1,7 @@
 .. _feature_qdm:
 
-Digital Quality Measures
-========================
+Intro to Digital Quality Measures
+=================================
 
 .. note::
 
@@ -76,7 +76,7 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 	:Input: Canonical reference to a Library, expression name, and optional patient and context data.
 	:Output: The result of the evaluated expression (same as $cql, but tied to named expressions in a Library).
 
-	See `Using CQL with FHR - OperationDefinition Library/$evaluate <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-library-evaluate.html>`_ and :ref:`feature_library_evaluate` on how to execute this operation.
+	See `Using CQL with FHIR - OperationDefinition Library/$evaluate <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-library-evaluate.html>`_ for the full HL7 specification, and :ref:`feature_library_evaluate` for details on how to execute this operation in Firely Server, including which parameters are supported.
 
 * Library/$data-requirements
 
@@ -112,7 +112,7 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 	:Input: A CQL expression and the relevant data context (e.g., patient data).
 	:Output: The evaluated result of the expression (e.g., Boolean, date, quantity) encoded in a FHIR Parameters resource.
 
-	See `Using CQL with FHR - OperationDefinition $cql <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_ and :ref:`feature_cql_operation` on how to execute this operation.
+	See `Using CQL with FHIR - OperationDefinition $cql <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_ for the full HL7 specification, and :ref:`feature_cql_operation` for details on how to execute this operation in Firely Server, including which parameters are supported.
 
 ----
 
@@ -301,6 +301,8 @@ This command assumes that the ELM files already exist in the specified ``--elm``
 .. attention::
 
 	Firely Server currently depends on CQL SDK version v2.6.0, which must be used for the compilation process to ensure compatibility.
+
+.. _feature_qdm_example_library:
 
 Example Library
 ^^^^^^^^^^^^^^^

@@ -682,62 +682,99 @@ Example: Type-Level Measure Evaluation
 $cql
 ----
 
-Firely Server's implementation of ``$cql`` is based on version 2.0.0 of the 
-`Using CQL with FHIR Implementation Guide <https://build.fhir.org/ig/HL7/cql-ig/>`_. For the formal specification of this operation, refer to the 
-`$cql OperationDefinition <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_.
+The ``$cql`` operation executes a CQL expression directly and returns the
+evaluated result. It is useful for rapid testing or prototyping when CQL logic
+needs to be validated independently of a ``Library`` or ``Measure`` resource.
+
+Overview
+~~~~~~~~
+
+**Operation name**
+  ``$cql``
+
+
+**FHIR specification**
+  `Using CQL with FHIR Implementation Guide - v2.0.0 <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_
+
+
+**OperationDefinition**
+  ``http://hl7.org/fhir/uv/cql/OperationDefinition/cql-cql``
+
+**Scope**
+  - Invocation level: ``system``
+  - Idempotent: ``yes``
+  - Affects server state: ``no``
+
+**HTTP methods**
+  - ``POST``
 
 Supported parameters
 ^^^^^^^^^^^^^^^^^^^^
 
 Firely Server supports the following parameters:
 
-+-------------------------+-----------+-------------------------+--------------------------------+
-| Parameter               | Supported | Type                    | Additional Notes               |
-+=========================+===========+=========================+================================+
-| ``expression``          | ✅        | ``string``              | Specifies an inline CQL        |
-|                         |           |                         | expression to be executed.     |
-|                         |           |                         | Only a single statement is     |
-|                         |           |                         | supported per request. It      |
-|                         |           |                         | cannot operate within a        |
-|                         |           |                         | context (e.g., Patient) and    |
-|                         |           |                         | will not execute correctly if  |
-|                         |           |                         | input parameters are needed.   |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``subject``             | ✅        | ``string``              | Only Patient references are    |
-|                         |           |                         | supported.                     |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``parameters``          | ✅        | ``Parameters`` resource | Input parameters passed into   |
-|                         |           |                         | the evaluation context.        |
-|                         |           |                         |                                |
-|                         |           |                         | These will be mapped from FHIR |
-|                         |           |                         | data types to CQL data types   |
-|                         |           |                         | according to the `FHIR Type    |
-|                         |           |                         | Mapping <https://build.fhir.or |
-|                         |           |                         | g/ig/HL7/cql-ig/conformance.ht |
-|                         |           |                         | ml#fhir-type-mapping>`_.       |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``library``             | ❌        | Complex                 |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``useServerData``       | ❌        | ``boolean``             |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``data``                | ❌        | ``Bundle``              |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``prefetchData``        | ❌        | Complex                 |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``dataEndpoint``        | ❌        | ``Endpoint`` resource   |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``contentEndpoint``     | ❌        | ``Endpoint`` resource   |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``terminologyEndpoint`` | ❌        | ``Endpoint`` resource   |                                |
-+-------------------------+-----------+-------------------------+--------------------------------+
-| ``raw``                 | ✅        | ``boolean``             | Return the execution results as|
-|                         |           |                         | a string without mapping the   |
-|                         |           |                         | CQL result data types back to  |
-|                         |           |                         | FHIR.                          |
-|                         |           |                         |                                |
-|                         |           |                         | This is a proprietary          |
-|                         |           |                         | parameter of Firely Server.    |
-+-------------------------+-----------+-------------------------+--------------------------------+
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| Parameter               | Supported | Type                    | Cardinality | Additional Notes               |
++=========================+===========+=========================+=============+================================+
+| ``expression``          | ✅        | ``string``              | 1..1        | Specifies an inline CQL        |
+|                         |           |                         |             | expression to be executed.     |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | Only a single statement is     |
+|                         |           |                         |             | supported per request. It      |
+|                         |           |                         |             | cannot operate within a        |
+|                         |           |                         |             | context (e.g. Patient) and     |
+|                         |           |                         |             | will not execute correctly if  |
+|                         |           |                         |             | input parameters are needed.   |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``subject``             | ✅        | ``string``              | 0..1        | Only Patient references are    |
+|                         |           |                         |             | supported.                     |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``parameters``          | ✅        | ``Parameters``          | 0..1        | Input parameters passed into   |
+|                         |           |                         |             | the evaluation context. See    |
+|                         |           |                         |             | ``Library/$evaluate``          |
+|                         |           |                         |             | configuration for details.     |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``raw``                 | ✅        | ``boolean``             | 0..1        | Return the execution results   |
+|                         |           |                         |             | as a string without mapping    |
+|                         |           |                         |             | the CQL result data types back |
+|                         |           |                         |             | to FHIR.                       |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | This is a proprietary          |
+|                         |           |                         |             | parameter of Firely Server.    |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``library``             | ❌        | Complex                 | 0..*        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``useServerData``       | ❌        | ``boolean``             | 0..1        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``data``                | ❌        | ``Bundle``              | 0..1        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``prefetchData``        | ❌        | Complex                 | 0..*        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``dataEndpoint``        | ❌        | ``Endpoint``            | 0..1        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``contentEndpoint``     | ❌        | ``Endpoint``            | 0..1        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+| ``terminologyEndpoint`` | ❌        | ``Endpoint``            | 0..1        |                                |
++-------------------------+-----------+-------------------------+-------------+--------------------------------+
+
+Output
+~~~~~~
+
+The operation returns a ``Parameters`` resource containing the result of the
+evaluated CQL expression.
+
+The result is returned in a parameter named ``return``. The value is mapped back
+to a FHIR data type, unless the proprietary ``raw`` parameter is set to ``true``.
+
+When to use this operation
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Use ``$cql`` when you want to:
+
+- quickly test a simple CQL expression
+- validate basic CQL syntax or behavior
+- prototype logic before moving it into a ``Library``
+- execute logic that does not require a full ``Measure`` evaluation
 
 Example: System-Level $cql Invocation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -31,10 +31,24 @@ Old Firely Server release notes (v5.x)
 
     For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
 
+.. _vonk_releasenotes_5_11_5:
+
+Release 5.11.5, March 31st, 2026
+--------------------------------
+
+Fix
+^^^
+
+#. The ``_summary`` and ``_elements`` parameters would not be applied when used in ``batch`` or ``transaction`` bundles. This has now been fixed so that these parameters are applied correctly in these types of bundles.
+
+
 .. _vonk_releasenotes_5_11_4:
 
 Release 5.11.4, November 25th, 2025
 -----------------------------------
+
+Fix
+^^^
 
 #. We updated the dependencies of the docker image to address security vulnerabilities in some of the base layers. The updated base image is now ``mcr.microsoft.com/dotnet/aspnet:8.0-alpine3.22``.
 

@@ -25,10 +25,15 @@ or support contract.
    Overview <overview>
    Getting started <getting_started/getting_started>
    Setting up Firely Server <setting_up_firely_server/setting_up_firely_server>
-   Maintenance and Management <maintenance/maintenance>
+   Maintenance & Management <maintenance/maintenance>
    Connecting Data Sources <connecting_data_sources/connecting_data_sources.rst>
-   Features <features_and_tools/features>
-   Security and Tools <security/security>
+   Features - Overview <features_and_tools/features>
+   Features - Core FHIR platform <features_core_fhir_platform/features_core>
+   Features - Data Exchange <features_data_exchange/features_data_exchange>
+   Features - Terminology <features_terminology/features_terminology>
+   Features - Clinical & Quality Workflows <features_clinical_and_quality_workflows/features_clinical_quality>
+   Features - Testing & Reporting <features_testing_and_reporting/features_testing_reporting>
+   Security & Provenance <security/security>
    Performance <performance/performance_firely_server>
    Programming API Reference <reference/reference>
    Compliance & Certification <compliance/compliance>

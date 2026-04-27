@@ -154,6 +154,8 @@ Firely Server supports the following parameters:
 +-------------------------+-----------+-------------------------+--------------------------------+
 | ``prefetchData``        | ❌        | Complex                 |                                |
 +-------------------------+-----------+-------------------------+--------------------------------+
+| ``includePrivate``      | ❌        | ``boolean``             |                                |
++-------------------------+-----------+-------------------------+--------------------------------+
 | ``contentEndpoint``     | ❌        | ``Endpoint`` resource   |                                |
 +-------------------------+-----------+-------------------------+--------------------------------+
 | ``terminologyEndpoint`` | ❌        | ``Endpoint`` resource   | External terminology services  |
@@ -291,9 +293,18 @@ Firely Server supports the following parameters:
 |                         |           |                         | will not execute correctly if  |
 |                         |           |                         | input parameters are needed.   |
 +-------------------------+-----------+-------------------------+--------------------------------+
-| ``subject``             | ✅        | ``string``              |                                |
+| ``subject``             | ✅        | ``string``              | Only Patient references are    |
+|                         |           |                         | supported.                     |
 +-------------------------+-----------+-------------------------+--------------------------------+
-| ``parameters``          | ✅        | ``Parameters`` resource |                                |
+| ``parameters``          | ✅        | ``Parameters`` resource | Input parameters passed into   |
+|                         |           |                         | the evaluation context.        |
+|                         |           |                         |                                |
+|                         |           |                         | These will be mapped from FHIR |
+|                         |           |                         | data types to CQL data types   |
+|                         |           |                         | according to the `FHIR Type    |
+|                         |           |                         | Mapping <https://build.fhir.or |
+|                         |           |                         | g/ig/HL7/cql-ig/conformance.ht |
+|                         |           |                         | ml#fhir-type-mapping>`_.       |
 +-------------------------+-----------+-------------------------+--------------------------------+
 | ``library``             | ❌        | Complex                 |                                |
 +-------------------------+-----------+-------------------------+--------------------------------+

@@ -16,13 +16,13 @@ This operation is defined by the Da Vinci ATR implementation guide as a speciali
 Relationship to Bulk Data Export
 --------------------------------
 
-Summary of how ``$davinci-data-export`` relates to BDE in Firely Server:
+Summary of how ``$davinci-data-export`` relates to :ref:`feature_bulkdataexport` in Firely Server:
 
 * Same asynchronous export pipeline and task handling
 * Same export status and file retrieval endpoints
 * Same storage and retention behavior
 * Same filtering behavior for shared parameters
-* Different kickoff operation name (``$davinci-data-export``)
+* Different export operation name (``$davinci-data-export``)
 * DaVinci specific ``exportType`` parameter
 
 
@@ -31,7 +31,7 @@ Introduction
 
 **Background and Purpose**
 
-The Da Vinci Data Export specification was developed to address a critical need in health information exchange: enabling safe, controlled data sharing between providers and payers without exposing sensitive patient clinical details. Traditional bulk data export mechanisms include all clinical data (encounters, observations, procedures, etc.), which may not be appropriate or necessary for certain provider-to-payer workflows. The DaVinci export IG constrains what data is exported to only what is essential for specific use cases, creating a more secure and efficient exchange pattern.
+The DaVinci Data Export specification was developed to address a critical need in health information exchange: enabling safe, controlled data sharing between providers and payers without exposing sensitive patient clinical details. Traditional bulk data export mechanisms include all clinical data (encounters, observations, procedures, etc.), which may not be appropriate or necessary for certain provider-to-payer workflows. The DaVinci export IG constrains what data is exported to only what is essential for specific use cases, creating a more secure and efficient exchange pattern.
 
 **Key Characteristics**
 
@@ -47,16 +47,12 @@ DaVinci Data Export currently supports:
 
 * **Member Attribution** (ATR - Attribution via Terms and Rules): Enables providers to share member/patient attribution data with payers for care coordination and quality reporting purposes, without exposing detailed clinical information
 
-Use this page for DaVinci specific behavior.
-For shared export behavior and operational concepts, see :ref:`feature_bulkdataexport`.
-
-
 Configuration
 -------------
 
-DaVinci Data Export builds on the same plugin and infrastructure configuration as BDE.
+DaVinci Data Export builds on the same plugin and infrastructure configuration as :ref:`feature_bulkdataexport`.
 
-Use the same setup described in :ref:`feature_bulkdataexport_configuration`, including:
+It is configured similarly to what is described in :ref:`feature_bulkdataexport_configuration`, with a couple of pre-requisites:
 
 * BDE plugin enablement in the PipelineOptions:
 
@@ -67,45 +63,78 @@ Use the same setup described in :ref:`feature_bulkdataexport_configuration`, inc
 * ``TaskFileManagement`` storage configuration
 * ``BulkDataExport`` settings such as ``RepeatPeriod`` and retention settings
 
-Because DaVinci export reuses the BDE task pipeline, there is no separate task storage or file storage configuration specific to ``$davinci-data-export``.
+Because DaVinci Data Export reuses the BDE task pipeline, it can reuse the same settings.
+
+Element redaction
+^^^^^^^^^^^^^^^^^
+For the DaVinci ATR use case, it is possible to hide a selection of resource elements from the result set. In Firely server, this is called 'Resource redaction'. To configure the redaction used for the ATR export, we use the 'ResourceRedactionOptions' in appsettings. Redaction 'hl7.fhir.us.davinci-atr' contains the redaction definition used for the ATR export. Note that multiple FHIR paths are combined with an OR-relationship.
+
+.. code-block:: json
+
+	{
+		"ResourceRedactionOptions": {
+			"Redactions": {
+				"hl7.fhir.us.davinci-atr": {
+					"FhirVersions": [
+						"Fhir4.0"
+					],
+					"OmitElements": [
+						"descendants().where($this is Money)",
+						"Coverage.costToBeneficiary"
+					]
+				}
+			}
+		}
+	}
+
 
 Prerequisites
 -------------
 
 There are a few prerequisites specifically for this export.
 
-1. The DaVinci ATR conformance resources package must be installed on the server
-2. A search parameter for the PDex provider access use case flag on ``Consent.provision.action`` must be defined on the server. This is required for the ATR export use case, which filters ``Consent`` resources based on this flag. Add the search parameter and refresh the actual index as described in :ref:`the search parameter re-indexing documentation <feature_customsp_reindex_specific>`:
+1. The DaVinci ATR specific conformance resources must be loaded in the administration database. See :ref:`_conformance`
+2. Two Davinci-specific search parameters have been added to Firely Server and are needed for the export. In order to be able to use these parameters, execute the following REST call:
 
-	 .. code-block:: json
+.. code-block:: http
 
-			{
-				"resourceType": "SearchParameter",
-				"id": "consent-pdex-provider-access-use-case",
-				"url": "http://hl7.org/fhir/us/davinci-pdex/SearchParameter/consent-pdex-provider-access-use-case",
-				"version": "4.0.1",
-				"name": "ConsentPdexProviderAccessUseCase",
-				"status": "active",
-				"publisher": "Firely",
-				"description": "Search Consent resources by the PDex provider access use case flag on provision.action",
-				"code": "pdex-provider-access-use-case",
-				"base": ["Consent"],
-				"type": "token",
-				"expression": "Consent.provision.action.extension.where(url='http://hl7.org/fhir/us/davinci-pdex/StructureDefinition/pdex-provider-access-use-case').value.ofType(boolean)"
-			}
+	POST ``[firely-server-base]/administration/$reindex``
+	Content-Type: application/x-www-form-urlencoded
+
+	include=Consent.decision,Consent.DaVinci-pdex-provider-access-use-case
 
 
 $davinci-data-export
 --------------------
 
-Kickoff endpoint
-^^^^^^^^^^^^^^^^
+Export request
+^^^^^^^^^^^^^^
 
-DaVinci Data Export is initiated as a Group-level operation (Patient and System level exports are not supported). Both GET and POST methods are supported on this endpoint:
+DaVinci Data Export is initiated as a Group-level operation (Patient and System level exports are not supported). Both GET and POST methods are supported:
 
 **url:** ``[firely-server-base]/Group/<group-id>/$davinci-data-export``
 
-In case of a POST request, a FHIR Parameters resource must be provided as the payload
+In case of a POST request, a FHIR Parameters resource must be provided as the payload. An example of such a request would look as follows:
+
+.. code-block:: http
+
+	POST ``[firely-server-base]/Group/{{GROUP_ID}}/$davinci-data-export
+	Content-Type: application/fhir+json
+	Prefer: respond-async
+
+	{
+		"resourceType": "Parameters",
+		"parameter": [
+			{
+				"name": "exportType",
+				"valueCanonical": "http://hl7.org/fhir/us/davinci-atr"
+			},
+			{
+				"name": "_since",
+				"valueInstant": "2026-01-01T00:00:00Z"
+			}
+		]
+	}
 
 Supported parameters
 ^^^^^^^^^^^^^^^^^^^^
@@ -113,44 +142,30 @@ Supported parameters
 Firely Server handles DaVinci using the same filtering semantics as BDE for shared parameters.
 The DaVinci operation also defines the ``exportType`` parameter to identify the requested Da Vinci use case.
 
-+-------------------+-----------+--------------------+---------------------------------------------------------------+
-| Parameter         | Supported | Type               | Additional Notes                                              |
-+===================+===========+====================+===============================================================+
-| ``exportType``    | ✅        | ``canonical``      | Indicates the type of export to perform. This parameter       |
-|                   |           |                    | is DaVinci-specific and is not part of the base Bulk Data     |
-|                   |           |                    | Export operation (see below)                                        |
-+-------------------+-----------+--------------------+---------------------------------------------------------------+
-| ``patient``       | ✅        | ``reference``      | Same behavior as BDE for POST requests (not allowed in GET)   |
-+-------------------+-----------+--------------------+---------------------------------------------------------------+
-| ``_since``        | ✅        | ``instant``        | Same behavior as BDE.                                         |
-+-------------------+-----------+--------------------+---------------------------------------------------------------+
-| ``_until``        | ✅        | ``instant``        | Same behavior as BDE.                                         |
-+-------------------+-----------+--------------------+---------------------------------------------------------------+
-| ``_type``         | ✅        | FHIR resource type | Specifies resource types to export. Must include              |
-|                   |           |                    | ``Group``, ``Patient``, and ``Coverage``. If omitted,         |
-|                   |           |                    | defaults to exactly these three required types.               |
-|                   |           |                    | Optional types: ``RelatedPerson``, ``Practitioner``,          |
-|                   |           |                    | ``PractitionerRole``, ``Organization``, ``Location``.         |
-+-------------------+-----------+--------------------+---------------------------------------------------------------+
-| ``_typeFilter``   | ❌        | ``string``         | Not supported.                                                |
-+-------------------+-----------+--------------------+---------------------------------------------------------------+
-| ``_elements``     | ✅        | FHIR element       | Same behavior as BDE.                                         |
-+-------------------+-----------+--------------------+---------------------------------------------------------------+
-| ``_outputFormat`` | ✅        | ``string``         | Only ``application/ndjson`` is supported.                     |
-+-------------------+-----------+--------------------+---------------------------------------------------------------+
++-------------------+-----------+--------------------+---------------------------------------------------------------------+
+| Parameter         | Supported | Type               | Additional Notes                                                    |
++===================+===========+====================+=====================================================================+
+| ``exportType``    | ✅        | ``canonical``      | Indicates the type of export to perform. This parameter is          |
+|                   |           |                    | DaVinci-specific and is not part of the base Bulk Data Export       |
+|                   |           |                    | operation. Firely Server currently only supports the                |
+|                   |           |                    | ``hl7.fhir.us.davinci-atr`` exportType                              |
++-------------------+-----------+--------------------+---------------------------------------------------------------------+
+| ``patient``       | ✅        | ``reference``      | Same behavior as BDE for POST requests (not allowed in GET)         |
++-------------------+-----------+--------------------+---------------------------------------------------------------------+
+| ``_since``        | ✅        | ``instant``        | Same behavior as BDE.                                               |
++-------------------+-----------+--------------------+---------------------------------------------------------------------+
+| ``_until``        | ✅        | ``instant``        | Same behavior as BDE.                                               |
++-------------------+-----------+--------------------+---------------------------------------------------------------------+
+| ``_type``         | ✅        | FHIR resource type | Specifies resource types to export. See the _type table below for   |
+|                   |           |                    | the supported types                                                 |
++-------------------+-----------+--------------------+---------------------------------------------------------------------+
+| ``_typeFilter``   | ❌        | ``string``         | Not supported.                                                      |
++-------------------+-----------+--------------------+---------------------------------------------------------------------+
+| ``_elements``     | ✅        | FHIR element       | Same behavior as BDE.                                               |
++-------------------+-----------+--------------------+---------------------------------------------------------------------+
+| ``_outputFormat`` | ✅        | ``string``         | Only ``application/ndjson`` is supported.                           |
++-------------------+-----------+--------------------+---------------------------------------------------------------------+
 
-Supported ``exportType`` values (examples)
-""""""""""""""""""""""""""""""""""""""""""
-
-Currently, Firely Server only supports the following exportType
-
-+--------------------------------------+----------------------------------------------------------+
-| ``exportType`` value                 | Use case                                                 |
-+======================================+==========================================================+
-| ``hl7.fhir.us.davinci-atr``          | Da Vinci Member Attribution export.                      |
-+--------------------------------------+----------------------------------------------------------+
-
-Servers are expected to provide detailed export guidance in the applicable implementation guide.
 
 Supported ``_type`` values for ATR
 """"""""""""""""""""""""""""""""""
@@ -177,37 +192,10 @@ Supported ``_type`` values for ATR
 
 If the ``_type`` parameter is omitted, Firely Server defaults to exporting only the three required types: ``Group``, ``Patient``, and ``Coverage``.
 
-
-Request examples
-^^^^^^^^^^^^^^^^
-
-Example POST kickoff:
-
-.. code-block:: text
-
-	POST {{BASE_URL}}/Group/{{GROUP_ID}}/$davinci-data-export
-	Content-Type: application/fhir+json
-	Prefer: respond-async
-
-	{
-		"resourceType": "Parameters",
-		"parameter": [
-			{
-				"name": "exportType",
-				"valueCanonical": "http://hl7.org/fhir/us/davinci-atr"
-			},
-			{
-				"name": "_since",
-				"valueInstant": "2026-01-01T00:00:00Z"
-			}
-		]
-	}
-
-
 Response and task lifecycle
 ---------------------------
 
-After kickoff, DaVinci export follows the same asynchronous task flow as BDE:
+After the initial DaVinci data export operation, DaVinci Data Export follows the same asynchronous task flow as BDE:
 
 * queued task creation
 * polling task state through ``$exportstatus``
@@ -234,7 +222,10 @@ See :ref:`feature_bulkdataexport` for full details.
 Security and authorization
 --------------------------
 
-When SMART on FHIR is enabled, the same token and scope behavior used by BDE applies to DaVinci export task initiation and retrieval endpoints. There is one additional requirement: as the DaVinci export checks for consent (a Patient can opt-out) the DaVinci export requires read access to Consent resources.
+When SMART on FHIR is enabled, the same token and scope behavior used by BDE applies to DaVinci Data Export task initiation and retrieval endpoints. There is one additional requirement: as the DaVinci Data Export checks for consent (a Patient can opt-out) the DaVinci Data Export requires read access to Consent resources.
+
+The opt-out Consent must conform to the DaVinci ATR IG's Consent profile (http://hl7.org/fhir/us/davinci-atr/StructureDefinition/atr-consent) and must be associated with the patient through the standard Consent.patient reference. For Firely Server's DaVinci export filtering, the Consent also needs the ``DaVinci-pdex-provider-access-use-case`` extension on ``Consent.provision.action`` (see IG `PDex Provider Consent profile <https://build.fhir.org/ig/HL7/davinci-epdx/StructureDefinition-pdex-provider-consent.html>`_). The export will exclude patients that have an applicable opt-out Consent in place.
+
 See the section "Filtering export results with SMART scopes" on :ref:`feature_bulkdataexport`.
 
 

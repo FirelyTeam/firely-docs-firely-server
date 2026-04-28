@@ -1,7 +1,7 @@
 .. _feature_qdm:
 
-Digital Quality Measures
-========================
+Intro to Digital Quality Measures
+=================================
 
 .. note::
 
@@ -76,7 +76,7 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 	:Input: Canonical reference to a Library, expression name, and optional patient and context data.
 	:Output: The result of the evaluated expression (same as $cql, but tied to named expressions in a Library).
 
-	See `Using CQL with FHR - OperationDefinition Library/$evaluate <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-library-evaluate.html>`_ and :ref:`feature_library_evaluate` on how to execute this operation.
+	See `Using CQL with FHIR - OperationDefinition Library/$evaluate <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-library-evaluate.html>`_ for the full HL7 specification, and :ref:`feature_library_evaluate` for details on how to execute this operation in Firely Server, including which parameters are supported.
 
 * Library/$data-requirements
 
@@ -112,7 +112,7 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 	:Input: A CQL expression and the relevant data context (e.g., patient data).
 	:Output: The evaluated result of the expression (e.g., Boolean, date, quantity) encoded in a FHIR Parameters resource.
 
-	See `Using CQL with FHR - OperationDefinition $cql <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_ and :ref:`feature_cql_operation` on how to execute this operation.
+	See `Using CQL with FHIR - OperationDefinition $cql <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_ for the full HL7 specification, and :ref:`feature_cql_operation` for details on how to execute this operation in Firely Server, including which parameters are supported.
 
 ----
 
@@ -234,7 +234,7 @@ FHIR Libraries
 --------------
 
 A FHIR Library resource contains one or more representations of the CQL logic that defines the population criteria referenced by the Measure resource. 
-In addition to publishing metadata, the Library includes the original CQL content—encoded in base64—within a content element annotated with contentType "text/cql".
+In addition to publishing metadata, the Library includes the original CQL content—encoded in base64—within a content element annotated with contentType ``text/cql``.
 
 While CQL is designed to be human-readable and author-friendly, it must be translated into ELM to be machine-readable. 
 ELM uses a canonical abstract syntax tree (AST) to represent CQL expressions, decisions, and data references in a structured way. 
@@ -300,7 +300,9 @@ This command assumes that the ELM files already exist in the specified ``--elm``
 
 .. attention::
 
-	Firely Server currently depends on CQL SDK version v2.0.0-alpha18, which must be used for the compilation process to ensure compatibility.
+	Firely Server currently depends on CQL SDK version v2.6.0, which must be used for the compilation process to ensure compatibility.
+
+.. _feature_qdm_example_library:
 
 Example Library
 ^^^^^^^^^^^^^^^
@@ -456,6 +458,25 @@ Managing Libraries
 ^^^^^^^^^^^^^^^^^^
 
 Libraries are treated as administrative resources and can be uploaded to the administration endpoint of Firely Server. See :ref:`administration_api` for more details.
+Libraries that contain dQM content are annotated with extensions whose corresponding ``StructureDefinition`` resources are not loaded into Firely Server by default.
+These extensions must be added manually to the administration database:
+
+* ``http://hl7.org/fhir/StructureDefinition/cqf-cqlType`` - `Download here <https://simplifier.net/packages/hl7.fhir.uv.extensions.r4/5.2.0/files/2729975>`_
+
+  This extension maps FHIR parameter value types to CQL types for Library input parameters. Firely Server uses it to determine the FHIR type representation of calculation results in the Parameters resource.
+
+* ``http://hl7.org/fhir/StructureDefinition/cqf-cqlOptions`` - `Download here <https://simplifier.net/packages/hl7.fhir.uv.extensions.r4/5.2.0/files/2729842>`_
+
+  This extension documents the detailed options and parameters used when
+  translating the Library’s underlying CQL into ELM. Note that these values exist for documentation purposes only, they do not influence the execution of the dQM content.
+
+* ``http://hl7.org/fhir/StructureDefinition/cqf-cqlAccessModifier`` - `Download here <https://simplifier.net/packages/hl7.fhir.uv.extensions.r4/5.2.0/files/2729900>`_
+
+  This extension indicates if a named expression is classified as "private" in CQL. Note that Firely Server currently does not check this extension when executing Library/$evaluate.
+
+.. attention::
+
+  The StructureDefinitions of the extensions listed above also reference ValueSets. These dependencies must be uploaded as well.
 
 Debuging Libraries
 ^^^^^^^^^^^^^^^^^^

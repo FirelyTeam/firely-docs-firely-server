@@ -31,10 +31,24 @@ Old Firely Server release notes (v5.x)
 
     For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
 
+.. _vonk_releasenotes_5_11_5:
+
+Release 5.11.5, March 31st, 2026
+--------------------------------
+
+Fix
+^^^
+
+#. The ``_summary`` and ``_elements`` parameters would not be applied when used in ``batch`` or ``transaction`` bundles. This has now been fixed so that these parameters are applied correctly in these types of bundles.
+
+
 .. _vonk_releasenotes_5_11_4:
 
 Release 5.11.4, November 25th, 2025
 -----------------------------------
+
+Fix
+^^^
 
 #. We updated the dependencies of the docker image to address security vulnerabilities in some of the base layers. The updated base image is now ``mcr.microsoft.com/dotnet/aspnet:8.0-alpine3.22``.
 
@@ -688,7 +702,6 @@ Feature
 #. You can now add signatures to ``AuditEvents``. See :ref:`audit_event_integrity` for more information.
 #. Firely Server now supports searching on version-specific references. Consult the `FHIR specification <https://www.hl7.org/fhir/search.html#versions>`_ for more information.
 #. Serilog CorrelationId support has been enabled in Firely Server. Please consult the `official documentation <https://github.com/ekmsystems/serilog-enrichers-correlation-id>`_ on how to configure it.
-#. We have added a public :ref:`Postman collection <postman_tutorial>` to test Firely Server's RESTful endpoints.
 #. Wildcard support for ``include`` is now declared in Firely Server's ``CapabilityStatement``.
 #. Navigational links (next, prev, last) in a searchset bundle are now anonymized by default. Privacy-sensitive information in search parameter values are hidden behind a UUID. Please note that this behaviour is required by FHIR R5 and can only be disabled in FHIR R4 and STU3. See :ref:`navigational_links` for more information.
 

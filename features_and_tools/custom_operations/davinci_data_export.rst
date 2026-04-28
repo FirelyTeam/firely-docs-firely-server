@@ -98,8 +98,10 @@ There are a few prerequisites specifically for this export.
 
 .. code-block:: http
 
-	POST ``[firely-server-base]/administration/$reindex``
+	POST [firely-server-base]/administration/$reindex HTTP/1.1
 	Content-Type: application/x-www-form-urlencoded
+
+.. code-block:: text
 
 	include=Consent.decision,Consent.DaVinci-pdex-provider-access-use-case
 
@@ -118,9 +120,11 @@ In case of a POST request, a FHIR Parameters resource must be provided as the pa
 
 .. code-block:: http
 
-	POST ``[firely-server-base]/Group/{{GROUP_ID}}/$davinci-data-export
+	POST [firely-server-base]/Group/{{GROUP_ID}}/$davinci-data-export HTTP/1.1
 	Content-Type: application/fhir+json
 	Prefer: respond-async
+
+.. code-block:: json
 
 	{
 		"resourceType": "Parameters",

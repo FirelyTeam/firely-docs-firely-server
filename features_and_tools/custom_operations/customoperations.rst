@@ -55,6 +55,7 @@ Extended retrieval capabilities allow access to patient-level datasets and speci
 - :ref:`Bulk Data Access - $export <feature_bulkdataexport>`
 - :ref:`feature_patienteverything`
 - :ref:`lastn`
+- :ref:`feature_davinci_data_export`
 
 Identity, Matching & Member Access
 ----------------------------------

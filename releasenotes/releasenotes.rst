@@ -21,4 +21,3 @@ Please take a look at our :ref:`vonk_roadmap` to see which features we are plann
    releasenotes_v3
    releasenotes_v2
    security_notes
-   roadmap

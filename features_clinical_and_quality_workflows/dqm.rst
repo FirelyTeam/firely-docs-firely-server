@@ -592,6 +592,38 @@ Each group is evaluated independently, and its results are reported separately i
 
 The ``group.id`` links the results in the MeasureReport back to the corresponding group definition in the Measure resource. Therefore it is required in the Measure resource.
 
+Population Basis
+^^^^^^^^^^^^^^^^
+
+The population basis defines what type of elements are returned by the population criteria and, therefore, what is counted in the resulting MeasureReport.
+
+In many quality measures, the counted elements are the same as the measure subject.  
+For example, if:
+
+- ``subject[x] = Patient``
+- ``populationBasis = boolean``
+
+then each population criterion evaluates to either ``true`` or ``false`` for each patient:
+
+- ``true`` → the patient belongs to the population
+- ``false`` → the patient does not belong to the population
+
+In this model, the MeasureReport counts patients.
+
+Measures are not limited to counting the measure subject itself.  
+A measure may instead count related clinical resources.
+
+For example, an encounter-based measure may define:
+
+- ``subject[x] = Patient``
+- ``populationBasis = Encounter``
+
+In this case, the population criteria return lists of ``Encounter`` resources rather than boolean values.  
+The MeasureReport therefore counts encounters instead of patients, meaning that a single patient may contribute multiple matching encounters.
+
+The population basis defines the expected result type of all population criteria within the measure.  
+All population-level criteria are expected to return values consistent with the configured population basis.
+
 Interpreting Population Counts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

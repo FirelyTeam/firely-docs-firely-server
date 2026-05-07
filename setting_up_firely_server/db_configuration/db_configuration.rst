@@ -24,4 +24,3 @@ This separation of clinical and administrative data allows for more flexible con
    db_sqlite
    Using SQL server <sqlserver/db_sql>
    Using MongoDB <mongodb/db_mongo>
-   db_memory

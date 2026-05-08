@@ -56,15 +56,7 @@ Import of Conformance Resources
 
 The import process of conformance resources runs on every startup of Firely Server, and :ref:`on demand<conformance_on_demand>`.
 
-The process uses these locations on disk:
-
-* ImportDirectory;
-* ImportedDirectory;
-* a read history, stored in the Administration database (for SQLite, SQL Server, and MongoDB)
-
-.. attention::
-
-   Please make sure that the Firely Server process has write permission on the ImportedDirectory.
+The process uses the `ImportDirectory` as a filesystem conformance source, and an import history stored in the Administration database.
 
 The process follows these steps for each FHIR version (currently STU3 and R4, and experimentally for R5)
 
@@ -146,8 +138,7 @@ Load Conformance Resources from disk
 Firely Server can read SearchParameter and CompartmentDefinition resources from a directory on disk at startup. The AdministrationImportOptions in the :ref:`configure_appsettings` control from which directory resources are loaded::
 
   "AdministrationImportOptions": {
-    "ImportDirectory": "<path to the directory you want to import from, default ./vonk-import>",
-    "ImportedDirectory": "<path to the directory where imported files are moved to, default ./vonk-imported>"
+    "ImportDirectory": "<path to the directory you want to import from, default ./vonk-import>"
   },
 
 :ImportDirectory: All files and zip files will be read, and any conformance resources in them will be imported. By default, STU3 is assumed.

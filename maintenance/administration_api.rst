@@ -51,7 +51,7 @@ You can configure the Administration API, including restricting access to functi
 
 Choosing your storage
 ---------------------
-The Administration API uses its own database, separate from the main **Firely Server Data** database. It supports SQLite, SQL Server, MongoDB, and in-memory storage as database options.
+The Administration API uses its own database, separate from the main **Firely Server Data** database. It supports SQLite, SQL Server, and MongoDB storage as database options.
 
 .. note::
 
@@ -59,7 +59,6 @@ The Administration API uses its own database, separate from the main **Firely Se
 
 #. ``Repository``: Choose which type of repository you want. Valid values are:
 
-  #. Memory
   #. SQL
   #. SQLite
   #. MongoDb
@@ -112,6 +111,7 @@ Operations that can be secured include:
 * ``ConceptMap`` (restrict both read and write)
 * ``Library`` (restrict both read and write)
 * ``Measure`` (restrict both read and write)
+* ``Questionnaire`` (restrict both read and write)
 * ``Subscription``: (restrict both read and write, see :ref:`feature_subscription`)
 
 The following rules apply for network configuration:

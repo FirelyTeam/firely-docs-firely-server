@@ -122,8 +122,6 @@ To ensure that only one instance runs the import you can do two things:
 
 If you want to use the manual import (``<url>/administration/$import-resources``) you are advised to apply solution nr. 1 above. In the second solution the call may or may not end up on an instance having the Import functionality.
 
-We are aware that this can be a bit cumbersome. On the :ref:`vonk_roadmap` is therefore the story to host the Administration API in its own microservice.
-
 .. _conformance_specification_zip:
 
 Default Conformance Resources

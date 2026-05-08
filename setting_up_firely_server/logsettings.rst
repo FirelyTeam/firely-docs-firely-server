@@ -47,7 +47,6 @@ Some additional namespaces you might want to log are:
 - ``Vonk.Repository.Sql.Raw`` to log SQL repository events for Firely Server v4.3.0 and above
 - ``Vonk.Repository.Sql`` to log SQL repository events for Firely Server v4.2.0 and below
 - ``Vonk.Repository.Document.Db`` to log MongoDB repository events 
-- ``Vonk.Repository.Memory`` to log memory database repository events
 - ``Vonk.Core.Repository.EntryIndexerContext``, set it to ``"Error"`` if you have excessive warnings about indexing (mostly when importing `Synthea <https://synthea.mitre.org/downloads>` data)
 - ``Microsoft`` to log events from the Microsoft libraries
 - ``Microsoft.AspNetCore.Diagnostics`` to report request handling times

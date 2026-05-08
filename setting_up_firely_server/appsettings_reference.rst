@@ -713,7 +713,6 @@ SearchParameters and other Conformance Resources
 
     "AdministrationImportOptions": {
         "ImportDirectory": "./vonk-import",
-        "ImportedDirectory": "./vonk-imported", //Do not place ImportedDirectory *under* ImportDirectory, since an import will recursively read all subdirectories.
         "SimplifierProjects": [
           {
             "Uri": "https://stu3.simplifier.net/<your-project>",

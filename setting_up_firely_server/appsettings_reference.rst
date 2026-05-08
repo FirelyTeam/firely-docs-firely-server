@@ -60,21 +60,10 @@ Repository
 
 #. ``Repository``: Choose which type of repository you want. Valid values are:
 
-  #. :ref:`Memory<configure_memory>`
   #. :ref:`SQL, for Microsoft SQL Server<configure_sql>`
   #. :ref:`SQLite<configure_sqlite>`
   #. :ref:`MongoDb<configure_mongodb>`
 
-
-Memory
-^^^^^^
-::
-
-    "MemoryOptions": {
-        "SimulateTransactions": "false"
-    },
-
-Refer to :ref:`configure_memory` for configuring the In-Memory storage.
 
 MongoDB
 ^^^^^^^

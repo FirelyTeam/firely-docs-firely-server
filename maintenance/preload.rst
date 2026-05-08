@@ -25,4 +25,4 @@ If you are :ref:`not permitted <configure_administration_access>` to preload res
 .. note:: The operation can take quite long if the zip contains many resources. |br|
 	E.g. when uploading the `examples-json.zip <http://www.hl7.org/fhir/examples-json.zip>`__ from the specification, it took about a minute on MongoDb and about 7 minutes on SQL Server on a simple test server.
 
-.. attention:: This feature is not meant for bulk uploading really large sets of resources. Firely Server currently has no special operation for bulk operations.
+.. attention:: This feature is not meant for bulk uploading really large sets of resources. Please see :ref:`tool_fsi` for Firely Server's bulk import capability.

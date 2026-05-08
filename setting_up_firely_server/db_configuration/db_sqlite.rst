@@ -27,7 +27,7 @@ SQLite for Firely Server Administration
 
 Firely Server Administration poses very limited stress on its storage engine, therefore SQLite is adequate and provides several advantages:
 
-*   **Runs out of the box:** SQLite requires no installation of a database engine, but still provides durable storage (unlike the Memory storage). 
+*   **Runs out of the box:** SQLite requires no installation of a database engine, but still provides durable storage.
     Thus, you don't need to setup anything to run Firely Server Administration and you can download the Firely Server binaries and run them without any further configuration.
 
 *   **Flexible on updates:** Many of the features that we will add to Firely Server require changes to the schema of the Administration database. By only supporting SQLite for this, we can provide these features to you more quickly.

@@ -105,8 +105,8 @@ If validation is set to ``Full`` the following validation rules will be checked:
 
 .. _feature_validation:
 
-$validate
----------
+Validation - $validate
+----------------------
 
 .. note::
 

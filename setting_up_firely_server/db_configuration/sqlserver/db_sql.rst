@@ -123,10 +123,6 @@ This option is mainly for experimentation as it effectively requires sysadmin pr
 
 *   If an upgrade to a new version of Firely requires a migration then a SQL time out might occur, halting the upgrade and resulting in a rollback of the migration. The duration of the SQL time out for migrations can be controlled with ``MigrationTimeout``. The default value is 1800 seconds (30 min).
 
-.. attention::
-
-    For SQL Server it is essential to retain the ``.vonk-import-history.json`` file. Please read :ref:`vonk_conformance_history` for details.
-
 Create a database and users by script, and have Firely Server create the schema
 -------------------------------------------------------------------------------
 

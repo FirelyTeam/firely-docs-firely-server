@@ -60,7 +60,7 @@ The process uses these locations on disk:
 
 * ImportDirectory;
 * ImportedDirectory;
-* a read history in the file .vonk-import-history.json, written in ImportedDirectory.
+* a read history, stored in the Administration database (for SQLite, SQL Server, and MongoDB) or in the file ``.vonk-import-history.json`` written in ImportedDirectory (fallback for custom repository plugins that do not register their own import history storage).
 
 .. attention::
 
@@ -84,7 +84,11 @@ Alternatively, the following log line is being written once the process is finis
 The read history keeps a record of files that have been read, with an MD5 hash of each.
 If you wish to force a renewed import of a specific file, you should:
 
-* manually edit the read history file and delete the entry about that file;
+* remove the entry for that file from the read history:
+
+  * **SQLite, SQL Server, MongoDB**: delete the corresponding row from the ``importhistory`` table in the Administration database;
+  * **custom repository plugins** without their own import history storage: manually edit the ``.vonk-import-history.json`` file and delete the entry about that file.
+
 * provide the file again in the ImportDirectory (if you deleted it previously - Vonk does not delete it).
 
 .. _vonk_conformance_history:
@@ -92,7 +96,11 @@ If you wish to force a renewed import of a specific file, you should:
 Retain the import history
 -------------------------
 
-If you run the Administration database on SQL Server or MongoDb it is important to *retain* the ``.vonk-import-history`` file. This means that if you run Firely Server on something stateless like a Kubernetes pod, or a webapp service, you need to attach file storage on which to store this file. If you do not do that, Firely Server will import all the conformance resources *on every start*.
+The import history is stored in the Administration database for SQLite, SQL Server, and MongoDB. As long as the Administration database is persistent, the import history is preserved automatically — no additional file storage is required.
+
+When upgrading from an older version of Firely Server that used the file-based history, SQL Server and MongoDB will automatically migrate the existing ``.vonk-import-history.json`` file into the database on first startup and then delete the file.
+
+For custom repository plugins that do not register their own import history storage, the history falls back to the ``.vonk-import-history`` file written in ``ImportedDirectory``. If you run Firely Server on a stateless environment (such as a Kubernetes pod or an Azure Web App) with such a plugin, you need to attach persistent file storage for that directory. Without it, Firely Server will re-import all conformance resources on every start.
 
 .. _vonk_conformance_instances:
 
@@ -152,7 +160,7 @@ Firely Server can read SearchParameter and CompartmentDefinition resources from 
 
 :ImportDirectory: All files and zip files will be read, and any conformance resources in them will be imported. By default, STU3 is assumed.
                   If you have R4 conformance resources, place them in a sibling directory that has the same name as your "ImportDirectory" with ``.R4`` appended to it -- so for example ``./vonk-import.R4``.
-:ImportedDirectory: This directory will contain the read history in the .vonk-import-history.json file. Please note, that this information is stored directly in the administration database when running on SQlite.
+:ImportedDirectory: This directory is used as the base path for the read history. Please note, that this information is stored directly in the administration database when running on SQLite, SQL Server, or MongoDB.
 
 Note that in json you either use forward slashes (/) or double backward slashes (\\\\) as path separators.
 

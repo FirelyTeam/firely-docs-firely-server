@@ -111,6 +111,7 @@ Operations that can be secured include:
 * ``ConceptMap`` (restrict both read and write)
 * ``Library`` (restrict both read and write)
 * ``Measure`` (restrict both read and write)
+* ``Questionnaire`` (restrict both read and write)
 * ``Subscription``: (restrict both read and write, see :ref:`feature_subscription`)
 
 The following rules apply for network configuration:

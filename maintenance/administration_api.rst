@@ -27,7 +27,7 @@ You can configure the Administration API, including restricting access to functi
 ::
 
   "Administration": {
-    "Repository": "SQLite", //Memory / SQL / MongoDb
+    "Repository": "SQLite", //SQL / MongoDb
     "MongoDbOptions": {
       "ConnectionString": "mongodb://localhost/vonkadmin",
       "EntryCollection": "vonkentries"

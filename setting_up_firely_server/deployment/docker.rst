@@ -252,7 +252,7 @@ To stop the container, run: |br|
 Running Docker with a SQL Server container
 ------------------------------------------
 
-Firely Server can use also other repositories than Memory, for example SQL Server. This section describes how to spin up a Firely Server container and a SQL Server container.
+Firely Server supports multiple repository backends such as SQL Server, SQLite, and MongoDB. This section describes how to spin up a Firely Server container and a SQL Server container.
 We will use docker-compose to achieve this.
 
 .. warning:: SQL Server container uses at least 3.25 GB of RAM. Make sure to assign enough memory to the Docker VM if you're running on Docker for Mac or Windows.

@@ -17,4 +17,3 @@ Additionally, an OpenAPI definition provides clear, machine-readable API documen
    customresources
    customsearchparameters
    openapi
-   validation

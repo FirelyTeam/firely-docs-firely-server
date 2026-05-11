@@ -98,10 +98,6 @@ This works the same as with the normal Firely Server database, except that you:
             ]
         }
 
-.. attention::
-
-    For MongoDb it is essential to retain the ``.vonk-import-history.json`` file. Please read :ref:`vonk_conformance_history` for details.
-
 .. _mongodb_transactions:
 
 MongoDB Transactions

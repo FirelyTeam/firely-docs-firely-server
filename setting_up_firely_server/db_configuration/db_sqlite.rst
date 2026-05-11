@@ -27,7 +27,7 @@ SQLite for Firely Server Administration
 
 Firely Server Administration poses very limited stress on its storage engine, therefore SQLite is adequate and provides several advantages:
 
-*   **Runs out of the box:** SQLite requires no installation of a database engine, but still provides durable storage (unlike the Memory storage). 
+*   **Runs out of the box:** SQLite requires no installation of a database engine, but still provides durable storage.
     Thus, you don't need to setup anything to run Firely Server Administration and you can download the Firely Server binaries and run them without any further configuration.
 
 *   **Flexible on updates:** Many of the features that we will add to Firely Server require changes to the schema of the Administration database. By only supporting SQLite for this, we can provide these features to you more quickly.
@@ -120,6 +120,7 @@ Settings for using SQLite for Firely Server Administration
 Administration import history in SQLite
 ---------------------------------------
 
-When Firely Server :ref:`imports Conformance resources<conformance_import>`, it keeps record of what is has imported. Unlike the SQL Server and MongoDb engines,
-the SQLite storage engine does *not* use the .vonk-import-history.json file for that. Instead, in SQLite the import history is stored within the Administration database itself.
+When Firely Server :ref:`imports Conformance resources<conformance_import>`, it keeps record of what it has imported. The import history is stored within the Administration database itself, in the ``importhistory`` table. The ``.vonk-import-history.json`` file is not used.
+
+This behaviour is the same for SQL Server and MongoDB.
 

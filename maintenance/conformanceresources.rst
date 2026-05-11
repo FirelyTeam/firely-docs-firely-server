@@ -210,15 +210,9 @@ Please note that this will also respect the history of already read files, and n
 Manage Conformance Resources with the Administration API
 --------------------------------------------------------
 
-The :ref:`administration_api` has a FHIR interface included, on the ``https://<firely-server-endpoint>/administration`` endpoint. On this endpoint you can do most of the FHIR interactions (create, read, update, delete, search) on these resourcetypes:
+The :ref:`administration_api` includes a FHIR interface on the ``https://<firely-server-endpoint>/administration`` endpoint. Through this endpoint you can manage conformance resources that affect Firely Server behavior.
 
-* SearchParameter
-* StructureDefinition
-* ValueSet
-* CodeSystem
-* CompartmentDefinition
-
-If you are :ref:`not permitted <configure_administration_access>` to access the endpoint for the resource you want to manage (e.g. ``<firely-server-endpoint>/administration/StructureDefinition``), Firely Server will return statuscode 403.
+See :ref:`administration_api` for the supported resource types and related operations.
 
 .. note:: You can also do the same interactions on the same resourcetypes on the normal (or 'data') FHIR endpoint ``https://<firely-server-endpoint>``. This will only result in storing, updating or deleting the resource. But it will not have any effect on the way Firely Server operates.
 

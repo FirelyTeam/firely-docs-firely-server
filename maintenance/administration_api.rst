@@ -15,7 +15,16 @@ The following functions are available in the Administration API:
 * :ref:`feature_customsp_reindex`
 * :ref:`Reseting the database <feature_resetdb>`
 * :ref:`feature_preload`
-* :ref:`Executing terminology operations <feature_terminology>`
+
+The Administration API supports create, read, update, delete and search interactions on the following resource types. These resources are used by Firely Server for the listed operations:
+
+* SearchParameter: indexing resources and evaluating :ref:`search <restful_search>` interactions.
+* StructureDefinition: :ref:`snapshot generation <feature_snapshot>` and, together with ValueSet and CodeSystem, :ref:`validation <feature_validation>`.
+* CompartmentDefinition: :ref:`access control <feature_accesscontrol>` and Compartment :ref:`search <restful_search>`.
+* ValueSet and CodeSystem: :ref:`terminology operations <feature_terminology>`.
+* StructureMap and ConceptMap: mapping.
+* Library, Measure and Questionnaire: clinical reasoning and questionnaire-related use cases, see :ref:`feature_qualitymeasures`.
+* Subscription: :ref:`subscriptions <feature_subscription>`.
 
 .. _configure_administration:
 
@@ -102,17 +111,9 @@ Operations that can be secured include:
 * ``$reset`` (see :ref:`feature_resetdb`)
 * ``$preload`` (see :ref:`feature_preload`)
 * ``$import-resources`` (see :ref:`conformance_on_demand`)
-* ``StructureDefinition`` (restrict both read and write)
-* ``SearchParameter`` (restrict both read and write)
-* ``ValueSet`` (restrict both read and write)
-* ``CodeSystem`` (restrict both read and write)
-* ``CompartmentDefinition`` (restrict both read and write)
-* ``StructureMap`` (restrict both read and write)
-* ``ConceptMap`` (restrict both read and write)
-* ``Library`` (restrict both read and write)
-* ``Measure`` (restrict both read and write)
-* ``Questionnaire`` (restrict both read and write)
-* ``Subscription``: (restrict both read and write, see :ref:`feature_subscription`)
+* Restful CRUD interactions on the supported conformance resource types listed above
+
+If you are not permitted to access the endpoint for the resource you want to manage (e.g. ``<firely-server-endpoint>/administration/StructureDefinition``), Firely Server will return statuscode 403.
 
 The following rules apply for network configuration:
 

@@ -12,7 +12,7 @@ Read replica support applies to the **resource database only**. The Administrati
 
 | Operation | Connection used | Notes |
 |---|---|---|
-| Search and read (GET, search) | Replica | SQLKata-based queries |
+| Search and read (GET, search) | Replica | CTE-based queries |
 | Bulk data export / $everything | Replica | |
 | Write operations (POST, PUT, PATCH, DELETE) | Primary | |
 | Conditional reads (If-Match, If-None-Exist) | Primary | Run inside a transaction; not affected by replica lag |
@@ -40,7 +40,7 @@ Firely Server routes reads to the replica endpoint you configure. It does not ma
 
 Two common approaches:
 
-**SQL Server Always On Availability Group**
+**SQL Server Always On Availability Group (AG)**
 
 Configure a secondary replica with `SECONDARY_ROLE (ALLOW_CONNECTIONS = ALL)` and `SEEDING_MODE = AUTOMATIC`. On first setup, SQL Server seeds the entire database (schema and data) from the primary to the secondary automatically. After that, every write to the primary — including schema migrations — is replicated to the secondary via the AG transaction log stream. Connect Firely Server to the secondary's listener or direct endpoint as the `ReadReplicaConnectionString`.
 
@@ -54,9 +54,10 @@ Adding an existing database to a new AG requires a full backup followed by a res
 
 Create a geo-replica from the Azure portal or CLI. The replica is initialised as a full copy of the primary at that point in time, including schema. All subsequent changes to the primary — data writes and schema migrations — are continuously replicated. The replica gets a separate server hostname (e.g. `myserver-replica.database.windows.net`). Use that hostname in `ReadReplicaConnectionString`.
 
-```{note}
-`ApplicationIntent=ReadOnly` in a single connection string is **not** the mechanism used here and is not required. Firely Server routes traffic by opening a separate connection to the configured replica endpoint. The `ApplicationIntent=ReadOnly` read scale-out feature is only available on Azure SQL Hyperscale tier.
-```
+**Azure SQL Hyperscale**
+
+Azure SQL Hyperscale has built-in named replicas (high-availability replicas and optional named read-scale replicas). For Hyperscale, the recommended approach is to use the same connection string, with added `ApplicationIntent=ReadOnly` as a `ReadReplicaConnectionString`. Azure SQL will route the connection to a read-scale replica automatically.
+
 
 ## Replication lag and consistency
 

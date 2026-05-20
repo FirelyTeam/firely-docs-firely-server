@@ -65,3 +65,15 @@ To include the plugin in your pipeline, add the following extra Include:
          ...
       ]
    }
+
+.. _patienteverything_pagination:
+
+Pagination for $everything
+--------------------------
+
+Pagination for the ``$everything`` operation in generally follows the pagination behavior of Firely Server as described in :ref:`navigational_links`. Specific to the ``$everything`` operation there are a few notes:
+
+#. The results of the $everything operations are always paginated using a ``_continuationToken`` for retrieving the next page. 
+#. :ref:`restful_search_anonymization` will not be applied to the ``next`` links of the results bundle.
+#. The number of resources returned in one response can be set with the ``_count`` parameter. This parameter is capped by the ``BundleOptions.MaxCount`` setting, meaning that if ``_count`` exceeds this value, it will be limited to ``BundleOptions.MaxCount`` . If omitted, ``_count`` is set to the value of ``BundleOptions.DefaultCount``. 
+#. For optimized performance, the ``_total`` parameter is not supported and will be ignored when being set in the query. 

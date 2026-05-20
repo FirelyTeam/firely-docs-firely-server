@@ -8,6 +8,19 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_6_7_1:
+
+Release 6.7.1, May 20th, 2026
+-----------------------------
+
+Fix
+^^^
+
+#. Introduced pagination for the results of the ``$everything`` operation. Before, when a large number of resources would be returned by the ``$everything`` operation, this could lead to stack overflow errors. With pagination, the results of the ``$everything`` operation are now returned in smaller chunks, improving performance and reducing the likelihood of timeouts. For more information, also see :ref:`patienteverything_pagination`.
+
+.. warning::
+    With the change in pagination for the ``$everything`` operation, support for the ``_total`` parameter was omitted for this operation to improve overall performance. If you relied on the ``_total`` parameter when calling the ``$everything`` operation, we advise to review your workflow.
+
 .. _vonk_releasenotes_6_7_0:
 
 Release 6.7.0, March 26th, 2026

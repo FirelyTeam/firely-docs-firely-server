@@ -18,7 +18,6 @@ On the ``Information`` level, Firely Server will tell you which assemblies are l
       C:\data\dd18\vonk_preview\Vonk.Fhir.R3.dll
       C:\data\dd18\vonk_preview\Vonk.Fhir.R4.dll
       C:\data\dd18\vonk_preview\Vonk.Repository.Generic.dll
-      C:\data\dd18\vonk_preview\Vonk.Repository.Memory.dll
       C:\data\dd18\vonk_preview\Vonk.Repository.MongoDb.dll
       C:\data\dd18\vonk_preview\Vonk.Repository.Sql.dll
       C:\data\dd18\vonk_preview\vonk.server.dll

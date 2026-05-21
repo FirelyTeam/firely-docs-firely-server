@@ -93,7 +93,7 @@ In Firely Server, the middleware components that implement these interactions ac
 In many scenarios, read-only access is sufficient, and you only need to implement the ISearchRepository.
 In that implementation you can choose which of the search parameters you want to support, and whether to expose versions and deleted resources.
 
-These interfaces enable you to implement a Firely Server Facade. And they enable us to support database engines as diverse as MongoDB, SQL Server and in-memory.
+These interfaces enable you to implement a Firely Server Facade. And they enable us to support database engines as diverse as MongoDB and SQL Server.
 
 Search
 ^^^^^^

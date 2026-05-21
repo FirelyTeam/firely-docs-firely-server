@@ -56,15 +56,7 @@ Import of Conformance Resources
 
 The import process of conformance resources runs on every startup of Firely Server, and :ref:`on demand<conformance_on_demand>`.
 
-The process uses these locations on disk:
-
-* ImportDirectory;
-* ImportedDirectory;
-* a read history in the file .vonk-import-history.json, written in ImportedDirectory.
-
-.. attention::
-
-   Please make sure that the Firely Server process has write permission on the ImportedDirectory.
+The process uses the `ImportDirectory` as a filesystem conformance source, and an import history stored in the Administration database.
 
 The process follows these steps for each FHIR version (currently STU3 and R4, and experimentally for R5)
 
@@ -84,7 +76,7 @@ Alternatively, the following log line is being written once the process is finis
 The read history keeps a record of files that have been read, with an MD5 hash of each.
 If you wish to force a renewed import of a specific file, you should:
 
-* manually edit the read history file and delete the entry about that file;
+* delete the corresponding row from the ``importhistory`` table in the Administration database;
 * provide the file again in the ImportDirectory (if you deleted it previously - Vonk does not delete it).
 
 .. _vonk_conformance_history:
@@ -92,7 +84,9 @@ If you wish to force a renewed import of a specific file, you should:
 Retain the import history
 -------------------------
 
-If you run the Administration database on SQL Server or MongoDb it is important to *retain* the ``.vonk-import-history`` file. This means that if you run Firely Server on something stateless like a Kubernetes pod, or a webapp service, you need to attach file storage on which to store this file. If you do not do that, Firely Server will import all the conformance resources *on every start*.
+The import history is stored in the Administration database. As long as the Administration database is persistent, the import history is preserved automatically — no additional file storage is required.
+
+When upgrading from an older version of Firely Server that used the file-based history, SQL Server and MongoDB will automatically migrate the existing ``.vonk-import-history.json`` file into the database on first startup and then delete the file.
 
 .. _vonk_conformance_instances:
 
@@ -120,8 +114,6 @@ To ensure that only one instance runs the import you can do two things:
 
 If you want to use the manual import (``<url>/administration/$import-resources``) you are advised to apply solution nr. 1 above. In the second solution the call may or may not end up on an instance having the Import functionality.
 
-We are aware that this can be a bit cumbersome. On the :ref:`vonk_roadmap` is therefore the story to host the Administration API in its own microservice.
-
 .. _conformance_specification_zip:
 
 Default Conformance Resources
@@ -146,13 +138,11 @@ Load Conformance Resources from disk
 Firely Server can read SearchParameter and CompartmentDefinition resources from a directory on disk at startup. The AdministrationImportOptions in the :ref:`configure_appsettings` control from which directory resources are loaded::
 
   "AdministrationImportOptions": {
-    "ImportDirectory": "<path to the directory you want to import from, default ./vonk-import>",
-    "ImportedDirectory": "<path to the directory where imported files are moved to, default ./vonk-imported>"
+    "ImportDirectory": "<path to the directory you want to import from, default ./vonk-import>"
   },
 
 :ImportDirectory: All files and zip files will be read, and any conformance resources in them will be imported. By default, STU3 is assumed.
                   If you have R4 conformance resources, place them in a sibling directory that has the same name as your "ImportDirectory" with ``.R4`` appended to it -- so for example ``./vonk-import.R4``.
-:ImportedDirectory: This directory will contain the read history in the .vonk-import-history.json file. Please note, that this information is stored directly in the administration database when running on SQlite.
 
 Note that in json you either use forward slashes (/) or double backward slashes (\\\\) as path separators.
 
@@ -220,15 +210,9 @@ Please note that this will also respect the history of already read files, and n
 Manage Conformance Resources with the Administration API
 --------------------------------------------------------
 
-The :ref:`administration_api` has a FHIR interface included, on the ``https://<firely-server-endpoint>/administration`` endpoint. On this endpoint you can do most of the FHIR interactions (create, read, update, delete, search) on these resourcetypes:
+The :ref:`administration_api` includes a FHIR interface on the ``https://<firely-server-endpoint>/administration`` endpoint. Through this endpoint you can manage conformance resources that affect Firely Server behavior.
 
-* SearchParameter
-* StructureDefinition
-* ValueSet
-* CodeSystem
-* CompartmentDefinition
-
-If you are :ref:`not permitted <configure_administration_access>` to access the endpoint for the resource you want to manage (e.g. ``<firely-server-endpoint>/administration/StructureDefinition``), Firely Server will return statuscode 403.
+See :ref:`administration_api` for the supported resource types and related operations.
 
 .. note:: You can also do the same interactions on the same resourcetypes on the normal (or 'data') FHIR endpoint ``https://<firely-server-endpoint>``. This will only result in storing, updating or deleting the resource. But it will not have any effect on the way Firely Server operates.
 

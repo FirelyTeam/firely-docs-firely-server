@@ -152,24 +152,21 @@ Loading additional conformance resources in Firely Server on Docker
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you want to load custom conformance resources in Firely Server, you can use the ``vonk-import`` folder, as is described in the section `Managing Conformance Resources <../maintenance/conformanceresources.html>`_.
-When running Firely Server on Docker, it is necessary to create this folder in your working directory, copy the conformance resources into this folder and mount a volume. 
-Be sure to also mount a volume for the ``vonk-imported`` folder, otherwise your conformance resources will be reloaded upon each startup of Firely Server and this can take up some time:
+When running Firely Server on Docker, it is necessary to create this folder in your working directory, copy the conformance resources into this folder and mount a volume:
 
 .. code-block::
    
    docker run -d -p 8080:4080 --name firely.server `
    -v ${PWD}/appsettings.instance.json:/app/appsettings.instance.json `
    -v ${PWD}/vonk-import:/app/vonk-import `
-   -v ${PWD}/vonk-imported:/app/vonk-imported `
    firely/server
 
-Be sure to mount your appsettings.instance.json as well, and make sure to point the ``AdministrationImportOptions`` to the ``vonk-import`` and ``vonk-imported`` folder:
+Be sure to mount your appsettings.instance.json as well, and make sure to point the ``AdministrationImportOptions`` to the ``vonk-import`` folder:
 
 .. code-block::
 
   "AdministrationImportOptions": {
-	"ImportDirectory": "./vonk-import",
-    	"ImportedDirectory": "./vonk-imported"
+	"ImportDirectory": "./vonk-import"
   }
 
 By default, Firely server will assume the resources placed in the vonk-import folder are R3 resources. If you want to load R4 or R5 resources, you need to alter the name of your import folder and volume accordingly:
@@ -179,7 +176,6 @@ By default, Firely server will assume the resources placed in the vonk-import fo
    docker run -d -p 8080:4080 --name firely.server `
    -v ${PWD}/appsettings.instance.json:/app/appsettings.instance.json `
    -v ${PWD}/vonk-import.R4:/app/vonk-import.R4 `
-   -v ${PWD}/vonk-imported:/app/vonk-imported `
    firely/server
 
 You can leave the ``AdministrationImportOptions`` in the appsettings.instance.json as is, there is no need to point these settings to a separate vonk-import.R4 or vonk-import.R5 folder.
@@ -252,7 +248,7 @@ To stop the container, run: |br|
 Running Docker with a SQL Server container
 ------------------------------------------
 
-Firely Server can use also other repositories than Memory, for example SQL Server. This section describes how to spin up a Firely Server container and a SQL Server container.
+Firely Server supports multiple repository backends such as SQL Server, SQLite, and MongoDB. This section describes how to spin up a Firely Server container and a SQL Server container.
 We will use docker-compose to achieve this.
 
 .. warning:: SQL Server container uses at least 3.25 GB of RAM. Make sure to assign enough memory to the Docker VM if you're running on Docker for Mac or Windows.

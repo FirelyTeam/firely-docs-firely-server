@@ -88,7 +88,7 @@ Commenting out sections
 JSON formally has no notion of comments. But the configuration system of ASP.Net Core (and hence Firely Server) accepts double slashes just fine::
 
     "Administration": {
-        "Repository": "SQLite", //Memory / SQL / MongoDb
+        "Repository": "SQLite", //SQL / MongoDb
         "SqlDbOptions": {
             "ConnectionString": "connectionstring to your Firely Server Admin SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
             "SchemaName": "vonkadmin",
@@ -230,7 +230,6 @@ Another example for excluding namespaces in the ``PipelineOptions``:
       {
          "Path": "/",
          "Exclude": [
-            "Vonk.Repository.Memory",
             "Vonk.Repository.Sql"
          ]
       }
@@ -238,8 +237,7 @@ Another example for excluding namespaces in the ``PipelineOptions``:
 
 environment variables::
     
-        VONK_PipelineOptions__Branches__0__Exclude__0=Vonk.Repository.Memory
-        VONK_PipelineOptions__Branches__0__Exclude__1=Vonk.Repository.Sql
+        VONK_PipelineOptions__Branches__0__Exclude__0=Vonk.Repository.Sql
 
 .. _configure_envvar_log:
 

@@ -1,4 +1,5 @@
 .DS_Store
+.idea/
 ._buildhtml
 _build/
 .vscode/

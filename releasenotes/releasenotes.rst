@@ -7,7 +7,6 @@ The following pages contain the release notes of the current major version of Fi
 See below for older release notes of Firely Server.
 
 We recommend that you familiarize yourself with the documentation on how to upgrade to a new version of Firely Server :ref:`upgrade` before proceeding.
-Please take a look at our :ref:`vonk_roadmap` to see which features we are planning to work on next.
 
 .. toctree::
    :maxdepth: 1
@@ -21,4 +20,3 @@ Please take a look at our :ref:`vonk_roadmap` to see which features we are plann
    releasenotes_v3
    releasenotes_v2
    security_notes
-   roadmap

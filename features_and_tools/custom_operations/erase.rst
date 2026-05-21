@@ -21,7 +21,6 @@ The ``$purge`` operation permanently deletes all resources within a patient comp
 .. note::
 
   Not all repositories support both operations. Refer to :ref:`FeatureAvailability` for more details.
-  Neither operation is supported on the Memory repository.
 
 Examples
 ^^^^^^^^

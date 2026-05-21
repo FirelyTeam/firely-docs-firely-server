@@ -257,3 +257,4 @@ Performance tuning of SQL Server is a topic on its own. Firely Server manages th
    index_maintenance
    sqlserver_statistics
    database_security
+   read_replica

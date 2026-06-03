@@ -428,11 +428,8 @@ If validation is set to ``Full`` the following validation rules will be checked 
 |                                | ``Composition.author``, ``Composition.custodian``,                 |
 |                                | ``Composition.attester.party``, and all ``Composition.section``    |
 |                                | references (``author``, ``focus``, ``entry``) recursively.         |
-|                                | Contained resource references (``#id``) are intentionally          |
-|                                | skipped, consistent with the Java reference validator.             |
 |                                | Compatible with FHIR STU3 and later (STU3 section fields           |
 |                                | ``author``/``focus`` are gracefully ignored when absent).          |
-|                                | This validator is experimental and subject to change.              |
 +--------------------------------+--------------------------------------------------------------------+
 
 ------

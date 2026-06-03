@@ -25,6 +25,7 @@ Optional parameters:
 * _since: Get only resources changed since this moment
 * _until: Get only resources changed until this moment
 * _type: Limit the returned resource types to only the types in this list
+* _count: Limit the number of resources returned per page
 
 Please note that other defined operation parameters have not been implemented (yet).
 
@@ -34,6 +35,11 @@ So if you would want to fetch only Patient 1 and their Observations, changed sin
 
    GET <base-url>/Patient/1/$everything?_type=Patient,Observation&_since=2021-01-01
    Accept: application/fhir+json
+
+Paged responses
+^^^^^^^^^^^^^^^
+
+The response is a FHIR Bundle of type ``searchset``. When the result set is large, the response is paged. Each page contains a ``relation: next`` link in the Bundle that can be followed to retrieve the next page of results. Continue following the ``next`` link until no further ``next`` link is present, which indicates you have reached the last page.
    
 Configuration
 -------------

@@ -178,17 +178,14 @@ Vonk automatically finds the FHIR version for each project and imports it only f
 Get a FHIR endpoint for a Simplifier project
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Open the project of your choice on https://simplifier.net. There are two limitations:
+Open the project of your choice on https://simplifier.net. This has to be a project that is either public or private but accessible to you. It can be either an R3, R4, or R5 project.
 
-1. You must have access to the project (so either public or private but accessible to you)
-2. The project must be STU3
-
-Then on the overview page of the project click 'Endpoint' and copy the value you see there:
+On the overview page of the project click 'API' and copy the FHIR value you see there:
 
    .. image:: ../images/simplifier-vonk-endpoint.png
       :align: center
 
-By default the endpoint is ``https://stu3.simplifier.net/<projectname>``
+By default the endpoint is ``https://fhir.simplifier.net/<projectname>``
 
 .. _conformance_on_demand:
 

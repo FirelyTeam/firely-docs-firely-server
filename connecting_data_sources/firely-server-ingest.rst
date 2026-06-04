@@ -178,6 +178,11 @@ If you want to specify input parameters in the file, you can use the snippet bel
               "documentFilterBson": "{ }" // See https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/ for the syntax
           },
 
+          "sqlSource": {
+              "connectionString": "<connectionstring to the Firely Server SQL Server source database>",
+              "runningMode": "AdHoc" // AdHoc | Continuous
+          },
+
           // Target
           "provisionTargetDatabase": false,
           "databaseType": "SQL", // SQL | MongoDb | PubSub
@@ -307,7 +312,7 @@ Source
 ^^^^^^
 
 
-* ``--sourceType <Filesystem|MongoDb|None>``: 
+* ``--sourceType <Filesystem|MongoDb|SqlServer|None>``: 
 
   * **Config**: sourceType
   * **Required**: No
@@ -316,7 +321,8 @@ Source
   * **Options**:
 
     * **Filesystem**: read data from the filesystem
-    * **MongoDb**: read data from a Firely Server MongoDB database 
+    * **MongoDb**: read data from a Firely Server MongoDB database
+    * **SqlServer**: read data from a Firely Server SQL Server database
     * **None**: use this option if you only want to provision the target database
 
 Source (for Filesystem)
@@ -365,6 +371,36 @@ See more information on how to run migrations in :ref:`this article <zero_downti
   * **Required**: No
   * **Default**: None
   * **Description**: BSON filter to apply when reading documents. See `MongoDB aggregation match syntax <https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/>`_ for details.
+
+
+Source (for SQL Server)
+^^^^^^^^^^^^^^^^^^^^^^^
+
+This source is intended to be used in zero-downtime migration scenarios from a Firely Server SQL Server instance to either a SQL Server or MongoDB target database.
+
+.. attention::
+
+  * Only the current version of each resource is migrated; historical versions are discarded.
+  * The source and target databases must be different databases; you cannot import from and to the same database.
+  * When using a SQL Server source, ``--update-existing-resources`` must be set to ``onlyIfNewer``. Using ``true`` (mark existing as historical) is not supported with this source type.
+  * PubSub cannot be used as a target when using a SQL Server source, since PubSub requires ``updateExistingResources`` to be set to ``true``.
+
+* ``--srcSqlConnectionString <connectionstring>``:
+
+  * **Config**: sqlSource/connectionString
+  * **Required**: Yes
+  * **Description**: Connection string to the Firely Server SQL Server source database.
+
+* ``--srcSqlRunningMode <AdHoc|Continuous>``:
+
+  * **Config**: sqlSource/runningMode
+  * **Required**: No
+  * **Default**: AdHoc
+  * **Description**: The mode in which the application should run.
+  * **Options**:
+
+    * **AdHoc**: the application will run once and exit when no new items are found
+    * **Continuous**: the application will run continuously, polling the source database for new resources until terminated by the user
 
 
 Target
@@ -475,7 +511,7 @@ If you have very large resources or are sending a lot of resources per message, 
 
 .. attention::
   * Currently there is an issue with Kafka as a target, so this is not supported yet.
-  * You cannot specify MongoDb as a source when you set the target to PubSub.
+  * You cannot specify MongoDb or SQL Server as a source when you set the target to PubSub.
   * ``updateExistingResources`` should be set to true when using PubSub as a target.
   * When ingesting a large amount of resources, take into account the limits of your message bus.
 

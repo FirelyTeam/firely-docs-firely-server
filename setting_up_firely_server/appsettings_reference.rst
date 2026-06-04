@@ -307,11 +307,12 @@ FHIR Capabilities
         //        "exp": "2099-12-31" // the expiration date of the key, this is a custom property and has to be added. Time will be ignored
         //    }
         //]
-      }
+      },
+      "WarnOnVersionMismatches": false
     }
   },
 
-See :ref:`restful_crud`.
+See :ref:`restful_crud` and :ref:`restful_search`.
 
 .. _disable_interactions:
 

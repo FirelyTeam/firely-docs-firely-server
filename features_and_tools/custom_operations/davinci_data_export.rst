@@ -228,7 +228,12 @@ Security and authorization
 
 When SMART on FHIR is enabled, the same token and scope behavior used by BDE applies to DaVinci Data Export task initiation and retrieval endpoints. There is one additional requirement: as the DaVinci Data Export checks for consent (a Patient can opt-out) the DaVinci Data Export requires read access to Consent resources.
 
-The opt-out Consent must conform to the DaVinci ATR IG's Consent profile (http://hl7.org/fhir/us/davinci-atr/StructureDefinition/atr-consent) and must be associated with the patient through the standard Consent.patient reference. For Firely Server's DaVinci export filtering, the Consent also needs the ``DaVinci-pdex-provider-access-use-case`` extension on ``Consent.provision.action`` (see IG `PDex Provider Consent profile <https://build.fhir.org/ig/HL7/davinci-epdx/StructureDefinition-pdex-provider-consent.html>`_). The export will exclude patients that have an applicable opt-out Consent in place.
+The opt-out Consent must conform to the DaVinci ATR IG's Consent profile (http://hl7.org/fhir/us/davinci-atr/StructureDefinition/atr-consent) and must be associated with the patient through the standard Consent.patient reference. Firely Server treats a ``deny`` Consent as an opt-out in two cases:
+
+* The Consent carries the ``DaVinci-pdex-provider-access-use-case`` extension on ``Consent.provision.action`` set to ``true`` (see IG `PDex Provider Consent profile <https://build.fhir.org/ig/HL7/davinci-epdx/StructureDefinition-pdex-provider-consent.html>`_), **or**
+* The Consent has **no** ``DaVinci-pdex-provider-access-use-case`` extension at all — a ``deny`` without the extension is treated as a global opt-out.
+
+The export will exclude patients that have an applicable opt-out Consent in place.
 
 See the section "Filtering export results with SMART scopes" on :ref:`feature_bulkdataexport`.
 

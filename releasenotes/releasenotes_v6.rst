@@ -17,7 +17,7 @@ Improvements
 ^^^^^^^^^^^^
 
 #. Updated conformance cache configuration to ``ConformanceCache`` and added ``SlidingExpirationSeconds`` to control cache entry lifetime. This improves stability for scenarios that resolve or compile conformance resources over longer periods, such as CQL library dependency chains.
-
+#. Warning on version mismatches in chained queries are now optional, and by default disabled. See :ref:`restful_search`.
 
 .. _vonk_releasenotes_6_7_0:
 

@@ -78,7 +78,7 @@ Initializing Firely Server database
 
 The tool requires that the target database already exists and contains all required indexes and tables (for SQL Server). If you don't have a database with the schema yet, you first need to run the Firely Server at least once as described in the articles :ref:`configure_sql` and :ref:`configure_mongodb`.
 
-  This prerequisite does not apply to FSI v6+ targeting a MongoDB database. In this case you can instruct FSI to provision the database automatically by setting the ``--provisionTargetDatabase`` flag to ``true``.
+  This prerequisite does not apply to FSI v6+ targeting a MongoDB or SQL Server database. In this case you can instruct FSI to provision the database automatically by setting the ``--provisionTargetDatabase`` flag to ``true``.
   This prerequisite also does not apply to FSI using PubSub as a target. In this case the consuming Firely Server instance(s) will take care of the database setup.
 
 Using the correct FSI version
@@ -382,7 +382,7 @@ This source is intended to be used in zero-downtime migration scenarios from a F
 
   * Only the current version of each resource is migrated; historical versions are discarded.
   * The source and target databases must be different databases; you cannot import from and to the same database.
-  * When using a SQL Server source, ``--update-existing-resources`` must be set to ``onlyIfNewer``. Using ``true`` (mark existing as historical) is not supported with this source type.
+  * When using a SQL Server source, ``--update-existing-resources`` must be set to ``onlyIfNewer``.
   * PubSub cannot be used as a target when using a SQL Server source, since PubSub requires ``updateExistingResources`` to be set to ``true``.
 
 * ``--srcSqlConnectionString <connectionstring>``:
@@ -423,7 +423,7 @@ Target
   * **Config**: provisionTargetDatabase
   * **Required**: No
   * **Default**: false
-  * **Description**: Whether to provision the target database. *Note: currently only supported for MongoDB.*
+  * **Description**: Whether to provision the target database. Supported for SQL Server and MongoDB targets.
 
 Target (for SQL Server)
 ^^^^^^^^^^^^^^^^^^^^^^^

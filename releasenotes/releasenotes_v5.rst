@@ -702,7 +702,6 @@ Feature
 #. You can now add signatures to ``AuditEvents``. See :ref:`audit_event_integrity` for more information.
 #. Firely Server now supports searching on version-specific references. Consult the `FHIR specification <https://www.hl7.org/fhir/search.html#versions>`_ for more information.
 #. Serilog CorrelationId support has been enabled in Firely Server. Please consult the `official documentation <https://github.com/ekmsystems/serilog-enrichers-correlation-id>`_ on how to configure it.
-#. We have added a public :ref:`Postman collection <postman_tutorial>` to test Firely Server's RESTful endpoints.
 #. Wildcard support for ``include`` is now declared in Firely Server's ``CapabilityStatement``.
 #. Navigational links (next, prev, last) in a searchset bundle are now anonymized by default. Privacy-sensitive information in search parameter values are hidden behind a UUID. Please note that this behaviour is required by FHIR R5 and can only be disabled in FHIR R4 and STU3. See :ref:`navigational_links` for more information.
 

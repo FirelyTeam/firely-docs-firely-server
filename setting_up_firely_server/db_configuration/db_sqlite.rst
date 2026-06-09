@@ -120,6 +120,7 @@ Settings for using SQLite for Firely Server Administration
 Administration import history in SQLite
 ---------------------------------------
 
-When Firely Server :ref:`imports Conformance resources<conformance_import>`, it keeps record of what is has imported. Unlike the SQL Server and MongoDb engines,
-the SQLite storage engine does *not* use the .vonk-import-history.json file for that. Instead, in SQLite the import history is stored within the Administration database itself.
+When Firely Server :ref:`imports Conformance resources<conformance_import>`, it keeps record of what it has imported. The import history is stored within the Administration database itself, in the ``importhistory`` table. The ``.vonk-import-history.json`` file is not used.
+
+This behaviour is the same for SQL Server and MongoDB.
 

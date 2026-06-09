@@ -74,6 +74,8 @@ You can configure the notifications sent by ``Vonk.Plugin.PubSub.Pub``:
         }
     },
 
+When ``Vonk.Plugin.PubSub.Sub`` is enabled, ``Update`` and ``Upsert`` commands that carry a resource identical to the one already stored are silently skipped by default — no new version is written and no AuditEvent or Provenance is created. This behaviour is controlled by the ``UpdateNoOp.EnableForPubSub`` setting (default: ``true``). See :ref:`restful_noop` for the full configuration reference.
+
 .. _pubsub_claimcheck:
 
 Claim Check Pattern
@@ -583,7 +585,7 @@ ResourcesChangedEvent
 If enabled, Firely Server can publish a ``ResourcesChangedEvent`` when one or more resources get changed. Other clients can then subscribe to this event.
 
 .. attention::
-    This functionality is not yet supported for SQLite or MongoDB.
+    This functionality is not yet supported for SQLite.
 
 .. note::
   Publishing of this event is disabled by default and must be enabled in the :ref:`configuration<pubsub_configuration>`.
@@ -638,7 +640,7 @@ ResourcesChangedLightEvent
 If enabled, Firely Server can also publish ``ResourcesChangedLightEvent`` messages. This message type will contain information on the resource change but will not include the entire resource resource body. As it is with the ``ResourcesChangedEvent``, clients can subscribe to the corresponding message type ``ResourcesChangedLightEvent``.
 
 .. attention::
-    This functionality is not yet supported for SQLite or MongoDB.
+    This functionality is not yet supported for SQLite.
 
 .. note::
   Publishing of this event is disabled by default and must be enabled in the :ref:`configuration<pubsub_configuration>`.

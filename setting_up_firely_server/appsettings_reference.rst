@@ -211,11 +211,17 @@ Cache of Conformance Resources
 ------------------------------
 ::
 
-   "Cache": {
-      "MaxConformanceResources": 5000
+  "ConformanceCache": {
+    "MaxConformanceResources": 5000,
+    "SlidingExpirationSeconds": 3600
    }
 
-Firely Server caches StructureDefinitions and other conformance resources that are needed for (de)serialization and validation in memory. If more than ``MaxConformanceResources`` get cached, the ones that have not been used for the longest time are discarded. If you frequently encounter a delay when requesting less used resource types, a larger value may help. If you are very restricted on memory, you can lower the value.
+Firely Server caches StructureDefinitions and other conformance resources that are needed for (de)serialization and validation in memory.
+
+* ``MaxConformanceResources`` sets the maximum number of cached conformance resources. If more entries are added, the least recently used entries are discarded.
+* ``SlidingExpirationSeconds`` sets the sliding expiration time for cached conformance resources. Every read resets the timer. Increase this value when dependent resources (for example CQL libraries and their dependencies) are compiled or resolved over a longer period.
+
+If you frequently encounter a delay when requesting less used resource types, a larger value for these settings may help. If you are very restricted on memory, lower ``MaxConformanceResources``.
 
 
 .. _bundle_options:
@@ -225,7 +231,7 @@ Search size
 ::
 
     "BundleOptions": {
-        "DefaultTotal": "none", // Allowed values: none, estimate, accurate
+        "DefaultTotal": "none", // Allowed values: none, accurate
         "DefaultCount": 10,
         "MaxCount": 50,
         "DefaultSort": "-_lastUpdated"
@@ -301,11 +307,12 @@ FHIR Capabilities
         //        "exp": "2099-12-31" // the expiration date of the key, this is a custom property and has to be added. Time will be ignored
         //    }
         //]
-      }
+      },
+      "WarnOnVersionMismatches": false
     }
   },
 
-See :ref:`restful_crud`.
+See :ref:`restful_crud` and :ref:`restful_search`.
 
 .. _disable_interactions:
 
@@ -707,7 +714,6 @@ SearchParameters and other Conformance Resources
 
     "AdministrationImportOptions": {
         "ImportDirectory": "./vonk-import",
-        "ImportedDirectory": "./vonk-imported", //Do not place ImportedDirectory *under* ImportDirectory, since an import will recursively read all subdirectories.
         "SimplifierProjects": [
           {
             "Uri": "https://stu3.simplifier.net/<your-project>",
@@ -812,47 +818,7 @@ See :ref:`feature_patienteverything`.
 
 Quality Measure Operations
 --------------------------
-
-::
-
-  "LibraryEvaluateOperation": {
-    "DataEndpoint": [
-      //{
-      //    "Endpoint": "<base url>",
-      //    "ClientId": "",
-      //    "ClientSecret": "",
-      //    "TokenEndpoint": "",
-      //    "Audience": "",
-      //    "Scopes": "patient/*.rs"
-      //}
-    ]
-  }
-
-The ``LibraryEvaluateOperation`` section configures external data sources for the
-FHIR ``$evaluate`` operation on ``Library`` resources.
-
-* ``DataEndpoint``: A list of external FHIR endpoints that may be used when
-  ``useServerData`` is set to ``false`` in a request. Each entry defines the
-  connection details for one endpoint.
-
-  The following fields are supported:
-
-  - ``Endpoint``: Base URL of the external FHIR server  
-  - ``ClientId`` / ``ClientSecret``: Credentials for OAuth2 authentication via a shared secret
-  - ``TokenEndpoint``: OAuth2 token URL for a client_credentials auth flow
-  - ``Audience``: Optional audience claim for the access token  
-  - ``Scopes``: Space-separated list of scopes requested by Firely Server for the dataEndpoint, e.g. ``system/*.rs``  
-
-Any ``dataEndpoint`` parameter submitted in a ``$evaluate`` request must match
-one of the pre-registered entries in this configuration.
-
-.. important::
-
-   Authorization using **SMART on FHIR** is **not optional**.  
-   It is expected that every endpoint providing clinical and claims data is
-   protected using OAuth2 with SMART scopes.  
-   This ensures that sensitive health information can only be accessed by
-   authorized clients under proper security controls.
+See :ref:`Library/$evaluate - Configuration <feature_library_evaluate_configuration>` for details on configuring settings relevant to the ``Library/$evaluate`` operation.
 
 .. _uri_conversion:
 

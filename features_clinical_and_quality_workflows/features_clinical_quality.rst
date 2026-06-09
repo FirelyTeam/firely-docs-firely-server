@@ -12,4 +12,5 @@ Together, these capabilities help drive data-informed care and improve clinical 
    :titlesonly:
 
    dqm
+   qualitymeasures
    cds-hooks

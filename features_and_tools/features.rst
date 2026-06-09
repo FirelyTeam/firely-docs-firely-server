@@ -18,7 +18,7 @@ Each feature page indicates the required license. If you have any questions, fee
 
    available_plugins
    features-availability
-   Custom Operations <custom_operations/customoperations>
+   Supported Custom Operations <custom_operations/customoperations>
    
 
 

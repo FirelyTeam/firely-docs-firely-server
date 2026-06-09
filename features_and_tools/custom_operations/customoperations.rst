@@ -55,6 +55,7 @@ Extended retrieval capabilities allow access to patient-level datasets and speci
 - :ref:`Bulk Data Access - $export <feature_bulkdataexport>`
 - :ref:`feature_patienteverything`
 - :ref:`lastn`
+- :ref:`feature_davinci_data_export`
 
 Identity, Matching & Member Access
 ----------------------------------
@@ -70,13 +71,14 @@ Clinical Reasoning & Quality Measurement
 Execution of clinical logic and quality measures enables evaluation of FHIR data using CQL expressions and measure calculations, supporting decision support and quality reporting workflows.
 
 - :ref:`feature_qualitymeasures`
+- :ref:`questionnaire-package`
 
 Testing & Reporting
 -------------------
 
 Support for testing and reporting enables analysis of system usage and behavior based on collected runtime metrics. Queries can be executed asynchronously to produce aggregated insights into API interactions, supporting compliance and reporting requirements.
 
-- :ref:`Realk World Testing - $realworldtesting <feature_realworldtesting_operation>`
+- :ref:`Real World Testing - $realworldtesting <feature_realworldtesting_operation>`
 
 .. _operations framework: http://www.hl7.org/implement/standards/fhir/operations.html
 .. _FHIR RESTful API: http://www.hl7.org/implement/standards/fhir/http.html

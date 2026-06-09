@@ -16,6 +16,7 @@ Release 6.8.0, June 8th, 2026
 Improvements
 ^^^^^^^^^^^^
 
+#. Updated conformance cache configuration to ``ConformanceCache`` and added ``SlidingExpirationSeconds`` to control cache entry lifetime. This improves stability for scenarios that resolve or compile conformance resources over longer periods, such as CQL library dependency chains.
 #. Warning on version mismatches in chained queries are now optional, and by default disabled. See :ref:`restful_search`.
 #. FSI schema version mismatch error messages are clearer: Reported maximum supported schema versions are corrected to match what the current FS build actually supports.
 #. PubSub configuration logging: ``BatchSize``, ``ClaimCheck``, ``ClaimCheck:AzureBlobContainerName`` and ``ClaimCheck:StorageType`` are now emitted by ConfigurationLogger instead of being masked as sensitive. 

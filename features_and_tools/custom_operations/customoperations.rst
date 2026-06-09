@@ -78,7 +78,7 @@ Testing & Reporting
 
 Support for testing and reporting enables analysis of system usage and behavior based on collected runtime metrics. Queries can be executed asynchronously to produce aggregated insights into API interactions, supporting compliance and reporting requirements.
 
-- :ref:`Realk World Testing - $realworldtesting <feature_realworldtesting_operation>`
+- :ref:`Real World Testing - $realworldtesting <feature_realworldtesting_operation>`
 
 .. _operations framework: http://www.hl7.org/implement/standards/fhir/operations.html
 .. _FHIR RESTful API: http://www.hl7.org/implement/standards/fhir/http.html

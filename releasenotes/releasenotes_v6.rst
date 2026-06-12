@@ -17,9 +17,11 @@ Improvements
 ^^^^^^^^^^^^    
 
 #. Upgraded the enterprise validator that includes two major improvements:
-    - QuestionnaireResponse text values can now be validated against the Questionnaire answerOption values. 
     - Resources that are referenced in a Composition resource are now resolved when validating the Compostion resource. See :ref:`feature_advancedvalidation` for more information.
-
+    - QuestionnaireResponse ``item.answers`` will now be validated against the Questionnaire ``answerOptions`` within the following specification-defined constraints: 
+        - type of the ``value[x]`` should match the ``item.type``
+        - ``Coding.display``, ``ResourceReference.display`` and ``Quantity.unit`` are not taken into account in answer validation, unless they are the only element provided in the answer
+    
 
 .. _vonk_releasenotes_6_8_0:
 

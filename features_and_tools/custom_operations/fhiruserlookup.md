@@ -69,6 +69,7 @@ No license token is required for this plugin.
 
 Confirm that `$fhirUser-lookup` appears in the `CapabilityStatement` returned by `GET [base]/metadata`. Firely Auth uses this check to decide whether to invoke the operation or fall back to a direct search.
 
+(custom-implementations)=
 ## Custom implementations
 
 The built-in plugin covers the standard use case. For scenarios that require additional processing during the user look-up — such as calling an external Master Patient Index (MPI) before searching Firely Server — you can implement a custom plugin that handles the `$fhirUser-lookup` operation.

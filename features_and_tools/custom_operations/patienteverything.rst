@@ -36,6 +36,8 @@ So if you would want to fetch only Patient 1 and their Observations, changed sin
    GET <base-url>/Patient/1/$everything?_type=Patient,Observation&_since=2021-01-01
    Accept: application/fhir+json
 
+.. _patienteverything_pagination:
+
 Paged responses
 ^^^^^^^^^^^^^^^
 

@@ -8,6 +8,19 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_6_8_1:
+
+Release 6.8.1, June 12th, 2026
+------------------------------
+
+Improvements
+^^^^^^^^^^^^    
+
+#. Upgraded the enterprise validator that includes two major improvements:
+    - QuestionnaireResponse text values can now be validated against the Questionnaire answerOption values. 
+    - Resources that are referenced in a Composition resource are now resolved when validating the Compostion resource. See :ref:`feature_advancedvalidation` for more information.
+
+
 .. _vonk_releasenotes_6_8_0:
 
 Release 6.8.0, June 8th, 2026

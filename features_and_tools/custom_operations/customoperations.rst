@@ -80,23 +80,5 @@ Support for testing and reporting enables analysis of system usage and behavior 
 
 - :ref:`Real World Testing - $realworldtesting <feature_realworldtesting_operation>`
 
-.. toctree::
-   :hidden:
-
-   convertoperation
-   davinci_data_export
-   docref
-   documentoperation
-   erase
-   fhiruserlookup
-   healthcheck
-   lastn
-   member-match
-   meta
-   patienteverything
-   questionnaire-package
-   snapshot
-   versions
-
 .. _operations framework: http://www.hl7.org/implement/standards/fhir/operations.html
 .. _FHIR RESTful API: http://www.hl7.org/implement/standards/fhir/http.html

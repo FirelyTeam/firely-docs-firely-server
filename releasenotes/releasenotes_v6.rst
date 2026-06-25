@@ -10,14 +10,35 @@ Current Firely Server release notes (v6.x)
 
 .. _vonk_releasenotes_6_8_0:
 
-Release 6.8.0, May X, 2026
---------------------------
+Release 6.8.0, June 8th, 2026
+-----------------------------
 
 Improvements
 ^^^^^^^^^^^^
 
-#. Updated conformance cache configuration to ``ConformanceCache`` and added ``SlidingExpirationSeconds`` to control cache entry lifetime. This improves stability for scenarios that resolve or compile conformance resources over longer periods, such as CQL library dependency chains.
+#. Warning on version mismatches in chained queries are now optional, and by default disabled. See :ref:`restful_search`.
+#. FSI schema version mismatch error messages are clearer: Reported maximum supported schema versions are corrected to match what the current FS build actually supports.
+#. PubSub configuration logging: ``BatchSize``, ``ClaimCheck``, ``ClaimCheck:AzureBlobContainerName`` and ``ClaimCheck:StorageType`` are now emitted by ConfigurationLogger instead of being masked as sensitive. 
+#. FSI MessageBroker / RabbitMQ configuration logging: ``Username``, ``VirtualHost`` and the non-secret RabbitMQ.* keys (``Port``, ``UseSsl``, ``ClientCertificatePath``, ``ServerName``) are no longer masked in FSI configuration logs. ``Password`` and ``ClientCertificatePassphrase`` remain masked. 
 
+Features
+^^^^^^^^
+
+#. Implemented the DaVinci Data Export (ATR) operation for R4. The operation is registered in the CapabilityStatement and supports both GET and POST, and is gated by a license token. See :ref:`feature_davinci_data_export` for more information.
+#. Implemented configurable authentication mode for ``Library/$evaluate``, plus a clear OperationOutcome error and log message when ``useServerData=true`` is requested while ``RemoteDataEndpointsOnly`` is enabled. See :ref:`feature_external_data_endpoints` for more information.
+#. Implemented ``MediaType`` configuration for ``Library/$evaluate``. See :ref:`feature_external_data_endpoints` for more information.
+#. ``Measure/$evaluate-measure``: ``population`` is now accepted as ``reportType`` alongside ``summary``, restoring compatibility with older FHIR versions that used population. The response is a valid ``MeasureReport`` with ``type=summary`` and population counts.
+#. FSI: Implemented SQL Server as an import source. Adds ``--srcType Sql`` with ``--srcSqlConnectionString`` and ``--srcSqlRunningMode`` CLI flags. See :ref:`tool_fsi` for more information.
+#. Firely server now supports routing read traffic to a separate SQL Server read replica, leaving the primary database free to handle writes. See :ref:`sql_read_replica` for more information.
+
+Fixed
+^^^^^
+
+#. Fixed issue preventing the Simplifier Conformance Import from working. See :ref:`conformance_fromsimplifier` for more information.
+#. Validation errors for codes missing in a CodeSystem and for invalid display values now produce informative messages instead of generic ones.
+#. ``$export`` POST requests with an empty request body now return ``202 Accepted`` with no filters applied, instead of ``400 Bad Request``. The empty body is valid per spec.
+#. Import history: duplicate audit rows in the ``importhistory`` table no longer crash startup.
+#. Fixed an issue where duplicate results would be returned when chained queries were executed against a SQL/SQLite backend.
 
 .. _vonk_releasenotes_6_7_0:
 

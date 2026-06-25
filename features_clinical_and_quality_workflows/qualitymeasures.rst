@@ -98,6 +98,7 @@ Alternatively, you can configure Firely Server to use only external data
 sources by enabling the ``RemoteDataEndpointsOnly`` setting. In that case,
 no local data retrieval (and thus no ``$everything`` support) is required.
 
+.. _feature_external_data_endpoints:
 
 External data endpoints
 ^^^^^^^^^^^^^^^^^^^^^^^
@@ -116,6 +117,7 @@ a configured external endpoint.
     "DataEndpoint": [
       //{
       //    "Endpoint": "<base url>",
+      //    "MediaType": "application/fhir+json",
       //    "RemoteDataEndpointAuthentication": "Jwt",
       //    "ClientId": "",
       //    "ClientSecret": "",
@@ -138,6 +140,7 @@ configured endpoints.
 Each ``DataEndpoint`` entry supports the following fields:
 
 - ``Endpoint``: Base URL of the external FHIR server  
+- ``MediaType``: The FHIR media type to use for requests to this endpoint ( ``application/fhir+json`` and ``application/fhir+xml`` are supported)  
 - ``ClientId`` / ``ClientSecret``: Credentials for authentication (if required)  
 - ``TokenEndpoint``: OAuth2 token endpoint (used for JWT authentication)  
 - ``Audience``: Optional audience claim for the access token  

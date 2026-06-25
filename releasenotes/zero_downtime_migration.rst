@@ -39,7 +39,7 @@ Before starting the migration, ensure you have:
 
 * The latest version of :ref:`Firely Server Ingest <tool_fsi_installation>` (FSI) tool installed
 * Sufficient disk space for both databases during migration
-* License file with the token ``http://fire.ly/vonk/plugins/bulk-data-import/migration``
+* License file with the token ``http://fire.ly/vonk/plugins/migration``
 * Access credentials for both source and target MongoDB instances
 * `MongoDB Shell (mongosh) <https://www.mongodb.com/products/tools/shell>`_ installed for comparing data and potentially for sharding configuration
 

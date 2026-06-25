@@ -167,6 +167,10 @@ are available. But Firely Server also allows :ref:`feature_customsp`.
 
 Chaining and reverse chaining is fully supported.
 
+Firely Server maintains the search index only for the current version of a resource. If your data contains versioned references (e.g. `Observation.subject` references `Patient/123/_history/2`), the search may match the current version of the referenced resource (e.g. `Patient/123/_history/5`), even if the reference is versioned.
+You can have a warning about this reported in the OperationOutcome of the search response by setting ``WarnOnVersionMismatches`` to true in the ``FhirCapabilities:SearchOptions`` configuration.
+Be aware though that this has a serious performance impact. Hence this warning is disabled by default.
+
 Quantity search on UCUM quantities automatically converts units to a canonical form. This means you can have kg in an Observation and search by lbs, or vice versa.
 
 `Compartment Search <http://www.hl7.org/implement/standards/fhir/search.html#2.21.1.2>`_ is supported.

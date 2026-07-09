@@ -9,10 +9,17 @@ with use in commercial, closed-source software.
 
 Rather than maintain a hand-written list here (which inevitably drifts out of sync with the actual dependency
 tree as packages are added, removed, or updated), Firely automatically generates a complete Software Bill of
-Materials (SBOM) - covering every direct and transitive dependency, for both the ZIP and Docker image
-distributions - as part of the build process for every release. Every dependency's license is checked
-automatically against that same compatibility policy. If you need the detailed SBOM for a specific release,
-please contact Firely support.
+Materials (SBOM) - covering every direct and transitive dependency - as part of the build process for every
+release. Every dependency's license is checked automatically against that same compatibility policy.
+
+You can retrieve the SBOM for a specific release yourself:
+
+* **Docker image**: the SBOM (and a build provenance attestation) is attached directly to the image. Retrieve
+  it with ``docker buildx imagetools inspect <image>:<tag> --format "{{ json .SBOM }}"``, or with
+  ``docker scout sbom <image>:<tag>`` if you have `Docker Scout <https://docs.docker.com/scout/>`_ available.
+* **ZIP**: published as a sibling file next to the release download on the
+  `download page <https://downloads.fire.ly/firely-server>`_, with a matching filename - for example,
+  ``firely-server-v6.9.0.zip`` and ``firely-server-v6.9.0.sbom.json``.
 
 .. _firely_oss_license:
 

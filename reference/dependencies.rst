@@ -17,15 +17,14 @@ You can retrieve the SBOM for a specific release yourself:
 * **Docker image**: the SBOM (and a build provenance attestation) is attached directly to the image. Retrieve
   it with ``docker buildx imagetools inspect <image>:<tag> --format "{{ json .SBOM }}"``, or with
   ``docker scout sbom <image>:<tag>`` if you have `Docker Scout <https://docs.docker.com/scout/>`_ available.
-* **ZIP**: published as a sibling file next to the release download in the same public Azure Blob Storage
-  location, with a matching filename - for example, the latest release's ZIP and SBOM are at::
+* **ZIP**: get the release itself from the `download page <https://downloads.fire.ly/firely-server>`_ as usual.
+  Its SBOM is published separately, at a URL matching the version you downloaded - for example, for the latest
+  release::
 
-      https://firelydownloads.blob.core.windows.net/firelyserver/firely-server/firely-server-latest.zip
       https://firelydownloads.blob.core.windows.net/firelyserver/firely-server/firely-server-latest.sbom.json
 
-  and a specific version's (e.g. 6.9.0) at::
+  or for a specific version (e.g. 6.9.0)::
 
-      https://firelydownloads.blob.core.windows.net/firelyserver/firely-server/versions/firely-server-v6.9.0.zip
       https://firelydownloads.blob.core.windows.net/firelyserver/firely-server/versions/firely-server-v6.9.0.sbom.json
 
 .. _firely_oss_license:

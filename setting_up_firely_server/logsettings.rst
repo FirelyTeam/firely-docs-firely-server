@@ -8,7 +8,7 @@ Firely Server comes with default settings in ``logsettings.default.json``. You c
 
 Alternatively you can control :ref:`configure_envvar_log`.
 
-Firely Server by default does nog log any Patient Health Information data, regardless of the level of the log. The only PHI part that can be included in the log is the User Name, when running with Smart authorization (so the user is identified) and including this part in the outputTemplate (see below). 
+Firely Server by default does nog log any Patient Health Information data, regardless of the level of the log. The only PHI part that can be included in the log is the User Name, when running with Smart authorization (so the user is identified) and including this part in the outputTemplate (see below).
 
 .. _configure_log_level:
 
@@ -46,14 +46,14 @@ Some additional namespaces you might want to log are:
 - ``Vonk.Core.Licensing`` to show license information in your logs
 - ``Vonk.Repository.Sql.Raw`` to log SQL repository events for Firely Server v4.3.0 and above
 - ``Vonk.Repository.Sql`` to log SQL repository events for Firely Server v4.2.0 and below
-- ``Vonk.Repository.Document.Db`` to log MongoDB repository events 
+- ``Vonk.Repository.Document.Db`` to log MongoDB repository events
 - ``Vonk.Core.Repository.EntryIndexerContext``, set it to ``"Error"`` if you have excessive warnings about indexing (mostly when importing `Synthea <https://synthea.mitre.org/downloads>` data)
 - ``Microsoft`` to log events from the Microsoft libraries
 - ``Microsoft.AspNetCore.Diagnostics`` to report request handling times
 - ``Microsoft.AspNetCore.Hosting.Diagnostics`` to log individual requests
 - ``System`` to log events from the System libraries
 
-Please note that the namespaces are evaluated in order from top to bottom, so more generic 'catch all' namespaces should be at the bottom of the list. 
+Please note that the namespaces are evaluated in order from top to bottom, so more generic 'catch all' namespaces should be at the bottom of the list.
 So this will log events on ``Vonk.Repository.Sql.Raw`` on ``Information`` level::
 
 	"MinimumLevel": {
@@ -93,7 +93,7 @@ If you run Firely Server in a Docker container, set the environment variable ``D
 
 .. _logging_individual_requests:
 
-Logging individual requests 
+Logging individual requests
 ---------------------------
 
 If you want to log individual requests, you can do so by adjusting the "Override" section to include ``Microsoft.AspNetCore.Hosting.Diagnostics``::
@@ -115,7 +115,7 @@ The first log line includes on the request that was made, the second line contai
 As you can see, the logs include information on the request type, any headers that are included, and the time it took to make this request.
 
 .. _configure_log_sinks:
- 
+
 Changing the sink
 -----------------
 Another setting you can adjust is ``WriteTo``. This tells Serilog which sink(s) to log to.
@@ -152,7 +152,7 @@ The Console is notoriously slow at processing log statements, so it is recommend
 Settings for the Console sink:
 
 	* ``outputTemplate``: What information will be in each log line. Besides regular text you can use placeholders for information from the log statement:
-	
+
 		* ``{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}``: When this was logged, with formatting
 		* ``{UserId}``: Technical id of the logged in user - if applicable
 		* ``{Username}``: Name of the logged in user - if applicable
@@ -162,7 +162,7 @@ Settings for the Console sink:
 		* ``{RequestId}``: Unique id of the web request, useful to correlate log statements
 		* ``{Message:l}``: Actual message being logged, `with format specifier <https://github.com/serilog/serilog/wiki/Formatting-Output#formatting-plain-text>`_ that makes the logs more readable
 		    * The :l format specifier switches off quoting of strings
-		    * The :j format specifier uses JSON-style rendering for any embedded structured data.  
+		    * The :j format specifier uses JSON-style rendering for any embedded structured data.
 		* ``{Exception}``: If an error is logged, Firely Server may include the original exception. That is then formatted here.
 		* ``{SourceContext}``: The class from which the log statement originated (this is usually not needed by end users).
 		* ``{NewLine}``: Well, ehh, continue on the next line,
@@ -180,7 +180,7 @@ The ``File`` sink will write to a file, possibly rolling it by interval or size.
 
 		"WriteTo": [
 			{
-			{ 
+			{
 				//Settings for Console
 			}
 			},
@@ -202,7 +202,7 @@ The ``File`` sink will write to a file, possibly rolling it by interval or size.
 				]
 			}
 			},
-			{ 
+			{
 				//Settings for Azure ApplicationInsights
 			}
 
@@ -211,14 +211,14 @@ The ``File`` sink will write to a file, possibly rolling it by interval or size.
 
 		{
 			"Name": "RollingFile",
-			"Args": { 
-				"path": "c:/logfiles/vonk.log" 
+			"Args": {
+				"path": "c:/logfiles/vonk.log"
 			}
 		},
 
 	Other values that you can set for the File log are:
 
-	* ``rollingInterval``: When this interval expires, the log system will start a new file. The start datetime of each interval is added to the filename. Valid values are ``Infinite``, ``Year``, ``Month``, ``Day``, ``Hour``, ``Minute``. 
+	* ``rollingInterval``: When this interval expires, the log system will start a new file. The start datetime of each interval is added to the filename. Valid values are ``Infinite``, ``Year``, ``Month``, ``Day``, ``Hour``, ``Minute``.
 	* ``fileSizeLimitBytes``: Limit the size of the log file, which is 1GB by default. When it is full, the log system will start a new file.
 	* ``retainedFileCountLimit``: If more than this number of log files is written, the oldest will be deleted. Default value is 31. Explicitly setting it to an empty value means files are never deleted.
 	* ``outputTemplate``: as described for `Console`_.
@@ -229,7 +229,7 @@ The ``File`` sink will write to a file, possibly rolling it by interval or size.
 Application Insights
 ^^^^^^^^^^^^^^^^^^^^
 
-Firely Server can also log to Azure Application Insights ("Application Insights Telemetry"). 
+Firely Server can also log to Azure Application Insights ("Application Insights Telemetry").
 
 .. note::
    Azure is deprecating the use of Instrumentation Keys. As a best practice, you should use the Application Insights Connection String instead of the Instrumentation Key when configuring Serilog.
@@ -246,7 +246,7 @@ What you need to do:
 			{
 				"Name": "ApplicationInsights",
 				"Args": {
-					"connectionString": "[your connection string here]", 
+					"connectionString": "[your connection string here]",
 					"telemetryConverter": "Serilog.Sinks.ApplicationInsights.TelemetryConverters.TraceTelemetryConverter, Serilog.Sinks.ApplicationInsights",
 					"restrictedToMinimumLevel": "Verbose" //Or a higher level
 				}
@@ -263,13 +263,13 @@ What you need to do:
    **Unified SDK Activation**: Regardless of which configuration method you choose, Firely Server automatically activates the full Application Insights SDK.
 
    **Both methods enable**:
-   
+
    - Full request telemetry and performance metrics
    - Dependency tracking for database operations (SQL Server, MongoDB)
    - Exception tracking and reporting
    - Custom metrics and events
    - Integration with other configured sinks like Seq
-   
+
    **Key difference**: When configuring via Serilog (method a), you gain additional control over which log levels are sent to Application Insights through the ``restrictedToMinimumLevel`` setting, while still collecting all telemetry data.
 
 #. This also enables Dependency Tracking for access to your database. This works for both SQL Server and MongoDB. And for the log sent to `Seq`_ if you enabled that.
@@ -317,7 +317,7 @@ Elasticsearch server::
 MongoDb
 ^^^^^^^
 
-Firely Server can also log to MongoDb. 
+Firely Server can also log to MongoDb.
 
 * Add the correct sink to the logsettings.json::
 
@@ -350,7 +350,7 @@ Firely Server can also log to AWS Cloudwatch. What you need to do:
 				"Name": "AmazonCloudWatch",
 				"Args": {
 					"logGroup": "<the name of your log group>",
-					"logStreamPrefix": "<the description to prefix your log stream>", 
+					"logStreamPrefix": "<the description to prefix your log stream>",
 					"restrictedToMinimumLevel": "Verbose" //Or a higher level
 				}
 			},
@@ -410,7 +410,7 @@ Remember to adjust your sink settings so that ``"restrictedToMinimumLevel": "Ver
 
 .. _configure_log_database_query_params:
 
-SQL/SQLite query parameter logging
+SQL query parameter logging
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It might be useful to log SQL queries that Firely Server executes against your database. You can get even more insights into what is happening when SQL query parameter values also get logged.
@@ -423,6 +423,27 @@ You can enable SQL query parameter values logging by setting the ``LogSqlQueryPa
 			"SqlDbOptions": {
 				"ConnectionString": "<connection string>",
 				"LogSqlQueryParameterValues": true // Add this line to your config file to log SQL query param values for your SQL Server Administration database
+			}
+		},
+		// OR:
+		{
+			"SqlDbOptions": {
+				"ConnectionString": "<connection string>",
+				"LogSqlQueryParameterValues": true // Add this line to your config file to log SQL query param values for your SQL Server Data database
+			}
+		}
+	}
+
+SQLite query parameter logging
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Firely Server also supports logging query parameter values for SQLite databases. This setting is disabled by default due to data privacy concerns. To enable it, set ``LogSqlQueryParameterValues`` to ``true`` for the corresponding SQLite database configuration in your ``appsettings.instance.json``. Example::
+
+	{
+		"Administration": {
+			"SQLiteDbOptions": {
+				"ConnectionString": "<connection string>",
+				"LogSqlQueryParameterValues": true // Add this line to your config file to log SQLite query param values for your SQLite Administration database
 			}
 		},
 		// OR:
@@ -460,7 +481,7 @@ Be sure to add ``[CorrId: {CorrelationId}]`` to your "outputTemplate" settings t
 	2023-08-09 11:22:17.884 +02:00 [UserId: ] [Username: ] [Information] [ReqId: 0HMSON8FK36UF:00000002] [CorrId: My custom correlation Id] Request finished HTTP/1.1 GET http://localhost:4080/Patient - - - 200 6642 application/fhir+json;+fhirVersion=4.0;+charset=utf-8 1986.1211ms
 
 Note that if this header is not included in the request, Firely Server will automatically assign a GUID to ``CorrelationId``.
- 
+
 .. _enrichResourceInformation:
 
 Enrich logs with resource type and id

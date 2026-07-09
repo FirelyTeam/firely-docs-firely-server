@@ -14,9 +14,6 @@ release. Every dependency's license is checked automatically against that same c
 
 You can retrieve the SBOM for a specific release yourself:
 
-* **Docker image**: the SBOM (and a build provenance attestation) is attached directly to the image. Retrieve
-  it with ``docker buildx imagetools inspect <image>:<tag> --format "{{ json .SBOM }}"``, or with
-  ``docker scout sbom <image>:<tag>`` if you have `Docker Scout <https://docs.docker.com/scout/>`_ available.
 * **ZIP**: get the release itself from the `download page <https://downloads.fire.ly/firely-server>`_ as usual.
   Its SBOM is published separately, at a URL matching the version you downloaded - for example, for the latest
   release::
@@ -26,6 +23,16 @@ You can retrieve the SBOM for a specific release yourself:
   or for a specific version (e.g. 6.9.0)::
 
       https://firelydownloads.blob.core.windows.net/firelyserver/firely-server/versions/firely-server-v6.9.0.sbom.json
+
+  This is available for all 5.x and 6.x releases, including versions published before this SBOM process existed.
+
+* **Docker image**: for releases published after this SBOM process was introduced (any release after 6.8.1), the
+  SBOM (and a build provenance attestation) is attached directly to the image. Retrieve it with
+  ``docker buildx imagetools inspect <image>:<tag> --format "{{ json .SBOM }}"``, or with
+  ``docker scout sbom <image>:<tag>`` if you have `Docker Scout <https://docs.docker.com/scout/>`_ available.
+  Unlike the ZIP, this isn't available for older image tags - attaching it to an already-published tag would
+  mean rebuilding and re-pushing it, which changes its digest, so we don't retrofit it onto images that have
+  already shipped.
 
 .. _firely_oss_license:
 

@@ -410,8 +410,8 @@ Remember to adjust your sink settings so that ``"restrictedToMinimumLevel": "Ver
 
 .. _configure_log_database_query_params:
 
-SQL query parameter logging
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SQL/SQLite query parameter logging
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It might be useful to log SQL queries that Firely Server executes against your database. You can get even more insights into what is happening when SQL query parameter values also get logged.
 However, this cannot be enabled by default due to data privacy concerns.
@@ -429,7 +429,7 @@ You can enable SQL query parameter values logging by setting the ``LogSqlQueryPa
 		{
 			"SQLiteDbOptions": {
 				"ConnectionString": "<connection string>",
-				"LogSqlQueryParameterValues": true // Add this line to your config file to log SQL query param values for your Sqlite Data database
+				"LogSqlQueryParameterValues": true // Add this line to your config file to log SQLite query param values for your SQLite Data database
 			}
 		}
 	}

@@ -427,7 +427,7 @@ You can enable SQL query parameter values logging by setting the ``LogSqlQueryPa
 		},
 		// OR:
 		{
-			"SQLDbOptions": {
+			"SqlDbOptions": {
 				"ConnectionString": "<connection string>",
 				"LogSqlQueryParameterValues": true // Add this line to your config file to log SQL query param values for your SQL Server Data database
 			}

@@ -68,6 +68,7 @@ Firely Server 6.9.0 migrates its internal resource model from an ``ISourceNode``
 #. A number of ``ISourceNode``/``IResource`` mutation extension methods are now deprecated and will be removed in a future major release: ``Patch``, ``ForcePatch``, ``ForcePatchAt``, ``ForceAdd``, ``Add``, ``AddIf``, ``AddIfNotExists``, ``AddOrReplace``, ``Remove`` and ``Revalue`` on ``ISourceNode``; ``Patch`` and ``ForcePatch`` on ``IResource``. Cast the resource to ``PocoNode`` (or check with ``is PocoNode``) and mutate its ``.Poco`` property (``Hl7.Fhir.Model.Resource``) directly using the FHIR SDK API instead.
 #. The fluent bundle-builder classes ``GenericBundle``, ``SearchBundle`` and ``HistoryBundle`` (and their builder methods, e.g. ``AddLink``, ``Total``, ``AddSearchEntries``, ``ToSearchBundle``, ``ToHistoryBundle``) are now deprecated and will be removed in a future major release. Build Bundle responses directly using the FHIR SDK ``Bundle`` POCO (``Hl7.Fhir.Model.Bundle``) instead, populating ``bundle.Entry`` yourself; use the new ``ResultPage.SetLinks`` helper for paging links.
 #. ``IResourceCurrencyProvider``, ``IResourceChangeProvider`` and ``IResourceMismatchedReferenceProvider`` are now deprecated. Use the annotation-based extension methods instead: ``SearchResourceExtensions.GetCurrencyIndicator``/``WithCurrency``, ``GetChangeIndicator``/``WithChange``, and ``GetMismatchedReferences``/``WithMismatchedReferences`` respectively.
+
 .. _vonk_releasenotes_6_8_1:
 
 Release 6.8.1, June 12th, 2026

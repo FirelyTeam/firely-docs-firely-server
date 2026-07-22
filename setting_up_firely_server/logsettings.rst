@@ -278,7 +278,7 @@ What you need to do:
 Seq
 ^^^
 
-`Seq <https://datalust.co/seq>`_ is a web interface to easily inspect structured logs.
+`Seq <https://datalust.co/seq>`__ is a web interface to easily inspect structured logs.
 
 For the ``Seq`` sink, you can also specify arguments. One of them is the server URL for your
 Seq server::

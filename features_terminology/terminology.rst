@@ -248,7 +248,7 @@ The local terminology service built into Firely Server works well for simple Val
 **Conformance Archive (CAR) files** solve this problem. A CAR file is a representation of a CodeSystem produced by the `Firely.Car` library. It stores the full concept inventory together with all required relationship data in a format that can be loaded and queried efficiently at runtime from the local filesystem — without requiring an external terminology server.
 
 How it works
-------------
+^^^^^^^^^^^^
 
 When ``AdvancedTerminologyConfiguration`` is active and at least one CAR file is configured, Firely Server registers a **CAR Terminology Host** alongside the existing local and remote terminology hosts. In addition, the default terminology implementation is replaced by the **Delegated Terminology**, which contains the following logic:
 
@@ -258,7 +258,7 @@ When ``AdvancedTerminologyConfiguration`` is active and at least one CAR file is
 4. If the CAR host cannot handle a request (either because the CodeSystem is not in a CAR file, or because the operation is not supported), the request falls back to the standard terminology proxy and the configured local/remote services.
 
 Supported operations via CAR files
------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The following FHIR terminology operations are directly supported when the requested CodeSystem is backed by a CAR file:
 
@@ -271,10 +271,10 @@ Operations that are **not** directly supported by CAR files (such as ``ValueSet/
 ``ValueSet/$validate-code`` is supported indirectly: if the included CodeSystem concepts are backed by a CAR file, the proxy automatically decomposes the validation into the supported CodeSystem-level operations listed above.
 
 Configuration
--------------
+^^^^^^^^^^^^^
 
 ConformanceArchives
-^^^^^^^^^^^^^^^^^^^
+-------------------
 
 Configure one or more CAR files in the ``Terminology:ConformanceArchives`` array in your ``appsettings.json``:
 
@@ -305,17 +305,17 @@ Configure one or more CAR files in the ``Terminology:ConformanceArchives`` array
    If ``ConformanceArchives`` is empty or not configured, the ``CarTerminologyHost`` is not registered and no CAR-related behaviour is active. The standard local and remote terminology services continue to work normally.
 
 Priority and fallback
-^^^^^^^^^^^^^^^^^^^^^
+---------------------
 
 The CAR Terminology Host is always consulted **before** other hosts for any CodeSystem that is present in a configured CAR file. If the CAR host cannot serve the request (unsupported operation or unrecognised system), the request is passed to the remaining terminology services in their configured order.
 
 Startup validation
-^^^^^^^^^^^^^^^^^^
+------------------
 
 All configured CAR files are validated when Firely Server starts. A ``VonkConfigurationException`` is raised if any file is missing or cannot be read, preventing the server from starting with an invalid terminology configuration.
 
 License
--------
+^^^^^^^
 
 The Advanced Terminology feature requires its own license token, separate from the base terminology plugin:
 

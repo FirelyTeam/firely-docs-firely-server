@@ -54,10 +54,6 @@ Fix
 #. FSI: a transaction rollback error during SQL deadlock retries (``This SqlTransaction has completed; it is no longer usable``) could prevent the automatic retry from running, causing the import to fail immediately instead of retrying with backoff. Rollback now tolerates an already-completed transaction.
 #. Fixed an issue where Firely Server's SQL Server database bootstrap could fail to start when running under minimal/least-privilege SQL permissions, caused by the use of globally-scoped temporary stored procedures. These are now session-scoped, requiring less broad permissions and avoiding collisions between concurrently-starting instances.
 
-Database
-^^^^^^^^
-
-#. Firely Server Ingest (FSI) adds support for newer storage schema versions, keeping it in sync with the schema used by Firely Server: SQL schema v30 and MongoDB schema v29.
 
 Programming API changes and plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

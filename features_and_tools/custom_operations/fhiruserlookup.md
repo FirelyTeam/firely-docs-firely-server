@@ -37,7 +37,7 @@ The high-level flow when `$fhirUser-lookup` is enabled depends on how the user s
 3. Firely Server (via the plugin described below) converts those parameters into a system-level search and returns the matching resource.
 4. Firely Auth derives the `fhirUser` claim from the resource type and ID of the returned resource.
 
-The built-in plugin performs a straightforward conversion of the `Parameters` resource into a system-level search — matching the previous search behavior exactly. For advanced scenarios (e.g. MPI look-ups) you can replace this with a custom plugin; see [Custom implementations](#custom-implementations) below.
+The built-in plugin performs a straightforward conversion of the `Parameters` resource into a system-level search — matching the previous search behavior exactly. For advanced scenarios (e.g. MPI look-ups) you can replace this with a custom plugin; see {ref}`Custom implementations <fhiruserlookup_custom_implementations>` below.
 
 ## Configuration
 
@@ -69,7 +69,7 @@ No license token is required for this plugin.
 
 Confirm that `$fhirUser-lookup` appears in the `CapabilityStatement` returned by `GET [base]/metadata`. Firely Auth uses this check to decide whether to invoke the operation or fall back to a direct search.
 
-(custom-implementations)=
+(fhiruserlookup_custom_implementations)=
 ## Custom implementations
 
 The built-in plugin covers the standard use case. For scenarios that require additional processing during the user look-up — such as calling an external Master Patient Index (MPI) before searching Firely Server — you can implement a custom plugin that handles the `$fhirUser-lookup` operation.

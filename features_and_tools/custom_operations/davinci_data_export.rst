@@ -93,7 +93,7 @@ Prerequisites
 
 There are a few prerequisites specifically for this export.
 
-1. The DaVinci ATR specific conformance resources must be loaded in the administration database. See :ref:`conformance`
+1. The DaVinci ATR specific conformance resources must be loaded in the administration database. See :ref:`conformance`.
 2. Two Davinci-specific search parameters have been added to Firely Server and are needed for the export. In order to be able to use these parameters, execute the following REST call:
 
 .. code-block:: http

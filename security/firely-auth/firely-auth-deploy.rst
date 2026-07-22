@@ -16,10 +16,10 @@ In addition to the Firely license file, you will also need a Duende IdentityServ
 Supported browsers
 ------------------
 
-Firely Auth only offers support for modern browers for its authentication and administration UI. To deliver a high quality web application, Firely Auth depends on `next.js <https://nextjs.org>`_, therefore the same restrictions to supported browers apply here. See `next.js - Supported Browsers <https://nextjs.org/docs/architecture/supported-browsers>`_.
+Firely Auth only offers support for modern browers for its authentication and administration UI. To deliver a high quality web application, Firely Auth depends on `vitejs <https://vitejs.dev>`_, therefore the same restrictions to supported browers apply here. See `vitejs - Supported Browsers <https://vite.dev/guide/build#browser-compatibility>`_.
 
 .. _firely_auth_deploy_exe:
-
+  
 Executable / binaries
 ---------------------
 

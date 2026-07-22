@@ -20,7 +20,7 @@ If you are interested in using a project on `Simplifier <https://docs.fire.ly/pr
 .. _vonk_basic_installation:
 
 Basic installation
------------------
+------------------
 
 .. note::
 	Firely Server can run on all operation systems that support .NET. If your OS does not support .NET or if you want to use Docker, 

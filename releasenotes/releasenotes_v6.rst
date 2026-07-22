@@ -72,6 +72,20 @@ Firely Server 6.9.0 migrates its internal resource model from an ``ISourceNode``
 #. A number of ``ISourceNode``/``IResource`` mutation extension methods are now deprecated and will be removed in a future major release: ``Patch``, ``ForcePatch``, ``ForcePatchAt``, ``ForceAdd``, ``Add``, ``AddIf``, ``AddIfNotExists``, ``AddOrReplace``, ``Remove`` and ``Revalue`` on ``ISourceNode``; ``Patch`` and ``ForcePatch`` on ``IResource``. Cast the resource to ``PocoNode`` (or check with ``is PocoNode``) and mutate its ``.Poco`` property (``Hl7.Fhir.Model.Resource``) directly using the FHIR SDK API instead.
 #. The fluent bundle-builder classes ``GenericBundle``, ``SearchBundle`` and ``HistoryBundle`` (and their builder methods, e.g. ``AddLink``, ``Total``, ``AddSearchEntries``, ``ToSearchBundle``, ``ToHistoryBundle``) are now deprecated and will be removed in a future major release. Build Bundle responses directly using the FHIR SDK ``Bundle`` POCO (``Hl7.Fhir.Model.Bundle``) instead, populating ``bundle.Entry`` yourself; use the new ``ResultPage.SetLinks`` helper for paging links.
 #. ``IResourceCurrencyProvider``, ``IResourceChangeProvider`` and ``IResourceMismatchedReferenceProvider`` are now deprecated. Use the annotation-based extension methods instead: ``SearchResourceExtensions.GetCurrencyIndicator``/``WithCurrency``, ``GetChangeIndicator``/``WithChange``, and ``GetMismatchedReferences``/``WithMismatchedReferences`` respectively.
+.. _vonk_releasenotes_6_8_1:
+
+Release 6.8.1, June 12th, 2026
+------------------------------
+
+Improvements
+^^^^^^^^^^^^    
+
+#. Upgraded the enterprise validator that includes two major improvements:
+    - Resources that are referenced in a Composition resource are now resolved when validating the Compostion resource. See :ref:`feature_advancedvalidation` for more information.
+    - QuestionnaireResponse ``item.answers`` will now be validated against the Questionnaire ``answerOptions`` within the following specification-defined constraints: 
+        - type of the ``value[x]`` should match the ``item.type``
+        - ``Coding.display``, ``ResourceReference.display`` and ``Quantity.unit`` are not taken into account in answer validation, unless they are the only element provided in the answer
+    
 
 .. _vonk_releasenotes_6_8_0:
 
@@ -81,6 +95,7 @@ Release 6.8.0, June 8th, 2026
 Improvements
 ^^^^^^^^^^^^
 
+#. Updated conformance cache configuration to ``ConformanceCache`` and added ``SlidingExpirationSeconds`` to control cache entry lifetime. This improves stability for scenarios that resolve or compile conformance resources over longer periods, such as CQL library dependency chains.
 #. Warning on version mismatches in chained queries are now optional, and by default disabled. See :ref:`restful_search`.
 #. FSI schema version mismatch error messages are clearer: Reported maximum supported schema versions are corrected to match what the current FS build actually supports.
 #. PubSub configuration logging: ``BatchSize``, ``ClaimCheck``, ``ClaimCheck:AzureBlobContainerName`` and ``ClaimCheck:StorageType`` are now emitted by ConfigurationLogger instead of being masked as sensitive. 
@@ -104,6 +119,19 @@ Fixed
 #. ``$export`` POST requests with an empty request body now return ``202 Accepted`` with no filters applied, instead of ``400 Bad Request``. The empty body is valid per spec.
 #. Import history: duplicate audit rows in the ``importhistory`` table no longer crash startup.
 #. Fixed an issue where duplicate results would be returned when chained queries were executed against a SQL/SQLite backend.
+
+.. _vonk_releasenotes_6_7_1:
+
+Release 6.7.1, May 20th, 2026
+-----------------------------
+
+Fix
+^^^
+
+#. Introduced pagination for the results of the ``$everything`` operation. Before, when a large number of resources would be returned by the ``$everything`` operation, this could lead to stack overflow errors. With pagination, the results of the ``$everything`` operation are now returned in smaller chunks, improving performance and reducing the likelihood of timeouts. For more information, also see :ref:`patienteverything_pagination`.
+
+.. warning::
+    With the change in pagination for the ``$everything`` operation, ``Bundle.total`` has been removed. If your workflow relies on it, we advise to update it and iterate through all pages to retrieve all resources.
 
 .. _vonk_releasenotes_6_7_0:
 

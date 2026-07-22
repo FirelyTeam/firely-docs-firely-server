@@ -235,7 +235,7 @@ Understanding the Export Results
 After successfully requesting a :ref:`Single Patient EHI Export <singlepatientexport>` or
 :ref:`Patient Population EHI Export <patientpopulationexport>`, the response will be in the following format:
 
-.. include:: ../features_and_tools/bulkdataexport.rst
+.. include:: ../features_data_exchange/bulkdataexport.rst
    :start-after: .. START-BDE-QUEUED-BODY
    :end-before: .. END-BDE-QUEUED-BODY
 
@@ -251,7 +251,7 @@ Refer to the :ref:`Bulk Data Export Status <bdeexportstatus>` documentation for 
 
 Once the **$exportstatus** returns a completed response, as shown below, the next step is to query and download the actual NDJSON files.
 
-.. include:: ../features_and_tools/bulkdataexport.rst
+.. include:: ../features_data_exchange/bulkdataexport.rst
    :start-after: .. START-BDE-COMPLETE-BODY
    :end-before: .. END-BDE-COMPLETE-BODY
 

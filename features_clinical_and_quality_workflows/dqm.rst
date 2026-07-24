@@ -115,6 +115,46 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 
 	See `Using CQL with FHIR - OperationDefinition $cql <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_ for the full HL7 specification, and :ref:`feature_cql_operation` for details on how to execute this operation in Firely Server, including which parameters are supported.
 
+Enabling dQM Operations in Firely Server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The four dQM operations above are not enabled by default. To enable them, add the following entries to the ``Operations`` section of ``appsettings.json``:
+
+.. code-block:: json
+
+   "Operations": {
+     "$evaluate": {
+       "Name": "$evaluate",
+       "Level": [ "Type", "Instance" ],
+       "Enabled": true,
+       "RequireAuthorization": "WhenAuthEnabled",
+       "RequireTenant": "WhenTenancyEnabled"
+     },
+     "$evaluate-measure": {
+       "Name": "$evaluate-measure",
+       "Level": [ "Type", "Instance" ],
+       "Enabled": true,
+       "RequireAuthorization": "WhenAuthEnabled",
+       "RequireTenant": "WhenTenancyEnabled"
+     },
+     "$cql": {
+       "Name": "$cql",
+       "Level": [ "System" ],
+       "Enabled": true,
+       "RequireAuthorization": "WhenAuthEnabled",
+       "RequireTenant": "WhenTenancyEnabled"
+     },
+     "$data-requirements": {
+       "Name": "$data-requirements",
+       "Level": [ "Type", "Instance" ],
+       "Enabled": true,
+       "RequireAuthorization": "WhenAuthEnabled",
+       "RequireTenant": "WhenTenancyEnabled"
+     }
+   }
+
+For a full description of each ``Operations`` property, see :ref:`fs_settings_reference`.
+
 ----
 
 FHIR Measures

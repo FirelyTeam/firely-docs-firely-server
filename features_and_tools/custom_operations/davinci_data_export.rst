@@ -1,8 +1,8 @@
 .. _feature_davinci_data_export:
 
-====================
-DaVinci Data Export
-====================
+==========================================
+DaVinci Data Export - $davinci-data-export
+==========================================
 
 .. note::
 

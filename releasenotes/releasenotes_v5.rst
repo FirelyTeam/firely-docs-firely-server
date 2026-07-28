@@ -31,6 +31,17 @@ Old Firely Server release notes (v5.x)
 
     For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
 
+.. _vonk_releasenotes_5_11_6:
+
+Release 5.11.6, June 15th, 2026
+-------------------------------
+
+Fix
+^^^
+
+#. Several packages as well as the base docker image have been updated to address security vulnerabilities in some of the base layers. The updated base image is now ``mcr.microsoft.com/dotnet/aspnet:8.0.27-alpine3.23``.
+
+
 .. _vonk_releasenotes_5_11_5:
 
 Release 5.11.5, March 31st, 2026

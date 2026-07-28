@@ -95,6 +95,9 @@ Release 5.11.0, January 24th, 2025
 .. important::
     In Firely Server 5.11.0, we introduced the ``ReverseProxySupport`` setting. This setting by default disables the use of `X-Forwarded-*` headers, meaning that all deployments that utilize a reverse proxy may be impacted by this change. Please configure this setting carefully if you plan to upgrade.
 
+.. important::
+    In Firely Server 5.11.0, ``vread`` and ``_history`` searches are no longer supported when SMART on FHIR is enabled as authorization cannot be enforced in combination with compartment restrictions on historic resource instances.
+
 Security
 ^^^^^^^^
 #. Enhanced the security of the following custom operations. Previously, these operations would only check for any valid token if they were specified in the :ref:`Protected <feature_accesscontrol_config>` operations setting. All operations now take limitations expressed in the SMART on FHIR scopes within the access token into account:

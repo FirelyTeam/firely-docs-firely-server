@@ -13,11 +13,13 @@ You can have Firely Server validate all resources that are sent in for create or
   "Validation": {
     "Parsing": "Permissive", // Permissive / Strict
     "Level": "Off", // Off / Core / Full
+    "FixInvalidPrimitiveTypes": true, // true / false - If true, invalid primitive types are fixed to the correct type where possible. If set to false, invalid primitive types are always returned as an error.
     "AllowedProfiles": 
     [
         "http://hl7.org/fhir/StructureDefinition/daf-patient", 
         "http://hl7.org/fhir/StructureDefinition/daf-allergyintolerance"
-    ]
+    ],
+    "AdvisorRules": ""
   },
 
 Parsing
@@ -100,6 +102,15 @@ If validation is set to ``Full`` the following validation rules will be checked:
 | ResourceSchema /              |                                                               |
 | ExtensionSchema               |                                                               |
 +-------------------------------+---------------------------------------------------------------+
+
+------
+
+.. _feature_fix_invalid_primitive_types:
+
+Fixing invalid primitive types
+------------------------------
+
+By default, Firely Server will attempt to fix invalid primitive types (e.g. convert string "65" to integer 65) and log a warning for each coerced value. This behavior can be disabled via ``Validation:FixInvalidPrimitiveTypes``. Coercing each invalid input does have a performance cost, so take this into account when choosing to keep the setting enabled.
 
 ------
 

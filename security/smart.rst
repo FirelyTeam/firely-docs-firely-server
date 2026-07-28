@@ -3,6 +3,12 @@
 Enforcing access control
 ========================
 
+.. warning::
+
+  #. From Firely Server version 5.11.0 to Firely Server 6.9.0 ``vread`` and ``_history`` searches are disabled when SMART on FHIR is enabled as the authorization cannot be enforced on historic resource instances in combination with compartment restrictions. From Firely Server version 6.9.1 and later, this restriction has been lifted with the introduction of the ``AllowHistory`` setting in the ``SmartAuthorizationOptions`` section of the configuration.
+  #. Before version 6.0, Firely Server allowed configuring other compartments than Patient in the SmartOptions. This is no longer supported. If you have configured this, you will need to adjust the configuration to only specify a filter on the Patient compartment.  
+
+
 .. note::
 
   The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
@@ -67,6 +73,7 @@ You can control the way Access Control based on `SMART on FHIR <https://fire.ly/
       "Enabled": true,
       //"ClockSkew": "00:05:00",
       "EnforceAccessPolicies": true,
+      "AllowHistory": false, //When true, history and vread requests are allowed. Authorization is then evaluated against the current version of the resources, as historical versions are not indexed.
       "PatientFilter": "identifier=#patient#", //Filter on a Patient compartment if a 'patient' launch scope is in the auth token, for the Patient that has an identifier matching the value of that 'patient' launch scope
       "Authority": "https://example.org/base-url-to-your-identity-provider",
     //"AdditionalBaseEndpointsInDiscoveryDocument": ["additional-url-to-your-identity-provider"],
@@ -118,6 +125,7 @@ To enable SMART on FHIR in Firely Server, the following core settings must be co
 Additional advanced configuration can be achieved through the following settings:
 
 * EnforceAccessPolicies: Global flag that controls whether ``AccessPolicies`` are enforced for all matching ``fhirUsers``. See :ref:`feature_accesscontrol_permissions` for more details.
+* AllowHistory: When true, history and vread requests are allowed. Authorization is then evaluated against the current version of the resources, as historical versions are not indexed. Note that when resources are deleted, access to historical versions of those resources is not possible when the user is restricted to the patient compartment. Unrestricted users can still access historical versions of deleted resources. 
 * ClockSkew: Allow potential time discrepancies between the authorization server and the FHIR server, allowing for a small tolerance window when checking token expiration and validity times. Defaults to 5 minutes.
 * AdditionalBaseEndpointsInDiscoveryDocument: Optional configuration setting. Add additional base authority endpoints that your identity provider also uses for operations that are listed in the .well-known document. 
 * AdditionalIssuersInToken: Optional configuration setting. The additional issuer setting will extend the list of issuer urls that are valid within the issuer claim in the token passed to Firely Server. The token validation will be adjusted accordingly. Please note that it does not influence which issuer urls are allowed in the .well-known/openid-configuration document of the authorization server.
@@ -133,11 +141,6 @@ Additional advanced configuration can be achieved through the following settings
   After properly configuring Firely Server to work with an OAuth2 authorization server, enabling SMART and configuring the SmartCapabilities for Firely Server, you are able to discover the SMART configuration metadata by retrieving ``<base-url>/.well-known/smart-configuration``. 
   
   Please check section `Retrieve .well-known/smart-configuration <https://build.fhir.org/ig/HL7/smart-app-launch/app-launch.html#retrieve-well-knownsmart-configuration>`_  in the SMART specification for more details on how to request the metadata and how to interpret the response.
-
-.. warning::
-
-  #. In Firely Server version 5.11.0 and later versions ``vread`` and ``_history`` searches will be disabled when SMART on FHIR is enabled as the authorization cannot be enforced on historic resource instances.
-  #. Before version 6.0, Firely Server allowed configuring other compartments than Patient in the SmartOptions. This is no longer supported. If you have configured this, you will need to adjust the configuration to only specify a filter on the Patient compartment.  
 
 Other forms of Authorization
 ----------------------------

@@ -171,6 +171,7 @@ If you want to specify input parameters in the file, you can use the snippet bel
           // Source
           "sourceType": "Filesystem", // Filesystem | MongoDb | None, None will try only to provision the target database
           "source": "./fsi-source", // source directory when Filesystem source is used
+          "sourceFilter": "*.*", //Only import files whose name matches this wildcard pattern (e.g. *.ndjson or patients_??.ndjson). Applies to all subdirectories of the source directory. When not set, all files are imported. Filesystem source only.
           "mongoDbSource": {
               "connectionString": "<connectionstring to the Firely Server MongoDb source database>",
               "collectionName": "vonkentries",
@@ -333,6 +334,13 @@ Source (for Filesystem)
   * **Config**: source
   * **Required**: Yes when ``sourceType`` is set to ``Filesystem``
   * **Description**: Input directory for work (this directory is visited recursively including all the subdirectories).
+
+* ``--sourceFilter <sourceFilter>``: 
+
+  * **Config**: sourceFilter
+  * **Required**: No
+  * **Default**: *.* (all files)
+  * **Description**: Only import files whose name matches this wildcard pattern (e.g. ``*.ndjson`` or ``patients_??.ndjson``). Applies to all subdirectories of the source directory. When not set, all files are imported.
 
 Source (for MongoDb)
 ^^^^^^^^^^^^^^^^^^^^

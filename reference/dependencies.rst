@@ -3,61 +3,36 @@
 Dependencies of Firely Server and their licenses
 ================================================
 
-Firely Server is mainly built using libraries from Microsoft .Net Core and ASP.NET Core, along with a limited list of other libraries.
-This is the full list of direct depencies that Firely Server has on other libraries, along with their licenses.
+Firely Server is built on top of a wide range of open-source libraries - mainly from the .NET, ASP.NET Core,
+and MongoDB ecosystems - all under permissive licenses (MIT, Apache 2.0, BSD, and similar) that are compatible
+with use in commercial, closed-source software.
 
-This list uses the NuGet package names (or prefixes of them) so you can easily lookup further details of those packages on `NuGet.org <https://www.nuget.org>`_ if needed.
+Rather than maintain a hand-written list here (which inevitably drifts out of sync with the actual dependency
+tree as packages are added, removed, or updated), Firely automatically generates a complete Software Bill of
+Materials (SBOM) - covering every direct and transitive dependency - as part of the build process for every
+release. Every dependency's license is checked automatically against that same compatibility policy.
 
-#. Microsoft.AspNetCore.* - Apache 2.0
-#. Microsoft.ApplicationInsights.* - MIT
-#. Microsoft.Bcl.AsyncInterfaces - MIT
-#. Microsoft.EntityFrameworkCore.* - MIT
-#. Microsoft.Extensions.* - MIT
-#. Microsoft.AspNet.WebApi.Client - `MS-.NET-Library License <https://go.microsoft.com/fwlink/?LinkId=329770>`_
-#. System.Interactive.Async - MIT
-#. Microsoft.Data.SqlClient - MIT
-#. Microsoft.CSharp - MIT
-#. System.Interactive.Async - MIT
-#. System.Text.Json - MIT
-#. System.* - `MS-.NET-Library License <https://go.microsoft.com/fwlink/?LinkId=329770>`_
-#. NETStandard.Library - MIT
-#. NewtonSoft.Json - MIT
-#. IdentityModel.* - Apache 2.0
-#. IPNetwork2 - BSD 2-Clause "Simplified" License
-#. Serilog(.*) - Apache-2.0
-#. LinqKit.Microsoft.EntityFrameworkCore - MIT
-#. Hl7.Fhir.* - Firely OSS license (see below)
-#. Hl7.Cql.* - BSD 3-Clause License
-#. Fhir.Metrics - as Hl7.Fhir
-#. Simplifier.Licensing - as Hl7.Fhir
-#. Dapper - Apache 2.0
-#. SQLitePCLRaw.lib.e_sqlite3 - Apache 2.0
-#. SqlKata.* - MIT
-#. CreativeCode.JWS - MIT
-#. Azure.Storage.* - MIT
-#. MongoDB.* - Apache 2.0
-#. Duende.AccessTokenManagement - Apache-2.0
+You can retrieve the SBOM for a specific release yourself:
 
-Firely Server PubSub:
+* **ZIP**: get the release itself from the `download page <https://downloads.fire.ly/firely-server>`_ as usual.
+  Its SBOM is published separately, at a URL matching the version you downloaded - for example, for the latest
+  release::
 
-#. MassTransit - Apache 2.0
+      https://firelydownloads.blob.core.windows.net/firelyserver/firely-server/firely-server-latest.sbom.json
 
-For in-house telemetry and statistics:
+  or for a specific version (e.g. 6.9.0)::
 
-#. OpenTelemetry.* - Apache 2.0
-#. MongoDB.Driver.Core.Extensions.DiagnosticSources - Apache 2.0
-#. InfluxDB.Client - MIT
+      https://firelydownloads.blob.core.windows.net/firelyserver/firely-server/versions/firely-server-v6.9.0.sbom.json
 
-For unit testing:
+  This is available for all 5.x and 6.x releases, including versions published before this SBOM process existed.
 
-#. XUnit - Apache 2.0
-#. Moq - BSD 3
-#. FluentAssertions - Apache 2.0
-#. Microsoft.NETCore.Platforms - MIT
-#. Microsoft.NET.Test.Sdk - `MS-.NET-Library License <https://go.microsoft.com/fwlink/?LinkId=329770>`_
-#. System.Reactive - MIT
-#. coverlet.collector - MIT
-#. WireMock.Net - Apache 2.0
+* **Docker image**: for releases published after this SBOM process was introduced (any release after 6.8.1), the
+  SBOM (and a build provenance attestation) is attached directly to the image. Retrieve it with
+  ``docker buildx imagetools inspect <image>:<tag> --format "{{ json .SBOM }}"``, or with
+  ``docker scout sbom <image>:<tag>`` if you have `Docker Scout <https://docs.docker.com/scout/>`_ available.
+  Unlike the ZIP, this isn't available for older image tags - attaching it to an already-published tag would
+  mean rebuilding and re-pushing it, which changes its digest, so we don't retrofit it onto images that have
+  already shipped.
 
 .. _firely_oss_license:
 

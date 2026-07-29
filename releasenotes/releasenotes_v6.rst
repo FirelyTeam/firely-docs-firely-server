@@ -27,6 +27,12 @@ Features
 #. FSI: added a ``--sourceFilter`` option for the filesystem source, to only import files whose name matches a given wildcard pattern (e.g. ``*.ndjson`` or ``patients_??.ndjson``) from the source directory and its subdirectories. When not set, all files are imported as before. The pattern must be a file name pattern (no directory separators), and is validated at startup.
 #. Validation: Introduced the setting ``Validation:FixInvalidPrimitiveTypes`` (default ``true``). When enabled, invalid primitive types are fixed to the correct type where possible. When disabled, invalid primitive types are always returned as an error. This setting was introduced to prevent breaking existing workflows that rely on permissive parsing of invalid primitive types, but as it can increase load on the server, it is recommended to set it to ``false`` in order to avoid unnecessary overhead when processing large amounts of data. See :ref:`_feature_fix_invalid_primitive_types` for more information.
 
+Fixed
+^^^^^
+
+#. Fixed an issue where custom resources could not be used after first start-up of Firely Server due to a timing issue when generating the snapshot. Only after the second startup would the custom resource be available for use. This issue was only present in Firely Server v6.9.0 and has been fixed in this release.
+#. Fixed an issue where upon first startup of Firely Server conformance resources from Simplifier projects or CAR files could not be loaded together with conformance resources from files/folders in the ``vonk-import`` directory. These conformance resources would only be loaded upon the second startup of Firely Server.
+
 .. _vonk_releasenotes_6_9_0:
 
 Release 6.9.0, July 22nd, 2026

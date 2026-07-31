@@ -278,7 +278,7 @@ What you need to do:
 Seq
 ^^^
 
-`Seq <https://datalust.co/seq>`_ is a web interface to easily inspect structured logs.
+`Seq <https://datalust.co/seq>`__ is a web interface to easily inspect structured logs.
 
 For the ``Seq`` sink, you can also specify arguments. One of them is the server URL for your
 Seq server::
@@ -411,7 +411,7 @@ Remember to adjust your sink settings so that ``"restrictedToMinimumLevel": "Ver
 .. _configure_log_database_query_params:
 
 SQL query parameter logging
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It might be useful to log SQL queries that Firely Server executes against your database. You can get even more insights into what is happening when SQL query parameter values also get logged.
 However, this cannot be enabled by default due to data privacy concerns.
@@ -435,7 +435,7 @@ You can enable SQL query parameter values logging by setting the ``LogSqlQueryPa
 	}
 
 SQLite query parameter logging
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Firely Server also supports logging query parameter values for SQLite databases. This setting is disabled by default due to data privacy concerns. To enable it, set ``LogSqlQueryParameterValues`` to ``true`` for the corresponding SQLite database configuration in your ``appsettings.instance.json``. Example::
 

@@ -27,6 +27,87 @@ Features
 #. FSI: added a ``--sourceFilter`` option for the filesystem source, to only import files whose name matches a given wildcard pattern (e.g. ``*.ndjson`` or ``patients_??.ndjson``) from the source directory and its subdirectories. When not set, all files are imported as before. The pattern must be a file name pattern (no directory separators), and is validated at startup.
 #. Validation: Introduced the setting ``Validation:FixInvalidPrimitiveTypes`` (default ``true``). When enabled, invalid primitive types are fixed to the correct type where possible. When disabled, invalid primitive types are always returned as an error. This setting was introduced to prevent breaking existing workflows that rely on permissive parsing of invalid primitive types, but as it can increase load on the server, it is recommended to set it to ``false`` in order to avoid unnecessary overhead when processing large amounts of data. See :ref:`_feature_fix_invalid_primitive_types` for more information.
 
+Fixed
+^^^^^
+
+#. Fixed an issue where custom resources could not be used after first start-up of Firely Server due to a timing issue when generating the snapshot. Only after the second startup would the custom resource be available for use. This issue was only present in Firely Server v6.9.0 and has been fixed in this release.
+#. Fixed an issue where upon first startup of Firely Server conformance resources from Simplifier projects or CAR files could not be loaded together with conformance resources from files/folders in the ``vonk-import`` directory. These conformance resources would only be loaded upon the second startup of Firely Server.
+
+.. _vonk_releasenotes_6_9_0:
+
+Release 6.9.0, July 22nd, 2026
+-------------------------------
+
+This release migrates Firely Server's internal resource model to be backed directly by the Firely .NET SDK POCO model, and upgrades the runtime to .NET 10. These are internal changes, but they unlock full support for custom resources as validated, typed resources, and improve performance across parsing, serializing and searching. Custom plugins should keep working unmodified, but please review the "Programming API changes and plugins" section below if you have custom plugins.
+
+.. attention::
+    The bundle ``prev`` paging link relation has been renamed to ``previous``, to align with the FHIR specification. Clients that parse paging links by relation name must be updated accordingly.
+
+.. attention::
+    Firely Server now targets .NET 10. If you build custom plugins or run Firely Server framework-dependent (rather than via the provided Docker image), make sure the .NET 10 runtime is installed and plugins are recompiled against it.
+
+Improvements
+^^^^^^^^^^^^
+
+#. Reduced memory allocations and eliminated blocking I/O when parsing incoming FHIR JSON/XML request bodies and when serializing FHIR JSON/XML response bodies. Request and response bodies are now read/written directly from/to pooled buffers instead of being materialized as intermediate strings. No behavioral change, but this improves throughput, especially for larger payloads.
+#. Improved the performance of ``batch``/``transaction`` Bundle processing. Reading per-entry fields such as ``fullUrl``, ``request.method`` and ``request.url`` no longer goes through the FHIRPath engine, so processing time for large bundles no longer scales with FHIRPath evaluation overhead.
+#. Reduced the performance overhead of permissive-mode primitive-type coercion (e.g. a JSON string value in an integer field). Previously, every parsed resource was re-walked and re-validated to check for wrongly-typed primitives. Now this only happens for values that actually need correcting, so the overwhelming majority of (valid) data no longer pays any overhead. This noticeably speeds up large result sets, such as ``Patient/$everything``. Behavior is unchanged: permissive mode still auto-corrects wrongly-typed primitives and logs a warning when it does so.
+#. FHIRPath ``$patch`` now operates directly on the FHIR POCO tree instead of through an intermediate lazy representation, removing redundant re-parsing and correctly preserving FHIR-specific type metadata (e.g. the ``xhtml`` type of ``Narrative.div``) through ``add``, ``delete``, ``insert``, ``move`` and ``replace`` operations.
+#. The default set of additional resources returned by Patient ``$everything`` and Bulk Data ``$export`` now includes ``Practitioner`` and ``PractitionerRole`` (Bulk Data ``$export`` also already included ``Practitioner``), so both operations return these commonly-referenced supporting resources out of the box. This is configurable via ``PatientEverythingOperation:AdditionalResources`` and ``BulkDataExport:AdditionalResources`` respectively, in case you want to opt out.
+#. Added a new ``SqlDbOptions:PatientEverythingTimeout`` setting (in seconds, default 300), to configure the SQL command timeout for the Patient ``$everything`` query (also used by ``$purge``) independently from other operations. Previously this query used the default SQL command timeout of 30 seconds, which could be too short for patients with a large amount of data.
+
+Features
+^^^^^^^^
+
+#. Custom resources are now fully supported as validated, typed resources, rather than being tolerated as untyped/dynamic content, provided a matching ``StructureDefinition`` is registered in the administration database. This applies to custom resources at the root of a request, nested inside a Bundle entry, or as a contained resource, as well as to any custom datatypes they reference. Resource types that are still unknown to Firely Server continue to be tolerated permissively, as before. See :ref:`feature_customresources` for more information.
+#. Firely Server Ingest (FSI) now also coerces wrongly-typed primitive values (e.g. a numeric value provided as a JSON string) to their correct native type during import, matching the behavior already applied by the regular REST API.
+#. ``Measure/$evaluate-measure`` now supports ``subject-list`` as ``reportType`` for ``Group`` subjects. The response is a ``MeasureReport`` with ``type=subject-list``, containing aggregated group population counts, a contained individual ``MeasureReport`` per group member, and contained population ``List`` resources.
+#. ``Measure/$evaluate-measure`` can now also be invoked on a specific ``Measure`` instance (e.g. ``Measure/{id}/$evaluate-measure``) using GET or POST, in addition to the existing type-level invocation; supplying a ``url`` parameter on an instance-level call is rejected with HTTP 400, and an unresolvable ``Measure`` id returns HTTP 404. Instance-level ``Library/$evaluate`` (``Library/{id}/$evaluate``) and instance-level ``$data-requirements`` (for both ``Library/{id}`` and ``Measure/{id}``) are likewise now fully supported, resolving their target resource the same way as the type-level operations.
+
+Fix
+^^^
+
+#. Requesting a FHIR version that is not supported or not enabled could return an unhandled HTTP 500 error instead of a graceful ``400 Bad Request`` with an ``OperationOutcome``. This has been fixed.
+#. The ``PATCH`` ``move`` operation now correctly applies multiple ``move`` operations submitted in a single request. As specified, the operations are applied sequentially.
+#. ``PATCH`` no longer rejects a request because of unrelated elements elsewhere in the resource that were already tolerated on ``create``/``update`` (for example, a boolean value permissively accepted as a JSON string). Only the elements actually touched by the patch are validated. As part of this fix, the ``add`` operation now explicitly rejects unknown element names with a clear error, instead of silently accepting them.
+#. Fixed reference resolution when posting Document bundles: ``Composition.subject`` and ``Composition.encounter`` are now resolved from the original, absolute references in the submitted bundle, instead of from references that had already been rewritten by the server. This prevents references from occasionally being resolved incorrectly.
+#. ``create``/``update`` requests containing an unknown element (e.g. an unrecognized property on a ``Patient``) are again correctly rejected with a ``400`` structural ``OperationOutcome``, restoring behavior that had regressed during the internal POCO migration. Recoverable value-level issues, such as an invalid ``id`` literal or an out-of-cardinality element, remain tolerated by permissive parsing as before.
+#. The background maintenance service no longer stops permanently after an error in a single maintenance job (e.g. a SQL timeout or deadlock). Such errors are now caught and logged per job, and the service continues with the next scheduled run instead of requiring a server restart.
+#. Restored administration database command logging (``Microsoft.EntityFrameworkCore.Database.Command``) for SQL Server and SQLite, which had silently stopped emitting log entries for administration-database reads and writes (e.g. conformance reads during model building, updates to ``StructureDefinition``/``SearchParameter``).
+#. CQL: when a ``Library/$evaluate`` dependency ``ValueSet`` cannot be resolved, the error and log message now include the ``url`` and ``version`` of the referencing ``Library``, making it clear where the unresolved dependency originates.
+#. CQL: ``Measure/$evaluate-measure`` now populates ``MeasureReport.measure`` from the resolved ``Measure.url`` (including ``|version`` when set) instead of from the request's ``url`` parameter, so the canonical reference is also populated correctly for instance-level invocations.
+#. FSI: a transaction rollback error during SQL deadlock retries (``This SqlTransaction has completed; it is no longer usable``) could prevent the automatic retry from running, causing the import to fail immediately instead of retrying with backoff. Rollback now tolerates an already-completed transaction.
+#. Fixed an issue where Firely Server's SQL Server database bootstrap could fail to start when running under minimal/least-privilege SQL permissions, caused by the use of globally-scoped temporary stored procedures. These are now session-scoped, requiring less broad permissions and avoiding collisions between concurrently-starting instances.
+
+
+Programming API changes and plugins
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Firely Server 6.9.0 migrates its internal resource model from an ``ISourceNode``-based wrapper chain to a FHIR SDK POCO-backed ``PocoNode``, and upgrades the target framework from .NET 8 to .NET 10. Most plugins will continue to compile and run unmodified, but there are a few areas where behavior has changed, where existing APIs are now deprecated in favor of direct POCO access, or where recompilation is required:
+
+#. Firely Server was updated to use the Firely .NET SDK v6.3.0. For those implementing custom plugins or facades, we recommend updating these to use the same SDK version when upgrading to this version of Firely Server.
+#. The target framework was upgraded from .NET 8 to .NET 10 (C# language version 14.0). Custom plugins need to be recompiled targeting ``net10.0``. The Docker images (both the server and the Firely Server Ingest CLI) are now based on .NET 10 Alpine base images.
+#. ``Vonk.Fhir.R4.Internal`` no longer has a hard dependency on the CQL plugin. The dependency is now inverted through an internal ``ICqlLibraryCompiler`` hook: when the CQL plugin is loaded it registers its compiler and ``Library`` conformance resolution compiles CQL/ELM content as before; when the CQL plugin is not loaded, ``Library`` resolution simply skips compilation. This is only relevant if you build against ``Vonk.Fhir.R4.Internal`` directly.
+#. ``IResource`` now extends ``IAnnotatable``, with default no-op implementations, so existing custom ``IResource`` implementations still compile. However, the new status helpers ``WithCurrency``, ``WithChange`` and ``WithMismatchedReferences`` (and their ``Get*`` counterparts) store their state as annotations. If a custom ``IResource`` implementation does not forward annotation calls to a real store, these helpers will silently do nothing on it. Implement ``IAnnotatable``/``IAnnotated`` explicitly if you have custom ``IResource`` implementations.
+#. Resource mutation is now in-place rather than copy-on-write. Methods such as ``SetId``, ``EnsureMeta``, ``SetValueAt``, ``WithCurrency``, ``WithChange`` and ``WithMismatchedReferences`` used to return a new, distinct ``IResource`` instance and leave the original unchanged; they now mutate the underlying POCO in place and return the *same* instance. Plugin code that relied on the original reference staying unchanged must be updated; deep-copy the underlying FHIR POCO beforehand if the pre-mutation state needs to be preserved.
+#. A number of ``ISourceNode``/``IResource`` mutation extension methods are now deprecated and will be removed in a future major release: ``Patch``, ``ForcePatch``, ``ForcePatchAt``, ``ForceAdd``, ``Add``, ``AddIf``, ``AddIfNotExists``, ``AddOrReplace``, ``Remove`` and ``Revalue`` on ``ISourceNode``; ``Patch`` and ``ForcePatch`` on ``IResource``. Cast the resource to ``PocoNode`` (or check with ``is PocoNode``) and mutate its ``.Poco`` property (``Hl7.Fhir.Model.Resource``) directly using the FHIR SDK API instead.
+#. The fluent bundle-builder classes ``GenericBundle``, ``SearchBundle`` and ``HistoryBundle`` (and their builder methods, e.g. ``AddLink``, ``Total``, ``AddSearchEntries``, ``ToSearchBundle``, ``ToHistoryBundle``) are now deprecated and will be removed in a future major release. Build Bundle responses directly using the FHIR SDK ``Bundle`` POCO (``Hl7.Fhir.Model.Bundle``) instead, populating ``bundle.Entry`` yourself; use the new ``ResultPage.SetLinks`` helper for paging links.
+#. ``IResourceCurrencyProvider``, ``IResourceChangeProvider`` and ``IResourceMismatchedReferenceProvider`` are now deprecated. Use the annotation-based extension methods instead: ``SearchResourceExtensions.GetCurrencyIndicator``/``WithCurrency``, ``GetChangeIndicator``/``WithChange``, and ``GetMismatchedReferences``/``WithMismatchedReferences`` respectively.
+
+.. _vonk_releasenotes_6_8_1:
+
+Release 6.8.1, June 12th, 2026
+------------------------------
+
+Improvements
+^^^^^^^^^^^^    
+
+#. Upgraded the enterprise validator that includes two major improvements:
+    - Resources that are referenced in a Composition resource are now resolved when validating the Compostion resource. See :ref:`feature_advancedvalidation` for more information.
+    - QuestionnaireResponse ``item.answers`` will now be validated against the Questionnaire ``answerOptions`` within the following specification-defined constraints: 
+        - type of the ``value[x]`` should match the ``item.type``
+        - ``Coding.display``, ``ResourceReference.display`` and ``Quantity.unit`` are not taken into account in answer validation, unless they are the only element provided in the answer
+    
 
 .. _vonk_releasenotes_6_8_0:
 
@@ -36,6 +117,7 @@ Release 6.8.0, June 8th, 2026
 Improvements
 ^^^^^^^^^^^^
 
+#. Updated conformance cache configuration to ``ConformanceCache`` and added ``SlidingExpirationSeconds`` to control cache entry lifetime. This improves stability for scenarios that resolve or compile conformance resources over longer periods, such as CQL library dependency chains.
 #. Warning on version mismatches in chained queries are now optional, and by default disabled. See :ref:`restful_search`.
 #. FSI schema version mismatch error messages are clearer: Reported maximum supported schema versions are corrected to match what the current FS build actually supports.
 #. PubSub configuration logging: ``BatchSize``, ``ClaimCheck``, ``ClaimCheck:AzureBlobContainerName`` and ``ClaimCheck:StorageType`` are now emitted by ConfigurationLogger instead of being masked as sensitive. 
@@ -59,6 +141,19 @@ Fixed
 #. ``$export`` POST requests with an empty request body now return ``202 Accepted`` with no filters applied, instead of ``400 Bad Request``. The empty body is valid per spec.
 #. Import history: duplicate audit rows in the ``importhistory`` table no longer crash startup.
 #. Fixed an issue where duplicate results would be returned when chained queries were executed against a SQL/SQLite backend.
+
+.. _vonk_releasenotes_6_7_1:
+
+Release 6.7.1, May 20th, 2026
+-----------------------------
+
+Fix
+^^^
+
+#. Introduced pagination for the results of the ``$everything`` operation. Before, when a large number of resources would be returned by the ``$everything`` operation, this could lead to stack overflow errors. With pagination, the results of the ``$everything`` operation are now returned in smaller chunks, improving performance and reducing the likelihood of timeouts. For more information, also see :ref:`patienteverything_pagination`.
+
+.. warning::
+    With the change in pagination for the ``$everything`` operation, ``Bundle.total`` has been removed. If your workflow relies on it, we advise to update it and iterate through all pages to retrieve all resources.
 
 .. _vonk_releasenotes_6_7_0:
 

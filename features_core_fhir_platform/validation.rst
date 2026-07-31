@@ -434,7 +434,7 @@ If validation is set to ``Full`` the following validation rules will be checked 
 | DocumentBundleValidator        | Validates that all resources referenced by the ``Composition``     |
 |                                | of a document ``Bundle`` are included in that bundle, as required  |
 |                                | by the `FHIR documents specification                               |
-|                                | <https://hl7.org/fhir/documents.html#content>`_. Checks           |
+|                                | <https://hl7.org/fhir/documents.html#content>`_. Checks            |
 |                                | references on ``Composition.subject``, ``Composition.encounter``,  |
 |                                | ``Composition.author``, ``Composition.custodian``,                 |
 |                                | ``Composition.attester.party``, and all ``Composition.section``    |

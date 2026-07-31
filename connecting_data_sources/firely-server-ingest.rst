@@ -76,7 +76,7 @@ Initializing Firely Server database
 
 .. note::
 
-The tool requires that the target database already exists and contains all required indexes and tables (for SQL Server). If you don't have a database with the schema yet, you first need to run the Firely Server at least once as described in the articles :ref:`configure_sql` and :ref:`configure_mongodb`.
+   The tool requires that the target database already exists and contains all required indexes and tables (for SQL Server). If you don't have a database with the schema yet, you first need to run the Firely Server at least once as described in the articles :ref:`configure_sql` and :ref:`configure_mongodb`.
 
   This prerequisite does not apply to FSI v6+ targeting a MongoDB or FSI v6.8+ targeting a SQL Server database. In this case you can instruct FSI to provision the database automatically by setting the ``--provisionTargetDatabase`` flag to ``true``.
   This prerequisite also does not apply to FSI using PubSub as a target. In this case the consuming Firely Server instance(s) will take care of the database setup.

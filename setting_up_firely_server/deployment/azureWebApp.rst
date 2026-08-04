@@ -19,7 +19,7 @@ Deployment
    .. image:: ../../images/Azure_01_CreateWebApp.png
       :align: center
 
-#. Choose a name for the webapp, we will use the placeholder `<firely-server-app>`, fill in an existing resource group or create a new one, unselect the unique secure hostname, select Linux for the operation system (OS), use `.Net 8` for the runtime stack and choose a region close to you:
+#. Choose a name for the webapp, we will use the placeholder `<firely-server-app>`, fill in an existing resource group or create a new one, unselect the unique secure hostname, select Linux for the operation system (OS), use `.NET 10` for the runtime stack and choose a region close to you:
 
    .. image:: ../../images/Azure_02_ChooseName.png
       :align: center

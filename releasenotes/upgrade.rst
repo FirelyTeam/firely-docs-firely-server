@@ -14,6 +14,13 @@ This page describes the general process for each situation. Please refer to the 
 
    In all cases, pay attention to the import of new conformance resources - especially if you have multiple instances of Firely Server running. See :ref:`vonk_conformance_instances` for details.
 
+.. attention::
+
+   Firely Server 6.9.0 and later run on **.NET 10**, whereas 5.7.0 up to and including 6.8.x run on .NET 8. When upgrading
+   across that boundary, install the `.NET 10 runtime <https://dotnet.microsoft.com/en-us/download/dotnet/10.0>`_ (the ASP.NET Core
+   Runtime Hosting Bundle on Windows/IIS) before starting the new version, and recompile any custom plugins and Facade projects
+   against ``net10.0``. The Docker images are already based on .NET 10, so no action is needed there.
+
 .. _upgrade_server: 
 
 Upgrading Firely Server

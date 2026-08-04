@@ -59,9 +59,13 @@ Running Firely Server
 
 .. important:: 
 	
-	The next step assumes you have a .NET Core environment installed. If not, please 
-	`download and install <https://dotnet.microsoft.com/en-us/download/dotnet/8.0>`_ **ASP.NET Core Runtime 8.x.xx Hosting Bundle** before you continue.
+	The next step assumes you have a .NET environment installed. If not, please
+	`download and install <https://dotnet.microsoft.com/en-us/download/dotnet/10.0>`_ **ASP.NET Core Runtime 10.x.xx Hosting Bundle** before you continue.
 	Choose the latest security patch to mitigate security issues in previous versions.
+
+	Firely Server requires .NET 10 as of version 6.9.0. Older releases require
+	`.NET 8 <https://dotnet.microsoft.com/en-us/download/dotnet/8.0>`_ (Firely Server 5.7.0 up to and including 6.8.x)
+	or .NET 6 (Firely Server 5.6.x and older).
 
 When you have completed your configuration changes, start the server.
 Open a command prompt or Powershell, navigate to your working directory and execute:

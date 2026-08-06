@@ -76,8 +76,65 @@ Alternatively, the following log line is being written once the process is finis
 The read history keeps a record of files that have been read, with an MD5 hash of each.
 If you wish to force a renewed import of a specific file, you should:
 
-* delete the corresponding row from the ``importhistory`` table in the Administration database;
+* delete the corresponding row from the ``importhistory`` table in the Administration database, see :ref:`conformance_import_history_remove`;
 * provide the file again in the ImportDirectory (if you deleted it previously - Vonk does not delete it).
+
+.. _conformance_import_history_remove:
+
+Remove entries from the import history
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Each entry in the import history has a ``SourceName``, holding the path of the file - or the endpoint of the Simplifier project - that was imported.
+Removing an entry makes Firely Server import that source again on the next startup, or on the next call to :ref:`$import-resources<conformance_on_demand>`.
+
+Removing an entry does not remove the conformance resources that were imported from it. They are updated (or re-created) by the next import run.
+
+The examples below all remove the entry for the file ``hl7-extensions-r4-5.3.0.car``.
+Adjust the connection details, the name of the Administration database and the filename to your own situation.
+
+.. tip::
+
+   List the entries before you delete any of them, so you can check that your filter matches exactly the sources you want to re-import.
+   Replace ``DELETE`` with ``SELECT SourceName`` (or use ``find`` instead of ``deleteMany`` for MongoDB) in the commands below.
+
+**SQLite** (the default for the Administration database), with the `sqlite3 <https://sqlite.org/cli.html>`_ command line tool::
+
+  sqlite3 ./data/vonkadmin.db \
+    "DELETE FROM importhistory WHERE SourceName LIKE '%hl7-extensions-r4-5.3.0.car';"
+
+Use the file from the ``ConnectionString`` in the ``Administration.SQLiteDbOptions`` :ref:`setting<configure_sqlite_admin>`, ``./data/vonkadmin.db`` by default.
+Stop Firely Server before you edit the file, since SQLite does not handle concurrent writes well.
+
+**SQL Server**, with the `sqlcmd <https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility>`_ utility installed on your own machine::
+
+  sqlcmd -C -S localhost -U sa -P '<password>' -d Firely_Admin \
+    -Q "DELETE FROM vonk.importhistory WHERE SourceName LIKE '%hl7-extensions-r4-5.3.0.car';"
+
+* ``-S`` is the SQL Server instance, ``-d`` the name of the Administration database.
+* ``-C`` tells sqlcmd 18 and higher to trust the server certificate. Leave it out if the server has a certificate that your machine trusts.
+* Use ``-E`` instead of ``-U``/``-P`` to connect with Windows integrated authentication.
+
+**SQL Server running in a Docker container**, using the sqlcmd that ships with the ``mssql`` images::
+
+  docker exec -it firelyserver_sql_2025 /opt/mssql-tools18/bin/sqlcmd \
+    -C -S localhost -U sa -P '<password>' -d Firely_Admin \
+    -Q "DELETE FROM vonk.importhistory WHERE SourceName LIKE '%hl7-extensions-r4-5.3.0.car';"
+
+Here ``firelyserver_sql_2025`` is the name of the container running SQL Server, and ``-S localhost`` refers to the server inside that container.
+On older images the tools are in ``/opt/mssql-tools/bin/sqlcmd``.
+
+**MongoDB**, with `mongosh <https://www.mongodb.com/docs/mongodb-shell/>`_::
+
+  mongosh "mongodb://localhost/vonkadmin" \
+    --eval 'db.importhistory.deleteMany({ SourceName: /hl7-extensions-r4-5\.3\.0\.car$/ })'
+
+Use the database from the ``ConnectionString`` in the ``Administration.MongoDbOptions`` :ref:`setting<configure_mongodb_admin>`.
+Run ``show collections`` and ``db.importhistory.findOne()`` first to confirm the collection and field names in your deployment.
+
+.. attention::
+
+   Emptying the import history completely (``DELETE FROM importhistory`` without a ``WHERE`` clause) also removes the record of the :ref:`conformance_specification_zip`.
+   The next startup will then re-import all of them, which can take several minutes.
 
 .. _vonk_conformance_history:
 

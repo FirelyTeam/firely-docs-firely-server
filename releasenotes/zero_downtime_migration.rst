@@ -32,6 +32,9 @@ The architecture consists of:
    During the migration period, both database instances operate concurrently. 
    However, the migration is one-way only, changes from the new instance are not synced back to the old instance.
 
+.. note::
+   To ensure resilience in case of a crash or interruption during migration, we recommend using the recovery :ref:`journal feature <tool_fsi_recovery>` of the FSI migration tool. This feature allows the migration process to resume from the last successfully processed item, minimizing data loss and downtime.
+
 Prerequisites
 -------------
 
@@ -60,6 +63,7 @@ Make sure to re-create your custom :ref:`AccessPolicies <feature_accesscontrol_p
 
 Migration of Main Database
 --------------------------
+
 
 #. Determine the target database deployment location and make a note of the connection string for reference in the next steps.
 #. For implementations requiring sharding, refer to :ref:`configure_mongodb_sharding` to set up sharding for the target database.

@@ -106,7 +106,8 @@ a.icon-home:hover {
  */
 .btn {
 	box-shadow: none;
-
+  border-radius: 5px;
+  border: none;
 	display: inline-block;
 
 	font-weight: 600;
@@ -114,11 +115,15 @@ a.icon-home:hover {
 	margin-bottom: 0;
 }
 
+a.btn {
+  text-decoration: none;
+}
+
 .btn-neutral,
 .btn-neutral:visited {
 	background-color: #16a2c5 !important;
 
-	border-color: none;
+  border: none;
 
 	color: #fff !important;
 
@@ -133,6 +138,15 @@ a.icon-home:hover {
 	color: #fff;
 
 	text-decoration: none;
+}
+
+.rst-content .btn:focus {
+  outline: none;
+}
+
+.rst-content .btn:focus-visible {
+  outline: 2px solid #0d6277;
+  outline-offset: 2px;
 }
 
 a.btn span.fa {
@@ -223,5 +237,46 @@ div.wy-menu.rst-pro {
 }
 
 .toggle .header.open > p:before {
-    content: "▼ ";
+  content: "▼ ";
+}
+
+.banner-container {
+  background: #194960;
+  color: #fff;
+  padding: clamp(12px, 1.5vw, 20px) clamp(20px, 3vw, 40px);
+}
+
+.banner-container img {
+  height: clamp(20px, 5vw, 70px);
+}
+
+.banner-title h2 {
+  font-size: clamp(8px, 2vw, 28px);
+  font-weight: normal;
+  margin: 0;
+}
+.banner-title {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  align-items: center;
+  justify-content: start;
+  flex-wrap: wrap;
+}
+
+.banner-container .btn {
+  font-size: clamp(12px, 1.2vw, 18px);
+  padding: clamp(8px, 1vw, 15px) clamp(15px, 2vw, 30px);
+}
+
+.banner-container a.btn > i {
+  margin-left: clamp(10px, 2vw, 20px);
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
 }

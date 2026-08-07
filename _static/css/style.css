@@ -106,7 +106,8 @@ a.icon-home:hover {
  */
 .btn {
 	box-shadow: none;
-
+  border-radius: 5px;
+  border: none;
 	display: inline-block;
 
 	font-weight: 600;
@@ -114,11 +115,15 @@ a.icon-home:hover {
 	margin-bottom: 0;
 }
 
+a.btn {
+  text-decoration: none;
+}
+
 .btn-neutral,
 .btn-neutral:visited {
 	background-color: #16a2c5 !important;
 
-	border-color: none;
+  border: none;
 
 	color: #fff !important;
 
@@ -134,6 +139,17 @@ a.icon-home:hover {
 
 	text-decoration: none;
 }
+
+.btn-xxl,
+.btn-xxl:hover,
+.btn-xxl:focus,
+.btn-xxl:active,
+.btn-xxl:visited {
+  font-size: 18px;
+  padding: 15px 30px;
+}
+
+.rst-content .btn:focus { outline: none }
 
 a.btn span.fa {
 	display: none;
@@ -224,4 +240,31 @@ div.wy-menu.rst-pro {
 
 .toggle .header.open > p:before {
     content: "▼ ";
+}
+
+.banner-container {
+  background: #194960;
+  color: #fff;
+  padding: 20px 40px;
+}
+
+.banner-container img {
+  height: 70px;
+}
+
+.banner-container h2 {
+  font-size: 28px;
+  font-weight: normal;
+  margin: 0;
+}
+
+.banner-container a.btn > i {
+  margin-left: 40px;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }

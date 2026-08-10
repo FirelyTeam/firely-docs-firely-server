@@ -89,7 +89,7 @@ Removing an entry makes Firely Server import that source again on the next start
 
 Removing an entry does not remove the conformance resources that were imported from it. They are updated (or re-created) by the next import run.
 
-The examples below all remove the entry for the file ``hl7-extensions-r4-5.3.0.car``.
+The examples below all remove the entry for a file named ``my-package.car``.
 Adjust the connection details, the name of the Administration database and the filename to your own situation.
 
 .. tip::
@@ -100,7 +100,7 @@ Adjust the connection details, the name of the Administration database and the f
 **SQLite** (the default for the Administration database), with the `sqlite3 <https://sqlite.org/cli.html>`_ command line tool::
 
   sqlite3 ./data/vonkadmin.db \
-    "DELETE FROM importhistory WHERE SourceName LIKE '%hl7-extensions-r4-5.3.0.car';"
+    "DELETE FROM importhistory WHERE SourceName LIKE '%my-package.car';"
 
 Use the file from the ``ConnectionString`` in the ``Administration.SQLiteDbOptions`` :ref:`setting<configure_sqlite_admin>`, ``./data/vonkadmin.db`` by default.
 Stop Firely Server before you edit the file, since SQLite does not handle concurrent writes well.
@@ -108,7 +108,7 @@ Stop Firely Server before you edit the file, since SQLite does not handle concur
 **SQL Server**, with the `sqlcmd <https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility>`_ utility installed on your own machine::
 
   sqlcmd -C -S localhost -U sa -P '<password>' -d fs_admin \
-    -Q "DELETE FROM vonk.importhistory WHERE SourceName LIKE '%hl7-extensions-r4-5.3.0.car';"
+    -Q "DELETE FROM vonk.importhistory WHERE SourceName LIKE '%my-package.car';"
 
 * ``-S`` is the SQL Server instance, ``-d`` the name of the Administration database.
 * ``-C`` tells sqlcmd 18 and higher to trust the server certificate. Leave it out if the server has a certificate that your machine trusts.
@@ -118,7 +118,7 @@ Stop Firely Server before you edit the file, since SQLite does not handle concur
 
   docker exec -it firelyserver_sql_2025 /opt/mssql-tools18/bin/sqlcmd \
     -C -S localhost -U sa -P '<password>' -d fs_admin \
-    -Q "DELETE FROM vonk.importhistory WHERE SourceName LIKE '%hl7-extensions-r4-5.3.0.car';"
+    -Q "DELETE FROM vonk.importhistory WHERE SourceName LIKE '%my-package.car';"
 
 Here ``firelyserver_sql_2025`` is the name of the container running SQL Server, and ``-S localhost`` refers to the server inside that container.
 On older images the tools are in ``/opt/mssql-tools/bin/sqlcmd``.
@@ -126,7 +126,7 @@ On older images the tools are in ``/opt/mssql-tools/bin/sqlcmd``.
 **MongoDB**, with `mongosh <https://www.mongodb.com/docs/mongodb-shell/>`_::
 
   mongosh "mongodb://localhost/fs_admin" \
-    --eval 'db.importhistory.deleteMany({ source_name: /hl7-extensions-r4-5\.3\.0\.car$/ })'
+    --eval 'db.importhistory.deleteMany({ source_name: /my-package\.car$/ })'
 
 Use the database from the ``ConnectionString`` in the ``Administration.MongoDbOptions`` :ref:`setting<configure_mongodb_admin>`.
 Run ``show collections`` and ``db.importhistory.findOne()`` first to confirm the collection and field names in your deployment.

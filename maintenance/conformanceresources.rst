@@ -107,7 +107,7 @@ Stop Firely Server before you edit the file, since SQLite does not handle concur
 
 **SQL Server**, with the `sqlcmd <https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility>`_ utility installed on your own machine::
 
-  sqlcmd -C -S localhost -U sa -P '<password>' -d Firely_Admin \
+  sqlcmd -C -S localhost -U sa -P '<password>' -d fs_admin \
     -Q "DELETE FROM vonk.importhistory WHERE SourceName LIKE '%hl7-extensions-r4-5.3.0.car';"
 
 * ``-S`` is the SQL Server instance, ``-d`` the name of the Administration database.
@@ -117,7 +117,7 @@ Stop Firely Server before you edit the file, since SQLite does not handle concur
 **SQL Server running in a Docker container**, using the sqlcmd that ships with the ``mssql`` images::
 
   docker exec -it firelyserver_sql_2025 /opt/mssql-tools18/bin/sqlcmd \
-    -C -S localhost -U sa -P '<password>' -d Firely_Admin \
+    -C -S localhost -U sa -P '<password>' -d fs_admin \
     -Q "DELETE FROM vonk.importhistory WHERE SourceName LIKE '%hl7-extensions-r4-5.3.0.car';"
 
 Here ``firelyserver_sql_2025`` is the name of the container running SQL Server, and ``-S localhost`` refers to the server inside that container.
@@ -125,8 +125,8 @@ On older images the tools are in ``/opt/mssql-tools/bin/sqlcmd``.
 
 **MongoDB**, with `mongosh <https://www.mongodb.com/docs/mongodb-shell/>`_::
 
-  mongosh "mongodb://localhost/vonkadmin" \
-    --eval 'db.importhistory.deleteMany({ SourceName: /hl7-extensions-r4-5\.3\.0\.car$/ })'
+  mongosh "mongodb://localhost/fs_admin" \
+    --eval 'db.importhistory.deleteMany({ source_name: /hl7-extensions-r4-5\.3\.0\.car$/ })'
 
 Use the database from the ``ConnectionString`` in the ``Administration.MongoDbOptions`` :ref:`setting<configure_mongodb_admin>`.
 Run ``show collections`` and ``db.importhistory.findOne()`` first to confirm the collection and field names in your deployment.

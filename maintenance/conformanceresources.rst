@@ -84,13 +84,22 @@ If you wish to force a renewed import of a specific file, you should:
 Remove entries from the import history
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Each entry in the import history has a ``SourceName``, holding the path of the file - or the endpoint of the Simplifier project - that was imported.
-Removing an entry makes Firely Server import that source again on the next startup, or on the next call to :ref:`$import-resources<conformance_on_demand>`.
+Every entry in the import history records three things:
 
-Removing an entry does not remove the conformance resources that were imported from it. They are updated (or re-created) by the next import run.
+* the source name: the full path of the file that was read, or the endpoint of the Simplifier project;
+* the MD5 hash of the file (empty for Simplifier projects);
+* the timestamp of the import.
 
-The examples below all remove the entry for a file named ``my-package.car``.
-Adjust the connection details, the name of the Administration database and the filename to your own situation.
+Firely Server reads the ImportDirectory recursively, so a file in a subfolder is recorded with its complete path, for example ``/app/vonk-import.R4/myprofiles/StructureDefinition-MyPatient.json``.
+That makes it easy to select all the files of one subfolder at once.
+Individual ``.json`` and ``.xml`` files each get their own entry; a ``.zip`` or ``.car`` archive gets a single entry for the whole archive.
+
+Removing an entry makes Firely Server read that source again on the next startup, or on the next call to :ref:`$import-resources<conformance_on_demand>`.
+It does not remove the conformance resources that were imported earlier - those are updated by the next import run.
+
+The examples below remove the entries for all files in the ``myprofiles`` subfolder of the R4 import directory ``vonk-import.R4``.
+Adjust the connection details, the name of the Administration database and the path to your own situation.
+On Windows the paths are recorded with backslashes, so match on ``%\vonk-import.R4\myprofiles\%`` there.
 
 .. tip::
 
@@ -100,7 +109,7 @@ Adjust the connection details, the name of the Administration database and the f
 **SQLite** (the default for the Administration database), with the `sqlite3 <https://sqlite.org/cli.html>`_ command line tool::
 
   sqlite3 ./data/vonkadmin.db \
-    "DELETE FROM importhistory WHERE SourceName LIKE '%my-package.car';"
+    "DELETE FROM importhistory WHERE SourceName LIKE '%/vonk-import.R4/myprofiles/%';"
 
 Use the file from the ``ConnectionString`` in the ``Administration.SQLiteDbOptions`` :ref:`setting<configure_sqlite_admin>`, ``./data/vonkadmin.db`` by default.
 Stop Firely Server before you edit the file, since SQLite does not handle concurrent writes well.
@@ -108,7 +117,7 @@ Stop Firely Server before you edit the file, since SQLite does not handle concur
 **SQL Server**, with the `sqlcmd <https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility>`_ utility installed on your own machine::
 
   sqlcmd -C -S localhost -U sa -P '<password>' -d fs_admin \
-    -Q "DELETE FROM vonk.importhistory WHERE SourceName LIKE '%my-package.car';"
+    -Q "DELETE FROM vonk.importhistory WHERE SourceName LIKE '%/vonk-import.R4/myprofiles/%';"
 
 * ``-S`` is the SQL Server instance, ``-d`` the name of the Administration database.
 * ``-C`` tells sqlcmd 18 and higher to trust the server certificate. Leave it out if the server has a certificate that your machine trusts.
@@ -118,7 +127,7 @@ Stop Firely Server before you edit the file, since SQLite does not handle concur
 
   docker exec -it firelyserver_sql_2025 /opt/mssql-tools18/bin/sqlcmd \
     -C -S localhost -U sa -P '<password>' -d fs_admin \
-    -Q "DELETE FROM vonk.importhistory WHERE SourceName LIKE '%my-package.car';"
+    -Q "DELETE FROM vonk.importhistory WHERE SourceName LIKE '%/vonk-import.R4/myprofiles/%';"
 
 Here ``firelyserver_sql_2025`` is the name of the container running SQL Server, and ``-S localhost`` refers to the server inside that container.
 On older images the tools are in ``/opt/mssql-tools/bin/sqlcmd``.
@@ -126,10 +135,16 @@ On older images the tools are in ``/opt/mssql-tools/bin/sqlcmd``.
 **MongoDB**, with `mongosh <https://www.mongodb.com/docs/mongodb-shell/>`_::
 
   mongosh "mongodb://localhost/fs_admin" \
-    --eval 'db.importhistory.deleteMany({ source_name: /my-package\.car$/ })'
+    --eval 'db.importhistory.deleteMany({ source_name: /\/vonk-import\.R4\/myprofiles\// })'
 
 Use the database from the ``ConnectionString`` in the ``Administration.MongoDbOptions`` :ref:`setting<configure_mongodb_admin>`.
-Run ``show collections`` and ``db.importhistory.findOne()`` first to confirm the collection and field names in your deployment.
+Note that MongoDB stores the fields in snake_case: ``source_name``, ``md5_hash`` and ``timestamp``, whereas SQL Server and SQLite use the columns ``SourceName``, ``Md5Hash`` and ``TimeStamp``.
+
+.. attention::
+
+   Firely Server recognizes a previously imported file by the MD5 hash of its contents, not by its name.
+   So if the very same file is also registered under a different source name - because you moved or copied it, for instance - it is still considered imported and will be skipped.
+   Remove those entries as well; you can find them by their identical ``Md5Hash`` value.
 
 .. attention::
 

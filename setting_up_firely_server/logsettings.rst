@@ -198,8 +198,8 @@ The ``File`` sink will write to a file, possibly rolling it by interval or size.
 	Other values that you can set for the File log are:
 
 	* ``rollingInterval``: When this interval expires, the log system will start a new file. The start datetime of each interval is added to the filename. Valid values are ``Infinite``, ``Year``, ``Month``, ``Day``, ``Hour``, ``Minute``.
-	* ``fileSizeLimitBytes``: Limit the size of the log file, which is 1GB by default. When it is full, the log system will start a new file.
-	* ``retainedFileCountLimit``: If more than this number of log files is written, the oldest will be deleted. Default value is 31. Explicitly setting it to an empty value means files are never deleted.
+	* ``fileSizeLimitBytes``: Limits the size of the log file. If not specified, the default limit is 1 GB. When the limit is reached, the logging system starts a new file. Explicitly setting this value to an empty value means there is no file size limit.
+	* ``retainedFileCountLimit``: If more than this number of log files are written, the oldest files will be deleted. Default value is 7. If not specified, the default value is 31. Explicitly setting it to an empty value means files are never deleted.
 	* ``outputTemplate``: as described for `Console`_.
 	* ``restrictedToMinimumLevel``: as described for `Console`_.
 

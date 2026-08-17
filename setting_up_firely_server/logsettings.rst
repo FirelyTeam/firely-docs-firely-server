@@ -53,24 +53,14 @@ Some additional namespaces you might want to log are:
 - ``Microsoft.AspNetCore.Hosting.Diagnostics`` to log individual requests
 - ``System`` to log events from the System libraries
 
-Please note that the namespaces are evaluated in order from top to bottom, so more generic 'catch all' namespaces should be at the bottom of the list.
-So this will log events on ``Vonk.Repository.Sql.Raw`` on ``Information`` level::
+The order of entries in the ``Override`` section does not matter. The most specific (longest matching) namespace always wins, regardless of where it appears in the list.
+So in both of these examples, events on ``Vonk.Repository.Sql.Raw`` are logged at ``Information`` level, while all other ``Vonk.*`` namespaces use ``Warning``::
 
 	"MinimumLevel": {
 		"Default": "Error",
 		"Override": {
 			"Vonk.Repository.Sql.Raw": "Information",
 			"Vonk": "Warning"
-		}
-	},
-
-But in this (purposefully incorrect) example the ``Warning`` level on the ``Vonk`` namespace will override the ``Information`` level on the ``Vonk.Repository.Sql.Raw`` namespace::
-
-	"MinimumLevel": {
-		"Default": "Error",
-		"Override": {
-			"Vonk": "Warning",
-			"Vonk.Repository.Sql.Raw": "Information"
 		}
 	},
 

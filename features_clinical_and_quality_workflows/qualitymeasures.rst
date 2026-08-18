@@ -445,13 +445,17 @@ Overview
   - Affects server state: **conditional**
 
 **HTTP methods**
-  - ``POST`` (type level)
-  - ``GET`` (type level, when all parameters can be provided as query parameters)
+  - ``POST`` (type level; instance level since Firely Server 6.9.0)
+  - ``GET`` (type level; instance level since Firely Server 6.9.0, when all parameters can be provided as query parameters)
 
-.. important::
+.. note::
 
-   Invocation at the instance level (``[base]/Measure/[id]/$evaluate-measure``)
-   is not currently supported. Use the type-level operation with the
+   Since Firely Server 6.9.0, the operation can also be invoked at the
+   instance level (``[base]/Measure/[id]/$evaluate-measure``). Supplying a
+   ``url`` parameter on an instance-level call is rejected with an HTTP 400
+   response, and an unresolvable ``Measure`` id returns an HTTP 404 response.
+
+   On servers older than 6.9.0, use the type-level operation with the
    ``measure`` parameter instead.
 
 
@@ -519,8 +523,14 @@ Firely Server supports the following parameters:
 |                   |           |                         |             |   aggregated counts (e.g. numerator,        |
 |                   |           |                         |             |   denominator).                             |
 |                   |           |                         |             |                                             |
-|                   |           |                         |             | The ``subject-list`` report type defined in |
-|                   |           |                         |             | the FHIR specification is not supported.    |
+|                   |           |                         |             | - ``subject-list`` (Group subjects only,    |
+|                   |           |                         |             |   since Firely Server 6.9.0): returns       |
+|                   |           |                         |             |   aggregated population counts plus a       |
+|                   |           |                         |             |   contained individual MeasureReport per    |
+|                   |           |                         |             |   group member.                             |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | Not supported for a ``Patient`` subject, or |
+|                   |           |                         |             | on Firely Server versions older than 6.9.0. |
 |                   |           |                         |             |                                             |
 |                   |           |                         |             | If not specified, the default is            |
 |                   |           |                         |             | ``individual``.                             |

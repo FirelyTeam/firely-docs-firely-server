@@ -445,18 +445,15 @@ Overview
   - Affects server state: **conditional**
 
 **HTTP methods**
-  - ``POST`` (type level; instance level since Firely Server 6.9.0)
-  - ``GET`` (type level; instance level since Firely Server 6.9.0, when all parameters can be provided as query parameters)
+  - ``POST`` (type level or instance level)
+  - ``GET`` (type level or instance level, when all parameters can be provided as query parameters)
 
 .. note::
 
-   Since Firely Server 6.9.0, the operation can also be invoked at the
-   instance level (``[base]/Measure/[id]/$evaluate-measure``). Supplying a
-   ``url`` parameter on an instance-level call is rejected with an HTTP 400
-   response, and an unresolvable ``Measure`` id returns an HTTP 404 response.
-
-   On servers older than 6.9.0, use the type-level operation with the
-   ``measure`` parameter instead.
+   Invocation at the instance level (``[base]/Measure/[id]/$evaluate-measure``)
+   is also supported. Supplying a ``url`` parameter on an instance-level call
+   is rejected with an HTTP 400 response, and an unresolvable ``Measure`` id
+   returns an HTTP 404 response.
 
 
 .. note::
@@ -523,14 +520,12 @@ Firely Server supports the following parameters:
 |                   |           |                         |             |   aggregated counts (e.g. numerator,        |
 |                   |           |                         |             |   denominator).                             |
 |                   |           |                         |             |                                             |
-|                   |           |                         |             | - ``subject-list`` (Group subjects only,    |
-|                   |           |                         |             |   since Firely Server 6.9.0): returns       |
-|                   |           |                         |             |   aggregated population counts plus a       |
-|                   |           |                         |             |   contained individual MeasureReport per    |
-|                   |           |                         |             |   group member.                             |
+|                   |           |                         |             | - ``subject-list``: for a ``Group``         |
+|                   |           |                         |             |   subject, returns aggregated population    |
+|                   |           |                         |             |   counts plus a contained individual        |
+|                   |           |                         |             |   MeasureReport per group member.           |
 |                   |           |                         |             |                                             |
-|                   |           |                         |             | Not supported for a ``Patient`` subject, or |
-|                   |           |                         |             | on Firely Server versions older than 6.9.0. |
+|                   |           |                         |             | Not supported for a ``Patient`` subject.    |
 |                   |           |                         |             |                                             |
 |                   |           |                         |             | If not specified, the default is            |
 |                   |           |                         |             | ``individual``.                             |

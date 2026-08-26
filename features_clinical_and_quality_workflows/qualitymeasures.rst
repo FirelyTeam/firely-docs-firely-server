@@ -445,14 +445,15 @@ Overview
   - Affects server state: **conditional**
 
 **HTTP methods**
-  - ``POST`` (type level)
-  - ``GET`` (type level, when all parameters can be provided as query parameters)
+  - ``POST`` (type level or instance level)
+  - ``GET`` (type level or instance level, when all parameters can be provided as query parameters)
 
-.. important::
+.. note::
 
    Invocation at the instance level (``[base]/Measure/[id]/$evaluate-measure``)
-   is not currently supported. Use the type-level operation with the
-   ``measure`` parameter instead.
+   is also supported. Supplying a ``url`` parameter on an instance-level call
+   is rejected with an HTTP 400 response, and an unresolvable ``Measure`` id
+   returns an HTTP 404 response.
 
 
 .. note::
@@ -519,8 +520,12 @@ Firely Server supports the following parameters:
 |                   |           |                         |             |   aggregated counts (e.g. numerator,        |
 |                   |           |                         |             |   denominator).                             |
 |                   |           |                         |             |                                             |
-|                   |           |                         |             | The ``subject-list`` report type defined in |
-|                   |           |                         |             | the FHIR specification is not supported.    |
+|                   |           |                         |             | - ``subject-list``: for a ``Group``         |
+|                   |           |                         |             |   subject, returns aggregated population    |
+|                   |           |                         |             |   counts plus a contained individual        |
+|                   |           |                         |             |   MeasureReport per group member.           |
+|                   |           |                         |             |                                             |
+|                   |           |                         |             | Not supported for a ``Patient`` subject.    |
 |                   |           |                         |             |                                             |
 |                   |           |                         |             | If not specified, the default is            |
 |                   |           |                         |             | ``individual``.                             |

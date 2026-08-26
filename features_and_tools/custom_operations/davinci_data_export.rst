@@ -239,7 +239,7 @@ See the section "Filtering export results with SMART scopes" on :ref:`feature_bu
 
 Restrict clients to DaVinci Data Export only
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-In addition to the standard SMART authorization, the DaVinci Data Export supports a mechanism that restricts background clients to only the operations and resource types relevant to the DaVinci ATR use case. 
+In addition to the standard SMART authorization, ATR clients SHOULD always be restricted to only the operations and resource types relevant to the DaVinci ATR use case. This minimizes the risk of leaking information or allowing unauthorized access. DaVinci Data Export supports a mechanism for restricting background clients in this way.
 
 The operations are:
 

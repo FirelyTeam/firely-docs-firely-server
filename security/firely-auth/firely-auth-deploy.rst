@@ -6,12 +6,12 @@ Deployment
 License
 -------
 
-You can use your Firely Server license file, provided that it contains the license token for Firely Auth: ``http://fire.ly/server/auth/unlimited``.
-This token is included in the evaluation license for Firely Server, and in your production license if Firely Auth is included in your order.
+You can use your Firely Server license file. Every Firely Server license contains a license token for Firely Auth: either ``http://fire.ly/server/auth`` (limited to three registered clients in total) or ``http://fire.ly/server/auth/unlimited`` (no limit on the number of registered clients).
+The ``http://fire.ly/server/auth/unlimited`` token is also included in the evaluation license for Firely Server.
 
 Configure the path to the license file in the appsettings, section :ref:`firely_auth_settings_license`.
 
-In addition to the Firely license file, you will also need a Duende IdentityServer license key file named ``Duende_License.key``. This file will be provided by Firely upon purchase of Firely Auth and is required for production use. You can place this file adjacent to the ``Firely.Auth.Core.exe`` or provide the license key string via the environment variable ``FIRELY_AUTH_License__DuendeLicenseString`` or in the appsettings.json file under the section ``FirelyAuth.License:DuendeLicenseString``.
+In addition to the Firely license file, you will also need a Duende IdentityServer license key file named ``Duende_License.key``. This file will be provided by Firely and is required for production use. You can place this file adjacent to the ``Firely.Auth.Core.exe`` or provide the license key string via the environment variable ``FIRELY_AUTH_License__DuendeLicenseString`` or in the appsettings.json file under the section ``FirelyAuth.License:DuendeLicenseString``.
 
 Supported browsers
 ------------------

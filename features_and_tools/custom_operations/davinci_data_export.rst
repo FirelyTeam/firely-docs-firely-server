@@ -250,7 +250,8 @@ The operations are:
 In order to restrict a client to only these operations, the SMART security token must include the following claims:
 
 * http://server.fire.ly/auth/claims/critical/IsAtrClient = true
-* fhirUser = { a reference to a FHIR resource representing the client, e.g. a Device or Practitioner }
+* The client uses the ``client_credentials`` flow.
+* fhirUser = { a reference to a Device resource representing the client }
 * groupId = { the groupId of the ATR Group that the client is allowed to export. This groupId is used in the AccessPolicyDefinition }
 
 Since all other access is denied, the client will also have to be granted read access to the resources, used in these operations. This can be done using an AccessPolicy, referencing an AccessPolicyDefinition (see :ref:`feature_accesscontrol_permissions`)
@@ -269,11 +270,11 @@ Since all other access is denied, the client will also have to be granted read a
   		"status": "active",
   		"policy": [{
     		"type": { "coding": [{ "code": "smart-v2" }] },
-    		"restriction": ["system/Group.rs?_identifier=atr|#groupId#", "system/Consent.rs", "system/Coverage.rs", "system/Patient.rs"]
+    		"restriction": ["system/Group.rs?_identifier=https://example.com/fhir/sid/atr-groupid|#groupId#", "system/Consent.rs", "system/Coverage.rs", "system/Patient.rs"]
   		}]
 	}
 
-Note that in the AccessPolicyDefinition above, an identifier with system 'atr' is expected. This is just an example and will likely be a different system in your database, so make sure to use that in order to restrict the client to the correct Group. 
+Note that in the AccessPolicyDefinition above, an identifier with system 'atr' is expected (e.g. https://example.com/fhir/sid/atr-groupid). This is just an example and will likely be a different system in your database, so make sure to use that in order to restrict the client to the correct Group. 
 
 As you can see, only the most necessary resource types are allowed here. If you would like to allow the client to receive additional resource types (as used in the _type parameter for the export), add them to the 'restriction' array.
 

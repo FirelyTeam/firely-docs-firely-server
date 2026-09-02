@@ -27,7 +27,6 @@ Fix
 Security
 ^^^^^^^^
 
-#. Pinned the Docker base images (``aspnet``, ``sdk``, ``alpine``) by ``sha256`` digest to remediate vulnerabilities reported by Trivy and improve the reproducibility of the image supply chain.
 #. Updated the ``lodash`` dependency and a transitive ``nanoid`` dependency used by the Firely Auth user interface to remediate reported vulnerabilities.
 
 .. _firelyauth_releasenotes_4.6.0:

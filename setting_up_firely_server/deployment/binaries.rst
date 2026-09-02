@@ -9,7 +9,8 @@ Afterwards it is possible to run Firely Server as described in the :ref:`Basic i
 The necessary files can be downloaded as zip files. All versions (incl. historic versions) can be accessed `here <https://downloads.fire.ly/firely-server/versions/>`_.
 
 Please consider running a :ref:`reverse proxy <deploy_reverseProxy>` when running Firely Server natively.
-Firely Server depends on the .NET Core platform and is therefore cross-platform in all supported `environments <https://github.com/dotnet/core/blob/main/release-notes/8.0/supported-os.md>`_.
+Firely Server depends on the .NET platform and is therefore cross-platform in all supported `environments <https://github.com/dotnet/core/blob/main/release-notes/10.0/supported-os.md>`_.
+As of Firely Server 6.9.0 the .NET 10 runtime is required; earlier releases (5.7.0 up to and including 6.8.x) require .NET 8.
 
 For a production usage, Microsoft SQL Server or MongoDB need to be installed in the same environment in addition to Firely Server.
 
@@ -22,7 +23,7 @@ Firely Server is a high-performance FHIR server designed for scalability and rel
 
 **Deployment Options & Operating System:**
   
-Firely Server is supported on all platforms supported by the `.NET framework <https://github.com/dotnet/core/blob/main/release-notes/8.0/supported-os.md>`_.
+Firely Server is supported on all platforms supported by `.NET 10 <https://github.com/dotnet/core/blob/main/release-notes/10.0/supported-os.md>`_.
 In practice, the choice of operating system should align with your team's operational expertise and familiarity with the platform.
 There are no limitations regarding any hypervisor being used when using a virtual machine instead of a physical server.
 

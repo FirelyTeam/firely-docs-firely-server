@@ -10,9 +10,10 @@ Prerequisites and Preparations
    #. get a free community edition at https://www.visualstudio.com/downloads/
    #. be sure to select the components for C# ASP.NET Core web development
 
-* .NET Core 2.0 SDK, from https://www.microsoft.com/net/download/windows
+* .NET 10 SDK, from https://dotnet.microsoft.com/en-us/download/dotnet/10.0
 
    #. this is probably installed along with the latest Visual Studio, but needed if your VS is not up-to-date.
+   #. Firely Server targets ``net10.0`` as of version 6.9.0, so your facade project has to target ``net10.0`` as well. For Firely Server 6.8.x and older, target ``net8.0`` and use the .NET 8 SDK instead.
 
 * SQL Server 2012 or newer:
 

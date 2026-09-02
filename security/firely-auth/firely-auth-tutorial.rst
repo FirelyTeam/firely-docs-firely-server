@@ -39,13 +39,13 @@ Firely Auth is distributed as .NET Core binaries and in a Docker image. For this
 Step 2 - License
 ^^^^^^^^^^^^^^^^
 
-Firely Auth is licensed, like all plugins and additional tools of Firely Server. It uses the same license file as the Firely Server instance it works with.
-Firely Auth requires this token to be present in the license file: ``http://fire.ly/server/auth``.
-If you don't have this in your license file yet, you probably need to acquire Firely Auth first. Please :ref:`vonk-contact` for that. You can also test Firely Auth with an evaluation license. To acquire this license you can `sign up <https://fire.ly/firely-auth-trial/>`_ after which you will receive an email with the license file.
+Firely Auth is included in every Firely Server package and uses the same license file as the Firely Server instance it works with.
+Firely Auth requires one of these tokens to be present in the license file: ``http://fire.ly/server/auth`` (limited to three registered clients in total) or ``http://fire.ly/server/auth/unlimited`` (no limit on the number of registered clients).
+Every Firely Server license contains one of these tokens; if yours does not, please :ref:`vonk-contact` Firely for an updated license file. You can also test Firely Auth with an evaluation license. To acquire this license you can `sign up <https://fire.ly/firely-auth-trial/>`_ after which you will receive an email with the license file.
 By default Firely Auth will look for a license file named ``firely-auth-license.json``, adjacent to the ``Firely.Auth.Core.exe`` 
 You can adjust the location of the license file in the configuration settings, see :ref:`firely_auth_settings_license`.
 
-Additionally you will have to place a file called ``Duende_License.key`` also adjacent to the ``Firely.Auth.Core.exe``. This is required for production use but not testing or development. Firely will provide this key with purchase of Firely Auth. Please note that the path to this file cannot be configured. Alternatively, you can specify the value of the Duende license key with the environment variable ``FIRELY_AUTH_License__DuendeLicenseString`` or place this value in the appsettings.json file under the section ``FirelyAuth.License:DuendeLicenseString``:
+Additionally you will have to place a file called ``Duende_License.key`` also adjacent to the ``Firely.Auth.Core.exe``. This is required for production use but not testing or development. Firely will provide this key for production use. Please note that the path to this file cannot be configured. Alternatively, you can specify the value of the Duende license key with the environment variable ``FIRELY_AUTH_License__DuendeLicenseString`` or place this value in the appsettings.json file under the section ``FirelyAuth.License:DuendeLicenseString``:
 
   .. code-block:: json
 

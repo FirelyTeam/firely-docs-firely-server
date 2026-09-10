@@ -3,6 +3,28 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.8.0:
+
+Release 4.8.0
+-------------
+
+.. attention::
+
+    Firely Auth now logs the success, failure and error events of Duende IdentityServer at ``Information`` level. This adds roughly two log lines per token request (``ClientAuthenticationSuccessEvent`` and ``TokenIssuedSuccessEvent``) and one log line per login. If you forward your logs to a metered sink, such as Application Insights, Splunk, Seq, CloudWatch or Elasticsearch, please take this increase in log volume into account. No tokens or authorization codes end up in these log lines: Duende obfuscates token values to ``****`` followed by only the last four characters. If you prefer not to log these events, you can suppress this category, and only this category, by adding the following to your ``logsettings.instance.json``::
+
+        "Serilog": {
+            "MinimumLevel": {
+                "Override": {
+                    "Duende.IdentityServer.Events": "Warning"
+                }
+            }
+        }
+
+Feature
+^^^^^^^
+
+#. Firely Auth now raises and logs the success, failure and error events of Duende IdentityServer, so that logins and token requests can be traced back to the API client they belong to. External (SSO) logins, local logins and MFA logins each result in a log line containing the ``client_id`` of the client and the subject id of the user. A successful token request logs the ``client_id``, the subject id, the granted scopes and the grant type, which is the only way to attribute ``client_credentials`` and refresh token traffic to a specific client. Informational events are not raised. See :ref:`configure_log_level` for more details on adjusting log levels.
+
 .. _firelyauth_releasenotes_4.6.0:
 
 Release 4.6.0, March 5th, 2026

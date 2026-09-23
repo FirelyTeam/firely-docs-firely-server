@@ -73,6 +73,41 @@ for more information on configuring available plugins.
 You can configure the behavior of this operation using the
 ``LibraryEvaluateOperation`` section in the appsettings.
 
+::
+
+  "LibraryEvaluateOperation": {
+    "MaxCachedCompiledLibraries": 32,
+    "RemoteDataEndpointsOnly": false,
+    "DataEndpoint": [ ],
+    "ForwardedHeaders": [ ]
+  }
+
+.. _feature_library_evaluate_compiled_library_cache:
+
+Compiled library cache
+^^^^^^^^^^^^^^^^^^^^^^
+
+Evaluating a CQL library requires its compiled assemblies — and those of every
+library it depends on — to be loaded into the process. Firely Server keeps these
+loaded libraries in a cache and reuses them across evaluations, so a library is
+loaded and JIT-compiled once instead of once per evaluation. This matters most for
+``Measure/$evaluate-measure``, which performs one evaluation per subject per group
+and would otherwise reload the same libraries hundreds of times.
+
+The ``MaxCachedCompiledLibraries`` setting bounds how many libraries are kept
+loaded (default ``32``). The count applies to the libraries that are *evaluated*,
+not to their dependencies, which are loaded together with the library that
+references them.
+
+Setting it to ``0`` disables reuse and loads the libraries again for every single
+evaluation.
+
+.. warning::
+
+   Disabling the cache is not recommended. Each load context is released
+   asynchronously, and on Linux every JIT-compiled code region costs two memory
+   mappings, so a large measure evaluation can reach the kernel's limit on memory
+   mappings (``vm.max_map_count``) and abort the server process.
 
 Database requirements
 ^^^^^^^^^^^^^^^^^^^^^
@@ -149,12 +184,16 @@ Each ``DataEndpoint`` entry supports the following fields:
 - ``RemoteDataEndpointAuthentication``: Defines how Firely Server authenticates
   against the endpoint. Supported values include ``JWT`` and ``None``
 
-.. important::
-  
-   Firely Server expects that the response of the remote ``$everything`` operation
-   is returned as a single Bundle page. Pagination is not supported in this context,
-   and Firely Server will not follow additional pages (e.g. via ``link[relation="next"]``)
-   returned by the remote endpoint.  
+.. note::
+
+   Firely Server follows pagination of the remote ``$everything`` response. It
+   requests a page size of ``BundleOptions:DefaultCount``, follows every
+   ``link[relation="next"]`` the remote endpoint returns, and merges all pages into
+   the single Bundle the evaluation runs on.
+
+   If the remote endpoint repeats a page link — which would make the retrieval loop
+   indefinitely — the operation fails with an ``OperationOutcome`` rather than
+   evaluating on a partial compartment.
 
 The ``ForwardedHeaders`` setting can be used to forward custom HTTP headers
 from the incoming request to external data endpoints.
@@ -197,10 +236,17 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | ELM content is provided, it    |
 |                         |           |                         |             | will be re-used.               |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
-| ``subject``             | ✅        | ``string``              | 0..1        | Only Patient references are    |
-|                         |           |                         |             | supported, may be omitted if   |
-|                         |           |                         |             | no "context Patient" is        |
-|                         |           |                         |             | included in the library.       |
+| ``subject``             | ✅        | ``string``              | 0..1        | The Patient whose data forms   |
+|                         |           |                         |             | the evaluation context, as a   |
+|                         |           |                         |             | relative reference, e.g.       |
+|                         |           |                         |             | ``Patient/pat1``. Other        |
+|                         |           |                         |             | reference forms are rejected;  |
+|                         |           |                         |             | see :ref:`feature_cql_subject`.|
+|                         |           |                         |             |                                |
+|                         |           |                         |             | May be omitted when the        |
+|                         |           |                         |             | library declares no "context   |
+|                         |           |                         |             | Patient", and is required      |
+|                         |           |                         |             | when it does.                  |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``expression``          | ✅        | ``reference``           | 0..*        | The name of the expression to  |
 |                         |           |                         |             | evaluate. If omitted, all      |
@@ -380,7 +426,7 @@ Given matching input data (see :ref:`feature_qdm_example_library` for context), 
           "extension": [
             {
               "url": "http://hl7.org/fhir/StructureDefinition/cqf-cqlType",
-              "valueString": "Fhir"
+              "valueString": "FHIR.Patient"
             }
           ],
           "name": "Patient",
@@ -398,7 +444,7 @@ Given matching input data (see :ref:`feature_qdm_example_library` for context), 
           "extension": [
             {
               "url": "http://hl7.org/fhir/StructureDefinition/cqf-cqlType",
-              "valueString": "Boolean"
+              "valueString": "System.Boolean"
             }
           ],
           "name": "HasBPReading",
@@ -408,7 +454,7 @@ Given matching input data (see :ref:`feature_qdm_example_library` for context), 
           "extension": [
             {
               "url": "http://hl7.org/fhir/StructureDefinition/cqf-cqlType",
-              "valueString": "Boolean"
+              "valueString": "System.Boolean"
             }
           ],
           "name": "AdultPatients",
@@ -464,6 +510,8 @@ Overview
    on the server. By default (``persist = false``), the report is returned in the
    response only and is not persisted.
 
+.. _feature_measure_evaluate_configuration:
+
 Configuration
 ~~~~~~~~~~~~~
 
@@ -474,100 +522,417 @@ You can enable or disable this operation by including or excluding this
 namespace in the Firely Server pipeline options. See :ref:`vonk_available_plugins`
 for more information.
 
+The operation evaluates the measure through ``Library/$evaluate``, so the settings
+described in :ref:`feature_library_evaluate_configuration` — the data endpoints and
+the compiled library cache in particular — apply to it as well. Its own behavior is
+configured in the ``MeasureEvaluateOperation`` section of the appsettings.
+
+::
+
+  "MeasureEvaluateOperation": {
+    "MaxDegreeOfParallelism": 2,
+    "MaxSubjectsForSynchronousGroupBasedMeasureEvaluation": <n>
+  }
+
+``MaxDegreeOfParallelism``
+  How many groups of a measure are evaluated concurrently within a single subject
+  (default ``2``). Retrieval of a subject's data is always sequential, and the
+  resulting ``MeasureReport`` is identical in content and ordering regardless of
+  this setting. Set it to ``1`` to evaluate groups strictly one after another. A
+  value below ``1`` is rejected at startup.
+
+  Raising it increases throughput for measures with many groups, at the cost of
+  more memory and more concurrent database and terminology work per request.
+
+``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation``
+  The maximum number of distinct subjects a ``Group``-based evaluation may cover
+  when the operation is invoked synchronously. A ``Group`` that resolves to more
+  subjects than this is rejected.
+
+  Subjects are counted after de-duplication: a patient listed several times in the
+  ``Group`` — however the member references are spelled — counts once.
+
 Supported parameters
 ^^^^^^^^^^^^^^^^^^^^
 
 Firely Server supports the following parameters:
 
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| Parameter         | Supported | Type                    | Cardinality | Additional Notes                            |
-+===================+===========+=========================+=============+=============================================+
-| ``url``           | ✅        | ``canonical``           | 0..1        | Canonical URL of the Measure to evaluate.   |
-|                   |           |                         |             |                                             |
-|                   |           |                         |             | Required for type-level invocation.         |
-|                   |           |                         |             |                                             |
-|                   |           |                         |             | Versioned canonical references are allowed, |
-|                   |           |                         |             | e.g.,                                       |
-|                   |           |                         |             | ``http://example.org/fhir/Measure/          |
-|                   |           |                         |             | ExampleMeasure|1.0.0``.                     |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``subject``       | ✅        | ``string``              | 1..1        | Reference to the subject for which the      |
-|                   |           |                         |             | measure is evaluated.                       |
-|                   |           |                         |             |                                             |
-|                   |           |                         |             | Supported resource types are ``Patient``    |
-|                   |           |                         |             | and ``Group``.                              |
-|                   |           |                         |             |                                             |
-|                   |           |                         |             | When a ``Patient`` is provided, the measure |
-|                   |           |                         |             | is evaluated for that single subject.       |
-|                   |           |                         |             |                                             |
-|                   |           |                         |             | When a ``Group`` is provided, the measure   |
-|                   |           |                         |             | is evaluated for all ``Patient`` references |
-|                   |           |                         |             | contained in the Group.                     |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``periodStart``   | ✅        | ``date``                | 1..1        | Start of the measurement period.            |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``periodEnd``     | ✅        | ``date``                | 1..1        | End of the measurement period.              |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``reportType``    | ✅        | ``code``                | 0..1        | The type of measure report:                 |
-|                   |           |                         |             |                                             |
-|                   |           |                         |             | - ``individual``: Evaluates the measure for |
-|                   |           |                         |             |   a single subject (e.g. Patient or Group)  |
-|                   |           |                         |             |   and returns population membership and     |
-|                   |           |                         |             |   score for that subject.                   |
-|                   |           |                         |             |                                             |
-|                   |           |                         |             | - ``summary``: Evaluates the measure across |
-|                   |           |                         |             |   a population of subjects and returns      |
-|                   |           |                         |             |   aggregated counts (e.g. numerator,        |
-|                   |           |                         |             |   denominator).                             |
-|                   |           |                         |             |                                             |
-|                   |           |                         |             | - ``subject-list``: for a ``Group``         |
-|                   |           |                         |             |   subject, returns aggregated population    |
-|                   |           |                         |             |   counts plus a contained individual        |
-|                   |           |                         |             |   MeasureReport per group member.           |
-|                   |           |                         |             |                                             |
-|                   |           |                         |             | Not supported for a ``Patient`` subject.    |
-|                   |           |                         |             |                                             |
-|                   |           |                         |             | If not specified, the default is            |
-|                   |           |                         |             | ``individual``.                             |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``parameters``    | ✅        | ``Parameters`` resource | 0..1        | See ``Library/$evaluate`` configuration     |
-|                   |           |                         |             | for details.                                |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``useServerData`` | ✅        | ``boolean``             | 0..1        | See ``Library/$evaluate`` configuration     |
-|                   |           |                         |             | for details.                                |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``data``          | ✅        | ``Bundle``              | 0..1        | See ``Library/$evaluate`` configuration     |
-|                   |           |                         |             | for details.                                |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``dataEndpoint``  | ✅        | ``Endpoint``            | 0..1        | See ``Library/$evaluate`` configuration     |
-|                   |           |                         |             | for details.                                |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``persist``       | ✅        | ``boolean``             | 0..1        | When ``true``, the generated                |
-|                   |           |                         |             | ``MeasureReport`` is stored on the server.  |
-|                   |           |                         |             |                                             |
-|                   |           |                         |             | When ``false`` (default), the result is     |
-|                   |           |                         |             | returned in the response only.              |
-|                   |           |                         |             |                                             |
-|                   |           |                         |             | This is a proprietary parameter of Firely   |
-|                   |           |                         |             | Server.                                     |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``raw``           | ✅        | ``boolean``             | 0..1        | Return the results as a string without      |
-|                   |           |                         |             | mapping the CQL result data types back to   |
-|                   |           |                         |             | FHIR.                                       |
-|                   |           |                         |             |                                             |
-|                   |           |                         |             | This is a proprietary parameter of Firely   |
-|                   |           |                         |             | Server.                                     |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``measure``       | ❌        | ``Measure``             | 0..1        |                                             |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``version``       | ❌        | ``string``              | 0..1        |                                             |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``provider``      | ❌        | ``string``              | 0..1        |                                             |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``location``      | ❌        | ``string``              | 0..1        |                                             |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``lastReceivedOn``| ❌        | ``dateTime``            | 0..1        |                                             |
-+-------------------+-----------+-------------------------+-------------+---------------------------------------------+
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| Parameter                | Supported | Type                    | Cardinality | Additional Notes                            |
++==========================+===========+=========================+=============+=============================================+
+| ``url``                  | ✅        | ``canonical``           | 0..1        | Canonical URL of the Measure to evaluate.   |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | Required for type-level invocation.         |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | Versioned canonical references are allowed, |
+|                          |           |                         |             | e.g.,                                       |
+|                          |           |                         |             | ``http://example.org/fhir/Measure/          |
+|                          |           |                         |             | ExampleMeasure|1.0.0``.                     |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``subject``              | ✅        | ``string``              | 1..1        | Reference to the subject for which the      |
+|                          |           |                         |             | measure is evaluated.                       |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | Supported resource types are ``Patient``    |
+|                          |           |                         |             | and ``Group``.                              |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | When a ``Patient`` is provided, the measure |
+|                          |           |                         |             | is evaluated for that single subject.       |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | When a ``Group`` is provided, the measure   |
+|                          |           |                         |             | is evaluated for all ``Patient`` references |
+|                          |           |                         |             | contained in the Group.                     |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | See :ref:`feature_cql_subject`.             |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``periodStart``          | ✅        | ``date``                | 1..1        | Start of the measurement period.            |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``periodEnd``            | ✅        | ``date``                | 1..1        | End of the measurement period.              |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``reportType``           | ✅        | ``code``                | 0..1        | The type of measure report:                 |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | - ``individual``: Evaluates the measure for |
+|                          |           |                         |             |   a single subject (e.g. Patient or Group)  |
+|                          |           |                         |             |   and returns population membership and     |
+|                          |           |                         |             |   score for that subject.                   |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | - ``summary``: Evaluates the measure across |
+|                          |           |                         |             |   a population of subjects and returns      |
+|                          |           |                         |             |   aggregated counts (e.g. numerator,        |
+|                          |           |                         |             |   denominator).                             |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | - ``subject-list``: for a ``Group``         |
+|                          |           |                         |             |   subject, returns aggregated population    |
+|                          |           |                         |             |   counts plus a contained individual        |
+|                          |           |                         |             |   MeasureReport per group member.           |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | Not supported for a ``Patient`` subject.    |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | If not specified, the default is            |
+|                          |           |                         |             | ``individual``.                             |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``parameters``           | ✅        | ``Parameters`` resource | 0..1        | See ``Library/$evaluate`` configuration     |
+|                          |           |                         |             | for details.                                |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``useServerData``        | ✅        | ``boolean``             | 0..1        | See ``Library/$evaluate`` configuration     |
+|                          |           |                         |             | for details.                                |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``data``                 | ✅        | ``Bundle``              | 0..1        | See ``Library/$evaluate`` configuration     |
+|                          |           |                         |             | for details.                                |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``dataEndpoint``         | ✅        | ``Endpoint``            | 0..1        | See ``Library/$evaluate`` configuration     |
+|                          |           |                         |             | for details.                                |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``persist``              | ✅        | ``boolean``             | 0..1        | When ``true``, the generated                |
+|                          |           |                         |             | ``MeasureReport`` is stored on the server.  |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | When ``false`` (default), the result is     |
+|                          |           |                         |             | returned in the response only.              |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | This is a proprietary parameter of Firely   |
+|                          |           |                         |             | Server.                                     |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``rawPopulationCounts``  | ✅        | ``boolean``             | 0..1        | When ``true``, every population count in the|
+|                          |           |                         |             | report reflects only the result of that     |
+|                          |           |                         |             | population's own criteria expression, rather|
+|                          |           |                         |             | than the label-based composition prescribed |
+|                          |           |                         |             | by the Quality Measure IG. The              |
+|                          |           |                         |             | ``measureScore`` is unaffected.             |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | Defaults to ``false``. See                  |
+|                          |           |                         |             | :ref:`feature_measure_evaluate_counts`.     |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | This is a proprietary parameter of Firely   |
+|                          |           |                         |             | Server.                                     |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``raw``                  | ✅        | ``boolean``             | 0..1        | Return the results as a string without      |
+|                          |           |                         |             | mapping the CQL result data types back to   |
+|                          |           |                         |             | FHIR.                                       |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | This is a proprietary parameter of Firely   |
+|                          |           |                         |             | Server.                                     |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``measure``              | ❌        | ``Measure``             | 0..1        |                                             |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``version``              | ❌        | ``string``              | 0..1        |                                             |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``provider``             | ❌        | ``string``              | 0..1        |                                             |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``location``             | ❌        | ``string``              | 0..1        |                                             |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+| ``lastReceivedOn``       | ❌        | ``dateTime``            | 0..1        |                                             |
++--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
+
+.. _feature_measure_evaluate_scoring:
+
+Measure scoring
+~~~~~~~~~~~~~~~
+
+The scoring type of a measure determines which populations are evaluated, how their
+counts are composed, and how the ``measureScore`` is calculated. Firely Server reads
+it from ``Measure.scoring``, using the codes of the
+``http://terminology.hl7.org/CodeSystem/measure-scoring`` CodeSystem.
+
++--------------------------+-----------+--------------------------------------------------------------+
+| Scoring type             | Supported | Notes                                                        |
++==========================+===========+==============================================================+
+| ``proportion``           | ✅        | The numerator is a subset of the denominator.                |
++--------------------------+-----------+--------------------------------------------------------------+
+| ``ratio``                | ✅        | The numerator and denominator are derived independently.     |
++--------------------------+-----------+--------------------------------------------------------------+
+| ``cohort``               | ✅        | Only an initial population is evaluated; no score.           |
++--------------------------+-----------+--------------------------------------------------------------+
+| ``continuous-variable``  | ❌        | Rejected with HTTP 422, issue type ``not-supported``.        |
++--------------------------+-----------+--------------------------------------------------------------+
+
+A ``Measure`` that declares no scoring type at all is still evaluated: every
+population criteria it defines is executed and reported, including population types
+that no scoring type requires. No ``measureScore`` is produced in that case.
+
+Proportion scoring
+^^^^^^^^^^^^^^^^^^
+
+The numerator is a subset of the denominator. The score is the numerator divided by
+the denominator, after the exclusion and exception populations have been subtracted::
+
+  denominator = (initial-population ∩ denominator)
+                 − denominator-exclusion − denominator-exception
+  numerator   = (denominator ∩ numerator) − numerator-exclusion
+  score       = numerator / denominator
+
+Ratio scoring
+^^^^^^^^^^^^^
+
+The numerator and denominator are derived **independently** of one another — unlike
+``proportion``, the numerator is not a subset of the denominator. Both are derived
+from the group's single initial population::
+
+  numerator   = (initial-population ∩ numerator) − numerator-exclusion
+  denominator = (initial-population ∩ denominator) − denominator-exclusion
+  score       = numerator / denominator
+
+A ``denominator-exception`` population is not permitted on a ratio-scored group, and
+a ratio-scored group cannot carry stratifiers. Both are rejected before evaluation;
+see :ref:`feature_measure_evaluate_validation`.
+
+.. note::
+
+   Measures that require *multiple* initial populations per group — one for the
+   numerator and one for the denominator — are not yet supported. A ratio-scored
+   group is evaluated against a single initial population shared by both paths.
+
+.. _feature_measure_evaluate_scoring_override:
+
+Group-level scoring override
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A single ``Measure`` can mix scoring types across its groups. A group that carries a
+scoring extension overrides ``Measure.scoring`` for that group only:
+
+- ``http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-scoring`` (US realm)
+- ``http://hl7.org/fhir/uv/cqm/StructureDefinition/cqm-scoring`` (UV realm)
+
+Both use the same ``measure-scoring`` codes as ``Measure.scoring``, and the value is
+validated exactly like ``Measure.scoring`` — including whether the populations the
+scoring type requires are present.
+
+The *effective* scoring type of a group — its override if it has one, and
+``Measure.scoring`` otherwise — is what every rule on this page is judged against.
+A group that overrides a ratio ``Measure`` to ``proportion`` may therefore carry a
+``denominator-exception``, while a group that overrides a proportion ``Measure`` to
+``ratio`` may not.
+
+.. _feature_measure_evaluate_populationbasis:
+
+Population basis
+~~~~~~~~~~~~~~~~
+
+The population basis of a population declares what its criteria expression returns:
+``boolean`` for a patient-based measure, or a FHIR resource type such as
+``Encounter`` for a measure that counts events rather than subjects.
+
+Firely Server reads it from either realm's extension on the population:
+
+- ``http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-populationBasis`` (US realm)
+- ``http://hl7.org/fhir/uv/cqm/StructureDefinition/cqm-populationBasis`` (UV realm)
+
+The declared basis is validated against the return type of the CQL expression the
+population's criteria names. A basis can only be a FHIR type, and FHIR type names
+are case-sensitive — ``Boolean`` is not ``boolean``.
+
+Consistency within a membership path
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Composing population counts and the score means intersecting and subtracting sets of
+cases, which is only meaningful when all populations involved describe the same kind
+of case. All populations within one *membership path* must therefore resolve to a
+single, common basis.
+
+Which populations form a path depends on the group's effective scoring type:
+
+- **proportion** — the whole group is one path. The initial population, the
+  denominator tree and the numerator tree must all share a basis.
+- **ratio** — the numerator path (``numerator``, ``numerator-exclusion``) and the
+  denominator path (``denominator``, ``denominator-exclusion``) are validated
+  independently and may use different bases. The initial population feeds both, so
+  its basis must be consistent with each.
+
+Mixing bases within one path is rejected with HTTP 422. When no basis is declared,
+it can only be observed from the results, so the same check is applied again during
+scoring, against the types the expressions actually returned.
+
+.. _feature_measure_evaluate_counts:
+
+Population counts
+~~~~~~~~~~~~~~~~~
+
+By default, the population counts in the ``MeasureReport`` follow the **label-based
+membership algorithm** of the FHIR Quality Measure IG, rather than the raw result of
+each population's criteria expression. For ``proportion`` and ``ratio`` scoring, a
+case is only counted for a population when it also belongs to the population that
+population is derived from:
+
+- the denominator only counts cases in the initial population;
+- the numerator only counts cases in the denominator that are not
+  denominator-excluded (``proportion``), or cases in the initial population
+  (``ratio``);
+- exclusion and exception counts are restricted to their parent population;
+- a denominator exception does not count cases that meet the numerator criteria.
+
+Exclusion and exception cases remain *included* in the count of their parent
+population — they are only subtracted when the ``measureScore`` is calculated.
+
+A subject whose ``Denominator Exclusion`` expression returns ``true`` but that is not
+a member of the denominator therefore counts as 0 for ``denominator-exclusion``.
+
+Raw population counts
+^^^^^^^^^^^^^^^^^^^^^
+
+Some certification programs — NCQA in particular — expect each population count to
+reflect its own criteria expression, without the label-based composition. Setting the
+proprietary ``rawPopulationCounts`` parameter to ``true`` reports the counts that way,
+and the same rule governs the membership of each population's ``subjectResults`` list
+in a ``subject-list`` report.
+
+The ``measureScore`` is **not** affected by this parameter: it always follows the
+label-based membership rules. In the example above, the subject counts as 1 for
+``denominator-exclusion`` under ``rawPopulationCounts=true``, while the score stays
+the same.
+
+.. _feature_measure_evaluate_stratifiers:
+
+Stratifiers
+~~~~~~~~~~~
+
+A stratifier partitions the reported populations of a group into strata. Firely
+Server supports **value-based (component) stratifiers**, declared as
+``Measure.group.stratifier.component[]``.
+
++-------------------------------------------+-----------+----------------------------------------------+
+| Stratifier form                           | Supported | Notes                                        |
++===========================================+===========+==============================================+
+| ``stratifier.component[]``                | ✅        | Only on groups with a ``boolean`` basis.     |
++-------------------------------------------+-----------+----------------------------------------------+
+| ``stratifier.criteria``                   | ❌        | Rejected with HTTP 501, not yet implemented. |
++-------------------------------------------+-----------+----------------------------------------------+
+
+Each component's ``text/cql-identifier`` expression is evaluated per subject, and the
+subjects are stratified by the **cross-product of their observed component values**.
+
+.. note::
+
+   A subject may produce several values for one component — one product line per
+   enrollment, for example. It then appears in one stratum per combination, so the
+   per-stratum counts of a group can legitimately sum to more than the group's own
+   population counts.
+
+Each stratum is reported with:
+
+- ``stratum.component[]`` code/value pairs. A coded value is reported as a
+  ``CodeableConcept`` carrying the ``coding`` plus a ``text`` holding the code
+  string; a non-coded primitive is reported as ``text`` only; an absent value is
+  reported as a ``CodeableConcept`` carrying only the ``data-absent-reason``
+  extension with code ``unknown``.
+- population counts, following the same rules as the group's own counts — see
+  :ref:`feature_measure_evaluate_counts`. A stratum never reports a member for a
+  population its group excludes.
+- a ``measureScore``, for proportion-scored groups. It always follows the
+  label-based membership rules, mirroring the group-level score.
+- ``subjectResults`` ``List`` resources, in ``subject-list`` reports.
+
+An ``individual`` report keeps strata whose counts are all 0, so the subject's
+observed component values are always visible. ``summary`` and ``subject-list``
+reports omit strata that contain no in-population subject.
+
+A ratio-scored group cannot carry stratifiers: the Quality Measure IG forbids the
+combination.
+
+.. _feature_measure_evaluate_validation:
+
+Measure validation
+~~~~~~~~~~~~~~~~~~
+
+A ``Measure`` is validated before any CQL is evaluated, so an authoring problem is
+reported as a client error naming the group and population concerned, rather than
+surfacing part-way through a long population run.
+
+Rejected with HTTP 422
+^^^^^^^^^^^^^^^^^^^^^^
+
+*Measure level*
+
+- No ``url``. The canonical URL identifies the measure in ``MeasureReport.measure``.
+- No single resolvable logic library: a missing ``Measure.library``, more than one
+  reference, or an empty canonical.
+- A ``Measure.library`` canonical that resolves to a resource of another type —
+  canonicals are unique per resource type, but not across types.
+- A scoring code the ``measure-scoring`` CodeSystem does not define (issue type
+  ``invalid``), or ``continuous-variable`` (issue type ``not-supported``).
+
+*Group level*
+
+- A population type the group's effective scoring type does not evaluate. Where the
+  Quality Measure IG marks it Not Permitted — a ``denominator`` on a cohort-scored
+  group, a ``denominator-exception`` on a ratio-scored group, a
+  ``measure-population`` on either — the issue type is ``invalid`` and the ``Measure``
+  should be corrected. Where the IG's population table does not cover it at all —
+  ``measure-observation``, on any ``Measure`` — the issue type is ``not-supported``,
+  because no edit to the ``Measure`` resolves it.
+- The same population type defined more than once in one group.
+- A population whose ``code`` the ``measure-population`` CodeSystem does not define,
+  or that carries no coding from that CodeSystem. The population is named by its
+  element id where it has one, and by its position in the group otherwise.
+- A population whose criteria names no CQL expression: no criteria at all, an empty
+  expression, or a criteria in another expression language than ``text/cql-identifier``.
+- Populations within one membership path that do not share a common population basis
+  (see :ref:`feature_measure_evaluate_populationbasis`).
+- A ``Library`` parameter whose declared type is not a FHIR type.
+- A stratifier that declares neither or both of ``criteria`` and ``component[]``,
+  duplicate stratifier or component ids, a stratifier on a ratio-scored group, or a
+  component on a group whose basis is not ``boolean``.
+- A stratifier component expression that returns resources rather than values.
+
+*Result level*
+
+- A population the evaluation returned no result for. This happens when the
+  ``Library`` does not define the named expression, or when the expression's value
+  cannot be represented in a FHIR ``Parameters`` resource and was therefore dropped.
+  The error names the group, the population, the expression and the library expected
+  to define it.
+- A population whose criteria returned results of more than one type.
+- A population result of a type the counting cannot identify a case by. A case must
+  be identifiable as a resource, a ``boolean``, a ``decimal``, a ``date`` or an
+  ``integer``; a ``Quantity`` or a ``Coding``, for instance, cannot be counted.
+
+Rejected with other status codes
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- **HTTP 412** — a group without an id, or several groups sharing one. The group id
+  is what the results, ``MeasureReport.group.id`` and the stratum memberships are
+  filed under.
+- **HTTP 404** — a ``Measure.library`` canonical that resolves to no resource. This
+  is reported before any subject data is retrieved, and names the library url and
+  version.
+- **HTTP 501** — a criteria-based stratifier, which is not yet implemented.
 
 Output parameters
 ~~~~~~~~~~~~~~~~~
@@ -732,8 +1097,12 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | will not execute correctly if  |
 |                         |           |                         |             | input parameters are needed.   |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
-| ``subject``             | ✅        | ``string``              | 0..1        | Only Patient references are    |
-|                         |           |                         |             | supported.                     |
+| ``subject``             | ✅        | ``string``              | 0..1        | The Patient whose data forms   |
+|                         |           |                         |             | the evaluation context, as a   |
+|                         |           |                         |             | relative reference, e.g.       |
+|                         |           |                         |             | ``Patient/pat1``. Other        |
+|                         |           |                         |             | reference forms are rejected;  |
+|                         |           |                         |             | see :ref:`feature_cql_subject`.|
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``parameters``          | ✅        | ``Parameters``          | 0..1        | Input parameters passed into   |
 |                         |           |                         |             | the evaluation context. See    |
@@ -750,9 +1119,22 @@ Firely Server supports the following parameters:
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``library``             | ❌        | Complex                 | 0..*        |                                |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
-| ``useServerData``       | ❌        | ``boolean``             | 0..1        |                                |
+| ``useServerData``       | ✅        | ``boolean``             | 0..1        | Controls whether the data of   |
+|                         |           |                         |             | the server the operation runs  |
+|                         |           |                         |             | on is used, when no ``data``   |
+|                         |           |                         |             | bundle is supplied.            |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | See ``Library/$evaluate``      |
+|                         |           |                         |             | for details.                   |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
-| ``data``                | ❌        | ``Bundle``              | 0..1        |                                |
+| ``data``                | ✅        | ``Bundle``              | 0..1        | Inline FHIR data bundle to     |
+|                         |           |                         |             | evaluate against. A supplied   |
+|                         |           |                         |             | bundle is evaluated in         |
+|                         |           |                         |             | isolation from the data of     |
+|                         |           |                         |             | the server.                    |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | See ``Library/$evaluate``      |
+|                         |           |                         |             | for details.                   |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``prefetchData``        | ❌        | Complex                 | 0..*        |                                |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
@@ -818,7 +1200,7 @@ This examples demonstrates a simple calculation executed via the dQM engine.
             "extension": [
                 {
                     "url": "http://hl7.org/fhir/StructureDefinition/cqf-cqlType",
-                    "valueString": "String"
+                    "valueString": "System.String"
                 }
             ],
             "name": "return",
@@ -826,3 +1208,157 @@ This examples demonstrates a simple calculation executed via the dQM engine.
         }
     ]
   }
+
+----
+
+.. _feature_cql_evaluation_behavior:
+
+CQL evaluation behavior
+-----------------------
+
+The behavior described in this section is shared by ``$cql``,
+``Library/$evaluate`` and ``Measure/$evaluate-measure``.
+
+.. _feature_cql_subject:
+
+The subject parameter
+~~~~~~~~~~~~~~~~~~~~~
+
+The ``subject`` parameter identifies whose data forms the evaluation context. It must
+be a **relative reference of the form** ``ResourceType/id``::
+
+  subject=Patient/pat1
+
+``Library/$evaluate`` and ``$cql`` accept a ``Patient`` reference.
+``Measure/$evaluate-measure`` accepts a ``Patient`` or a ``Group``.
+
+Any other reference form is rejected with an ``OperationOutcome`` identifying
+``subject`` as having an invalid value:
+
+- an absolute url, such as ``http://example.org/fhir/Patient/pat1``
+- a versioned reference, such as ``Patient/pat1/_history/2``
+- a bare id without a resource type, such as ``pat1``
+
+For ``Library/$evaluate`` and ``$cql``, ``subject`` may be omitted when the library
+declares no Patient context. It is required when the library does declare one; a
+request that omits it is rejected with HTTP 422 naming the library.
+
+Group subjects
+^^^^^^^^^^^^^^
+
+When a ``Group`` is supplied, the measure is evaluated for every ``Patient`` the
+group references. Member entries are de-duplicated on the identity of the referenced
+resource, so a patient listed several times is evaluated and counted exactly once —
+regardless of whether the entries spell the reference relatively, as an absolute url
+or with a version. The ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation`` limit
+applies to those distinct patients.
+
+A member entry whose reference does not identify a resource by type and id at all —
+an empty reference, or an absolute uri that is not a resource url such as
+``urn:uuid:…``, as produced by ingesting a ``Group`` from a transaction Bundle — is
+rejected with an ``OperationOutcome`` naming that reference.
+
+Unknown patients
+^^^^^^^^^^^^^^^^
+
+When Firely Server resolves the evaluation data itself — from its own data or from a
+``dataEndpoint`` — the ``Patient`` type is always included in the retrieval. Data
+without a ``Patient`` resource therefore means the requested patient does not exist,
+and the ``OperationOutcome`` reports that the patient could not be found, with issue
+code ``not-found``. ``Measure/$evaluate-measure`` reports this without evaluating a
+single group of the measure.
+
+When the caller supplies the data through the ``data`` parameter, the outcome instead
+reports that the provided data does not contain the expected ``Patient`` — the data
+lacks it, while the patient itself may well exist on the server.
+
+.. _feature_cql_result_mapping:
+
+Mapping CQL results to FHIR
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Unless the proprietary ``raw`` parameter is used, the result of each evaluated
+expression is mapped back to a FHIR data type and returned as a parameter in the
+response ``Parameters`` resource. A list result returns one parameter repetition per
+element.
+
+Declared CQL type
+^^^^^^^^^^^^^^^^^
+
+Every returned parameter carries a
+``http://hl7.org/fhir/StructureDefinition/cqf-cqlType`` extension holding the CQL type
+of the value, using the model names CQL itself uses — ``FHIR.Encounter``,
+``System.Integer``, ``System.Boolean``.
+
+A list is typed as the list rather than as the element it carries, on every repetition
+of the parameter: ``List<FHIR.Encounter>``, ``List<System.Integer>``. An empty list
+reports the type of the elements it would have held, and a null element of a list —
+carried as a repetition with a ``data-absent-reason`` — carries the list's type as
+well.
+
+Type mapping notes
+^^^^^^^^^^^^^^^^^^
+
+Most values map directly onto their FHIR equivalent. The following are worth calling
+out, because their FHIR representation cannot express everything the CQL value holds:
+
+``Concept`` and ``CodeableConcept``
+  Returned as a ``CodeableConcept``. A CQL ``Concept``'s codes become ``coding``
+  entries (system, code, version and display), and its display becomes the ``text``.
+
+``Interval<Integer>``, ``Interval<Decimal>``, ``Interval<Long>``
+  Returned as a FHIR ``Range``. A ``Range`` has inclusive bounds only, so an open
+  bound is returned as its closed equivalent — the successor of an open low bound,
+  the predecessor of an open high bound. Every bound carries a ``quantity-precision``
+  extension stating its number of digits after the decimal point, so the precision of
+  a bound does not depend on the serializer preserving trailing zeros. An
+  ``Interval<Long>`` is returned as a unit-less (UCUM ``1``) ``Range``.
+
+``Interval<DateTime>``
+  Returned as a FHIR ``Period``. A UTC instant is written with the ``Z`` designator
+  rather than a ``+00:00`` offset; both denote the same instant, and offsets other
+  than UTC are unaffected.
+
+``Time``
+  Returned as a FHIR ``time``, without a timezone. The FHIR ``time`` datatype has no
+  timezone component.
+
+A value that cannot be represented in a FHIR ``Parameters`` resource is dropped from
+the response and logged. When a list held elements but none of them could be mapped,
+the parameter is reported as an empty list and a ``CouldNotMapAnyListElement``
+warning records the parameter name and the number of dropped elements.
+
+.. _feature_cql_semantics:
+
+CQL language semantics
+~~~~~~~~~~~~~~~~~~~~~~
+
+A few points of CQL semantics affect measure results directly, and are worth knowing
+when comparing Firely Server's output against another engine's.
+
+Quantities and units
+  Comparing or ordering two quantities whose units are not of the same dimension
+  (``=``, ``<``, ``>``, ``<=``, ``>=``, ``between``) evaluates to ``null``, as the CQL
+  specification requires — ``1 'cm' = 0.01 'g'`` is ``null``, not ``true`` — and list
+  equality propagates that unknown. Equivalence (``~``) converts units before
+  comparing and always yields a boolean, so it is ``false`` for units of different
+  dimensions. An operation on invalid or incommensurable units returns ``null``
+  rather than failing the evaluation.
+
+  Adding and subtracting quantities in different but compatible units is supported:
+  ``1 'm' + 30 'cm'`` returns the result in the most granular of the input units.
+
+Date and time precision
+  Equivalence (``~``) between two dates, date-times or times of differing precision
+  evaluates to ``false``. Matching known components is not enough.
+
+Value set membership
+  A value set that has been resolved and expanded is interpreted under **closed-world
+  semantics**: membership is decided from the expansion itself, so a code that is
+  absent from it yields ``false`` rather than an unknown result. Membership is decided
+  from the expansion at hand without consulting the terminology service again.
+
+.. important::
+
+   If the library references any ``ValueSet`` resources, they must be preloaded into
+   the Firely Server administration endpoint **before** the library is evaluated.

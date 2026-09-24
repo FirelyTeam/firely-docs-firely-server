@@ -835,6 +835,15 @@ The Stratification section of the `Quality Measure IG <https://hl7.org/fhir/us/c
 In the first approach the expression selects the members of the stratum, just like a population criterion does. In the second approach the expression returns a value, such as ``Patient.gender``, and all members with the same value share a stratum.
 For components, the IG states: "If component stratifiers are used and the component expressions return the stratum value, the combination of the component values are considered the stratum value."
 
+Which element to use depends on how the results should be broken down:
+
+- **Use** ``stratifier.criteria`` **to break the results down by one characteristic**, such as gender. Snippet 3-31 of the IG defines such a stratifier with ``define "Gender Stratification": Patient.gender``, and each gender is a stratum.
+- **Use** ``stratifier.component[]`` **to break the results down by the combination of several characteristics at once.** Snippet 3-32 of the IG combines a ``Patient.gender`` component with a ``Coverage.type`` component, and states: "The stratum value for a given Patient would be the combination of gender and payer type." Each component carries its own ``code``, so the MeasureReport can say which value in a stratum belongs to which characteristic.
+- **Use several stratifiers, each with its own criteria, to break the results down by several characteristics separately.** A stratifier by gender and a second stratifier by payer type report the counts per gender and, independently, the counts per payer type. A single stratifier with a gender and a payer type component reports the counts for each combination, such as female patients with a commercial payer.
+
+A stratifier uses one of the two elements, never both. The definition of ``Measure.group.stratifier.component`` in the `FHIR R4 Measure resource <https://hl7.org/fhir/R4/measure-definitions.html#Measure.group.stratifier.component>`_ comments: "Stratifiers are defined either as a single criteria, or as a set of component criteria."
+Within one stratifier, all components use the same approach. Conformance Requirement 3.17 (Stratification Criteria) states: "If component stratifiers are used, all the component expressions SHALL return the same type within a stratifier (i.e. within a stratifier, all the component expression must use the same stratification approach)".
+
 In a MeasureReport, each stratifier of a group is reported in ``MeasureReport.group.stratifier``, and each of its strata in ``group.stratifier.stratum``:
 
 - ``stratum.value`` identifies the stratum of a single-criteria stratifier; ``stratum.component[]`` holds the ``code`` and ``value`` of each component of a component stratifier.
@@ -849,6 +858,7 @@ Firely Server 6.10.0 supports component stratifiers whose expressions return the
 #. A stratifier defined with ``stratifier.component[]`` is supported on groups with a ``boolean`` population basis, which count subjects such as patients rather than events such as encounters.
    A component expression must return values, such as codes, codings, strings or numbers, not resources.
 #. A stratifier defined with ``stratifier.criteria`` is not supported. ``Measure/$evaluate-measure`` responds with ``501 Not Implemented``.
+   To break the results down by one characteristic, define a stratifier with a single component instead.
 #. A ratio-scored group cannot carry stratifiers. Conformance Requirement 15 (Stratification Criteria), in section 3.4.8 Stratification of the `Quality Measure IG STU1 <https://hl7.org/fhir/us/cqfmeasures/STU1/measure-conformance.html#stratification>`_, states that "Stratification SHALL NOT be used with ratio measures, since ratio measures may define multiple initial populations." Such a Measure is rejected with ``422 Unprocessable Entity``.
 
 A component expression may return more than one value for a patient, for example one product line for each coverage the patient holds.

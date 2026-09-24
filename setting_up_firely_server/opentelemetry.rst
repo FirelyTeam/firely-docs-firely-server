@@ -84,8 +84,125 @@ The individual settings are described below:
 * ``RecordException``: When set to ``true``, exceptions will be recorded as part of the trace data.
 * ``SetDbStatementForText``: When set to ``true``, database statements for text-based queries will be included in the trace data.
 * ``SetDbStatementForStoredProcedure``: When set to ``true``, database statements for stored procedures will be included in the trace data.
-* ``VonkSourcesInclude``: A list of namespace patterns to include in the telemetry data. Use ``*`` to include all sources.
+* ``VonkSourcesInclude``: A list of ``ActivitySource`` names to include in the telemetry data. Firely Server names its sources after the fully qualified class that emits the spans; a value matches the whole source name, case-insensitively, and may use the wildcards ``*`` and ``?`` (for example ``Vonk.Plugin.Cql.*``). Use ``*`` to include all sources.
 * ``VonkSourcesExclude``: A list of span name prefixes to exclude from the telemetry data. A span is not recorded if its name starts with one of these values (case-sensitive). The values are matched against the span name only, not against a namespace: the span of a middleware is named after its service class without the namespace, like ``DefaultShapesService``, and the spans of the CQL plugin have names like ``EvaluateMeasure`` and ``ExecuteCqlExpressions``. For example, ``"Evaluate"`` excludes ``EvaluateMeasure``, ``EvaluateSubject``, ``EvaluateGroup`` and ``EvaluateLibrary``, but not ``ExecuteCqlExpressions``. Each span is matched on its own name, so the spans nested in an excluded span are still recorded unless their own name matches as well. A non-empty list replaces the default parent-based sampling, so the sampling decision carried by an incoming trace context is no longer taken into account. Leave this empty to exclude no spans.
+
+.. _feature_opentelemetry_cql:
+
+Tracing CQL operations
+----------------------
+
+The CQL operations of Firely Server (``Library/$evaluate``, ``Measure/$evaluate-measure`` and ``$cql``) emit spans of their own, in addition to the spans of the HTTP request and the middleware. These spans break an evaluation down into its steps, like loading the value sets, retrieving the data of a subject and executing the CQL expressions, so the time spent in each step can be inspected.
+
+Each span is emitted by an OpenTelemetry ``ActivitySource`` that is named after the fully qualified name of the class that emits it, for example ``Vonk.Plugin.Cql.Operations.Library.Evaluate.Internal.LibraryEvaluateOperationService``. The values of ``VonkSourcesInclude`` are passed to OpenTelemetry as the names of the sources to listen to. OpenTelemetry matches such a value against the whole source name, case-insensitively, and supports the wildcards ``*`` (any sequence of characters) and ``?`` (a single character). To trace the CQL operations, include either ``"*"`` or a pattern like ``"Vonk.Plugin.Cql.*"``. A value without a wildcard only matches a source with exactly that name, so ``"Vonk.Plugin.Cql"`` on its own does not enable any of the CQL spans.
+
+.. code-block:: JavaScript
+
+  "OpenTelemetryOptions": {
+    "EnableTracing": true,
+    "Endpoint": "<otlp-collector-endpoint>",
+    "VonkSourcesInclude": [
+      "Vonk.Plugin.Cql.*"
+    ],
+    "VonkSourcesExclude": []
+  }
+
+The table below lists the spans per source. The source names are abbreviated: ``Library.Evaluate`` stands for ``Vonk.Plugin.Cql.Operations.Library.Evaluate.Internal``, ``Measure.Evaluate`` for ``Vonk.Plugin.Cql.Operations.Measure.Evaluate.Internal`` and ``Infrastructure`` for ``Vonk.Plugin.Cql.Infrastructure``.
+
+.. list-table::
+   :widths: 30 25 45
+   :header-rows: 1
+
+   * - ActivitySource
+     - Span name
+     - Tags
+   * - ``Library.Evaluate.LibraryEvaluateOperationService``
+     - ``EvaluateLibrary``
+     - ``cql.library.url``: the canonical url of the evaluated Library, as requested.
+   * -
+     - ``ResolveOperationContext``
+     -
+   * -
+     - ``ExtractLibraryParameters``
+     -
+   * -
+     - ``ApplyResponse``
+     -
+   * -
+     - ``ConvertCqlResults``
+     - ``cql.result_count``: the number of expression results.
+   * - ``Library.Evaluate.LibraryEvaluateOperationContextResolver``
+     - ``ResolveLibraryDependencies``
+     -
+   * -
+     - ``LoadValueSets``
+     - ``cql.valueset_count``: the number of value sets the libraries depend on.
+   * -
+     - ``ExtractAssemblyBinaries``
+     -
+   * - ``Library.Evaluate.LibraryEvaluateOperationContext``
+     - ``ValidateDataBundle``
+     -
+   * -
+     - ``CreateCqlContext``
+     - ``cql.bundle_entry_count``: the number of entries in the data bundle. ``cql.data_source_reused``: ``true`` when the data source of the subject, built by an earlier group of the same ``Measure/$evaluate-measure`` request, is reused. Both tags are only present when the evaluation has a data bundle.
+   * -
+     - ``ExecuteCqlLibrary``
+     - ``cql.library.name``, ``cql.library.version``, ``cql.expression_count``: the number of expressions evaluated.
+   * -
+     - ``SelectExpressions``
+     - ``cql.expression_count``
+   * -
+     - ``ExecuteCqlExpressions``
+     - ``cql.expression_count``
+   * - ``Library.Evaluate.LibraryEvaluationDataProvider``
+     - ``RetrieveDataBundle``
+     - ``cql.data_source``: where the data comes from, ``remote`` (a remote data endpoint), ``supplied`` (the ``data`` parameter of the request) or ``server`` (the database of Firely Server). ``fhir.bundle.entry_count``: the number of entries in the retrieved bundle.
+   * -
+     - ``GetPatientEverythingRemote``
+     - ``fhir.bundle.page_count``: the number of pages retrieved from the remote data endpoint.
+   * - ``Measure.Evaluate.MeasureEvaluateOperationService``
+     - ``ResolveOperationContext``
+     -
+   * -
+     - ``ApplyRawResult``
+     -
+   * -
+     - ``ExtractMeasureResults``
+     -
+   * -
+     - ``BuildMeasureReport``
+     -
+   * -
+     - ``PersistMeasureReport``
+     -
+   * - ``Measure.Evaluate.MeasureEvaluateOperationContext``
+     - ``EvaluateMeasure``
+     - ``fhir.measure.subject_count``: the number of subjects evaluated. ``fhir.measure.name``, ``fhir.measure.version``, ``fhir.measure.group_count``: the number of groups of the Measure.
+   * -
+     - ``ResolveLibraryDataRequirements``
+     -
+   * -
+     - ``EvaluateSubject``
+     -
+   * -
+     - ``EvaluateGroup``
+     - ``fhir.measure.group_id``, ``cql.expression_count``: the number of expressions evaluated for the group.
+   * - ``Infrastructure.PatientEverythingBundleProvider``
+     - ``GetPatientEverything``
+     - ``fhir.bundle.entry_count``: the number of resources retrieved for the subject.
+   * - ``Infrastructure.CqlCompilerService``
+     - ``CompileCqlLibrary``
+     - ``cql.library.name``, ``cql.library.version``
+
+Some spans are only emitted when the corresponding step takes place. For example, ``GetPatientEverythingRemote`` is only emitted for a remote data endpoint, and ``ValidateDataBundle`` is only emitted when the evaluation has a data bundle. When the groups of a ``Measure/$evaluate-measure`` request share the data bundle of a subject, that bundle is validated, and ``ValidateDataBundle`` emitted, once for the subject rather than once per group.
+
+Note the following:
+
+* ``$cql`` and the CDS Hooks CRD hook evaluate CQL by running ``Library/$evaluate`` within the same request. Their traces therefore contain the ``EvaluateLibrary`` span and the spans nested in it as well.
+* ``Measure/$evaluate-measure`` evaluates every group of the Measure for every subject. For each subject it emits an ``EvaluateSubject`` span, with an ``EvaluateGroup`` span per group, and each ``EvaluateGroup`` span holds an ``EvaluateLibrary`` span with the spans nested in it. An evaluation for a Group of patients, or for a whole population, therefore produces a large number of spans. Use the ``VonkSourcesExclude`` setting described above to leave out the spans you do not need. It matches the start of the span name, so ``"ExecuteCql"`` excludes both ``ExecuteCqlLibrary`` and ``ExecuteCqlExpressions``.
+* The CQL spans do not carry patient identifiers. Their tags identify the evaluated Library, Measure and Measure group, and otherwise only carry counts and the kind of data source.
+* The CQL spans do not set an error status. A failed evaluation is reported in the ``OperationOutcome`` of the response and in the log of Firely Server; the top-level span of the request carries the HTTP status code in ``http.response.status_code``.
 
 Usages
 ------

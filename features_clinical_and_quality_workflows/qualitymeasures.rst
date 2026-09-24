@@ -9,6 +9,11 @@ Executing Digital Quality Measures (dQMs) - $cql, $evaluate, $evaluate-measure, 
 
   * Firely dQM - 🌍 / 🇺🇸
 
+.. note::
+
+  The operations require the license token ``http://fire.ly/vonk/plugins/cql`` to be present in the license file.
+  If you do not have this license token, please contact `Firely <https://fire.ly/contact>`_.
+
 .. important::
 
    Please see :ref:`feature_qdm` for an introduction to Digital Quality Reporting in FHIR.
@@ -17,15 +22,24 @@ FHIR provides several operations for executing Digital Quality Measures (dQMs), 
 
 * ``Library/$evaluate`` is most commonly used for debugging purposes. dQMs frequently reference multiple ``Library`` resources to encapsulate modular logic.  When a measure produces unexpected results—such as an incorrect or zero score—it is often useful to investigate why a particular subject meets or fails to meet specific population criteria (e.g., initial population, denominator, numerator). In such cases, it can be helpful to execute a targeted set of CQL expressions or evaluate specific sub-libraries within the measure. This allows implementers to isolate and verify individual components of the logic without executing the entire measure.
 
-* ``Measure/$measure-evaluate`` is the primary operation for executing a digital quality measure (dQM) as a whole. This operation evaluates a ``Measure`` resource against a specified subject (such as a patient, group) using the measurement period and any associated ``Library`` parameters. ``Measure/$evaluate-measure`` is typically used in production or formal testing scenarios to generate actual measure scores. It is also suitable for automated execution in quality reporting workflows. Unlike ``Library/$evaluate``, which targets specific expressions, ``Measure/$evaluate-measure`` executes the full population logic and scoring methodology defined in the measure, making it the most comprehensive method for end-to-end dQM evaluation.
+* ``Measure/$evaluate-measure`` is the primary operation for executing a digital quality measure (dQM) as a whole. This operation evaluates a ``Measure`` resource against a specified subject (such as a patient, group) using the measurement period and any associated ``Library`` parameters. ``Measure/$evaluate-measure`` is typically used in production or formal testing scenarios to generate actual measure scores. It is also suitable for automated execution in quality reporting workflows. Unlike ``Library/$evaluate``, which targets specific expressions, ``Measure/$evaluate-measure`` executes the full population logic and scoring methodology defined in the measure, making it the most comprehensive method for end-to-end dQM evaluation.
 
 * ``$cql`` allows direct execution of CQL expressions, either inline or from referenced libraries. It is useful for rapid testing or prototyping when measure logic needs to be validated independently of a ``Measure`` resource.
 
-For the preperation of the execution data-requirements can be gathered using the following operations:
+To prepare the execution, data requirements can be gathered with the following operations:
 
-* ``Library/$data-requirements`` retrieves a structured representation of the data required to evaluate a measure, making it a supporting operation for both ``Library/$evaluate`` and ``Measure/$evaluate-measure``. This operation identifies the necessary FHIR data types and elements, including value sets, code filters, and date constraints. It returns a ``Library`` resource containing ``DataRequirement`` elements, which describe the expected inputs for measure evaluation. This operation is particularly useful during implementation, data mapping, and integration planning, as it helps clarify what data must be available for successful execution of a digital quality measure.
+* ``Library/$data-requirements`` returns the data requirements declared on a ``Library``: a ``Library`` of type ``module-definition`` containing a copy of the target Library's ``dataRequirement`` elements, which describe the FHIR data types, value sets, codes and date constraints the logic needs. Firely Server does not derive them from the CQL or ELM, so the result is only as complete as the ``dataRequirement`` elements the ``Library`` carries. The Firely CQL SDK Packager writes them when it packages a library, including those of the libraries it depends on. This operation is useful during implementation, data mapping and integration planning, to see what data must be available for a successful evaluation.
 
-* ``Measure/$data-requirements`` functions identically, but aggregates the data requirements across all libraries referenced by the measure, providing a complete picture of the inputs needed for measure evaluation.
+* ``Measure/$data-requirements`` does the same for the single logic ``Library`` that the ``Measure`` references.
+
+See :ref:`feature_data_requirements` for details.
+
+.. important::
+
+   ``$cql``, ``Library/$evaluate``, ``Measure/$evaluate-measure``, ``Library/$data-requirements``
+   and ``Measure/$data-requirements`` are only available in **FHIR R4**. If Firely Server hosts
+   multiple FHIR versions (see :ref:`feature_multiversion`), these operations are only available
+   for the R4 version. They are not available for STU3 or R5.
 
 ----
 
@@ -113,25 +127,32 @@ Database requirements
 ^^^^^^^^^^^^^^^^^^^^^
 
 Execution of dQMs relies on retrieving clinical data from the Firely Server
-data store. Internally, Firely Server uses the ``$everything`` operation to
-collect all relevant data for a subject.
+data store. Firely Server reads the patient compartment of the subject (the data
+``Patient/$everything`` would return) directly from the repository. The data requirements of the evaluated
+``Library`` determine which resource types are collected; see
+:ref:`feature_cql_data_retrieval`.
 
 This functionality is only supported when the data store is backed by
 MongoDB or SQL Server. Therefore, to execute dQMs against data stored in
 Firely Server, the primary FHIR data database must use either MongoDB or
 SQL Server.
 
-In addition, the ``Vonk.Plugin.PatientEverything`` plugin must be enabled
-in the pipeline options, as it provides the ``$everything`` operation used
-during data retrieval. See :ref:`vonk_available_plugins` for more information
-on configuring available plugins.
+The ``Vonk.Plugin.PatientEverything`` plugin, which provides the ``Patient/$everything``
+operation, does not need to be enabled for this: the CQL operations read the data from the
+SQL Server or MongoDB repository themselves.
 
 The administration database (used for conformance resources such as
 ``Library`` and ``Measure``) can still be hosted on SQLite.
 
 Alternatively, you can configure Firely Server to use only external data
 sources by enabling the ``RemoteDataEndpointsOnly`` setting. In that case,
-no local data retrieval (and thus no ``$everything`` support) is required.
+no local data retrieval (and thus no SQL Server or MongoDB data store) is required.
+
+With ``RemoteDataEndpointsOnly`` enabled, every request must set ``useServerData`` to
+``false``. A request that sets it to ``true``, or omits it, is rejected with HTTP 400 —
+also when it supplies the data in the ``data`` parameter. With ``useServerData`` set to
+``false``, the data comes from the ``data`` parameter when it is supplied, and otherwise
+from the ``dataEndpoint``; see :ref:`feature_external_data_endpoints`.
 
 .. _feature_external_data_endpoints:
 
@@ -143,7 +164,9 @@ during execution of ``Library/$evaluate``.
 
 This is used when the ``useServerData`` parameter is set to ``false`` in a request.
 In that case, data is not retrieved from the local Firely Server database, but from
-a configured external endpoint.
+a configured external endpoint. Firely Server requests the data of the subject with
+``GET [endpoint]/Patient/[id]/$everything``, listing the resource types to retrieve in
+the ``_type`` parameter; see :ref:`feature_cql_data_retrieval`.
 
 ::
 
@@ -160,9 +183,9 @@ a configured external endpoint.
       //    "Audience": "",
       //    "Scopes": "system/*.rs"
       //}
-      "ForwardedHeaders": [
-        "X-Custom-Auth-Header"
-      ]
+    ],
+    "ForwardedHeaders": [
+      "X-Custom-Auth-Header"
     ]
   }
 
@@ -170,7 +193,8 @@ The ``DataEndpoint`` setting defines a list of pre-configured external FHIR endp
 Each endpoint can be referenced in a request using the ``dataEndpoint`` parameter.
 
 Any ``dataEndpoint`` parameter provided in a request must match one of the
-configured endpoints.
+configured endpoints: its ``Endpoint.address`` is compared with the ``Endpoint`` of each
+configured entry as an exact string, so letter case and a trailing slash must be the same.
 
 Each ``DataEndpoint`` entry supports the following fields:
 
@@ -178,11 +202,19 @@ Each ``DataEndpoint`` entry supports the following fields:
 - ``MediaType``: The FHIR media type to use for requests to this endpoint ( ``application/fhir+json`` and ``application/fhir+xml`` are supported)  
 - ``ClientId`` / ``ClientSecret``: Credentials for authentication (if required)  
 - ``TokenEndpoint``: OAuth2 token endpoint (used for JWT authentication)  
-- ``Audience``: Optional audience claim for the access token  
+- ``Audience``: Audience requested for the access token; sent as the ``aud`` parameter of
+  the token request
 - ``Scopes``: Space-separated list of **SMART on FHIR scopes**. Since Firely Server uses a ``client_credentials``
   flow, only system-level scopes should be used (e.g. ``system/*.rs``). 
 - ``RemoteDataEndpointAuthentication``: Defines how Firely Server authenticates
-  against the endpoint. Supported values include ``JWT`` and ``None``
+  against the endpoint. Supported values are ``Jwt`` and ``None``; defaults to ``Jwt``
+
+With ``Jwt`` authentication (the default), ``ClientId``, ``ClientSecret``, ``TokenEndpoint``,
+``Audience`` and ``Scopes`` are all required: if any of them is empty, Firely Server does not
+start. With ``None``, none of them is used.
+
+With ``Jwt`` authentication, Firely Server obtains an access token from the ``TokenEndpoint``
+with the ``client_credentials`` flow and sends it as a bearer token.
 
 .. note::
 
@@ -194,6 +226,18 @@ Each ``DataEndpoint`` entry supports the following fields:
    If the remote endpoint repeats a page link — which would make the retrieval loop
    indefinitely — the operation fails with an ``OperationOutcome`` rather than
    evaluating on a partial compartment.
+
+When ``useServerData`` is ``false`` and no ``data`` is supplied, the operation fails
+with HTTP 500 and an ``OperationOutcome`` stating that the library failed to execute and
+to see the log for details, if:
+
+- the ``dataEndpoint`` parameter is missing, or its ``Endpoint`` has no ``address``;
+- the ``address`` matches no configured ``DataEndpoint`` entry;
+- the remote endpoint answers with an error, including HTTP 401 when Firely Server could
+  not authenticate;
+- the remote endpoint repeats a page link, as described above.
+
+The server log names the cause.
 
 The ``ForwardedHeaders`` setting can be used to forward custom HTTP headers
 from the incoming request to external data endpoints.
@@ -226,15 +270,21 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | are allowed, e.g.,             |
 |                         |           |                         |             | ``http://example.org/fhir/     |
 |                         |           |                         |             | Library/MyLogic|1.0.0``.       |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | A request that supplies both   |
+|                         |           |                         |             | ``url`` and ``library`` is     |
+|                         |           |                         |             | rejected with HTTP 409.        |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``library``             | ✅        | ``Library`` resource    | 0..1        | In-line logic library that     |
 |                         |           |                         |             | contains executable CQL logic. |
 |                         |           |                         |             | This Library will not be       |
-|                         |           |                         |             | stored in Firely Server. It    |
-|                         |           |                         |             | MAY only contain CQL and will  |
-|                         |           |                         |             | be compiled dynamically. If    |
-|                         |           |                         |             | ELM content is provided, it    |
-|                         |           |                         |             | will be re-used.               |
+|                         |           |                         |             | stored in Firely Server. It is |
+|                         |           |                         |             | validated and compiled on      |
+|                         |           |                         |             | every request. When it carries |
+|                         |           |                         |             | ELM content, the ELM is        |
+|                         |           |                         |             | compiled instead of the CQL.   |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | See `Inline library`_.         |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``subject``             | ✅        | ``string``              | 0..1        | The Patient whose data forms   |
 |                         |           |                         |             | the evaluation context, as a   |
@@ -254,9 +304,9 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | evaluated.                     |
 |                         |           |                         |             |                                |
 |                         |           |                         |             | `CQL Access Modifier <https:// |
-|                         |           |                         |             | build.fhir.org/ig/HL7/fhir-    |
-|                         |           |                         |             | extensions/StructureDefinition |
-|                         |           |                         |             | -cqf-cqlAccessModifier.html>`_ |
+|                         |           |                         |             | hl7.org/fhir/extensions/Struct |
+|                         |           |                         |             | ureDefinition-cqf-cqlAccessMod |
+|                         |           |                         |             | ifier.html>`_                  |
 |                         |           |                         |             | extensions are not taken into  |
 |                         |           |                         |             | account.                       |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
@@ -266,19 +316,29 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | These will be mapped from FHIR |
 |                         |           |                         |             | data types to CQL data types   |
 |                         |           |                         |             | according to the `FHIR Type    |
-|                         |           |                         |             | Mapping <https://build.fhir.or |
-|                         |           |                         |             | g/ig/HL7/cql-ig/conformance.ht |
-|                         |           |                         |             | ml#fhir-type-mapping>`_.       |
+|                         |           |                         |             | Mapping <https://hl7.org/fhir/ |
+|                         |           |                         |             | uv/cql/conformance.html#fhir-t |
+|                         |           |                         |             | ype-mapping>`_.                |
 |                         |           |                         |             |                                |
 |                         |           |                         |             | Most notably, this includes    |
 |                         |           |                         |             | passing in the measurement     |
 |                         |           |                         |             | period parameter as a FHIR     |
 |                         |           |                         |             | Period.                        |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | Only parameters the Library    |
+|                         |           |                         |             | declares are bound; see        |
+|                         |           |                         |             | `Input parameter binding`_.    |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
-| ``raw``                 | ✅        | ``boolean``             | 0..1        | Return the library results as  |
-|                         |           |                         |             | a string without mapping the   |
-|                         |           |                         |             | CQL result data types back to  |
-|                         |           |                         |             | FHIR.                          |
+| ``raw``                 | ✅        | ``boolean``             | 0..1        | When ``true``, the results are |
+|                         |           |                         |             | not mapped back to FHIR. The   |
+|                         |           |                         |             | response holds a single        |
+|                         |           |                         |             | ``rawResult`` parameter: a     |
+|                         |           |                         |             | ``valueString`` with a JSON    |
+|                         |           |                         |             | object that has one member per |
+|                         |           |                         |             | evaluated expression, named    |
+|                         |           |                         |             | after the expression; see      |
+|                         |           |                         |             | :ref:`raw output               |
+|                         |           |                         |             | <feature_cql_raw>`.            |
 |                         |           |                         |             |                                |
 |                         |           |                         |             | This is a proprietary          |
 |                         |           |                         |             | parameter of Firely Server.    |
@@ -297,6 +357,13 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | In both cases, any data passed |
 |                         |           |                         |             | via the ``data`` parameter     |
 |                         |           |                         |             | takes precedence.              |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | With                           |
+|                         |           |                         |             | ``RemoteDataEndpointsOnly``    |
+|                         |           |                         |             | enabled, a request that sets   |
+|                         |           |                         |             | ``useServerData`` to ``true``  |
+|                         |           |                         |             | or omits it is rejected with   |
+|                         |           |                         |             | HTTP 400.                      |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``data``                | ✅        | ``Bundle``              | 0..1        | Inline FHIR data bundle to use |
 |                         |           |                         |             | as the data context during     |
@@ -337,7 +404,119 @@ Firely Server supports the following parameters:
 
 .. important::
 
-   If the Library references any ``ValueSet`` resources, they must be preloaded into the Firely Server's administration endpoint **before** executing the Library.
+   If the Library references any ``ValueSet`` resources, they must be preloaded into the Firely Server's administration endpoint **before** executing the Library. See `ValueSets`_.
+
+.. _feature_library_evaluate_inline_library:
+
+Inline library
+^^^^^^^^^^^^^^
+
+A ``Library`` passed in the ``library`` parameter is handled as follows:
+
+- It cannot be combined with ``url``: a request that supplies both is rejected with
+  HTTP 409.
+- It must have a ``url``, a ``name`` and a ``version``. FHIR declares all three as
+  optional on ``Library``, but the CQL engine identifies a library by them. A library
+  that lacks any of them is rejected with HTTP 422.
+- It is validated with the server's validation settings (``Validation:Level``, see
+  :ref:`feature_prevalidation`). Any issue the validation reports, warnings included,
+  rejects the request with HTTP 400 and returns the issues in the ``OperationOutcome``.
+  With ``Level`` set to ``Off``, the library is not validated.
+- It is compiled on every request; the result of the compilation is not kept. When the
+  library carries ELM content (``application/elm+json``), the ELM is compiled and the CQL
+  content is not used. Otherwise its CQL (``text/cql``) is translated to ELM first. When
+  compilation fails, the request is rejected with HTTP 422, reporting that the library
+  holds no .NET assembly; the server log holds the compilation errors.
+- Its dependencies are resolved from the administration database, like those of a stored
+  library; see `Library dependencies`_.
+
+.. _feature_library_evaluate_parameter_binding:
+
+Input parameter binding
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Firely Server binds the entries of the ``parameters`` parameter to the input parameters
+declared in ``Library.parameter``, not to the ``parameter`` definitions in the CQL.
+The declarations are collected from the evaluated ``Library`` and from every library in its
+dependency closure. Only declarations with ``use`` set to ``in`` and one of the following
+``type`` values are bound: ``string``, ``boolean``, ``integer``, ``decimal``, ``date``,
+``dateTime``, ``time``, ``Quantity``, ``Period``, ``Range``, ``code``, ``Coding`` and
+``Basic``.
+
+- A supplied parameter is matched to a declaration by its ``name`` (case-sensitive). A
+  supplied parameter that matches no declaration is ignored, without an error. This
+  applies to every supplied parameter when the ``Library`` has no ``parameter``
+  elements, which can be the case for an inline library that carries only CQL.
+- A declared parameter that is not supplied is left to the CQL engine, which uses the
+  ``default`` of the CQL ``parameter`` definition, if it has one.
+- The cardinality of the declaration is enforced. The request is rejected with HTTP 400
+  when fewer parameters with that name are supplied than ``min`` — also when a
+  declaration has a ``min`` of 1 or more and the request has no ``parameters`` at all —
+  or when more are supplied than ``max``. A declaration with an unusable cardinality
+  (``min`` missing or negative, ``max`` missing, ``0`` or lower than ``min``) is rejected
+  with HTTP 422.
+- A declaration with a ``max`` greater than ``1``, or ``*``, binds a CQL ``List`` of all
+  supplied values with that name. Otherwise a single value is bound.
+- A supplied parameter with ``part`` elements binds a CQL ``Tuple`` with one element per
+  part, named after the part. Every part needs a ``value[x]``, and nested parts are not
+  allowed; both are rejected with HTTP 400.
+- A value is converted according to its own FHIR type. Supported are ``string``,
+  ``boolean``, ``integer``, ``decimal``, ``date``, ``dateTime``, ``time``, ``Quantity``,
+  ``code`` and ``Coding`` (both bind a CQL ``Code``), ``Period`` and ``Range``. A value of
+  any other type, for example ``CodeableConcept`` or ``Reference``, is rejected with
+  HTTP 501.
+- A ``Period`` binds an ``Interval<DateTime>`` and a ``Range`` an ``Interval<Quantity>``.
+  A ``cqf-cqlType`` extension on the ``Library.parameter`` declaration of the evaluated
+  ``Library`` selects another point type: ``Interval<Date>`` for a ``Period``, and
+  ``Interval<Integer>``, ``Interval<Decimal>`` or ``Interval<Long>`` for a ``Range`` of
+  unit-less quantities.
+
+.. _feature_library_evaluate_dependencies:
+
+Library dependencies
+^^^^^^^^^^^^^^^^^^^^
+
+Firely Server follows the ``relatedArtifact`` elements of type ``depends-on`` of the
+evaluated ``Library``, and of every library it depends on, transitively. Other
+``relatedArtifact`` types are ignored. Each ``depends-on`` entry names its dependency in
+``relatedArtifact.resource``, as a canonical with an optional version (``url|version``):
+
+- A canonical that contains ``ValueSet`` (in any letter case) and does not contain
+  ``Library`` is a ValueSet to preload; see `ValueSets`_.
+- A canonical that contains ``CodeSystem``, or an entry whose ``display`` contains
+  ``Code system``, is skipped.
+- Any other canonical is resolved as a ``Library`` from the administration database. A
+  dependency that cannot be resolved, or that resolves to a resource of another type, is
+  rejected with HTTP 404, naming the dependency and the library that declares it.
+
+A ``depends-on`` entry without a ``resource``, or with a canonical that is not of the form
+``url`` or ``url|version`` (for example with an empty part or with more than one ``|``),
+is rejected with HTTP 400.
+
+Every library in the dependency closure must be compiled: a library that holds no
+compiled .NET assembly is rejected with HTTP 422.
+
+.. _feature_library_evaluate_valuesets:
+
+ValueSets
+^^^^^^^^^
+
+Before the evaluation starts, Firely Server loads every ValueSet that the evaluated
+``Library``, or a library in its dependency closure, lists as a ``depends-on`` dependency
+(see `Library dependencies`_). The ValueSets are resolved by canonical from the
+administration database:
+
+- When the ValueSet carries an expansion, that expansion is used. The expansion must be
+  complete: a paged expansion (with ``expansion.offset`` set, or an ``expansion.total``
+  larger than the number of codes it contains) is not accepted, and the operation fails.
+- Otherwise, Firely Server expands the ValueSet from its ``compose``, resolving the
+  ValueSets and CodeSystems it refers to from the administration database.
+- A ValueSet that cannot be resolved is rejected with HTTP 404, naming the ValueSet and
+  the library that lists it.
+
+A value set that the CQL uses, but that no library lists as a ``depends-on`` dependency,
+is not loaded up front. A membership test against it is passed to the server's
+terminology service; see :ref:`feature_terminology`.
 
 Output parameters
 ~~~~~~~~~~~~~~~~~
@@ -358,6 +537,14 @@ the results of the evaluated CQL expressions.
 |                         |                         |             | an extension (                 |
 |                         |                         |             | ``cqf-cqlType``).              |
 +-------------------------+-------------------------+-------------+--------------------------------+
+
+.. _feature_cql_raw:
+
+When the proprietary ``raw`` parameter is ``true``, the results are not mapped back to
+FHIR data types. Instead, the ``Parameters`` resource holds a single parameter named
+``rawResult``, whose ``valueString`` is a JSON object with one member per evaluated
+expression: all expressions of the ``Library``, or those named in ``expression``. Each
+member is named after its expression and holds the JSON serialization of the CQL result.
 
 When to use this operation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -516,7 +703,7 @@ Configuration
 ~~~~~~~~~~~~~
 
 The ``Measure/$evaluate-measure`` operation is provided by the
-``Vonk.Plugin.Cql.Operations.Measure.EvaluateMeasure`` namespace.
+``Vonk.Plugin.Cql.Operations.Measure.Evaluate`` namespace.
 
 You can enable or disable this operation by including or excluding this
 namespace in the Firely Server pipeline options. See :ref:`vonk_available_plugins`
@@ -584,19 +771,41 @@ Firely Server supports the following parameters:
 |                          |           |                         |             |                                             |
 |                          |           |                         |             | See :ref:`feature_cql_subject`.             |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``periodStart``          | ✅        | ``date``                | 1..1        | Start of the measurement period.            |
+| ``periodStart``          | ✅        | ``date``                | 0..1        | Start of the measurement period.            |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | Supply both ``periodStart`` and             |
+|                          |           |                         |             | ``periodEnd``, or neither: a request that   |
+|                          |           |                         |             | supplies only one of them is rejected with  |
+|                          |           |                         |             | HTTP 400.                                   |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | When neither is supplied, the Measure's     |
+|                          |           |                         |             | ``effectivePeriod`` is used. It must then   |
+|                          |           |                         |             | have both a ``start`` and an ``end``,       |
+|                          |           |                         |             | otherwise the request is rejected with      |
+|                          |           |                         |             | HTTP 400.                                   |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | The dates are expanded to whole days: the   |
+|                          |           |                         |             | measurement period passed to the CQL runs   |
+|                          |           |                         |             | from 00:00:00.000 on ``periodStart`` to     |
+|                          |           |                         |             | 23:59:59.999 on ``periodEnd``, both with    |
+|                          |           |                         |             | offset ``+00:00``.                          |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``periodEnd``            | ✅        | ``date``                | 1..1        | End of the measurement period.              |
+| ``periodEnd``            | ✅        | ``date``                | 0..1        | End of the measurement period. See          |
+|                          |           |                         |             | ``periodStart``.                            |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | ``reportType``           | ✅        | ``code``                | 0..1        | The type of measure report:                 |
 |                          |           |                         |             |                                             |
-|                          |           |                         |             | - ``individual``: Evaluates the measure for |
-|                          |           |                         |             |   a single subject (e.g. Patient or Group)  |
-|                          |           |                         |             |   and returns population membership and     |
-|                          |           |                         |             |   score for that subject.                   |
+|                          |           |                         |             | - ``individual`` (or ``subject``, the code  |
+|                          |           |                         |             |   the R4 operation defines for it):         |
+|                          |           |                         |             |   evaluates the measure for a single        |
+|                          |           |                         |             |   ``Patient`` subject and returns           |
+|                          |           |                         |             |   population membership and score for that  |
+|                          |           |                         |             |   subject.                                  |
 |                          |           |                         |             |                                             |
-|                          |           |                         |             | - ``summary``: Evaluates the measure across |
-|                          |           |                         |             |   a population of subjects and returns      |
+|                          |           |                         |             | - ``summary`` (or ``population``, the code  |
+|                          |           |                         |             |   the R4 operation defines for it):         |
+|                          |           |                         |             |   evaluates the measure for the members of  |
+|                          |           |                         |             |   a ``Group`` subject and returns           |
 |                          |           |                         |             |   aggregated counts (e.g. numerator,        |
 |                          |           |                         |             |   denominator).                             |
 |                          |           |                         |             |                                             |
@@ -605,19 +814,47 @@ Firely Server supports the following parameters:
 |                          |           |                         |             |   counts plus a contained individual        |
 |                          |           |                         |             |   MeasureReport per group member.           |
 |                          |           |                         |             |                                             |
-|                          |           |                         |             | Not supported for a ``Patient`` subject.    |
+|                          |           |                         |             | A ``Patient`` subject accepts only          |
+|                          |           |                         |             | ``individual`` and ``subject``; a ``Group`` |
+|                          |           |                         |             | subject accepts only ``summary``,           |
+|                          |           |                         |             | ``population`` and ``subject-list``. Any    |
+|                          |           |                         |             | other combination is rejected with          |
+|                          |           |                         |             | HTTP 400.                                   |
 |                          |           |                         |             |                                             |
 |                          |           |                         |             | If not specified, the default is            |
-|                          |           |                         |             | ``individual``.                             |
+|                          |           |                         |             | ``individual`` for every subject type, so a |
+|                          |           |                         |             | request for a ``Group`` subject must supply |
+|                          |           |                         |             | ``reportType``.                             |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | ``parameters``           | ✅        | ``Parameters`` resource | 0..1        | See ``Library/$evaluate`` configuration     |
 |                          |           |                         |             | for details.                                |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | Unlike for ``Library/$evaluate``, it must   |
+|                          |           |                         |             | not hold a ``Measurement Period``           |
+|                          |           |                         |             | parameter: the measurement period comes     |
+|                          |           |                         |             | only from ``periodStart`` and               |
+|                          |           |                         |             | ``periodEnd``, or the Measure's             |
+|                          |           |                         |             | ``effectivePeriod``. A request that         |
+|                          |           |                         |             | supplies a ``Measurement Period`` here is   |
+|                          |           |                         |             | rejected with HTTP 400.                     |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | ``useServerData``        | ✅        | ``boolean``             | 0..1        | See ``Library/$evaluate`` configuration     |
 |                          |           |                         |             | for details.                                |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | ``data``                 | ✅        | ``Bundle``              | 0..1        | See ``Library/$evaluate`` configuration     |
 |                          |           |                         |             | for details.                                |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | For a ``Group`` subject, the same bundle is |
+|                          |           |                         |             | used for every member. When the measure's   |
+|                          |           |                         |             | library is defined in the Patient context,  |
+|                          |           |                         |             | the data of the bundle must belong to       |
+|                          |           |                         |             | exactly one patient: the patient it is      |
+|                          |           |                         |             | evaluated for. ``data`` can therefore not   |
+|                          |           |                         |             | be used with a ``Group`` of more than one   |
+|                          |           |                         |             | patient; the evaluation of a member the     |
+|                          |           |                         |             | bundle does not belong to fails with        |
+|                          |           |                         |             | HTTP 422, and the whole request is rejected |
+|                          |           |                         |             | with it.                                    |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | ``dataEndpoint``         | ✅        | ``Endpoint``            | 0..1        | See ``Library/$evaluate`` configuration     |
 |                          |           |                         |             | for details.                                |
@@ -627,6 +864,9 @@ Firely Server supports the following parameters:
 |                          |           |                         |             |                                             |
 |                          |           |                         |             | When ``false`` (default), the result is     |
 |                          |           |                         |             | returned in the response only.              |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | See                                         |
+|                          |           |                         |             | :ref:`feature_measure_evaluate_persist`.    |
 |                          |           |                         |             |                                             |
 |                          |           |                         |             | This is a proprietary parameter of Firely   |
 |                          |           |                         |             | Server.                                     |
@@ -644,9 +884,26 @@ Firely Server supports the following parameters:
 |                          |           |                         |             | This is a proprietary parameter of Firely   |
 |                          |           |                         |             | Server.                                     |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``raw``                  | ✅        | ``boolean``             | 0..1        | Return the results as a string without      |
-|                          |           |                         |             | mapping the CQL result data types back to   |
-|                          |           |                         |             | FHIR.                                       |
+| ``raw``                  | ✅        | ``boolean``             | 0..1        | When ``true``, returns the unscored results |
+|                          |           |                         |             | of the evaluation instead of a              |
+|                          |           |                         |             | ``MeasureReport``: a ``Parameters``         |
+|                          |           |                         |             | resource with one parameter per             |
+|                          |           |                         |             | ``Measure.group``, named after the group    |
+|                          |           |                         |             | ``id``. Each of them holds one              |
+|                          |           |                         |             | ``population`` part per evaluated subject,  |
+|                          |           |                         |             | with a ``subject`` part (``valueString``)   |
+|                          |           |                         |             | and a ``parameters`` part holding the       |
+|                          |           |                         |             | ``Library/$evaluate`` result of that        |
+|                          |           |                         |             | group's CQL expressions for that subject.   |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | The values in these results are mapped to   |
+|                          |           |                         |             | FHIR as usual (see                          |
+|                          |           |                         |             | :ref:`feature_cql_result_mapping`); no      |
+|                          |           |                         |             | population counts or scores are             |
+|                          |           |                         |             | calculated.                                 |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | Combining ``raw`` with ``persist=true`` is  |
+|                          |           |                         |             | rejected with HTTP 400.                     |
 |                          |           |                         |             |                                             |
 |                          |           |                         |             | This is a proprietary parameter of Firely   |
 |                          |           |                         |             | Server.                                     |
@@ -699,6 +956,9 @@ the denominator, after the exclusion and exception populations have been subtrac
   numerator   = (denominator ∩ numerator) − numerator-exclusion
   score       = numerator / denominator
 
+When the denominator is 0, the ``measureScore`` is 0 — for example in an
+``individual`` report for a patient that is not in the denominator.
+
 Ratio scoring
 ^^^^^^^^^^^^^
 
@@ -709,6 +969,8 @@ from the group's single initial population::
   numerator   = (initial-population ∩ numerator) − numerator-exclusion
   denominator = (initial-population ∩ denominator) − denominator-exclusion
   score       = numerator / denominator
+
+As for ``proportion``, a denominator of 0 gives a ``measureScore`` of 0.
 
 A ``denominator-exception`` population is not permitted on a ratio-scored group, and
 a ratio-scored group cannot carry stratifiers. Both are rejected before evaluation;
@@ -818,6 +1080,56 @@ label-based membership rules. In the example above, the subject counts as 1 for
 ``denominator-exclusion`` under ``rawPopulationCounts=true``, while the score stays
 the same.
 
+.. _feature_measure_evaluate_counted_types:
+
+Which results are counted
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Every population count counts *cases*, and what a case is depends on what the
+population's criteria expression returns:
+
+- An expression that returns a single ``boolean`` makes the population patient-based:
+  the case is the subject itself, counted when the value is ``true``.
+- Otherwise every element the expression returns is a case. Composing the
+  label-based counts and the ``measureScore`` means intersecting and subtracting the
+  cases of several populations, so each case needs an identity. Firely Server derives
+  it from the returned type:
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 30 70
+
+     * - Returned type
+       - Identity of the case
+     * - A resource
+       - ``ResourceType/id``
+     * - ``boolean``
+       - its value, ``true`` or ``false``
+     * - ``integer`` or ``decimal``
+       - its value
+     * - ``date``
+       - its value
+
+  Two returned elements with the same identity are the same case.
+
+Which of these rules applies depends on the count:
+
+- For ``proportion`` and ``ratio`` groups, the label-based counts (every population
+  except the initial population) and the ``measureScore`` identify cases as above. A
+  population whose expression returns any other type — for example a ``string``, a
+  ``dateTime``, a ``Quantity`` or a ``Coding`` — cannot be counted, and the request is
+  rejected with HTTP 422, naming the group, the population and the returned type.
+  This also applies with ``rawPopulationCounts=true``, because the ``measureScore``
+  still follows the label-based rules.
+- The initial population, every population of a ``cohort``-scored or unscored group,
+  and every population with ``rawPopulationCounts=true`` count the returned elements
+  as they are: each returned resource, and each returned primitive value that has a
+  value, is counted, including repeated values. A returned value that is not a
+  primitive, such as a ``Quantity`` or a ``Coding``, is not counted there.
+
+All populations within one membership path must also return the same type; see
+:ref:`feature_measure_evaluate_populationbasis`.
+
 .. _feature_measure_evaluate_stratifiers:
 
 Stratifiers
@@ -856,8 +1168,42 @@ Each stratum is reported with:
   :ref:`feature_measure_evaluate_counts`. A stratum never reports a member for a
   population its group excludes.
 - a ``measureScore``, for proportion-scored groups. It always follows the
-  label-based membership rules, mirroring the group-level score.
+  label-based membership rules, mirroring the group-level score, so a stratum whose
+  denominator is 0 has a ``measureScore`` of 0.
 - ``subjectResults`` ``List`` resources, in ``subject-list`` reports.
+
+Stratifier component values
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A component expression must return values, not resources. Firely Server turns each
+returned value into the stratum value as follows:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 65
+
+   * - Returned value
+     - Stratum value
+   * - ``Coding`` with a ``code``
+     - Coded: ``coding`` with the ``system`` and ``code``, and ``text`` set to the code
+   * - ``Coding`` without a ``code``, with a ``display``
+     - ``text`` set to the display
+   * - ``CodeableConcept``
+     - Coded from its first coding that has a ``code``; otherwise ``text`` set to its
+       ``text``, or to the ``display`` of its first coding that has one
+   * - ``code``, ``string``, ``boolean`` (``true``/``false``), ``integer``,
+       ``decimal``, ``date``, ``dateTime``, ``time``
+     - ``text`` set to the value
+   * - A resource
+     - Rejected with HTTP 422
+   * - Any other type, for example a ``Quantity`` or a ``Period``
+     - Rejected with HTTP 422, naming the component and the returned type
+
+A value without content — an empty or blank value, or a ``Coding`` or
+``CodeableConcept`` with neither a code nor a text — is ignored, and a value the
+subject returns more than once counts once. When a component returns no value at all
+for a subject, the subject is placed in the stratum whose value carries only the
+``data-absent-reason`` extension with code ``unknown``.
 
 An ``individual`` report keeps strata whose counts are all 0, so the subject's
 observed component values are always visible. ``summary`` and ``subject-list``
@@ -885,8 +1231,8 @@ Rejected with HTTP 422
   reference, or an empty canonical.
 - A ``Measure.library`` canonical that resolves to a resource of another type —
   canonicals are unique per resource type, but not across types.
-- A scoring code the ``measure-scoring`` CodeSystem does not define (issue type
-  ``invalid``), or ``continuous-variable`` (issue type ``not-supported``).
+- The ``continuous-variable`` scoring type, in ``Measure.scoring`` or in a group-level
+  scoring override (issue type ``not-supported``).
 
 *Group level*
 
@@ -926,6 +1272,10 @@ Rejected with HTTP 422
 Rejected with other status codes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+- **HTTP 400** — a scoring code the ``measure-scoring`` CodeSystem does not define,
+  in ``Measure.scoring`` or in a group-level scoring override (issue type
+  ``invalid``). A ``Measure.scoring`` that carries no coding from that CodeSystem is
+  rejected the same way.
 - **HTTP 412** — a group without an id, or several groups sharing one. The group id
   is what the results, ``MeasureReport.group.id`` and the stratum memberships are
   filed under.
@@ -937,13 +1287,70 @@ Rejected with other status codes
 Output parameters
 ~~~~~~~~~~~~~~~~~
 
-The operation returns a ``MeasureReport`` resource containing the evaluation results.
+The operation returns a ``MeasureReport`` resource containing the evaluation results,
+or a ``Parameters`` resource when ``raw`` is ``true``.
 
 The report includes:
 
 - population counts (e.g. initial population, denominator, numerator)
 - measure score (if applicable)
 - subject-level or population-level results depending on ``reportType``
+- the parameters of the request (see below)
+
+Each ``group`` and each ``population`` of the report carries the ``id`` of the
+``Measure`` element it reports on. A ``Measure.group.population`` therefore needs an
+``id`` to appear in the report: a population without one is still evaluated, and takes
+part in the counts and the score of the other populations, but is left out of the
+``MeasureReport``. Such a ``Measure`` is not rejected; Firely Server only logs a
+warning.
+
+Request parameters in the report
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Every ``MeasureReport`` contains a ``Parameters`` resource with the parameters of the
+request, and references it through the
+``http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-inputParameters``
+extension. All parameters of the request are included, except ``data``:
+
+- for a ``POST`` request, the parameters are copied as they were sent, including the
+  ``parameters`` resource and a ``dataEndpoint`` ``Endpoint`` resource with all of its
+  ``header`` values;
+- for a ``GET`` request, the ``Parameters`` resource is rebuilt from the query
+  parameters.
+
+When ``persist`` is ``true``, the contained ``Parameters`` resource is stored together
+with the report. The individual reports contained in a ``subject-list`` report do not
+carry it.
+
+.. warning::
+
+   A client should send nothing in a ``dataEndpoint`` ``Endpoint`` besides its
+   ``address``. Firely Server only uses the ``Endpoint.address``, and takes the
+   credentials for it from the data endpoint configured with that address (see
+   :ref:`feature_external_data_endpoints`). Everything sent in the request body
+   except ``data`` ends up in the ``MeasureReport`` and, with ``persist=true``, in
+   the database, so anything else in the ``Endpoint``, such as credentials in its
+   ``header`` values, is exposed there without being used.
+   HTTP headers of the incoming request that are forwarded to data endpoints are
+   not request parameters, and are not included.
+
+.. _feature_measure_evaluate_persist:
+
+Persisting the report
+^^^^^^^^^^^^^^^^^^^^^
+
+With ``persist=true``, the ``MeasureReport`` is stored after it has been built, and
+the response is the same as without it: HTTP 200 — not 201 — with the report as its
+body, and no ``Location`` header.
+
+The report is written to the repository directly, not through a regular create
+interaction. It is therefore not validated, and pre-handlers registered for the
+create interaction do not run for it.
+
+Before the report is written, the write is authorized by the same check that guards
+a create interaction. When the authorization denies it, the report is not stored and
+the response has HTTP 403 — its body is still the ``MeasureReport``, not an
+``OperationOutcome``.
 
 When to use this operation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -992,24 +1399,65 @@ Example: Type-Level Measure Evaluation
 
 **Response Body**
 
+The ``id`` of the report and of its contained ``Parameters``, and the ``date``, differ
+for every invocation. The ``group`` and ``population`` ids are those of the
+``Measure``. ``[base]`` stands for the base url of the server, as Firely Server returns
+absolute references by default.
+
 .. code-block:: json
 
    {
      "resourceType": "MeasureReport",
+     "id": "5b7f3a2e-9c41-4d8b-a6e0-2f1c8d9b3e47",
+     "contained": [
+       {
+         "resourceType": "Parameters",
+         "id": "c2d94e1b-7a35-4f60-8b1e-9d4a6c0f2e18",
+         "parameter": [
+           {
+             "name": "url",
+             "valueCanonical": "http://example.org/fhir/Measure/ExampleMeasure|1.0.0"
+           },
+           {
+             "name": "subject",
+             "valueString": "Patient/cql-patient-test"
+           },
+           {
+             "name": "periodStart",
+             "valueDate": "2023-01-01"
+           },
+           {
+             "name": "periodEnd",
+             "valueDate": "2023-12-31"
+           }
+         ]
+       }
+     ],
+     "extension": [
+       {
+         "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-inputParameters",
+         "valueReference": {
+           "reference": "#c2d94e1b-7a35-4f60-8b1e-9d4a6c0f2e18"
+         }
+       }
+     ],
      "status": "complete",
      "type": "individual",
      "measure": "http://example.org/fhir/Measure/ExampleMeasure|1.0.0",
      "subject": {
-       "reference": "Patient/cql-patient-test"
+       "reference": "[base]/Patient/cql-patient-test"
      },
+     "date": "2024-03-18T14:27:05.3176942+00:00",
      "period": {
        "start": "2023-01-01",
        "end": "2023-12-31"
      },
      "group": [
        {
+         "id": "group-1",
          "population": [
            {
+             "id": "initial-population",
              "code": {
                "coding": [
                  {
@@ -1021,6 +1469,7 @@ Example: Type-Level Measure Evaluation
              "count": 1
            },
            {
+             "id": "denominator",
              "code": {
                "coding": [
                  {
@@ -1032,6 +1481,7 @@ Example: Type-Level Measure Evaluation
              "count": 1
            },
            {
+             "id": "numerator",
              "code": {
                "coding": [
                  {
@@ -1044,7 +1494,9 @@ Example: Type-Level Measure Evaluation
            }
          ],
          "measureScore": {
-           "value": 1.0
+           "value": 1,
+           "system": "http://unitsofmeasure.org",
+           "code": "{score}"
          }
        }
      ]
@@ -1066,7 +1518,7 @@ Overview
   ``$cql``
 
 **FHIR specification**
-  `Using CQL with FHIR Implementation Guide - v2.0.0 <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_
+  `Using CQL with FHIR Implementation Guide - v2.0.0 <https://hl7.org/fhir/uv/cql/OperationDefinition-cql-cql.html>`_
 
 **OperationDefinition**
   ``http://hl7.org/fhir/uv/cql/OperationDefinition/cql-cql``
@@ -1092,10 +1544,12 @@ Firely Server supports the following parameters:
 |                         |           |                         |             |                                |
 |                         |           |                         |             | Only a single statement is     |
 |                         |           |                         |             | supported per request. It      |
-|                         |           |                         |             | cannot operate within a        |
-|                         |           |                         |             | context (e.g. Patient) and     |
-|                         |           |                         |             | will not execute correctly if  |
-|                         |           |                         |             | input parameters are needed.   |
+|                         |           |                         |             | is evaluated in the Patient    |
+|                         |           |                         |             | context when a ``subject`` is  |
+|                         |           |                         |             | supplied, and can refer to the |
+|                         |           |                         |             | supplied ``parameters`` by     |
+|                         |           |                         |             | name; see                      |
+|                         |           |                         |             | :ref:`feature_cql_expression`. |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``subject``             | ✅        | ``string``              | 0..1        | The Patient whose data forms   |
 |                         |           |                         |             | the evaluation context, as a   |
@@ -1105,14 +1559,17 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | see :ref:`feature_cql_subject`.|
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``parameters``          | ✅        | ``Parameters``          | 0..1        | Input parameters passed into   |
-|                         |           |                         |             | the evaluation context. See    |
-|                         |           |                         |             | ``Library/$evaluate``          |
-|                         |           |                         |             | configuration for details.     |
+|                         |           |                         |             | the evaluation context. Their  |
+|                         |           |                         |             | values are mapped as for       |
+|                         |           |                         |             | ``Library/$evaluate``; see     |
+|                         |           |                         |             | :ref:`feature_cql_expression`  |
+|                         |           |                         |             | for how they are declared.     |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
-| ``raw``                 | ✅        | ``boolean``             | 0..1        | Return the execution results   |
-|                         |           |                         |             | as a string without mapping    |
-|                         |           |                         |             | the CQL result data types back |
-|                         |           |                         |             | to FHIR.                       |
+| ``raw``                 | ✅        | ``boolean``             | 0..1        | When ``true``, the result is   |
+|                         |           |                         |             | not mapped back to FHIR, but   |
+|                         |           |                         |             | returned as JSON in a single   |
+|                         |           |                         |             | ``rawResult`` parameter; see   |
+|                         |           |                         |             | the output parameters below.   |
 |                         |           |                         |             |                                |
 |                         |           |                         |             | This is a proprietary          |
 |                         |           |                         |             | parameter of Firely Server.    |
@@ -1145,6 +1602,46 @@ Firely Server supports the following parameters:
 | ``terminologyEndpoint`` | ❌        | ``Endpoint``            | 0..1        |                                |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 
+.. _feature_cql_expression:
+
+Evaluating the expression
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Firely Server wraps the ``expression`` in a CQL library that it generates for the
+request, compiles that library and evaluates it through ``Library/$evaluate``. The
+generated library has this shape::
+
+  library Test version '1.0.0'
+  using FHIR version '4.0.1'
+  parameter <name> <type>    // one for every parameter in 'parameters'
+
+  context Patient            // only when a 'subject' is supplied
+
+  define "ExpressionToBeEvaluated": <expression>
+
+- When a ``subject`` is supplied, the expression is evaluated in the ``Patient``
+  context, so it can use ``Patient`` and retrieve the data of that patient, such as
+  ``[Encounter]``. Without a ``subject``, no context is declared.
+- Every parameter in ``parameters`` is declared as a ``parameter`` of the library, so
+  the expression can refer to it by name. Its CQL type is inferred from the supplied
+  FHIR value. A parameter supplied more than once is declared as a ``List`` of that
+  type, and a parameter that carries ``part`` elements instead of a value as a
+  ``Tuple`` with an element for every part. For example, ``SomeNumber`` supplied twice
+  with a ``valueInteger`` is declared as a list of integers, so ``Sum(SomeNumber)``
+  returns their sum.
+- Parameter and part names are written into the library unquoted, so they must be
+  valid unquoted CQL identifiers: a name with spaces, such as ``Measurement Period``,
+  cannot be used.
+- The library declares nothing else — no ``include``, ``codesystem``, ``valueset`` or
+  ``code`` — so the expression cannot refer to another library, such as
+  ``FHIRHelpers``, or to a code system, value set or code by name.
+
+A parameter whose value cannot be mapped to a CQL type is rejected with HTTP 501. A
+parameter without a value, with both a value and ``part`` elements, with nested parts,
+or with repetitions of different types is rejected with HTTP 400. An
+``OperationOutcome`` about the evaluation itself, such as one for an unknown patient,
+refers to the generated library as ``Test`` version ``1.0.0``.
+
 Output parameters
 ~~~~~~~~~~~~~~~~~
 
@@ -1152,7 +1649,31 @@ The operation returns a ``Parameters`` resource containing the result of the
 evaluated CQL expression.
 
 The result is returned in a parameter named ``return``. The value is mapped back
-to a FHIR data type, unless the proprietary ``raw`` parameter is set to ``true``.
+to a FHIR data type.
+
+When a ``subject`` is supplied, the response also contains a parameter named
+``Patient`` that holds the ``Patient`` resource of the subject: the ``Patient``
+definition that ``context Patient`` adds to the generated library.
+
+When the proprietary ``raw`` parameter is set to ``true``, the result is not mapped
+back to FHIR (see :ref:`raw output <feature_cql_raw>`). The response then holds a
+single parameter named ``rawResult``, whose ``valueString`` is a JSON object. In that
+object the result is a member named ``ExpressionToBeEvaluated``, the name of the
+expression in the generated library; it is not renamed to ``return``. When a
+``subject`` is supplied, the object also has a ``Patient`` member. For the example
+request below with ``raw`` set to ``true``, the response is:
+
+.. code-block:: json
+
+   {
+    "resourceType": "Parameters",
+    "parameter": [
+        {
+            "name": "rawResult",
+            "valueString": "{\"ExpressionToBeEvaluated\":\"Hello World\"}"
+        }
+    ]
+  }
 
 When to use this operation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1209,6 +1730,66 @@ This examples demonstrates a simple calculation executed via the dQM engine.
     ]
   }
 
+.. _feature_data_requirements:
+
+Library/$data-requirements and Measure/$data-requirements
+---------------------------------------------------------
+
+Both operations return the data requirements that are declared on a ``Library``. They
+do not analyze the CQL or ELM of the library.
+
+**Scope**
+  - Invocation level: ``type`` / ``instance``
+  - Supported resource type(s): ``Library``, ``Measure``
+  - Idempotent: ``yes``
+  - Affects server state: ``no``
+
+**HTTP methods**
+  - ``POST`` and ``GET``, at type and instance level
+
+Library/$data-requirements
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The only supported parameter is ``target``: the canonical of the ``Library``, optionally
+versioned (``url|version``), passed as a ``valueString`` in a ``POST``. It is required at
+type level and not allowed at instance level (``Library/[id]/$data-requirements``), which
+takes the ``Library`` with that id instead.
+
+The response is a new ``Library`` of type ``module-definition``
+(``http://terminology.hl7.org/CodeSystem/library-type``) that holds a copy of the
+``dataRequirement`` elements of the target ``Library``. Nothing else is added: the
+libraries the target depends on are not included, and when the target declares no
+``dataRequirement`` the result contains none.
+
+.. note::
+
+   Firely Server compiles a ``Library`` that carries only CQL or ELM itself (see
+   :ref:`feature_qdm`), but that compilation does not add ``dataRequirement`` elements.
+   Package a library with the Firely CQL SDK Packager to have its data requirements,
+   including those of the libraries it depends on, written into the ``Library``.
+
+Measure/$data-requirements
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``Measure`` is identified by the ``url`` parameter (a ``valueString`` in a ``POST``,
+optionally versioned) at type level, or by its id at instance level. The ``periodStart``
+and ``periodEnd`` parameters are accepted, but do not affect the result.
+
+The ``Measure`` must reference exactly one logic ``Library`` in ``Measure.library``. The
+operation returns the result of ``Library/$data-requirements`` for that ``Library``; the
+data requirements are not aggregated across libraries. The operation requires the
+``Library/$data-requirements`` plugin to be enabled as well.
+
+Errors
+~~~~~~
+
+- HTTP 400 — the canonical parameter is missing or empty at type level, or supplied at
+  instance level.
+- HTTP 404 — no ``Library`` or ``Measure`` is found for the canonical or id, or the
+  ``Measure``'s ``Library`` cannot be resolved.
+- HTTP 422 — the ``Measure`` references no ``Library``, or more than one.
+- HTTP 501 — any other parameter is supplied.
+
 ----
 
 .. _feature_cql_evaluation_behavior:
@@ -1253,10 +1834,27 @@ regardless of whether the entries spell the reference relatively, as an absolute
 or with a version. The ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation`` limit
 applies to those distinct patients.
 
-A member entry whose reference does not identify a resource by type and id at all —
-an empty reference, or an absolute uri that is not a resource url such as
-``urn:uuid:…``, as produced by ingesting a ``Group`` from a transaction Bundle — is
-rejected with an ``OperationOutcome`` naming that reference.
+The ``Group`` is read from Firely Server's own data store, also when the patient data
+comes from the ``data`` parameter or a ``dataEndpoint``. A ``Group`` that is not found
+there is rejected with HTTP 404.
+
+Only an actual group of patients can be evaluated. Each of the following rejects the
+whole request with HTTP 422, issue type ``not-supported``:
+
+- ``Group.actual`` is ``false``: a descriptive group.
+- ``Group.type`` is another type than ``person``.
+- The ``Group`` has no member entities.
+- A member entity references another resource type than ``Patient``. Such a member
+  is not skipped: the request is rejected.
+- A member entry whose reference does not identify a resource by type and id at all —
+  an empty reference, or an absolute uri that is not a resource url such as
+  ``urn:uuid:…``, as produced by ingesting a ``Group`` from a transaction Bundle. The
+  ``OperationOutcome`` names that reference.
+- More distinct patients than ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation``
+  allows.
+
+``member.inactive`` and ``member.period`` are not taken into account: an inactive
+member, or a member whose period has ended, is evaluated like any other member.
 
 Unknown patients
 ^^^^^^^^^^^^^^^^
@@ -1272,15 +1870,39 @@ When the caller supplies the data through the ``data`` parameter, the outcome in
 reports that the provided data does not contain the expected ``Patient`` — the data
 lacks it, while the patient itself may well exist on the server.
 
+.. _feature_cql_data_retrieval:
+
+Data retrieval
+~~~~~~~~~~~~~~
+
+When Firely Server retrieves the data of the subject itself — from its own data or from
+a ``dataEndpoint`` — it retrieves only the resource types listed in the
+``dataRequirement.type`` elements of the evaluated ``Library``, plus ``Patient``. For
+``Measure/$evaluate-measure``, the evaluated ``Library`` is the one the ``Measure``
+references. When that ``Library`` declares no data requirements, all resource types the
+server supports are retrieved.
+
+The data requirements of the libraries that the evaluated ``Library`` includes are not
+taken into account. A bundle supplied through the ``data`` parameter is used as
+supplied, without filtering.
+
+.. important::
+
+   A resource type that the logic retrieves but the evaluated ``Library`` does not
+   declare is not retrieved, so a retrieve of that type returns an empty result, without
+   an error. Declare every resource type the logic retrieves — including those retrieved
+   by included libraries — in ``dataRequirement`` of the evaluated ``Library``.
+
 .. _feature_cql_result_mapping:
 
 Mapping CQL results to FHIR
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Unless the proprietary ``raw`` parameter is used, the result of each evaluated
-expression is mapped back to a FHIR data type and returned as a parameter in the
-response ``Parameters`` resource. A list result returns one parameter repetition per
-element.
+Unless the proprietary ``raw`` parameter of ``$cql`` or ``Library/$evaluate`` is used,
+the result of each evaluated expression is mapped back to a FHIR data type and returned
+as a parameter in the response ``Parameters`` resource. A list result returns one
+parameter repetition per element. ``raw`` on ``Measure/$evaluate-measure`` does not
+change this mapping; it only replaces the ``MeasureReport`` with the per-group results.
 
 Declared CQL type
 ^^^^^^^^^^^^^^^^^

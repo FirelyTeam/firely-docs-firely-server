@@ -160,9 +160,9 @@ a configured external endpoint.
       //    "Audience": "",
       //    "Scopes": "system/*.rs"
       //}
-      "ForwardedHeaders": [
-        "X-Custom-Auth-Header"
-      ]
+    ],
+    "ForwardedHeaders": [
+      "X-Custom-Auth-Header"
     ]
   }
 
@@ -516,7 +516,7 @@ Configuration
 ~~~~~~~~~~~~~
 
 The ``Measure/$evaluate-measure`` operation is provided by the
-``Vonk.Plugin.Cql.Operations.Measure.EvaluateMeasure`` namespace.
+``Vonk.Plugin.Cql.Operations.Measure.Evaluate`` namespace.
 
 You can enable or disable this operation by including or excluding this
 namespace in the Firely Server pipeline options. See :ref:`vonk_available_plugins`

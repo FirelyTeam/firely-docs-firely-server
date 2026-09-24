@@ -9,6 +9,8 @@ Intro to Digital Quality Measures
 
   * Firely dQM - 🌍 / 🇺🇸
 
+.. note::
+
   The operations require the license token ``http://fire.ly/vonk/plugins/cql`` to be present in the license file.
   If you do not have this license token, please contact `Firely <https://fire.ly/contact>`_.
 

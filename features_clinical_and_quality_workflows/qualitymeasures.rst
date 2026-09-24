@@ -9,6 +9,8 @@ Executing Digital Quality Measures (dQMs) - $cql, $evaluate, $evaluate-measure, 
 
   * Firely dQM - 🌍 / 🇺🇸
 
+.. note::
+
   The operations require the license token ``http://fire.ly/vonk/plugins/cql`` to be present in the license file.
   If you do not have this license token, please contact `Firely <https://fire.ly/contact>`_.
 
@@ -146,6 +148,12 @@ Alternatively, you can configure Firely Server to use only external data
 sources by enabling the ``RemoteDataEndpointsOnly`` setting. In that case,
 no local data retrieval (and thus no SQL Server or MongoDB data store) is required.
 
+With ``RemoteDataEndpointsOnly`` enabled, every request must set ``useServerData`` to
+``false``. A request that sets it to ``true``, or omits it, is rejected with HTTP 400 —
+also when it supplies the data in the ``data`` parameter. With ``useServerData`` set to
+``false``, the data comes from the ``data`` parameter when it is supplied, and otherwise
+from the ``dataEndpoint``; see :ref:`feature_external_data_endpoints`.
+
 .. _feature_external_data_endpoints:
 
 External data endpoints
@@ -185,7 +193,8 @@ The ``DataEndpoint`` setting defines a list of pre-configured external FHIR endp
 Each endpoint can be referenced in a request using the ``dataEndpoint`` parameter.
 
 Any ``dataEndpoint`` parameter provided in a request must match one of the
-configured endpoints.
+configured endpoints: its ``Endpoint.address`` is compared with the ``Endpoint`` of each
+configured entry as an exact string, so letter case and a trailing slash must be the same.
 
 Each ``DataEndpoint`` entry supports the following fields:
 
@@ -204,6 +213,9 @@ With ``Jwt`` authentication (the default), ``ClientId``, ``ClientSecret``, ``Tok
 ``Audience`` and ``Scopes`` are all required: if any of them is empty, Firely Server does not
 start. With ``None``, none of them is used.
 
+With ``Jwt`` authentication, Firely Server obtains an access token from the ``TokenEndpoint``
+with the ``client_credentials`` flow and sends it as a bearer token.
+
 .. note::
 
    Firely Server follows pagination of the remote ``$everything`` response. It
@@ -214,6 +226,18 @@ start. With ``None``, none of them is used.
    If the remote endpoint repeats a page link — which would make the retrieval loop
    indefinitely — the operation fails with an ``OperationOutcome`` rather than
    evaluating on a partial compartment.
+
+When ``useServerData`` is ``false`` and no ``data`` is supplied, the operation fails
+with HTTP 500 and an ``OperationOutcome`` stating that the library failed to execute and
+to see the log for details, if:
+
+- the ``dataEndpoint`` parameter is missing, or its ``Endpoint`` has no ``address``;
+- the ``address`` matches no configured ``DataEndpoint`` entry;
+- the remote endpoint answers with an error, including HTTP 401 when Firely Server could
+  not authenticate;
+- the remote endpoint repeats a page link, as described above.
+
+The server log names the cause.
 
 The ``ForwardedHeaders`` setting can be used to forward custom HTTP headers
 from the incoming request to external data endpoints.
@@ -246,15 +270,21 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | are allowed, e.g.,             |
 |                         |           |                         |             | ``http://example.org/fhir/     |
 |                         |           |                         |             | Library/MyLogic|1.0.0``.       |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | A request that supplies both   |
+|                         |           |                         |             | ``url`` and ``library`` is     |
+|                         |           |                         |             | rejected with HTTP 409.        |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``library``             | ✅        | ``Library`` resource    | 0..1        | In-line logic library that     |
 |                         |           |                         |             | contains executable CQL logic. |
 |                         |           |                         |             | This Library will not be       |
-|                         |           |                         |             | stored in Firely Server. It    |
-|                         |           |                         |             | MAY only contain CQL and will  |
-|                         |           |                         |             | be compiled dynamically. If    |
-|                         |           |                         |             | ELM content is provided, it    |
-|                         |           |                         |             | will be re-used.               |
+|                         |           |                         |             | stored in Firely Server. It is |
+|                         |           |                         |             | validated and compiled on      |
+|                         |           |                         |             | every request. When it carries |
+|                         |           |                         |             | ELM content, the ELM is        |
+|                         |           |                         |             | compiled instead of the CQL.   |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | See `Inline library`_.         |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``subject``             | ✅        | ``string``              | 0..1        | The Patient whose data forms   |
 |                         |           |                         |             | the evaluation context, as a   |
@@ -294,6 +324,10 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | passing in the measurement     |
 |                         |           |                         |             | period parameter as a FHIR     |
 |                         |           |                         |             | Period.                        |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | Only parameters the Library    |
+|                         |           |                         |             | declares are bound; see        |
+|                         |           |                         |             | `Input parameter binding`_.    |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``raw``                 | ✅        | ``boolean``             | 0..1        | When ``true``, the results are |
 |                         |           |                         |             | not mapped back to FHIR. The   |
@@ -323,6 +357,13 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | In both cases, any data passed |
 |                         |           |                         |             | via the ``data`` parameter     |
 |                         |           |                         |             | takes precedence.              |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | With                           |
+|                         |           |                         |             | ``RemoteDataEndpointsOnly``    |
+|                         |           |                         |             | enabled, a request that sets   |
+|                         |           |                         |             | ``useServerData`` to ``true``  |
+|                         |           |                         |             | or omits it is rejected with   |
+|                         |           |                         |             | HTTP 400.                      |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``data``                | ✅        | ``Bundle``              | 0..1        | Inline FHIR data bundle to use |
 |                         |           |                         |             | as the data context during     |
@@ -363,7 +404,119 @@ Firely Server supports the following parameters:
 
 .. important::
 
-   If the Library references any ``ValueSet`` resources, they must be preloaded into the Firely Server's administration endpoint **before** executing the Library.
+   If the Library references any ``ValueSet`` resources, they must be preloaded into the Firely Server's administration endpoint **before** executing the Library. See `ValueSets`_.
+
+.. _feature_library_evaluate_inline_library:
+
+Inline library
+^^^^^^^^^^^^^^
+
+A ``Library`` passed in the ``library`` parameter is handled as follows:
+
+- It cannot be combined with ``url``: a request that supplies both is rejected with
+  HTTP 409.
+- It must have a ``url``, a ``name`` and a ``version``. FHIR declares all three as
+  optional on ``Library``, but the CQL engine identifies a library by them. A library
+  that lacks any of them is rejected with HTTP 422.
+- It is validated with the server's validation settings (``Validation:Level``, see
+  :ref:`feature_prevalidation`). Any issue the validation reports, warnings included,
+  rejects the request with HTTP 400 and returns the issues in the ``OperationOutcome``.
+  With ``Level`` set to ``Off``, the library is not validated.
+- It is compiled on every request; the result of the compilation is not kept. When the
+  library carries ELM content (``application/elm+json``), the ELM is compiled and the CQL
+  content is not used. Otherwise its CQL (``text/cql``) is translated to ELM first. When
+  compilation fails, the request is rejected with HTTP 422, reporting that the library
+  holds no .NET assembly; the server log holds the compilation errors.
+- Its dependencies are resolved from the administration database, like those of a stored
+  library; see `Library dependencies`_.
+
+.. _feature_library_evaluate_parameter_binding:
+
+Input parameter binding
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Firely Server binds the entries of the ``parameters`` parameter to the input parameters
+declared in ``Library.parameter``, not to the ``parameter`` definitions in the CQL.
+The declarations are collected from the evaluated ``Library`` and from every library in its
+dependency closure. Only declarations with ``use`` set to ``in`` and one of the following
+``type`` values are bound: ``string``, ``boolean``, ``integer``, ``decimal``, ``date``,
+``dateTime``, ``time``, ``Quantity``, ``Period``, ``Range``, ``code``, ``Coding`` and
+``Basic``.
+
+- A supplied parameter is matched to a declaration by its ``name`` (case-sensitive). A
+  supplied parameter that matches no declaration is ignored, without an error. This
+  applies to every supplied parameter when the ``Library`` has no ``parameter``
+  elements, which can be the case for an inline library that carries only CQL.
+- A declared parameter that is not supplied is left to the CQL engine, which uses the
+  ``default`` of the CQL ``parameter`` definition, if it has one.
+- The cardinality of the declaration is enforced. The request is rejected with HTTP 400
+  when fewer parameters with that name are supplied than ``min`` — also when a
+  declaration has a ``min`` of 1 or more and the request has no ``parameters`` at all —
+  or when more are supplied than ``max``. A declaration with an unusable cardinality
+  (``min`` missing or negative, ``max`` missing, ``0`` or lower than ``min``) is rejected
+  with HTTP 422.
+- A declaration with a ``max`` greater than ``1``, or ``*``, binds a CQL ``List`` of all
+  supplied values with that name. Otherwise a single value is bound.
+- A supplied parameter with ``part`` elements binds a CQL ``Tuple`` with one element per
+  part, named after the part. Every part needs a ``value[x]``, and nested parts are not
+  allowed; both are rejected with HTTP 400.
+- A value is converted according to its own FHIR type. Supported are ``string``,
+  ``boolean``, ``integer``, ``decimal``, ``date``, ``dateTime``, ``time``, ``Quantity``,
+  ``code`` and ``Coding`` (both bind a CQL ``Code``), ``Period`` and ``Range``. A value of
+  any other type, for example ``CodeableConcept`` or ``Reference``, is rejected with
+  HTTP 501.
+- A ``Period`` binds an ``Interval<DateTime>`` and a ``Range`` an ``Interval<Quantity>``.
+  A ``cqf-cqlType`` extension on the ``Library.parameter`` declaration of the evaluated
+  ``Library`` selects another point type: ``Interval<Date>`` for a ``Period``, and
+  ``Interval<Integer>``, ``Interval<Decimal>`` or ``Interval<Long>`` for a ``Range`` of
+  unit-less quantities.
+
+.. _feature_library_evaluate_dependencies:
+
+Library dependencies
+^^^^^^^^^^^^^^^^^^^^
+
+Firely Server follows the ``relatedArtifact`` elements of type ``depends-on`` of the
+evaluated ``Library``, and of every library it depends on, transitively. Other
+``relatedArtifact`` types are ignored. Each ``depends-on`` entry names its dependency in
+``relatedArtifact.resource``, as a canonical with an optional version (``url|version``):
+
+- A canonical that contains ``ValueSet`` (in any letter case) and does not contain
+  ``Library`` is a ValueSet to preload; see `ValueSets`_.
+- A canonical that contains ``CodeSystem``, or an entry whose ``display`` contains
+  ``Code system``, is skipped.
+- Any other canonical is resolved as a ``Library`` from the administration database. A
+  dependency that cannot be resolved, or that resolves to a resource of another type, is
+  rejected with HTTP 404, naming the dependency and the library that declares it.
+
+A ``depends-on`` entry without a ``resource``, or with a canonical that is not of the form
+``url`` or ``url|version`` (for example with an empty part or with more than one ``|``),
+is rejected with HTTP 400.
+
+Every library in the dependency closure must be compiled: a library that holds no
+compiled .NET assembly is rejected with HTTP 422.
+
+.. _feature_library_evaluate_valuesets:
+
+ValueSets
+^^^^^^^^^
+
+Before the evaluation starts, Firely Server loads every ValueSet that the evaluated
+``Library``, or a library in its dependency closure, lists as a ``depends-on`` dependency
+(see `Library dependencies`_). The ValueSets are resolved by canonical from the
+administration database:
+
+- When the ValueSet carries an expansion, that expansion is used. The expansion must be
+  complete: a paged expansion (with ``expansion.offset`` set, or an ``expansion.total``
+  larger than the number of codes it contains) is not accepted, and the operation fails.
+- Otherwise, Firely Server expands the ValueSet from its ``compose``, resolving the
+  ValueSets and CodeSystems it refers to from the administration database.
+- A ValueSet that cannot be resolved is rejected with HTTP 404, naming the ValueSet and
+  the library that lists it.
+
+A value set that the CQL uses, but that no library lists as a ``depends-on`` dependency,
+is not loaded up front. A membership test against it is passed to the server's
+terminology service; see :ref:`feature_terminology`.
 
 Output parameters
 ~~~~~~~~~~~~~~~~~

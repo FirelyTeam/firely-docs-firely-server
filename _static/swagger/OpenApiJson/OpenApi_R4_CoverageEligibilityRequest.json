@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - CoverageEligibilityRequest",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1783,8 +1783,7 @@
       "created": {
         "name": "created",
         "in": "query",
-        "description": "The creation date",
-        "style": "form",
+        "description": "The creation date for the EOB",
         "schema": {
           "type": "string"
         }
@@ -1792,8 +1791,7 @@
       "enterer": {
         "name": "enterer",
         "in": "query",
-        "description": "The party responsible for the entry of the Claim",
-        "style": "form",
+        "description": "The party who is responsible for the request",
         "schema": {
           "type": "string"
         }
@@ -1801,8 +1799,7 @@
       "facility": {
         "name": "facility",
         "in": "query",
-        "description": "Facility where the products or services have been or will be provided",
-        "style": "form",
+        "description": "Facility responsible for the goods and services",
         "schema": {
           "type": "string"
         }
@@ -1810,7 +1807,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
+        "description": "ID of the evaluation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1819,7 +1816,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The reference to the patient",
+        "description": "The patient being evaluated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1829,7 +1826,6 @@
         "name": "provider",
         "in": "query",
         "description": "The reference to the provider",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1837,7 +1833,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the evidence variable",
+        "description": "Immunization evaluation status",
         "style": "form",
         "schema": {
           "type": "string"

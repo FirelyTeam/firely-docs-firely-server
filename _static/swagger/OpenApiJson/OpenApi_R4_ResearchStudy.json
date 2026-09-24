@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - ResearchStudy",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1861,7 +1861,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "E.g. Treatment, dietary, behavioral, etc.",
+        "description": "Classification of the procedure",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1870,7 +1870,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The evidence variable publication date",
+        "description": "Date the evaluation was generated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1879,7 +1879,8 @@
       "focus": {
         "name": "focus",
         "in": "query",
-        "description": "Drugs, devices, etc. under study",
+        "description": "A resource that is a permitted focus of the message",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1887,7 +1888,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
+        "description": "ID of the evaluation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1905,7 +1906,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Location where adverse event occurred",
+        "description": "Where the procedure happened",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1956,7 +1957,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the evidence variable",
+        "description": "Immunization evaluation status",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1965,7 +1966,7 @@
       "title": {
         "name": "title",
         "in": "query",
-        "description": "The human-friendly name of the evidence variable",
+        "description": "The human-friendly name of the research element definition",
         "style": "form",
         "schema": {
           "type": "string"

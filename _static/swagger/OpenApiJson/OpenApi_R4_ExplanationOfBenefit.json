@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - ExplanationOfBenefit",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1913,7 +1913,7 @@
       "care-team": {
         "name": "care-team",
         "in": "query",
-        "description": "Who's involved in plan?",
+        "description": "Member of the CareTeam",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1938,7 +1938,7 @@
       "created": {
         "name": "created",
         "in": "query",
-        "description": "The creation date",
+        "description": "The creation date for the EOB",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1965,7 +1965,7 @@
       "encounter": {
         "name": "encounter",
         "in": "query",
-        "description": "Encounter created as part of",
+        "description": "Multiple Resources: \r\n\r\n* [Composition](composition.html): Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter during which request was created\r\n* [DiagnosticReport](diagnosticreport.html): The Encounter when the order was made\r\n* [DocumentReference](documentreference.html): Context of the document  content\r\n* [Flag](flag.html): Alert relevant during encounter\r\n* [List](list.html): Context in which list created\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this encounter identifier\r\n* [Observation](observation.html): Encounter related to the observation\r\n* [Procedure](procedure.html): Encounter created as part of\r\n* [RiskAssessment](riskassessment.html): Where was assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter in which this request is made\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this encounter identifier\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1974,7 +1974,7 @@
       "enterer": {
         "name": "enterer",
         "in": "query",
-        "description": "The party responsible for the entry of the Claim",
+        "description": "The party who is responsible for the request",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1983,7 +1983,7 @@
       "facility": {
         "name": "facility",
         "in": "query",
-        "description": "Facility where the products or services have been or will be provided",
+        "description": "Facility responsible for the goods and services",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1992,7 +1992,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
+        "description": "ID of the evaluation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2010,7 +2010,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The reference to the patient",
+        "description": "The patient being evaluated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2046,7 +2046,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the evidence variable",
+        "description": "Immunization evaluation status",
         "style": "form",
         "schema": {
           "type": "string"

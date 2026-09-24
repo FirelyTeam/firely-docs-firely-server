@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - AuditEvent",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1926,8 +1926,7 @@
       "action": {
         "name": "action",
         "in": "query",
-        "description": "Actions controlled by this rule",
-        "style": "form",
+        "description": "Type of action performed during the event",
         "schema": {
           "type": "string"
         }
@@ -1976,7 +1975,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The evidence variable publication date",
+        "description": "Date the evaluation was generated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2017,8 +2016,7 @@
       "outcome": {
         "name": "outcome",
         "in": "query",
-        "description": "The processing outcome",
-        "style": "form",
+        "description": "Whether the event succeeded or failed",
         "schema": {
           "type": "string"
         }
@@ -2026,7 +2024,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The reference to the patient",
+        "description": "The patient being evaluated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2051,7 +2049,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "The source value set that contains the concepts that are being mapped",
+        "description": "Who and/or what defined the list contents (aka Author)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2068,7 +2066,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Amino Acid Sequence/ DNA Sequence / RNA Sequence",
+        "description": "Type of Invoice",
         "style": "form",
         "schema": {
           "type": "string"

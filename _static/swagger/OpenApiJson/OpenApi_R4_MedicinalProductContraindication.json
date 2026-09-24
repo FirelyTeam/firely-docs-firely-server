@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - MedicinalProductContraindication",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1705,7 +1705,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Who this goal is intended for",
+        "description": "Recipient(s) of goods and services",
         "style": "form",
         "schema": {
           "type": "string"

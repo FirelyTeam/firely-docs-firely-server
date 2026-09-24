@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - PaymentNotice",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1783,7 +1783,7 @@
       "created": {
         "name": "created",
         "in": "query",
-        "description": "The creation date",
+        "description": "The creation date for the EOB",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1792,7 +1792,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
+        "description": "ID of the evaluation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1810,6 +1810,7 @@
         "name": "provider",
         "in": "query",
         "description": "The reference to the provider",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1817,8 +1818,7 @@
       "request": {
         "name": "request",
         "in": "query",
-        "description": "The EligibilityRequest reference",
-        "style": "form",
+        "description": "The Claim",
         "schema": {
           "type": "string"
         }
@@ -1834,7 +1834,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the evidence variable",
+        "description": "Immunization evaluation status",
         "style": "form",
         "schema": {
           "type": "string"

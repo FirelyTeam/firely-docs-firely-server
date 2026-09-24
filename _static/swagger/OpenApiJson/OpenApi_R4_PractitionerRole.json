@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - PractitionerRole",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1861,7 +1861,7 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Whether the patient record is active",
+        "description": "Indicates if the related person record is active",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1870,7 +1870,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The evidence variable publication date",
+        "description": "Date the evaluation was generated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1888,7 +1888,7 @@
       "endpoint": {
         "name": "endpoint",
         "in": "query",
-        "description": "Technical endpoints providing access to services operated for the organization",
+        "description": "Technical endpoint",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1897,7 +1897,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
+        "description": "ID of the evaluation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1906,7 +1906,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Location where adverse event occurred",
+        "description": "Where the procedure happened",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1915,7 +1915,7 @@
       "organization": {
         "name": "organization",
         "in": "query",
-        "description": "The organization that is the custodian of the patient record",
+        "description": "The organization at which this person record is being managed",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1951,7 +1951,7 @@
       "service": {
         "name": "service",
         "in": "query",
-        "description": "Healthcare services provided through the role",
+        "description": "Which rendered service is being charged?",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1960,7 +1960,7 @@
       "specialty": {
         "name": "specialty",
         "in": "query",
-        "description": "Type of specialty needed",
+        "description": "Specific specialty of the participatingOrganization in the context of the role",
         "style": "form",
         "schema": {
           "type": "string"

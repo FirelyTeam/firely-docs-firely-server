@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - DocumentManifest",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1861,7 +1861,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Who and/or what authored the composition",
+        "description": "Who and/or what authored the document",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1870,7 +1870,7 @@
       "created": {
         "name": "created",
         "in": "query",
-        "description": "The creation date",
+        "description": "The creation date for the EOB",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1879,7 +1879,7 @@
       "description": {
         "name": "description",
         "in": "query",
-        "description": "The description of the evidence variable",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The description of the capability statement\r\n* [CodeSystem](codesystem.html): The description of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The description of the compartment definition\r\n* [ConceptMap](conceptmap.html): The description of the concept map\r\n* [GraphDefinition](graphdefinition.html): The description of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The description of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The description of the message definition\r\n* [NamingSystem](namingsystem.html): The description of the naming system\r\n* [OperationDefinition](operationdefinition.html): The description of the operation definition\r\n* [SearchParameter](searchparameter.html): The description of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The description of the structure definition\r\n* [StructureMap](structuremap.html): The description of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The description of the terminology capabilities\r\n* [ValueSet](valueset.html): The description of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1888,7 +1888,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
+        "description": "ID of the evaluation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1906,7 +1906,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The reference to the patient",
+        "description": "The patient being evaluated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1915,7 +1915,7 @@
       "recipient": {
         "name": "recipient",
         "in": "query",
-        "description": "Message recipient",
+        "description": "Recipient of this invoice",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1942,7 +1942,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "The source value set that contains the concepts that are being mapped",
+        "description": "Who and/or what defined the list contents (aka Author)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1951,7 +1951,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the evidence variable",
+        "description": "Immunization evaluation status",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1960,7 +1960,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Who this goal is intended for",
+        "description": "Recipient(s) of goods and services",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1969,7 +1969,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Amino Acid Sequence/ DNA Sequence / RNA Sequence",
+        "description": "Type of Invoice",
         "style": "form",
         "schema": {
           "type": "string"

@@ -82,7 +82,7 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 	:Input: Canonical reference to a Library, expression name, and optional patient and context data.
 	:Output: The result of the evaluated expression (same as $cql, but tied to named expressions in a Library).
 
-	See `Using CQL with FHIR - OperationDefinition Library/$evaluate <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-library-evaluate.html>`_ for the full HL7 specification, and :ref:`feature_library_evaluate` for details on how to execute this operation in Firely Server, including which parameters are supported.
+	See `Using CQL with FHIR - OperationDefinition Library/$evaluate <https://hl7.org/fhir/uv/cql/OperationDefinition-cql-library-evaluate.html>`_ for the full HL7 specification, and :ref:`feature_library_evaluate` for details on how to execute this operation in Firely Server, including which parameters are supported.
 
 * Library/$data-requirements
 
@@ -118,7 +118,7 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 	:Input: A CQL expression and the relevant data context (e.g., patient data).
 	:Output: The evaluated result of the expression (e.g., Boolean, date, quantity) encoded in a FHIR Parameters resource.
 
-	See `Using CQL with FHIR - OperationDefinition $cql <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_ for the full HL7 specification, and :ref:`feature_cql_operation` for details on how to execute this operation in Firely Server, including which parameters are supported.
+	See `Using CQL with FHIR - OperationDefinition $cql <https://hl7.org/fhir/uv/cql/OperationDefinition-cql-cql.html>`_ for the full HL7 specification, and :ref:`feature_cql_operation` for details on how to execute this operation in Firely Server, including which parameters are supported.
 
 Enabling dQM Operations in Firely Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -303,29 +303,29 @@ The scoring method of a measure determines which populations a group defines and
 It is declared in ``Measure.scoring``, using a code from the ``http://terminology.hl7.org/CodeSystem/measure-scoring`` CodeSystem (see the `measure-scoring value set <https://hl7.org/fhir/R4/valueset-measure-scoring.html>`_).
 A Measure that reports several rates can give a single group its own scoring method with the ``cqfm-scoring`` (US realm) or ``cqm-scoring`` (UV realm) extension on ``Measure.group``; that value overrides ``Measure.scoring`` for that group only (see :ref:`feature_measure_evaluate_scoring_override`).
 
-Which populations a group may define depends on its scoring method. Table 3-1, "Measure populations based on types of measure scoring", in the Population Criteria section of the `Quality Measure IG <https://build.fhir.org/ig/HL7/cqf-measures/measure-conformance.html#population-criteria>`_, marks each population as required, optional or not permitted for each scoring method.
+Which populations a group may define depends on its scoring method. Table 3-1, "Measure populations based on types of measure scoring", in the Population Criteria section of the `Quality Measure IG <https://hl7.org/fhir/us/cqfmeasures/STU5/measure-conformance.html#population-criteria>`_, marks each population as required, optional or not permitted for each scoring method.
 The CodeSystem defines four scoring methods:
 
 #. **Proportion** - "The measure score is defined using a proportion."
    A proportion measure uses the initial population, denominator, denominator exclusion, denominator exception, numerator and numerator exclusion populations.
    The populations are nested: the denominator is a subset of the initial population, and the numerator is a subset of the denominator. Exclusions and exceptions remove cases before the score is calculated.
-   The `Proportion Measures <https://build.fhir.org/ig/HL7/cqf-measures/measure-conformance.html#proportion-measures>`_ section of the Quality Measure IG defines the score as the performance rate:
+   The `Proportion Measures <https://hl7.org/fhir/us/cqfmeasures/STU5/measure-conformance.html#proportion-measures>`_ section of the Quality Measure IG defines the score as the performance rate:
    "Performance rate = (Numerator - Numerator Exclusion) / (Denominator – Denominator Exclusion – Denominator Exception)".
    A typical proportion measure answers a question like "Of the adults eligible for a blood pressure check, what fraction had one?".
 
 #. **Ratio** - "The measure score is defined using a ratio."
    A ratio measure uses the initial population, denominator, denominator exclusion, numerator and numerator exclusion populations. A denominator exception is not permitted.
    Unlike a proportion measure, the numerator is not a subset of the denominator: both are derived independently from the initial population.
-   The `Ratio Measures <https://build.fhir.org/ig/HL7/cqf-measures/measure-conformance.html#ratio-measures>`_ section of the Quality Measure IG defines the numerator as "that subset of the Initial Population that meets the Numerator criteria", and notes that "Some ratio measures will require multiple initial populations, one for the numerator, and one for the denominator."
+   The `Ratio Measures <https://hl7.org/fhir/us/cqfmeasures/STU5/measure-conformance.html#ratio-measures>`_ section of the Quality Measure IG defines the numerator as "that subset of the Initial Population that meets the Numerator criteria", and notes that "Some ratio measures will require multiple initial populations, one for the numerator, and one for the denominator."
    An example is the number of central line blood stream infections relative to the number of patients with a central line.
 
 #. **Continuous variable** - "The score is defined by a calculation of some quantity."
    A continuous-variable measure uses the initial population, measure population and measure population exclusion populations, together with a ``measure-observation`` that computes a value for each member of the measure population.
-   The score is an aggregate of those observations, for example their median, with the aggregate method specified by the ``cqfm-aggregateMethod`` extension. In the words of the `Continuous Variable Measure <https://build.fhir.org/ig/HL7/cqf-measures/measure-conformance.html#continuous-variable-measure>`_ section of the Quality Measure IG:
+   The score is an aggregate of those observations, for example their median, with the aggregate method specified by the ``cqfm-aggregateMethod`` extension. In the words of the `Continuous Variable Measure <https://hl7.org/fhir/us/cqfmeasures/STU5/measure-conformance.html#continuous-variable-measure>`_ section of the Quality Measure IG:
    "Rather than reporting a Numerator and Denominator, a Continuous Variable measure defines variables that are computed across the Measure Population (e.g., average wait time in the emergency department)."
 
 #. **Cohort** - "The measure is a cohort definition."
-   According to the `Cohort Definitions <https://build.fhir.org/ig/HL7/cqf-measures/measure-conformance.html#cohort-definitions>`_ section of the Quality Measure IG, "For cohort definitions, only the Initial Population criteria type is used."
+   According to the `Cohort Definitions <https://hl7.org/fhir/us/cqfmeasures/STU5/measure-conformance.html#cohort-definitions>`_ section of the Quality Measure IG, "For cohort definitions, only the Initial Population criteria type is used."
    A cohort measure has no score: its result is the population itself, for example all patients who received an immunization.
 
 The quoted definitions of the scoring methods are those of the measure-scoring CodeSystem in FHIR R4. See also the `Quality Reporting <https://hl7.org/fhir/R4/clinicalreasoning-quality-reporting.html>`_ page of the FHIR R4 Clinical Reasoning module.
@@ -830,7 +830,7 @@ A stratifier is defined in ``Measure.group.stratifier``, in one of two forms:
 #. **A single criteria**: ``stratifier.criteria`` holds one expression, and the stratum is determined by its result.
 #. **Components**: ``stratifier.component[]`` holds several expressions, each with its own ``code`` and ``criteria``. The stratum is the combination of the component results, so a stratifier with an age group and a product line component has a stratum for each combination of age group and product line.
 
-The Stratification section of the `Quality Measure IG <https://build.fhir.org/ig/HL7/cqf-measures/measure-conformance.html#stratification>`_ (Conformance Requirement 3.17, "Stratification Criteria", in the v5.0.0 CI build) allows a stratifier expression to return one of two things:
+The Stratification section of the `Quality Measure IG <https://hl7.org/fhir/us/cqfmeasures/STU5/measure-conformance.html#stratification>`_ (Conformance Requirement 3.17, "Stratification Criteria", in v5.0.0) allows a stratifier expression to return one of two things:
 "the same type as other population criteria expressions in the measure (i.e. the population basis), or the stratum value".
 In the first approach the expression selects the members of the stratum, just like a population criterion does. In the second approach the expression returns a value, such as ``Patient.gender``, and all members with the same value share a stratum.
 For components, the IG states: "If component stratifiers are used and the component expressions return the stratum value, the combination of the component values are considered the stratum value."

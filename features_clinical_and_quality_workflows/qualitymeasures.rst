@@ -304,9 +304,9 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | evaluated.                     |
 |                         |           |                         |             |                                |
 |                         |           |                         |             | `CQL Access Modifier <https:// |
-|                         |           |                         |             | build.fhir.org/ig/HL7/fhir-    |
-|                         |           |                         |             | extensions/StructureDefinition |
-|                         |           |                         |             | -cqf-cqlAccessModifier.html>`_ |
+|                         |           |                         |             | hl7.org/fhir/extensions/Struct |
+|                         |           |                         |             | ureDefinition-cqf-cqlAccessMod |
+|                         |           |                         |             | ifier.html>`_                  |
 |                         |           |                         |             | extensions are not taken into  |
 |                         |           |                         |             | account.                       |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
@@ -316,9 +316,9 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | These will be mapped from FHIR |
 |                         |           |                         |             | data types to CQL data types   |
 |                         |           |                         |             | according to the `FHIR Type    |
-|                         |           |                         |             | Mapping <https://build.fhir.or |
-|                         |           |                         |             | g/ig/HL7/cql-ig/conformance.ht |
-|                         |           |                         |             | ml#fhir-type-mapping>`_.       |
+|                         |           |                         |             | Mapping <https://hl7.org/fhir/ |
+|                         |           |                         |             | uv/cql/conformance.html#fhir-t |
+|                         |           |                         |             | ype-mapping>`_.                |
 |                         |           |                         |             |                                |
 |                         |           |                         |             | Most notably, this includes    |
 |                         |           |                         |             | passing in the measurement     |
@@ -1432,7 +1432,7 @@ Overview
   ``$cql``
 
 **FHIR specification**
-  `Using CQL with FHIR Implementation Guide - v2.0.0 <https://build.fhir.org/ig/HL7/cql-ig/OperationDefinition-cql-cql.html>`_
+  `Using CQL with FHIR Implementation Guide - v2.0.0 <https://hl7.org/fhir/uv/cql/OperationDefinition-cql-cql.html>`_
 
 **OperationDefinition**
   ``http://hl7.org/fhir/uv/cql/OperationDefinition/cql-cql``

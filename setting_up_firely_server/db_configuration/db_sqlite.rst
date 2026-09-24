@@ -124,3 +124,5 @@ When Firely Server :ref:`imports Conformance resources<conformance_import>`, it 
 
 This behaviour is the same for SQL Server and MongoDB.
 
+See :ref:`conformance_import_history_remove` for how to remove entries from the import history to force a renewed import.
+

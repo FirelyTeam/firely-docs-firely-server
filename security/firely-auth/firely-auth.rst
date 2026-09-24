@@ -14,9 +14,11 @@ In a production scenario, you typically already have at least an identity provid
 Creating SMART on FHIR conformant tokens and handling all protocol details related to a SMART app launch requires dedicated support which generic authorization servers do not offer. Firely provides Firely Auth, an external authorization service optimized for SMART on FHIR, which enables a out-of-the-box experience with your existing authentication services. 
 
 .. note::
-   Firely Auth is licensed separately from the core Firely Server distribution. Please :ref:`contact<vonk-contact>` Firely to get the license. 
-   Your license already permits the usage of Firely Auth if it contains ``http://fire.ly/server/auth/unlimited``. You can also `try out Firely Auth <https://fire.ly/firely-auth-trial/>`_ using an evaluation license with a limited uptime.
-   Firely Auth as part of the Essentials edition (license token ``http://fire.ly/server/auth``) is limited to three registered clients in total.
+   Firely Auth is included in every Firely Server package; it does not require a separate license.
+   The :ref:`Firely Server editions <vonk_overview>` differ only in the number of clients that can be registered in Firely Auth:
+   a license containing the token ``http://fire.ly/server/auth/unlimited`` permits an unlimited number of registered clients,
+   while the Essentials edition (license token ``http://fire.ly/server/auth``) is limited to three registered clients in total.
+   You can also `try out Firely Auth <https://fire.ly/firely-auth-trial/>`_ using an evaluation license with a limited uptime.
 
 To allow you to test :ref:`access control <feature_accesscontrol>`, we provide you with :ref:`instructions <firely_auth_introduction>` to build and run Firely Auth in which you can configure the necessary clients, claims and users yourself to test different scenarios.
 

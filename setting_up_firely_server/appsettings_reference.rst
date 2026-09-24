@@ -820,7 +820,34 @@ See :ref:`feature_patienteverything`.
 
 Quality Measure Operations
 --------------------------
-See :ref:`Library/$evaluate - Configuration <feature_library_evaluate_configuration>` for details on configuring settings relevant to the ``Library/$evaluate`` operation.
+::
+
+  "LibraryEvaluateOperation": {
+    "RemoteDataEndpointsOnly": false,
+    "MaxCachedCompiledLibraries": 32,
+    "DataEndpoint": [],
+    "ForwardedHeaders": []
+  },
+  "MeasureEvaluateOperation": {
+    "MaxSubjectsForSynchronousGroupBasedMeasureEvaluation": 1000,
+    "MaxDegreeOfParallelism": 2
+  },
+
+The ``LibraryEvaluateOperation`` section configures the ``Library/$evaluate`` operation, which is also used by ``Measure/$evaluate-measure`` and ``$cql``:
+
+* ``RemoteDataEndpointsOnly``: When set to ``true``, an evaluation never reads data from the database of Firely Server: a request that does not set the ``useServerData`` parameter to ``false`` is rejected. Default ``false``.
+* ``MaxCachedCompiledLibraries``: The maximum number of compiled CQL libraries kept loaded in memory for reuse across evaluations. ``0`` disables the reuse; a value below ``0`` is rejected at startup. Default ``32``. See :ref:`feature_library_evaluate_compiled_library_cache`.
+* ``DataEndpoint``: The remote data endpoints that data can be retrieved from, with the authentication used for each of them. Default empty. See :ref:`feature_external_data_endpoints`.
+* ``ForwardedHeaders``: The names of the HTTP request headers that are forwarded from the incoming request to the requests to a remote data endpoint. Default empty.
+
+See :ref:`Library/$evaluate - Configuration <feature_library_evaluate_configuration>` for details.
+
+The ``MeasureEvaluateOperation`` section configures the ``Measure/$evaluate-measure`` operation:
+
+* ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation``: The maximum number of distinct patients in a Group that is used as the subject of an evaluation. A request for a Group with more distinct patients is rejected with HTTP status code ``422``. Default ``1000``.
+* ``MaxDegreeOfParallelism``: The maximum number of Measure groups evaluated concurrently per subject. Set it to ``1`` to evaluate the groups one after the other; a value below ``1`` is rejected at startup. Default ``2``.
+
+See :ref:`Measure/$evaluate-measure - Configuration <feature_measure_evaluate_configuration>` for details, and :ref:`feature_opentelemetry_cql` for tracing these operations.
 
 .. _uri_conversion:
 

@@ -14,6 +14,12 @@ The retrieved identifier can then be used to perform subsequent queries and oper
 
 The operation is defined as part of the `Da Vinci Health Record Exchange (HRex) Implementation Guide <https://hl7.org/fhir/us/davinci-hrex>`_ in coordination with the `Da Vinci Payer Data Exchange Implementation Guide <https://hl7.org/fhir/us/davinci-pdex/>`_. See :ref:`davinci_pdex_ig` for supported versions.
 
+.. note::
+
+   The HRex Implementation Guide is published for FHIR R4 only, so ``$member-match`` is
+   available on R4 endpoints only. On an endpoint of another FHIR release it is neither
+   advertised in the CapabilityStatement nor routed.
+
 Matching algorithm
 ------------------
 

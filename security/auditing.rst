@@ -38,7 +38,7 @@ These features can be enabled by including ``Vonk.Plugin.Audit`` in the pipeline
 
 See :ref:`vonk_plugins_config` for more details on pipeline configuration.
 
-There are configuration values for enabling/disabling audit features. 
+There are configuration values for enabling/disabling audit features.
 Keep in mind that those are disregarded if the pipeline is not configured to enable audit event logging, i.e. ``Vonk.Plugin.Audit`` is disabled.
 To enable username logging, you have to include Vonk.Plugin.Audit.UsernameLoggingConfiguration in the pipeline options.
 Please see :ref:`vonk_plugins_audit` for the available options.
@@ -54,7 +54,7 @@ Please see :ref:`vonk_plugins_audit` for the available options.
 Filtering configuration
 -----------------------
 
-You can exclude requests from generating audit logs (both audit log file and audit event logging). 
+You can exclude requests from generating audit logs (both audit log file and audit event logging).
 This is helpful to reduce clutter in the logs. For example, you could exclude logging for an endpoint that is used for health monitoring of the server.
 The example below disables audit logging for all GET requests to /Patient and sub resources or operations.
 
@@ -80,7 +80,7 @@ The wildcard (\*) can be used to expand matching in different ways, e.g.:
 * /$\* will match all system level operations
 * /\*/\*/$validate will match all validation operations on all resources
 
-The Method property is optional. If left out, null, empty or given the value \*, it will match all HTTP verbs. 
+The Method property is optional. If left out, null, empty or given the value \*, it will match all HTTP verbs.
 You can enter multiple verbs, delimited by the \| symbol (e.g. GET\|POST).
 
 .. _configure_audit_log_file:
@@ -123,8 +123,8 @@ Firely Server comes with default settings in ``audit.logsettings.default.json``.
 The values that you can set for the File sink Args are:
 
 * ``path``: The location where the audit log file should be stored.
-* ``rollingInterval``: When this interval expires, the log system will start a new file. The start datetime of each interval is added to the filename. Valid values are ``Infinite``, ``Year``, ``Month``, ``Day``, ``Hour``, ``Minute``. 
-* ``fileSizeLimitBytes``: Limit the size of the log file, which is 1GB by default. When it is full, the log system will start a new file.
+* ``rollingInterval``: When this interval expires, the log system will start a new file. The start datetime of each interval is added to the filename. Valid values are ``Infinite``, ``Year``, ``Month``, ``Day``, ``Hour``, ``Minute``.
+* ``fileSizeLimitBytes``: Limits the size of the log file. If not specified, the default limit is 1 GB. When the limit is reached, the logging system starts a new file. Explicitly setting this value to an empty value means there is no file size limit.
 
 The OutputTemplate listed here contains all the properties that can be logged:
 
@@ -176,7 +176,7 @@ In normal circumstances the buffer will regularly be flushed to the underlying s
       "AuditLog": {
          "WriteTo": [
             {
-               "Name": "File", 
+               "Name": "File",
                "Args": {
                   "path": "./audit/AuditLog.log",
                   "rollingInterval": "Day",
@@ -267,15 +267,15 @@ The table below contains some elements you can find in the generated AuditEvents
 
 AuditEvent Integrity
 --------------------
-Firely server provides a mechanism to validate the integrity of the AuditEvents. 
+Firely server provides a mechanism to validate the integrity of the AuditEvents.
 On the one hand, it provides a way to sign the AuditEvent upon creation,
 and on the other hand, it offers a custom operation to validate the signatures, ensuring that the AuditEvents have not been tampered.
-  
-AuditEvent Signature 
+
+AuditEvent Signature
 ^^^^^^^^^^^^^^^^^^^^
 
-An AuditEvent Signature is a Provenance FHIR resource which contains a signature of the complete AuditEvent FHIR resource JSON. 
-This Provenance FHIR resource also includes a reference to an AuditEvent FHIR resource from which the signature is created. 
+An AuditEvent Signature is a Provenance FHIR resource which contains a signature of the complete AuditEvent FHIR resource JSON.
+This Provenance FHIR resource also includes a reference to an AuditEvent FHIR resource from which the signature is created.
 
 .. note::
 
@@ -309,7 +309,7 @@ If all AuditEvents had a valid signatures, the body should be:
 
   {
     "resourceType": "OperationOutcome",
-    "text": 
+    "text":
         {
             "status": "All Audit Event signatures validated",
             "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>All Audit Event signatures validated</p>\n    </div>"
@@ -335,24 +335,24 @@ If all AuditEvents had a valid signatures, the body should be:
          "details": {
            "text": "Original Request: xxx"
            }
-       } 
+       }
     ]
   }
 
 If some AuditEvents  were not valid, in addition to the informational issues listed above, there should be one processing issue
 (see https://www.hl7.org/fhir/codesystem-issue-type.html#issue-type-processing) per validation error:
- 
+
 .. code-block:: json
-   
+
   {
       "severity": "error",
       "code": "processing",
-      "expression": "AuditEvent/event_id", 
+      "expression": "AuditEvent/event_id",
       "details": {
         "text": "Signature for the event does not match audit event content"
         }
-   } 
-    
+   }
+
 
 Finally, if the number of validation failures is higher than the pre-configured threshold, an additional error should be reported:
 
@@ -364,7 +364,7 @@ Finally, if the number of validation failures is higher than the pre-configured 
       "details": {
           "text": "Process interrupted because too many signature validation errors encountered."
         }
-   } 
+   }
 
 
 
@@ -372,7 +372,7 @@ AuditEvent Integrity Configuration
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 By default, the signature of the AuditEvent and their verification is disabled. In order to enable it, you have to modify the settings of the server.
 
-First of all, in the `PipelineOptions`, you need to have `"Vonk.Plugin.Audit.Integrity"` (or a prefix of it) as part of the plugin pipelines. 
+First of all, in the `PipelineOptions`, you need to have `"Vonk.Plugin.Audit.Integrity"` (or a prefix of it) as part of the plugin pipelines.
 As it is listed in the ``Exclude`` section by default, you have to remove it from this section:
 
 .. code-block:: javascript
@@ -415,7 +415,7 @@ In addition to the pipelines setup, you need to configure properly the ``Audit``
 
    "Audit": {
       "AuditEventSignatureEnabled": true, // Default is false
-      "AuditEventSignatureSecret": 
+      "AuditEventSignatureSecret":
       {
           "SecretType": "JWKS", // Currently only supported type
           // This is an example secret. Generate your own and do not use this example 'Secret' in your configuration!
@@ -423,14 +423,14 @@ In addition to the pipelines setup, you need to configure properly the ``Audit``
       },
       "AsyncProcessingRepeatPeriod" : 10000,
       "InvalidAuditEventProcessingThreshold" : 100,
-      "AuditEventVerificationBatchSize": 20 
+      "AuditEventVerificationBatchSize": 20
     },
 
 with:
 
 ``AuditEventSignatureEnabled`` must be set to ``true`` to enable the signature generation.
 
-``AuditEventSignatureSecret`` specifies the secret to be used when signing the AuditEvent. Currently, it can only contain a JSON Web Key Set ``Secret``. 
+``AuditEventSignatureSecret`` specifies the secret to be used when signing the AuditEvent. Currently, it can only contain a JSON Web Key Set ``Secret``.
  A JSON Web Key Set (JWKS) is a set of JSON Web Tokens (JWT) keys. The next section details how to generate a JWKS.
 
 .. note::
@@ -442,20 +442,20 @@ with:
 ``InvalidAuditEventProcessingThreshold`` specifies the threshold on the maximum number of invalid AuditEvent signatures. Once this threshold
 is reached, the operation is terminated and a specific issue is log in the operation outcome.
 
-``AuditEventVerificationBatchSize`` specifies the batch size when validating the AuditEvent signatures, 
-expressed as number of AuditEvent to verify in one step. We recommend to to set this value to 500 when using SqlServer or MongoDb as data backend, and 
+``AuditEventVerificationBatchSize`` specifies the batch size when validating the AuditEvent signatures,
+expressed as number of AuditEvent to verify in one step. We recommend to set this value to 500 when using SqlServer or MongoDb as data backend, and
 20 when using SQLite.
-        
+
 .. note::
-   
-   When using SQLite, setting ``AuditEventVerificationBatchSize`` will prevent the validation of AuditEvent signature as SQLite 
-   has a limitation on the query size it supports. Concretely, when the provided value is too large, the `$verify-signature`operation 
+
+   When using SQLite, setting ``AuditEventVerificationBatchSize`` will prevent the validation of AuditEvent signature as SQLite
+   has a limitation on the query size it supports. Concretely, when the provided value is too large, the `$verify-signature`operation
    would fail, indicating the following error:
    ``SqliteException (0x80004005): SQLite Error 1: 'parser stack overflow'``
 
 Finally, in order to enable the integrity verification, the corresponding custom operations must be listed as part of the
-``SupportedInteractions``. 
-For that, you have to add the type-level custom operations ``$verify-integrity`` and the system-level custom operation ``$verify-integrity-status``, as follows: 
+``SupportedInteractions``.
+For that, you have to add the type-level custom operations ``$verify-integrity`` and the system-level custom operation ``$verify-integrity-status``, as follows:
 
 .. code-block:: json
 
@@ -468,23 +468,23 @@ For that, you have to add the type-level custom operations ``$verify-integrity``
 JSON Web Key Set generation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The following code snippet in C# is an example how you can generate a JSON Web Key Set. 
+The following code snippet in C# is an example how you can generate a JSON Web Key Set.
 
 .. code-block:: CSharp
 
    using CreativeCode.JWK.KeyParts;
    using CreativeCode.JWK;
-   
+
    ...
-    
+
    private static string CreateJSONWebKeySet()
    {
        var algorithm = Algorithm.ES256;
        var keyUse = PublicKeyUse.Signature;
-       var keyOperations = new HashSet<KeyOperation>(new[] 
-                                { 
-                                    KeyOperation.ComputeDigitalSignature, 
-                                    KeyOperation.VerifyDigitalSignature 
+       var keyOperations = new HashSet<KeyOperation>(new[]
+                                {
+                                    KeyOperation.ComputeDigitalSignature,
+                                    KeyOperation.VerifyDigitalSignature
                                 });
        var jwk = new JWK(algorithm, keyUse, keyOperations);
        var jwks = new JWKS(new[]{ jwk });
@@ -504,7 +504,7 @@ If you are using Ubuntu linux, you can also install ``jose`` command to generate
 Install Ubuntu package ``jose``
 
 .. code-block:: shell-session
-  
+
   sudo apt install jose -y
 
 Generate JSON Web Key Set
@@ -524,10 +524,10 @@ Generate JSON Web Key Set
 AuditEvent customization
 ------------------------
 
-If you need to include additional information in the standard AuditEvents, you can do that with a custom plugin. 
+If you need to include additional information in the standard AuditEvents, you can do that with a custom plugin.
 
 To implement such a plugin, it is helpful to understand how AuditEvents get created in Firely Server. Whenever the server receives an incoming HTTP request, a middleware registered in ``AuditEventConfiguration`` first passes it transparently to the downstream handlers. Then, when the original requests get handled, the audit middleware creates another artificial request and passes it down the stream again. This time, the request contains a creation operation with the AuditEvent as a payload. Like any other request in Firely Server, this request can be intercepted and changed using a pre-handler before it continues down the pipeline until ``CreateOperationMiddleware`` handles it. The order of the customization plugin should be greater than ``3170`` and less than ``4420``.
-  
+
 
 .. @startuml
 
@@ -587,7 +587,7 @@ See an example plugin below. This plugin captures all the token claims from the 
          services.AddScoped<AuditEventCustomizationService>();
          return services;
       }
-      
+
       public static IApplicationBuilder Configure(IApplicationBuilder builder)
       {
          builder.OnInteraction(VonkInteraction.all).PreHandleWith<AuditEventCustomizationService>((s, ctx) => s.CaptureOriginalRequestInfo(ctx));
@@ -635,8 +635,8 @@ See an example plugin below. This plugin captures all the token claims from the 
          }
 
          private static bool IsAuditEventCreationRequest(IVonkContext ctx) =>
-               ctx.Request.Interaction == VonkInteraction.type_create 
-               && ctx.Arguments.TryGetArgument(ArgumentNames.resourceType, out var arg) 
+               ctx.Request.Interaction == VonkInteraction.type_create
+               && ctx.Arguments.TryGetArgument(ArgumentNames.resourceType, out var arg)
                && arg is {Source: ArgumentSource.Internal};
       }
    }

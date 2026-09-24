@@ -305,6 +305,25 @@ Google Cloud Firestore with MongoDB API
     *Last Updated: December 2025* - `Firestore MongoDB API version 8.0 <https://docs.cloud.google.com/firestore/mongodb-compatibility/docs/supported-features-80>`_
 
 
+Amazon DocumentDB (with MongoDB compatibility)
+----------------------------------------------
+
+.. caution::
+    Firely Server does not support Amazon DocumentDB due to several critical limitations:
+
+    * The `$lookup` operator does not support correlated subqueries, i.e. the `let` and `pipeline` fields, which are used by Firely Server for chained search parameters. This applies to all DocumentDB engine versions, including 8.0.
+    * Sharding is not possible: instance-based clusters cannot be sharded, and DocumentDB elastic clusters do not support multi-document transactions, unique indexes, partial indexes, change streams or the MongoDB 8.0 wire protocol.
+    * `$lastN`, used by the :ref:`Observation $lastn operation <lastn>`, is only available on DocumentDB 8.0.1 and higher.
+    * Transactions have additional restrictions compared to MongoDB, such as no cursors within a transaction and a 32 MB transaction log limit, which may cause large transaction bundles to fail.
+    * Retryable writes are not supported and must be disabled in the connection string.
+    * Other limitations may apply.
+    * See the `Functional differences: Amazon DocumentDB and MongoDB <https://docs.aws.amazon.com/documentdb/latest/developerguide/functional-differences.html>`_ and `Supported MongoDB APIs, operations, and data types <https://docs.aws.amazon.com/documentdb/latest/developerguide/mongo-apis.html>`_ documentation for details.
+
+    Recommendation: Use native MongoDB for Firely Server deployments. Amazon DocumentDB is not compatible.
+
+    *Last Updated: September 2026* - `Amazon DocumentDB engine version 8.0 <https://docs.aws.amazon.com/documentdb/latest/developerguide/mongo-apis.html>`_
+
+
 MongoDB Security
 ----------------
 

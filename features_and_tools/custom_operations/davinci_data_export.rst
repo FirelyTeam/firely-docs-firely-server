@@ -237,5 +237,58 @@ The export will exclude patients that have an applicable opt-out Consent in plac
 
 See the section "Filtering export results with SMART scopes" on :ref:`feature_bulkdataexport`.
 
+Restrict clients to DaVinci Data Export only
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In addition to the standard SMART authorization, ATR clients SHOULD always be restricted to only the operations and resource types relevant to the DaVinci ATR use case. This minimizes the risk of leaking information or allowing unauthorized access. DaVinci Data Export supports a mechanism for restricting background clients in this way.
 
+The operations are:
+
+* /Group/{id}/$davinci-data-export
+* /Group/{id}/$exportstatus
+* /Group/{id}/$exportfilerequest
+
+In order to restrict a client to only these operations, the SMART security token must include the following claims:
+
+* http://server.fire.ly/auth/claims/critical/IsAtrClient = true
+* The client uses the ``client_credentials`` flow.
+* fhirUser = { a reference to a Device resource representing the client }
+* groupId = { the groupId of the ATR Group that the client is allowed to export. This groupId is used in the AccessPolicyDefinition }
+
+Since all other access is denied, the client will also have to be granted read access to the resources, used in these operations. This can be done using an AccessPolicy, referencing an AccessPolicyDefinition (see :ref:`feature_accesscontrol_permissions`)
+
+.. code-block:: http
+
+   	PUT [firely-server-base]/administration/AccessPolicyDefinition/AtrClientGroups HTTP/1.1
+   	Content-Type: application/fhir+json
+
+.. code-block:: json
+
+	{
+  		"resourceType": "AccessPolicyDefinition",
+  		"id": "AtrClientGroups",
+  		"url": "[firely-server-base]/administration/AccessPolicyDefinition/AtrClientGroups",
+  		"status": "active",
+  		"policy": [{
+    		"type": { "coding": [{ "code": "smart-v2" }] },
+    		"restriction": ["system/Group.rs?_identifier=https://example.com/fhir/sid/atr-groupid|#groupId#", "system/Consent.rs", "system/Coverage.rs", "system/Patient.rs"]
+  		}]
+	}
+
+Note that in the AccessPolicyDefinition above, an identifier with system 'atr' is expected (e.g. https://example.com/fhir/sid/atr-groupid). This is just an example and will likely be a different system in your database, so make sure to use that in order to restrict the client to the correct Group. 
+
+As you can see, only the most necessary resource types are allowed here. If you would like to allow the client to receive additional resource types (as used in the _type parameter for the export), add them to the 'restriction' array.
+
+.. code-block:: http
+
+   	PUT [firely-server-base]/AccessPolicy/atr-client-abc HTTP/1.1
+   	Content-Type: application/fhir+json
+
+.. code-block:: json
+
+	{
+  		"resourceType": "AccessPolicy",
+  		"id": "atr-client-abc",
+  		"subject": [{ "reference": "[the fhirUser in the token]" }],
+  		"instantiatesCanonical": ["[firely-server-base]/administration/AccessPolicyDefinition/AtrClientGroups"]
+	}
 

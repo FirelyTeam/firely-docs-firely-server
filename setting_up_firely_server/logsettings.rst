@@ -53,27 +53,6 @@ Some additional namespaces you might want to log are:
 - ``Microsoft.AspNetCore.Hosting.Diagnostics`` to log individual requests
 - ``System`` to log events from the System libraries
 
-Please note that the namespaces are evaluated in order from top to bottom, so more generic 'catch all' namespaces should be at the bottom of the list.
-So this will log events on ``Vonk.Repository.Sql.Raw`` on ``Information`` level::
-
-	"MinimumLevel": {
-		"Default": "Error",
-		"Override": {
-			"Vonk.Repository.Sql.Raw": "Information",
-			"Vonk": "Warning"
-		}
-	},
-
-But in this (purposefully incorrect) example the ``Warning`` level on the ``Vonk`` namespace will override the ``Information`` level on the ``Vonk.Repository.Sql.Raw`` namespace::
-
-	"MinimumLevel": {
-		"Default": "Error",
-		"Override": {
-			"Vonk": "Warning",
-			"Vonk.Repository.Sql.Raw": "Information"
-		}
-	},
-
 .. _hot_reload_log_level:
 
 Hot-reloading log event level
@@ -219,8 +198,8 @@ The ``File`` sink will write to a file, possibly rolling it by interval or size.
 	Other values that you can set for the File log are:
 
 	* ``rollingInterval``: When this interval expires, the log system will start a new file. The start datetime of each interval is added to the filename. Valid values are ``Infinite``, ``Year``, ``Month``, ``Day``, ``Hour``, ``Minute``.
-	* ``fileSizeLimitBytes``: Limit the size of the log file, which is 1GB by default. When it is full, the log system will start a new file.
-	* ``retainedFileCountLimit``: If more than this number of log files is written, the oldest will be deleted. Default value is 31. Explicitly setting it to an empty value means files are never deleted.
+	* ``fileSizeLimitBytes``: Limits the size of the log file. If not specified, the default limit is 1 GB. When the limit is reached, the logging system starts a new file. Explicitly setting this value to an empty value means there is no file size limit.
+	* ``retainedFileCountLimit``: If more than this number of log files are written, the oldest files will be deleted. The default configuration sets this value to 7. If the setting is omitted entirely, the default value is 31. Explicitly setting it to an empty value means files are never deleted.
 	* ``outputTemplate``: as described for `Console`_.
 	* ``restrictedToMinimumLevel``: as described for `Console`_.
 

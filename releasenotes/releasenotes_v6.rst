@@ -10,8 +10,8 @@ Current Firely Server release notes (v6.x)
 
 .. _vonk_releasenotes_6_10_0:
 
-Release 6.10.0, TBD
--------------------
+Release 6.10.0, 24th of September 2026
+--------------------------------------
 
 This release is centred on the CQL and quality measure operations: ``Measure/$evaluate-measure`` gains ratio scoring, value-based stratifiers and group-level scoring overrides, population-level evaluations are substantially faster and no longer risk aborting the server process, and invalid ``Measure`` definitions are now rejected up front instead of failing halfway through. The documentation of these operations has been extended accordingly — see :ref:`feature_qualitymeasures`. This release also fixes a number of issues outside CQL, most notably in ``$purge``, ``Patient/$everything`` paging, ``_include`` links, custom authorization and the administration database.
 
@@ -32,11 +32,6 @@ Improvements
 #. FSI: NDJSON ingestion now parses resources in parallel, improving import throughput on multi-core machines. Reading and numbering the lines stays strictly sequential, so journaling and import order are unaffected. Tune it with the new ``workflow:parseParallel`` (``--parsePar``, default ``-1`` = unbounded) and ``workflow:parseBufferSize`` (``--parseBuffer``, default ``50``) settings. See :ref:`tool_fsi` for more information.
 #. FSI: all ``workflow:*Parallel`` and ``workflow:*BufferSize`` settings are now validated at startup, instead of surfacing as a runtime error once the import pipeline is built. The per-category timing statistics reported at the end of an import run are now measured with tick precision, so the fast per-resource steps (``Read``, ``Parse``, ``Index``) are no longer under-reported as 0ms.
 #. Reduced allocations when parsing FHIR JSON during Firely Server Ingest and during MongoDB search-index updates. No behavioral change.
-
-**Other**
-
-#. Application Insights telemetry is now flushed on graceful shutdown. Buffered telemetry could previously be lost if the process exited before the SDK had sent it.
-#. When running in the ``Development`` environment, startup no longer fails hard when a plugin referenced in ``PipelineOptions`` cannot be resolved — for example a plugin listed in ``appsettings.Development.json`` but not present in the ``./plugins`` directory. The condition is logged as an error instead. Other environments keep the existing fail-fast behavior.
 
 Features
 ^^^^^^^^
@@ -84,11 +79,9 @@ Fix
 #. ``$purge`` now erases the patient's entire compartment instead of only the first 20 resources. The compartment was requested with the default page size, so a patient with a larger compartment kept every resource beyond that first page.
 #. ``Patient/$everything`` no longer returns a ``next`` link that restarts pagination from the first page. When the number of matching resources was an exact multiple of ``_count``, the final page was completely full, and the operation emitted an offset-based ``next`` link instead of the keyset cursor the preceding pages used — so a client walking the ``next`` links never reached the end. The final page now omits the ``next`` link.
 #. ``entry.fullUrl`` for ``_include``/``_revinclude`` entries in a search bundle no longer contains a ``/_history/{versionId}`` segment. The included resource's fullUrl was built from its versioned key, producing a version-specific URL that violates FHIR's ``bdl-8`` invariant. Matched entries were unaffected.
-#. A custom ``IAuthorization`` implementation no longer has every read and search refused. When a plugin or customer implementation was adapted to ``IAuthorizationV2`` — which happens on a Virtual Tenants deployment — reads, version reads, searches and history requests were refused regardless of what ``CanRead`` returned. Writes were decided correctly. These are decided by ``CanRead`` again, and a custom operation is left to the operation's own authorization.
 #. A ``StructureDefinition`` is no longer returned without a snapshot when the conformance cache changes while that snapshot is being generated. The resolver read an instance from the cache and kept returning it, but snapshot generation resolves the canonical again — so if the cache was emptied, the entry evicted, or another thread cached its own instance, the snapshot was generated on that other instance and the caller got one without a snapshot. Validation against such a profile then failed or silently checked nothing. The resolver now returns the instance the snapshot was generated on.
 #. Reading the supported resource types from a large administration database no longer times out. On SQL Server or SQLite with many conformance resources, the query building the resource type to canonical mapping from the ``StructureDefinition``s could exceed the 30 second command timeout, failing the model build — at startup, and on every create/update/delete on the administration endpoint, since those trigger a rebuild. The mapping is now read through indexed token predicates instead of matching against unindexable value columns. Two defects in the same mapping are fixed along with it: a ``StructureDefinition`` that mentions ``Resource``, ``MetadataResource`` or ``CanonicalResource`` anywhere other than in its ``baseDefinition`` is no longer treated as defining a resource type, and when two ``StructureDefinition``s define the same resource type the error now names both canonicals. On SQLite, the STU3 ``base`` match is now case-insensitive as well, matching the collation SQL Server already evaluated it under.
 #. SQL Server string ``:contains`` filters for short values now scope the ``ShortString``/``LongString`` ``LIKE`` predicates under one grouped condition, preventing unintended broad matches caused by SQL operator precedence.
-#. Bulk Data Export (``$export``) and Real World Testing (``$realworldtesting``, ``$realworldtestingstatus``) no longer fail at startup, or silently lose their routes, when a single process builds more than one host that configures them — for example an admin pipeline alongside a patient-data pipeline. Both plugins tracked "already configured" with a process-wide static flag shared by every host, so a second host skipped real registration and ``$export`` failed with ``A service of type ExportOperationService is required for Bulk Data Export Tasks but has not been registered``. This state is tracked per host now, and the Real World Testing operations are registered on every matching pipeline branch rather than only the first.
 #. ``$questionnaire-package`` no longer sets ``Bundle.timestamp`` when the request targets STU3, where that element does not exist. On bundles built through the new ``BundleBuilder`` — search, history, ``$lastn``, ``$docref``, ``Patient/$everything`` and ``$questionnaire-package`` responses — ``meta.lastUpdated`` and ``Bundle.timestamp`` now come from a single clock read, so they no longer diverge by the time it takes to assemble the entries. Batch and transaction response bundles are unchanged.
 
 Security
@@ -123,7 +116,6 @@ Programming API changes and plugins
 
 #. The ``ITypedElement``- and ``ISourceNode``-based ``FhirPatch`` overloads are now marked ``[Obsolete]`` and will be removed in the next major version of Firely Server. Use ``FhirPatch(PocoNode, PocoNode, ModelInspector)`` instead, converting both inputs with ``ToPocoNode(ModelInspector)`` first, so the patch is applied to the FHIR POCO directly instead of through a lazily evaluated ``ITypedElement`` wrapper chain.
 #. Added ``Vonk.Core.Common.BundleBuilder``, a POCO-based helper for building ``Bundle`` resources. ``BundleBuilder.Create``, ``AddEntry``, ``AddSearchEntries``, ``WithTotal`` and ``ToSearchsetBundle`` build a ``Hl7.Fhir.Model.Bundle`` directly, replacing the ``ISourceNode``-based ``GenericBundle``/``SearchBundle``/``HistoryBundle`` deprecated in 6.9.0.
-#. CQL service registration, and that of Bulk Data Export and Real World Testing, is now idempotent per host or service collection instead of per process, so registration is no longer wrongly skipped when Firely Server pipelines are hosted more than once in a single process. There is no behavior change for a standard server process.
 
 .. _vonk_releasenotes_6_9_1:
 

@@ -17,11 +17,11 @@ FHIR provides several operations for executing Digital Quality Measures (dQMs), 
 
 * ``Library/$evaluate`` is most commonly used for debugging purposes. dQMs frequently reference multiple ``Library`` resources to encapsulate modular logic.  When a measure produces unexpected results—such as an incorrect or zero score—it is often useful to investigate why a particular subject meets or fails to meet specific population criteria (e.g., initial population, denominator, numerator). In such cases, it can be helpful to execute a targeted set of CQL expressions or evaluate specific sub-libraries within the measure. This allows implementers to isolate and verify individual components of the logic without executing the entire measure.
 
-* ``Measure/$measure-evaluate`` is the primary operation for executing a digital quality measure (dQM) as a whole. This operation evaluates a ``Measure`` resource against a specified subject (such as a patient, group) using the measurement period and any associated ``Library`` parameters. ``Measure/$evaluate-measure`` is typically used in production or formal testing scenarios to generate actual measure scores. It is also suitable for automated execution in quality reporting workflows. Unlike ``Library/$evaluate``, which targets specific expressions, ``Measure/$evaluate-measure`` executes the full population logic and scoring methodology defined in the measure, making it the most comprehensive method for end-to-end dQM evaluation.
+* ``Measure/$evaluate-measure`` is the primary operation for executing a digital quality measure (dQM) as a whole. This operation evaluates a ``Measure`` resource against a specified subject (such as a patient, group) using the measurement period and any associated ``Library`` parameters. ``Measure/$evaluate-measure`` is typically used in production or formal testing scenarios to generate actual measure scores. It is also suitable for automated execution in quality reporting workflows. Unlike ``Library/$evaluate``, which targets specific expressions, ``Measure/$evaluate-measure`` executes the full population logic and scoring methodology defined in the measure, making it the most comprehensive method for end-to-end dQM evaluation.
 
 * ``$cql`` allows direct execution of CQL expressions, either inline or from referenced libraries. It is useful for rapid testing or prototyping when measure logic needs to be validated independently of a ``Measure`` resource.
 
-For the preperation of the execution data-requirements can be gathered using the following operations:
+To prepare the execution, data requirements can be gathered with the following operations:
 
 * ``Library/$data-requirements`` returns the data requirements declared on a ``Library``: a ``Library`` of type ``module-definition`` containing a copy of the target Library's ``dataRequirement`` elements, which describe the FHIR data types, value sets, codes and date constraints the logic needs. Firely Server does not derive them from the CQL or ELM, so the result is only as complete as the ``dataRequirement`` elements the ``Library`` carries. The Firely CQL SDK Packager writes them when it packages a library, including those of the libraries it depends on. This operation is useful during implementation, data mapping and integration planning, to see what data must be available for a successful evaluation.
 
@@ -292,10 +292,16 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | period parameter as a FHIR     |
 |                         |           |                         |             | Period.                        |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
-| ``raw``                 | ✅        | ``boolean``             | 0..1        | Return the library results as  |
-|                         |           |                         |             | a string without mapping the   |
-|                         |           |                         |             | CQL result data types back to  |
-|                         |           |                         |             | FHIR.                          |
+| ``raw``                 | ✅        | ``boolean``             | 0..1        | When ``true``, the results are |
+|                         |           |                         |             | not mapped back to FHIR. The   |
+|                         |           |                         |             | response holds a single        |
+|                         |           |                         |             | ``rawResult`` parameter: a     |
+|                         |           |                         |             | ``valueString`` with a JSON    |
+|                         |           |                         |             | object that has one member per |
+|                         |           |                         |             | evaluated expression, named    |
+|                         |           |                         |             | after the expression; see      |
+|                         |           |                         |             | :ref:`raw output               |
+|                         |           |                         |             | <feature_cql_raw>`.            |
 |                         |           |                         |             |                                |
 |                         |           |                         |             | This is a proprietary          |
 |                         |           |                         |             | parameter of Firely Server.    |
@@ -375,6 +381,14 @@ the results of the evaluated CQL expressions.
 |                         |                         |             | an extension (                 |
 |                         |                         |             | ``cqf-cqlType``).              |
 +-------------------------+-------------------------+-------------+--------------------------------+
+
+.. _feature_cql_raw:
+
+When the proprietary ``raw`` parameter is ``true``, the results are not mapped back to
+FHIR data types. Instead, the ``Parameters`` resource holds a single parameter named
+``rawResult``, whose ``valueString`` is a JSON object with one member per evaluated
+expression: all expressions of the ``Library``, or those named in ``expression``. Each
+member is named after its expression and holds the JSON serialization of the CQL result.
 
 When to use this operation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1261,10 +1275,11 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | :ref:`feature_cql_expression`  |
 |                         |           |                         |             | for how they are declared.     |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
-| ``raw``                 | ✅        | ``boolean``             | 0..1        | Return the execution results   |
-|                         |           |                         |             | as a string without mapping    |
-|                         |           |                         |             | the CQL result data types back |
-|                         |           |                         |             | to FHIR.                       |
+| ``raw``                 | ✅        | ``boolean``             | 0..1        | When ``true``, the result is   |
+|                         |           |                         |             | not mapped back to FHIR, but   |
+|                         |           |                         |             | returned as JSON in a single   |
+|                         |           |                         |             | ``rawResult`` parameter; see   |
+|                         |           |                         |             | the output parameters below.   |
 |                         |           |                         |             |                                |
 |                         |           |                         |             | This is a proprietary          |
 |                         |           |                         |             | parameter of Firely Server.    |
@@ -1344,11 +1359,31 @@ The operation returns a ``Parameters`` resource containing the result of the
 evaluated CQL expression.
 
 The result is returned in a parameter named ``return``. The value is mapped back
-to a FHIR data type, unless the proprietary ``raw`` parameter is set to ``true``.
+to a FHIR data type.
 
 When a ``subject`` is supplied, the response also contains a parameter named
 ``Patient`` that holds the ``Patient`` resource of the subject: the ``Patient``
 definition that ``context Patient`` adds to the generated library.
+
+When the proprietary ``raw`` parameter is set to ``true``, the result is not mapped
+back to FHIR (see :ref:`raw output <feature_cql_raw>`). The response then holds a
+single parameter named ``rawResult``, whose ``valueString`` is a JSON object. In that
+object the result is a member named ``ExpressionToBeEvaluated``, the name of the
+expression in the generated library; it is not renamed to ``return``. When a
+``subject`` is supplied, the object also has a ``Patient`` member. For the example
+request below with ``raw`` set to ``true``, the response is:
+
+.. code-block:: json
+
+   {
+    "resourceType": "Parameters",
+    "parameter": [
+        {
+            "name": "rawResult",
+            "valueString": "{\"ExpressionToBeEvaluated\":\"Hello World\"}"
+        }
+    ]
+  }
 
 When to use this operation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

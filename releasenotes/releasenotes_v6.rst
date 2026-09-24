@@ -35,10 +35,6 @@ Improvements
 #. FSI: all ``workflow:*Parallel`` and ``workflow:*BufferSize`` settings are now validated at startup, instead of surfacing as a runtime error once the import pipeline is built. The per-category timing statistics reported at the end of an import run are now measured with tick precision, so the fast per-resource steps (``Read``, ``Parse``, ``Index``) are no longer under-reported as 0ms.
 #. Reduced allocations when parsing FHIR JSON during Firely Server Ingest and during MongoDB search-index updates. No behavioral change.
 
-**Other**
-
-#. When Firely Server runs in the ``Development`` environment, a ``PipelineOptions`` ``Include`` or ``Exclude`` entry that matches no configuration class in the loaded assemblies — for example a plugin listed in ``appsettings.Development.json`` that is not present in the ``./plugins`` directory when developing in an IDE — is now logged as an error instead of preventing the server from starting. In every other environment such an entry still makes startup fail. See :ref:`settings_pipeline`.
-
 Features
 ^^^^^^^^
 

@@ -1080,6 +1080,56 @@ label-based membership rules. In the example above, the subject counts as 1 for
 ``denominator-exclusion`` under ``rawPopulationCounts=true``, while the score stays
 the same.
 
+.. _feature_measure_evaluate_counted_types:
+
+Which results are counted
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Every population count counts *cases*, and what a case is depends on what the
+population's criteria expression returns:
+
+- An expression that returns a single ``boolean`` makes the population patient-based:
+  the case is the subject itself, counted when the value is ``true``.
+- Otherwise every element the expression returns is a case. Composing the
+  label-based counts and the ``measureScore`` means intersecting and subtracting the
+  cases of several populations, so each case needs an identity. Firely Server derives
+  it from the returned type:
+
+  .. list-table::
+     :header-rows: 1
+     :widths: 30 70
+
+     * - Returned type
+       - Identity of the case
+     * - A resource
+       - ``ResourceType/id``
+     * - ``boolean``
+       - its value, ``true`` or ``false``
+     * - ``integer`` or ``decimal``
+       - its value
+     * - ``date``
+       - its value
+
+  Two returned elements with the same identity are the same case.
+
+Which of these rules applies depends on the count:
+
+- For ``proportion`` and ``ratio`` groups, the label-based counts (every population
+  except the initial population) and the ``measureScore`` identify cases as above. A
+  population whose expression returns any other type — for example a ``string``, a
+  ``dateTime``, a ``Quantity`` or a ``Coding`` — cannot be counted, and the request is
+  rejected with HTTP 422, naming the group, the population and the returned type.
+  This also applies with ``rawPopulationCounts=true``, because the ``measureScore``
+  still follows the label-based rules.
+- The initial population, every population of a ``cohort``-scored or unscored group,
+  and every population with ``rawPopulationCounts=true`` count the returned elements
+  as they are: each returned resource, and each returned primitive value that has a
+  value, is counted, including repeated values. A returned value that is not a
+  primitive, such as a ``Quantity`` or a ``Coding``, is not counted there.
+
+All populations within one membership path must also return the same type; see
+:ref:`feature_measure_evaluate_populationbasis`.
+
 .. _feature_measure_evaluate_stratifiers:
 
 Stratifiers
@@ -1121,6 +1171,39 @@ Each stratum is reported with:
   label-based membership rules, mirroring the group-level score, so a stratum whose
   denominator is 0 has a ``measureScore`` of 0.
 - ``subjectResults`` ``List`` resources, in ``subject-list`` reports.
+
+Stratifier component values
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A component expression must return values, not resources. Firely Server turns each
+returned value into the stratum value as follows:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 35 65
+
+   * - Returned value
+     - Stratum value
+   * - ``Coding`` with a ``code``
+     - Coded: ``coding`` with the ``system`` and ``code``, and ``text`` set to the code
+   * - ``Coding`` without a ``code``, with a ``display``
+     - ``text`` set to the display
+   * - ``CodeableConcept``
+     - Coded from its first coding that has a ``code``; otherwise ``text`` set to its
+       ``text``, or to the ``display`` of its first coding that has one
+   * - ``code``, ``string``, ``boolean`` (``true``/``false``), ``integer``,
+       ``decimal``, ``date``, ``dateTime``, ``time``
+     - ``text`` set to the value
+   * - A resource
+     - Rejected with HTTP 422
+   * - Any other type, for example a ``Quantity`` or a ``Period``
+     - Rejected with HTTP 422, naming the component and the returned type
+
+A value without content — an empty or blank value, or a ``Coding`` or
+``CodeableConcept`` with neither a code nor a text — is ignored, and a value the
+subject returns more than once counts once. When a component returns no value at all
+for a subject, the subject is placed in the stratum whose value carries only the
+``data-absent-reason`` extension with code ``unknown``.
 
 An ``individual`` report keeps strata whose counts are all 0, so the subject's
 observed component values are always visible. ``summary`` and ``subject-list``

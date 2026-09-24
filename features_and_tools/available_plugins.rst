@@ -701,7 +701,6 @@ FHIR RESTful interactions
 :License token: http://fire.ly/vonk/plugins/cql
 :Order: 5370
 :Description: Implements the ``$evaluate-measure`` operation on the Measure endpoint to evaluate a CQL-based quality measure.
-:Note: Firely Server 6.10.0 renamed this configuration class from ``Vonk.Plugin.Cql.Operations.Measure.Evaluate.EvaluateMeasureOperationConfiguration``. A ``PipelineOptions`` ``Include`` or ``Exclude`` entry naming the old class must be updated, otherwise Firely Server fails to start outside the Development environment. An entry naming only a namespace, such as ``Vonk.Plugin.Cql`` or ``Vonk.Plugin.Cql.Operations.Measure.Evaluate``, is unaffected. See :ref:`vonk_releasenotes_6_10_0`.
 
 .. _vonk_plugins_cql_measure_datarequirements:
 

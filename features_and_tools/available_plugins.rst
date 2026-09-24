@@ -673,7 +673,7 @@ FHIR RESTful interactions
 .. _vonk_plugins_cql_library_evaluate:
 
 :Name: CQL
-:Configuration: ``Vonk.Plugin.Cql.LibraryEvaluate.LibraryEvaluateOperationConfiguration``
+:Configuration: ``Vonk.Plugin.Cql.Operations.Library.Evaluate.LibraryEvaluateOperationConfiguration``
 :License token: http://fire.ly/vonk/plugins/cql
 :Order: 5360
 :Description: Implements the `$evaluate <https://hl7.org/fhir/uv/cql/OperationDefinition-cql-library-evaluate.html>` operation on the Library endpoint to execute CQL-based content.
@@ -681,7 +681,7 @@ FHIR RESTful interactions
 .. _vonk_plugins_cql_library_datarequirements:
 
 :Name: CQL Library Data Requirements
-:Configuration: ``Vonk.Plugin.Cql.LibraryDataRequirements.LibraryDataRequirementsOperationConfiguration``
+:Configuration: ``Vonk.Plugin.Cql.Operations.Library.DataRequirements.LibraryDataRequirementsOperationConfiguration``
 :License token: http://fire.ly/vonk/plugins/cql
 :Order: 5380
 :Description: Implements the ``$data-requirements`` operation on the Library endpoint to retrieve the data requirements for a CQL library.
@@ -697,17 +697,18 @@ FHIR RESTful interactions
 .. _vonk_plugins_cql_measure_evaluate:
 
 :Name: CQL Measure Evaluate
-:Configuration: ``Vonk.Plugin.Cql.MeasureEvaluate.EvaluateMeasureOperationConfiguration``
+:Configuration: ``Vonk.Plugin.Cql.Operations.Measure.Evaluate.MeasureEvaluateOperationConfiguration``
 :License token: http://fire.ly/vonk/plugins/cql
 :Order: 5370
 :Description: Implements the ``$evaluate-measure`` operation on the Measure endpoint to evaluate a CQL-based quality measure.
+:Note: Firely Server 6.10.0 renamed this configuration class from ``Vonk.Plugin.Cql.Operations.Measure.Evaluate.EvaluateMeasureOperationConfiguration``. A ``PipelineOptions`` ``Include`` or ``Exclude`` entry naming the old class must be updated, otherwise Firely Server fails to start outside the Development environment. An entry naming only a namespace, such as ``Vonk.Plugin.Cql`` or ``Vonk.Plugin.Cql.Operations.Measure.Evaluate``, is unaffected. See :ref:`vonk_releasenotes_6_10_0`.
 
 .. _vonk_plugins_cql_measure_datarequirements:
 
 :Name: CQL Measure Data Requirements
-:Configuration: ``Vonk.Plugin.Cql.MeasureDataRequirements.MeasureDataRequirementsOperationConfiguration``
+:Configuration: ``Vonk.Plugin.Cql.Operations.Measure.DataRequirements.MeasureDataRequirementsOperationConfiguration``
 :License token: http://fire.ly/vonk/plugins/cql
-:Order: 5390
+:Order: 5395
 :Description: Implements the ``$data-requirements`` operation on the Measure endpoint to retrieve the data requirements for a CQL measure.
 
 .. _vonk_plugins_cql_operation:

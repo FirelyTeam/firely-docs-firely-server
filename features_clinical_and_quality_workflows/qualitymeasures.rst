@@ -595,19 +595,41 @@ Firely Server supports the following parameters:
 |                          |           |                         |             |                                             |
 |                          |           |                         |             | See :ref:`feature_cql_subject`.             |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``periodStart``          | ✅        | ``date``                | 1..1        | Start of the measurement period.            |
+| ``periodStart``          | ✅        | ``date``                | 0..1        | Start of the measurement period.            |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | Supply both ``periodStart`` and             |
+|                          |           |                         |             | ``periodEnd``, or neither: a request that   |
+|                          |           |                         |             | supplies only one of them is rejected with  |
+|                          |           |                         |             | HTTP 400.                                   |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | When neither is supplied, the Measure's     |
+|                          |           |                         |             | ``effectivePeriod`` is used. It must then   |
+|                          |           |                         |             | have both a ``start`` and an ``end``,       |
+|                          |           |                         |             | otherwise the request is rejected with      |
+|                          |           |                         |             | HTTP 400.                                   |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | The dates are expanded to whole days: the   |
+|                          |           |                         |             | measurement period passed to the CQL runs   |
+|                          |           |                         |             | from 00:00:00.000 on ``periodStart`` to     |
+|                          |           |                         |             | 23:59:59.999 on ``periodEnd``, both with    |
+|                          |           |                         |             | offset ``+00:00``.                          |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``periodEnd``            | ✅        | ``date``                | 1..1        | End of the measurement period.              |
+| ``periodEnd``            | ✅        | ``date``                | 0..1        | End of the measurement period. See          |
+|                          |           |                         |             | ``periodStart``.                            |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | ``reportType``           | ✅        | ``code``                | 0..1        | The type of measure report:                 |
 |                          |           |                         |             |                                             |
-|                          |           |                         |             | - ``individual``: Evaluates the measure for |
-|                          |           |                         |             |   a single subject (e.g. Patient or Group)  |
-|                          |           |                         |             |   and returns population membership and     |
-|                          |           |                         |             |   score for that subject.                   |
+|                          |           |                         |             | - ``individual`` (or ``subject``, the code  |
+|                          |           |                         |             |   the R4 operation defines for it):         |
+|                          |           |                         |             |   evaluates the measure for a single        |
+|                          |           |                         |             |   ``Patient`` subject and returns           |
+|                          |           |                         |             |   population membership and score for that  |
+|                          |           |                         |             |   subject.                                  |
 |                          |           |                         |             |                                             |
-|                          |           |                         |             | - ``summary``: Evaluates the measure across |
-|                          |           |                         |             |   a population of subjects and returns      |
+|                          |           |                         |             | - ``summary`` (or ``population``, the code  |
+|                          |           |                         |             |   the R4 operation defines for it):         |
+|                          |           |                         |             |   evaluates the measure for the members of  |
+|                          |           |                         |             |   a ``Group`` subject and returns           |
 |                          |           |                         |             |   aggregated counts (e.g. numerator,        |
 |                          |           |                         |             |   denominator).                             |
 |                          |           |                         |             |                                             |
@@ -616,10 +638,17 @@ Firely Server supports the following parameters:
 |                          |           |                         |             |   counts plus a contained individual        |
 |                          |           |                         |             |   MeasureReport per group member.           |
 |                          |           |                         |             |                                             |
-|                          |           |                         |             | Not supported for a ``Patient`` subject.    |
+|                          |           |                         |             | A ``Patient`` subject accepts only          |
+|                          |           |                         |             | ``individual`` and ``subject``; a ``Group`` |
+|                          |           |                         |             | subject accepts only ``summary``,           |
+|                          |           |                         |             | ``population`` and ``subject-list``. Any    |
+|                          |           |                         |             | other combination is rejected with          |
+|                          |           |                         |             | HTTP 400.                                   |
 |                          |           |                         |             |                                             |
 |                          |           |                         |             | If not specified, the default is            |
-|                          |           |                         |             | ``individual``.                             |
+|                          |           |                         |             | ``individual`` for every subject type, so a |
+|                          |           |                         |             | request for a ``Group`` subject must supply |
+|                          |           |                         |             | ``reportType``.                             |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | ``parameters``           | ✅        | ``Parameters`` resource | 0..1        | See ``Library/$evaluate`` configuration     |
 |                          |           |                         |             | for details.                                |
@@ -655,9 +684,26 @@ Firely Server supports the following parameters:
 |                          |           |                         |             | This is a proprietary parameter of Firely   |
 |                          |           |                         |             | Server.                                     |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
-| ``raw``                  | ✅        | ``boolean``             | 0..1        | Return the results as a string without      |
-|                          |           |                         |             | mapping the CQL result data types back to   |
-|                          |           |                         |             | FHIR.                                       |
+| ``raw``                  | ✅        | ``boolean``             | 0..1        | When ``true``, returns the unscored results |
+|                          |           |                         |             | of the evaluation instead of a              |
+|                          |           |                         |             | ``MeasureReport``: a ``Parameters``         |
+|                          |           |                         |             | resource with one parameter per             |
+|                          |           |                         |             | ``Measure.group``, named after the group    |
+|                          |           |                         |             | ``id``. Each of them holds one              |
+|                          |           |                         |             | ``population`` part per evaluated subject,  |
+|                          |           |                         |             | with a ``subject`` part (``valueString``)   |
+|                          |           |                         |             | and a ``parameters`` part holding the       |
+|                          |           |                         |             | ``Library/$evaluate`` result of that        |
+|                          |           |                         |             | group's CQL expressions for that subject.   |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | The values in these results are mapped to   |
+|                          |           |                         |             | FHIR as usual (see                          |
+|                          |           |                         |             | :ref:`feature_cql_result_mapping`); no      |
+|                          |           |                         |             | population counts or scores are             |
+|                          |           |                         |             | calculated.                                 |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | Combining ``raw`` with ``persist=true`` is  |
+|                          |           |                         |             | rejected with HTTP 400.                     |
 |                          |           |                         |             |                                             |
 |                          |           |                         |             | This is a proprietary parameter of Firely   |
 |                          |           |                         |             | Server.                                     |
@@ -896,8 +942,7 @@ Rejected with HTTP 422
   reference, or an empty canonical.
 - A ``Measure.library`` canonical that resolves to a resource of another type —
   canonicals are unique per resource type, but not across types.
-- A scoring code the ``measure-scoring`` CodeSystem does not define (issue type
-  ``invalid``), or ``continuous-variable`` (issue type ``not-supported``).
+- The ``continuous-variable`` scoring type (issue type ``not-supported``).
 
 *Group level*
 
@@ -937,6 +982,10 @@ Rejected with HTTP 422
 Rejected with other status codes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+- **HTTP 400** — a scoring code the ``measure-scoring`` CodeSystem does not define,
+  in ``Measure.scoring`` or in a group-level scoring override (issue type
+  ``invalid``). A ``Measure.scoring`` that carries no coding from that CodeSystem is
+  rejected the same way.
 - **HTTP 412** — a group without an id, or several groups sharing one. The group id
   is what the results, ``MeasureReport.group.id`` and the stratum memberships are
   filed under.
@@ -948,13 +997,49 @@ Rejected with other status codes
 Output parameters
 ~~~~~~~~~~~~~~~~~
 
-The operation returns a ``MeasureReport`` resource containing the evaluation results.
+The operation returns a ``MeasureReport`` resource containing the evaluation results,
+or a ``Parameters`` resource when ``raw`` is ``true``.
 
 The report includes:
 
 - population counts (e.g. initial population, denominator, numerator)
 - measure score (if applicable)
 - subject-level or population-level results depending on ``reportType``
+- the parameters of the request (see below)
+
+Each ``group`` and each ``population`` of the report carries the ``id`` of the
+``Measure`` element it reports on. A ``Measure.group.population`` therefore needs an
+``id`` to appear in the report: a population without one is still evaluated, and takes
+part in the counts and the score of the other populations, but is left out of the
+``MeasureReport``. Such a ``Measure`` is not rejected; Firely Server only logs a
+warning.
+
+Request parameters in the report
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Every ``MeasureReport`` contains a ``Parameters`` resource with the parameters of the
+request, and references it through the
+``http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-inputParameters``
+extension. All parameters of the request are included, except ``data``:
+
+- for a ``POST`` request, the parameters are copied as they were sent, including the
+  ``parameters`` resource and a ``dataEndpoint`` ``Endpoint`` resource with all of its
+  ``header`` values;
+- for a ``GET`` request, the ``Parameters`` resource is rebuilt from the query
+  parameters.
+
+When ``persist`` is ``true``, the contained ``Parameters`` resource is stored together
+with the report. The individual reports contained in a ``subject-list`` report do not
+carry it.
+
+.. warning::
+
+   Everything sent in the request body except ``data`` ends up in the
+   ``MeasureReport`` — for example credentials in the ``header`` values of a
+   ``dataEndpoint`` ``Endpoint`` — and, with ``persist=true``, in the database.
+   HTTP headers of the incoming request that are forwarded to data endpoints (see
+   :ref:`feature_external_data_endpoints`) are not request parameters, and are not
+   included.
 
 When to use this operation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1003,24 +1088,65 @@ Example: Type-Level Measure Evaluation
 
 **Response Body**
 
+The ``id`` of the report and of its contained ``Parameters``, and the ``date``, differ
+for every invocation. The ``group`` and ``population`` ids are those of the
+``Measure``. ``[base]`` stands for the base url of the server, as Firely Server returns
+absolute references by default.
+
 .. code-block:: json
 
    {
      "resourceType": "MeasureReport",
+     "id": "5b7f3a2e-9c41-4d8b-a6e0-2f1c8d9b3e47",
+     "contained": [
+       {
+         "resourceType": "Parameters",
+         "id": "c2d94e1b-7a35-4f60-8b1e-9d4a6c0f2e18",
+         "parameter": [
+           {
+             "name": "url",
+             "valueCanonical": "http://example.org/fhir/Measure/ExampleMeasure|1.0.0"
+           },
+           {
+             "name": "subject",
+             "valueString": "Patient/cql-patient-test"
+           },
+           {
+             "name": "periodStart",
+             "valueDate": "2023-01-01"
+           },
+           {
+             "name": "periodEnd",
+             "valueDate": "2023-12-31"
+           }
+         ]
+       }
+     ],
+     "extension": [
+       {
+         "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-inputParameters",
+         "valueReference": {
+           "reference": "#c2d94e1b-7a35-4f60-8b1e-9d4a6c0f2e18"
+         }
+       }
+     ],
      "status": "complete",
      "type": "individual",
      "measure": "http://example.org/fhir/Measure/ExampleMeasure|1.0.0",
      "subject": {
-       "reference": "Patient/cql-patient-test"
+       "reference": "[base]/Patient/cql-patient-test"
      },
+     "date": "2024-03-18T14:27:05.3176942+00:00",
      "period": {
        "start": "2023-01-01",
        "end": "2023-12-31"
      },
      "group": [
        {
+         "id": "group-1",
          "population": [
            {
+             "id": "initial-population",
              "code": {
                "coding": [
                  {
@@ -1032,6 +1158,7 @@ Example: Type-Level Measure Evaluation
              "count": 1
            },
            {
+             "id": "denominator",
              "code": {
                "coding": [
                  {
@@ -1043,6 +1170,7 @@ Example: Type-Level Measure Evaluation
              "count": 1
            },
            {
+             "id": "numerator",
              "code": {
                "coding": [
                  {
@@ -1055,7 +1183,9 @@ Example: Type-Level Measure Evaluation
            }
          ],
          "measureScore": {
-           "value": 1.0
+           "value": 1,
+           "system": "http://unitsofmeasure.org",
+           "code": "{score}"
          }
        }
      ]
@@ -1359,10 +1489,11 @@ supplied, without filtering.
 Mapping CQL results to FHIR
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Unless the proprietary ``raw`` parameter is used, the result of each evaluated
-expression is mapped back to a FHIR data type and returned as a parameter in the
-response ``Parameters`` resource. A list result returns one parameter repetition per
-element.
+Unless the proprietary ``raw`` parameter of ``$cql`` or ``Library/$evaluate`` is used,
+the result of each evaluated expression is mapped back to a FHIR data type and returned
+as a parameter in the response ``Parameters`` resource. A list result returns one
+parameter repetition per element. ``raw`` on ``Measure/$evaluate-measure`` does not
+change this mapping; it only replaces the ``MeasureReport`` with the per-group results.
 
 Declared CQL type
 ^^^^^^^^^^^^^^^^^

@@ -122,8 +122,8 @@ Database requirements
 ^^^^^^^^^^^^^^^^^^^^^
 
 Execution of dQMs relies on retrieving clinical data from the Firely Server
-data store. Internally, Firely Server uses the ``$everything`` operation to
-collect the data of a subject. The data requirements of the evaluated
+data store. Firely Server reads the patient compartment of the subject (the data
+``Patient/$everything`` would return) directly from the repository. The data requirements of the evaluated
 ``Library`` determine which resource types are collected; see
 :ref:`feature_cql_data_retrieval`.
 
@@ -132,17 +132,16 @@ MongoDB or SQL Server. Therefore, to execute dQMs against data stored in
 Firely Server, the primary FHIR data database must use either MongoDB or
 SQL Server.
 
-In addition, the ``Vonk.Plugin.PatientEverything`` plugin must be enabled
-in the pipeline options, as it provides the ``$everything`` operation used
-during data retrieval. See :ref:`vonk_available_plugins` for more information
-on configuring available plugins.
+The ``Vonk.Plugin.PatientEverything`` plugin, which provides the ``Patient/$everything``
+operation, does not need to be enabled for this: the CQL operations read the data from the
+SQL Server or MongoDB repository themselves.
 
 The administration database (used for conformance resources such as
 ``Library`` and ``Measure``) can still be hosted on SQLite.
 
 Alternatively, you can configure Firely Server to use only external data
 sources by enabling the ``RemoteDataEndpointsOnly`` setting. In that case,
-no local data retrieval (and thus no ``$everything`` support) is required.
+no local data retrieval (and thus no SQL Server or MongoDB data store) is required.
 
 .. _feature_external_data_endpoints:
 

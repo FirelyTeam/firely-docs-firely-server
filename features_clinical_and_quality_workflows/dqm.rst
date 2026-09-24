@@ -118,7 +118,28 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 Enabling dQM Operations in Firely Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The four dQM operations above are not enabled by default. To enable them, add the following entries to the ``Operations`` section of ``appsettings.json``:
+The dQM operations above are not enabled by default. Enabling them takes two steps.
+
+First, add the CQL plugin to the pipeline. It is not part of the default ``PipelineOptions``, but it ships with Firely Server, so no files need to be added to the plugin directory. Add ``Vonk.Plugin.Cql`` to the ``Include`` list of the pipeline branch that serves your FHIR data:
+
+.. code-block:: json
+
+   "PipelineOptions": {
+     "Branches": [
+       {
+         "Path": "/",
+         "Include": [
+           "Vonk.Core",
+           "...",
+           "Vonk.Plugin.Cql"
+         ]
+       }
+     ]
+   }
+
+This namespace enables all five operations (``Library/$evaluate``, ``Measure/$evaluate-measure``, ``$cql``, ``Library/$data-requirements`` and ``Measure/$data-requirements``). To enable only some of them, include their configuration classes instead, listed in :ref:`vonk_available_plugins`; ``Measure/$evaluate-measure`` and ``$cql`` also need ``Library/$evaluate``, and ``Measure/$data-requirements`` needs ``Library/$data-requirements``. The operations require a license that includes the ``http://fire.ly/vonk/plugins/cql`` token.
+
+Second, add the following entries to the ``Operations`` section of ``appsettings.json``:
 
 .. code-block:: json
 

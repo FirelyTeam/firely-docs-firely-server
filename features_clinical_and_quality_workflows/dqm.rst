@@ -282,13 +282,25 @@ ELM uses a canonical abstract syntax tree (AST) to represent CQL expressions, de
 This makes it portable and enables any compliant engine to evaluate the logic consistently, regardless of the original authoring tool.
 
 Firely Server internally uses the open-source `.NET CQL SDK <https://github.com/FirelyTeam/firely-cql-sdk>`_ to compile ELM into executable C# code, enabling enhanced debuggability and high-performance execution. 
-As a result, the ``Library`` resource must include a compiled binary (``.dll`` file), which is dynamically loaded at runtime during the execution of operations such as ``Measure/$evaluate-measure`` or ``Library/$evaluate``.
+The resulting .NET assembly (``.dll``) is dynamically loaded at runtime during the execution of operations such as ``Measure/$evaluate-measure`` or ``Library/$evaluate``.
 
 Compiling CQL
 ^^^^^^^^^^^^^
 
-When uploading ``Library`` resources to Firely Server, it is expected that the compiled `.dll` file is included as one of the content representations within the resource.
-The compilation process must be performed manually using the `.NET CQL SDK <https://github.com/FirelyTeam/firely-cql-sdk>`_. After downloading the SDK, open the solution file ``Cql-Sdk-All.sln`` in your development environment.
+Uploading a ``Library`` resource with CQL (``text/cql``) and/or ELM (``application/elm+json``) content is sufficient: Firely Server compiles it into a .NET assembly itself.
+When an operation such as ``Library/$evaluate`` or ``Measure/$evaluate-measure`` resolves a ``Library`` from the administration database, Firely Server compiles it in memory, using the ELM content if the ``Library`` contains it and the CQL content otherwise.
+The Libraries it depends on (``relatedArtifact`` of type ``depends-on``) are resolved from the administration database and compiled as well, so they must be uploaded too.
+The compiled assembly is only kept in the cache of conformance resources, it is not written back to the administration database. Once the cache entry has expired or has been evicted, the ``Library`` is compiled again on its next use; see ``SlidingExpirationSeconds`` in :ref:`configure_cache`.
+If the compilation fails, the cause is written to the Firely Server log and the operation responds with ``422 Unprocessable Entity``, reporting that no .NET dll was found in the ``Library``.
+
+Firely Server only skips its own compilation for a precompiled ``Library``: one of type ``logic-library`` (CodeSystem ``http://terminology.hl7.org/CodeSystem/library-type``) with a ``content`` element of contentType ``application/octet-stream`` whose element id contains ``+dll``, like the ``BloodPressureCheckLogic-1.0.0+dll`` content in the :ref:`feature_qdm_example_library` below. The assembly in that element is then used as-is.
+
+Precompiling a ``Library`` with the `.NET CQL SDK <https://github.com/FirelyTeam/firely-cql-sdk>`_ is optional. It is useful to:
+
+* include debug symbols (``+pdb`` content), which the compilation by Firely Server does not produce, see `Debuging Libraries`_;
+* avoid the compilation by Firely Server when the ``Library`` is first used, and again after its cache entry has expired.
+
+To precompile, download the SDK and open the solution file ``Cql-Sdk-All.sln`` in your development environment.
 
 .. note::
 
@@ -318,7 +330,7 @@ Alternatively, you can perform the compilation and packaging process via command
     --cs <path to project>/Demo/Measures.Demo/CSharp
 
 Please make sure to adjust ``<path to project>`` according to your local environment.
-This process generates the required artifacts, including the ELM, compiled C# source, and DLL, all of which are necessary for successful evaluation on Firely Server.
+This process generates the ELM, the C# source code and the DLL, and adds them as content to the generated FHIR ``Library`` resources.
 
 
 When generating ``Library`` resources, the compiler must assign a base URL to construct the canonical URL of each library. This can be configured using the ``BaseCanonicalUrl`` setting in the ``Hl7.Cql.Packager.appsettings.json`` file.
@@ -341,7 +353,8 @@ This command assumes that the ELM files already exist in the specified ``--elm``
 
 .. attention::
 
-	Firely Server currently depends on CQL SDK version v2.6.0, which must be used for the compilation process to ensure compatibility.
+	Firely Server 6.10.0 ships with version v2.15.0 of the .NET CQL SDK (packages ``Hl7.Cql.Fhir``, ``Hl7.Cql.Invocation`` and ``Hl7.Cql.Packaging``), which it also uses for its own compilation.
+	A precompiled ``Library`` must be built with the CQL SDK version of the Firely Server release it runs on, so use v2.15.0 for Firely Server 6.10.0.
 
 .. _feature_qdm_example_library:
 
@@ -531,6 +544,7 @@ For advanced debugging scenarios, such as stepping through the compiled logic or
 To enable this behavior, the executed CQL library must include debug symbols, typically in the form of `.pdb` (Program Database) files. 
 These symbols map the compiled code back to the original CQL expressions and are crucial for enabling breakpoints, call stacks, and other debugging features.
 Debug symbols can be generated using the CQL .NET SDK, which supports emitting `.pdb` content alongside the compiled logic library content. This debug information is embedded inthe corresponding FHIR `Library` resource.
+Firely Server does not produce debug symbols when it compiles a ``Library`` itself, so stepping through the code requires a precompiled ``Library`` that carries ``+pdb`` content.
 
 Debug symbols can be generated by passing the appropriate parameters to the CQL .NET SDK during compilation, as shown below:
 

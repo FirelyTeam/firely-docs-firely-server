@@ -191,11 +191,16 @@ Each ``DataEndpoint`` entry supports the following fields:
 - ``MediaType``: The FHIR media type to use for requests to this endpoint ( ``application/fhir+json`` and ``application/fhir+xml`` are supported)  
 - ``ClientId`` / ``ClientSecret``: Credentials for authentication (if required)  
 - ``TokenEndpoint``: OAuth2 token endpoint (used for JWT authentication)  
-- ``Audience``: Optional audience claim for the access token  
+- ``Audience``: Audience requested for the access token; sent as the ``aud`` parameter of
+  the token request
 - ``Scopes``: Space-separated list of **SMART on FHIR scopes**. Since Firely Server uses a ``client_credentials``
   flow, only system-level scopes should be used (e.g. ``system/*.rs``). 
 - ``RemoteDataEndpointAuthentication``: Defines how Firely Server authenticates
-  against the endpoint. Supported values include ``JWT`` and ``None``
+  against the endpoint. Supported values are ``Jwt`` and ``None``; defaults to ``Jwt``
+
+With ``Jwt`` authentication (the default), ``ClientId``, ``ClientSecret``, ``TokenEndpoint``,
+``Audience`` and ``Scopes`` are all required: if any of them is empty, Firely Server does not
+start. With ``None``, none of them is used.
 
 .. note::
 

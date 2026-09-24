@@ -81,12 +81,12 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 
 * Library/$data-requirements
 
-	:Purpose: Returns the data requirements (FHIR resource types, value sets, codes) needed by a CQL Library.
+	:Purpose: Returns the data requirements (FHIR resource types, value sets, codes) declared on a CQL Library.
 	:Use Case: Critical for data validation, measure packaging, or generating queries to collect required clinical data.
 	:Input: Canonical reference to a Library.
-	:Output: A list of Library resource of type 'module-definition' describing what input is needed for evaluation of the inital Library.
+	:Output: A Library resource of type 'module-definition' holding a copy of the ``dataRequirement`` elements of the Library. Firely Server does not derive them from the CQL or ELM.
 
-	See `FHIR Core specification - OperationDefinition Library/$data-requirements <https://www.hl7.org/fhir/R4/library-operation-data-requirements.html>`_ on how to execute this operation.
+	See `FHIR Core specification - OperationDefinition Library/$data-requirements <https://www.hl7.org/fhir/R4/library-operation-data-requirements.html>`_ for the HL7 specification, and :ref:`feature_data_requirements` for details on how to execute this operation in Firely Server.
 
 * Measure/$evaluate-measure
 
@@ -99,12 +99,12 @@ FHIR defines several key operations that enable the execution, evaluation, and s
 
 * Measure/$data-requirements
 
-    :Purpose: Returns the data requirements (FHIR resource types, value sets, codes) needed by a CQL-based measure, including dependencies from all referenced Libraries.
+    :Purpose: Returns the data requirements (FHIR resource types, value sets, codes) declared on the logic Library of a CQL-based measure.
     :Use Case: Used to determine what data is necessary to run a measure, support validation against EHR capabilities or generate queries for patient/population data collection.
     :Input: Canonical reference to a Measure.
-    :Output: A Library resource of type module-definition describing the complete set of data requirements aggregated from the Measure and its dependent Libraries.
+    :Output: A Library resource of type module-definition holding a copy of the ``dataRequirement`` elements of the single Library the Measure references. The requirements are not aggregated across libraries.
 
-    See `Quality Measure Implementation Guide - OperationDefinition Measure Data Requirements <https://hl7.org/fhir/us/cqfmeasures/OperationDefinition-Measure-data-requirements.html>`_ on how to execute this operation.
+    See `Quality Measure Implementation Guide - OperationDefinition Measure Data Requirements <https://hl7.org/fhir/us/cqfmeasures/OperationDefinition-Measure-data-requirements.html>`_ for the HL7 specification, and :ref:`feature_data_requirements` for details on how to execute this operation in Firely Server.
 
 * $cql
 

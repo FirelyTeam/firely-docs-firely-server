@@ -23,9 +23,11 @@ FHIR provides several operations for executing Digital Quality Measures (dQMs), 
 
 For the preperation of the execution data-requirements can be gathered using the following operations:
 
-* ``Library/$data-requirements`` retrieves a structured representation of the data required to evaluate a measure, making it a supporting operation for both ``Library/$evaluate`` and ``Measure/$evaluate-measure``. This operation identifies the necessary FHIR data types and elements, including value sets, code filters, and date constraints. It returns a ``Library`` resource containing ``DataRequirement`` elements, which describe the expected inputs for measure evaluation. This operation is particularly useful during implementation, data mapping, and integration planning, as it helps clarify what data must be available for successful execution of a digital quality measure.
+* ``Library/$data-requirements`` returns the data requirements declared on a ``Library``: a ``Library`` of type ``module-definition`` containing a copy of the target Library's ``dataRequirement`` elements, which describe the FHIR data types, value sets, codes and date constraints the logic needs. Firely Server does not derive them from the CQL or ELM, so the result is only as complete as the ``dataRequirement`` elements the ``Library`` carries. The Firely CQL SDK Packager writes them when it packages a library, including those of the libraries it depends on. This operation is useful during implementation, data mapping and integration planning, to see what data must be available for a successful evaluation.
 
-* ``Measure/$data-requirements`` functions identically, but aggregates the data requirements across all libraries referenced by the measure, providing a complete picture of the inputs needed for measure evaluation.
+* ``Measure/$data-requirements`` does the same for the single logic ``Library`` that the ``Measure`` references.
+
+See :ref:`feature_data_requirements` for details.
 
 .. important::
 
@@ -1398,6 +1400,66 @@ This examples demonstrates a simple calculation executed via the dQM engine.
         }
     ]
   }
+
+.. _feature_data_requirements:
+
+Library/$data-requirements and Measure/$data-requirements
+---------------------------------------------------------
+
+Both operations return the data requirements that are declared on a ``Library``. They
+do not analyze the CQL or ELM of the library.
+
+**Scope**
+  - Invocation level: ``type`` / ``instance``
+  - Supported resource type(s): ``Library``, ``Measure``
+  - Idempotent: ``yes``
+  - Affects server state: ``no``
+
+**HTTP methods**
+  - ``POST`` and ``GET``, at type and instance level
+
+Library/$data-requirements
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The only supported parameter is ``target``: the canonical of the ``Library``, optionally
+versioned (``url|version``), passed as a ``valueString`` in a ``POST``. It is required at
+type level and not allowed at instance level (``Library/[id]/$data-requirements``), which
+takes the ``Library`` with that id instead.
+
+The response is a new ``Library`` of type ``module-definition``
+(``http://terminology.hl7.org/CodeSystem/library-type``) that holds a copy of the
+``dataRequirement`` elements of the target ``Library``. Nothing else is added: the
+libraries the target depends on are not included, and when the target declares no
+``dataRequirement`` the result contains none.
+
+.. note::
+
+   Firely Server compiles a ``Library`` that carries only CQL or ELM itself (see
+   :ref:`feature_qdm`), but that compilation does not add ``dataRequirement`` elements.
+   Package a library with the Firely CQL SDK Packager to have its data requirements,
+   including those of the libraries it depends on, written into the ``Library``.
+
+Measure/$data-requirements
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``Measure`` is identified by the ``url`` parameter (a ``valueString`` in a ``POST``,
+optionally versioned) at type level, or by its id at instance level. The ``periodStart``
+and ``periodEnd`` parameters are accepted, but do not affect the result.
+
+The ``Measure`` must reference exactly one logic ``Library`` in ``Measure.library``. The
+operation returns the result of ``Library/$data-requirements`` for that ``Library``; the
+data requirements are not aggregated across libraries. The operation requires the
+``Library/$data-requirements`` plugin to be enabled as well.
+
+Errors
+~~~~~~
+
+- HTTP 400 — the canonical parameter is missing or empty at type level, or supplied at
+  instance level.
+- HTTP 404 — no ``Library`` or ``Measure`` is found for the canonical or id, or the
+  ``Measure``'s ``Library`` cannot be resolved.
+- HTTP 422 — the ``Measure`` references no ``Library``, or more than one.
+- HTTP 501 — any other parameter is supplied.
 
 ----
 

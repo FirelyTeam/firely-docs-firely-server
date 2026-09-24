@@ -154,8 +154,8 @@ Release Notes
 
 .. _dashboard_releasenotes_1_0_0_beta_2:
 
-Release 1.0.0-beta.2, TBD
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Release 1.0.0-beta.2, September 24th, 2026
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. attention::
 

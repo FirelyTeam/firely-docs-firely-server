@@ -675,12 +675,33 @@ Firely Server supports the following parameters:
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | ``parameters``           | ✅        | ``Parameters`` resource | 0..1        | See ``Library/$evaluate`` configuration     |
 |                          |           |                         |             | for details.                                |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | Unlike for ``Library/$evaluate``, it must   |
+|                          |           |                         |             | not hold a ``Measurement Period``           |
+|                          |           |                         |             | parameter: the measurement period comes     |
+|                          |           |                         |             | only from ``periodStart`` and               |
+|                          |           |                         |             | ``periodEnd``, or the Measure's             |
+|                          |           |                         |             | ``effectivePeriod``. A request that         |
+|                          |           |                         |             | supplies a ``Measurement Period`` here is   |
+|                          |           |                         |             | rejected with HTTP 400.                     |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | ``useServerData``        | ✅        | ``boolean``             | 0..1        | See ``Library/$evaluate`` configuration     |
 |                          |           |                         |             | for details.                                |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | ``data``                 | ✅        | ``Bundle``              | 0..1        | See ``Library/$evaluate`` configuration     |
 |                          |           |                         |             | for details.                                |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | For a ``Group`` subject, the same bundle is |
+|                          |           |                         |             | used for every member. When the measure's   |
+|                          |           |                         |             | library is defined in the Patient context,  |
+|                          |           |                         |             | the data of the bundle must belong to       |
+|                          |           |                         |             | exactly one patient: the patient it is      |
+|                          |           |                         |             | evaluated for. ``data`` can therefore not   |
+|                          |           |                         |             | be used with a ``Group`` of more than one   |
+|                          |           |                         |             | patient; the evaluation of a member the     |
+|                          |           |                         |             | bundle does not belong to fails with        |
+|                          |           |                         |             | HTTP 422, and the whole request is rejected |
+|                          |           |                         |             | with it.                                    |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | ``dataEndpoint``         | ✅        | ``Endpoint``            | 0..1        | See ``Library/$evaluate`` configuration     |
 |                          |           |                         |             | for details.                                |
@@ -690,6 +711,9 @@ Firely Server supports the following parameters:
 |                          |           |                         |             |                                             |
 |                          |           |                         |             | When ``false`` (default), the result is     |
 |                          |           |                         |             | returned in the response only.              |
+|                          |           |                         |             |                                             |
+|                          |           |                         |             | See                                         |
+|                          |           |                         |             | :ref:`feature_measure_evaluate_persist`.    |
 |                          |           |                         |             |                                             |
 |                          |           |                         |             | This is a proprietary parameter of Firely   |
 |                          |           |                         |             | Server.                                     |
@@ -779,6 +803,9 @@ the denominator, after the exclusion and exception populations have been subtrac
   numerator   = (denominator ∩ numerator) − numerator-exclusion
   score       = numerator / denominator
 
+When the denominator is 0, the ``measureScore`` is 0 — for example in an
+``individual`` report for a patient that is not in the denominator.
+
 Ratio scoring
 ^^^^^^^^^^^^^
 
@@ -789,6 +816,8 @@ from the group's single initial population::
   numerator   = (initial-population ∩ numerator) − numerator-exclusion
   denominator = (initial-population ∩ denominator) − denominator-exclusion
   score       = numerator / denominator
+
+As for ``proportion``, a denominator of 0 gives a ``measureScore`` of 0.
 
 A ``denominator-exception`` population is not permitted on a ratio-scored group, and
 a ratio-scored group cannot carry stratifiers. Both are rejected before evaluation;
@@ -936,7 +965,8 @@ Each stratum is reported with:
   :ref:`feature_measure_evaluate_counts`. A stratum never reports a member for a
   population its group excludes.
 - a ``measureScore``, for proportion-scored groups. It always follows the
-  label-based membership rules, mirroring the group-level score.
+  label-based membership rules, mirroring the group-level score, so a stratum whose
+  denominator is 0 has a ``measureScore`` of 0.
 - ``subjectResults`` ``List`` resources, in ``subject-list`` reports.
 
 An ``individual`` report keeps strata whose counts are all 0, so the subject's
@@ -1064,6 +1094,24 @@ carry it.
    HTTP headers of the incoming request that are forwarded to data endpoints (see
    :ref:`feature_external_data_endpoints`) are not request parameters, and are not
    included.
+
+.. _feature_measure_evaluate_persist:
+
+Persisting the report
+^^^^^^^^^^^^^^^^^^^^^
+
+With ``persist=true``, the ``MeasureReport`` is stored after it has been built, and
+the response is the same as without it: HTTP 200 — not 201 — with the report as its
+body, and no ``Location`` header.
+
+The report is written to the repository directly, not through a regular create
+interaction. It is therefore not validated, and pre-handlers registered for the
+create interaction do not run for it.
+
+Before the report is written, the write is authorized by the same check that guards
+a create interaction. When the authorization denies it, the report is not stored and
+the response has HTTP 403 — its body is still the ``MeasureReport``, not an
+``OperationOutcome``.
 
 When to use this operation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1547,10 +1595,27 @@ regardless of whether the entries spell the reference relatively, as an absolute
 or with a version. The ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation`` limit
 applies to those distinct patients.
 
-A member entry whose reference does not identify a resource by type and id at all —
-an empty reference, or an absolute uri that is not a resource url such as
-``urn:uuid:…``, as produced by ingesting a ``Group`` from a transaction Bundle — is
-rejected with an ``OperationOutcome`` naming that reference.
+The ``Group`` is read from Firely Server's own data store, also when the patient data
+comes from the ``data`` parameter or a ``dataEndpoint``. A ``Group`` that is not found
+there is rejected with HTTP 404.
+
+Only an actual group of patients can be evaluated. Each of the following rejects the
+whole request with HTTP 422, issue type ``not-supported``:
+
+- ``Group.actual`` is ``false``: a descriptive group.
+- ``Group.type`` is another type than ``person``.
+- The ``Group`` has no member entities.
+- A member entity references another resource type than ``Patient``. Such a member
+  is not skipped: the request is rejected.
+- A member entry whose reference does not identify a resource by type and id at all —
+  an empty reference, or an absolute uri that is not a resource url such as
+  ``urn:uuid:…``, as produced by ingesting a ``Group`` from a transaction Bundle. The
+  ``OperationOutcome`` names that reference.
+- More distinct patients than ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation``
+  allows.
+
+``member.inactive`` and ``member.period`` are not taken into account: an inactive
+member, or a member whose period has ended, is evaluated like any other member.
 
 Unknown patients
 ^^^^^^^^^^^^^^^^

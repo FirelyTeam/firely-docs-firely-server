@@ -292,6 +292,88 @@ The following is a FHIR `Measure` resource defining the populations used in an e
 
 Each population criterion corresponds to a named expression defined in the CQL within the referenced Library. To ensure the dQM engine correctly interprets the selection logic, the criteria.language must be set to "text/cql-identifier", indicating that the population is identified by a named CQL expression.
 
+.. _feature_dqm_scoring:
+
+Measure Scoring Methods
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The scoring method of a measure determines which populations a group defines and how their results are combined into a score.
+It is declared in ``Measure.scoring``, using a code from the ``http://terminology.hl7.org/CodeSystem/measure-scoring`` CodeSystem (see the `measure-scoring value set <https://hl7.org/fhir/R4/valueset-measure-scoring.html>`_).
+A Measure that reports several rates can give a single group its own scoring method with the ``cqfm-scoring`` (US realm) or ``cqm-scoring`` (UV realm) extension on ``Measure.group``; that value overrides ``Measure.scoring`` for that group only (see :ref:`feature_measure_evaluate_scoring_override`).
+
+Which populations a group may define depends on its scoring method. Table 3-1, "Measure populations based on types of measure scoring", in the Population Criteria section of the `Quality Measure IG <https://build.fhir.org/ig/HL7/cqf-measures/measure-conformance.html#population-criteria>`_, marks each population as required, optional or not permitted for each scoring method.
+The CodeSystem defines four scoring methods:
+
+#. **Proportion** - "The measure score is defined using a proportion."
+   A proportion measure uses the initial population, denominator, denominator exclusion, denominator exception, numerator and numerator exclusion populations.
+   The populations are nested: the denominator is a subset of the initial population, and the numerator is a subset of the denominator. Exclusions and exceptions remove cases before the score is calculated.
+   The `Proportion Measures <https://build.fhir.org/ig/HL7/cqf-measures/measure-conformance.html#proportion-measures>`_ section of the Quality Measure IG defines the score as the performance rate:
+   "Performance rate = (Numerator - Numerator Exclusion) / (Denominator – Denominator Exclusion – Denominator Exception)".
+   A typical proportion measure answers a question like "Of the adults eligible for a blood pressure check, what fraction had one?".
+
+#. **Ratio** - "The measure score is defined using a ratio."
+   A ratio measure uses the initial population, denominator, denominator exclusion, numerator and numerator exclusion populations. A denominator exception is not permitted.
+   Unlike a proportion measure, the numerator is not a subset of the denominator: both are derived independently from the initial population.
+   The `Ratio Measures <https://build.fhir.org/ig/HL7/cqf-measures/measure-conformance.html#ratio-measures>`_ section of the Quality Measure IG defines the numerator as "that subset of the Initial Population that meets the Numerator criteria", and notes that "Some ratio measures will require multiple initial populations, one for the numerator, and one for the denominator."
+   An example is the number of central line blood stream infections relative to the number of patients with a central line.
+
+#. **Continuous variable** - "The score is defined by a calculation of some quantity."
+   A continuous-variable measure uses the initial population, measure population and measure population exclusion populations, together with a ``measure-observation`` that computes a value for each member of the measure population.
+   The score is an aggregate of those observations, for example their median, with the aggregate method specified by the ``cqfm-aggregateMethod`` extension. In the words of the `Continuous Variable Measure <https://build.fhir.org/ig/HL7/cqf-measures/measure-conformance.html#continuous-variable-measure>`_ section of the Quality Measure IG:
+   "Rather than reporting a Numerator and Denominator, a Continuous Variable measure defines variables that are computed across the Measure Population (e.g., average wait time in the emergency department)."
+
+#. **Cohort** - "The measure is a cohort definition."
+   According to the `Cohort Definitions <https://build.fhir.org/ig/HL7/cqf-measures/measure-conformance.html#cohort-definitions>`_ section of the Quality Measure IG, "For cohort definitions, only the Initial Population criteria type is used."
+   A cohort measure has no score: its result is the population itself, for example all patients who received an immunization.
+
+The quoted definitions of the scoring methods are those of the measure-scoring CodeSystem in FHIR R4. See also the `Quality Reporting <https://hl7.org/fhir/R4/clinicalreasoning-quality-reporting.html>`_ page of the FHIR R4 Clinical Reasoning module.
+
+Scoring Methods in Firely Server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Firely Server 6.10.0 supports the following scoring methods:
+
+#. ``proportion`` - supported.
+#. ``ratio`` - supported, for a group with a single initial population that feeds both the numerator and the denominator. Measures that require a separate initial population for the numerator and for the denominator are not supported.
+#. ``cohort`` - supported. Only the initial population is evaluated, and no ``measureScore`` is reported.
+#. ``continuous-variable`` - not supported. A Measure that uses it, in ``Measure.scoring`` or in a group-level override, is rejected with ``422 Unprocessable Entity`` and issue type ``not-supported``. A ``measure-observation`` population is rejected the same way on any Measure, as Firely Server does not evaluate measure observations.
+
+A Measure without a scoring method is still evaluated: its initial population, denominator, numerator, exclusion and exception criteria are executed and reported, but no ``measureScore`` is calculated.
+
+By default, Firely Server counts each population following the label-based membership rules of the Quality Measure IG: a case is only counted for a population when it also belongs to the population it is derived from.
+Exclusion and exception cases remain included in the count of their parent population, and are only subtracted when the score is calculated.
+As a result, the population counts in the MeasureReport can be entered directly into the performance rate formula above.
+
+For example, suppose the "Blood Pressure Check for Adults" measure also defined a denominator exclusion (patients in hospice care) and a denominator exception (patients who declined the check). Evaluating it for six patients gives:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Patient
+     - Criteria met
+     - Counted in
+   * - 1, 2
+     - Adult, had a blood pressure reading
+     - initial population, denominator, numerator
+   * - 3
+     - Adult, no blood pressure reading
+     - initial population, denominator
+   * - 4
+     - Adult in hospice care, no blood pressure reading
+     - initial population, denominator, denominator exclusion
+   * - 5
+     - Adult who declined the check, no blood pressure reading
+     - initial population, denominator, denominator exception
+   * - 6
+     - Not an adult
+     - none
+
+The resulting summary MeasureReport reports an initial population and a denominator of 5, a denominator exclusion of 1, a denominator exception of 1 and a numerator of 2.
+The ``measureScore`` is (2 - 0) / (5 - 1 - 1) = 2/3, reported as ``0.6666666666666666``.
+Had patient 5 also had a blood pressure reading, that patient would have been counted in the numerator and not as a denominator exception, because a denominator exception only applies when the numerator criteria are not met.
+
+For the full scoring rules, the formulas Firely Server applies and the validation performed before evaluation, see :ref:`feature_measure_evaluate_scoring`, :ref:`feature_measure_evaluate_counts` and :ref:`feature_measure_evaluate_validation`.
+
 Managing Measures
 ^^^^^^^^^^^^^^^^^
 
@@ -730,6 +812,349 @@ For example:
 - Numerator = 75 → 75 subjects met the measure criteria  
 
 This eventually allows calculation of performance rates (e.g. 75%).
+
+.. _feature_dqm_stratification:
+
+Stratification
+^^^^^^^^^^^^^^
+
+A stratifier breaks the results of a group down by a characteristic of its members, such as age group, gender or insurance product line.
+Each distinct value of that characteristic defines a stratum, and every stratum reports its own population counts and, where the scoring method has one, its own score.
+This is different from defining several groups: a group is a separate calculation with its own population criteria, while the strata of a stratifier are views on the populations of one group.
+According to the `Quality Reporting <https://hl7.org/fhir/R4/clinicalreasoning-quality-reporting.html>`_ page of the FHIR R4 Clinical Reasoning module, stratifiers are "Additional criteria used to calculate the measure along different dimensions within the population such as age or gender. A measure may define any number of stratifiers for each population group."
+
+A stratifier is defined in ``Measure.group.stratifier``, in one of two forms:
+
+#. **A single criteria**: ``stratifier.criteria`` holds one expression, and the stratum is determined by its result.
+#. **Components**: ``stratifier.component[]`` holds several expressions, each with its own ``code`` and ``criteria``. The stratum is the combination of the component results, so a stratifier with an age group and a product line component has a stratum for each combination of age group and product line.
+
+The Stratification section of the `Quality Measure IG <https://build.fhir.org/ig/HL7/cqf-measures/measure-conformance.html#stratification>`_ (Conformance Requirement 3.17, "Stratification Criteria", in the v5.0.0 CI build) allows a stratifier expression to return one of two things:
+"the same type as other population criteria expressions in the measure (i.e. the population basis), or the stratum value".
+In the first approach the expression selects the members of the stratum, just like a population criterion does. In the second approach the expression returns a value, such as ``Patient.gender``, and all members with the same value share a stratum.
+For components, the IG states: "If component stratifiers are used and the component expressions return the stratum value, the combination of the component values are considered the stratum value."
+
+In a MeasureReport, each stratifier of a group is reported in ``MeasureReport.group.stratifier``, and each of its strata in ``group.stratifier.stratum``:
+
+- ``stratum.value`` identifies the stratum of a single-criteria stratifier; ``stratum.component[]`` holds the ``code`` and ``value`` of each component of a component stratifier.
+- ``stratum.population[]`` holds the counts of the group's populations, restricted to the members of the stratum.
+- ``stratum.measureScore`` holds the score calculated over the members of the stratum.
+
+Stratification in Firely Server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Firely Server 6.10.0 supports component stratifiers whose expressions return the stratum value:
+
+#. A stratifier defined with ``stratifier.component[]`` is supported on groups with a ``boolean`` population basis, which count subjects such as patients rather than events such as encounters.
+   A component expression must return values, such as codes, codings, strings or numbers, not resources.
+#. A stratifier defined with ``stratifier.criteria`` is not supported. ``Measure/$evaluate-measure`` responds with ``501 Not Implemented``.
+#. A ratio-scored group cannot carry stratifiers. Conformance Requirement 15 (Stratification Criteria), in section 3.4.8 Stratification of the `Quality Measure IG STU1 <https://hl7.org/fhir/us/cqfmeasures/STU1/measure-conformance.html#stratification>`_, states that "Stratification SHALL NOT be used with ratio measures, since ratio measures may define multiple initial populations." Such a Measure is rejected with ``422 Unprocessable Entity``.
+
+A component expression may return more than one value for a patient, for example one product line for each coverage the patient holds.
+The patient then belongs to one stratum for each combination of values, and is counted in each of them.
+As a result, the counts of the strata of a stratifier can add up to more than the counts of the group itself.
+
+For example, the "Blood Pressure Check for Adults" measure could be stratified by product line and age group, using two CQL expressions: ``Product Line``, which returns the ``Coding`` of the type of each of the patient's coverages, and ``Age Group``, which returns a string such as ``'18-44'`` or ``'45+'``.
+The group of the Measure then declares a ``boolean`` population basis and the following stratifier, next to the populations shown in :ref:`bp-measure-json`:
+
+.. code-block:: json
+   :caption: Measure.group with a component stratifier
+   :name: bp-measure-stratifier-json
+
+   {
+     "id": "9a3f3b12-4e7d-4cf2-8e6a-729e5a21f4b9",
+     "extension": [
+       {
+         "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-populationBasis",
+         "valueCode": "boolean"
+       }
+     ],
+     "stratifier": [
+       {
+         "id": "product-line-age-group",
+         "code": {
+           "text": "Product line and age group"
+         },
+         "component": [
+           {
+             "id": "product-line",
+             "code": {
+               "text": "Product line"
+             },
+             "criteria": {
+               "language": "text/cql-identifier",
+               "expression": "Product Line"
+             }
+           },
+           {
+             "id": "age-group",
+             "code": {
+               "text": "Age group"
+             },
+             "criteria": {
+               "language": "text/cql-identifier",
+               "expression": "Age Group"
+             }
+           }
+         ]
+       }
+     ]
+   }
+
+Suppose the measure is evaluated as a summary report for a Group of two patients:
+
+- Patient A is 30 years old, has coverage in two product lines (``PPO`` and ``MCD``) and had a blood pressure reading.
+- Patient B is 50 years old, has coverage in the ``PPO`` product line and had no blood pressure reading.
+
+The group reports an initial population and a denominator of 2, a numerator of 1 and a ``measureScore`` of 0.5.
+Its stratifier reports three strata: patient A appears in both the (``MCD``, ``18-44``) and the (``PPO``, ``18-44``) stratum, and patient B in the (``PPO``, ``45+``) stratum.
+The initial population counts of the strata therefore add up to 3, while the group's initial population is 2.
+
+.. code-block:: json
+   :caption: MeasureReport.group.stratifier of a summary report
+   :name: bp-measurereport-stratifier-json
+
+   {
+     "stratifier": [
+       {
+         "id": "product-line-age-group",
+         "code": [
+           {
+             "text": "Product line and age group"
+           }
+         ],
+         "stratum": [
+           {
+             "component": [
+               {
+                 "code": {
+                   "text": "Product line"
+                 },
+                 "value": {
+                   "coding": [
+                     {
+                       "system": "http://example.org/fhir/CodeSystem/product-line",
+                       "code": "MCD"
+                     }
+                   ],
+                   "text": "MCD"
+                 }
+               },
+               {
+                 "code": {
+                   "text": "Age group"
+                 },
+                 "value": {
+                   "text": "18-44"
+                 }
+               }
+             ],
+             "population": [
+               {
+                 "code": {
+                   "coding": [
+                     {
+                       "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                       "code": "initial-population"
+                     }
+                   ]
+                 },
+                 "count": 1
+               },
+               {
+                 "code": {
+                   "coding": [
+                     {
+                       "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                       "code": "denominator"
+                     }
+                   ]
+                 },
+                 "count": 1
+               },
+               {
+                 "code": {
+                   "coding": [
+                     {
+                       "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                       "code": "numerator"
+                     }
+                   ]
+                 },
+                 "count": 1
+               }
+             ],
+             "measureScore": {
+               "value": 1,
+               "system": "http://unitsofmeasure.org",
+               "code": "{score}"
+             }
+           },
+           {
+             "component": [
+               {
+                 "code": {
+                   "text": "Product line"
+                 },
+                 "value": {
+                   "coding": [
+                     {
+                       "system": "http://example.org/fhir/CodeSystem/product-line",
+                       "code": "PPO"
+                     }
+                   ],
+                   "text": "PPO"
+                 }
+               },
+               {
+                 "code": {
+                   "text": "Age group"
+                 },
+                 "value": {
+                   "text": "18-44"
+                 }
+               }
+             ],
+             "population": [
+               {
+                 "code": {
+                   "coding": [
+                     {
+                       "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                       "code": "initial-population"
+                     }
+                   ]
+                 },
+                 "count": 1
+               },
+               {
+                 "code": {
+                   "coding": [
+                     {
+                       "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                       "code": "denominator"
+                     }
+                   ]
+                 },
+                 "count": 1
+               },
+               {
+                 "code": {
+                   "coding": [
+                     {
+                       "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                       "code": "numerator"
+                     }
+                   ]
+                 },
+                 "count": 1
+               }
+             ],
+             "measureScore": {
+               "value": 1,
+               "system": "http://unitsofmeasure.org",
+               "code": "{score}"
+             }
+           },
+           {
+             "component": [
+               {
+                 "code": {
+                   "text": "Product line"
+                 },
+                 "value": {
+                   "coding": [
+                     {
+                       "system": "http://example.org/fhir/CodeSystem/product-line",
+                       "code": "PPO"
+                     }
+                   ],
+                   "text": "PPO"
+                 }
+               },
+               {
+                 "code": {
+                   "text": "Age group"
+                 },
+                 "value": {
+                   "text": "45+"
+                 }
+               }
+             ],
+             "population": [
+               {
+                 "code": {
+                   "coding": [
+                     {
+                       "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                       "code": "initial-population"
+                     }
+                   ]
+                 },
+                 "count": 1
+               },
+               {
+                 "code": {
+                   "coding": [
+                     {
+                       "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                       "code": "denominator"
+                     }
+                   ]
+                 },
+                 "count": 1
+               },
+               {
+                 "code": {
+                   "coding": [
+                     {
+                       "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                       "code": "numerator"
+                     }
+                   ]
+                 },
+                 "count": 0
+               }
+             ],
+             "measureScore": {
+               "value": 0,
+               "system": "http://unitsofmeasure.org",
+               "code": "{score}"
+             }
+           }
+         ]
+       }
+     ]
+   }
+
+The report shows how Firely Server represents strata:
+
+- ``stratifier.id`` and ``stratifier.code`` are copied from the stratifier in the Measure.
+- ``stratum.component.code`` is copied from the component in the Measure. When the component has no ``code``, Firely Server uses a ``CodeableConcept`` with the component's ``id`` as ``text``.
+- A coded component value is reported as a ``CodeableConcept`` with the ``system`` and ``code`` of the coding, and with ``text`` set to the code. A value that is not coded, such as a string, number, date or boolean, is reported with ``text`` only.
+- A patient for whom a component expression returns no value is placed in a stratum whose component value only carries the ``data-absent-reason`` extension:
+
+  .. code-block:: json
+     :caption: Stratum component without a value
+
+     {
+       "code": {
+         "text": "Product line"
+       },
+       "value": {
+         "extension": [
+           {
+             "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+             "valueCode": "unknown"
+           }
+         ]
+       }
+     }
+
+- ``stratum.population`` carries the ``code`` and ``count`` of each population of the group, but no ``id``. The counts follow the same rules as the counts of the group, so a stratum never counts a patient that the group does not count.
+- ``stratum.measureScore`` is reported for proportion-scored groups and is calculated in the same way as the score of the group.
+- An individual report keeps strata whose counts are all 0, so the patient's component values are always visible. Summary and subject-list reports leave out strata that contain no patient of any reported population.
+
+For the full list of rules and the validation of stratifiers, see :ref:`feature_measure_evaluate_stratifiers` and :ref:`feature_measure_evaluate_validation`.
 
 Generating MeasureReports
 ^^^^^^^^^^^^^^^^^^^^^^^^^

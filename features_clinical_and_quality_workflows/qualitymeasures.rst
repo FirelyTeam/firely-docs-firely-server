@@ -27,6 +27,13 @@ For the preperation of the execution data-requirements can be gathered using the
 
 * ``Measure/$data-requirements`` functions identically, but aggregates the data requirements across all libraries referenced by the measure, providing a complete picture of the inputs needed for measure evaluation.
 
+.. important::
+
+   ``$cql``, ``Library/$evaluate``, ``Measure/$evaluate-measure``, ``Library/$data-requirements``
+   and ``Measure/$data-requirements`` are only available in **FHIR R4**. If Firely Server hosts
+   multiple FHIR versions (see :ref:`feature_multiversion`), these operations are only available
+   for the R4 version. They are not available for STU3 or R5.
+
 ----
 
 .. _feature_library_evaluate:
@@ -114,7 +121,9 @@ Database requirements
 
 Execution of dQMs relies on retrieving clinical data from the Firely Server
 data store. Internally, Firely Server uses the ``$everything`` operation to
-collect all relevant data for a subject.
+collect the data of a subject. The data requirements of the evaluated
+``Library`` determine which resource types are collected; see
+:ref:`feature_cql_data_retrieval`.
 
 This functionality is only supported when the data store is backed by
 MongoDB or SQL Server. Therefore, to execute dQMs against data stored in
@@ -143,7 +152,9 @@ during execution of ``Library/$evaluate``.
 
 This is used when the ``useServerData`` parameter is set to ``false`` in a request.
 In that case, data is not retrieved from the local Firely Server database, but from
-a configured external endpoint.
+a configured external endpoint. Firely Server requests the data of the subject with
+``GET [endpoint]/Patient/[id]/$everything``, listing the resource types to retrieve in
+the ``_type`` parameter; see :ref:`feature_cql_data_retrieval`.
 
 ::
 
@@ -1092,10 +1103,12 @@ Firely Server supports the following parameters:
 |                         |           |                         |             |                                |
 |                         |           |                         |             | Only a single statement is     |
 |                         |           |                         |             | supported per request. It      |
-|                         |           |                         |             | cannot operate within a        |
-|                         |           |                         |             | context (e.g. Patient) and     |
-|                         |           |                         |             | will not execute correctly if  |
-|                         |           |                         |             | input parameters are needed.   |
+|                         |           |                         |             | is evaluated in the Patient    |
+|                         |           |                         |             | context when a ``subject`` is  |
+|                         |           |                         |             | supplied, and can refer to the |
+|                         |           |                         |             | supplied ``parameters`` by     |
+|                         |           |                         |             | name; see                      |
+|                         |           |                         |             | :ref:`feature_cql_expression`. |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``subject``             | ✅        | ``string``              | 0..1        | The Patient whose data forms   |
 |                         |           |                         |             | the evaluation context, as a   |
@@ -1105,9 +1118,11 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | see :ref:`feature_cql_subject`.|
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``parameters``          | ✅        | ``Parameters``          | 0..1        | Input parameters passed into   |
-|                         |           |                         |             | the evaluation context. See    |
-|                         |           |                         |             | ``Library/$evaluate``          |
-|                         |           |                         |             | configuration for details.     |
+|                         |           |                         |             | the evaluation context. Their  |
+|                         |           |                         |             | values are mapped as for       |
+|                         |           |                         |             | ``Library/$evaluate``; see     |
+|                         |           |                         |             | :ref:`feature_cql_expression`  |
+|                         |           |                         |             | for how they are declared.     |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``raw``                 | ✅        | ``boolean``             | 0..1        | Return the execution results   |
 |                         |           |                         |             | as a string without mapping    |
@@ -1145,6 +1160,46 @@ Firely Server supports the following parameters:
 | ``terminologyEndpoint`` | ❌        | ``Endpoint``            | 0..1        |                                |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 
+.. _feature_cql_expression:
+
+Evaluating the expression
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Firely Server wraps the ``expression`` in a CQL library that it generates for the
+request, compiles that library and evaluates it through ``Library/$evaluate``. The
+generated library has this shape::
+
+  library Test version '1.0.0'
+  using FHIR version '4.0.1'
+  parameter <name> <type>    // one for every parameter in 'parameters'
+
+  context Patient            // only when a 'subject' is supplied
+
+  define "ExpressionToBeEvaluated": <expression>
+
+- When a ``subject`` is supplied, the expression is evaluated in the ``Patient``
+  context, so it can use ``Patient`` and retrieve the data of that patient, such as
+  ``[Encounter]``. Without a ``subject``, no context is declared.
+- Every parameter in ``parameters`` is declared as a ``parameter`` of the library, so
+  the expression can refer to it by name. Its CQL type is inferred from the supplied
+  FHIR value. A parameter supplied more than once is declared as a ``List`` of that
+  type, and a parameter that carries ``part`` elements instead of a value as a
+  ``Tuple`` with an element for every part. For example, ``SomeNumber`` supplied twice
+  with a ``valueInteger`` is declared as a list of integers, so ``Sum(SomeNumber)``
+  returns their sum.
+- Parameter and part names are written into the library unquoted, so they must be
+  valid unquoted CQL identifiers: a name with spaces, such as ``Measurement Period``,
+  cannot be used.
+- The library declares nothing else — no ``include``, ``codesystem``, ``valueset`` or
+  ``code`` — so the expression cannot refer to another library, such as
+  ``FHIRHelpers``, or to a code system, value set or code by name.
+
+A parameter whose value cannot be mapped to a CQL type is rejected with HTTP 501. A
+parameter without a value, with both a value and ``part`` elements, with nested parts,
+or with repetitions of different types is rejected with HTTP 400. An
+``OperationOutcome`` about the evaluation itself, such as one for an unknown patient,
+refers to the generated library as ``Test`` version ``1.0.0``.
+
 Output parameters
 ~~~~~~~~~~~~~~~~~
 
@@ -1153,6 +1208,10 @@ evaluated CQL expression.
 
 The result is returned in a parameter named ``return``. The value is mapped back
 to a FHIR data type, unless the proprietary ``raw`` parameter is set to ``true``.
+
+When a ``subject`` is supplied, the response also contains a parameter named
+``Patient`` that holds the ``Patient`` resource of the subject: the ``Patient``
+definition that ``context Patient`` adds to the generated library.
 
 When to use this operation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1271,6 +1330,29 @@ single group of the measure.
 When the caller supplies the data through the ``data`` parameter, the outcome instead
 reports that the provided data does not contain the expected ``Patient`` — the data
 lacks it, while the patient itself may well exist on the server.
+
+.. _feature_cql_data_retrieval:
+
+Data retrieval
+~~~~~~~~~~~~~~
+
+When Firely Server retrieves the data of the subject itself — from its own data or from
+a ``dataEndpoint`` — it retrieves only the resource types listed in the
+``dataRequirement.type`` elements of the evaluated ``Library``, plus ``Patient``. For
+``Measure/$evaluate-measure``, the evaluated ``Library`` is the one the ``Measure``
+references. When that ``Library`` declares no data requirements, all resource types the
+server supports are retrieved.
+
+The data requirements of the libraries that the evaluated ``Library`` includes are not
+taken into account. A bundle supplied through the ``data`` parameter is used as
+supplied, without filtering.
+
+.. important::
+
+   A resource type that the logic retrieves but the evaluated ``Library`` does not
+   declare is not retrieved, so a retrieve of that type returns an empty result, without
+   an error. Declare every resource type the logic retrieves — including those retrieved
+   by included libraries — in ``dataRequirement`` of the evaluated ``Library``.
 
 .. _feature_cql_result_mapping:
 

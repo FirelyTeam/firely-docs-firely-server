@@ -291,18 +291,18 @@ The resulting .NET assembly (``.dll``) is dynamically loaded at runtime during t
 Compiling CQL
 ^^^^^^^^^^^^^
 
-Uploading a ``Library`` resource with CQL (``text/cql``) and/or ELM (``application/elm+json``) content is sufficient: Firely Server compiles it into a .NET assembly itself.
+Uploading a ``Library`` resource that has a ``url``, ``name`` and ``version`` and carries CQL (``text/cql``) and/or ELM (``application/elm+json``) content as inline ``data`` is sufficient: Firely Server compiles it into a .NET assembly itself.
 When an operation such as ``Library/$evaluate`` or ``Measure/$evaluate-measure`` resolves a ``Library`` from the administration database, Firely Server compiles it in memory, using the ELM content if the ``Library`` contains it and the CQL content otherwise.
 The Libraries it depends on (``relatedArtifact`` of type ``depends-on``) are resolved from the administration database and compiled as well, so they must be uploaded too.
 The compiled assembly is only kept in the cache of conformance resources, it is not written back to the administration database. Once the cache entry has expired or has been evicted, the ``Library`` is compiled again on its next use; see ``SlidingExpirationSeconds`` in :ref:`configure_cache`.
-If the compilation fails, the cause is written to the Firely Server log and the operation responds with ``422 Unprocessable Entity``, reporting that no .NET dll was found in the ``Library``.
+If the compilation fails, the operation responds with ``422 Unprocessable Entity``, reporting that no .NET dll was found in the ``Library``; the cause of a parse, translation or compilation error is written to the Firely Server log. A ``depends-on`` Library that cannot be resolved is reported with ``404 Not Found``, and a ``Library`` without ``url``, ``name`` or ``version`` with ``422 Unprocessable Entity`` naming the missing elements.
 
-Firely Server only skips its own compilation for a precompiled ``Library``: one of type ``logic-library`` (CodeSystem ``http://terminology.hl7.org/CodeSystem/library-type``) with a ``content`` element of contentType ``application/octet-stream`` whose element id contains ``+dll``, like the ``BloodPressureCheckLogic-1.0.0+dll`` content in the :ref:`feature_qdm_example_library` below. The assembly in that element is then used as-is.
+Firely Server only skips its own compilation for a precompiled ``Library``: one of type ``logic-library`` (CodeSystem ``http://terminology.hl7.org/CodeSystem/library-type``) with a ``content`` element whose element id contains ``+dll``, like the ``BloodPressureCheckLogic-1.0.0+dll`` content in the :ref:`feature_qdm_example_library` below. The assembly in that element is then used as-is; it must have contentType ``application/octet-stream``, otherwise it cannot be loaded and the operation responds with ``422 Unprocessable Entity``. A ``Library`` passed inline through the ``library`` parameter of ``Library/$evaluate`` is always compiled.
 
 Precompiling a ``Library`` with the `.NET CQL SDK <https://github.com/FirelyTeam/firely-cql-sdk>`_ is optional. It is useful to:
 
 * include debug symbols (``+pdb`` content), which the compilation by Firely Server does not produce, see `Debuging Libraries`_;
-* avoid the compilation by Firely Server when the ``Library`` is first used, and again after its cache entry has expired.
+* avoid the compilation by Firely Server when a ``Library`` stored in the administration database is first used, and again after its cache entry has expired.
 
 To precompile, download the SDK and open the solution file ``Cql-Sdk-All.sln`` in your development environment.
 

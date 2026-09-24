@@ -942,7 +942,8 @@ Rejected with HTTP 422
   reference, or an empty canonical.
 - A ``Measure.library`` canonical that resolves to a resource of another type —
   canonicals are unique per resource type, but not across types.
-- The ``continuous-variable`` scoring type (issue type ``not-supported``).
+- The ``continuous-variable`` scoring type, in ``Measure.scoring`` or in a group-level
+  scoring override (issue type ``not-supported``).
 
 *Group level*
 

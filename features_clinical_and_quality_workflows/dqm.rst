@@ -9,6 +9,9 @@ Intro to Digital Quality Measures
 
   * Firely dQM - 🌍 / 🇺🇸
 
+  The operations require the license token ``http://fire.ly/vonk/plugins/cql`` to be present in the license file.
+  If you do not have this license token, please contact `Firely <https://fire.ly/contact>`_.
+
 Digital Quality Measures (dQMs) represent a transformative capability within the healthcare data ecosystem, enabling standardized and automated assessment of clinical outcomes.
 For example, a dQM can automatically determine what percentage of adult patients had their blood pressure measured in the last year, based entirely on structured FHIR data and executable logic.
 Firely Server provides native support for dQMs based on an integrated clinical reasoning module. Firely Server’s digital quality measurement capabilities are built entirely on the `HL7 Clinical Quality Language (CQL) <https://cql.hl7.org>`_ standard, integrated with FHIR resources.

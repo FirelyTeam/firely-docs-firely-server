@@ -9,6 +9,9 @@ Executing Digital Quality Measures (dQMs) - $cql, $evaluate, $evaluate-measure, 
 
   * Firely dQM - 🌍 / 🇺🇸
 
+  The operations require the license token ``http://fire.ly/vonk/plugins/cql`` to be present in the license file.
+  If you do not have this license token, please contact `Firely <https://fire.ly/contact>`_.
+
 .. important::
 
    Please see :ref:`feature_qdm` for an introduction to Digital Quality Reporting in FHIR.

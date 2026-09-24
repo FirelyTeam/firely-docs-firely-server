@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Encounter",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1991,7 +1991,7 @@
       "account": {
         "name": "account",
         "in": "query",
-        "description": "Account to place this charge",
+        "description": "Account that is being balanced",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2008,7 +2008,7 @@
       "based-on": {
         "name": "based-on",
         "in": "query",
-        "description": "Fulfills CarePlan",
+        "description": "A request for this procedure",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2025,7 +2025,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The evidence variable publication date",
+        "description": "Date the evaluation was generated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2050,7 +2050,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
+        "description": "ID of the evaluation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2067,7 +2067,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Location where adverse event occurred",
+        "description": "Where the procedure happened",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2084,7 +2084,7 @@
       "part-of": {
         "name": "part-of",
         "in": "query",
-        "description": "Part of referenced CarePlan",
+        "description": "Part of referenced event",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2093,7 +2093,7 @@
       "participant": {
         "name": "participant",
         "in": "query",
-        "description": "The reference to a participant in the test execution",
+        "description": "Individual who was involved",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2110,7 +2110,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The reference to the patient",
+        "description": "The patient being evaluated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2128,7 +2128,7 @@
       "reason-code": {
         "name": "reason-code",
         "in": "query",
-        "description": "Reason why the vaccine was administered",
+        "description": "Coded reason procedure performed",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2137,7 +2137,7 @@
       "reason-reference": {
         "name": "reason-reference",
         "in": "query",
-        "description": "Why immunization occurred",
+        "description": "The justification that the procedure was performed",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2162,7 +2162,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the evidence variable",
+        "description": "Immunization evaluation status",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2171,7 +2171,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Who this goal is intended for",
+        "description": "Recipient(s) of goods and services",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2180,7 +2180,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Amino Acid Sequence/ DNA Sequence / RNA Sequence",
+        "description": "Type of Invoice",
         "style": "form",
         "schema": {
           "type": "string"

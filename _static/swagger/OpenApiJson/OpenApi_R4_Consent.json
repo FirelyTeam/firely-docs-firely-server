@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Consent",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -262,6 +262,12 @@
             "$ref": "#/components/parameters/date"
           },
           {
+            "$ref": "#/components/parameters/DaVinci-pdex-provider-access-use-case"
+          },
+          {
+            "$ref": "#/components/parameters/decision"
+          },
+          {
             "$ref": "#/components/parameters/identifier"
           },
           {
@@ -422,6 +428,12 @@
           },
           {
             "$ref": "#/components/parameters/date"
+          },
+          {
+            "$ref": "#/components/parameters/DaVinci-pdex-provider-access-use-case"
+          },
+          {
+            "$ref": "#/components/parameters/decision"
           },
           {
             "$ref": "#/components/parameters/identifier"
@@ -804,6 +816,12 @@
             "$ref": "#/components/parameters/date"
           },
           {
+            "$ref": "#/components/parameters/DaVinci-pdex-provider-access-use-case"
+          },
+          {
+            "$ref": "#/components/parameters/decision"
+          },
+          {
             "$ref": "#/components/parameters/identifier"
           },
           {
@@ -1115,6 +1133,14 @@
                   },
                   "date": {
                     "title": "date",
+                    "type": "string"
+                  },
+                  "DaVinci-pdex-provider-access-use-case": {
+                    "title": "DaVinci-pdex-provider-access-use-case",
+                    "type": "string"
+                  },
+                  "decision": {
+                    "title": "decision",
                     "type": "string"
                   },
                   "identifier": {
@@ -1887,7 +1913,8 @@
       "action": {
         "name": "action",
         "in": "query",
-        "description": "Actions controlled by this rule",
+        "description": "Type of action performed during the event",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1895,7 +1922,7 @@
       "actor": {
         "name": "actor",
         "in": "query",
-        "description": "The individual(HealthcareService, Practitioner, Location, ...) to find a Schedule for",
+        "description": "Any one of the individuals participating in the appointment",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1904,7 +1931,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "E.g. Treatment, dietary, behavioral, etc.",
+        "description": "Classification of the procedure",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1929,8 +1956,24 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The evidence variable publication date",
+        "description": "Date the evaluation was generated",
         "style": "form",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "DaVinci-pdex-provider-access-use-case": {
+        "name": "DaVinci-pdex-provider-access-use-case",
+        "in": "query",
+        "description": "DaVinci PDEX provider access use case Consent extension",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "decision": {
+        "name": "decision",
+        "in": "query",
+        "description": "Decision (deny or permit) on a Consent",
         "schema": {
           "type": "string"
         }
@@ -1938,7 +1981,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
+        "description": "ID of the evaluation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1947,7 +1990,7 @@
       "organization": {
         "name": "organization",
         "in": "query",
-        "description": "The organization that is the custodian of the patient record",
+        "description": "The organization at which this person record is being managed",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1956,7 +1999,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The reference to the patient",
+        "description": "The patient being evaluated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1965,7 +2008,8 @@
       "period": {
         "name": "period",
         "in": "query",
-        "description": "Timeframe for this rule",
+        "description": "Time of service that is being documented\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1989,7 +2033,8 @@
       "security-label": {
         "name": "security-label",
         "in": "query",
-        "description": "Security Labels that define affected resources",
+        "description": "Document security-tags",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2005,7 +2050,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the evidence variable",
+        "description": "Immunization evaluation status",
         "style": "form",
         "schema": {
           "type": "string"

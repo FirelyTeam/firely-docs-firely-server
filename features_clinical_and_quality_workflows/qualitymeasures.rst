@@ -1322,14 +1322,18 @@ When ``persist`` is ``true``, the contained ``Parameters`` resource is stored to
 with the report. The individual reports contained in a ``subject-list`` report do not
 carry it.
 
-.. warning::
+.. note::
 
    Everything sent in the request body except ``data`` ends up in the
-   ``MeasureReport`` — for example credentials in the ``header`` values of a
-   ``dataEndpoint`` ``Endpoint`` — and, with ``persist=true``, in the database.
-   HTTP headers of the incoming request that are forwarded to data endpoints (see
-   :ref:`feature_external_data_endpoints`) are not request parameters, and are not
-   included.
+   ``MeasureReport`` and, with ``persist=true``, in the database. This does not
+   expose the credentials of a data endpoint: Firely Server only needs the
+   ``Endpoint.address`` of a ``dataEndpoint``, and takes the credentials for it
+   from the data endpoint configured with that address (see
+   :ref:`feature_external_data_endpoints`). Other elements of the ``Endpoint``,
+   such as ``header``, are not used, so a request does not need to carry
+   credentials in them.
+   HTTP headers of the incoming request that are forwarded to data endpoints are
+   not request parameters, and are not included either.
 
 .. _feature_measure_evaluate_persist:
 

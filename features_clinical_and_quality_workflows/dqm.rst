@@ -212,6 +212,7 @@ The following is a FHIR `Measure` resource defining the populations used in an e
          "id": "9a3f3b12-4e7d-4cf2-8e6a-729e5a21f4b9",
          "population": [
            {
+             "id": "initial-population",
              "code": {
                "coding": [
                  {
@@ -226,6 +227,7 @@ The following is a FHIR `Measure` resource defining the populations used in an e
              }
            },
            {
+             "id": "denominator",
              "code": {
                "coding": [
                  {
@@ -240,6 +242,7 @@ The following is a FHIR `Measure` resource defining the populations used in an e
              }
            },
            {
+             "id": "numerator",
              "code": {
                "coding": [
                  {
@@ -260,7 +263,8 @@ The following is a FHIR `Measure` resource defining the populations used in an e
 
 .. attention::
 
-	Firely Server currently requires that each group within a Measure resource includes an "id" element to ensure correct generation of the corresponding MeasureReport.
+	Firely Server currently requires that each group within a Measure resource includes an "id" element, unique within the Measure, to ensure correct generation of the corresponding MeasureReport. Otherwise, ``Measure/$evaluate-measure`` responds with ``412 Precondition Failed``.
+	Each population needs an "id" element as well. A population without one is still evaluated, but it is left out of the MeasureReport without an error: Firely Server only logs a warning.
 
 Each population criterion corresponds to a named expression defined in the CQL within the referenced Library. To ensure the dQM engine correctly interprets the selection logic, the criteria.language must be set to "text/cql-identifier", indicating that the population is identified by a named CQL expression.
 
@@ -576,7 +580,7 @@ Understanding Population results
 A ``MeasureReport`` represents the outcome of evaluating a FHIR ``Measure`` against clinical data. 
 It contains the computed results for each population defined in the Measure, such as the initial population, denominator, numerator, exclusions, and exceptions.
 
-Each population in the Measure is reflected in the MeasureReport under the corresponding ``group.population`` entries.
+Each population in the Measure that has an ``id`` is reflected in the MeasureReport under the corresponding ``group.population`` entries, with the same ``id`` and ``code``, in the order of the Measure.
 
 
 The Anatomy of a MeasureReport
@@ -611,6 +615,8 @@ A MeasureReport is composed of several key elements that describe what was evalu
 
   - The input parameters (``periodStart`` / ``periodEnd``) provided to ``Measure/$evaluate-measure``  
   - Or, if not provided, the ``effectivePeriod`` defined in the ``Measure`` resource (if present)
+
+  The report echoes the supplied ``periodStart`` and ``periodEnd`` values as given (for example ``2025-01-01``), not the date-time bounds of the measurement period derived from them.
 
   The measurement period is passed into the underlying CQL logic as a parameter (named ``Measurement Period``), which is used in the evaluation expressions.
 
@@ -710,7 +716,8 @@ Unlike Measures and Libraries, MeasureReports are stored on the **FHIR data endp
 Example MeasureReports
 ^^^^^^^^^^^^^^^^^^^^^^
 
-The following example shows a FHIR ``MeasureReport`` resource representing the individual evaluation of a single patient against the "Blood Pressure Check for Adults" measure.
+The following example shows a FHIR ``MeasureReport`` resource representing the individual evaluation of a single patient against the "Blood Pressure Check for Adults" measure, where the patient meets all three population criteria.
+It is the response to a ``POST`` to ``Measure/$evaluate-measure`` with the parameters ``url``, ``periodStart``, ``periodEnd`` and ``subject`` and without ``persist``, so the report is not stored and carries no ``meta``. The contained ``Parameters`` resource holds the input parameters of the request and is referenced by the ``cqfm-inputParameters`` extension.
 
 .. code-block:: json
    :caption: FHIR MeasureReport – Individual Result
@@ -719,26 +726,48 @@ The following example shows a FHIR ``MeasureReport`` resource representing the i
    {
      "resourceType": "MeasureReport",
      "id": "bc23af57-f8a4-408b-9149-f91b4092e6dc",
-     "meta": {
-       "versionId": "5eb91495-f229-4faa-8cb6-e3bcde788a6d",
-       "lastUpdated": "2025-04-16T19:38:13.870+00:00"
-     },
+     "contained": [
+       {
+         "resourceType": "Parameters",
+         "id": "3f6c2a9e-8d41-4b7a-9c0e-51d2f7a8b6c3",
+         "parameter": [
+           {
+             "name": "url",
+             "valueCanonical": "http://example.org/fhir/Measure/bp-check-adults"
+           },
+           {
+             "name": "periodStart",
+             "valueDate": "2025-01-01"
+           },
+           {
+             "name": "periodEnd",
+             "valueDate": "2025-12-31"
+           },
+           {
+             "name": "subject",
+             "valueString": "Patient/test"
+           }
+         ]
+       }
+     ],
      "extension": [
        {
-         "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-MeasureReport.population.description",
-         "valueString": "Measure assessing whether adult patients (18 years or older) had at least one systolic blood pressure reading during the measurement period."
+         "url": "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-inputParameters",
+         "valueReference": {
+           "reference": "#3f6c2a9e-8d41-4b7a-9c0e-51d2f7a8b6c3"
+         }
        }
      ],
      "status": "complete",
      "type": "individual",
-     "measure": "http://example.org/fhir/Measure/bp-check-adults",
+     "measure": "http://example.org/fhir/Measure/bp-check-adults|1.0.0",
      "subject": {
-       "reference": "Patient/test"
+       "reference": "http://localhost:4080/Patient/test"
      },
-     "date": "2025-05-14T00:00:00+00:00",
+     "date": "2026-01-15T10:24:37.5306219+00:00",
      "period": {
-       "start": "2025-01-01T00:00:00+00:00",
-       "end": "2025-12-31T00:00:00+00:00"
+       "start": "2025-01-01",
+       "end": "2025-12-31"
      },
      "group": [
        {
@@ -750,27 +779,7 @@ The following example shows a FHIR ``MeasureReport`` resource representing the i
                "coding": [
                  {
                    "system": "http://terminology.hl7.org/CodeSystem/measure-population",
-                   "code": "initial-population",
-                   "display": "Initial Population"
-                 }
-               ]
-             },
-             "count": 1
-           },
-           {
-             "id": "numerator",
-             "extension": [
-               {
-                 "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-MeasureReport.population.description",
-                 "valueString": "The number of umbrellas supplied to those suffering from Rock Fall conditions."
-               }
-             ],
-             "code": {
-               "coding": [
-                 {
-                   "system": "http://terminology.hl7.org/CodeSystem/measure-population",
-                   "code": "numerator",
-                   "display": "Numerator"
+                   "code": "initial-population"
                  }
                ]
              },
@@ -778,24 +787,34 @@ The following example shows a FHIR ``MeasureReport`` resource representing the i
            },
            {
              "id": "denominator",
-             "extension": [
-               {
-                 "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-MeasureReport.population.description",
-                 "valueString": "Those patients suffering from Rock Fall conditions."
-               }
-             ],
              "code": {
                "coding": [
                  {
                    "system": "http://terminology.hl7.org/CodeSystem/measure-population",
-                   "code": "denominator",
-                   "display": "Denominator"
+                   "code": "denominator"
+                 }
+               ]
+             },
+             "count": 1
+           },
+           {
+             "id": "numerator",
+             "code": {
+               "coding": [
+                 {
+                   "system": "http://terminology.hl7.org/CodeSystem/measure-population",
+                   "code": "numerator"
                  }
                ]
              },
              "count": 1
            }
-         ]
+         ],
+         "measureScore": {
+           "value": 1,
+           "system": "http://unitsofmeasure.org",
+           "code": "{score}"
+         }
        }
      ]
    }

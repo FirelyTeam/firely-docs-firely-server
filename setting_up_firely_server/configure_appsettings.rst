@@ -13,7 +13,7 @@ We go through all the sections of this file and refer you to detailed pages on e
 
 You can also control :ref:`configure_envvar`.
 
-Changes to the settings require a restart of Firely Server.
+Changes to the settings require a restart of Firely Server. If you provide settings with environment variables, a restart alone may not be enough: see :ref:`configure_envvar_file`.
 
 .. _configure_levels:
 
@@ -196,6 +196,32 @@ environment variable::
 .. note:: 
     A colon ``:`` is also valid as a separator in some environments, but not all. For its wider support we recommend to use ``__``.
     See `this article <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-8.0#non-prefixed-environment-variables>`_ for more information.
+
+.. _configure_envvar_file:
+
+Providing environment variables in a file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you configure Firely Server with many environment variables, you can keep them together in one file, e.g. ``firely-server.env``. The Guided Setup in the Firely Server UI exports this file for all settings where you selected *Use Environment Variable*. You can also write the file yourself.
+The file contains one variable per line, in the format ``NAME=value``. Lines starting with ``#`` are comments:
+
+::
+
+   # Firely Server environment variables
+   VONK_Repository=SQL
+   VONK_SqlDbOptions__ConnectionString=Server=myserver;Database=VonkData;User Id=fsuser;Password=<secret>
+   VONK_Administration__Repository=SQL
+   VONK_Administration__SqlDbOptions__ConnectionString=Server=myserver;Database=VonkAdmin;User Id=fsuser;Password=<secret>
+
+Keep in mind:
+
+* **Firely Server does not read this file itself.** The variables have to be loaded into the environment of the Firely Server process by whatever starts it: your shell, a service manager, Docker, Kubernetes or Azure. Each page under :ref:`deployment` has a section *Starting Firely Server with environment variables* that shows how to do this.
+* **Environment variables are only read at startup.** After changing the file, load the variables again and restart Firely Server. Depending on the deployment, a plain restart is not enough. For example, a Docker container has to be recreated. See the deployment pages for the right sequence.
+* **Watch the settings hierarchy.** Environment variables override ``appsettings.json``, but are overridden by ``appsettings.instance.json`` (see :ref:`configure_levels`). If a setting is in the env file and also in ``appsettings.instance.json``, the value from ``appsettings.instance.json`` wins.
+* Use ``__`` (double underscore) as the level separator, not ``:``. Not every tool accepts a colon in a variable name.
+* Don't put quotes around values, and keep each value on a single line. Tools handle quotes differently. For example, ``docker run --env-file`` passes quotes on as part of the value.
+* Save the file with Unix (LF) line endings when it is used on Linux or in a container. Otherwise a trailing carriage return can end up in the values.
+* The file usually contains secrets such as connection strings. Restrict access to the file, and do not commit it to source control.
 
 Arrays in Environment Variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

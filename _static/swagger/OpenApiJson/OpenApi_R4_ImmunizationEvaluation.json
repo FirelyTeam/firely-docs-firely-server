@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - ImmunizationEvaluation",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1775,7 +1775,6 @@
         "name": "_has",
         "in": "query",
         "description": "Enables querying a reverse chain",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1783,8 +1782,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The evidence variable publication date",
-        "style": "form",
+        "description": "Date the evaluation was generated",
         "schema": {
           "type": "string"
         }
@@ -1800,8 +1798,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
-        "style": "form",
+        "description": "ID of the evaluation",
         "schema": {
           "type": "string"
         }
@@ -1817,8 +1814,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The reference to the patient",
-        "style": "form",
+        "description": "The patient being evaluated",
         "schema": {
           "type": "string"
         }
@@ -1826,8 +1822,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the evidence variable",
-        "style": "form",
+        "description": "Immunization evaluation status",
         "schema": {
           "type": "string"
         }
@@ -1835,8 +1830,7 @@
       "target-disease": {
         "name": "target-disease",
         "in": "query",
-        "description": "The target disease the dose is being administered against",
-        "style": "form",
+        "description": "The vaccine preventable disease being evaluated against",
         "schema": {
           "type": "string"
         }
@@ -1846,7 +1840,6 @@
         "in": "path",
         "description": "Resource Logical ID",
         "required": true,
-        "style": "simple",
         "schema": {
           "type": "string"
         }
@@ -1856,7 +1849,6 @@
         "in": "path",
         "description": "Resource Version Number",
         "required": true,
-        "style": "simple",
         "schema": {
           "type": "string"
         }

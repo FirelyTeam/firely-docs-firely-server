@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - DocumentReference",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -2025,8 +2025,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Who and/or what authored the composition",
-        "style": "form",
+        "description": "Who and/or what authored the document",
         "schema": {
           "type": "string"
         }
@@ -2034,7 +2033,7 @@
       "category": {
         "name": "category",
         "in": "query",
-        "description": "E.g. Treatment, dietary, behavioral, etc.",
+        "description": "Classification of the procedure",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2059,7 +2058,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The evidence variable publication date",
+        "description": "Date the evaluation was generated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2068,7 +2067,7 @@
       "description": {
         "name": "description",
         "in": "query",
-        "description": "The description of the evidence variable",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The description of the capability statement\r\n* [CodeSystem](codesystem.html): The description of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The description of the compartment definition\r\n* [ConceptMap](conceptmap.html): The description of the concept map\r\n* [GraphDefinition](graphdefinition.html): The description of the graph definition\r\n* [ImplementationGuide](implementationguide.html): The description of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The description of the message definition\r\n* [NamingSystem](namingsystem.html): The description of the naming system\r\n* [OperationDefinition](operationdefinition.html): The description of the operation definition\r\n* [SearchParameter](searchparameter.html): The description of the search parameter\r\n* [StructureDefinition](structuredefinition.html): The description of the structure definition\r\n* [StructureMap](structuremap.html): The description of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The description of the terminology capabilities\r\n* [ValueSet](valueset.html): The description of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2077,7 +2076,7 @@
       "encounter": {
         "name": "encounter",
         "in": "query",
-        "description": "Encounter created as part of",
+        "description": "Multiple Resources: \r\n\r\n* [Composition](composition.html): Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter during which request was created\r\n* [DiagnosticReport](diagnosticreport.html): The Encounter when the order was made\r\n* [DocumentReference](documentreference.html): Context of the document  content\r\n* [Flag](flag.html): Alert relevant during encounter\r\n* [List](list.html): Context in which list created\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this encounter identifier\r\n* [Observation](observation.html): Encounter related to the observation\r\n* [Procedure](procedure.html): Encounter created as part of\r\n* [RiskAssessment](riskassessment.html): Where was assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter in which this request is made\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this encounter identifier\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2086,8 +2085,7 @@
       "event": {
         "name": "event",
         "in": "query",
-        "description": "Type of the event itself in relation to the subject",
-        "style": "form",
+        "description": "Main clinical acts documented",
         "schema": {
           "type": "string"
         }
@@ -2095,7 +2093,7 @@
       "facility": {
         "name": "facility",
         "in": "query",
-        "description": "Facility where the products or services have been or will be provided",
+        "description": "Facility responsible for the goods and services",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2104,8 +2102,7 @@
       "format": {
         "name": "format",
         "in": "query",
-        "description": "formats supported (xml | json | ttl | mime type)",
-        "style": "form",
+        "description": "Format/content rules for the document",
         "schema": {
           "type": "string"
         }
@@ -2113,7 +2110,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
+        "description": "ID of the evaluation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2122,8 +2119,7 @@
       "language": {
         "name": "language",
         "in": "query",
-        "description": "Language code (irrespective of use value)",
-        "style": "form",
+        "description": "Human language of the content (BCP-47)",
         "schema": {
           "type": "string"
         }
@@ -2131,7 +2127,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Location where adverse event occurred",
+        "description": "Where the procedure happened",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2140,7 +2136,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The reference to the patient",
+        "description": "The patient being evaluated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2149,8 +2145,7 @@
       "period": {
         "name": "period",
         "in": "query",
-        "description": "Timeframe for this rule",
-        "style": "form",
+        "description": "Time of service that is being documented\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
         "schema": {
           "type": "string"
         }
@@ -2191,8 +2186,7 @@
       "security-label": {
         "name": "security-label",
         "in": "query",
-        "description": "Security Labels that define affected resources",
-        "style": "form",
+        "description": "Document security-tags",
         "schema": {
           "type": "string"
         }
@@ -2208,7 +2202,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the evidence variable",
+        "description": "Immunization evaluation status",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2217,7 +2211,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Who this goal is intended for",
+        "description": "Recipient(s) of goods and services",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2226,7 +2220,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Amino Acid Sequence/ DNA Sequence / RNA Sequence",
+        "description": "Type of Invoice",
         "style": "form",
         "schema": {
           "type": "string"

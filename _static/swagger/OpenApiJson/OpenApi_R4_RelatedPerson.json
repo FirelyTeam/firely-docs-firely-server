@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - RelatedPerson",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1900,8 +1900,7 @@
       "active": {
         "name": "active",
         "in": "query",
-        "description": "Whether the patient record is active",
-        "style": "form",
+        "description": "Indicates if the related person record is active",
         "schema": {
           "type": "string"
         }
@@ -1910,7 +1909,6 @@
         "name": "address",
         "in": "query",
         "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A server defined search that may match any of the string fields in the Address, including line, city, district, state, country, postalCode, and/or text\r\n* [Person](person.html): A server defined search that may match any of the string fields in the Address, including line, city, district, state, country, postalCode, and/or text\r\n* [Practitioner](practitioner.html): A server defined search that may match any of the string fields in the Address, including line, city, district, state, country, postalCode, and/or text\r\n* [RelatedPerson](relatedperson.html): A server defined search that may match any of the string fields in the Address, including line, city, district, state, country, postalCode, and/or text\r\n",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1919,7 +1917,6 @@
         "name": "address-city",
         "in": "query",
         "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A city specified in an address\r\n* [Person](person.html): A city specified in an address\r\n* [Practitioner](practitioner.html): A city specified in an address\r\n* [RelatedPerson](relatedperson.html): A city specified in an address\r\n",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1928,7 +1925,6 @@
         "name": "address-country",
         "in": "query",
         "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A country specified in an address\r\n* [Person](person.html): A country specified in an address\r\n* [Practitioner](practitioner.html): A country specified in an address\r\n* [RelatedPerson](relatedperson.html): A country specified in an address\r\n",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1937,7 +1933,6 @@
         "name": "address-postalcode",
         "in": "query",
         "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A postalCode specified in an address\r\n* [Person](person.html): A postal code specified in an address\r\n* [Practitioner](practitioner.html): A postalCode specified in an address\r\n* [RelatedPerson](relatedperson.html): A postal code specified in an address\r\n",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1946,7 +1941,6 @@
         "name": "address-state",
         "in": "query",
         "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A state specified in an address\r\n* [Person](person.html): A state specified in an address\r\n* [Practitioner](practitioner.html): A state specified in an address\r\n* [RelatedPerson](relatedperson.html): A state specified in an address\r\n",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1955,7 +1949,6 @@
         "name": "address-use",
         "in": "query",
         "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A use code specified in an address\r\n* [Person](person.html): A use code specified in an address\r\n* [Practitioner](practitioner.html): A use code specified in an address\r\n* [RelatedPerson](relatedperson.html): A use code specified in an address\r\n",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1963,8 +1956,7 @@
       "birthdate": {
         "name": "birthdate",
         "in": "query",
-        "description": "The patient's date of birth\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
-        "style": "form",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): The patient's date of birth\r\n* [Person](person.html): The person's date of birth\r\n* [RelatedPerson](relatedperson.html): The Related Person's date of birth\r\n",
         "schema": {
           "type": "string"
         }
@@ -1973,7 +1965,6 @@
         "name": "email",
         "in": "query",
         "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A value in an email contact\r\n* [Person](person.html): A value in an email contact\r\n* [Practitioner](practitioner.html): A value in an email contact\r\n* [PractitionerRole](practitionerrole.html): A value in an email contact\r\n* [RelatedPerson](relatedperson.html): A value in an email contact\r\n",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1981,8 +1972,7 @@
       "gender": {
         "name": "gender",
         "in": "query",
-        "description": "Gender of the patient\\<br /\\>\n\\<em\\>NOTE\\</em\\>: This US Core SearchParameter definition extends the usage context of\n\\<a href=\"http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html\"\\>capabilitystatement-expectation\\</a\\>\n extension to formally express implementer conformance expectations for these elements:\\<br /\\>\n - multipleAnd\\<br /\\>\n - multipleOr\\<br /\\>\n - comparator\\<br /\\>\n - modifier\\<br /\\>\n - chain\\<br /\\>",
-        "style": "form",
+        "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): Gender of the patient\r\n* [Person](person.html): The gender of the person\r\n* [Practitioner](practitioner.html): Gender of the practitioner\r\n* [RelatedPerson](relatedperson.html): Gender of the related person\r\n",
         "schema": {
           "type": "string"
         }
@@ -1990,7 +1980,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
+        "description": "ID of the evaluation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1999,7 +1989,7 @@
       "name": {
         "name": "name",
         "in": "query",
-        "description": "Computationally friendly name of the evidence variable",
+        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): Computationally friendly name of the capability statement\r\n* [CodeSystem](codesystem.html): Computationally friendly name of the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): Computationally friendly name of the compartment definition\r\n* [ConceptMap](conceptmap.html): Computationally friendly name of the concept map\r\n* [GraphDefinition](graphdefinition.html): Computationally friendly name of the graph definition\r\n* [ImplementationGuide](implementationguide.html): Computationally friendly name of the implementation guide\r\n* [MessageDefinition](messagedefinition.html): Computationally friendly name of the message definition\r\n* [NamingSystem](namingsystem.html): Computationally friendly name of the naming system\r\n* [OperationDefinition](operationdefinition.html): Computationally friendly name of the operation definition\r\n* [SearchParameter](searchparameter.html): Computationally friendly name of the search parameter\r\n* [StructureDefinition](structuredefinition.html): Computationally friendly name of the structure definition\r\n* [StructureMap](structuremap.html): Computationally friendly name of the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): Computationally friendly name of the terminology capabilities\r\n* [ValueSet](valueset.html): Computationally friendly name of the value set\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2008,7 +1998,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The reference to the patient",
+        "description": "The patient being evaluated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2018,7 +2008,6 @@
         "name": "phone",
         "in": "query",
         "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): A value in a phone contact\r\n* [Person](person.html): A value in a phone contact\r\n* [Practitioner](practitioner.html): A value in a phone contact\r\n* [PractitionerRole](practitionerrole.html): A value in a phone contact\r\n* [RelatedPerson](relatedperson.html): A value in a phone contact\r\n",
-        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2035,7 +2024,6 @@
         "name": "telecom",
         "in": "query",
         "description": "Multiple Resources: \r\n\r\n* [Patient](patient.html): The value in any kind of telecom details of the patient\r\n* [Person](person.html): The value in any kind of contact\r\n* [Practitioner](practitioner.html): The value in any kind of contact\r\n* [PractitionerRole](practitionerrole.html): The value in any kind of contact\r\n* [RelatedPerson](relatedperson.html): The value in any kind of contact\r\n",
-        "style": "form",
         "schema": {
           "type": "string"
         }

@@ -152,6 +152,36 @@ Example Use Cases
 Release Notes
 -------------
 
+.. _dashboard_releasenotes_1_0_0_beta_2:
+
+Release 1.0.0-beta.2, September 24th, 2026
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. attention::
+
+   The dashboard now runs on .NET 10 (previously .NET 8). If you run the dashboard from the binaries, make sure the .NET 10 ASP.NET Core runtime is installed before upgrading. The Docker image already includes it.
+
+Improvements
+~~~~~~~~~~~~
+
+#. The Docker image is now based on the .NET 10 ASP.NET Core runtime on Alpine 3.24.
+#. On the interaction duration chart, axis values of 1000 ms and above are now shown in seconds (for example ``1.5s``) instead of milliseconds.
+
+Fixed
+~~~~~
+
+#. The help icon in the header did nothing when clicked. It now opens this documentation page in a new tab.
+#. Several chart layout issues were fixed:
+
+   - The resource ingestion and resource count charts now fill the full width and height of their widget.
+   - The PubSub and FSI bars in the resource ingestion chart have distinct colors again.
+   - The margins and axis widths of the interaction rate and interaction duration charts were adjusted.
+
+Security
+~~~~~~~~
+
+#. The OS packages in the Docker image are now upgraded when the image is built, so the image includes Alpine security fixes released after the base image was published.
+
 .. _dashboard_releasenotes_1_0_0_beta:
 
 Release 1.0.0-beta, February 18th, 2026

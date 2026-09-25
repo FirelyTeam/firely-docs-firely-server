@@ -3,6 +3,32 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.7.0:
+
+Release 4.7.0, September 2nd, 2026
+-----------------------------------
+
+.. attention::
+
+    This release upgrades the runtime to **.NET 10** (previously .NET 8) and Duende IdentityServer to version **7.4.11**. If you install Firely Auth using binaries, please update the .NET runtime accordingly; the Docker image has been updated for you. This upgrade introduces a new database migration for both the SQL Server and SQLite user stores. As with previous releases, this migration will be applied automatically by Firely Auth on startup as part of your regular upgrade procedure.
+
+Feature
+^^^^^^^
+
+#. Added an About page, accessible from the account menu, that shows Duende IdentityServer license information.
+#. The fhirUser lookup against Firely Server is now gated on a live status check of the connected FHIR server. This prevents the lookup from hanging or failing silently when Firely Server is unreachable or misconfigured.
+
+Fix
+^^^
+
+#. Improved detection of the US Core version supported by the connected Firely Server. US Core 3 and 4 are now recognized explicitly, US Core 7 and any newer, untracked version are treated as "7 or newer" instead of falling back to "unknown", and pre-release/ballot versions such as ``7.0.0-ballot`` are now parsed correctly.
+#. Fixed an issue where the admin dashboard did not always correctly reflect the availability of the connected Firely Server on the user and client forms.
+
+Security
+^^^^^^^^
+
+#. Updated the ``lodash`` dependency and a transitive ``nanoid`` dependency used by the Firely Auth user interface to remediate reported vulnerabilities.
+
 .. _firelyauth_releasenotes_4.6.0:
 
 Release 4.6.0, March 5th, 2026

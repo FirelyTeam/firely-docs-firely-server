@@ -158,6 +158,8 @@ If you want to specify input parameters in the file, you can use the snippet bel
 
           "workflow": { //-1 = unbounded
               "readBufferSize": 750,
+              "parseParallel": -1, //FHIR parsing is CPU intensive - give it as much CPU time as possible.
+              "parseBufferSize": 50,
               "metaParallel": 1,
               "metaBufferSize": 50,
               "typeParallel": 4,
@@ -533,7 +535,21 @@ Workflow
   * **Default**: 750
   * **Description**: Number of resources to buffer after reading.
 
-* ``--metaPar <metaPar>``: 
+* ``--parsePar <parsePar>``:
+
+  * **Config**: workflow/parseParallel
+  * **Required**: No
+  * **Default**: -1 (no limit)
+  * **Description**: Number of threads to parse the resources that were read. FHIR parsing is the most CPU intensive part of reading, so spreading it over multiple threads improves import throughput on multi-core machines. Reading the lines of an ndjson file and numbering the resources stay strictly sequential, so journaling and the import order are not affected.
+
+* ``--parseBuffer <parseBuffer>``:
+
+  * **Config**: workflow/parseBufferSize
+  * **Required**: No
+  * **Default**: 50
+  * **Description**: Number of resources to buffer for parsing.
+
+* ``--metaPar <metaPar>``:
 
   * **Config**: workflow/metaParallel
   * **Required**: No
@@ -588,6 +604,13 @@ Workflow
   * **Required**: No
   * **Default**: 50
   * **Description**: Number of resources to buffer for indexing the search parameters.
+
+.. note::
+
+   All ``workflow/*Parallel`` and ``workflow/*BufferSize`` settings are validated when
+   FSI starts. A value that is neither positive nor ``-1`` (unbounded) fails
+   configuration validation with a message naming the setting, instead of surfacing as
+   an error once the import pipeline is built.
 
 
 Telemetry

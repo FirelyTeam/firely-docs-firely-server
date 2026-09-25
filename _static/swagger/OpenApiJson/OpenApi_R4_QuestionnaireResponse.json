@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - QuestionnaireResponse",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1835,7 +1835,7 @@
       "author": {
         "name": "author",
         "in": "query",
-        "description": "Who and/or what authored the composition",
+        "description": "Who and/or what authored the document",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1853,7 +1853,7 @@
       "based-on": {
         "name": "based-on",
         "in": "query",
-        "description": "Fulfills CarePlan",
+        "description": "A request for this procedure",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1862,7 +1862,7 @@
       "encounter": {
         "name": "encounter",
         "in": "query",
-        "description": "Encounter created as part of",
+        "description": "Multiple Resources: \r\n\r\n* [Composition](composition.html): Context of the Composition\r\n* [DeviceRequest](devicerequest.html): Encounter during which request was created\r\n* [DiagnosticReport](diagnosticreport.html): The Encounter when the order was made\r\n* [DocumentReference](documentreference.html): Context of the document  content\r\n* [Flag](flag.html): Alert relevant during encounter\r\n* [List](list.html): Context in which list created\r\n* [NutritionOrder](nutritionorder.html): Return nutrition orders with this encounter identifier\r\n* [Observation](observation.html): Encounter related to the observation\r\n* [Procedure](procedure.html): Encounter created as part of\r\n* [RiskAssessment](riskassessment.html): Where was assessment performed?\r\n* [ServiceRequest](servicerequest.html): An encounter in which this request is made\r\n* [VisionPrescription](visionprescription.html): Return prescriptions with this encounter identifier\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1871,7 +1871,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
+        "description": "ID of the evaluation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1880,7 +1880,7 @@
       "part-of": {
         "name": "part-of",
         "in": "query",
-        "description": "Part of referenced CarePlan",
+        "description": "Part of referenced event",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1889,7 +1889,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The reference to the patient",
+        "description": "The patient being evaluated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1906,7 +1906,7 @@
       "source": {
         "name": "source",
         "in": "query",
-        "description": "The source value set that contains the concepts that are being mapped",
+        "description": "Who and/or what defined the list contents (aka Author)",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1915,7 +1915,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the evidence variable",
+        "description": "Immunization evaluation status",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1924,7 +1924,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Who this goal is intended for",
+        "description": "Recipient(s) of goods and services",
         "style": "form",
         "schema": {
           "type": "string"

@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Immunization",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1900,7 +1900,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The evidence variable publication date",
+        "description": "Date the evaluation was generated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1909,7 +1909,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
+        "description": "ID of the evaluation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1918,7 +1918,7 @@
       "location": {
         "name": "location",
         "in": "query",
-        "description": "Location where adverse event occurred",
+        "description": "Where the procedure happened",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1927,7 +1927,8 @@
       "lot-number": {
         "name": "lot-number",
         "in": "query",
-        "description": "Vaccine Lot Number",
+        "description": "Returns medications in a batch with this lot number",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1935,7 +1936,8 @@
       "manufacturer": {
         "name": "manufacturer",
         "in": "query",
-        "description": "Vaccine Manufacturer",
+        "description": "Returns medications made or sold for this manufacturer",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1943,7 +1945,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The reference to the patient",
+        "description": "The patient being evaluated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1952,7 +1954,7 @@
       "performer": {
         "name": "performer",
         "in": "query",
-        "description": "Matches if the practitioner is listed as a performer in any of the \"simple\" activities.  (For performers of the detailed activities, chain through the activitydetail search parameter.)",
+        "description": "The reference to the practitioner",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1977,7 +1979,8 @@
       "reason-code": {
         "name": "reason-code",
         "in": "query",
-        "description": "Reason why the vaccine was administered",
+        "description": "Coded reason procedure performed",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -1985,7 +1988,8 @@
       "reason-reference": {
         "name": "reason-reference",
         "in": "query",
-        "description": "Why immunization occurred",
+        "description": "The justification that the procedure was performed",
+        "style": "form",
         "schema": {
           "type": "string"
         }
@@ -2001,7 +2005,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the evidence variable",
+        "description": "Immunization evaluation status",
         "style": "form",
         "schema": {
           "type": "string"
@@ -2018,7 +2022,8 @@
       "target-disease": {
         "name": "target-disease",
         "in": "query",
-        "description": "The target disease the dose is being administered against",
+        "description": "The vaccine preventable disease being evaluated against",
+        "style": "form",
         "schema": {
           "type": "string"
         }

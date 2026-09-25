@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Invoice",
-    "version": "6.5.0-alpha-build-20251104.9+afe282bc662495b255c95a751e060d2030d5aded"
+    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
   },
   "servers": [
     {
@@ -1861,8 +1861,7 @@
       "account": {
         "name": "account",
         "in": "query",
-        "description": "Account to place this charge",
-        "style": "form",
+        "description": "Account that is being balanced",
         "schema": {
           "type": "string"
         }
@@ -1870,7 +1869,7 @@
       "date": {
         "name": "date",
         "in": "query",
-        "description": "The evidence variable publication date",
+        "description": "Date the evaluation was generated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1879,7 +1878,7 @@
       "identifier": {
         "name": "identifier",
         "in": "query",
-        "description": "External identifier for the evidence variable",
+        "description": "ID of the evaluation",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1896,8 +1895,7 @@
       "participant": {
         "name": "participant",
         "in": "query",
-        "description": "The reference to a participant in the test execution",
-        "style": "form",
+        "description": "Individual who was involved",
         "schema": {
           "type": "string"
         }
@@ -1913,7 +1911,7 @@
       "patient": {
         "name": "patient",
         "in": "query",
-        "description": "The reference to the patient",
+        "description": "The patient being evaluated",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1922,8 +1920,7 @@
       "recipient": {
         "name": "recipient",
         "in": "query",
-        "description": "Message recipient",
-        "style": "form",
+        "description": "Recipient of this invoice",
         "schema": {
           "type": "string"
         }
@@ -1931,7 +1928,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "The current status of the evidence variable",
+        "description": "Immunization evaluation status",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1940,8 +1937,7 @@
       "subject": {
         "name": "subject",
         "in": "query",
-        "description": "Who this goal is intended for",
-        "style": "form",
+        "description": "Recipient(s) of goods and services",
         "schema": {
           "type": "string"
         }
@@ -1965,8 +1961,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Amino Acid Sequence/ DNA Sequence / RNA Sequence",
-        "style": "form",
+        "description": "Type of Invoice",
         "schema": {
           "type": "string"
         }

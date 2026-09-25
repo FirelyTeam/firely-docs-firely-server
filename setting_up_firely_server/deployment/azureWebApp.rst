@@ -85,6 +85,55 @@ with the settings for either :ref:`SQL Server<configure_sql>` or :ref:`MongoDB<c
    :align: center
    :width: 900px
 
+.. _azure_webapp_envvar:
+
+Starting Firely Server with environment variables
+-------------------------------------------------
+
+In an Azure Web App, the *App settings* of the Web App (under *Settings* > *Environment variables*) are passed to Firely Server as environment variables. If you have your configuration in a file, e.g. ``firely-server.env`` exported by the Guided Setup, you can upload all variables in one go with the Azure CLI. See :ref:`configure_envvar_file` for the format of the file.
+
+.. note::
+   On a Linux Web App, app setting names can't contain a ``:``. Always use ``__`` as the separator, e.g. ``VONK_SqlDbOptions__ConnectionString``.
+
+The Azure CLI expects a JSON file, not an env file. First convert ``firely-server.env`` to JSON, then apply it:
+
+.. code-block:: powershell
+
+   $settings = Get-Content .\firely-server.env |
+     Where-Object { $_ -match '^\s*[^#\s][^=]*=' } |
+     ForEach-Object {
+       $name, $value = $_ -split '=', 2
+       [ordered]@{ name = $name.Trim(); value = $value; slotSetting = $false }
+     }
+   ConvertTo-Json -InputObject @($settings) | Set-Content .\firely-server.settings.json
+
+   az webapp config appsettings set `
+     --resource-group <resource-group> `
+     --name <firely-server-app> `
+     --settings "@firely-server.settings.json"
+
+   Remove-Item .\firely-server.settings.json   # the file contains secrets
+
+.. tip::
+   For secrets like connection strings, consider `Key Vault references <https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references>`_ instead of plain values in the app settings.
+
+Restarting after a change to the env file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+After you change ``firely-server.env``, run the commands above again. App Service restarts the app automatically when the app settings change, so you don't have to restart it yourself. Keep in mind:
+
+* ``az webapp config appsettings set`` only adds and updates settings. If you **removed** a variable from the env file, also remove it from the Web App:
+
+  .. code-block:: bash
+
+     az webapp config appsettings delete \
+       --resource-group <resource-group> \
+       --name <firely-server-app> \
+       --setting-names VONK_Some__Removed__Setting
+
+* If you use deployment slots, apply the settings to the slot that you are going to use (add ``--slot <slot-name>``) before you swap.
+* The Web App restarts, so Firely Server is briefly unavailable, and loads its conformance resources again on startup. The health check on ``/$liveness`` (see step 3 of `Deployment`_) gives it time to start.
+
 More information
 ----------------
 About Azure zip deployment: https://learn.microsoft.com/en-us/azure/app-service/deploy-zip?tabs=cli

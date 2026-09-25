@@ -107,4 +107,19 @@ The following parameters are available for configuring the Firely Server deploym
   (the extensions are located in the ``Extensions + applications`` in the ``Settings`` section of the AKS instance where the extension is deployed). If updating the extension parameters,
   you need to encode the JSON values in base64 format.
 
+.. _deploy_azure_marketplace_envvar:
 
+Starting Firely Server with environment variables
+-------------------------------------------------
+
+The Azure Marketplace offer has no parameter for environment variables. If you have your configuration in an env file, e.g. ``firely-server.env`` exported by the Guided Setup, you can deploy Firely Server with the :ref:`Helm chart <deploy_helm>` directly and follow :ref:`deploy_helm_envvar`.
+
+Restarting after a change to the settings
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+After you changed the **appsettings** or **logsettings** parameter, check that the Firely Server pods in the ``firely-market-place`` namespace have restarted. If they have not, restart them:
+
+.. code-block:: bash
+
+   kubectl get deployments --namespace firely-market-place
+   kubectl rollout restart deployment/<firely-server-deployment> --namespace firely-market-place

@@ -440,6 +440,78 @@ If you use docker-compose, you can specify the variable in you docker-compose fi
        environment:
          - "VONK_License:LicenseString={ 'LicenseOptions': { 'Kind': 'Production', 'ValidUntil': '2022-10-30', 'Licensee': 'example@fire.ly', 'Plugins': [ ... ] }, 'Signature': '...' }"
 
+.. _docker_envvar:
+
+Starting Firely Server with environment variables
+-------------------------------------------------
+
+The examples above set environment variables one by one, with ``-e`` or in the ``environment`` section of a docker-compose file. If you have all variables in a file, e.g. ``firely-server.env`` exported by the Guided Setup, you can pass the whole file to Docker instead. See :ref:`configure_envvar_file` for the format of the file.
+
+With docker run
+^^^^^^^^^^^^^^^
+
+Use ``--env-file``:
+
+.. code-block:: bash
+
+   docker run -d -p 8080:4080 --name firely.server \
+     --env-file ./firely-server.env \
+     -v ${PWD}/firelyserver-license.json:/app/firelyserver-license.json \
+     firely/server
+
+``docker run --env-file`` takes each line literally: quotes are not removed and ``$`` is not expanded. So do not put quotes around the values.
+
+With docker compose
+^^^^^^^^^^^^^^^^^^^
+
+Use ``env_file``:
+
+.. code-block:: yaml
+   :linenos:
+
+   services:
+
+     vonk-web:
+       image: firely/server
+       ports:
+         - "8080:4080"
+       env_file:
+         - ./firely-server.env
+       volumes:
+         - .:/app/license
+
+You can still add an ``environment`` section next to ``env_file``. If a variable is in both, the value in ``environment`` wins.
+
+.. note::
+   Docker Compose applies variable interpolation to the values in an ``env_file``. If a value contains a ``$`` (e.g. in a password), write it as ``$$``, or put the value in single quotes.
+
+Restarting after a change to the env file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Docker reads the env file only when the container is **created**. ``docker restart`` and ``docker compose restart`` restart the existing container with the old variables, so a changed env file is **not** applied that way.
+
+To apply a changed ``firely-server.env``, recreate the container:
+
+* **docker run**: remove the container and run it again with the same command:
+
+  .. code-block:: bash
+
+     docker rm -f firely.server
+     docker run -d -p 8080:4080 --name firely.server \
+       --env-file ./firely-server.env \
+       -v ${PWD}/firelyserver-license.json:/app/firelyserver-license.json \
+       firely/server
+
+* **docker compose**: recreate the service:
+
+  .. code-block:: bash
+
+     docker compose -f docker-compose.yml up -d --force-recreate vonk-web
+
+Removing the container does not remove data that you stored outside of it, such as a mounted ``resourcedata`` folder or a SQL Server or MongoDB database. Data stored only inside the container (e.g. a SQLite database that is not on a mounted volume) is lost when the container is removed.
+
+To check which variables the new container got, run ``docker exec firely.server printenv``. Be aware that this prints secrets, such as connection strings, to your console.
+
 .. |br| raw:: html
 
    <br />

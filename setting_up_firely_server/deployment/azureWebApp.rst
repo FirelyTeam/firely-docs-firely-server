@@ -99,13 +99,14 @@ The Azure CLI expects a JSON file, not an env file. First convert ``firely-serve
 
 .. code-block:: powershell
 
-   $settings = Get-Content .\firely-server.env |
+   $settings = [ordered]@{}
+   Get-Content .\firely-server.env |
      Where-Object { $_ -match '^\s*[^#\s][^=]*=' } |
      ForEach-Object {
        $name, $value = $_ -split '=', 2
-       [ordered]@{ name = $name.Trim(); value = $value; slotSetting = $false }
+       $settings[$name.Trim()] = $value
      }
-   ConvertTo-Json -InputObject @($settings) | Set-Content .\firely-server.settings.json
+   ConvertTo-Json -InputObject $settings | Set-Content .\firely-server.settings.json
 
    az webapp config appsettings set `
      --resource-group <resource-group> `

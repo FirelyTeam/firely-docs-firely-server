@@ -478,7 +478,7 @@ Use ``env_file``:
        env_file:
          - ./firely-server.env
        volumes:
-         - .:/app/license
+         - ./firelyserver-license.json:/app/firelyserver-license.json
 
 You can still add an ``environment`` section next to ``env_file``. If a variable is in both, the value in ``environment`` wins.
 

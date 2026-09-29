@@ -59,7 +59,15 @@ Run Firely Server in a subshell, so the variables are only set for Firely Server
 .. code-block:: bash
 
    (
-     mapfile -t vars < <(grep -Ev '^\s*(#|$)' ./firely-server.env | tr -d '\r')
+     vars=()
+     while IFS= read -r line || [ -n "$line" ]; do
+       line=${line%$'\r'}
+       trimmed=${line#"${line%%[![:space:]]*}"}
+       case "$trimmed" in
+         ''|\#*) continue ;;
+       esac
+       vars+=("$line")
+     done < ./firely-server.env
      exec env "${vars[@]}" dotnet ./Firely.Server.dll
    )
 

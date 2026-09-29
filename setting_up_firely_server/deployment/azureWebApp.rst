@@ -106,7 +106,7 @@ The Azure CLI expects a JSON file, not an env file. First convert ``firely-serve
        $name, $value = $_ -split '=', 2
        $settings[$name.Trim()] = $value
      }
-   ConvertTo-Json -InputObject $settings | Set-Content .\firely-server.settings.json
+   [System.IO.File]::WriteAllText('.\firely-server.settings.json', (ConvertTo-Json -InputObject $settings), [System.Text.UTF8Encoding]::new($false))
 
    az webapp config appsettings set `
      --resource-group <resource-group> `

@@ -117,7 +117,7 @@ The Azure Marketplace offer has no parameter for environment variables. If you h
 Restarting after a change to the settings
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-After you changed the **appsettings** or **logsettings** parameter, check that the Firely Server pods in the ``firely-market-place`` namespace have restarted. If they have not, restart them:
+After you change the **appsettings** or **logsettings** parameter, check that the Firely Server pods in the ``firely-market-place`` namespace have restarted. If they have not, restart them:
 
 .. code-block:: bash
 

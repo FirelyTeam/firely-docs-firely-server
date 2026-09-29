@@ -54,22 +54,29 @@ Running the script with ``-File`` starts a new process, so the variables do not 
 Linux / macOS (bash)
 ^^^^^^^^^^^^^^^^^^^^
 
-Run Firely Server in a subshell, so the variables are only set for Firely Server:
+Create ``start-firely-server.sh`` in the working directory:
 
 .. code-block:: bash
 
-   (
-     vars=()
-     while IFS= read -r line || [ -n "$line" ]; do
-       line=${line%$'\r'}
-       trimmed=${line#"${line%%[![:space:]]*}"}
-       case "$trimmed" in
-         ''|\#*) continue ;;
-       esac
-       vars+=("$line")
-     done < ./firely-server.env
-     exec env "${vars[@]}" dotnet ./Firely.Server.dll
-   )
+   #!/usr/bin/env bash
+   cd "$(dirname "$0")"
+   vars=()
+   while IFS= read -r line || [ -n "$line" ]; do
+     line=${line%$'\r'}
+     trimmed=${line#"${line%%[![:space:]]*}"}
+     case "$trimmed" in
+       ''|\#*) continue ;;
+     esac
+     vars+=("$line")
+   done < ./firely-server.env
+   exec env "${vars[@]}" dotnet ./Firely.Server.dll
+
+Make it executable and run it:
+
+.. code-block:: bash
+
+   chmod +x ./start-firely-server.sh
+   ./start-firely-server.sh
 
 Each line of the file is passed to ``env`` as-is, so special characters in values (e.g. ``;``, ``$`` or ``!`` in a connection string) are not interpreted by the shell.
 Avoid ``source firely-server.env`` / ``export $(cat firely-server.env)``: the shell then parses the values, which breaks on such characters, and on variable names that contain a ``.``, such as ``VONKLOG_Serilog__MinimumLevel__Override__Vonk.Configuration``.
@@ -77,17 +84,16 @@ Avoid ``source firely-server.env`` / ``export $(cat firely-server.env)``: the sh
 Running as a service
 ^^^^^^^^^^^^^^^^^^^^
 
-**systemd (Linux)**: reference the file from the unit file with ``EnvironmentFile``, for example in ``/etc/systemd/system/firely-server.service``:
+**systemd (Linux)**: systemd's ``EnvironmentFile`` does not support variable names containing a ``.``, so use the Bash wrapper above to load the full env-file format. For example, in ``/etc/systemd/system/firely-server.service``:
 
 .. code-block:: ini
 
    [Service]
    WorkingDirectory=/opt/firely-server
-   EnvironmentFile=/opt/firely-server/firely-server.env
-   ExecStart=/usr/bin/dotnet /opt/firely-server/Firely.Server.dll
+   ExecStart=/opt/firely-server/start-firely-server.sh
    Restart=on-failure
 
-systemd reads the ``EnvironmentFile`` again each time the service starts. If systemd rejects a line, it logs ``Ignoring invalid environment assignment`` in the journal (``journalctl -u firely-server``).
+The wrapper reads ``firely-server.env`` each time the service starts.
 
 **Windows Service**: a Windows service does not pick up variables from your PowerShell session, and it only sees changed machine-wide environment variables after a reboot. Instead, store the variables on the service itself. Run this in an elevated PowerShell (replace ``FirelyServer`` with the name of your service):
 

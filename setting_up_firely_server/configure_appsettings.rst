@@ -215,7 +215,7 @@ The file contains one variable per line, in the format ``NAME=value``. Lines sta
 
 Keep in mind:
 
-* **Firely Server does not read this file itself.** The variables have to be loaded into the environment of the Firely Server process by whatever starts it: your shell, a service manager, Docker, Kubernetes or Azure. Each page under :ref:`deployment` has a section *Starting Firely Server with environment variables* that shows how to do this.
+* **Firely Server does not read this file itself.** The variables have to be loaded into the environment of the Firely Server process by whatever starts it: your shell, a service manager, Docker, Kubernetes or Azure. The environment-variable sections on the Binaries, Docker, Azure App Service, Kubernetes/Helm, and Azure Marketplace pages describe the available approaches.
 * **Environment variables are only read at startup.** After changing the file, load the variables again and restart Firely Server. Depending on the deployment, a plain restart is not enough. For example, a Docker container has to be recreated. See the deployment pages for the right sequence.
 * **Watch the settings hierarchy.** Environment variables override ``appsettings.json``, but are overridden by ``appsettings.instance.json`` (see :ref:`configure_levels`). If a setting is in the env file and also in ``appsettings.instance.json``, the value from ``appsettings.instance.json`` wins.
 * Use ``__`` (double underscore) as the level separator, not ``:``. Not every tool accepts a colon in a variable name.

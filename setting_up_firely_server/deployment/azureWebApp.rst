@@ -106,14 +106,15 @@ The Azure CLI expects a JSON file, not an env file. First convert ``firely-serve
        $name, $value = $_ -split '=', 2
        $settings[$name.Trim()] = $value
      }
-   [System.IO.File]::WriteAllText('.\firely-server.settings.json', (ConvertTo-Json -InputObject $settings), [System.Text.UTF8Encoding]::new($false))
+   $jsonPath = Join-Path (Get-Location) 'firely-server.settings.json'
+   [System.IO.File]::WriteAllText($jsonPath, (ConvertTo-Json -InputObject $settings), [System.Text.UTF8Encoding]::new($false))
 
    az webapp config appsettings set `
      --resource-group <resource-group> `
      --name <firely-server-app> `
      --settings "@firely-server.settings.json"
 
-   Remove-Item .\firely-server.settings.json   # the file contains secrets
+   Remove-Item $jsonPath   # the file contains secrets
 
 .. tip::
    For secrets like connection strings, consider `Key Vault references <https://learn.microsoft.com/en-us/azure/app-service/app-service-key-vault-references>`_ instead of plain values in the app settings.

@@ -26,10 +26,10 @@ If you have your configuration in a file, e.g. ``firely-server.env`` exported by
 
    .. code-block:: bash
 
-     kubectl create secret generic firely-server-env \
-       --namespace <namespace> \
-       --from-env-file=./firely-server.env \
-       --save-config
+      kubectl create secret generic firely-server-env \
+        --namespace <namespace> \
+        --from-env-file=./firely-server.env \
+        --save-config
 
    Each ``NAME=value`` line becomes one entry in the Secret. Quotes are not removed, so do not put quotes around the values.
 

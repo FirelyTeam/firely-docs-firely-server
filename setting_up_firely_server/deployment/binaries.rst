@@ -66,8 +66,9 @@ Create ``start-firely-server.sh`` in the working directory:
      trimmed=${line#"${line%%[![:space:]]*}"}
      case "$trimmed" in
        ''|\#*) continue ;;
+       *=*) vars+=("$trimmed") ;;
+       *) echo "Skipping invalid line: $trimmed" >&2 ;;
      esac
-     vars+=("$line")
    done < ./firely-server.env
    exec env "${vars[@]}" dotnet ./Firely.Server.dll
 
@@ -78,7 +79,7 @@ Make it executable and run it:
    chmod +x ./start-firely-server.sh
    ./start-firely-server.sh
 
-Each line of the file is passed to ``env`` as-is, so special characters in values (e.g. ``;``, ``$`` or ``!`` in a connection string) are not interpreted by the shell.
+Each ``NAME=value`` line of the file is passed to ``env`` as-is, so special characters in values (e.g. ``;``, ``$`` or ``!`` in a connection string) are not interpreted by the shell.
 Avoid ``source firely-server.env`` / ``export $(cat firely-server.env)``: the shell then parses the values, which breaks on such characters, and on variable names that contain a ``.``, such as ``VONKLOG_Serilog__MinimumLevel__Override__Vonk.Configuration``.
 
 Running as a service
@@ -95,7 +96,7 @@ Running as a service
 
 The wrapper reads ``firely-server.env`` each time the service starts.
 
-**Windows Service**: a Windows service does not pick up variables from your PowerShell session, and it only sees changed machine-wide environment variables after a reboot. Instead, store the variables on the service itself. Run this in an elevated PowerShell (replace ``FirelyServer`` with the name of your service):
+**Windows Service**: a Windows service does not pick up variables from your PowerShell session, and it only sees changed machine-wide environment variables after a reboot. Instead, store the variables on the service itself. Run this in an elevated PowerShell (replace ``FirelyServer`` with the name of your service). An elevated PowerShell usually starts in ``C:\Windows\System32``, so first go to the folder that contains ``firely-server.env``, e.g. ``Set-Location C:\FirelyServer``:
 
 .. code-block:: powershell
 

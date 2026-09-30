@@ -483,7 +483,7 @@ Use ``env_file``:
 You can still add an ``environment`` section next to ``env_file``. If a variable is in both, the value in ``environment`` wins.
 
 .. note::
-   Docker Compose applies variable interpolation to the values in an ``env_file``. If a value contains a ``$`` (e.g. in a password), write it as ``$$``, or put the value in single quotes.
+   Docker Compose applies variable interpolation to the values in an ``env_file``. If a value contains a ``$`` (e.g. in a password), write it as ``$$``, or put the value in single quotes. Only Docker Compose removes these escapes: ``docker run --env-file``, Kubernetes and the start scripts on the other deployment pages would keep ``$$`` or the quotes as part of the value. So a file with such escapes can only be used with Docker Compose.
 
 Restarting after a change to the env file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -510,7 +510,7 @@ To apply a changed ``firely-server.env``, recreate the container:
 
 Removing the container does not remove data that you stored outside of it, such as a mounted ``resourcedata`` folder or a SQL Server or MongoDB database. Data stored only inside the container (e.g. a SQLite database that is not on a mounted volume) is lost when the container is removed.
 
-To check which variables the new container got, run ``docker exec firely.server printenv``. Be aware that this prints secrets, such as connection strings, to your console.
+To check which variables the new container got, run ``docker exec firely.server printenv`` (with docker run) or ``docker compose -f docker-compose.yml exec vonk-web printenv`` (with docker compose). Be aware that this prints secrets, such as connection strings, to your console.
 
 .. |br| raw:: html
 

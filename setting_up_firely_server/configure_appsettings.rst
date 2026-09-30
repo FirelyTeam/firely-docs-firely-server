@@ -219,7 +219,7 @@ Keep in mind:
 * **Environment variables are only read at startup.** After changing the file, load the variables again and restart Firely Server. Depending on the deployment, a plain restart is not enough. For example, a Docker container has to be recreated. See the deployment pages for the right sequence.
 * **Watch the settings hierarchy.** Environment variables override ``appsettings.json``, but are overridden by ``appsettings.instance.json`` (see :ref:`configure_levels`). If a setting is in the env file and also in ``appsettings.instance.json``, the value from ``appsettings.instance.json`` wins.
 * Use ``__`` (double underscore) as the level separator, not ``:``. Not every tool accepts a colon in a variable name.
-* Don't put quotes around values, and keep each value on a single line. Tools handle quotes differently. For example, ``docker run --env-file`` passes quotes on as part of the value.
+* Don't put quotes around values, and keep each value on a single line. Tools handle quotes differently. For example, ``docker run --env-file`` passes quotes on as part of the value. The same goes for escapes such as ``$$``, which only Docker Compose understands (see :ref:`docker_envvar`).
 * Save the file with Unix (LF) line endings when it is used on Linux or in a container. Otherwise a trailing carriage return can end up in the values.
 * The file usually contains secrets such as connection strings. Restrict access to the file, and do not commit it to source control.
 

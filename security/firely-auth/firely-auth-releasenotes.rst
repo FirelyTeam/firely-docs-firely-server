@@ -3,6 +3,58 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.7.1:
+
+Release 4.7.1, September 30th, 2026
+------------------------------------
+
+.. attention::
+
+    Please review the following before upgrading:
+
+    - **Clients with Allow Online Access receive refresh tokens.** Clients that have ``AllowOnlineAccess`` switched on, including public clients, will start receiving refresh tokens when they request the ``online_access`` scope. No configuration change is needed for this. Check which clients have this setting switched on before you upgrade. See the Feature section below.
+    - **Users have to log in again.** Firely Auth now stores login sessions on the server. Login cookies issued by earlier versions are not recognised, so users who are logged in during the upgrade are asked to log in once more.
+    - **New database migration.** This release adds a new database migration for both the SQL Server and SQLite user stores. This migration will be applied automatically by Firely Auth on startup as part of your regular upgrade procedure.
+    - **More log output.** Firely Auth now logs more at the ``Information`` level. Each login adds about one line, each token request about two, and each completed authorization flow about ten. If you forward logs to a metered sink, see the Feature section below for how to reduce this.
+
+Feature
+^^^^^^^
+
+#. SMART ``online_access`` is now supported with refresh tokens. Before, a client with ``AllowOnlineAccess`` could request the ``online_access`` scope, but it did not get a refresh token. Now the client gets a refresh token that only works while the user's Firely Auth session exists. The token is revoked when the user logs out or when the session expires (see ``AuthenticationCookieExpiration`` in :ref:`firely_auth_settings_account`). Using the refresh token does not extend the session.
+
+   - A client only needs ``AllowOnlineAccess`` for this. ``AllowOfflineAccess`` is not required.
+   - ``offline_access`` refresh tokens have not changed. They are not tied to the session and still work after the user logs out, also when ``online_access`` is requested in the same request.
+   - To stop a client from receiving these refresh tokens, switch ``AllowOnlineAccess`` off for it in the admin dashboard or through the management API. After that, Firely Auth rejects requests from that client that include ``online_access``. Before this release, such requests were accepted without a refresh token.
+
+#. Logins and token requests are now logged together with the ``client_id`` they belong to, so you can see which client was used for each login. Firely Auth now logs the success, failure and error events of Duende IdentityServer, such as ``UserLoginSuccessEvent``, ``UserLoginFailureEvent``, ``TokenIssuedSuccessEvent``, ``ClientAuthenticationFailureEvent``, ``ConsentGrantedEvent``, ``UserLogoutSuccessEvent`` and ``GrantsRevokedEvent``. ``TokenIssuedSuccessEvent`` is the only way to see which client made a ``client_credentials`` request or a refresh token request. Token values are never logged in full. Only their last four characters are shown. To go back to the old log level, add this override to ``logsettings.instance.json``:
+
+   .. code-block:: json
+
+       {
+         "Serilog": {
+           "MinimumLevel": {
+             "Override": {
+               "Duende.IdentityServer.Events": "Warning"
+             }
+           }
+         }
+       }
+
+#. Log lines that Firely Auth writes during an authorization flow now contain a ``FlowId``. One authorization is made up of many HTTP requests: ``/connect/authorize``, the round trip to the external identity provider, the callbacks, and each interactive page (consent, disclaimers, launch context, authorized representative, MFA enrolment). With the ``FlowId`` you can follow all of these requests as one flow in the log. The id is calculated from the authorize request itself, so it does not need a cookie, storage or configuration. The default output templates show it as ``[Flow: {FlowId}]`` right after ``[ReqId: {RequestId}]``. If you have your own ``outputTemplate`` in ``logsettings.instance.json``, add ``{FlowId}`` to it to see the id. The ``FlowId`` is only added to Firely Auth's own log lines. Lines that Duende IdentityServer writes from its endpoints do not have it.
+#. The steps of an authorization flow are now logged at the ``Information`` level. For each interactive step, Firely Auth logs when the step is required, when its page is shown and when the user completes it, together with the step name, client id and subject id. Firely Auth also logs the external login callback (with the provider and client id) and the two-factor challenge at login. A skipped fhirUser lookup, because the FHIR server settings are not loaded yet, is now logged as a ``Warning``. Some existing messages have also moved to a higher log level. The messages about 2FA being required or needing to be set up are now ``Information``. The three ways the ``$fhirUser-lookup`` operation can fail (HTTP failure, more than one match, other errors) are now ``Warning`` instead of ``Debug``, so a failing lookup is still logged when you lower the log level. To turn off the new flow log lines, add a ``"Firely.Auth.Core": "Warning"`` override to ``logsettings.instance.json``. You will then no longer see the steps of each flow in the log. None of the new log lines contain tokens, authorization codes or other sensitive data. The ``FlowId`` is a one-way hash.
+
+Fix
+^^^
+
+#. Firely Auth now correctly tells the difference between a user without a company and a user whose company fields are all empty. Before, a user with all company fields empty was read back as a user without a company, and Firely Auth logged an ``OptionalDependentWithoutIdentifyingPropertyWarning`` warning at startup. The new database migration fixes this for existing users. On SQL Server, Firely Auth also corrects the stored ID of the earlier ``AddUserCompany`` migration at startup, so existing databases do not apply it a second time.
+#. Updated Duende IdentityServer to version 7.4.12 and the .NET packages to 10.0.12. The Docker image now uses the ``10.0.12-alpine3.23`` ASP.NET base image.
+
+Security
+^^^^^^^^
+
+#. Only real management API access tokens now give access to the management API. Before, Firely Auth skipped the role check on its API endpoints for any signed-in user that had a claim with the management API scope (``http://server.fire.ly/auth/scope/authmanagement``) as its value, whatever the claim type. This included claims copied from an external identity provider. Now the role check is only skipped for a bearer access token for the management API that has this value in its ``scope`` claim. Management API clients that use ``client_credentials`` and admins who are logged in to the UI are not affected. No configuration change is needed.
+#. The login cookie is now invalidated on the server when the user logs out. Firely Auth now uses Duende IdentityServer server-side sessions. The login cookie only holds a session key, and the session itself is stored in the ``ServerSideSessions`` table of the user store. Logging out deletes the session, so a copy of the cookie can no longer be used afterwards. Before, the cookie stayed valid until it expired. Expired sessions are removed every 10 minutes. The table already exists in both the SQL Server and SQLite user stores, so this needs no migration and no configuration change. Firely Auth now reads the session from the user store for each authenticated request. Each time an ``online_access`` refresh token is rejected because its session has ended, Firely Auth logs a ``Warning`` that only contains the client id.
+
 .. _firelyauth_releasenotes_4.7.0:
 
 Release 4.7.0, September 2nd, 2026

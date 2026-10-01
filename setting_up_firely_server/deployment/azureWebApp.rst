@@ -97,7 +97,7 @@ In an Azure Web App, the *App settings* of the Web App (under *Settings* > *Envi
 .. note::
    On a Linux Web App, app setting names can't contain a ``:``. Always use ``__`` as the separator, e.g. ``VONK_SqlDbOptions__ConnectionString``. Note that ``VONK`` in this example is a prefix and thus only needs one underscore. 
 
-The Azure CLI expects a JSON file, not an env file. First convert ``firely-server.env`` to JSON, then apply it:
+The Azure CLI expects a JSON file, not an env file. The script below converts ``firely-server.env`` to a temporary file ``firely-server.env.json``, uploads it to the Web App and deletes it again. This file is only used by the Azure CLI. It is not an ``appsettings.json`` file and Firely Server does not read it:
 
 .. code-block:: powershell
 
@@ -108,13 +108,13 @@ The Azure CLI expects a JSON file, not an env file. First convert ``firely-serve
        $name, $value = $_ -split '=', 2
        $settings[$name.Trim()] = $value
      }
-   $jsonPath = Join-Path (Get-Location) 'firely-server.settings.json'
+   $jsonPath = Join-Path (Get-Location) 'firely-server.env.json'
    [System.IO.File]::WriteAllText($jsonPath, (ConvertTo-Json -InputObject $settings), [System.Text.UTF8Encoding]::new($false))
 
    az webapp config appsettings set `
      --resource-group <resource-group> `
      --name <firely-server-app> `
-     --settings "@firely-server.settings.json"
+     --settings "@firely-server.env.json"
 
    Remove-Item $jsonPath   # the file contains secrets
 

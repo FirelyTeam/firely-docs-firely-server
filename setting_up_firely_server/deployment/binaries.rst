@@ -25,98 +25,113 @@ If you provide (part of) the configuration as environment variables in a file, e
 
 The examples below assume that ``firely-server.env`` is in the Firely Server working directory.
 
-Windows (PowerShell)
-^^^^^^^^^^^^^^^^^^^^
+.. tab-set::
 
-Create a script ``start-firely-server.ps1`` in the working directory:
+   .. tab-item:: Windows (PowerShell)
 
-.. code-block:: powershell
+      **Start Firely Server**
 
-   # Load all NAME=value lines from firely-server.env into the environment of this process
-   Get-Content "$PSScriptRoot\firely-server.env" |
-     Where-Object { $_ -match '^\s*[^#\s][^=]*=' } |
-     ForEach-Object {
-       $name, $value = $_ -split '=', 2
-       [Environment]::SetEnvironmentVariable($name.Trim(), $value, 'Process')
-     }
+      Create a script ``start-firely-server.ps1`` in the working directory:
 
-   Set-Location $PSScriptRoot
-   dotnet .\Firely.Server.dll
+      .. code-block:: powershell
 
-Start Firely Server with:
+         # Load all NAME=value lines from firely-server.env into the environment of this process
+         Get-Content "$PSScriptRoot\firely-server.env" |
+           Where-Object { $_ -match '^\s*[^#\s][^=]*=' } |
+           ForEach-Object {
+             $name, $value = $_ -split '=', 2
+             [Environment]::SetEnvironmentVariable($name.Trim(), $value, 'Process')
+           }
 
-.. code-block:: powershell
+         Set-Location $PSScriptRoot
+         dotnet .\Firely.Server.dll
 
-   powershell -ExecutionPolicy Bypass -File .\start-firely-server.ps1
+      Start Firely Server with:
 
-Running the script with ``-File`` starts a new process, so the variables do not stay behind in your own PowerShell session.
+      .. code-block:: powershell
 
-Linux / macOS (bash)
-^^^^^^^^^^^^^^^^^^^^
+         powershell -ExecutionPolicy Bypass -File .\start-firely-server.ps1
 
-Create ``start-firely-server.sh`` in the working directory:
+      Running the script with ``-File`` starts a new process, so the variables do not stay behind in your own PowerShell session.
 
-.. code-block:: bash
+      **Running as a Windows Service**
 
-   #!/usr/bin/env bash
-   cd "$(dirname "$0")"
-   vars=()
-   while IFS= read -r line || [ -n "$line" ]; do
-     line=${line%$'\r'}
-     trimmed=${line#"${line%%[![:space:]]*}"}
-     case "$trimmed" in
-       ''|\#*) continue ;;
-       *=*) vars+=("$trimmed") ;;
-       *) echo "Skipping invalid line: $trimmed" >&2 ;;
-     esac
-   done < ./firely-server.env
-   exec env "${vars[@]}" dotnet ./Firely.Server.dll
+      A Windows service does not pick up variables from your PowerShell session, and it only sees changed machine-wide environment variables after a reboot. Instead, store the variables on the service itself. Run this in an elevated PowerShell (replace ``FirelyServer`` with the name of your service). An elevated PowerShell usually starts in ``C:\Windows\System32``, so first go to the folder that contains ``firely-server.env``, e.g. ``Set-Location C:\FirelyServer``:
 
-Make it executable and run it:
+      .. code-block:: powershell
 
-.. code-block:: bash
+         $vars = Get-Content .\firely-server.env | Where-Object { $_ -match '^\s*[^#\s][^=]*=' }
+         New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\FirelyServer' `
+           -Name Environment -PropertyType MultiString -Value $vars -Force
 
-   chmod +x ./start-firely-server.sh
-   ./start-firely-server.sh
+      **Restarting after a change to the env file**
 
-Each ``NAME=value`` line of the file is passed to ``env`` as-is, so special characters in values (e.g. ``;``, ``$`` or ``!`` in a connection string) are not interpreted by the shell.
-Avoid ``source firely-server.env`` / ``export $(cat firely-server.env)``: the shell then parses the values, which breaks on such characters, and on variable names that contain a ``.``, such as ``VONKLOG_Serilog__MinimumLevel__Override__Vonk.Configuration``.
+      Firely Server only reads environment variables at startup. After you change ``firely-server.env``:
 
-Running as a service
-^^^^^^^^^^^^^^^^^^^^
+      #. Stop Firely Server (``Ctrl+C`` in the console window, or stop the service).
+      #. Load the variables again and start Firely Server:
 
-**systemd (Linux)**: systemd's ``EnvironmentFile`` does not support variable names containing a ``.``, so use the Bash wrapper above to load the full env-file format. For example, in ``/etc/systemd/system/firely-server.service``:
+         * **PowerShell**: run the start command above again. Because the variables are set for the Firely Server process only, variables that you removed from the file are gone as well.
+         * **Windows Service**: run the ``New-ItemProperty`` command above again, then ``Restart-Service FirelyServer``.
 
-.. code-block:: ini
+      #. Check the startup log to verify the resulting configuration (see :ref:`configure_log`).
 
-   [Service]
-   WorkingDirectory=/opt/firely-server
-   ExecStart=/opt/firely-server/start-firely-server.sh
-   Restart=on-failure
+   .. tab-item:: Linux / macOS (bash)
 
-The wrapper reads ``firely-server.env`` each time the service starts.
+      **Start Firely Server**
 
-**Windows Service**: a Windows service does not pick up variables from your PowerShell session, and it only sees changed machine-wide environment variables after a reboot. Instead, store the variables on the service itself. Run this in an elevated PowerShell (replace ``FirelyServer`` with the name of your service). An elevated PowerShell usually starts in ``C:\Windows\System32``, so first go to the folder that contains ``firely-server.env``, e.g. ``Set-Location C:\FirelyServer``:
+      Create ``start-firely-server.sh`` in the working directory:
 
-.. code-block:: powershell
+      .. code-block:: bash
 
-   $vars = Get-Content .\firely-server.env | Where-Object { $_ -match '^\s*[^#\s][^=]*=' }
-   New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Services\FirelyServer' `
-     -Name Environment -PropertyType MultiString -Value $vars -Force
+         #!/usr/bin/env bash
+         cd "$(dirname "$0")"
+         vars=()
+         while IFS= read -r line || [ -n "$line" ]; do
+           line=${line%$'\r'}
+           trimmed=${line#"${line%%[![:space:]]*}"}
+           case "$trimmed" in
+             ''|\#*) continue ;;
+             *=*) vars+=("$trimmed") ;;
+             *) echo "Skipping invalid line: $trimmed" >&2 ;;
+           esac
+         done < ./firely-server.env
+         exec env "${vars[@]}" dotnet ./Firely.Server.dll
 
-Restarting after a change to the env file
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+      Make it executable and run it:
 
-Firely Server only reads environment variables at startup. After you change ``firely-server.env``:
+      .. code-block:: bash
 
-#. Stop Firely Server (``Ctrl+C`` in the console window, or stop the service).
-#. Load the variables again and start Firely Server:
+         chmod +x ./start-firely-server.sh
+         ./start-firely-server.sh
 
-   * **PowerShell / bash**: run the start command above again. Because the variables are set for the Firely Server process only, variables that you removed from the file are gone as well.
-   * **systemd**: ``sudo systemctl restart firely-server``. You only need ``sudo systemctl daemon-reload`` if you changed the unit file itself, not for a change in the env file.
-   * **Windows Service**: run the ``New-ItemProperty`` command above again, then ``Restart-Service FirelyServer``.
+      Each ``NAME=value`` line of the file is passed to ``env`` as-is, so special characters in values (e.g. ``;``, ``$`` or ``!`` in a connection string) are not interpreted by the shell.
+      Avoid ``source firely-server.env`` / ``export $(cat firely-server.env)``: the shell then parses the values, which breaks on such characters, and on variable names that contain a ``.``, such as ``VONKLOG_Serilog__MinimumLevel__Override__Vonk.Configuration``.
 
-#. Check the startup log to verify the resulting configuration (see :ref:`configure_log`).
+      **Running as a systemd service (Linux)**
+
+      systemd's ``EnvironmentFile`` does not support variable names containing a ``.``, so use the Bash wrapper above to load the full env-file format. For example, in ``/etc/systemd/system/firely-server.service``:
+
+      .. code-block:: ini
+
+         [Service]
+         WorkingDirectory=/opt/firely-server
+         ExecStart=/opt/firely-server/start-firely-server.sh
+         Restart=on-failure
+
+      The wrapper reads ``firely-server.env`` each time the service starts.
+
+      **Restarting after a change to the env file**
+
+      Firely Server only reads environment variables at startup. After you change ``firely-server.env``:
+
+      #. Stop Firely Server (``Ctrl+C`` in the terminal, or stop the service).
+      #. Load the variables again and start Firely Server:
+
+         * **bash**: run the start command above again. Because the variables are set for the Firely Server process only, variables that you removed from the file are gone as well.
+         * **systemd**: ``sudo systemctl restart firely-server``. You only need ``sudo systemctl daemon-reload`` if you changed the unit file itself, not for a change in the env file.
+
+      #. Check the startup log to verify the resulting configuration (see :ref:`configure_log`).
 
 .. note::
    If you have set Firely Server variables in your user or system environment in the past (e.g. with ``setx`` or in the System Properties dialog), they are still applied in addition to the file. Remove them to avoid confusion about which value is used.

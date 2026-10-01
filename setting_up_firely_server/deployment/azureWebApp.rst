@@ -66,6 +66,8 @@ Deployment
          --src-path <path-to-zip-file> \
          --type zip --clean true --restart true
 
+   .. warning::
+      ``--clean true`` removes all files from the web root before the zip file is extracted. This includes the SQLite administration database (``./data/vonkadmin.db``), which is replaced by the pre-built database from the zip file. Conformance resources that you added later, e.g. through the :ref:`administration API <administration_api>`, are lost after such a redeployment. Include your own conformance resources in the zip file (see :ref:`conformance_import`) so they are imported again, or use SQL Server or MongoDB for the administration database.
 
    After deploying the .zip file using the Azure CLI, verify that all content has been extracted into the top-level webroot directory.
    
@@ -93,7 +95,7 @@ Starting Firely Server with environment variables
 In an Azure Web App, the *App settings* of the Web App (under *Settings* > *Environment variables*) are passed to Firely Server as environment variables. If you have your configuration in a file, e.g. ``firely-server.env`` exported by the Guided Setup, you can upload all variables in one go with the Azure CLI. See :ref:`configure_envvar_file` for the format of the file.
 
 .. note::
-   On a Linux Web App, app setting names can't contain a ``:``. Always use ``__`` as the separator, e.g. ``VONK_SqlDbOptions__ConnectionString``.
+   On a Linux Web App, app setting names can't contain a ``:``. Always use ``__`` as the separator, e.g. ``VONK_SqlDbOptions__ConnectionString``. Note that ``VONK`` in this example is a prefix and thus only needs one underscore. 
 
 The Azure CLI expects a JSON file, not an env file. First convert ``firely-server.env`` to JSON, then apply it:
 
@@ -134,7 +136,7 @@ After you change ``firely-server.env``, run the commands above again. App Servic
        --setting-names VONK_Some__Removed__Setting
 
 * If you use deployment slots, apply the settings to the slot that you are going to use (add ``--slot <slot-name>``) before you swap.
-* The Web App restarts, so Firely Server is briefly unavailable, and loads its conformance resources again on startup. The health check on ``/$liveness`` (see step 3 of `Deployment`_) gives it time to start.
+* The Web App restarts, so Firely Server is briefly unavailable. The health check on ``/$liveness`` (see step 3 of `Deployment`_) gives it time to start. A restart does not reset the files in the web root, so the SQLite administration database (``./data/vonkadmin.db``) is kept and the conformance resources are not imported again.
 
 More information
 ----------------

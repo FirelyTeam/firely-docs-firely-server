@@ -1213,32 +1213,60 @@ PubSub Messaging
 CDS Hooks
 ---------
 
-Please note that the CDS Hooks functionality and plugins are currently in beta and not yet available for production use.
-Their implementation and public API may change in the future. 
+The CDS Hooks plugins below are included in a pipeline branch of their own, with ``"Path": "/cds-services"``, not in the branch on ``/``. A CDS Service is only offered when it is also named under ``CdsHooks:Services`` in the appsettings. See :ref:`CDS Hooks <feature_cds_hooks>` for more information.
 
 .. _vonk_plugins_cds_hooks:
 
 :Name: CDS Hooks
-:Configuration: ``Vonk.Plugin.CdsHooks.Configuration``
+:Configuration: ``Vonk.Plugin.CdsHooks.Infra``
 :License token: http://fire.ly/server/plugins/cds-hooks
-:Order: 900 (core configuration) and 1190 (discovery service)
-:Description: Implements the CDS Hooks framework, allowing external systems to interact with Firely Server using the CDS Hooks protocol. This plugin provides the endpoint for the CDS Hooks Discovery document, and infrastructure for executing hooks. See :ref:`CDS Hooks <feature_cds_hooks>` for more information.
+:Order: 1110 - 1150, and 8000
+:Description: Serves CDS Hooks on the ``/cds-services`` branch: the discovery document, the invocation of CDS Services, authorization of CDS Clients, and validation of the payloads. List it first in the ``Include`` of the ``/cds-services`` branch. It consists of several configuration classes; include them all by naming the namespace ``Vonk.Plugin.CdsHooks.Infra``. This plugin does not offer any CDS Service itself. See :ref:`CDS Hooks <feature_cds_hooks>`.
 
 .. _vonk_plugins_cds_hooks_patient_view:
 
-:Name: CDS Hooks Patient View Test Hook
-:Configuration: ``Vonk.Plugin.CdsHooks.PatientViewTestHook``
+:Name: CDS Hooks Patient View example service
+:Configuration: ``Vonk.Plugin.CdsHooks.Examples.PatientViewTestCdsServiceConfiguration``
 :License token: http://fire.ly/server/plugins/cds-hooks
 :Order: 5500
-:Description: Example CDS Hooks service. See :ref:`CDS Hooks <feature_cds_hooks>` for more information.
+:Description: Example CDS Service ``patient-view-test-hook`` on the ``patient-view`` hook, greeting the patient in view. It also serves as the template for your own CDS Services, see :ref:`vonk_reference_api_cds_hooks`. See :ref:`CDS Hooks <feature_cds_hooks_examples>`.
 
 .. _vonk_plugins_cds_hooks_crd_order_select:
 
-:Name: CDS Hooks CRD Order Select Hook
-:Configuration: ``Vonk.Plugin.CdsHooks.CrdOrderSelectHook.CrdOrderSelectHookConfiguration``
+:Name: CDS Hooks CRD Order Select example service
+:Configuration: ``Vonk.Plugin.CdsHooks.Examples.CrdOrderSelectCdsServiceConfiguration``
 :License token: http://fire.ly/server/plugins/crd
 :Order: 5510
-:Description: Implements the CRD (Coverage Requirements Discovery) ``order-select`` CDS Hook. See :ref:`CDS Hooks <feature_cds_hooks>` for more information.
+:Description: Example CDS Service ``crd-order-select-hook``, implementing the Da Vinci CRD (Coverage Requirements Discovery) ``order-select`` hook. Requires the CQL plugin and the :ref:`Member Match operation <vonk_plugins_member_match>` in the branch on ``/``. See :ref:`CDS Hooks <feature_cds_hooks_examples>`.
+
+CDS Hooks (legacy)
+------------------
+
+These plugins implement CDS Hooks the way earlier versions of Firely Server did, by mapping CDS Hooks requests onto FHIR custom operations in the branch on ``/``. They are superseded by the CDS Hooks plugins above, and will be removed in the next major version. Do not combine them with the ``/cds-services`` branch: both claim the same route. Before Firely Server 6.11.0, these plugins were named ``Vonk.Plugin.CdsHooks``; do not use that name in an ``Include`` anymore. See :ref:`feature_cds_hooks_upgrade` for upgrading and migrating.
+
+.. _vonk_plugins_cds_hooks_legacy:
+
+:Name: CDS Hooks (legacy)
+:Configuration: ``Vonk.Plugin.CdsHooks.Legacy.Configuration``
+:License token: http://fire.ly/server/plugins/cds-hooks
+:Order: 900 (operation mapping), 1123 (content adapter) and 1190 (discovery service)
+:Description: Maps CDS Hooks requests on ``/cds-services`` onto FHIR custom operations, and serves the CDS Hooks discovery document.
+
+.. _vonk_plugins_cds_hooks_legacy_patient_view:
+
+:Name: CDS Hooks Patient View Test Hook (legacy)
+:Configuration: ``Vonk.Plugin.CdsHooks.Legacy.PatientViewTestHook``
+:License token: http://fire.ly/server/plugins/cds-hooks
+:Order: 5500
+:Description: Example CDS Hooks service ``patient-view-test-hook`` for the legacy implementation.
+
+.. _vonk_plugins_cds_hooks_legacy_crd_order_select:
+
+:Name: CDS Hooks CRD Order Select Hook (legacy)
+:Configuration: ``Vonk.Plugin.CdsHooks.Legacy.CrdOrderSelectHook.CrdOrderSelectHookConfiguration``
+:License token: http://fire.ly/server/plugins/crd
+:Order: 5510
+:Description: Implements the CRD (Coverage Requirements Discovery) ``order-select`` CDS Hook for the legacy implementation.
 
 .. _vonk_tools_fsi:
 

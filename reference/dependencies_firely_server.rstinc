@@ -1,0 +1,393 @@
+.. list-table::
+   :header-rows: 1
+
+   * - Package
+     - License
+   * - `Antlr4.Runtime.Standard <https://www.nuget.org/packages/Antlr4.Runtime.Standard>`__
+     - BSD-3-Clause
+   * - `AWSSDK.CloudWatchLogs <https://www.nuget.org/packages/AWSSDK.CloudWatchLogs>`__
+     - Apache-2.0
+   * - `AWSSDK.Core <https://www.nuget.org/packages/AWSSDK.Core>`__
+     - Apache-2.0
+   * - `Azure.Core <https://www.nuget.org/packages/Azure.Core>`__
+     - MIT
+   * - `Azure.Core.Amqp <https://www.nuget.org/packages/Azure.Core.Amqp>`__
+     - MIT
+   * - `Azure.Identity <https://www.nuget.org/packages/Azure.Identity>`__
+     - MIT
+   * - `Azure.Messaging.ServiceBus <https://www.nuget.org/packages/Azure.Messaging.ServiceBus>`__
+     - MIT
+   * - `Azure.Storage.Blobs <https://www.nuget.org/packages/Azure.Storage.Blobs>`__
+     - MIT
+   * - `Azure.Storage.Blobs.Batch <https://www.nuget.org/packages/Azure.Storage.Blobs.Batch>`__
+     - MIT
+   * - `Azure.Storage.Common <https://www.nuget.org/packages/Azure.Storage.Common>`__
+     - MIT
+   * - `Azure.Storage.Files.Shares <https://www.nuget.org/packages/Azure.Storage.Files.Shares>`__
+     - MIT
+   * - `Confluent.Kafka <https://www.nuget.org/packages/Confluent.Kafka>`__
+     - Apache-2.0
+   * - `CreativeCode.JWK <https://www.nuget.org/packages/CreativeCode.JWK>`__
+     - MIT
+   * - `CreativeCode.JWS <https://www.nuget.org/packages/CreativeCode.JWS>`__
+     - MIT
+   * - `CsvHelper <https://www.nuget.org/packages/CsvHelper>`__
+     - MS-PL OR Apache-2.0
+   * - `Dapper <https://www.nuget.org/packages/Dapper>`__
+     - Apache-2.0
+   * - `DnsClient <https://www.nuget.org/packages/DnsClient>`__
+     - Apache-2.0
+   * - `Duende.AccessTokenManagement <https://www.nuget.org/packages/Duende.AccessTokenManagement>`__
+     - Apache-2.0
+   * - `Duende.IdentityModel <https://www.nuget.org/packages/Duende.IdentityModel>`__
+     - Apache-2.0
+   * - `Elastic.Channels <https://www.nuget.org/packages/Elastic.Channels>`__
+     - Apache-2.0
+   * - `Elastic.CommonSchema <https://www.nuget.org/packages/Elastic.CommonSchema>`__
+     - Apache-2.0
+   * - `Elastic.CommonSchema.Serilog <https://www.nuget.org/packages/Elastic.CommonSchema.Serilog>`__
+     - Apache-2.0
+   * - `Elastic.Ingest.Elasticsearch <https://www.nuget.org/packages/Elastic.Ingest.Elasticsearch>`__
+     - Apache-2.0
+   * - `Elastic.Ingest.Elasticsearch.CommonSchema <https://www.nuget.org/packages/Elastic.Ingest.Elasticsearch.CommonSchema>`__
+     - Apache-2.0
+   * - `Elastic.Ingest.Transport <https://www.nuget.org/packages/Elastic.Ingest.Transport>`__
+     - Apache-2.0
+   * - `Elastic.Serilog.Sinks <https://www.nuget.org/packages/Elastic.Serilog.Sinks>`__
+     - Apache-2.0
+   * - `Elastic.Transport <https://www.nuget.org/packages/Elastic.Transport>`__
+     - Apache-2.0
+   * - `Fhir.Metrics <https://www.nuget.org/packages/Fhir.Metrics>`__
+     - BSD-3-Clause
+   * - `Firely.Fhir.Packages <https://www.nuget.org/packages/Firely.Fhir.Packages>`__
+     - BSD-3-Clause
+   * - `Firely.Fhir.Validation <https://www.nuget.org/packages/Firely.Fhir.Validation>`__
+     - BSD-3-Clause
+   * - `Firely.Fhir.Validation.Compilation <https://www.nuget.org/packages/Firely.Fhir.Validation.Compilation>`__
+     - BSD-3-Clause
+   * - `Firely.Fhir.Validation.Compilation.STU3 <https://www.nuget.org/packages/Firely.Fhir.Validation.Compilation.STU3>`__
+     - BSD-3-Clause
+   * - `Firely.Fhir.Validation.R4 <https://www.nuget.org/packages/Firely.Fhir.Validation.R4>`__
+     - BSD-3-Clause
+   * - `Firely.Fhir.Validation.R5 <https://www.nuget.org/packages/Firely.Fhir.Validation.R5>`__
+     - BSD-3-Clause
+   * - `Firely.Fhir.Validation.STU3 <https://www.nuget.org/packages/Firely.Fhir.Validation.STU3>`__
+     - BSD-3-Clause
+   * - `Firely.Server.Contracts <https://www.nuget.org/packages/Firely.Server.Contracts>`__
+     - Firely
+   * - `Google.Protobuf <https://www.nuget.org/packages/Google.Protobuf>`__
+     - BSD-3-Clause
+   * - `Grpc.Core.Api <https://www.nuget.org/packages/Grpc.Core.Api>`__
+     - Apache-2.0
+   * - `Grpc.Net.Client <https://www.nuget.org/packages/Grpc.Net.Client>`__
+     - Apache-2.0
+   * - `Grpc.Net.Common <https://www.nuget.org/packages/Grpc.Net.Common>`__
+     - Apache-2.0
+   * - `HL7.Cql.Abstractions <https://www.nuget.org/packages/HL7.Cql.Abstractions>`__
+     - BSD-3-Clause
+   * - `Hl7.Cql.CodeGeneration.NET <https://www.nuget.org/packages/Hl7.Cql.CodeGeneration.NET>`__
+     - BSD-3-Clause
+   * - `Hl7.Cql.Compiler <https://www.nuget.org/packages/Hl7.Cql.Compiler>`__
+     - BSD-3-Clause
+   * - `Hl7.Cql.CqlToElm <https://www.nuget.org/packages/Hl7.Cql.CqlToElm>`__
+     - BSD-3-Clause
+   * - `Hl7.Cql.CqlToElm.Grammar <https://www.nuget.org/packages/Hl7.Cql.CqlToElm.Grammar>`__
+     - BSD-3-Clause
+   * - `Hl7.Cql.Elm <https://www.nuget.org/packages/Hl7.Cql.Elm>`__
+     - BSD-3-Clause
+   * - `Hl7.Cql.Fhir <https://www.nuget.org/packages/Hl7.Cql.Fhir>`__
+     - BSD-3-Clause
+   * - `Hl7.Cql.Invocation <https://www.nuget.org/packages/Hl7.Cql.Invocation>`__
+     - BSD-3-Clause
+   * - `Hl7.Cql.Iso8601 <https://www.nuget.org/packages/Hl7.Cql.Iso8601>`__
+     - BSD-3-Clause
+   * - `Hl7.Cql.Model <https://www.nuget.org/packages/Hl7.Cql.Model>`__
+     - BSD-3-Clause
+   * - `Hl7.Cql.Packaging <https://www.nuget.org/packages/Hl7.Cql.Packaging>`__
+     - BSD-3-Clause
+   * - `Hl7.Cql.Runtime <https://www.nuget.org/packages/Hl7.Cql.Runtime>`__
+     - BSD-3-Clause
+   * - `Hl7.Fhir.Base <https://www.nuget.org/packages/Hl7.Fhir.Base>`__
+     - BSD-3-Clause
+   * - `Hl7.Fhir.Conformance <https://www.nuget.org/packages/Hl7.Fhir.Conformance>`__
+     - BSD-3-Clause
+   * - `Hl7.Fhir.R4 <https://www.nuget.org/packages/Hl7.Fhir.R4>`__
+     - BSD-3-Clause
+   * - `Hl7.Fhir.R5 <https://www.nuget.org/packages/Hl7.Fhir.R5>`__
+     - BSD-3-Clause
+   * - `Hl7.Fhir.STU3 <https://www.nuget.org/packages/Hl7.Fhir.STU3>`__
+     - BSD-3-Clause
+   * - `Humanizer.Core <https://www.nuget.org/packages/Humanizer.Core>`__
+     - MIT
+   * - `IdentityModel <https://www.nuget.org/packages/IdentityModel>`__
+     - Apache-2.0
+   * - `IdentityModel.AspNetCore.OAuth2Introspection <https://www.nuget.org/packages/IdentityModel.AspNetCore.OAuth2Introspection>`__
+     - Apache-2.0
+   * - `InfluxDB.Client <https://www.nuget.org/packages/InfluxDB.Client>`__
+     - MIT
+   * - `InfluxDB.Client.Core <https://www.nuget.org/packages/InfluxDB.Client.Core>`__
+     - MIT
+   * - `JetBrains.Annotations <https://www.nuget.org/packages/JetBrains.Annotations>`__
+     - MIT
+   * - `JsonSubTypes <https://www.nuget.org/packages/JsonSubTypes>`__
+     - MIT
+   * - `LazyCache <https://www.nuget.org/packages/LazyCache>`__
+     - MIT
+   * - `librdkafka.redist <https://www.nuget.org/packages/librdkafka.redist>`__
+     - BSD-2-Clause
+   * - `LinqKit.Core <https://www.nuget.org/packages/LinqKit.Core>`__
+     - MIT
+   * - `LinqKit.Microsoft.EntityFrameworkCore <https://www.nuget.org/packages/LinqKit.Microsoft.EntityFrameworkCore>`__
+     - MIT
+   * - `MassTransit <https://www.nuget.org/packages/MassTransit>`__
+     - Apache-2.0
+   * - `MassTransit.Abstractions <https://www.nuget.org/packages/MassTransit.Abstractions>`__
+     - Apache-2.0
+   * - `MassTransit.Azure.ServiceBus.Core <https://www.nuget.org/packages/MassTransit.Azure.ServiceBus.Core>`__
+     - Apache-2.0
+   * - `MassTransit.Azure.Storage <https://www.nuget.org/packages/MassTransit.Azure.Storage>`__
+     - Apache-2.0
+   * - `MassTransit.Kafka <https://www.nuget.org/packages/MassTransit.Kafka>`__
+     - Apache-2.0
+   * - `MassTransit.RabbitMQ <https://www.nuget.org/packages/MassTransit.RabbitMQ>`__
+     - Apache-2.0
+   * - `MessagePack <https://www.nuget.org/packages/MessagePack>`__
+     - MIT
+   * - `MessagePack.Annotations <https://www.nuget.org/packages/MessagePack.Annotations>`__
+     - MIT
+   * - `Microsoft.ApplicationInsights <https://www.nuget.org/packages/Microsoft.ApplicationInsights>`__
+     - MIT
+   * - `Microsoft.ApplicationInsights.AspNetCore <https://www.nuget.org/packages/Microsoft.ApplicationInsights.AspNetCore>`__
+     - MIT
+   * - `Microsoft.ApplicationInsights.DependencyCollector <https://www.nuget.org/packages/Microsoft.ApplicationInsights.DependencyCollector>`__
+     - MIT
+   * - `Microsoft.ApplicationInsights.EventCounterCollector <https://www.nuget.org/packages/Microsoft.ApplicationInsights.EventCounterCollector>`__
+     - MIT
+   * - `Microsoft.ApplicationInsights.PerfCounterCollector <https://www.nuget.org/packages/Microsoft.ApplicationInsights.PerfCounterCollector>`__
+     - MIT
+   * - `Microsoft.ApplicationInsights.WindowsServer <https://www.nuget.org/packages/Microsoft.ApplicationInsights.WindowsServer>`__
+     - MIT
+   * - `Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel <https://www.nuget.org/packages/Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel>`__
+     - MIT
+   * - `Microsoft.AspNetCore.Authentication.JwtBearer <https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.JwtBearer>`__
+     - MIT
+   * - `Microsoft.AspNetCore.Authentication.OpenIdConnect <https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.OpenIdConnect>`__
+     - MIT
+   * - `Microsoft.Azure.Amqp <https://www.nuget.org/packages/Microsoft.Azure.Amqp>`__
+     - MIT
+   * - `Microsoft.Bcl.AsyncInterfaces <https://www.nuget.org/packages/Microsoft.Bcl.AsyncInterfaces>`__
+     - MIT
+   * - `Microsoft.Bcl.Cryptography <https://www.nuget.org/packages/Microsoft.Bcl.Cryptography>`__
+     - MIT
+   * - `Microsoft.Bcl.Memory <https://www.nuget.org/packages/Microsoft.Bcl.Memory>`__
+     - MIT
+   * - `Microsoft.CodeAnalysis.Common <https://www.nuget.org/packages/Microsoft.CodeAnalysis.Common>`__
+     - MIT
+   * - `Microsoft.CodeAnalysis.CSharp <https://www.nuget.org/packages/Microsoft.CodeAnalysis.CSharp>`__
+     - MIT
+   * - `Microsoft.CodeAnalysis.CSharp.Workspaces <https://www.nuget.org/packages/Microsoft.CodeAnalysis.CSharp.Workspaces>`__
+     - MIT
+   * - `Microsoft.CodeAnalysis.Workspaces.Common <https://www.nuget.org/packages/Microsoft.CodeAnalysis.Workspaces.Common>`__
+     - MIT
+   * - `Microsoft.Data.SqlClient <https://www.nuget.org/packages/Microsoft.Data.SqlClient>`__
+     - MIT
+   * - `Microsoft.Data.SqlClient.SNI.runtime <https://www.nuget.org/packages/Microsoft.Data.SqlClient.SNI.runtime>`__
+     - Microsoft
+   * - `Microsoft.Data.Sqlite.Core <https://www.nuget.org/packages/Microsoft.Data.Sqlite.Core>`__
+     - MIT
+   * - `Microsoft.EntityFrameworkCore <https://www.nuget.org/packages/Microsoft.EntityFrameworkCore>`__
+     - MIT
+   * - `Microsoft.EntityFrameworkCore.Abstractions <https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.Abstractions>`__
+     - MIT
+   * - `Microsoft.EntityFrameworkCore.Relational <https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.Relational>`__
+     - MIT
+   * - `Microsoft.EntityFrameworkCore.Sqlite.Core <https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.Sqlite.Core>`__
+     - MIT
+   * - `Microsoft.EntityFrameworkCore.SqlServer <https://www.nuget.org/packages/Microsoft.EntityFrameworkCore.SqlServer>`__
+     - MIT
+   * - `Microsoft.Extensions.AmbientMetadata.Application <https://www.nuget.org/packages/Microsoft.Extensions.AmbientMetadata.Application>`__
+     - MIT
+   * - `Microsoft.Extensions.Caching.Hybrid <https://www.nuget.org/packages/Microsoft.Extensions.Caching.Hybrid>`__
+     - MIT
+   * - `Microsoft.Extensions.Compliance.Abstractions <https://www.nuget.org/packages/Microsoft.Extensions.Compliance.Abstractions>`__
+     - MIT
+   * - `Microsoft.Extensions.DependencyInjection.AutoActivation <https://www.nuget.org/packages/Microsoft.Extensions.DependencyInjection.AutoActivation>`__
+     - MIT
+   * - `Microsoft.Extensions.DependencyModel <https://www.nuget.org/packages/Microsoft.Extensions.DependencyModel>`__
+     - MIT
+   * - `Microsoft.Extensions.Diagnostics.ExceptionSummarization <https://www.nuget.org/packages/Microsoft.Extensions.Diagnostics.ExceptionSummarization>`__
+     - MIT
+   * - `Microsoft.Extensions.Http.Diagnostics <https://www.nuget.org/packages/Microsoft.Extensions.Http.Diagnostics>`__
+     - MIT
+   * - `Microsoft.Extensions.Http.Resilience <https://www.nuget.org/packages/Microsoft.Extensions.Http.Resilience>`__
+     - MIT
+   * - `Microsoft.Extensions.Logging.ApplicationInsights <https://www.nuget.org/packages/Microsoft.Extensions.Logging.ApplicationInsights>`__
+     - MIT
+   * - `Microsoft.Extensions.Resilience <https://www.nuget.org/packages/Microsoft.Extensions.Resilience>`__
+     - MIT
+   * - `Microsoft.Extensions.Telemetry <https://www.nuget.org/packages/Microsoft.Extensions.Telemetry>`__
+     - MIT
+   * - `Microsoft.Extensions.Telemetry.Abstractions <https://www.nuget.org/packages/Microsoft.Extensions.Telemetry.Abstractions>`__
+     - MIT
+   * - `Microsoft.Identity.Client <https://www.nuget.org/packages/Microsoft.Identity.Client>`__
+     - MIT
+   * - `Microsoft.Identity.Client.Extensions.Msal <https://www.nuget.org/packages/Microsoft.Identity.Client.Extensions.Msal>`__
+     - MIT
+   * - `Microsoft.IdentityModel.Abstractions <https://www.nuget.org/packages/Microsoft.IdentityModel.Abstractions>`__
+     - MIT
+   * - `Microsoft.IdentityModel.JsonWebTokens <https://www.nuget.org/packages/Microsoft.IdentityModel.JsonWebTokens>`__
+     - MIT
+   * - `Microsoft.IdentityModel.Logging <https://www.nuget.org/packages/Microsoft.IdentityModel.Logging>`__
+     - MIT
+   * - `Microsoft.IdentityModel.Protocols <https://www.nuget.org/packages/Microsoft.IdentityModel.Protocols>`__
+     - MIT
+   * - `Microsoft.IdentityModel.Protocols.OpenIdConnect <https://www.nuget.org/packages/Microsoft.IdentityModel.Protocols.OpenIdConnect>`__
+     - MIT
+   * - `Microsoft.IdentityModel.Tokens <https://www.nuget.org/packages/Microsoft.IdentityModel.Tokens>`__
+     - MIT
+   * - `Microsoft.IO.RecyclableMemoryStream <https://www.nuget.org/packages/Microsoft.IO.RecyclableMemoryStream>`__
+     - MIT
+   * - `Microsoft.NET.StringTools <https://www.nuget.org/packages/Microsoft.NET.StringTools>`__
+     - MIT
+   * - `Microsoft.SqlServer.Server <https://www.nuget.org/packages/Microsoft.SqlServer.Server>`__
+     - MIT
+   * - `Microsoft.Win32.SystemEvents <https://www.nuget.org/packages/Microsoft.Win32.SystemEvents>`__
+     - MIT
+   * - `MongoDB.Bson <https://www.nuget.org/packages/MongoDB.Bson>`__
+     - Apache-2.0
+   * - `MongoDB.Driver <https://www.nuget.org/packages/MongoDB.Driver>`__
+     - Apache-2.0
+   * - `MongoDB.Driver.Core.Extensions.DiagnosticSources <https://www.nuget.org/packages/MongoDB.Driver.Core.Extensions.DiagnosticSources>`__
+     - Apache-2.0
+   * - `Newtonsoft.Json <https://www.nuget.org/packages/Newtonsoft.Json>`__
+     - MIT
+   * - `NodaTime <https://www.nuget.org/packages/NodaTime>`__
+     - Apache-2.0
+   * - `NodaTime.Serialization.JsonNet <https://www.nuget.org/packages/NodaTime.Serialization.JsonNet>`__
+     - Apache-2.0
+   * - `OpenTelemetry <https://www.nuget.org/packages/OpenTelemetry>`__
+     - Apache-2.0
+   * - `OpenTelemetry.Api <https://www.nuget.org/packages/OpenTelemetry.Api>`__
+     - Apache-2.0
+   * - `OpenTelemetry.Api.ProviderBuilderExtensions <https://www.nuget.org/packages/OpenTelemetry.Api.ProviderBuilderExtensions>`__
+     - Apache-2.0
+   * - `OpenTelemetry.Exporter.OpenTelemetryProtocol <https://www.nuget.org/packages/OpenTelemetry.Exporter.OpenTelemetryProtocol>`__
+     - Apache-2.0
+   * - `OpenTelemetry.Extensions.Hosting <https://www.nuget.org/packages/OpenTelemetry.Extensions.Hosting>`__
+     - Apache-2.0
+   * - `OpenTelemetry.Instrumentation.AspNetCore <https://www.nuget.org/packages/OpenTelemetry.Instrumentation.AspNetCore>`__
+     - Apache-2.0
+   * - `OpenTelemetry.Instrumentation.SqlClient <https://www.nuget.org/packages/OpenTelemetry.Instrumentation.SqlClient>`__
+     - Apache-2.0
+   * - `Polly.Core <https://www.nuget.org/packages/Polly.Core>`__
+     - BSD-3-Clause
+   * - `Polly.Extensions <https://www.nuget.org/packages/Polly.Extensions>`__
+     - BSD-3-Clause
+   * - `Polly.RateLimiting <https://www.nuget.org/packages/Polly.RateLimiting>`__
+     - BSD-3-Clause
+   * - `RabbitMQ.Client <https://www.nuget.org/packages/RabbitMQ.Client>`__
+     - Apache-2.0 OR MPL-2.0
+   * - `RestSharp <https://www.nuget.org/packages/RestSharp>`__
+     - Apache-2.0
+   * - `SemanticVersioning <https://www.nuget.org/packages/SemanticVersioning>`__
+     - MIT
+   * - `Serilog <https://www.nuget.org/packages/Serilog>`__
+     - Apache-2.0
+   * - `Serilog.AspNetCore <https://www.nuget.org/packages/Serilog.AspNetCore>`__
+     - Apache-2.0
+   * - `Serilog.Enrichers.ClientInfo <https://www.nuget.org/packages/Serilog.Enrichers.ClientInfo>`__
+     - MIT
+   * - `Serilog.Enrichers.CorrelationId <https://www.nuget.org/packages/Serilog.Enrichers.CorrelationId>`__
+     - MIT
+   * - `Serilog.Enrichers.Environment <https://www.nuget.org/packages/Serilog.Enrichers.Environment>`__
+     - Apache-2.0
+   * - `Serilog.Enrichers.Thread <https://www.nuget.org/packages/Serilog.Enrichers.Thread>`__
+     - Apache-2.0
+   * - `Serilog.Expressions <https://www.nuget.org/packages/Serilog.Expressions>`__
+     - Apache-2.0
+   * - `Serilog.Extensions.Hosting <https://www.nuget.org/packages/Serilog.Extensions.Hosting>`__
+     - Apache-2.0
+   * - `Serilog.Extensions.Logging <https://www.nuget.org/packages/Serilog.Extensions.Logging>`__
+     - Apache-2.0
+   * - `Serilog.Formatting.Compact <https://www.nuget.org/packages/Serilog.Formatting.Compact>`__
+     - Apache-2.0
+   * - `Serilog.Settings.Configuration <https://www.nuget.org/packages/Serilog.Settings.Configuration>`__
+     - Apache-2.0
+   * - `Serilog.Sinks.ApplicationInsights <https://www.nuget.org/packages/Serilog.Sinks.ApplicationInsights>`__
+     - Apache-2.0
+   * - `Serilog.Sinks.Async <https://www.nuget.org/packages/Serilog.Sinks.Async>`__
+     - Apache-2.0
+   * - `Serilog.Sinks.AwsCloudWatch <https://www.nuget.org/packages/Serilog.Sinks.AwsCloudWatch>`__
+     - Apache-2.0
+   * - `Serilog.Sinks.Console <https://www.nuget.org/packages/Serilog.Sinks.Console>`__
+     - Apache-2.0
+   * - `Serilog.Sinks.Debug <https://www.nuget.org/packages/Serilog.Sinks.Debug>`__
+     - Apache-2.0
+   * - `Serilog.Sinks.File <https://www.nuget.org/packages/Serilog.Sinks.File>`__
+     - Apache-2.0
+   * - `Serilog.Sinks.MongoDB <https://www.nuget.org/packages/Serilog.Sinks.MongoDB>`__
+     - Apache-2.0
+   * - `Serilog.Sinks.OpenTelemetry <https://www.nuget.org/packages/Serilog.Sinks.OpenTelemetry>`__
+     - Apache-2.0
+   * - `Serilog.Sinks.PeriodicBatching <https://www.nuget.org/packages/Serilog.Sinks.PeriodicBatching>`__
+     - Apache-2.0
+   * - `Serilog.Sinks.Seq <https://www.nuget.org/packages/Serilog.Sinks.Seq>`__
+     - Apache-2.0
+   * - `Serilog.Sinks.Splunk <https://www.nuget.org/packages/Serilog.Sinks.Splunk>`__
+     - Apache-2.0
+   * - `SharpCompress <https://www.nuget.org/packages/SharpCompress>`__
+     - MIT
+   * - `SharpZipLib <https://www.nuget.org/packages/SharpZipLib>`__
+     - MIT
+   * - `Snappier <https://www.nuget.org/packages/Snappier>`__
+     - BSD-3-Clause
+   * - `SQLite <https://www.nuget.org/packages/SQLite>`__
+     - Public Domain
+   * - `SQLitePCLRaw.config.e_sqlite3 <https://www.nuget.org/packages/SQLitePCLRaw.config.e_sqlite3>`__
+     - Apache-2.0
+   * - `SQLitePCLRaw.core <https://www.nuget.org/packages/SQLitePCLRaw.core>`__
+     - Apache-2.0
+   * - `SQLitePCLRaw.provider.dynamic_cdecl <https://www.nuget.org/packages/SQLitePCLRaw.provider.dynamic_cdecl>`__
+     - Apache-2.0
+   * - `SQLitePCLRaw.provider.e_sqlite3 <https://www.nuget.org/packages/SQLitePCLRaw.provider.e_sqlite3>`__
+     - Apache-2.0
+   * - `SqlKata <https://www.nuget.org/packages/SqlKata>`__
+     - MIT
+   * - `SqlKata.Execution <https://www.nuget.org/packages/SqlKata.Execution>`__
+     - MIT
+   * - `Superpower <https://www.nuget.org/packages/Superpower>`__
+     - Apache-2.0
+   * - `System.ClientModel <https://www.nuget.org/packages/System.ClientModel>`__
+     - MIT
+   * - `System.CommandLine <https://www.nuget.org/packages/System.CommandLine>`__
+     - MIT
+   * - `System.Composition.AttributedModel <https://www.nuget.org/packages/System.Composition.AttributedModel>`__
+     - MIT
+   * - `System.Composition.Convention <https://www.nuget.org/packages/System.Composition.Convention>`__
+     - MIT
+   * - `System.Composition.Hosting <https://www.nuget.org/packages/System.Composition.Hosting>`__
+     - MIT
+   * - `System.Composition.Runtime <https://www.nuget.org/packages/System.Composition.Runtime>`__
+     - MIT
+   * - `System.Composition.TypedParts <https://www.nuget.org/packages/System.Composition.TypedParts>`__
+     - MIT
+   * - `System.Configuration.ConfigurationManager <https://www.nuget.org/packages/System.Configuration.ConfigurationManager>`__
+     - MIT
+   * - `System.Diagnostics.PerformanceCounter <https://www.nuget.org/packages/System.Diagnostics.PerformanceCounter>`__
+     - MIT
+   * - `System.Drawing.Common <https://www.nuget.org/packages/System.Drawing.Common>`__
+     - MIT
+   * - `System.IdentityModel.Tokens.Jwt <https://www.nuget.org/packages/System.IdentityModel.Tokens.Jwt>`__
+     - MIT
+   * - `System.IO.Hashing <https://www.nuget.org/packages/System.IO.Hashing>`__
+     - MIT
+   * - `System.Memory.Data <https://www.nuget.org/packages/System.Memory.Data>`__
+     - MIT
+   * - `System.Reactive <https://www.nuget.org/packages/System.Reactive>`__
+     - MIT
+   * - `System.Security.Cryptography.Pkcs <https://www.nuget.org/packages/System.Security.Cryptography.Pkcs>`__
+     - MIT
+   * - `System.Security.Cryptography.ProtectedData <https://www.nuget.org/packages/System.Security.Cryptography.ProtectedData>`__
+     - MIT
+   * - `ZstdSharp.Port <https://www.nuget.org/packages/ZstdSharp.Port>`__
+     - MIT

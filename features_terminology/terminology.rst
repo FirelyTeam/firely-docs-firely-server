@@ -100,7 +100,7 @@ Configuration
 Pipeline
 ^^^^^^^^
 
-Make sure to add the ``Vonk.Plugins.Terminology`` plugin to the PipelineOptions in appsettings in order to make use of the ``TerminologyIntegration`` plugin.
+Make sure to add the ``Vonk.Plugins.Terminology`` plugin to the PipelineOptions in appsettings in order to make use of the terminology operations.
 Additionally, to the "/administration" pipeline, ``Vonk.Plugins.Terminology`` can be used on the regular FHIR pipeline "/". Please note that in this case, CodeSystems and ValueSets are resolved from the Administration repository when executing a terminology operation and the corresponding resource is not provided as part of the request as a parameter.
 
 .. code-block:: JavaScript
@@ -130,22 +130,44 @@ Additionally, to the "/administration" pipeline, ``Vonk.Plugins.Terminology`` ca
           
 To include or exclude individual operations in the pipeline, see the available plugins under :ref:`vonk_plugins_terminology`.
 
-Also make sure that the terminology operations are allowed at all in the ``SupportedInteractions`` section::
+Also make sure that the terminology operations are enabled in the ``Operations`` section, on the levels on which you want to use them (see :ref:`disable_interactions`). The default settings enable all of them on the regular FHIR endpoint, for example::
 
-   "SupportedInteractions": {
-      "InstanceLevelInteractions": "$validate-code, $expand, $compose, $translate, $subsumes",
-      "TypeLevelInteractions": "$validate-code, $expand, $lookup, $compose, $translate, $subsumes",
-      "WholeSystemInteractions": "$closure"
+   "Operations": {
+      "$validate-code": {
+         "Name": "$validate-code",
+         "Level": [ "Instance", "Type" ],
+         "Enabled": true,
+         "RequireAuthorization": "WhenAuthEnabled",
+         "RequireTenant": "Never"
+      },
+      "$closure": {
+         "Name": "$closure",
+         "Level": [ "System" ],
+         "Enabled": true,
+         "RequireAuthorization": "WhenAuthEnabled",
+         "RequireTenant": "Never"
+      },
+      // ... likewise for $expand, $lookup, $find-matches, $compose, $translate and $subsumes
    },
 
-Lastly, operation on the administration endpoint can be limited to specific IP addresses::
+The operations on the administration endpoint are configured in ``Administration:Operations``. Set ``NetworkProtected`` to ``true`` to limit an operation to the IP addresses in ``Administration:AllowedNetworks`` (see :ref:`configure_administration_access`)::
 
    "Administration": {
-      "Security": {
-         "AllowedNetworks": [ "127.0.0.1", "::1" ], // i.e.: ["127.0.0.1", "::1" (ipv6 localhost), "10.1.50.0/24", "10.5.3.0/24", "31.161.91.98"]
-         "OperationsToBeSecured": [ "$validate-code", "$expand", "$compose", "$translate", "$subsumes", "$lookup", "$closure" ]
-      }
+      "Operations": {
+         "$validate-code": {
+            "Name": "$validate-code",
+            "Level": [ "Instance", "Type" ],
+            "Enabled": true,
+            "NetworkProtected": true
+         },
+         // ... likewise for $expand, $lookup, $find-matches, $translate, $subsumes and $closure
+      },
+      "AllowedNetworks": [ "127.0.0.1", "::1" ] // i.e.: ["127.0.0.1", "::1" (ipv6 localhost), "10.1.50.0/24", "10.5.3.0/24", "31.161.91.98"]
    },
+
+.. note::
+
+   The ``SupportedInteractions`` section and the ``Administration:Security:AllowedNetworks`` and ``Administration:Security:OperationsToBeSecured`` settings of Firely Server versions before 6.0 are no longer supported. If one of them is present in your settings, Firely Server does not start. See :ref:`disable_interactions` for the migration to the ``Operations`` section.
 
 .. _feature_terminologyoptions:
 

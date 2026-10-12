@@ -46,6 +46,37 @@ If you allow for multiple deletes, you have to specify a maximum number of resou
         }
     }
 
+.. _restful_crud_versioned_update:
+
+Versioned update with If-Match
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+An update, a conditional update or a patch can be made conditional on the current version of the resource, as described in `Managing Resource Contention <http://hl7.org/fhir/R4/http.html#concurrency>`_.
+Send the version that you expect to be current in the ``If-Match`` header, in the weak ETag format that Firely Server returns in the ``ETag`` header::
+
+  If-Match: W/"<versionId>"
+
+In a batch or transaction, use ``entry.request.ifMatch`` for the same purpose.
+
+* If the version in ``If-Match`` is the current version of the resource, the update is performed.
+* If it is not, Firely Server rejects the request with ``HTTP 409 Conflict``. Note that the FHIR specification asks for ``412 Precondition Failed`` here.
+* If no resource exists with the given id, Firely Server also returns ``409 Conflict``, and does not create the resource, even when create-on-update is enabled.
+* A value that is not in the weak ETag format ``W/"<versionId>"`` never matches, so the request is rejected with ``409 Conflict``.
+
+.. _restful_crud_headers:
+
+Response headers
+^^^^^^^^^^^^^^^^
+
+When a response contains a single resource, for example the response to a read, create, update or patch, Firely Server includes these headers:
+
+* ``ETag``: the version of the resource, as a weak ETag: ``W/"<versionId>"``. Use this value in the ``If-Match`` header of a versioned update.
+* ``Last-Modified``: the ``meta.lastUpdated`` of the resource, as an HTTP date.
+
+These headers are also sent when the resource is not returned in the body because the request has a ``Prefer: return=minimal`` or ``Prefer: return=OperationOutcome`` header.
+
+After a create, an update or a conditional create or update, the ``Location`` header holds the absolute url of the new version of the resource: ``<firely-server-endpoint>/<resourcetype>/<id>/_history/<versionId>``.
+
 .. _restful_crud_limitations:
 
 Limitations on CRUD
@@ -167,6 +198,10 @@ are available. But Firely Server also allows :ref:`feature_customsp`.
 
 Chaining and reverse chaining is fully supported.
 
+Besides ``GET``, you can search with ``POST`` on ``<firely-server-endpoint>/<resourcetype>/_search`` or ``<firely-server-endpoint>/_search``. Send the search parameters in the body with Content-Type ``application/x-www-form-urlencoded`` (or ``multipart/form-data``). Parameters in the query of the url are added to the ones in the body. A compartment search can only be done with ``GET``.
+
+The ``_list`` parameter is supported for a List resource that is stored in Firely Server: ``<resourcetype>?_list=<id>`` returns the resources of that type that are referenced in ``List.entry.item`` of the List with that id. `Functional lists <http://hl7.org/fhir/R4/lifecycle.html#lists>`_ such as ``$current-allergies`` are not supported.
+
 Firely Server maintains the search index only for the current version of a resource. If your data contains versioned references (e.g. `Observation.subject` references `Patient/123/_history/2`), the search may match the current version of the referenced resource (e.g. `Patient/123/_history/5`), even if the reference is versioned.
 You can have a warning about this reported in the OperationOutcome of the search response by setting ``WarnOnVersionMismatches`` to true in the ``FhirCapabilities:SearchOptions`` configuration.
 Be aware though that this has a serious performance impact. Hence this warning is disabled by default.
@@ -184,6 +219,8 @@ Firely Server also supports ``_include:iterate`` and ``_revinclude:iterate``, as
          "MaximumIncludeIterationDepth": 1
       }
    },
+
+The number of resources that one ``_include`` or ``_revinclude`` adds to a search result page is limited to ``BundleOptions:MaxCount`` per included resource type, see :ref:`navigational_links`. When that limit is reached, the other matching resources are not included, and the OperationOutcome of the search response contains a warning that the limit has been reached.
 
 .. warning:: ``_include`` isn't supported for a versioned reference
 
@@ -267,6 +304,10 @@ Firely Server supports modifiers for the following data types:
 | string                      | :contains      | ✅          |
 +-----------------------------+----------------+-------------+
 | token                       | :text          | ✅          |
++-----------------------------+----------------+-------------+
+| token                       | :not           | ✅          |
++-----------------------------+----------------+-------------+
+| token                       | :of-type       | ✅          |
 +-----------------------------+----------------+-------------+
 | token                       | :in            | ❌          |
 +-----------------------------+----------------+-------------+

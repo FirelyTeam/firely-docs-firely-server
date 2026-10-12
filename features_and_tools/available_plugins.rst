@@ -1238,7 +1238,7 @@ Their implementation and public API may change in the future.
 :Configuration: ``Vonk.Plugin.CdsHooks.CrdOrderSelectHook.CrdOrderSelectHookConfiguration``
 :License token: http://fire.ly/server/plugins/crd
 :Order: 5510
-:Description: Implements the CRD (Coverage Requirements Discovery) ``order-select`` CDS Hook. See :ref:`CDS Hooks <feature_cds_hooks>` for more information.
+:Description: Demo implementation of the CRD (Coverage Requirements Discovery) ``order-select`` CDS Hook, which supports Firely's CRD demo UI. It is not a general-purpose CRD service and is not intended for production use: it evaluates a fixed set of example CQL Libraries. See :ref:`CDS Hooks <feature_cds_hooks>` for more information.
 
 .. _vonk_tools_fsi:
 

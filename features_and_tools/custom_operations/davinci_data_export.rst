@@ -67,12 +67,12 @@ Because DaVinci Data Export reuses the BDE task pipeline, it can reuse the same 
 
 Element redaction
 ^^^^^^^^^^^^^^^^^
-For the DaVinci ATR use case, it is possible to hide a selection of resource elements from the result set. In Firely server, this is called 'Resource redaction'. To configure the redaction used for the ATR export, we use the 'ResourceRedactionOptions' in appsettings. Redaction 'hl7.fhir.us.davinci-atr' contains the redaction definition used for the ATR export. Note that multiple FHIR paths are combined with an OR-relationship.
+For the DaVinci ATR use case, it is possible to hide a selection of resource elements from the result set. In Firely server, this is called 'Resource redaction'. To configure the redaction used for the ATR export, we use the ``ResourceRedaction`` section in appsettings. Redaction 'hl7.fhir.us.davinci-atr' contains the redaction definition used for the ATR export. Note that multiple FHIR paths are combined with an OR-relationship.
 
 .. code-block:: json
 
 	{
-		"ResourceRedactionOptions": {
+		"ResourceRedaction": {
 			"Redactions": {
 				"hl7.fhir.us.davinci-atr": {
 					"FhirVersions": [

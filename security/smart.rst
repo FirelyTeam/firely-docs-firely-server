@@ -78,14 +78,9 @@ You can control the way Access Control based on `SMART on FHIR <https://fire.ly/
       "Authority": "https://example.org/base-url-to-your-identity-provider",
     //"AdditionalBaseEndpointsInDiscoveryDocument": ["additional-url-to-your-identity-provider"],
     //"AdditionalIssuersInToken": ["additional-url-to-your-identity-provider"],   
-    //"Audience": "https://example.org/base-url-of-firely-server", //Has to match the value the Authority provides in the audience claim.
+    //"Audience": "https://example.org/base-url-of-firely-server", //Has to match the value the Authority provides in the audience claim. If not set, the audience of the token is not validated.
     //"ClaimsNamespace": "http://smarthealthit.org",
       "RequireHttpsToProvider": false, //You want this set to true (the default) in a production environment!
-      "Protected": {
-        "InstanceLevelInteractions": "read, vread, update, delete, history, conditional_delete, conditional_update, $validate",
-        "TypeLevelInteractions": "create, search, history, conditional_create",
-        "WholeSystemInteractions": "batch, transaction, history, search"
-      },
       "TokenIntrospection": {
         "ClientId": "Firely Server",
         "ClientSecret": "secret"
@@ -120,7 +115,11 @@ To enable SMART on FHIR in Firely Server, the following core settings must be co
 * Enabled: With this setting you can disable ('false') the authentication and authorization altogether. When it is enabled ('true'), Firely Server will also evaluate the other settings. The default value is 'false'. This implies that authorization is disabled as if no SmartAuthorizationOptions section is present in the settings.
 * PatientFilter: Defines how the ``patient`` launch context is translated to a search argument. See :ref:`feature_accesscontrol_compartment` for more background. You can use any supported search parameter defined on Patient. It should contain ``#patient#``, which is substituted by the value of the ``patient`` claim.
 * Authority: The base url of your identity provider, such that ``{{base_url}}/.well-known/openid-configuration`` returns a valid configuration response (`OpenID Connect Discovery documentation <https://openid.net/specs/openid-connect-discovery-1_0.html#rfc.section.4.2>`_). At minimum, the ``jwks_uri``, ``token_endpoint`` and ``authorization_endpoint`` keys are required in addition to the keys required by the specification. See :ref:`Firely Auth<feature_accesscontrol_idprovider>` for more background.
-* Audience: Defines the name of this Firely Server instance as it is known to the Authorization server. The default should be the base url of Firely Server.
+* Audience: Defines the name of this Firely Server instance as it is known to the Authorization server. The default should be the base url of Firely Server. Firely Server only accepts tokens whose ``aud`` claim contains this value.
+
+  .. warning::
+
+     If ``Audience`` is not set or empty, Firely Server does not validate the ``aud`` claim at all, and accepts a token from the ``Authority`` that was issued for any audience, for example for another API. Always set ``Audience`` in a production environment.
 
 Additional advanced configuration can be achieved through the following settings:
 
@@ -131,7 +130,13 @@ Additional advanced configuration can be achieved through the following settings
 * AdditionalIssuersInToken: Optional configuration setting. The additional issuer setting will extend the list of issuer urls that are valid within the issuer claim in the token passed to Firely Server. The token validation will be adjusted accordingly. Please note that it does not influence which issuer urls are allowed in the .well-known/openid-configuration document of the authorization server.
 * ClaimsNamespace: Some authorization providers will prefix all their claims with a namespace, e.g. ``http://my.company.org/auth/user/*.read``. Configure the namespace here to make Firely Server interpret it correctly. It will then strip off that prefix and interpret it as just ``user/*.read``. By default no namespace is configured.
 * RequireHttpsToProvider: Token exchange with an Authorization server should always happen over https. However, in a local testing scenario you may need to use http. Then you can set this to 'false'. The default value is 'true'. 
-* Protected: This setting controls which of the interactions actually require authentication. In the example values provided here, $validate is not in the TypeLevelInteractions. This means that you can use POST [base-url]/Patient/$validate without authorization. Since you only read Conformance resources with this interaction, this might make sense.
+
+Which interactions and operations require authorization is not configured in ``SmartAuthorizationOptions``, but per operation with ``RequireAuthorization`` in the ``Operations`` section (``WhenAuthEnabled``, ``Always`` or ``Never``), see :ref:`disable_interactions`. For example, to allow ``POST [base-url]/Patient/$validate`` without authorization, set ``RequireAuthorization`` of ``$validate`` to ``Never``.
+
+.. note::
+
+   The ``Protected`` setting in ``SmartAuthorizationOptions`` of Firely Server versions before 6.0 is no longer used. Firely Server ignores it, so interactions that you left out of ``Protected`` do require authorization unless their ``RequireAuthorization`` is ``Never``.
+
 * TokenIntrospection: This setting is configurable when you use `reference tokens <https://docs.duendesoftware.com/identityserver/v7/apis/aspnetcore/reference/>`_.
 * ShowAuthorizationPII: This is a flag to indicate whether or not personally identifiable information is shown in logs.
 * AccessTokenScopeReplace: With this optional setting you tell Firely Server which character replaces the ``/`` (forward slash) character in a SMART scope. This setting is needed in cases like working with Azure Active Directory (see details in section :ref:`feature_accesscontrol_aad`). 

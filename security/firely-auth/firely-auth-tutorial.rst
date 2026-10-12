@@ -239,11 +239,6 @@ In **Firely Server**, all the settings are in the section :ref:`SmartAuthorizati
     "Authority": "https://localhost:5001",
     "Audience": "http://localhost:4080", //Has to match the value the Authority provides in the audience claim.
     "RequireHttpsToProvider": true, //You want this set to true (the default) in a production environment!
-    "Protected": {
-      "InstanceLevelInteractions": "read, vread, update, patch, delete, history, conditional_delete, conditional_update, $validate, $meta, $meta-add, $meta-delete, $export, $everything, $erase",
-      "TypeLevelInteractions": "create, search, history, conditional_create, compartment_type_search, $export, $lastn, $docref",
-      "WholeSystemInteractions": "batch, transaction, history, search, compartment_system_search, $export, $exportstatus, $exportfilerequest"
-    },
     // "TokenIntrospection": {
     //     "ClientId": "Firely Server",
     //     "ClientSecret": "secret"

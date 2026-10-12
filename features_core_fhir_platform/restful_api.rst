@@ -27,6 +27,12 @@ Firely Server enables create-on-update: If you request an update and no resource
 
 Firely Server can reject a resource based on :ref:`feature_prevalidation`.
 
+A conditional update whose search criteria match no resource, but whose payload contains an ``id``, is handled as follows:
+
+* If no resource exists with that id, the resource is created under that id. With ``AllowCreateOnUpdate`` set to ``false``, Firely Server returns ``HTTP 404 Not Found`` instead.
+* If a resource with that id exists but has been deleted, the resource is brought back to life: the update is stored as a new version under that id, and Firely Server returns ``HTTP 200 OK``.
+* If a resource with that id exists, is not deleted and does not match the search criteria, or exists in another FHIR version, the update is rejected with ``HTTP 409 Conflict``.
+
 .. _restful_crud_configuration:
 
 Configuration
@@ -88,7 +94,6 @@ Limitations on CRUD
    * Two conditional creates may both succeed, although the result of one may be a match to the other.
    * A conditional create and a simultaneous conditional update may both result in a ``create``, although the result of one may be a match to the other.
 
-#. It is not possible to bring a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload. This operation will result in an ``HTTP 409 Conflict`` error. As a workaround, it is possible to create a new resource (with a new logical id) by omitting the ``id`` field in the payload.
 #. Parameter ``_pretty`` is not yet supported.
 #. XML Patch and JSON Patch, as well as version-read and conditional variations of FHIR Patch are not yet supported.
 
@@ -502,6 +507,9 @@ Capabilities
 
 On the Capabilities interaction (``<firely-server-endpoint>/metadata``) Firely Server returns a CapabilityStatement that is built dynamically from the 
 supported ResourceTypes, SearchParameters and interactions. E.g. if you :ref:`feature_customsp_configure`, the SearchParameters that are actually loaded appear in the CapabilityStatement.
+
+``CapabilityStatement.instantiates`` lists the CapabilityStatements that Firely Server conforms to. Firely Server fills it with the canonical url (``url|version`` if the CapabilityStatement has a ``version``) of every CapabilityStatement in the :ref:`administration database <conformance>` that has ``mode`` set to ``server`` and ``status`` set to ``active``, up to ``BundleOptions:MaxCount`` of them.
+To declare that Firely Server instantiates the server CapabilityStatement of an Implementation Guide, load that CapabilityStatement into the administration database, for example as part of the IG package.
 
 .. _restful_notsupported:
 

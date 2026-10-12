@@ -222,7 +222,7 @@ Firely Server also supports ``_include:iterate`` and ``_revinclude:iterate``, as
 
 The number of resources that one ``_include`` or ``_revinclude`` adds to a search result page is limited to ``BundleOptions:MaxCount`` per included resource type, see :ref:`navigational_links`. When that limit is reached, the other matching resources are not included, and the OperationOutcome of the search response contains a warning that the limit has been reached.
 
-.. warning:: ``_include`` isn't supported for a versioned reference
+``_include`` follows a versioned reference (e.g. ``Patient/123/_history/2``) to the referenced version of the resource. When :ref:`SMART on FHIR <feature_accesscontrol_config>` restricts the request and ``SmartAuthorizationOptions:AllowHistory`` is ``false``, Firely Server does not return historical versions: it includes the referenced resource only if the referenced version is its current version.
 
 .. _navigational_links:
 
@@ -243,8 +243,12 @@ Paging behavior of Firely Server can be configured in the ``BundleOptions`` of t
 If ``DefaultTotal`` is set to "none" the server will return:
 
 * The ``self`` and ``next`` links in the bundle response on the first page
-* Additionally, the ``first`` and ``prev`` links are returned on subsequent pages
-* The ``self``, ``first``, and ``prev`` links are returned on the last page
+* Additionally, the ``first`` and ``previous`` links are returned on subsequent pages
+* The ``self``, ``first``, and ``previous`` links are returned on the last page
+
+.. note::
+
+   Since Firely Server 6.9.0, the link to the previous page has the relation ``previous``, as defined by the FHIR specification. Earlier versions used ``prev``. Clients that look up paging links by relation name must use ``previous``.
 
 If ``DefaultTotal`` is set to "accurate" the server will additionally return a ``last`` link on all but the last page, as well as a ``total`` element in the bundle response. The ``total`` element contains the total number of resources that match the search criteria.
 With ``DefaultCount``, the number of resources that are returned per page can be regulated. The maximum number of resources that can be returned per page is set with ``MaxCount``. The default sort order can be set with ``DefaultSort``.
@@ -264,7 +268,7 @@ If keyset pagination is applied, the navigational links will only contain ``firs
 Search Anonymization
 ^^^^^^^^^^^^^^^^^^^^
 
-The ``next``, ``prev``, and ``last`` link may contain privacy-sensitive information as part of a search parameter value. In order to not expose these values in logs, the :ref:`Vonk.Plugin.SearchAnonymization<vonk_plugins_searchAnonymization>` plugin can be used. It will replace the query parameter part of the navigational link with an opaque UUID. The plugin must be used starting with FHIR R5 as the specification mandates the removal of sensitive information.
+The ``next``, ``previous``, and ``last`` link may contain privacy-sensitive information as part of a search parameter value. In order to not expose these values in logs, the :ref:`Vonk.Plugin.SearchAnonymization<vonk_plugins_searchAnonymization>` plugin can be used. It will replace the query parameter part of the navigational link with an opaque UUID. The plugin must be used starting with FHIR R5 as the specification mandates the removal of sensitive information.
 The following settings manage the search anonymization:
 ::
 
@@ -413,7 +417,7 @@ The following parameters and options are not yet supported:
 #. ``:text`` modifier on a string SearchParameter
 #. ``:above``, ``:below``, ``:in`` and ``:not-in`` modifiers on a token SearchParameter, ``above`` and ``below`` are also not supported for `Mime Types <http://hl7.org/fhir/R4B/search.html#mimetype>`_.
 #. ``:above``, ``:below`` modifiers on a reference SearchParameter (only valid on a `strict hierarchy <http://hl7.org/fhir/R4B/search.html#recursive>`_)
-#. ``_include`` and ``_revinclude`` will match the current version of the referenced resources, also if the reference is versioned.
+#. ``_revinclude`` will match the current version of the referenced resources, also if the reference is versioned.
 #. ``_pretty``
 #. Implicit ranges are supported on dates, datetimes and quantities with a UCUM unit. But not on other quantities and number parameters.
 #. Search parameter arguments in exponential form (e.g. 1.8e2).

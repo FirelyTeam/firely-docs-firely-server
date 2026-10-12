@@ -250,7 +250,8 @@ or custom authorization headers, to external systems.
 Supported parameters
 ^^^^^^^^^^^^^^^^^^^^
 
-Firely Server supports the following parameters:
+Firely Server supports the following parameters. A request that supplies a parameter marked ❌, or a parameter that is
+not listed, is rejected with HTTP 501 (see :ref:`feature_cql_unsupported_parameters`):
 
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | Parameter               | Supported | Type                    | Cardinality | Additional Notes               |
@@ -742,7 +743,8 @@ configured in the ``MeasureEvaluateOperation`` section of the appsettings.
 Supported parameters
 ^^^^^^^^^^^^^^^^^^^^
 
-Firely Server supports the following parameters:
+Firely Server supports the following parameters. A request that supplies a parameter marked ❌, or a parameter that is
+not listed, is rejected with HTTP 501 (see :ref:`feature_cql_unsupported_parameters`):
 
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | Parameter                | Supported | Type                    | Cardinality | Additional Notes                            |
@@ -1212,6 +1214,16 @@ reports omit strata that contain no in-population subject.
 A ratio-scored group cannot carry stratifiers: the Quality Measure IG forbids the
 combination.
 
+.. _feature_measure_evaluate_supplemental_data:
+
+Supplemental data
+~~~~~~~~~~~~~~~~~
+
+``Measure.supplementalData`` is not evaluated. A ``Measure`` that defines supplemental
+data elements is evaluated as if it had none: it is not rejected, and the
+``MeasureReport`` contains no supplemental data, neither as extensions nor as
+``evaluatedResource`` entries.
+
 .. _feature_measure_evaluate_validation:
 
 Measure validation
@@ -1534,7 +1546,8 @@ Overview
 Supported parameters
 ^^^^^^^^^^^^^^^^^^^^
 
-Firely Server supports the following parameters:
+Firely Server supports the following parameters. A request that supplies a parameter marked ❌, or a parameter that is
+not listed, is rejected with HTTP 501 (see :ref:`feature_cql_unsupported_parameters`):
 
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | Parameter               | Supported | Type                    | Cardinality | Additional Notes               |
@@ -1821,7 +1834,7 @@ Any other reference form is rejected with an ``OperationOutcome`` identifying
 - a bare id without a resource type, such as ``pat1``
 
 For ``Library/$evaluate`` and ``$cql``, ``subject`` may be omitted when the library
-declares no Patient context. It is required when the library does declare one; a
+declares no :ref:`Patient context <feature_cql_patient_context>`. It is required when the library does declare one; a
 request that omits it is rejected with HTTP 422 naming the library.
 
 Group subjects
@@ -1869,6 +1882,54 @@ single group of the measure.
 When the caller supplies the data through the ``data`` parameter, the outcome instead
 reports that the provided data does not contain the expected ``Patient`` — the data
 lacks it, while the patient itself may well exist on the server.
+
+.. _feature_cql_patient_context:
+
+Patient context
+~~~~~~~~~~~~~~~
+
+For ``Library/$evaluate``, and for the ``Library`` that ``Measure/$evaluate-measure``
+evaluates, Firely Server decides whether the library is evaluated in the Patient context
+from the ``Library`` resource only. The library declares a Patient context when
+``Library.subjectCodeableConcept`` contains this coding:
+
+.. code-block:: json
+
+   "subjectCodeableConcept": {
+     "coding": [
+       {
+         "system": "http://hl7.org/fhir/resource-types",
+         "code": "Patient"
+       }
+     ]
+   }
+
+A ``context Patient`` statement in the CQL itself is not taken into account.
+
+A library without this coding is evaluated without any patient data:
+
+- no data is retrieved, and a bundle supplied in the ``data`` parameter and a
+  ``dataEndpoint`` are not used, so every retrieve in the CQL returns an empty result;
+- ``subject`` is not required, and a ``subject`` that is supplied is not used. Firely
+  Server logs a warning that the library has no Patient context.
+
+The request is not rejected in that case, so check ``subjectCodeableConcept`` when an
+evaluation unexpectedly returns empty results.
+
+For ``$cql``, the expression is evaluated in the Patient context when a ``subject`` is
+supplied.
+
+.. _feature_cql_unsupported_parameters:
+
+Unsupported parameters
+~~~~~~~~~~~~~~~~~~~~~~
+
+``$cql``, ``Library/$evaluate``, ``Measure/$evaluate-measure`` and both
+``$data-requirements`` operations accept only the parameters listed as supported for
+them. A request that supplies any other parameter — including the parameters that the
+FHIR specification defines but Firely Server does not support, marked ❌ in the
+parameter tables — is rejected as a whole with HTTP 501, and the ``OperationOutcome``
+names the unsupported parameters. The parameter is not ignored.
 
 .. _feature_cql_data_retrieval:
 

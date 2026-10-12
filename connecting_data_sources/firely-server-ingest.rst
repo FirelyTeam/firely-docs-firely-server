@@ -171,12 +171,12 @@ If you want to specify input parameters in the file, you can use the snippet bel
           },
 
           // Source
-          "sourceType": "Filesystem", // Filesystem | MongoDb | None, None will try only to provision the target database
+          "sourceType": "Filesystem", // Filesystem | MongoDb | Sql | None, None will try only to provision the target database
           "source": "./fsi-source", // source directory when Filesystem source is used
           "sourceFilter": "*.*", //Only import files whose name matches this wildcard pattern (e.g. *.ndjson or patients_??.ndjson). Applies to all subdirectories of the source directory. When not set, all files are imported. Filesystem source only.
           "mongoDbSource": {
               "connectionString": "<connectionstring to the Firely Server MongoDb source database>",
-              "collectionName": "vonkentries",
+              "entryCollection": "vonkentries",
               "runningMode": "AdHoc",
               "documentFilterBson": "{ }" // See https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/ for the syntax
           },
@@ -315,7 +315,7 @@ Source
 ^^^^^^
 
 
-* ``--sourceType <Filesystem|MongoDb|SqlServer|None>``: 
+* ``--sourceType <Filesystem|MongoDb|Sql|None>``: 
 
   * **Config**: sourceType
   * **Required**: No
@@ -325,7 +325,7 @@ Source
 
     * **Filesystem**: read data from the filesystem
     * **MongoDb**: read data from a Firely Server MongoDB database
-    * **SqlServer**: read data from a Firely Server SQL Server database
+    * **Sql**: read data from a Firely Server SQL Server database
     * **None**: use this option if you only want to provision the target database
 
 Source (for Filesystem)
@@ -359,7 +359,7 @@ See more information on how to run migrations in :ref:`this article <zero_downti
 
 * ``--srcMongoCollection <srcMongoCollection>``: 
 
-  * **Config**: mongoDbSource/collectionName
+  * **Config**: mongoDbSource/entryCollection
   * **Required**: No
   * **Default**: vonkentries
   * **Description**: Collection name to read entries from.

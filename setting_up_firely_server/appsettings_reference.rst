@@ -150,7 +150,7 @@ Validation
 
     "Validation": {
       "Parsing": "Permissive", // Permissive / Strict
-      "Level": "Off", // Off / Core / Full
+      "Level": "Core", // Off / Core / Full - default: Core
       "FixInvalidPrimitiveTypes": true, // true / false - If true, invalid primitive types are fixed to the correct type where possible. If set to false, invalid primitive types are always returned as an error.
       "AllowedProfiles": [],
       "AdvisorRules": ""

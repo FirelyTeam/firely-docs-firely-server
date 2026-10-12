@@ -119,6 +119,12 @@ The following rules apply for network configuration:
 
 * The ``AllowedNetworks`` have to be valid IP networks, either IPv4 or IPv6, and providing the subnet prefix length explicitly is recommended. If you provide a 'bare' IP Address, it will be interpreted as a ``/32`` for IPv4 and ``/128`` for IPv6, effectively reducing it to a single host network.
 * We recommend to only use internal, single host networks.
+* A value that is not a valid IP address or network stops Firely Server from starting.
+
+.. warning::
+
+    If ``AllowedNetworks`` is empty or left out, there is no IP restriction: every client can call the operations with ``NetworkProtected`` set to ``true``.
+    Always list the networks that may call these operations.
 
 Examples:
     

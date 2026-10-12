@@ -46,6 +46,8 @@ License
 
 The :ref:`vonk_getting_started` explains how to obtain a licensefile for Firely Server. Once you have it, put the path to it in the ``LicenseFile`` setting. Note that in json you either use forward slashes (/) or double backward slashes (\\\\) as path separators.
 
+Firely Server answers requests with ``HTTP 402 Payment Required`` when no valid license is loaded, when the license has expired, and, with an evaluation license, when Firely Server has been running for more than 12 hours. In that last case, restart Firely Server to continue your evaluation.
+
 .. note::
 
   It is also possible to supply a license via an environment variable. This functionality is handy when Firely Server is running within a Docker container. See :ref:`license_as_environment_variable` for details.
@@ -119,13 +121,14 @@ http and https
       //"CertificatePassword" : "<cert-pass>", // Relevant when HttpsPort is present
       //"SslProtocols": [ "Tls12", "Tls13" ], // Relevant when HttpsPort is present.
       //"PathBase": "<subpath-to-firely-server>",
+      //"IsHttp1AndHttp2": false, // Set to true to accept HTTP/2 next to HTTP/1.1
       "ClientCertificateMode": "NoCertificate" // NoCertificate, AllowCertificate, RequireCertificate,
       "Limits": {
           "MaxRequestBufferSize": 2097152 // Kestrel default: 1048576.
     }
     },
     
-Refer to :ref:`configure_hosting` for enabling https and adjusting port numbers.
+Refer to :ref:`configure_hosting` for enabling https and adjusting port numbers, and to :ref:`configure_hosting_http2` for ``IsHttp1AndHttp2``.
 
 In case Firely Server is hosted behind a reverse proxy using a subpath as part of the base url, use the `PathBase` option to specify the path after the root to enable Firely Server to generate correct links in places where the absolute base url is used (e.g. in the ``Location`` header when returning an HTTP response). See `PathBase middleware <https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.usepathbaseextensions.usepathbase>`_ for more information. Only a single static path is allowed here. For more dynamic options using multiple paths, see support for the :ref:`X-Forwarded-Prefix header<xforwardedheader>`.
 

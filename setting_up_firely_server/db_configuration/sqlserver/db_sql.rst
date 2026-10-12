@@ -196,6 +196,22 @@ It is possible to disable automatic migrations for the database, by setting Auto
 With auto-updating disabled, an error will halt the startup. The error contains the version of the current schema and the required schema version of the server. 
 You must use the SQL script(s) in the /sqlserver folder to update your database to the required version.
 
+.. _sql_query_options:
+
+Query hints for search queries
+------------------------------
+Firely Server adds a query hint to every search query it runs on SQL Server, as an ``OPTION(...)`` clause at the end of the statement.
+The ``QueryOptions`` setting holds the content of that clause. Its default is ``MAXDOP 1``, which runs each search query on a single processor::
+
+    "SqlDbOptions": {
+        "QueryOptions": "MAXDOP 1"
+    }
+
+* You can set ``QueryOptions`` separately for the database with resources (``SqlDbOptions``) and for the administration database (``Administration:SqlDbOptions``).
+* To use more than one hint, separate them with a comma, for example ``"MAXDOP 1, RECOMPILE"``. Any `query hint of SQL Server <https://learn.microsoft.com/en-us/sql/t-sql/queries/hints-transact-sql-query>`_ is allowed. Firely Server passes the value on as is, so an invalid hint makes the search queries fail.
+* To add no hint at all, set ``QueryOptions`` to an empty string.
+* The setting applies to the search queries of the ``Vonk.Repository.Sql.Raw.KSearchConfiguration`` and ``Vonk.Repository.Sql.Raw.KAdminSearchConfiguration`` plugins.
+
 .. _overview_of_permissions:
 
 Overview of permissions

@@ -58,6 +58,12 @@ Configuring an example CDS Hooks service
 ----------------------------------------
 Firely Server provides an example CDS Hooks service to demonstrate how to configure and use CDS Hooks.
 
+.. note::
+
+  Firely Server also contains a CRD (Coverage Requirements Discovery) ``order-select`` hook, ``crd-order-select-hook``.
+  It is a demo implementation that supports Firely's CRD demo UI and is not intended for production use.
+  See :ref:`CDS Hooks CRD Order Select Hook <vonk_plugins_cds_hooks_crd_order_select>` in the list of available plugins.
+
 To configure the example service, add the plugin ``Vonk.Plugin.CdsHooks.PatientViewTestHook`` to the ``PipelineOptions`` in the appsettings.
 
 .. code-block:: JavaScript

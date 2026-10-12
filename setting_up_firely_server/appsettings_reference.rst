@@ -88,11 +88,16 @@ SQL
       "ConnectionString": "connectionstring to your Firely Server SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
       "AutoUpdateDatabase": true,
       "MigrationTimeout": 1800, // in seconds
+      "BulkDataExportTimeout": 300, // in seconds
+      "PatientEverythingTimeout": 300, // in seconds, applies to the Patient $everything query (also used by $purge)
       "LogSqlQueryParameterValues": false
       //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
     },
 
 Refer to :ref:`configure_sql` for configuring access to your SQL Server databases.
+
+* ``BulkDataExportTimeout``: the command timeout for the queries of a Bulk Data Export, see :ref:`feature_bulkdataexport`.
+* ``PatientEverythingTimeout``: the command timeout for the query that collects the resources of a Patient for :ref:`$everything <feature_patienteverything>` and for :ref:`$purge <erase>`. ``BulkDataExportTimeout`` does not apply to that query.
 
 SQLite
 ^^^^^^
@@ -121,6 +126,7 @@ http and https
       //"CertificatePassword" : "<cert-pass>", // Relevant when HttpsPort is present
       //"SslProtocols": [ "Tls12", "Tls13" ], // Relevant when HttpsPort is present.
       //"PathBase": "<subpath-to-firely-server>",
+      "SendServerHeader": false, // Set to true to send the Server header (Kestrel) in responses
       //"IsHttp1AndHttp2": false, // Set to true to accept HTTP/2 next to HTTP/1.1
       "ClientCertificateMode": "NoCertificate" // NoCertificate, AllowCertificate, RequireCertificate,
       "Limits": {
@@ -131,6 +137,8 @@ http and https
 Refer to :ref:`configure_hosting` for enabling https and adjusting port numbers, and to :ref:`configure_hosting_http2` for ``IsHttp1AndHttp2``.
 
 In case Firely Server is hosted behind a reverse proxy using a subpath as part of the base url, use the `PathBase` option to specify the path after the root to enable Firely Server to generate correct links in places where the absolute base url is used (e.g. in the ``Location`` header when returning an HTTP response). See `PathBase middleware <https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.usepathbaseextensions.usepathbase>`_ for more information. Only a single static path is allowed here. For more dynamic options using multiple paths, see support for the :ref:`X-Forwarded-Prefix header<xforwardedheader>`.
+
+By default Firely Server does not send the ``Server`` header, which would reveal the web server (Kestrel) that it runs on. Set ``SendServerHeader`` to ``true`` to send it.
 
 The `ClientCertificateMode` will instruct Firely Server to request or require a TLS client certificate. See `ASP .NET Core - Client Certificates <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?#configure-client-certificates-in-appsettingsjson>`_ for more information.
 

@@ -97,6 +97,10 @@ PipelineOptions.Branches:
    Exclude
       (Prefixes of) :ref:`vonk_plugins_configclass` that may not be executed. ``Exclude`` overrides ``Include`` and is useful if you want to use all but one configuration class from a namespace.
 
+   Each entry in ``Include`` and ``Exclude`` must be the full name of a configuration class, or a namespace that contains one, for example ``Vonk.Plugin.Operations``. A namespace matches whole segments only, so ``Vonk.Repository.Sql`` does not match ``Vonk.Repository.Sqlite``. The match is case-sensitive.
+
+   At startup, Firely Server checks that every entry matches a configuration class in the loaded assemblies, including the plugins in the ``PluginDirectory``. An entry that matches nothing, for example because of a typo or because the plugin is not in the ``PluginDirectory``, stops Firely Server from starting, with an error that lists the entries concerned. In the ``Development`` environment, Firely Server logs this as an error and continues starting.
+
 Features can be identified by their corresponding Configuration namespace in the list below. To disable a feature, add the namespace to the ``Excluded`` section or commented it out.
 Custom REST operations can additionally be enabled on a system-, type-, or instance-level using the ``Operations`` setting, see :ref:`disable_interactions` for more details.
 

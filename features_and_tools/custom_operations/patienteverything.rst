@@ -55,6 +55,14 @@ Many resources in the Patient compartment reference resources outside the compar
    
 This is the default value for the setting. As you can see, Practitioner is not included by default out of privacy considerations but you can change that by overriding the setting. 
 
+On SQL Server, collecting the resources of a Patient can take long for a Patient with many resources. The query is stopped after ``SqlDbOptions:PatientEverythingTimeout`` seconds (default ``300``):
+
+.. code-block:: JavaScript
+
+   "SqlDbOptions": {
+      "PatientEverythingTimeout": 300
+   }
+
 **Note:** Device was added as an additional resource as it includes a reference to a patient but is not listed in the patient's compartment yet. As soon as the specification is updated, it will be removed from the appsetttings and returned by default.
 
 To include the plugin in your pipeline, add the following extra Include:

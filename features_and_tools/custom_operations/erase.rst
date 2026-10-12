@@ -140,4 +140,28 @@ This configuration ensures that when authorization is enabled, access tokens mus
 
 Note on erase and purge on SQL Server
 -------------------------------------
-When using the SQL Server repository, deletions are not processed immediately. Instead, they are marked as deleted and are processed in the background. This is done to prevent blocking the database for other operations. This means that the data is not immediately erased from the database. The actual deletion will be done in the background. The background process is nominally triggered every 20 seconds. But the time it takes to process the deletion depends on the number of resources that are being deleted and how busy the server is with other tasks. 
+When using the SQL Server repository, deletions are not processed immediately. Instead, they are marked as deleted and are processed in the background. This is done to prevent blocking the database for other operations. This means that the data is not immediately erased from the database. The actual deletion will be done in the background. The background process is nominally triggered every 20 seconds. But the time it takes to process the deletion depends on the number of resources that are being deleted and how busy the server is with other tasks.
+
+``$purge`` uses the same query as :ref:`$everything <feature_patienteverything>` to find the resources of the Patient. On SQL Server, that query is stopped after ``SqlDbOptions:PatientEverythingTimeout`` seconds (default ``300``).
+
+.. _erase_sp_purge:
+
+Deleting all resources of a type on SQL Server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To permanently delete all resources of one resource type, together with their history and index data, Firely Server comes with the stored procedure ``vonk.sp_purge``.
+It is not installed in the database automatically: the script that creates it is ``data/20240918_Purge.sql`` in the Firely Server distribution. Run that script on the Firely Server database to create the procedure, and then call it, for example:
+
+.. code-block:: sql
+
+   declare @nrOfResourcesProcessed bigint
+   exec vonk.sp_purge @resourcetype = 'Observation', @batch_size = 500, @processed = @nrOfResourcesProcessed out
+   print convert(varchar(32), @nrOfResourcesProcessed) + ' resources deleted'
+
+* ``@resourcetype`` (required): the resource type of the resources to delete.
+* ``@batch_size``: how many resources are deleted per transaction. The default ``-1`` deletes everything in a single transaction. Use a lower value if the transactions time out or run into deadlocks.
+* ``@processed`` (output): the number of deleted resources, or ``-1`` if an error occurred. After an error, earlier batches may already have been committed, so check the messages that the procedure prints.
+
+.. warning::
+
+   ``vonk.sp_purge`` deletes directly in the database, bypassing Firely Server: no AuditEvents are written, and references from other resources to the deleted resources are not checked. Make a backup before you run it. 

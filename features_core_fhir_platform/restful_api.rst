@@ -184,7 +184,7 @@ In the example below an OperationOutcome for a No-Op scenario is returned when t
 Versioning
 ----------
 
-Firely Server keeps a full version history of every resource, including the resources on the :ref:`administration_api`. Be aware that version specific searches cannot be used when SMART on FHIR is enabled in Firely Server version 5.11.0 and later versions.
+Firely Server keeps a full version history of every resource, including the resources on the :ref:`administration_api`. When SMART on FHIR is enabled, history and version reads are only available if ``SmartAuthorizationOptions:AllowHistory`` is ``true``, and then with restrictions. See :ref:`smart_history`.
 
 .. _restful_search:
 
@@ -472,7 +472,8 @@ Limitations on history
 
 #. ``_at`` parameter is not yet supported.
 #. Paging is supported, but it is not isolated from intermediate changes to resources.
-#. In Firely Server version 5.11.0 and later versions ``_history`` cannot be used when SMART on FHIR is enabled.
+#. When SMART on FHIR is enabled, ``_history`` can only be used if ``SmartAuthorizationOptions:AllowHistory`` is ``true``, and then with restrictions. See :ref:`smart_history`.
+#. With :ref:`virtual multi-tenancy <feature_multitenancy>` enabled, ``_history`` and ``vread`` cannot be used.
 
 .. _restful_batch:
 

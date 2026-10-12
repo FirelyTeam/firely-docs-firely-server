@@ -125,7 +125,7 @@ To enable SMART on FHIR in Firely Server, the following core settings must be co
 Additional advanced configuration can be achieved through the following settings:
 
 * EnforceAccessPolicies: Global flag that controls whether ``AccessPolicies`` are enforced for all matching ``fhirUsers``. See :ref:`feature_accesscontrol_permissions` for more details.
-* AllowHistory: When true, history and vread requests are allowed. Authorization is then evaluated against the current version of the resources, as historical versions are not indexed. Note that when resources are deleted, access to historical versions of those resources is not possible when the user is restricted to the patient compartment. Unrestricted users can still access historical versions of deleted resources. 
+* AllowHistory: When true, history and vread requests are allowed. The default is ``false``. Authorization is then evaluated against the current version of the resources, as historical versions are not indexed. See :ref:`smart_history` for the restrictions that apply.
 * ClockSkew: Allow potential time discrepancies between the authorization server and the FHIR server, allowing for a small tolerance window when checking token expiration and validity times. Defaults to 5 minutes.
 * AdditionalBaseEndpointsInDiscoveryDocument: Optional configuration setting. Add additional base authority endpoints that your identity provider also uses for operations that are listed in the .well-known document. 
 * AdditionalIssuersInToken: Optional configuration setting. The additional issuer setting will extend the list of issuer urls that are valid within the issuer claim in the token passed to Firely Server. The token validation will be adjusted accordingly. Please note that it does not influence which issuer urls are allowed in the .well-known/openid-configuration document of the authorization server.
@@ -141,6 +141,43 @@ Additional advanced configuration can be achieved through the following settings
   After properly configuring Firely Server to work with an OAuth2 authorization server, enabling SMART and configuring the SmartCapabilities for Firely Server, you are able to discover the SMART configuration metadata by retrieving ``<base-url>/.well-known/smart-configuration``. 
   
   Please check section `Retrieve .well-known/smart-configuration <https://build.fhir.org/ig/HL7/smart-app-launch/app-launch.html#retrieve-well-knownsmart-configuration>`_  in the SMART specification for more details on how to request the metadata and how to interpret the response.
+
+.. _smart_history:
+
+History and version reads
+-------------------------
+
+Firely Server indexes only the current version of a resource. Scopes, launch contexts and :ref:`AccessPolicies <feature_accesscontrol_permissions>` can therefore only be evaluated against the current version, not against the historical versions.
+For that reason, history is disabled by default when SMART on FHIR is enabled, and can be enabled with ``SmartAuthorizationOptions:AllowHistory``.
+
+With ``AllowHistory`` set to ``false`` (the default):
+
+* A request that is subject to SMART on FHIR authorization is rejected with ``HTTP 403 Forbidden`` when it asks for:
+
+  * ``_history`` on the system, type or instance level;
+  * a version read (``vread``), for example ``GET <base>/Patient/123/_history/2``;
+  * a custom operation on a specific version of a resource.
+
+* ``_include`` of a versioned reference only includes the referenced resource if the referenced version is its current version.
+* Requests on the :ref:`administration_api`, and operations that do not require authorization (``RequireAuthorization`` set to ``Never`` in :ref:`disable_interactions`), are not subject to SMART on FHIR authorization, so history remains available there.
+
+With ``AllowHistory`` set to ``true``, these requests are allowed, with the following restrictions:
+
+* **Access is decided on the current version.** A client that may read the current version of a resource may read all its earlier versions, even versions that would not have matched its scopes or launch context. For example, if an Observation was linked to another patient before it was corrected, a client in the launch context of the current patient can also read the earlier versions. The other way around, if a client may not read the current version, it cannot read any of the earlier versions either.
+* **Deleted resources.** A deleted resource has no current version to evaluate the authorization against. If the access of the client is restricted to specific resources, Firely Server returns ``HTTP 404 Not Found`` on a version read of a deleted resource, and does not return the history of deleted resources. Access counts as restricted to specific resources when:
+
+  * the token has a ``patient`` launch context, so the request is limited to the Patient compartment;
+  * a SMART v2 scope carries search parameters, for example ``user/Observation.rs?category=laboratory``;
+  * the authorization does not come from SMART v2 scopes, for example SMART v1 scopes or a custom authorization plugin. Firely Server cannot inspect such an authorization, and treats it as restricted.
+
+  A client whose access is not restricted to specific resources, for example with ``system/Observation.rs``, gets the standard FHIR behavior: a version read of the deletion returns ``HTTP 410 Gone``.
+* **History on the type and system level** is assembled for at most ``BundleOptions:MaxCount`` resources that the client may read (see :ref:`bundle_options`). The history of further resources is not included, and Firely Server logs a warning when this happens.
+
+Only enable ``AllowHistory`` if it is acceptable that access to historical versions is decided based on the current version of the resources.
+
+.. note::
+
+   With :ref:`virtual multi-tenancy <feature_multitenancy>` enabled, history and ``vread`` are disabled regardless of this setting.
 
 Other forms of Authorization
 ----------------------------

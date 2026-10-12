@@ -151,7 +151,7 @@ These are not included in the examples, to keep those readable.
       :Compartment: Is applied to both Patient and link. In pseudo code: ``GET [base]/Patient?link:(Patient.identifier=456&Patient.identifier=123)&identifier=123`` In this case there will probably be no results.
 
 #. Read: Is evaluated as a Search, but implicitly you only specify the _type and _id search parameters.
-#. VRead: If a user can Read the current version of the resource, he is allowed to get the requested version as well.
+#. VRead: Only allowed when ``SmartAuthorizationOptions:AllowHistory`` is ``true``, otherwise HTTP Status Code 403 is returned. If a user can Read the current version of the resource, they are allowed to get the requested version as well. See :ref:`smart_history` for the restrictions, for example on deleted resources.
 #. Create
 
    a. Create on the compartment type
@@ -187,7 +187,7 @@ These are not included in the examples, to keep those readable.
       :Compartment: User should be allowed to Read Observation/123 and Create the Observation provided in the body. Then Update is allowed.
 
 #. Delete: Allowed if the user can Read the current version of the resource, and has write access to the type of resource.
-#. History: Allowed on the resources that the user is allowed to Read the current versions of (although it is theoretically possible that an older version would not match the compartment). 
+#. History: Only allowed when ``SmartAuthorizationOptions:AllowHistory`` is ``true``, otherwise HTTP Status Code 403 is returned. Then it is allowed on the resources that the user is allowed to Read the current versions of (although it is possible that an older version would not match the compartment). See :ref:`smart_history` for the restrictions.
 
 .. note:: A conditional create, update or delete (see the `FHIR http specification <https://hl7.org/fhir/http.html>`_), requires read permissions on the condition. Therefore, ``patient/*.write`` will usually require additional ``read`` scopes.
 

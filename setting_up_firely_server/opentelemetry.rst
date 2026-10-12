@@ -92,14 +92,15 @@ The individual settings are described below:
 Service name and resource attributes
 ------------------------------------
 
-Firely Server identifies itself in the exported traces and metrics with the OpenTelemetry resource attributes ``service.name``, ``service.namespace``, ``service.version`` and ``service.instance.id``. By default, ``service.name`` is ``Firely Server``. This is how Firely Server shows up in your tracing or metrics backend, so you may want to change it, for example to tell several Firely Server instances apart.
+Firely Server identifies itself in the exported traces and metrics with the OpenTelemetry resource attributes ``service.name``, ``service.namespace``, ``service.version`` and ``service.instance.id``. By default, ``service.name`` is ``Firely Server``. This is how Firely Server shows up in your tracing or metrics backend, so you may want to change it, for example to tell separate deployments apart, such as a test and a production environment.
+Scaled-out instances of the same deployment should keep the same ``service.name``; they are told apart by ``service.instance.id`` (see ``SERVICE_INSTANCE_ID`` below).
 
-These attributes are **not** set through the ``OpenTelemetryOptions`` section of the settings. Setting ``OpenTelemetryOptions:ServiceName`` in the appsettings, or ``OpenTelemetryOptions__ServiceName`` as an environment variable, has no effect. Firely Server reads them from the following plain :ref:`environment variables <configure_envvar>`:
+These attributes are **not** set through the ``OpenTelemetryOptions`` section of the settings. Setting ``OpenTelemetryOptions:ServiceName`` in the appsettings, or ``VONK_OpenTelemetryOptions__ServiceName`` as an :ref:`environment variable <configure_envvar>`, has no effect. Firely Server reads them from the following plain environment variables, without the ``VONK_`` prefix:
 
 * ``SERVICE_NAME``: The value of ``service.name``. Default: ``Firely Server``.
 * ``SERVICE_NAMESPACE``: The value of ``service.namespace``. Default: ``Firely``.
 * ``SERVICE_VERSION``: The value of ``service.version``. Default: the version of Firely Server.
-* ``SERVICE_INSTANCE_ID``: The value of ``service.instance.id``. If it is not set or empty, a value is generated.
+* ``SERVICE_INSTANCE_ID``: The value of ``service.instance.id``. If it is not set or empty, a new unique value is generated each time Firely Server starts.
 
 For example, to run Firely Server in Docker under the service name ``my-firely-server``:
 

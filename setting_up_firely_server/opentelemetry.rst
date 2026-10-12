@@ -87,6 +87,34 @@ The individual settings are described below:
 * ``VonkSourcesInclude``: A list of ``ActivitySource`` names to include in the telemetry data. Firely Server names its sources after the fully qualified class that emits the spans; a value matches the whole source name, case-insensitively, and may use the wildcards ``*`` and ``?`` (for example ``Vonk.Plugin.Cql.*``). Use ``*`` to include all sources.
 * ``VonkSourcesExclude``: A list of span name prefixes to exclude from the telemetry data. A span is not recorded if its name starts with one of these values (case-sensitive). The values are matched against the span name only, not against a namespace: the span of a middleware is named after its service class without the namespace, like ``DefaultShapesService``, and the spans of the CQL plugin have names like ``EvaluateMeasure`` and ``ExecuteCqlExpressions``. For example, ``"Evaluate"`` excludes ``EvaluateMeasure``, ``EvaluateSubject``, ``EvaluateGroup`` and ``EvaluateLibrary``, but not ``ExecuteCqlExpressions``. Each span is matched on its own name, so the spans nested in an excluded span are still recorded unless their own name matches as well. A non-empty list replaces the default parent-based sampling, so the sampling decision carried by an incoming trace context is no longer taken into account. Leave this empty to exclude no spans.
 
+.. _feature_opentelemetry_resource:
+
+Service name and resource attributes
+------------------------------------
+
+Firely Server identifies itself in the exported traces and metrics with the OpenTelemetry resource attributes ``service.name``, ``service.namespace``, ``service.version`` and ``service.instance.id``. By default, ``service.name`` is ``Firely Server``. This is how Firely Server shows up in your tracing or metrics backend, so you may want to change it, for example to tell several Firely Server instances apart.
+
+These attributes are **not** set through the ``OpenTelemetryOptions`` section of the settings. Setting ``OpenTelemetryOptions:ServiceName`` in the appsettings, or ``OpenTelemetryOptions__ServiceName`` as an environment variable, has no effect. Firely Server reads them from the following plain :ref:`environment variables <configure_envvar>`:
+
+* ``SERVICE_NAME``: The value of ``service.name``. Default: ``Firely Server``.
+* ``SERVICE_NAMESPACE``: The value of ``service.namespace``. Default: ``Firely``.
+* ``SERVICE_VERSION``: The value of ``service.version``. Default: the version of Firely Server.
+* ``SERVICE_INSTANCE_ID``: The value of ``service.instance.id``. If it is not set or empty, a value is generated.
+
+For example, to run Firely Server in Docker under the service name ``my-firely-server``:
+
+.. code-block:: bash
+
+  docker run -e SERVICE_NAME=my-firely-server ... firely/server
+
+The attributes apply to both the traces and the metrics that Firely Server exports. Restart Firely Server after changing them.
+
+.. note::
+
+  The standard OpenTelemetry environment variables ``OTEL_SERVICE_NAME`` and ``OTEL_RESOURCE_ATTRIBUTES`` are not read by Firely Server and are not supported for these attributes. Use the variables above.
+
+The service name is used for OpenTelemetry output only. It does not change the name of Firely Server in its log, the CapabilityStatement or the health checks. Application Insights is configured separately and is not affected.
+
 .. _feature_opentelemetry_cql:
 
 Tracing CQL operations

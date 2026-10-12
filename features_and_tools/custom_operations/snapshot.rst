@@ -1,7 +1,7 @@
 .. _feature_snapshot:
 
-Snapshot generation - $snapshot
-===============================
+Generate a StructureDefinition snapshot
+=======================================
 
 .. note::
 

@@ -202,6 +202,18 @@ We try to correct all errors in :ref:`feature_errata`. You can also override the
 .. attention::
    The Core Specification provides almost 4000 Conformance Resources. Depending on the machine it may take a few minutes to load and index them.
 
+.. _conformance_import_parallel:
+
+At startup, Firely Server imports the Conformance Resources from all sources in parallel. ``AdministrationImportOptions:MaxInParallel`` sets how many resources are processed at the same time::
+
+  "AdministrationImportOptions": {
+    "MaxInParallel": 1
+  },
+
+The default settings use ``1``, which works best for the SQLite administration database. With SQL Server or MongoDB as the administration database, a value of ``10`` speeds up the import.
+If the setting is left out completely, Firely Server uses ``100``.
+The setting does not apply to :ref:`$import-resources<conformance_on_demand>`, which imports one resource at a time.
+
 .. _conformance_fromdisk:
 
 Load Conformance Resources from disk

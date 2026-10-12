@@ -176,11 +176,19 @@ For each terminology service you can set the following options:
        "Fhir5.0"
 
     :Endpoint: The endpoint url where Firely Server can redirect the requests to.
-    :Username: If the terminology service uses Basic Authentication, you can set the required username here. 
-    :Password: If the terminology service uses Basic Authentication, you can set the required password here.
-    :ClientId: If the terminology service uses a `client_credentials`-based OAuth2 flow, you can set the client_id here.
-    :ClientSecret: If the terminology service uses a `client_credentials`-based OAuth2 flow, you can set the shared client secret here.
-    :Scopes: If the terminology service uses a `client_credentials`-based OAuth2 flow, you can set the scopes requested by Firely Server here.
+    :RemoteTerminologyAuthentication: How Firely Server authenticates to the terminology service. Valid values:
+
+       * ``Off`` (default): no credentials are sent, even if ``Username``, ``Password`` or the OAuth2 settings below are filled in.
+       * ``Basic``: Basic Authentication with ``Username`` and ``Password``.
+       * ``JwtClientCredentials``: an OAuth2 ``client_credentials`` flow with ``ClientId``, ``ClientSecret``, ``Scopes`` and ``TokenEndpoint``.
+
+       If a setting that the chosen value requires is empty, Firely Server does not start.
+    :Username: If ``RemoteTerminologyAuthentication`` is ``Basic``, the username to authenticate with.
+    :Password: If ``RemoteTerminologyAuthentication`` is ``Basic``, the password to authenticate with.
+    :ClientId: If ``RemoteTerminologyAuthentication`` is ``JwtClientCredentials``, the client_id that Firely Server uses to request a token.
+    :ClientSecret: If ``RemoteTerminologyAuthentication`` is ``JwtClientCredentials``, the shared client secret that Firely Server uses to request a token.
+    :Scopes: If ``RemoteTerminologyAuthentication`` is ``JwtClientCredentials``, the scopes requested by Firely Server.
+    :TokenEndpoint: If ``RemoteTerminologyAuthentication`` is ``JwtClientCredentials``, the url of the token endpoint of the authorization server that issues the tokens.
     :MediaType: Default Media-Type that should be used for serialization of the Parameters resources forwarded to the external terminology servie
 
 Notes:
@@ -188,7 +196,7 @@ Notes:
 * The Endpoint, Username and Password settings are not valid for the Local Terminology Server, just for the Remote services.
 * If a Remote Terminology Service has different endpoints for different FHIR versions, configure each endpoint separately.
 * The ``SupportedInformationModels`` cannot be broader than the corresponding ``Fhir.Rx`` plugins configured in the PipelineOptions.
-* Firely Server automatically requests JWT tokens for an OAuth2-protected endpoint and ensures that a valid token is always submitted as part of the request to the external terminology service.
+* With ``JwtClientCredentials``, Firely Server automatically requests JWT tokens from the ``TokenEndpoint`` and ensures that a valid token is always submitted as part of the request to the external terminology service.
 
 A sample Terminology section in the appsettings can look like this:
 
@@ -217,6 +225,7 @@ A sample Terminology section in the appsettings can look like this:
          "SupportedInteractions": [ "ValueSetValidateCode", "Expand", "Translate" ],
          "SupportedInformationModels": [ "Fhir3.0", "Fhir4.0" ],
          "Endpoint": "https://fhir.loinc.org/",
+         "RemoteTerminologyAuthentication": "Basic",
          "Username": "",
          "Password": ""
       }

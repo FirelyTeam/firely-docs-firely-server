@@ -200,7 +200,7 @@ Terminology
       //    "ClientSecret": "",
       //    "TokenEndpoint": "",
       //    "Scopes": "",
-      //    "RemoteTerminologyAuthentication": "Basic", // Jwt or Basic
+      //    "RemoteTerminologyAuthentication": "Basic", // Off (default, no credentials sent), Basic or JwtClientCredentials
       //  }
       //]
     },
@@ -723,8 +723,11 @@ SearchParameters and other Conformance Resources
             "Password": "Password for the above user name",
             "BatchSize": 20
           }
-        ]
+        ],
+        "MaxInParallel": 1
     }
+
+``MaxInParallel`` sets how many Conformance Resources are imported at the same time at startup. Use ``1`` for an SQLite administration database and ``10`` for SQL Server or MongoDB. See :ref:`parallel import at startup <conformance_import_parallel>`.
 
 See :ref:`conformance` and :ref:`feature_customsp`.
 

@@ -254,11 +254,13 @@ With **Conformance Archive (CAR) files**, Firely Server supports these terminolo
    * - Terminology
      - CodeSystem url
    * - SNOMED CT, US Edition
-     - ``http://snomed.info/sct`` (US Edition: ``http://snomed.info/sct/731000124108``)
+     - ``http://snomed.info/sct``
    * - LOINC
      - ``http://loinc.org``
    * - ICD-10-CM
      - ``http://hl7.org/fhir/sid/icd-10-cm``
+
+SNOMED CT uses the same CodeSystem url for every edition. Use ``http://snomed.info/sct`` as the system; the edition URI ``http://snomed.info/sct/731000124108`` is not a system and is not recognized. The edition is only part of the ``version``.
 
 A CAR file holds the complete set of concepts of one terminology, together with their relationships and properties, in a format that Firely Server reads from the local filesystem. Firely provides pre-built CAR files for these terminologies on request; please :ref:`contact us <vonk-contact>`.
 

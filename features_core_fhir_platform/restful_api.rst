@@ -361,14 +361,14 @@ Firely Server supports modifiers for the following data types:
 +-----------------------------+----------------+-------------+
 | reference                   | :above         | ❌          |
 +-----------------------------+----------------+-------------+
-| reference                   | :below         | ✅ [#]_     |
+| reference                   | :below         | ✅          |
 +-----------------------------+----------------+-------------+
 | uri                         | :below         | ✅          |
 +-----------------------------+----------------+-------------+
 | uri                         | :above         | ❌          |
 +-----------------------------+----------------+-------------+
 
-.. [#] For canonical references with a version: Firely Server matches the references to that canonical whose version starts with the given version. For example, ``?derived-from:below=http://example.org/fhir/StructureDefinition/my-profile|1.2`` matches the versions ``1.2`` and ``1.2.3``. The comparison is on the text of the version, so ``|1`` also matches ``10.0``.
+Reference ``:below`` is supported for canonical references with a version: Firely Server matches the references to that canonical whose version starts with the given version. For example, ``?derived-from:below=http://example.org/fhir/StructureDefinition/my-profile|1.2`` matches the versions ``1.2`` and ``1.2.3``. The comparison is on the text of the version, so ``|1`` also matches ``10.0``.
 
 
 When searching with the ``:exact`` modifier the server handles `grapheme clusters <http://hl7.org/fhir/R4B/search.html#modifiers>`_. 

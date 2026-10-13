@@ -132,31 +132,41 @@ FSI stores references as they are. It does not resolve ``urn:uuid`` references b
 Exit codes
 ^^^^^^^^^^
 
-FSI ends with one of these exit codes, which you can use in scripts:
+FSI ends with one of these exit codes, which you can use in scripts. Linux and macOS, including the Docker image, report an exit code as a number from 0 to 255, so the negative codes appear there as 255 to 250:
 
 .. list-table::
    :header-rows: 1
-   :widths: 10 90
+   :widths: 10 15 75
 
    * - Code
+     - On Linux and macOS
      - Meaning
    * - ``0``
+     - ``0``
      - Success.
    * - ``1``
+     - ``1``
      - The operation was cancelled.
    * - ``2``
+     - ``2``
      - The import finished, but one or more resources could not be imported. The log lists them.
    * - ``-1``
+     - ``255``
      - An unexpected error occurred.
    * - ``-2``
+     - ``254``
      - An unexpected error occurred while invoking an internal component (target invocation exception).
    * - ``-3``
+     - ``253``
      - The configuration settings are incorrect.
    * - ``-4``
+     - ``252``
      - Invalid command-line arguments were passed.
    * - ``-5``
+     - ``251``
      - The license validation failed.
    * - ``-6``
+     - ``250``
      - FSI stopped at the first error, because ``haltOnError`` is enabled.
 
 After the import

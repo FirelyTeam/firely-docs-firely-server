@@ -823,7 +823,7 @@ Patient Everything Operation
 ::
 
   "PatientEverythingOperation": {
-    "AdditionalResources": [ "Organization", "Location", "Substance", "Medication", "Device" ] // included referenced resources, additional to the Patient compartment resources
+    "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "Medication", "Practitioner", "PractitionerRole" ] // included referenced resources, additional to the Patient compartment resources
   },
 
 The Patient $everything operation returns all resources linked to a patient that are listed in the Compartment Patient. This section allows you to define additional resources that will be included in the resulting searchset bundle.

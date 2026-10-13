@@ -1833,9 +1833,12 @@ Any other reference form is rejected with an ``OperationOutcome`` identifying
 - a versioned reference, such as ``Patient/pat1/_history/2``
 - a bare id without a resource type, such as ``pat1``
 
-For ``Library/$evaluate`` and ``$cql``, ``subject`` may be omitted when the library
+For ``Library/$evaluate``, ``subject`` may be omitted when the library
 declares no :ref:`Patient context <feature_cql_patient_context>`. It is required when the library does declare one; a
 request that omits it is rejected with HTTP 422 naming the library.
+
+For ``$cql``, ``subject`` is always optional. The expression is evaluated in the Patient
+context only when a ``subject`` is supplied.
 
 Group subjects
 ^^^^^^^^^^^^^^

@@ -9,7 +9,7 @@ Terminology services
 
 Firely Server provides support for Terminology operations and validation against terminologies. This is done through a local implementation based on the Administration database ('Local Terminology Service') and - if configured - extended with external FHIR Terminology Servers ('Remote Terminology Services'). The configuration allows you to set preferred services for each CodeSystem and ValueSet. Firely Server will then transparently select and query either the Local or one of the Remote Terminology Services.
 
-Of the operations listed below, the Local Terminology Service supports ValueSet $validate-code, $expand, $lookup, CodeSystem $validate-code, $find-matches and $subsumes. $translate and $closure are always passed on to a Remote Terminology Service. Note that it only supports simple ValueSets and CodeSystems like the ones part of the FHIR specification. It cannot support complex terminologies like LOINC or SNOMED-CT.
+Of the operations listed below, the Local Terminology Service supports ValueSet $validate-code and ValueSet $expand, and CodeSystem $lookup, CodeSystem $validate-code, CodeSystem $find-matches and CodeSystem $subsumes. $translate and $closure are always passed on to a Remote Terminology Service. Note that it only supports simple ValueSets and CodeSystems like the ones part of the FHIR specification. It cannot support complex terminologies like LOINC or SNOMED-CT.
 
 The terminology operations can be invoked for different FHIR versions as specified in :ref:`feature_multiversion`.
 

@@ -207,6 +207,8 @@ But Firely Server will still apply the restrictions expressed in the user-level 
 The SMART on FHIR specification defines that the authorization server can communicate to the application which user (for example, a Practitioner) logged in during the authorization flow. This is exposed as the ``fhirUser`` claim in the access token response document.
 Note that this refers to the JSON document returned from the token endpoint. Firely Auth will also embed this claim in the access token itself. Based on this verified claim, Firely Server identifies the user and enforces the configured ``AccessPolicy`` for that user.
 
+The ``fhirUser`` claim in the access token must be a reference of the form ``[base/]Type/id``: a relative reference such as ``Practitioner/123`` or ``/Practitioner/123``, or an absolute one such as ``https://example.org/fhir/Practitioner/123``. The type must be one of ``Practitioner``, ``PractitionerRole``, ``Patient``, ``RelatedPerson``, ``Person`` or ``Device``. If the claim has any other form, Firely Server rejects every request made with the token with ``401 Unauthorized``, and logs a warning naming the invalid claim.
+
 .. _system_level_scopes:  
 
 System-level scopes

@@ -200,13 +200,17 @@ The following input parameters are supported for the ``$validate`` operation.
 |                         |           |                         |             | ``Parameters`` resource as     |
 |                         |           |                         |             | input.                         |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
-| ``profile``             | ✅        | canonical (uri)         | 0..1        | Canonical URL of the           |
+| ``profile``             | ✅        | uri                     | 0..1        | Canonical URL of the           |
 |                         |           |                         |             | ``StructureDefinition`` to     |
 |                         |           |                         |             | validate against. If omitted,  |
 |                         |           |                         |             | validation is performed        |
 |                         |           |                         |             | against the base profile and   |
 |                         |           |                         |             | any profiles in                |
-|                         |           |                         |             | ``meta.profile``.              |
+|                         |           |                         |             | ``meta.profile``. In a         |
+|                         |           |                         |             | ``Parameters`` body, pass it   |
+|                         |           |                         |             | as ``valueUri``. A             |
+|                         |           |                         |             | ``valueCanonical`` is          |
+|                         |           |                         |             | rejected.                      |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``mode``                | ❌        | code                    | 0..1        | Validation mode as defined by  |
 |                         |           |                         |             | the FHIR specification         |
@@ -295,7 +299,7 @@ Example request with a ``Parameters`` body:
        },
        {
          "name": "profile",
-         "valueCanonical": "https://example.org/fhir/StructureDefinition/MyPatientProfile"
+         "valueUri": "https://example.org/fhir/StructureDefinition/MyPatientProfile"
        }
      ]
    }

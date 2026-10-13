@@ -612,7 +612,7 @@ FHIR RESTful interactions
 :Configuration: ``Vonk.Plugin.Operations.SnapshotGeneration.SnapshotGenerationConfiguration``
 :License token: http://fire.ly/vonk/plugins/snapshotgeneration
 :Order: 4850
-:Description: Implements `FHIR $snapshot <http://hl7.org/fhir/R4/structuredefinition-operation-snapshot.html>`_ on a type level: ``POST <base>/administration/StructureDefinition/$snapshot``.
+:Description: Implements `FHIR $snapshot <http://hl7.org/fhir/R4/structuredefinition-operation-snapshot.html>`_ on the type and instance level: ``GET`` / ``POST <base>/StructureDefinition/$snapshot`` and ``GET`` / ``POST <base>/StructureDefinition/<id>/$snapshot``. See :ref:`feature_snapshot`.
 
 .. _vonk_plugins_batch:
 

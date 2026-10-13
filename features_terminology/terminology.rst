@@ -9,7 +9,7 @@ Terminology services
 
 Firely Server provides support for Terminology operations and validation against terminologies. This is done through a local implementation based on the Administration database ('Local Terminology Service') and - if configured - extended with external FHIR Terminology Servers ('Remote Terminology Services'). The configuration allows you to set preferred services for each CodeSystem and ValueSet. Firely Server will then transparently select and query either the Local or one of the Remote Terminology Services.
 
-Of the operations listed below the following can be supported by the Local Terminology Service: $validate-code, $expand, $lookup, $find-matches. Note that it only supports simple ValueSets and CodeSystems like the ones part of the FHIR specification. It cannot support complex terminologies like LOINC or SNOMED-CT.
+Of the operations listed below, the Local Terminology Service supports ValueSet $validate-code, $expand, $lookup, CodeSystem $validate-code, $find-matches and $subsumes. $translate and $closure are always passed on to a Remote Terminology Service. Note that it only supports simple ValueSets and CodeSystems like the ones part of the FHIR specification. It cannot support complex terminologies like LOINC or SNOMED-CT.
 
 The terminology operations can be invoked for different FHIR versions as specified in :ref:`feature_multiversion`.
 
@@ -23,14 +23,18 @@ In earlier versions of Firely Server, local terminology services were separately
 Operations
 ----------
 
+Every operation below is available on the regular FHIR endpoint (``<firely-server-endpoint>/...``) and on the administration endpoint (``<firely-server-endpoint>/administration/...``), on the levels listed for it. Which of these levels are actually open is set per endpoint in ``Operations`` and ``Administration:Operations`` (see :ref:`enabling the operations <feature_terminology_operations_config>`). On the regular endpoint, CodeSystems, ValueSets and ConceptMaps are still resolved from the Administration database.
+
+Firely Server decides per request whether the Local Terminology Service or a Remote Terminology Service handles it (see :ref:`feature_terminologyoptions`). The parameter lists below are those of the Local Terminology Service. It rejects any other parameter with the message "The input parameter(s) ... are currently not supported". A Remote Terminology Service receives the parameters of the request and decides itself which ones it supports. Parameters of a complex type, such as ``coding`` or ``valueSet``, can only be passed with ``POST``.
+
 ValueSet $validate-code
 -----------------------
 
 :definition: https://hl7.org/fhir/valueset-operation-validate-code.html
 :notes: 
-   * Available on the type level ``<firely-server-endpoint>/administration/ValueSet/$validate-code`` and the instance level ``<firely-server-endpoint>/administration/ValueSet/<id>/$validate-code``.
-   * Only the parameters url, valueSet, valueSetVersion, code, system, display, coding, codeableConcept, abstract are supported.
-   * The url and valueSetVersion input parameters are only taken into consideration if no valueSet resource was provided in the body. So the valueSet in the body takes priority.
+   * Available on the type level ``ValueSet/$validate-code`` and the instance level ``ValueSet/<id>/$validate-code``.
+   * The Local Terminology Service supports the parameters url, valueSetVersion, valueSet, code, system, display, coding, codeableConcept, abstract, inferSystem and context.
+   * Pass the ValueSet either by reference (url, optionally with valueSetVersion, or the id on the instance level) or as a resource (the valueSet parameter or the request body), not both. A request that has both is rejected with ``400 Bad Request`` and "Ambiguous call. ValueSet information present both in url and in the valueSet parameter or request body".
    * Both ``GET`` and ``POST`` interactions are available. 
 
 ValueSet $expand
@@ -38,9 +42,10 @@ ValueSet $expand
 
 :definition: https://hl7.org/fhir/valueset-operation-expand.html
 :notes:
-   * Available on the type level ``<firely-server-endpoint>/administration/ValueSet/$expand`` and the instance level ``<firely-server-endpoint>/administration/ValueSet/<id>/$expand``.
-   * Only the parameters url, valueSet, valueSetVersion and includeDesignations are supported.
-   * The url and valueSetVersion input parameters are only taken into consideration if no valueSet resource was provided in the body. So the valueSet in the body takes priority.
+   * Available on the type level ``ValueSet/$expand`` and the instance level ``ValueSet/<id>/$expand``.
+   * The Local Terminology Service supports the parameters url, valueSet and includeDesignations. It does not support valueSetVersion or any of the other expansion parameters, such as filter, count or offset. A Remote Terminology Service may support them.
+   * Pass the ValueSet either by reference (url, or the id on the instance level) or as a resource (the valueSet parameter or the request body), not both. A request that has both is rejected with ``400 Bad Request`` and "Ambiguous call. ValueSet information present both in url and in the valueSet parameter or request body".
+   * The size of an expansion by the Local Terminology Service is limited by ``MaxExpansionSize`` (see :ref:`feature_terminologyoptions`).
    * Both ``GET`` and ``POST`` interactions are available. 
 
 CodeSystem $lookup
@@ -48,9 +53,18 @@ CodeSystem $lookup
 
 :definition: https://hl7.org/fhir/codesystem-operation-lookup.html
 :notes:
-   * Available on the type level ``<firely-server-endpoint>/administration/CodeSystem/$lookup``.
-   * Only the parameters code, system, version, coding and date are supported. 
-   * Code & system combination takes priority over the coding parameter.
+   * Available on the type level ``CodeSystem/$lookup`` and the instance level ``CodeSystem/<id>/$lookup``. On the instance level the id is not used: pass the CodeSystem with system or coding as on the type level.
+   * The Local Terminology Service supports the parameters code, system, version, coding and property. It does not support date.
+   * Pass the concept either as code and system or as coding, not both. A request with both code and ``coding.code``, or with both system and ``coding.system``, is rejected with "Ambiguous call. code/system was provided in both code/system parameters and coding parameter".
+   * Both ``GET`` and ``POST`` interactions are available. 
+
+CodeSystem $validate-code
+-------------------------
+
+:definition: https://hl7.org/fhir/codesystem-operation-validate-code.html
+:notes:
+   * Available on the type level ``CodeSystem/$validate-code`` and the instance level ``CodeSystem/<id>/$validate-code``. On the instance level the CodeSystem with that id is used, unless url is given.
+   * The Local Terminology Service supports the parameters url, version, codeSystem, code, display, coding, codeableConcept, abstract and displayLanguage.
    * Both ``GET`` and ``POST`` interactions are available. 
 
 CodeSystem $find-matches / $compose
@@ -58,21 +72,18 @@ CodeSystem $find-matches / $compose
 
 :definition: https://hl7.org/fhir/codesystem-operation-find-matches.html
 :notes:
-   * Available on the type level ``<firely-server-endpoint>/administration/CodeSystem/$find-matches`` and the instance level ``<firely-server-endpoint>/administration/CodeSystem/<id>/$find-matches``.
-   * Only the parameters system, exact, version, property.code and property.value are supported.
-   * The url and valueSetVersion input parameters are only taken into consideration if no valueSet resource was provided in the body. So the valueSet in the body takes priority.
-   * Both ``GET`` and ``POST`` interactions are available. 
-   * $find-matches was named $compose in FHIR STU3. The operation is supported with both names.
+   * Available on the type level ``CodeSystem/$find-matches`` and the instance level ``CodeSystem/<id>/$find-matches``. On the instance level the CodeSystem with that id is used, unless system is given.
+   * The Local Terminology Service supports the parameters system, version, exact and property (with the parts code and value).
+   * property can only be passed with ``POST``. Both ``GET`` and ``POST`` interactions are available. 
+   * $find-matches was named $compose in FHIR STU3. The operation is supported with both names. For STU3, the terminology service must list ``Compose`` in its ``SupportedInteractions`` (see :ref:`feature_terminologyoptions`), and ``$compose`` must be enabled in the ``Operations`` section of the endpoint. The default settings of the Local Terminology Service only list ``FindMatches``.
 
-   
 CodeSystem $subsumes
 --------------------
 
 :definition: https://hl7.org/fhir/codesystem-operation-subsumes.html
 :notes:
-   * Available on the type level ``<firely-server-endpoint>/administration/CodeSystem/$subsumes``.
-   * Only the parameters codeA, codeB, system, and version are supported.
-   * The system input parameters is only taken into when called on the type level.
+   * Available on the type level ``CodeSystem/$subsumes`` and the instance level ``CodeSystem/<id>/$subsumes``. On the instance level the CodeSystem with that id is used, unless system is given.
+   * The Local Terminology Service supports the parameters codeA, codeB, codingA, codingB, system and version.
    * Both ``GET`` and ``POST`` interactions are available. 
 
 ConceptMap $closure
@@ -80,8 +91,8 @@ ConceptMap $closure
 
 :definition: https://hl7.org/fhir/conceptmap-operation-closure.html
 :notes:
-   * Available on the system level ``<firely-server-endpoint>/administration/$closure``.
-   * This operation is passed on to a Remote Terminology Service supporting it. It supports any parameters that the Remote service supports. 
+   * Available on the system level ``$closure``.
+   * The Local Terminology Service does not support this operation. It is passed on to a Remote Terminology Service supporting it, and supports any parameters that the remote service supports.
    * Only ``POST`` interactions are available. 
 
 ConceptMap $translate
@@ -89,8 +100,9 @@ ConceptMap $translate
 
 :definition: https://hl7.org/fhir/conceptmap-operation-translate.html
 :notes:
-   * Available on the instance level ``<firely-server-endpoint>/administration/ConceptMap/[id]/$translate`` and the type level ``<firely-server-endpoint>/administration/ConceptMap/$translate``.
-   * Only the parameters url, conceptMap (on POST), conceptMapVersion, code, system, version, source, target, targetsystem and reverse are supported.
+   * Available on the type level ``ConceptMap/$translate`` and the instance level ``ConceptMap/<id>/$translate``.
+   * The Local Terminology Service does not support this operation. It is passed on to a Remote Terminology Service supporting it. With ``GET``, the parameters url, conceptMapVersion, code, system, version, source, target, targetsystem and reverse are passed on; with ``POST`` the remote service decides which parameters it supports.
+   * Pass the ConceptMap either by reference (url, or the id on the instance level) or as a resource (the conceptMap parameter or the request body), not both. A request that has both is rejected with ``400 Bad Request`` and "Ambiguous call".
    * Both ``GET`` and ``POST`` interactions are available. 
 
 
@@ -130,6 +142,8 @@ Additionally, to the "/administration" pipeline, ``Vonk.Plugins.Terminology`` ca
           
 To include or exclude individual operations in the pipeline, see the available plugins under :ref:`vonk_plugins_terminology`.
 
+.. _feature_terminology_operations_config:
+
 Also make sure that the terminology operations are enabled in the ``Operations`` section, on the levels on which you want to use them (see :ref:`disable_interactions`). The default settings enable all of them on the regular FHIR endpoint, for example::
 
    "Operations": {
@@ -165,9 +179,11 @@ The operations on the administration endpoint are configured in ``Administration
       "AllowedNetworks": [ "127.0.0.1", "::1" ] // i.e.: ["127.0.0.1", "::1" (ipv6 localhost), "10.1.50.0/24", "10.5.3.0/24", "31.161.91.98"]
    },
 
+In the default settings of the administration endpoint, ``$lookup`` and ``$subsumes`` are enabled on the type level only, and ``$compose`` is not enabled. Add ``Instance`` to their ``Level``, or add a ``$compose`` entry, to use them there.
+
 .. note::
 
-   The ``SupportedInteractions`` section and the ``Administration:Security:AllowedNetworks`` and ``Administration:Security:OperationsToBeSecured`` settings of Firely Server versions before 6.0 are no longer supported. If one of them is present in your settings, Firely Server does not start. See :ref:`disable_interactions` for the migration to the ``Operations`` section.
+   The top-level ``SupportedInteractions`` section and the ``Administration:Security:AllowedNetworks`` and ``Administration:Security:OperationsToBeSecured`` settings of Firely Server versions before 6.0 are no longer supported. If one of them is present in your settings, Firely Server does not start. See :ref:`disable_interactions` for the migration to the ``Operations`` section.
 
 .. _feature_terminologyoptions:
 

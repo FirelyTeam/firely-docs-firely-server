@@ -253,8 +253,8 @@ With **Conformance Archive (CAR) files**, Firely Server supports these terminolo
 
    * - Terminology
      - CodeSystem url
-   * - SNOMED CT
-     - ``http://snomed.info/sct``
+   * - SNOMED CT, US Edition
+     - ``http://snomed.info/sct`` (US Edition: ``http://snomed.info/sct/731000124108``)
    * - LOINC
      - ``http://loinc.org``
    * - ICD-10-CM
@@ -278,7 +278,7 @@ The CAR terminology service answers these operations for the code systems in its
 
 For those code systems it is preferred over the local and remote terminology services. Other operations, such as ``ValueSet/$expand`` or ``ConceptMap/$translate``, and code systems that are not in a CAR file are handled by the local and remote terminology services as before.
 
-``ValueSet/$validate-code`` is handled by delegation. This includes the code checks of resource validation, which use ``ValueSet/$validate-code``. Firely Server looks for a terminology service that supports all three CodeSystem operations above for the code system of the code: first the CAR terminology service, then the local and remote services in their configured order. If it finds one, Firely Server reads the ValueSet itself, including filters such as ``is-a`` and ``descendent-of``, and answers the request with ``CodeSystem/$validate-code``, ``CodeSystem/$lookup`` and ``CodeSystem/$subsumes`` calls to that service. So a ValueSet defined on SNOMED CT, LOINC or ICD-10-CM can be validated locally, as long as the ValueSet itself is available to Firely Server.
+``ValueSet/$validate-code`` is handled by delegation. This includes the code checks of resource validation, which use ``ValueSet/$validate-code``. Firely Server looks for a terminology service that supports all three CodeSystem operations above for the code system of the code: first the CAR terminology service, then the local and remote services in their configured order. If it finds one, Firely Server reads the ValueSet itself, including filters such as ``is-a`` and ``descendent-of``, and answers the request with ``CodeSystem/$validate-code``, ``CodeSystem/$lookup`` and ``CodeSystem/$subsumes`` calls to that service. So a ValueSet defined on SNOMED CT (US Edition), LOINC or ICD-10-CM can be validated locally, as long as the ValueSet itself is available to Firely Server.
 
 Firely Server uses the regular routing for ``ValueSet/$validate-code`` instead, when:
 

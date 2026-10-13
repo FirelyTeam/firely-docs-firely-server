@@ -131,7 +131,7 @@ In case of a POST request, a FHIR Parameters resource must be provided as the pa
 		"parameter": [
 			{
 				"name": "exportType",
-				"valueCanonical": "http://hl7.org/fhir/us/davinci-atr"
+				"valueCanonical": "hl7.fhir.us.davinci-atr"
 			},
 			{
 				"name": "_since",
@@ -152,7 +152,10 @@ The DaVinci operation also defines the ``exportType`` parameter to identify the 
 | ``exportType``    | ✅        | ``canonical``      | Indicates the type of export to perform. This parameter is          |
 |                   |           |                    | DaVinci-specific and is not part of the base Bulk Data Export       |
 |                   |           |                    | operation. Firely Server currently only supports the                |
-|                   |           |                    | ``hl7.fhir.us.davinci-atr`` exportType                              |
+|                   |           |                    | ``hl7.fhir.us.davinci-atr`` exportType. The value is                |
+|                   |           |                    | case-sensitive. A request without ``exportType``, or with more      |
+|                   |           |                    | than one, returns ``400 Bad Request``. Any other value returns      |
+|                   |           |                    | ``501 Not Implemented``.                                            |
 +-------------------+-----------+--------------------+---------------------------------------------------------------------+
 | ``patient``       | ✅        | ``reference``      | Same behavior as BDE for POST requests (not allowed in GET)         |
 +-------------------+-----------+--------------------+---------------------------------------------------------------------+

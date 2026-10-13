@@ -108,12 +108,56 @@ Starting from FS version 5.5.0, the FSI version number aligns with the FS versio
 Input files formats
 ^^^^^^^^^^^^^^^^^^^
 
-FSI supports the following input file formats:
+FSI reads files by their extension:
 
-* FHIR *collection* bundles stored in ``*.json`` files, and
-* ``*.ndjson`` files where each line contains a separate FHIR resource in JSON format.
+* ``*.json``: a single FHIR resource or a Bundle in JSON format.
+* ``*.xml``: a single FHIR resource or a Bundle in XML format.
+* ``*.ndjson``: one FHIR resource or Bundle in JSON format per line.
 
-*Transaction* bundles can also be imported; however, they are processed as collection bundles.
+Files with any other extension are reported as an error and skipped.
+
+How a Bundle is imported depends on its ``type``:
+
+* ``collection``: each entry is imported as a separate resource.
+* ``batch``, ``transaction`` and ``searchset``: processed as a collection, so each entry is imported as a separate resource. The ``request`` of the entries is ignored.
+* ``message`` and ``document``: the Bundle itself is imported as one resource.
+* Any other type, or no type: the Bundle is reported as an error and skipped.
+
+FSI keeps the ``id``, ``meta.versionId`` and ``meta.lastUpdated`` of the incoming resources. If a resource has no ``id`` or ``meta.versionId``, FSI assigns a new GUID. If it has no ``meta.lastUpdated``, FSI sets it to the time of the import.
+
+FSI stores references as they are. It does not resolve ``urn:uuid`` references between the entries of a Bundle, and it rejects resources with a conditional reference (a reference containing ``?``) with the error "Conditional references are not supported". To convert absolute references to relative ones, see ``--urlConvBases`` and ``--urlConvElems`` below.
+
+.. _tool_fsi_exit_codes:
+
+Exit codes
+^^^^^^^^^^
+
+FSI ends with one of these exit codes, which you can use in scripts:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 10 90
+
+   * - Code
+     - Meaning
+   * - ``0``
+     - Success.
+   * - ``1``
+     - The operation was cancelled.
+   * - ``2``
+     - The import finished, but one or more resources could not be imported. The log lists them.
+   * - ``-1``
+     - An unexpected error occurred.
+   * - ``-2``
+     - An unexpected error occurred while invoking an internal component (target invocation exception).
+   * - ``-3``
+     - The configuration settings are incorrect.
+   * - ``-4``
+     - Invalid command-line arguments were passed.
+   * - ``-5``
+     - The license validation failed.
+   * - ``-6``
+     - FSI stopped at the first error, because ``haltOnError`` is enabled.
 
 After the import
 ^^^^^^^^^^^^^^^^

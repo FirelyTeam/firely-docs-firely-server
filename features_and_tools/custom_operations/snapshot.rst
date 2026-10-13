@@ -244,6 +244,10 @@ Firely Server rejects a request with the following HTTP status codes:
 | The body is another resource than a ``StructureDefinition`` or a     | 400    |
 | ``Parameters`` resource.                                             |        |
 +----------------------------------------------------------------------+--------+
+| The request has a body that cannot be read: it cannot be parsed      | 400 or |
+| (400), or its Content-Type is missing or not supported (415). A      | 415    |
+| ``url`` in the query does not make Firely Server ignore such a body. |        |
++----------------------------------------------------------------------+--------+
 | Snapshot generation reports an error.                                | 400    |
 +----------------------------------------------------------------------+--------+
 | The server does not know a StructureDefinition with the given        | 404    |
@@ -254,6 +258,9 @@ Firely Server rejects a request with the following HTTP status codes:
 +----------------------------------------------------------------------+--------+
 | At the instance level: the StructureDefinition is stored in another  | 415    |
 | FHIR version than the one of the request.                            |        |
++----------------------------------------------------------------------+--------+
+| At the instance level: more than one StructureDefinition is stored   | 409    |
+| with the given id.                                                   |        |
 +----------------------------------------------------------------------+--------+
 
 .. note::

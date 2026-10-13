@@ -453,16 +453,25 @@ expressed as number of AuditEvent to verify in one step. We recommend to set thi
    would fail, indicating the following error:
    ``SqliteException (0x80004005): SQLite Error 1: 'parser stack overflow'``
 
-Finally, in order to enable the integrity verification, the corresponding custom operations must be listed as part of the
-``SupportedInteractions``.
-For that, you have to add the type-level custom operations ``$verify-integrity`` and the system-level custom operation ``$verify-integrity-status``, as follows:
+Finally, the type-level operation ``$verify-integrity`` and the system-level operation ``$verify-integrity-status`` must also be enabled in the ``Operations`` section (see :ref:`disable_interactions`). The default settings already enable them:
 
 .. code-block:: json
 
-  "SupportedInteractions": {
-    "InstanceLevelInteractions": "...",
-    "TypeLevelInteractions": "..., $verify-integrity",
-    "WholeSystemInteractions": "..., $verify-integrity-status"
+  "Operations": {
+    "$verify-integrity": {
+      "Name": "$verify-integrity",
+      "Level": [ "Type" ],
+      "Enabled": true,
+      "RequireAuthorization": "WhenAuthEnabled",
+      "RequireTenant": "WhenTenancyEnabled"
+    },
+    "$verify-integrity-status": {
+      "Name": "$verify-integrity-status",
+      "Level": [ "System" ],
+      "Enabled": true,
+      "RequireAuthorization": "WhenAuthEnabled",
+      "RequireTenant": "WhenTenancyEnabled"
+    }
   }
 
 JSON Web Key Set generation

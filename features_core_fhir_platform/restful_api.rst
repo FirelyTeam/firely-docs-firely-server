@@ -62,12 +62,39 @@ Send the version that you expect to be current in the ``If-Match`` header, in th
 
   If-Match: W/"<versionId>"
 
-In a batch or transaction, use ``entry.request.ifMatch`` for the same purpose.
+In a batch or transaction, use ``entry.request.ifMatch`` for the same purpose, see :ref:`restful_crud_conditional_headers`.
 
 * If the version in ``If-Match`` is the current version of the resource, the update is performed.
 * If it is not, Firely Server rejects the request with ``HTTP 409 Conflict``. Note that the FHIR specification asks for ``412 Precondition Failed`` here.
 * If no resource exists with the given id, Firely Server also returns ``409 Conflict``, and does not create the resource, even when create-on-update is enabled.
 * A value that is not in the weak ETag format ``W/"<versionId>"`` never matches, so the request is rejected with ``409 Conflict``.
+
+.. _restful_crud_conditional_headers:
+
+Conditional headers
+^^^^^^^^^^^^^^^^^^^
+
+Firely Server supports these conditional request headers. In a batch or transaction, each entry can carry them in its ``request`` element, with the same effect:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 18 18 64
+
+   * - HTTP header
+     - ``entry.request``
+     - Effect
+   * - ``If-None-Exist``
+     - ``ifNoneExist``
+     - Makes a create conditional. The value is a search query without the resource type, for example ``identifier=http://example.org|123``. If no resource matches, the resource is created (``201 Created``). If one resource matches, nothing is created and Firely Server returns ``200 OK`` with the ``Location`` of the existing resource. If more than one resource matches, the create is rejected with ``412 Precondition Failed``. In a bundle entry it only applies to a ``POST`` (create).
+   * - ``If-Match``
+     - ``ifMatch``
+     - Makes an update, a conditional update or a patch conditional on the current version of the resource, see :ref:`restful_crud_versioned_update`.
+   * - ``If-None-Match``
+     - ``ifNoneMatch``
+     - Makes a read conditional. The value is one or more ETags, separated by commas, such as ``W/"3"``. If the current version of the resource is one of them, Firely Server returns ``304 Not Modified`` without the resource. A value that is not a correctly formed ETag is rejected with ``400 Bad Request``.
+   * - ``If-Modified-Since``
+     - ``ifModifiedSince``
+     - Makes a read conditional. The value is an HTTP date, such as ``Wed, 21 Oct 2026 07:28:00 GMT``. If the resource was not changed after that moment, Firely Server returns ``304 Not Modified`` without the resource. A value that is not an HTTP date is rejected with ``400 Bad Request``. In a bundle entry, ``ifModifiedSince`` is a FHIR ``instant``, such as ``2026-10-21T07:28:00Z``.
 
 .. _restful_crud_headers:
 

@@ -25,6 +25,19 @@ Before you can run Firely Server, you will need to pull the Docker Firely Server
 
 .. warning:: If you use Docker, you may want to run multiple instances of Firely Server (e.g. with Kubernetes). Read :ref:`vonk_conformance_instances` for caveats with the Administration endpoint.
 
+.. _docker_user_permissions:
+
+.. note::
+
+   The ``firely/server`` image runs Firely Server as the non-root user ``firely``, with user id ``1000`` and group id ``2000``. The working directory ``/app`` is owned by that user. This has a few consequences:
+
+   * Files that you mount into the container, such as the license file and the ``*.instance.json`` settings files, must be readable by user id ``1000``.
+   * Folders that Firely Server writes to, such as the folder with the SQLite database files, the log folder and the folder for Bulk Data Export files, must be writable by user id ``1000``. With a bind mount of a host folder, set its owner or permissions accordingly, for example with ``chown -R 1000:2000 ./resourcedata``.
+   * Depending on the container runtime, a non-root user may not be allowed to listen on a port below 1024. Keep ``Hosting:HttpPort`` at its default ``4080`` and map it to another port on the host if needed, for example with ``-p 80:4080``.
+   * The image sets ``COMPlus_EnableDiagnostics=0``, which disables the .NET diagnostics port. Tools like ``dotnet-counters``, ``dotnet-trace`` and ``dotnet-dump`` cannot attach to Firely Server in the container. Use the :ref:`OpenTelemetry <feature_opentelemetry>` metrics and traces instead.
+
+   The Docker image of :ref:`Firely Server Ingest <tool_fsi>` runs as the same user and also disables the diagnostics port.
+
 .. note:: Since Firely Server version 4.7.0, the Docker image name has changed from `simplifier/vonk <https://hub.docker.com/repository/docker/simplifier/vonk>`_ to `firely/server <https://hub.docker.com/r/firely/server>`_. The old image name will be maintained for a few months to allow for a smooth transition. When updating to version 4.7.0, you should start to use the new image name. Versions 4.6.2 and older will stay available (only) on 'simplifier/vonk'.
 
 

@@ -789,6 +789,8 @@ To monitor the counters for FSI, you can execute the following command:
 
 where *<process_id>* is the PID of the running FSI tool.
 
+``dotnet-counters`` cannot attach to FSI when it runs in the official Docker image, because the image disables the .NET diagnostics port (``COMPlus_EnableDiagnostics=0``, see :ref:`running FSI in Docker <docker_user_permissions>`). Use the OpenTelemetry metrics of FSI in that case.
+
 .. note::
 
   If you think the ingestion process is going too slow for your amount of data and the hardware specifications, please :ref:`contact us<vonk-contact>` for advice.

@@ -63,7 +63,7 @@ In the example below we have enabled all three levels: Patient, Group and System
           "Vonk.Fhir.R3",
           "Vonk.Fhir.R4",
           //"Vonk.Fhir.R5",
-          "Vonk.Repository.Sql.SqlVonkConfiguration",
+          "Vonk.Repository.Sql.Raw.KSearchConfiguration",
           "Vonk.Repository.Sqlite.SqliteVonkConfiguration",
           "Vonk.Repository.MongoDb.MongoDbVonkConfiguration",
           "Vonk.Subscriptions",
@@ -73,7 +73,7 @@ In the example below we have enabled all three levels: Patient, Group and System
           "Vonk.Plugin.ConvertOperation.ConvertOperationConfiguration",
           "Vonk.Plugin.BinaryWrapper",
           "Vonk.Plugin.Audit",
-          "Vonk.Plugins.TerminologyIntegration",          
+          "Vonk.Plugins.Terminology",
           "Vonk.Plugin.BulkDataExport.SystemBulkDataExportConfiguration",
           "Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration",
           "Vonk.Plugin.BulkDataExport.PatientBulkDataExportConfiguration",
@@ -120,9 +120,9 @@ BDE introduces several new parts to the appsettings:
 
   "TaskFileManagement": {
       "StorageService": {
-          "StorageType": "LocalFile", // LocalFile / AzureBlob / AzureFile
+          "StorageType": "LocalFile", // LocalFile / AzureBlob / AzureFiles
           "StoragePath": "./taskfiles",
-          "ContainerName": "firelyserver" // For AzureBlob / AzureFile only
+          "ContainerName": "firelyserver" // For AzureBlob / AzureFiles only
       }
   },
   "AzureServices": {

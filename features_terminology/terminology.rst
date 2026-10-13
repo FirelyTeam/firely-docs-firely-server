@@ -195,7 +195,7 @@ You can enable the integration with one or more external terminology services by
 For each terminology service you can set the following options:
 
     :Order: The order of the terminology service, or the priority. If multiple Terminology services could be used for a request, Firely Server will use the priority to select a service. Terminology services are arranged in a ascending order: so 1 will be selected over 2.
-    :PreferredSystem: If a request is directed at a specific code system, Firely Server will choose this terminology server over other available services. A system matches one of the preferred systems if the system starts with the preferred system. So ``http://loinc.org`` will match any CodeSystem or ValueSet with a canonical that starts with that url.  
+    :PreferredSystems: If a request is directed at a specific code system, Firely Server will choose this terminology server over other available services. A system matches one of the preferred systems if the system starts with the preferred system. So ``http://loinc.org`` will match any CodeSystem or ValueSet with a canonical that starts with that url.  
     :SupportedInteractions: The operations supported by the terminology service. Firely Server will only select this service if the operation is in this list. Valid values::
 
        "ValueSetValidateCode"

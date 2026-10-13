@@ -12,7 +12,7 @@ Firely Server supports most of the features in the `FHIR RESTful API <http://www
 FHIR Versions
 -------------
 
-All the operations below can be called for FHIR STU3 or FHIR R4. Firely Server supports the fhirVersion mimetype parameter and fhir version endpoint mappings for that purpose. 
+All the operations below can be called for FHIR STU3, FHIR R4 or FHIR R5. Firely Server supports the fhirVersion mimetype parameter and fhir version endpoint mappings for that purpose. 
 See :ref:`feature_multiversion` for more information.
 
 .. _restful_crud:
@@ -267,8 +267,8 @@ Paging behavior of Firely Server can be configured in the ``BundleOptions`` of t
   "BundleOptions": {
     "DefaultTotal": "none", // none, accurate
     "DefaultCount": 10,
-    "MaxCount": 50,
-    "DefaultSort": "-_lastUpdated"
+    "MaxCount": 50
+    //,"DefaultSort": "-_lastUpdated"
   },
   
 
@@ -283,7 +283,9 @@ If ``DefaultTotal`` is set to "none" the server will return:
    Since Firely Server 6.9.0, the link to the previous page has the relation ``previous``, as defined by the FHIR specification. Earlier versions used ``prev``. Clients that look up paging links by relation name must use ``previous``.
 
 If ``DefaultTotal`` is set to "accurate" the server will additionally return a ``last`` link on all but the last page, as well as a ``total`` element in the bundle response. The ``total`` element contains the total number of resources that match the search criteria.
-With ``DefaultCount``, the number of resources that are returned per page can be regulated. The maximum number of resources that can be returned per page is set with ``MaxCount``. The default sort order can be set with ``DefaultSort``.
+With ``DefaultCount``, the number of resources that are returned per page can be regulated. The maximum number of resources that can be returned per page is set with ``MaxCount``.
+
+``DefaultSort`` sets a sort order for searches. It is commented out in the default settings, so searches have no implicit sort order: unless the request contains ``_sort``, the order of the results is not defined. When ``DefaultSort`` is set, it is used as the sort order of a request without ``_sort``, and added as the last sort clause to a request with ``_sort``.
 
 If MongoDb is configured as the repository back-end, Firely Server may utilize keyset pagination for navigating through the search results for optimized performance. There are a few limitations to this feature:
 
@@ -359,12 +361,14 @@ Firely Server supports modifiers for the following data types:
 +-----------------------------+----------------+-------------+
 | reference                   | :above         | ❌          |
 +-----------------------------+----------------+-------------+
-| reference                   | :below         | ❌          |
+| reference                   | :below         | ✅ [#]_     |
 +-----------------------------+----------------+-------------+
 | uri                         | :below         | ✅          |
 +-----------------------------+----------------+-------------+
 | uri                         | :above         | ❌          |
 +-----------------------------+----------------+-------------+
+
+.. [#] For canonical references with a version: Firely Server matches the references to that canonical whose version starts with the given version. For example, ``?derived-from:below=http://example.org/fhir/StructureDefinition/my-profile|1.2`` matches the versions ``1.2`` and ``1.2.3``. The comparison is on the text of the version, so ``|1`` also matches ``10.0``.
 
 
 When searching with the ``:exact`` modifier the server handles `grapheme clusters <http://hl7.org/fhir/R4B/search.html#modifiers>`_. 
@@ -448,12 +452,12 @@ The following parameters and options are not yet supported:
 #. ``:approx`` modifier on a quantity SearchParameter
 #. ``:text`` modifier on a string SearchParameter
 #. ``:above``, ``:below``, ``:in`` and ``:not-in`` modifiers on a token SearchParameter, ``above`` and ``below`` are also not supported for `Mime Types <http://hl7.org/fhir/R4B/search.html#mimetype>`_.
-#. ``:above``, ``:below`` modifiers on a reference SearchParameter (only valid on a `strict hierarchy <http://hl7.org/fhir/R4B/search.html#recursive>`_)
+#. ``:above`` modifier on a reference SearchParameter, and ``:below`` on a reference that is not a canonical (only valid on a `strict hierarchy <http://hl7.org/fhir/R4B/search.html#recursive>`_)
 #. ``_revinclude`` will match the current version of the referenced resources, also if the reference is versioned.
 #. ``_pretty``
 #. Implicit ranges are supported on dates, datetimes and quantities with a UCUM unit. But not on other quantities and number parameters.
 #. Search parameter arguments in exponential form (e.g. 1.8e2).
-#. ``_total=estimate``, only ``none`` and ``accurate`` are supported.
+#. ``_total=estimate``. Only ``none`` and ``accurate`` are supported. A request with ``_total=estimate`` is not rejected, but Firely Server does not calculate a quick estimate: it counts the matches as for ``accurate``.
 
 In addition, Firely Server does not support the search parameters whose field ``xpathUsage`` (STU3, R4) or ``processingMode`` (R5) is not set to ``normal``. Concretely, this means that the following search parameters are not supported:
 

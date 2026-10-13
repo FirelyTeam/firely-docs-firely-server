@@ -43,7 +43,6 @@ You can configure the Administration API, including restricting access to functi
     },
     "SqlDbOptions": {
       "ConnectionString": "connectionstring to your Firely Server Admin SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
-      "SchemaName": "vonkadmin",
       "AutoUpdateDatabase": true,
       "MigrationTimeout": 1800 // in seconds
       //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"

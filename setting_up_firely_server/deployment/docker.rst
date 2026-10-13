@@ -281,12 +281,10 @@ We will use docker-compose to achieve this.
        environment:
          - VONK_Repository=SQL
          - VONK_SqlDbOptions:ConnectionString=Initial Catalog=VonkData;Data Source=vonk-sqlserver-db,1433;User ID=sa;Password=SQLServerStrong(!)Password*
-         - VONK_SqlDbOptions:SchemaName=vonk
          - VONK_SqlDbOptions:AutoUpdateDatabase=true
          - VONK_SqlDbOptions:AutoUpdateConnectionString=Initial Catalog=VonkData;Data Source=vonk-sqlserver-db,1433;User ID=sa;Password=SQLServerStrong(!)Password*
          - VONK_Administration:Repository=SQL
          - VONK_Administration:SqlDbOptions:ConnectionString=Initial Catalog=VonkAdmin;Data Source=vonk-sqlserver-db,1433;User ID=sa;Password=SQLServerStrong(!)Password*
-         - VONK_Administration:SqlDbOptions:SchemaName=vonkadmin
          - VONK_Administration:SqlDbOptions:AutoUpdateDatabase=true
          - VONK_Administration:SqlDbOptions:AutoUpdateConnectionString=Initial Catalog=VonkAdmin;Data Source=vonk-sqlserver-db,1433;User ID=sa;Password=SQLServerStrong(!)Password*
          - VONK_License:LicenseFile=./license/firelyserver-license.json
@@ -343,12 +341,10 @@ To run the Firely Server container we will use the following docker-compose file
        environment:
          - VONK_Repository=SQL
          - VONK_SqlDbOptions:ConnectionString=Database=VonkData;Server=my_host\<myInstanceName>;User ID=<myUser>;Password=<myPassword>
-         - VONK_SqlDbOptions:SchemaName=vonk
          - VONK_SqlDbOptions:AutoUpdateDatabase=true
          - VONK_SqlDbOptions:AutoUpdateConnectionString=Database=VonkData;Server=my_host\<myInstanceName>;User ID=<DLLUser>;Password=<myPassword>
          - VONK_Administration:Repository=SQL
          - VONK_Administration:SqlDbOptions:ConnectionString=Database=VonkAdmin;Server=my_host\<myInstanceName>;User ID=<myUser>;Password=<myPassword>
-         - VONK_Administration:SqlDbOptions:SchemaName=vonkadmin
          - VONK_Administration:SqlDbOptions:AutoUpdateDatabase=true
          - VONK_Administration:SqlDbOptions:AutoUpdateConnectionString=Database=VonkAdmin;Server=my_host\<myInstanceName>;User ID=<DLLUser>;Password=<myPassword>
          - VONK_License:LicenseFile=./license/firelyserver-license.json

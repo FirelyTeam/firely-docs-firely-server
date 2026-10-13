@@ -246,9 +246,9 @@ In addition to the standard SMART authorization, ATR clients SHOULD always be re
 
 The operations are:
 
-* /Group/{id}/$davinci-data-export
-* /Group/{id}/$exportstatus
-* /Group/{id}/$exportfilerequest
+* ``/Group/{id}/$davinci-data-export``, to start the export
+* ``/$exportstatus``, to poll for the status of the export and to cancel it (see :ref:`bdeexportstatus`)
+* ``/$exportfilerequest``, to download the exported files
 
 In order to restrict a client to only these operations, the SMART security token must include the following claims:
 

@@ -297,19 +297,19 @@ General
   * **Default**: null
   * **Description**: A file containing additional search parameters to be indexed on load directly into SQL or MongoDB target database. See :ref:`Custom Search Parameters <custom_search_parameters>`.
 
-* ``--urlConvBases:index url``: 
+* ``--urlConvBases <url>``: 
 
   * **Config**: absoluteUrlConversion/baseEndpoints
   * **Required**: No
   * **Default**: None
-  * **Description**: Convert absolute URLs to relative for endpoints included in this array. The array values must match exactly the base URL otherwise no changes are made.
+  * **Description**: Convert absolute URLs to relative for endpoints included in this array. The array values must match exactly the base URL otherwise no changes are made. Repeat the argument for each base URL, for example ``--urlConvBases http://localhost:4080/R4 --urlConvBases https://example.org/fhir``.
 
-* ``--urlConvElems:index FHIRPath``: 
+* ``--urlConvElems <FHIRPath>``: 
 
   * **Config**: absoluteUrlConversion/elements
   * **Required**: No
   * **Default**: None
-  * **Description**: List of FHIR paths specifying the list of ``Uri`` or ``Url`` elements that should be converted from absolute to relative URI if their base endpoints match one of the base endpoint specified in ``absoluteUrlConversion/baseEndpoints``.
+  * **Description**: List of FHIR paths specifying the list of ``Uri`` or ``Url`` elements that should be converted from absolute to relative URI if their base endpoints match one of the base endpoint specified in ``absoluteUrlConversion/baseEndpoints``. Repeat the argument for each FHIRPath.
 
 Source
 ^^^^^^
@@ -453,7 +453,7 @@ Target (for SQL Server)
 
 * ``--sqlBatch <sqlBatch>``: 
 
-  * **Config**: sqlServer/saveBatchSize
+  * **Config**: sqlServer/batchSize
   * **Required**: No
   * **Default**: 500
   * **Description**: The number of resources to save in each batch. SQL Server must be able to process it within the CommandTimeout. It is recommended to set this value to at least 500 for optimal performance.

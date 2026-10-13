@@ -246,8 +246,8 @@ Search size
     "BundleOptions": {
         "DefaultTotal": "none", // Allowed values: none, accurate
         "DefaultCount": 10,
-        "MaxCount": 50,
-        "DefaultSort": "-_lastUpdated"
+        "MaxCount": 50
+        //,"DefaultSort": "-_lastUpdated"
     },
 
 
@@ -256,7 +256,7 @@ The Search interactions returns a bundle with results. Users can specify the num
 * ``DefaultCount`` sets the number of results if the user has not specified a ``_count`` parameter.
 * ``MaxCount`` sets the number of results in case the user specifies a ``_count`` value higher than this maximum. This is to protect Firely Server from being overloaded.
 * ``DefaultCount`` should be less than or equal to ``MaxCount``
-* ``DefaultSort`` is what search results are sorted on if no sort order is specified in the request. If a sort order is specified, this is still added as the last sort clause.
+* ``DefaultSort`` is what search results are sorted on if no sort order is specified in the request. If a sort order is specified, this is still added as the last sort clause. It is commented out in the default settings, so by default searches have no implicit sort order.
 * ``DefaultTotal`` sets default total behaviour for search requests if not specified in the request itself.
 
 .. _sizelimits_options:
@@ -268,7 +268,7 @@ Protect against large input
     "SizeLimits": {
         "MaxResourceSize": "1MiB",
         "MaxBatchSize": "5MiB",
-        "MaxBatchEntries": 150
+        "MaxBatchEntries": 200
     },
 
 * ``MaxResourceSize`` sets the maximum size of a resource that is sent in a create or update.
@@ -801,9 +801,9 @@ Task File Management and Bulk Data Export
 
   "TaskFileManagement": {
     "StorageService": {
-          "StorageType": "LocalFile", // LocalFile / AzureBlob / AzureFile
+          "StorageType": "LocalFile", // LocalFile / AzureBlob / AzureFiles
           "StoragePath": "./taskfiles",
-          "ContainerName": "firelyserver" // For AzureBlob / AzureFile only
+          "ContainerName": "firelyserver" // For AzureBlob / AzureFiles only
       }
   },
 

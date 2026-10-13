@@ -50,10 +50,10 @@ Many resources in the Patient compartment reference resources outside the compar
 .. code-block:: JavaScript
 
    "PatientEverythingOperation": {
-      "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "Medication" ] 
+      "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "Medication", "Practitioner", "PractitionerRole" ]
    }
-   
-This is the default value for the setting. As you can see, Practitioner is not included by default out of privacy considerations but you can change that by overriding the setting. 
+
+This is the value in the default settings, so Practitioner and PractitionerRole resources referenced by the Patient's resources are returned. If you do not want to return them, for example for privacy considerations, override the setting without them. If the setting is left out completely, no additional resources are returned.
 
 On SQL Server, collecting the resources of a Patient can take long for a Patient with many resources. The query is stopped after ``SqlDbOptions:PatientEverythingTimeout`` seconds (default ``300``):
 

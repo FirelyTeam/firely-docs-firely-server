@@ -18,6 +18,8 @@ The ``$erase`` operation permanently deletes a single resource or one or more hi
 
 The ``$purge`` operation permanently deletes all resources within a patient compartment. The operation can be executed at a Patient instance level.
 
+``Group`` resources in the patient compartment are not deleted, as they usually concern other patients as well. Instead, Firely Server removes the ``member`` entries that reference the purged Patient, and stores the result as a new version of the Group. The earlier versions of the Group, which still contain the member entry, stay in its history. Use :ref:`$erase <erase>` on those versions if they have to be removed as well.
+
 .. note::
 
   Not all repositories support both operations. Refer to :ref:`FeatureAvailability` for more details.

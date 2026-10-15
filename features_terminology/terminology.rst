@@ -290,32 +290,62 @@ Advanced Terminology with Conformance Archives (CAR files)
 
    The features described in this section require the **Advanced Terminology** license token ``http://fire.ly/advanced-terminology``, which is separate from the base terminology license.
 
-The local terminology service built into Firely Server works well for simple ValueSets and CodeSystems such as those shipped with the FHIR specification. However, large and complex terminologies like **SNOMED CT** and **LOINC** cannot be stored as plain FHIR resources in the Administration database — they are too large, have rich hierarchical relationships, and require specialised subsumption logic.
+The local terminology service built into Firely Server works well for simple ValueSets and CodeSystems such as those shipped with the FHIR specification. Large terminologies with rich hierarchies cannot be represented as a FHIR CodeSystem resource in the Administration database: they are too large, and checking whether one concept is a descendant of another needs dedicated logic.
 
-**Conformance Archive (CAR) files** solve this problem. A CAR file is a representation of a CodeSystem produced by the `Firely.Car` library. It stores the full concept inventory together with all required relationship data in a format that can be loaded and queried efficiently at runtime from the local filesystem — without requiring an external terminology server.
+With **Conformance Archive (CAR) files**, Firely Server supports these terminologies locally, without an external terminology server:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
+
+   * - Terminology
+     - CodeSystem url
+   * - SNOMED CT, US Edition
+     - ``http://snomed.info/sct``
+   * - LOINC
+     - ``http://loinc.org``
+   * - ICD-10-CM
+     - ``http://hl7.org/fhir/sid/icd-10-cm``
+
+SNOMED CT uses the same CodeSystem url for every edition. Use ``http://snomed.info/sct`` as the system; the edition URI ``http://snomed.info/sct/731000124108`` is not a system and is not recognized. The edition is only part of the ``version``.
+
+A CAR file holds the complete set of concepts of one terminology, together with their relationships and properties, in a format that Firely Server reads from the local filesystem. Firely provides pre-built CAR files for these terminologies on request; please :ref:`contact us <vonk-contact>`.
 
 How it works
 ^^^^^^^^^^^^
 
-When ``AdvancedTerminologyConfiguration`` is active and at least one CAR file is configured, Firely Server registers a **CAR Terminology Host** alongside the existing local and remote terminology hosts. In addition, the default terminology implementation is replaced by the **Delegated Terminology**, which contains the following logic:
+The Advanced Terminology plugin (``Vonk.Plugins.Terminology.AdvancedTerminologyConfiguration``) is part of ``Vonk.Plugins.Terminology``, so it is in the default pipeline. It is loaded when your license contains the Advanced Terminology token, and then changes two things:
 
-1. For every incoming terminology request, the proxy first checks whether the CAR Terminology Host can handle the request (i.e. whether the requested CodeSystem URL is present in one of the configured CAR files).
-2. If the CAR host can handle the request, it serves it directly.
-3. For **ValueSet/$validate-code** requests that involve complex filter criteria (e.g. ``is-a`` or ``descendent-of`` filters referencing a CAR-backed CodeSystem), the proxy decomposes the request into a series of lower-level CodeSystem operations (``CodeSystem/$validate-code``, ``CodeSystem/$subsumes``, and ``CodeSystem/$lookup``) and aggregates the results.
-4. If the CAR host cannot handle a request (either because the CodeSystem is not in a CAR file, or because the operation is not supported), the request falls back to the standard terminology proxy and the configured local/remote services.
+#. If ``Terminology:ConformanceArchives`` lists at least one CAR file, it adds a **CAR terminology service** next to the local and remote terminology services.
+#. It replaces the routing of ``ValueSet/$validate-code`` with a **delegating** implementation. This also applies when no CAR files are configured.
 
-Supported operations via CAR files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The following FHIR terminology operations are directly supported when the requested CodeSystem is backed by a CAR file:
+The CAR terminology service answers these operations for the code systems in its CAR files:
 
 * ``CodeSystem/$validate-code``
-* ``CodeSystem/$subsumes``
 * ``CodeSystem/$lookup``
+* ``CodeSystem/$subsumes``
 
-Operations that are **not** directly supported by CAR files (such as ``ValueSet/$expand``, ``ConceptMap/$translate``) will be handled by the fallback services (local or remote), just as before.
+For those code systems it is preferred over the local and remote terminology services. Other operations, such as ``ValueSet/$expand`` or ``ConceptMap/$translate``, and code systems that are not in a CAR file are handled by the local and remote terminology services as before.
 
-``ValueSet/$validate-code`` is supported indirectly: if the included CodeSystem concepts are backed by a CAR file, the proxy automatically decomposes the validation into the supported CodeSystem-level operations listed above.
+``ValueSet/$validate-code`` is handled by delegation. This includes the code checks of resource validation, which use ``ValueSet/$validate-code``. Firely Server looks for a terminology service that supports all three CodeSystem operations above for the code system of the code: first the CAR terminology service, then the local and remote services in their configured order. If it finds one, Firely Server reads the ValueSet itself, including filters such as ``is-a`` and ``descendent-of``, and answers the request with ``CodeSystem/$validate-code``, ``CodeSystem/$lookup`` and ``CodeSystem/$subsumes`` calls to that service. So a ValueSet defined on SNOMED CT (US Edition), LOINC or ICD-10-CM can be validated locally, as long as the ValueSet itself is available to Firely Server.
+
+Firely Server uses the regular routing for ``ValueSet/$validate-code`` instead, when:
+
+* no terminology service supports all three CodeSystem operations for the code system;
+* the code system is ``urn:ietf:bcp:47`` (languages) or ``urn:ietf:bcp:13`` (MIME types);
+* the request has ``inferSystem`` set to ``true`` together with a ``code``;
+* the delegation fails. Firely Server then logs the reason at the ``Verbose`` level.
+
+What still needs a remote terminology server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+CAR files cover the checks on single codes. These operations are never answered from a CAR file, so for SNOMED CT, LOINC or ICD-10-CM they need a :ref:`remote terminology service <feature_terminologyoptions>` that supports them:
+
+* ``ValueSet/$expand``, so also expanding a ValueSet that is defined on one of these terminologies
+* ``CodeSystem/$find-matches`` (``$compose`` in STU3)
+* ``ConceptMap/$translate`` and ``$closure``
+
+The CAR files hold the code systems, not the ValueSets that are defined on them. To validate a code against such a ValueSet, the ValueSet itself must be in the Administration database. Load it with the :ref:`conformance resource import <conformance_import>`, for example from the package of the Implementation Guide that defines it, or through the :ref:`Administration API <conformance_administration_api>`.
 
 Configuration
 ^^^^^^^^^^^^^
@@ -323,7 +353,7 @@ Configuration
 ConformanceArchives
 -------------------
 
-Configure one or more CAR files in the ``Terminology:ConformanceArchives`` array in your ``appsettings.json``:
+List the CAR files in the ``Terminology:ConformanceArchives`` array, for example in your ``appsettings.instance.json``:
 
 .. code-block:: JSON
 
@@ -335,31 +365,119 @@ Configure one or more CAR files in the ``Terminology:ConformanceArchives`` array
        },
        {
          "Path": "/data/terminology/LOINC.cs.car"
+       },
+       {
+         "Path": "/data/terminology/ICD10CM.cs.car"
        }
      ],
      "LocalTerminologyService": {
        "Order": 10,
        "PreferredSystems": [ "http://hl7.org/fhir" ],
-       "SupportedInteractions": [ "ValueSetValidateCode", "Expand", "FindMatches", "Lookup" ],
+       "SupportedInteractions": [ "ValueSetValidateCode", "CodeSystemValidateCode", "Subsumes", "Expand", "FindMatches", "Lookup" ],
        "SupportedInformationModels": [ "Fhir3.0", "Fhir4.0", "Fhir5.0" ]
      }
    }
 
-:Path: Absolute or relative path to the ``.car`` file on the local filesystem. All configured paths are validated at startup; Firely Server will refuse to start if a CAR file cannot be opened.
+:Path: Path to the ``.car`` file on the local filesystem. A relative path is resolved against the working directory of Firely Server. The CAR files are used for every FHIR version.
 
 .. note::
 
-   If ``ConformanceArchives`` is empty or not configured, the ``CarTerminologyHost`` is not registered and no CAR-related behaviour is active. The standard local and remote terminology services continue to work normally.
+   If ``ConformanceArchives`` is empty or not configured, the CAR terminology service is not added. ``ValueSet/$validate-code`` is still handled by delegation, with the local and remote terminology services that support all three CodeSystem operations.
+
+Running in Docker
+-----------------
+
+When Firely Server runs in :ref:`Docker <use_docker>`, mount the CAR files into the container and point ``Path`` to the location inside the container. The image runs as a user with uid 1000, so the files must be readable by that user. For example, with Docker Compose:
+
+.. code-block:: yaml
+
+   volumes:
+     - ./terminology:/app/terminology:ro
+   environment:
+     - VONK_Terminology:ConformanceArchives:0:Path=/app/terminology/SCT.cs.car
+     - VONK_Terminology:ConformanceArchives:1:Path=/app/terminology/LOINC.cs.car
 
 Priority and fallback
 ---------------------
 
-The CAR Terminology Host is always consulted **before** other hosts for any CodeSystem that is present in a configured CAR file. If the CAR host cannot serve the request (unsupported operation or unrecognised system), the request is passed to the remaining terminology services in their configured order.
+For a code system in one of the CAR files, the CAR terminology service is preferred over the other terminology services for ``CodeSystem/$validate-code``, ``CodeSystem/$lookup`` and ``CodeSystem/$subsumes``. If more than one CAR file contains the code system, Firely Server uses them together. For other operations and other code systems, the request goes to the remaining terminology services in their configured order.
 
 Startup validation
 ------------------
 
-All configured CAR files are validated when Firely Server starts. A ``VonkConfigurationException`` is raised if any file is missing or cannot be read, preventing the server from starting with an invalid terminology configuration.
+Firely Server opens every configured CAR file at startup. If a file is missing or cannot be read, Firely Server does not start and logs "A configured CodeSystem Conformance Archive file at <path> could not be opened."
+
+Examples
+^^^^^^^^
+
+The examples use SNOMED CT: ``73211009`` is *Diabetes mellitus*, and ``44054006`` is *Diabetes mellitus type 2*, a descendant of it. The operations are available on the regular FHIR endpoint and, as far as enabled in ``Administration:Operations``, on the administration endpoint (see :ref:`feature_terminology`).
+
+Look up a concept:
+
+.. code-block:: http
+
+   GET [base]/CodeSystem/$lookup?system=http://snomed.info/sct&code=44054006 HTTP/1.1
+
+Check that a code exists in the code system:
+
+.. code-block:: http
+
+   GET [base]/CodeSystem/$validate-code?url=http://snomed.info/sct&code=44054006 HTTP/1.1
+
+Check whether one concept subsumes another. Here the result is ``subsumes``, because type 2 diabetes is a kind of diabetes:
+
+.. code-block:: http
+
+   GET [base]/CodeSystem/$subsumes?system=http://snomed.info/sct&codeA=73211009&codeB=44054006 HTTP/1.1
+
+Validate a code against a ValueSet that is defined on SNOMED CT. For a ValueSet that is stored in the Administration database with the url ``http://example.org/fhir/ValueSet/diabetes`` and this definition:
+
+.. code-block:: json
+
+   {
+     "resourceType": "ValueSet",
+     "url": "http://example.org/fhir/ValueSet/diabetes",
+     "status": "active",
+     "compose": {
+       "include": [
+         {
+           "system": "http://snomed.info/sct",
+           "filter": [
+             { "property": "concept", "op": "is-a", "value": "73211009" }
+           ]
+         }
+       ]
+     }
+   }
+
+Firely Server validates the code with delegation, using the CAR file:
+
+.. code-block:: http
+
+   GET [base]/ValueSet/$validate-code?url=http://example.org/fhir/ValueSet/diabetes&system=http://snomed.info/sct&code=44054006 HTTP/1.1
+
+Troubleshooting
+^^^^^^^^^^^^^^^
+
+If delegation of ``ValueSet/$validate-code`` fails, Firely Server does not return an error. It handles the request with the regular routing, which can give a different result or go to a remote terminology service, and logs the reason at the ``Verbose`` level. To see these messages, raise the log level of the terminology plugin in your ``logsettings.instance.json`` (see :ref:`configure_log`). Also lower ``restrictedToMinimumLevel`` of the sink you look at to ``Verbose``:
+
+.. code-block:: JSON
+
+   "Serilog": {
+     "MinimumLevel": {
+       "Override": {
+         "Vonk.Plugins.Terminology": "Verbose"
+       }
+     }
+   }
+
+Add the override before any broader namespaces such as ``Vonk``.
+
+If the CAR terminology service is not used at all, check that:
+
+* your license contains the token ``http://fire.ly/advanced-terminology``;
+* ``Terminology:ConformanceArchives`` lists the files, and Firely Server started without an error about opening them;
+* the request uses the exact CodeSystem url from the table above, such as ``http://snomed.info/sct``.
 
 License
 ^^^^^^^

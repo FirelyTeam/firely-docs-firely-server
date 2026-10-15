@@ -54,7 +54,46 @@ For each child span corresponding to a middleware span, only a subset of the tag
 
 Metrics
 -------
-Firely Server publishes the standard .Net metrics for the `HTTP Server <https://opentelemetry.io/docs/specs/semconv/dotnet/dotnet-http-metrics/#http-server>`_ and `Kestrel <https://opentelemetry.io/docs/specs/semconv/dotnet/dotnet-kestrel-metrics/>`_. 
+Firely Server publishes the standard .NET metrics for the `HTTP Server <https://opentelemetry.io/docs/specs/semconv/dotnet/dotnet-http-metrics/#http-server>`_ and `Kestrel <https://opentelemetry.io/docs/specs/semconv/dotnet/dotnet-kestrel-metrics/>`_.
+
+In addition, Firely Server publishes these metrics of its own:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 30 10 35
+
+   * - Meter
+     - Instrument
+     - Type
+     - Description
+   * - ``Firely.Server.Interactions``
+     - ``firely.server.interactions.count``
+     - Counter
+     - The number of handled FHIR interactions. Tags: ``interaction`` (for example ``instance_read`` or ``type_search``), ``outcome`` (``success``, ``client_error``, ``server_error`` or ``unknown``), ``clientId`` (the client id from the access token) and ``tenantId`` (with :ref:`virtual tenants <feature_multitenancy>`).
+   * - ``Firely.Server.Interactions``
+     - ``firely.server.interactions.duration``
+     - Histogram
+     - The duration of the handled FHIR interactions, in seconds. Tags: ``interaction``, ``clientId`` and ``tenantId``.
+   * - ``Firely.Server.ProcessPerformance``
+     - ``firely.process.cpu.usage``
+     - Gauge
+     - The CPU usage of the Firely Server process, in percent.
+   * - ``Firely.Server.ProcessPerformance``
+     - ``firely.process.memory.working-set``
+     - Gauge
+     - The working set memory of the Firely Server process, in MB.
+   * - ``Firely.Server.Repository``
+     - ``ingested_resources``
+     - Counter
+     - The number of resources written to the database: creates, updates and (soft) deletes.
+   * - ``Firely.Server.PubSub``
+     - ``pubsub_ingested_resources``
+     - Counter
+     - The number of resources written to the database through :ref:`PubSub <pubsub>`.
+   * - ``Firely.Server.PatientAccessAPI``
+     - ``firely.server.cms0057.patient.count``
+     - Counter
+     - The number of read, search and history requests made by a patient, that is with an access token whose ``fhirUser`` is a Patient, through a client application. Tags: ``idHash`` (a SHA-256 hash of the Patient's id) and ``clientId``. Use it for the Patient Access API metrics that :ref:`CMS-0057-F <cms>` requires.
 
 Configuration
 -------------

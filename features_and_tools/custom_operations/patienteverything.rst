@@ -50,10 +50,18 @@ Many resources in the Patient compartment reference resources outside the compar
 .. code-block:: JavaScript
 
    "PatientEverythingOperation": {
-      "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "Medication" ] 
+      "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "Medication", "Practitioner", "PractitionerRole" ]
    }
-   
-This is the default value for the setting. As you can see, Practitioner is not included by default out of privacy considerations but you can change that by overriding the setting. 
+
+This is the value in the default settings, so Practitioner and PractitionerRole resources referenced by the Patient's resources are returned. If you do not want to return them, for example for privacy considerations, override the setting in your own settings with the list you want; an array in your settings replaces the default array completely. If you leave the setting out of your own settings, the default list applies. To return no additional resources at all, set it to an array with just an empty string, ``[ "" ]`` (see :ref:`configure_levels`).
+
+On SQL Server, collecting the resources of a Patient can take long for a Patient with many resources. The query is stopped after ``SqlDbOptions:PatientEverythingTimeout`` seconds (default ``300``):
+
+.. code-block:: JavaScript
+
+   "SqlDbOptions": {
+      "PatientEverythingTimeout": 300
+   }
 
 **Note:** Device was added as an additional resource as it includes a reference to a patient but is not listed in the patient's compartment yet. As soon as the specification is updated, it will be removed from the appsetttings and returned by default.
 

@@ -243,7 +243,7 @@ Features
 #. Implemented configurable authentication mode for ``Library/$evaluate``, plus a clear OperationOutcome error and log message when ``useServerData=true`` is requested while ``RemoteDataEndpointsOnly`` is enabled. See :ref:`feature_external_data_endpoints` for more information.
 #. Implemented ``MediaType`` configuration for ``Library/$evaluate``. See :ref:`feature_external_data_endpoints` for more information.
 #. ``Measure/$evaluate-measure``: ``population`` is now accepted as ``reportType`` alongside ``summary``, restoring compatibility with older FHIR versions that used population. The response is a valid ``MeasureReport`` with ``type=summary`` and population counts.
-#. FSI: Implemented SQL Server as an import source. Adds ``--srcType Sql`` with ``--srcSqlConnectionString`` and ``--srcSqlRunningMode`` CLI flags. See :ref:`tool_fsi` for more information.
+#. FSI: Implemented SQL Server as an import source. Adds ``--sourceType Sql`` with ``--srcSqlConnectionString`` and ``--srcSqlRunningMode`` CLI flags. See :ref:`tool_fsi` for more information.
 #. Firely server now supports routing read traffic to a separate SQL Server read replica, leaving the primary database free to handle writes. See :ref:`sql_read_replica` for more information.
 
 Fixed

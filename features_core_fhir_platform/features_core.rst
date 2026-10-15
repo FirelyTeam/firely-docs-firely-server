@@ -14,6 +14,7 @@ Additionally, an OpenAPI definition provides clear, machine-readable API documen
 
    restful_api
    validation
+   Generate a StructureDefinition snapshot <../features_and_tools/custom_operations/snapshot>
    customresources
    customsearchparameters
    openapi

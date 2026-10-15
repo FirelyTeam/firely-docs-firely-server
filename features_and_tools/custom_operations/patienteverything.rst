@@ -53,7 +53,7 @@ Many resources in the Patient compartment reference resources outside the compar
       "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "Medication", "Practitioner", "PractitionerRole" ]
    }
 
-This is the value in the default settings, so Practitioner and PractitionerRole resources referenced by the Patient's resources are returned. If you do not want to return them, for example for privacy considerations, override the setting without them. If the setting is left out completely, no additional resources are returned.
+This is the value in the default settings, so Practitioner and PractitionerRole resources referenced by the Patient's resources are returned. If you do not want to return them, for example for privacy considerations, override the setting in your own settings with the list you want; an array in your settings replaces the default array completely. If you leave the setting out of your own settings, the default list applies. To return no additional resources at all, set it to an array with just an empty string, ``[ "" ]`` (see :ref:`configure_levels`).
 
 On SQL Server, collecting the resources of a Patient can take long for a Patient with many resources. The query is stopped after ``SqlDbOptions:PatientEverythingTimeout`` seconds (default ``300``):
 

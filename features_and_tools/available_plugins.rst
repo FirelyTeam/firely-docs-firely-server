@@ -588,7 +588,7 @@ FHIR RESTful interactions
 :Configuration: ``Vonk.Plugin.Operations.MetaOperation.MetaConfiguration``
 :License token: http://fire.ly/vonk/plugins/meta
 :Order: 5180
-:Description: Implements FHIR $meta on system, type, instance and version level.
+:Description: Implements FHIR $meta on system, type and instance level.
 
 .. _vonk_plugins_meta_add_configuration:
 
@@ -596,7 +596,7 @@ FHIR RESTful interactions
 :Configuration: ``Vonk.Plugin.Operations.MetaOperation.MetaAddConfiguration``
 :License token: http://fire.ly/vonk/plugins/meta
 :Order: 5190
-:Description: Implements FHIR $meta-add on instance and version level.
+:Description: Implements FHIR $meta-add on instance level.
 
 .. _vonk_plugins_meta_delete_configuration:
 
@@ -604,7 +604,7 @@ FHIR RESTful interactions
 :Configuration: ``Vonk.Plugin.Operations.MetaOperation.MetaDeleteConfiguration``
 :License token: http://fire.ly/vonk/plugins/meta
 :Order: 5195
-:Description: Implements FHIR $meta-delete on instance and version level.
+:Description: Implements FHIR $meta-delete on instance level.
 
 .. _vonk_plugins_snapshot:
 

@@ -78,7 +78,8 @@ Input parameters
 ^^^^^^^^^^^^^^^^
 
 The following input parameters are supported for the ``$snapshot`` operation.
-At the type level, provide exactly one of them. At the instance level, both are ignored.
+When you call ``$snapshot`` on the type level (``StructureDefinition/$snapshot``), provide exactly one of them.
+When you call it on the instance level (``StructureDefinition/<id>/$snapshot``), Firely Server generates the snapshot of the stored StructureDefinition and ignores both parameters, see :ref:`feature_snapshot_instance`.
 
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | Parameter               | Supported | Type                    | Cardinality | Additional Notes               |
@@ -160,49 +161,53 @@ When you send a body, the request must have a Content-Type header matching the f
 
 The StructureDefinition you submit is not stored. With ``url``, Firely Server generates the snapshot again on a copy of the StructureDefinition it knows, so the issues of generating it are reported in the same way as for a submitted StructureDefinition.
 
-Example request with a ``StructureDefinition`` body:
+Example requests:
 
-.. code-block::
+.. tab-set::
 
-   POST <firely_server_endpoint>/StructureDefinition/$snapshot
+   .. tab-item:: StructureDefinition body
 
-.. code-block::
+      .. code-block::
 
-   {
-     "resourceType": "StructureDefinition",
-     "url": "https://example.org/fhir/StructureDefinition/MyPatientProfile",
-     "type": "Patient",
-     "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Patient",
-     "derivation": "constraint",
-     "differential": {
-       [...]
-     },
-     [...]
-   }
+         POST <firely_server_endpoint>/StructureDefinition/$snapshot
 
-Example request with a ``Parameters`` body:
+      .. code-block::
 
-.. code-block::
+         {
+           "resourceType": "StructureDefinition",
+           "url": "https://example.org/fhir/StructureDefinition/MyPatientProfile",
+           "type": "Patient",
+           "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Patient",
+           "derivation": "constraint",
+           "differential": {
+             [...]
+           },
+           [...]
+         }
 
-   POST <firely_server_endpoint>/StructureDefinition/$snapshot
+   .. tab-item:: Parameters body
 
-.. code-block::
+      .. code-block::
 
-   {
-     "resourceType": "Parameters",
-     "parameter": [
-       {
-         "name": "url",
-         "valueUri": "https://example.org/fhir/StructureDefinition/MyPatientProfile"
-       }
-     ]
-   }
+         POST <firely_server_endpoint>/StructureDefinition/$snapshot
 
-Example request with ``url`` in the query:
+      .. code-block::
 
-.. code-block::
+         {
+           "resourceType": "Parameters",
+           "parameter": [
+             {
+               "name": "url",
+               "valueUri": "https://example.org/fhir/StructureDefinition/MyPatientProfile"
+             }
+           ]
+         }
 
-   GET <firely_server_endpoint>/StructureDefinition/$snapshot?url=https://example.org/fhir/StructureDefinition/MyPatientProfile
+   .. tab-item:: url in the query
+
+      .. code-block::
+
+         GET <firely_server_endpoint>/StructureDefinition/$snapshot?url=https://example.org/fhir/StructureDefinition/MyPatientProfile
 
 .. _feature_snapshot_instance:
 

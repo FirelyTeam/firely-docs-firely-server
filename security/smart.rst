@@ -173,7 +173,7 @@ With ``AllowHistory`` set to ``true``, these requests are allowed, with the foll
 
   * the token has a ``patient`` launch context, so the request is limited to the Patient compartment;
   * a SMART v2 scope carries search parameters, for example ``user/Observation.rs?category=laboratory``;
-  * the authorization does not come from SMART v2 scopes, for example SMART v1 scopes or a custom authorization plugin. Firely Server cannot inspect such an authorization, and treats it as restricted.
+  * the client is authorized with SMART v1 scopes or by a custom authorization plugin. Firely Server supports both, but it cannot tell from them whether the access is limited to specific resources, so for deleted resources it treats them as restricted.
 
   A client whose access is not restricted to specific resources, for example with ``system/Observation.rs``, gets the standard FHIR behavior: a version read of the deletion returns ``HTTP 410 Gone``.
 * **History on the type and system level** is assembled for at most ``BundleOptions:MaxCount`` resources that the client may read (see :ref:`bundle_options`). The history of further resources is not included, and Firely Server logs a warning when this happens.

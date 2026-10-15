@@ -111,10 +111,9 @@ Input files formats
 FSI reads files by their extension:
 
 * ``*.json``: a single FHIR resource or a Bundle in JSON format.
-* ``*.xml``: a single FHIR resource or a Bundle in XML format.
 * ``*.ndjson``: one FHIR resource or Bundle in JSON format per line.
 
-Files with any other extension are reported as an error and skipped.
+Other file formats are not supported.
 
 How a Bundle is imported depends on its ``type``:
 

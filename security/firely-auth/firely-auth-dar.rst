@@ -39,7 +39,7 @@ You can enable DAR functionality by configuring it in the Firely Auth App Settin
   "AuthorizedRepresentatives": {
       "LookupOnLogin": true,
       "LookupRequestScopes": "https://fire.ly/fhir/OperationDefinition/has-authorized-representative-relationships",
-      "RelationshipsLookupTimeout": 5000, // in ms
+      "CheckAuthorizedRepresentativeTimeout": 5000, // in ms
       "TitleOnLogin": "Who Are You Signing In As?",
       "TitleOwnProfileOnLogin": "Continue as Yourself",
       "TitleAuthorizedProfilesOnLogin": "Continue On Behalf Of ...",

@@ -476,7 +476,7 @@ CAR files cover the checks on single codes. These operations are never answered 
 * ``CodeSystem/$find-matches`` (``$compose`` in STU3)
 * ``ConceptMap/$translate`` and ``$closure``
 
-The CAR files hold the code systems, not the ValueSets that are defined on them. To validate a code against such a ValueSet, the ValueSet itself must be in the Administration database. Load it with the :ref:`conformance resource import <conformance_import>`, for example from the package of the Implementation Guide that defines it, or through the :ref:`Administration API <conformance_administration_api>`.
+The CAR files hold the code systems, not the ValueSets that are defined on them. To validate a code against such a ValueSet by its url or id, the ValueSet itself must be in the Administration database. A ValueSet that you send in the request instead, in the ``valueSet`` parameter of a ``POST``, does not need to be stored. Load a ValueSet into the Administration database with the :ref:`conformance resource import <conformance_import>`, for example from the package of the Implementation Guide that defines it, or through the :ref:`Administration API <conformance_administration_api>`.
 
 Configuration
 ^^^^^^^^^^^^^
@@ -602,7 +602,7 @@ If delegation of ``ValueSet/$validate-code`` fails, Firely Server does not retur
      }
    }
 
-Add the override before any broader namespaces such as ``Vonk``.
+Add the override before any broader namespaces such as ``Vonk``. Firely Server only picks up a new namespace override after a restart; changing the level of an override that already exists takes effect without one (see :ref:`hot_reload_log_level`).
 
 If the CAR terminology service is not used at all, check that:
 

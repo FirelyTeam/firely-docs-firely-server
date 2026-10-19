@@ -160,21 +160,6 @@
    * - `Hl7.Cql.Runtime <https://www.nuget.org/packages/Hl7.Cql.Runtime>`__
      - 2.15.0
      - BSD-3-Clause
-   * - `Hl7.Fhir.Base <https://www.nuget.org/packages/Hl7.Fhir.Base>`__
-     - 6.5.0
-     - BSD-3-Clause
-   * - `Hl7.Fhir.Conformance <https://www.nuget.org/packages/Hl7.Fhir.Conformance>`__
-     - 6.5.0
-     - BSD-3-Clause
-   * - `Hl7.Fhir.R4 <https://www.nuget.org/packages/Hl7.Fhir.R4>`__
-     - 6.5.0
-     - BSD-3-Clause
-   * - `Hl7.Fhir.R5 <https://www.nuget.org/packages/Hl7.Fhir.R5>`__
-     - 6.5.0
-     - BSD-3-Clause
-   * - `Hl7.Fhir.STU3 <https://www.nuget.org/packages/Hl7.Fhir.STU3>`__
-     - 6.5.0
-     - BSD-3-Clause
    * - `Humanizer.Core <https://www.nuget.org/packages/Humanizer.Core>`__
      - 2.14.1
      - MIT

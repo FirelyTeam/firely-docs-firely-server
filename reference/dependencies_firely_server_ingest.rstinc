@@ -52,18 +52,6 @@
    * - `Firely.Server.Contracts <https://www.nuget.org/packages/Firely.Server.Contracts>`__
      - 1.2.0
      - Firely
-   * - `Hl7.Fhir.Base <https://www.nuget.org/packages/Hl7.Fhir.Base>`__
-     - 6.5.0
-     - BSD-3-Clause
-   * - `Hl7.Fhir.Conformance <https://www.nuget.org/packages/Hl7.Fhir.Conformance>`__
-     - 6.5.0
-     - BSD-3-Clause
-   * - `Hl7.Fhir.R4 <https://www.nuget.org/packages/Hl7.Fhir.R4>`__
-     - 6.5.0
-     - BSD-3-Clause
-   * - `Hl7.Fhir.STU3 <https://www.nuget.org/packages/Hl7.Fhir.STU3>`__
-     - 6.5.0
-     - BSD-3-Clause
    * - `IdentityModel <https://www.nuget.org/packages/IdentityModel>`__
      - 6.0.0
      - Apache-2.0

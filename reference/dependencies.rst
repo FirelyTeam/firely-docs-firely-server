@@ -41,13 +41,15 @@ Third-party packages
 
 The tables below list the NuGet packages that Firely Server 6.11.0 and Firely Server Ingest (FSI) 6.11.0 ship, with
 their versions and licenses. They include every package, direct or transitive, that puts a file in the build output.
-Packages by Firely that are not published on `NuGet.org <https://www.nuget.org>`_ are not listed. For the complete
-and authoritative list of a specific release, use its SBOM as described above.
+Packages by Firely that are not published on `NuGet.org <https://www.nuget.org>`_ are not listed, and neither are the
+Hl7.Fhir.* packages, whose license is in :ref:`firely_oss_license` below. For the complete and authoritative list of a
+specific release, use its SBOM as described above.
 
 ..
-   These tables are generated with SPDXtoRST (FirelyTeam/SPDXtoRST), using --show-version, from the .deps.json files
-   of a Release build: src/Vonk.Server/bin/Release/<tfm>/Firely.Server.deps.json and
-   ingest/Vonk.Import.Cli/bin/Release/<tfm>/fsi.deps.json.
+   These tables are generated with SPDXtoRST (FirelyTeam/SPDXtoRST), using --show-version and
+   --config reference/dependencies.config.json, from the .deps.json files of a Release build:
+   src/Vonk.Server/bin/Release/<tfm>/Firely.Server.deps.json and ingest/Vonk.Import.Cli/bin/Release/<tfm>/fsi.deps.json.
+   That config leaves out the Hl7.Fhir.* packages, which the Firely OSS License section covers.
    Regenerate the .rstinc files rather than editing them by hand.
 
 Firely Server

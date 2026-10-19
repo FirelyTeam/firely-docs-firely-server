@@ -40,13 +40,14 @@ Third-party packages
 --------------------
 
 The tables below list the NuGet packages that Firely Server 6.11.0 and Firely Server Ingest (FSI) 6.11.0 ship, with
-their licenses. They include every package, direct or transitive, that puts a file in the build output. Packages by
-Firely that are not published on `NuGet.org <https://www.nuget.org>`_ are not listed. For the complete and
-authoritative list of a specific release, use its SBOM as described above.
+their versions and licenses. They include every package, direct or transitive, that puts a file in the build output.
+Packages by Firely that are not published on `NuGet.org <https://www.nuget.org>`_ are not listed. For the complete
+and authoritative list of a specific release, use its SBOM as described above.
 
 ..
-   These tables are generated with SPDXtoRST (FirelyTeam/SPDXtoRST) from the .deps.json files of a Release build:
-   src/Vonk.Server/bin/Release/<tfm>/Firely.Server.deps.json and ingest/Vonk.Import.Cli/bin/Release/<tfm>/fsi.deps.json.
+   These tables are generated with SPDXtoRST (FirelyTeam/SPDXtoRST), using --show-version, from the .deps.json files
+   of a Release build: src/Vonk.Server/bin/Release/<tfm>/Firely.Server.deps.json and
+   ingest/Vonk.Import.Cli/bin/Release/<tfm>/fsi.deps.json.
    Regenerate the .rstinc files rather than editing them by hand.
 
 Firely Server

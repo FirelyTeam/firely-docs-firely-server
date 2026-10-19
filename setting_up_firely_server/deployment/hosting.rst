@@ -65,3 +65,22 @@ If you need your server to run on https instead of http, follow these steps:
 	  with the name :code:`VONK_Hosting:CertificatePassword` and the value set to your password
 
 *   You can choose to comment-out the ``HttpPort`` setting, so Firely Server will no longer be available through unsecured http.
+
+.. _configure_hosting_http2:
+
+Enabling HTTP/2
+---------------
+
+By default Firely Server only accepts HTTP/1.1. To accept HTTP/2 as well, set ``IsHttp1AndHttp2`` to ``true``:
+
+::
+
+	"Hosting": {
+		"HttpsPort": 4081,
+		"CertificateFile": "<your-certificate-file>.pfx",
+		"CertificatePassword" : "<cert-pass>",
+		"IsHttp1AndHttp2": true
+	},
+
+The setting applies to both the ``HttpPort`` and the ``HttpsPort``. A client and Firely Server agree on HTTP/2 during the TLS handshake, so in practice HTTP/2 is only used on the ``HttpsPort``. On the ``HttpPort``, clients keep using HTTP/1.1.
+If Firely Server runs behind a reverse proxy, it is the proxy that has to support HTTP/2 towards the clients.

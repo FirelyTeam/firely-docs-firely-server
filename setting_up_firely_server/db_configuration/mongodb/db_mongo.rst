@@ -231,7 +231,7 @@ Tips and hints for using MongoDb for Firely Server
 #. If searches and/or creates and updates are excessively slow, you may be limited by the IOPS on your MongoDb deployment (e.g. MongoDb Atlas). Try upgrading it and check the timings again.
 #. If for any reason you would like to see how Firely Server is interacting with MongoDb, make the following adjustments to the :ref:`configure_log`:
 
-    #. In the section ``Serilog.MinimumLevel.Override`` add ``"Vonk.Repository.DocumentDb": "Verbose"``. Add it before any broader namespaces like ``Vonk``.
+    #. In the section ``Serilog.MinimumLevel.Override`` add ``"Vonk.Repository.MongoDb": "Verbose"``. Add it before any broader namespaces like ``Vonk``. Each command is logged, cut off after ``MongoDbOptions:MaxLogLine`` characters (default 300; ``-1`` logs the whole command).
     #. In the section on the File sink, change the ``restrictedToMinimumLevel`` to ``Verbose``.
 
 #. With regards to Firely Server version and MongoDB version:

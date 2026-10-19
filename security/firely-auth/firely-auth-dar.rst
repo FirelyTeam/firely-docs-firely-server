@@ -26,6 +26,20 @@ When the Authorized Representatives feature is enabled, user authentication trig
     
     The DAR Selection Screen is only shown if the operation returns ``true`` during the authorized code flow. The operation can post relationship details to the Firely Auth Administrative API either synchronously (before returning the response) or asynchronously (after returning the response). The relationship(s) will live in memory for 5 minutes.
 
+.. warning::
+
+    The DAR feature does not support running more than one Firely Auth instance behind a load balancer. The relationships that Firely Server posts to the Administrative API, and the profile the user then selects, are kept only in the memory of the Firely Auth instance that received them. They are not shared with other instances or stored in the database.
+
+    With more than one instance, these requests can each land on a different instance:
+
+    - Firely Server posting the relationships to ``/api/external/authorized-representative``,
+    - the user's browser loading the DAR Selection Screen and submitting the selection,
+    - the client application requesting the access token from the token endpoint.
+
+    If Firely Server's post lands on another instance than the one serving the user, the selection screen does not find the relationships and shows the ``HelpMessageOnFail`` message, so the user can only continue as themselves. If the token request lands on another instance than the one that received the selection, the access token is issued without an error, but for the user's own patient context (derived from their ``fhirUser`` claim) instead of the patient they selected. Sticky sessions on the load balancer do not prevent this, because Firely Server and the client application call Firely Auth directly rather than through the user's browser.
+
+    If you use DAR, run a single Firely Auth instance.
+
 Configuration Guide: Enabling Designated Authorized Representatives
 -------------------------------------------------------------------
 
@@ -39,7 +53,7 @@ You can enable DAR functionality by configuring it in the Firely Auth App Settin
   "AuthorizedRepresentatives": {
       "LookupOnLogin": true,
       "LookupRequestScopes": "https://fire.ly/fhir/OperationDefinition/has-authorized-representative-relationships",
-      "RelationshipsLookupTimeout": 5000, // in ms
+      "CheckAuthorizedRepresentativeTimeout": 5000, // in ms
       "TitleOnLogin": "Who Are You Signing In As?",
       "TitleOwnProfileOnLogin": "Continue as Yourself",
       "TitleAuthorizedProfilesOnLogin": "Continue On Behalf Of ...",

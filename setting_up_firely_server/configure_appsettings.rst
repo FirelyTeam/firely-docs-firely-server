@@ -91,7 +91,6 @@ JSON formally has no notion of comments. But the configuration system of ASP.Net
         "Repository": "SQLite", //SQL / MongoDb
         "SqlDbOptions": {
             "ConnectionString": "connectionstring to your Firely Server Admin SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
-            "SchemaName": "vonkadmin",
             "AutoUpdateDatabase": true,
             "MigrationTimeout": 1800 // in seconds
             //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
@@ -111,7 +110,7 @@ It can be useful or even necessary to provide settings outside of the Firely Ser
 
    1. ``appsettings.instance.json``
    2. ``logsettings.instance.json``
-   3. ``auditlogsettings.instance.json``
+   3. ``audit.logsettings.instance.json``
 
 3. These files will be read with the same :ref:`priority <configure_levels>` as they would have if they were in the Firely Server directory. 
 
@@ -233,7 +232,7 @@ appsettings.json:
 .. code-block:: json
 
    "Validation": {
-      "ValidateIncomingResources": "true",
+      "Level": "Full",
       "AllowedProfiles": 
       [
          "http://hl7.org/fhir/StructureDefinition/daf-patient", 
@@ -243,7 +242,7 @@ appsettings.json:
 
 environment variables::
 
-	VONK_Validation__ValidateIncomingResources=true
+	VONK_Validation__Level=Full
 	VONK_Validation__AllowedProfiles__0=http://hl7.org/fhir/StructureDefinition/daf-patient
 	VONK_Validation__AllowedProfiles__1=http://hl7.org/fhir/StructureDefinition/daf-allergyintolerance
 

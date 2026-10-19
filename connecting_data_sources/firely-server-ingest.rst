@@ -108,12 +108,65 @@ Starting from FS version 5.5.0, the FSI version number aligns with the FS versio
 Input files formats
 ^^^^^^^^^^^^^^^^^^^
 
-FSI supports the following input file formats:
+FSI reads files by their extension:
 
-* FHIR *collection* bundles stored in ``*.json`` files, and
-* ``*.ndjson`` files where each line contains a separate FHIR resource in JSON format.
+* ``*.json``: a single FHIR resource or a Bundle in JSON format.
+* ``*.ndjson``: one FHIR resource or Bundle in JSON format per line.
 
-*Transaction* bundles can also be imported; however, they are processed as collection bundles.
+Other file formats are not supported.
+
+How a Bundle is imported depends on its ``type``:
+
+* ``collection``: each entry is imported as a separate resource.
+* ``batch``, ``transaction`` and ``searchset``: processed as a collection, so each entry is imported as a separate resource. The ``request`` of the entries is ignored.
+* ``message`` and ``document``: the Bundle itself is imported as one resource.
+* Any other type, or no type: the Bundle is reported as an error and skipped.
+
+FSI keeps the ``id``, ``meta.versionId`` and ``meta.lastUpdated`` of the incoming resources. If a resource has no ``id`` or ``meta.versionId``, FSI assigns a new GUID. If it has no ``meta.lastUpdated``, FSI sets it to the time of the import.
+
+FSI stores references as they are. It does not resolve ``urn:uuid`` references between the entries of a Bundle, and it rejects resources with a conditional reference (a reference containing ``?``) with the error "Conditional references are not supported". To convert absolute references to relative ones, see ``--urlConvBases`` and ``--urlConvElems`` below.
+
+.. _tool_fsi_exit_codes:
+
+Exit codes
+^^^^^^^^^^
+
+FSI ends with one of these exit codes, which you can use in scripts. Linux and macOS, including the Docker image, report an exit code as a number from 0 to 255, so the negative codes appear there as 255 to 250:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 10 15 75
+
+   * - Code
+     - On Linux and macOS
+     - Meaning
+   * - ``0``
+     - ``0``
+     - Success.
+   * - ``1``
+     - ``1``
+     - The operation was cancelled.
+   * - ``2``
+     - ``2``
+     - The import finished, but one or more resources could not be imported. The log lists them.
+   * - ``-1``
+     - ``255``
+     - An unexpected error occurred.
+   * - ``-2``
+     - ``254``
+     - An unexpected error occurred while invoking an internal component (target invocation exception).
+   * - ``-3``
+     - ``253``
+     - The configuration settings are incorrect.
+   * - ``-4``
+     - ``252``
+     - Invalid command-line arguments were passed.
+   * - ``-5``
+     - ``251``
+     - The license validation failed.
+   * - ``-6``
+     - ``250``
+     - FSI stopped at the first error, because ``haltOnError`` is enabled.
 
 After the import
 ^^^^^^^^^^^^^^^^
@@ -171,12 +224,12 @@ If you want to specify input parameters in the file, you can use the snippet bel
           },
 
           // Source
-          "sourceType": "Filesystem", // Filesystem | MongoDb | None, None will try only to provision the target database
+          "sourceType": "Filesystem", // Filesystem | MongoDb | Sql | None, None will try only to provision the target database
           "source": "./fsi-source", // source directory when Filesystem source is used
           "sourceFilter": "*.*", //Only import files whose name matches this wildcard pattern (e.g. *.ndjson or patients_??.ndjson). Applies to all subdirectories of the source directory. When not set, all files are imported. Filesystem source only.
           "mongoDbSource": {
               "connectionString": "<connectionstring to the Firely Server MongoDb source database>",
-              "collectionName": "vonkentries",
+              "entryCollection": "vonkentries",
               "runningMode": "AdHoc",
               "documentFilterBson": "{ }" // See https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/ for the syntax
           },
@@ -297,25 +350,25 @@ General
   * **Default**: null
   * **Description**: A file containing additional search parameters to be indexed on load directly into SQL or MongoDB target database. See :ref:`Custom Search Parameters <custom_search_parameters>`.
 
-* ``--urlConvBases:index url``: 
+* ``--urlConvBases <url>``: 
 
   * **Config**: absoluteUrlConversion/baseEndpoints
   * **Required**: No
   * **Default**: None
-  * **Description**: Convert absolute URLs to relative for endpoints included in this array. The array values must match exactly the base URL otherwise no changes are made.
+  * **Description**: Convert absolute URLs to relative for endpoints included in this array. The array values must match exactly the base URL otherwise no changes are made. Repeat the argument for each base URL, for example ``--urlConvBases http://localhost:4080/R4 --urlConvBases https://example.org/fhir``.
 
-* ``--urlConvElems:index FHIRPath``: 
+* ``--urlConvElems <FHIRPath>``: 
 
   * **Config**: absoluteUrlConversion/elements
   * **Required**: No
   * **Default**: None
-  * **Description**: List of FHIR paths specifying the list of ``Uri`` or ``Url`` elements that should be converted from absolute to relative URI if their base endpoints match one of the base endpoint specified in ``absoluteUrlConversion/baseEndpoints``.
+  * **Description**: List of FHIR paths specifying the list of ``Uri`` or ``Url`` elements that should be converted from absolute to relative URI if their base endpoints match one of the base endpoint specified in ``absoluteUrlConversion/baseEndpoints``. Repeat the argument for each FHIRPath.
 
 Source
 ^^^^^^
 
 
-* ``--sourceType <Filesystem|MongoDb|SqlServer|None>``: 
+* ``--sourceType <Filesystem|MongoDb|Sql|None>``: 
 
   * **Config**: sourceType
   * **Required**: No
@@ -325,7 +378,7 @@ Source
 
     * **Filesystem**: read data from the filesystem
     * **MongoDb**: read data from a Firely Server MongoDB database
-    * **SqlServer**: read data from a Firely Server SQL Server database
+    * **Sql**: read data from a Firely Server SQL Server database
     * **None**: use this option if you only want to provision the target database
 
 Source (for Filesystem)
@@ -359,7 +412,7 @@ See more information on how to run migrations in :ref:`this article <zero_downti
 
 * ``--srcMongoCollection <srcMongoCollection>``: 
 
-  * **Config**: mongoDbSource/collectionName
+  * **Config**: mongoDbSource/entryCollection
   * **Required**: No
   * **Default**: vonkentries
   * **Description**: Collection name to read entries from.
@@ -453,7 +506,7 @@ Target (for SQL Server)
 
 * ``--sqlBatch <sqlBatch>``: 
 
-  * **Config**: sqlServer/saveBatchSize
+  * **Config**: sqlServer/batchSize
   * **Required**: No
   * **Default**: 500
   * **Description**: The number of resources to save in each batch. SQL Server must be able to process it within the CommandTimeout. It is recommended to set this value to at least 500 for optimal performance.
@@ -788,6 +841,8 @@ To monitor the counters for FSI, you can execute the following command:
   dotnet-counters monitor --counters 'System.Runtime','FSI Processing'  --process-id <process_id>
 
 where *<process_id>* is the PID of the running FSI tool.
+
+``dotnet-counters`` cannot attach to FSI when it runs in the official Docker image, because the image disables the .NET diagnostics port (``COMPlus_EnableDiagnostics=0``, see :ref:`running FSI in Docker <docker_user_permissions>`). Use the OpenTelemetry metrics of FSI in that case.
 
 .. note::
 

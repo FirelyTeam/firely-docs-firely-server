@@ -12,7 +12,7 @@ Firely Server supports most of the features in the `FHIR RESTful API <http://www
 FHIR Versions
 -------------
 
-All the operations below can be called for FHIR STU3 or FHIR R4. Firely Server supports the fhirVersion mimetype parameter and fhir version endpoint mappings for that purpose. 
+All the operations below can be called for FHIR STU3, FHIR R4 or FHIR R5. Firely Server supports the fhirVersion mimetype parameter and fhir version endpoint mappings for that purpose. 
 See :ref:`feature_multiversion` for more information.
 
 .. _restful_crud:
@@ -26,6 +26,12 @@ A few limitations apply.
 Firely Server enables create-on-update: If you request an update and no resource exists for the given id, the provided resource will be created under the provided id. It is possible to disable this feature by setting ``AllowCreateOnUpdate`` to false in the ``FhirCapabilities`` configuration.
 
 Firely Server can reject a resource based on :ref:`feature_prevalidation`.
+
+A conditional update whose search criteria match no resource, but whose payload contains an ``id``, is handled as follows:
+
+* If no resource exists with that id, the resource is created under that id. With ``AllowCreateOnUpdate`` set to ``false``, Firely Server returns ``HTTP 404 Not Found`` instead.
+* If a resource with that id exists but has been deleted, the resource is brought back to life: the update is stored as a new version under that id, and Firely Server returns ``HTTP 200 OK``.
+* If a resource with that id exists, is not deleted and does not match the search criteria, or exists in another FHIR version, the update is rejected with ``HTTP 409 Conflict``.
 
 .. _restful_crud_configuration:
 
@@ -46,6 +52,64 @@ If you allow for multiple deletes, you have to specify a maximum number of resou
         }
     }
 
+.. _restful_crud_versioned_update:
+
+Versioned update with If-Match
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+An update, a conditional update or a patch can be made conditional on the current version of the resource, as described in `Managing Resource Contention <http://hl7.org/fhir/R4/http.html#concurrency>`_.
+Send the version that you expect to be current in the ``If-Match`` header, in the weak ETag format that Firely Server returns in the ``ETag`` header::
+
+  If-Match: W/"<versionId>"
+
+In a batch or transaction, use ``entry.request.ifMatch`` for the same purpose, see :ref:`restful_crud_conditional_headers`.
+
+* If the version in ``If-Match`` is the current version of the resource, the update is performed.
+* If it is not, Firely Server rejects the request with ``HTTP 409 Conflict``. Note that the FHIR specification asks for ``412 Precondition Failed`` here.
+* If no resource exists with the given id, Firely Server also returns ``409 Conflict``, and does not create the resource, even when create-on-update is enabled.
+* A value that is not in the weak ETag format ``W/"<versionId>"`` never matches, so the request is rejected with ``409 Conflict``.
+
+.. _restful_crud_conditional_headers:
+
+Conditional headers
+^^^^^^^^^^^^^^^^^^^
+
+Firely Server supports these conditional request headers. In a batch or transaction, each entry can carry them in its ``request`` element, with the same effect:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 18 18 64
+
+   * - HTTP header
+     - ``entry.request``
+     - Effect
+   * - ``If-None-Exist``
+     - ``ifNoneExist``
+     - Makes a create conditional. The value is a search query without the resource type, for example ``identifier=http://example.org|123``. If no resource matches, the resource is created (``201 Created``). If one resource matches, nothing is created and Firely Server returns ``200 OK`` with the ``Location`` of the existing resource. If more than one resource matches, the create is rejected with ``412 Precondition Failed``. In a bundle entry it only applies to a ``POST`` (create).
+   * - ``If-Match``
+     - ``ifMatch``
+     - Makes an update, a conditional update or a patch conditional on the current version of the resource, see :ref:`restful_crud_versioned_update`.
+   * - ``If-None-Match``
+     - ``ifNoneMatch``
+     - Makes a read conditional. The value is one or more ETags, separated by commas, such as ``W/"3"``. If the current version of the resource is one of them, Firely Server returns ``304 Not Modified`` without the resource. A value that is not a correctly formed ETag is rejected with ``400 Bad Request``.
+   * - ``If-Modified-Since``
+     - ``ifModifiedSince``
+     - Makes a read conditional. The value is an HTTP date, such as ``Wed, 21 Oct 2026 07:28:00 GMT``. If the resource was not changed after that moment, Firely Server returns ``304 Not Modified`` without the resource. A value that is not an HTTP date is rejected with ``400 Bad Request``. In a bundle entry, ``ifModifiedSince`` is a FHIR ``instant``, such as ``2026-10-21T07:28:00Z``.
+
+.. _restful_crud_headers:
+
+Response headers
+^^^^^^^^^^^^^^^^
+
+When a response contains a single resource, for example the response to a read, create, update or patch, Firely Server includes these headers:
+
+* ``ETag``: the version of the resource, as a weak ETag: ``W/"<versionId>"``. Use this value in the ``If-Match`` header of a versioned update.
+* ``Last-Modified``: the ``meta.lastUpdated`` of the resource, as an HTTP date.
+
+These headers are also sent when the resource is not returned in the body because the request has a ``Prefer: return=minimal`` or ``Prefer: return=OperationOutcome`` header.
+
+After a create, an update or a conditional create or update, the ``Location`` header holds the absolute url of the new version of the resource: ``<firely-server-endpoint>/<resourcetype>/<id>/_history/<versionId>``.
+
 .. _restful_crud_limitations:
 
 Limitations on CRUD
@@ -57,7 +121,6 @@ Limitations on CRUD
    * Two conditional creates may both succeed, although the result of one may be a match to the other.
    * A conditional create and a simultaneous conditional update may both result in a ``create``, although the result of one may be a match to the other.
 
-#. It is not possible to bring a resource that has earlier been deleted back to life with a conditional update while providing the logical id of the resource in the request payload. This operation will result in an ``HTTP 409 Conflict`` error. As a workaround, it is possible to create a new resource (with a new logical id) by omitting the ``id`` field in the payload.
 #. Parameter ``_pretty`` is not yet supported.
 #. XML Patch and JSON Patch, as well as version-read and conditional variations of FHIR Patch are not yet supported.
 
@@ -153,7 +216,7 @@ In the example below an OperationOutcome for a No-Op scenario is returned when t
 Versioning
 ----------
 
-Firely Server keeps a full version history of every resource, including the resources on the :ref:`administration_api`. Be aware that version specific searches cannot be used when SMART on FHIR is enabled in Firely Server version 5.11.0 and later versions.
+Firely Server keeps a full version history of every resource, including the resources on the :ref:`administration_api`. When SMART on FHIR is enabled, history and version reads are only available if ``SmartAuthorizationOptions:AllowHistory`` is ``true``, and then with restrictions. See :ref:`smart_history`.
 
 .. _restful_search:
 
@@ -166,6 +229,10 @@ In the default configuration the SearchParameters from the `FHIR specification <
 are available. But Firely Server also allows :ref:`feature_customsp`. 
 
 Chaining and reverse chaining is fully supported.
+
+Besides ``GET``, you can search with ``POST`` on ``<firely-server-endpoint>/<resourcetype>/_search`` or ``<firely-server-endpoint>/_search``. Send the search parameters in the body with Content-Type ``application/x-www-form-urlencoded`` (or ``multipart/form-data``). Parameters in the query of the url are added to the ones in the body. A compartment search can only be done with ``GET``.
+
+The ``_list`` parameter is supported for a List resource that is stored in Firely Server: ``<resourcetype>?_list=<id>`` returns the resources of that type that are referenced in ``List.entry.item`` of the List with that id. `Functional lists <http://hl7.org/fhir/R4/lifecycle.html#lists>`_ such as ``$current-allergies`` are not supported.
 
 Firely Server maintains the search index only for the current version of a resource. If your data contains versioned references (e.g. `Observation.subject` references `Patient/123/_history/2`), the search may match the current version of the referenced resource (e.g. `Patient/123/_history/5`), even if the reference is versioned.
 You can have a warning about this reported in the OperationOutcome of the search response by setting ``WarnOnVersionMismatches`` to true in the ``FhirCapabilities:SearchOptions`` configuration.
@@ -185,7 +252,9 @@ Firely Server also supports ``_include:iterate`` and ``_revinclude:iterate``, as
       }
    },
 
-.. warning:: ``_include`` isn't supported for a versioned reference
+The number of resources that one ``_include`` or ``_revinclude`` adds to a search result page is limited to ``BundleOptions:MaxCount`` per included resource type, see :ref:`navigational_links`. When that limit is reached, the other matching resources are not included, and the OperationOutcome of the search response contains a warning that the limit has been reached.
+
+``_include`` follows a versioned reference (e.g. ``Patient/123/_history/2``) to the referenced version of the resource. When :ref:`SMART on FHIR <feature_accesscontrol_config>` restricts the request and ``SmartAuthorizationOptions:AllowHistory`` is ``false``, Firely Server does not return historical versions: it includes the referenced resource only if the referenced version is its current version.
 
 .. _navigational_links:
 
@@ -198,19 +267,25 @@ Paging behavior of Firely Server can be configured in the ``BundleOptions`` of t
   "BundleOptions": {
     "DefaultTotal": "none", // none, accurate
     "DefaultCount": 10,
-    "MaxCount": 50,
-    "DefaultSort": "-_lastUpdated"
+    "MaxCount": 50
+    //,"DefaultSort": "-_lastUpdated"
   },
   
 
 If ``DefaultTotal`` is set to "none" the server will return:
 
 * The ``self`` and ``next`` links in the bundle response on the first page
-* Additionally, the ``first`` and ``prev`` links are returned on subsequent pages
-* The ``self``, ``first``, and ``prev`` links are returned on the last page
+* Additionally, the ``first`` and ``previous`` links are returned on subsequent pages
+* The ``self``, ``first``, and ``previous`` links are returned on the last page
+
+.. note::
+
+   Since Firely Server 6.9.0, the link to the previous page has the relation ``previous``, as defined by the FHIR specification. Earlier versions used ``prev``. Clients that look up paging links by relation name must use ``previous``.
 
 If ``DefaultTotal`` is set to "accurate" the server will additionally return a ``last`` link on all but the last page, as well as a ``total`` element in the bundle response. The ``total`` element contains the total number of resources that match the search criteria.
-With ``DefaultCount``, the number of resources that are returned per page can be regulated. The maximum number of resources that can be returned per page is set with ``MaxCount``. The default sort order can be set with ``DefaultSort``.
+With ``DefaultCount``, the number of resources that are returned per page can be regulated. The maximum number of resources that can be returned per page is set with ``MaxCount``.
+
+``DefaultSort`` sets a sort order for searches. It is commented out in the default settings, so searches have no implicit sort order: unless the request contains ``_sort``, the order of the results is not defined. When ``DefaultSort`` is set, it is used as the sort order of a request without ``_sort``, and added as the last sort clause to a request with ``_sort``.
 
 If MongoDb is configured as the repository back-end, Firely Server may utilize keyset pagination for navigating through the search results for optimized performance. There are a few limitations to this feature:
 
@@ -227,7 +302,7 @@ If keyset pagination is applied, the navigational links will only contain ``firs
 Search Anonymization
 ^^^^^^^^^^^^^^^^^^^^
 
-The ``next``, ``prev``, and ``last`` link may contain privacy-sensitive information as part of a search parameter value. In order to not expose these values in logs, the :ref:`Vonk.Plugin.SearchAnonymization<vonk_plugins_searchAnonymization>` plugin can be used. It will replace the query parameter part of the navigational link with an opaque UUID. The plugin must be used starting with FHIR R5 as the specification mandates the removal of sensitive information.
+The ``next``, ``previous``, and ``last`` link may contain privacy-sensitive information as part of a search parameter value. In order to not expose these values in logs, the :ref:`Vonk.Plugin.SearchAnonymization<vonk_plugins_searchAnonymization>` plugin can be used. It will replace the query parameter part of the navigational link with an opaque UUID. The plugin must be used starting with FHIR R5 as the specification mandates the removal of sensitive information.
 The following settings manage the search anonymization:
 ::
 
@@ -268,6 +343,10 @@ Firely Server supports modifiers for the following data types:
 +-----------------------------+----------------+-------------+
 | token                       | :text          | ✅          |
 +-----------------------------+----------------+-------------+
+| token                       | :not           | ✅          |
++-----------------------------+----------------+-------------+
+| token                       | :of-type       | ✅          |
++-----------------------------+----------------+-------------+
 | token                       | :in            | ❌          |
 +-----------------------------+----------------+-------------+
 | token                       | :below         | ❌          |
@@ -282,12 +361,14 @@ Firely Server supports modifiers for the following data types:
 +-----------------------------+----------------+-------------+
 | reference                   | :above         | ❌          |
 +-----------------------------+----------------+-------------+
-| reference                   | :below         | ❌          |
+| reference                   | :below         | ✅          |
 +-----------------------------+----------------+-------------+
 | uri                         | :below         | ✅          |
 +-----------------------------+----------------+-------------+
 | uri                         | :above         | ❌          |
 +-----------------------------+----------------+-------------+
+
+Reference ``:below`` is supported for canonical references with a version: Firely Server matches the references to that canonical whose version starts with the given version. For example, ``?derived-from:below=http://example.org/fhir/StructureDefinition/my-profile|1.2`` matches the versions ``1.2`` and ``1.2.3``. The comparison is on the text of the version, so ``|1`` also matches ``10.0``.
 
 
 When searching with the ``:exact`` modifier the server handles `grapheme clusters <http://hl7.org/fhir/R4B/search.html#modifiers>`_. 
@@ -371,12 +452,12 @@ The following parameters and options are not yet supported:
 #. ``:approx`` modifier on a quantity SearchParameter
 #. ``:text`` modifier on a string SearchParameter
 #. ``:above``, ``:below``, ``:in`` and ``:not-in`` modifiers on a token SearchParameter, ``above`` and ``below`` are also not supported for `Mime Types <http://hl7.org/fhir/R4B/search.html#mimetype>`_.
-#. ``:above``, ``:below`` modifiers on a reference SearchParameter (only valid on a `strict hierarchy <http://hl7.org/fhir/R4B/search.html#recursive>`_)
-#. ``_include`` and ``_revinclude`` will match the current version of the referenced resources, also if the reference is versioned.
+#. ``:above`` modifier on a reference SearchParameter, and ``:below`` on a reference that is not a canonical (only valid on a `strict hierarchy <http://hl7.org/fhir/R4B/search.html#recursive>`_)
+#. ``_revinclude`` will match the current version of the referenced resources, also if the reference is versioned.
 #. ``_pretty``
 #. Implicit ranges are supported on dates, datetimes and quantities with a UCUM unit. But not on other quantities and number parameters.
 #. Search parameter arguments in exponential form (e.g. 1.8e2).
-#. ``_total=estimate``, only ``none`` and ``accurate`` are supported.
+#. ``_total=estimate``. Only ``none`` and ``accurate`` are supported. A request with ``_total=estimate`` is not rejected, but Firely Server does not calculate a quick estimate: it counts the matches as for ``accurate``.
 
 In addition, Firely Server does not support the search parameters whose field ``xpathUsage`` (STU3, R4) or ``processingMode`` (R5) is not set to ``normal``. Concretely, this means that the following search parameters are not supported:
 
@@ -427,7 +508,8 @@ Limitations on history
 
 #. ``_at`` parameter is not yet supported.
 #. Paging is supported, but it is not isolated from intermediate changes to resources.
-#. In Firely Server version 5.11.0 and later versions ``_history`` cannot be used when SMART on FHIR is enabled.
+#. When SMART on FHIR is enabled, ``_history`` can only be used if ``SmartAuthorizationOptions:AllowHistory`` is ``true``, and then with restrictions. See :ref:`smart_history`.
+#. With :ref:`virtual multi-tenancy <feature_multitenancy>` enabled, ``_history`` and ``vread`` cannot be used.
 
 .. _restful_batch:
 
@@ -456,6 +538,9 @@ Capabilities
 
 On the Capabilities interaction (``<firely-server-endpoint>/metadata``) Firely Server returns a CapabilityStatement that is built dynamically from the 
 supported ResourceTypes, SearchParameters and interactions. E.g. if you :ref:`feature_customsp_configure`, the SearchParameters that are actually loaded appear in the CapabilityStatement.
+
+``CapabilityStatement.instantiates`` lists the CapabilityStatements that Firely Server conforms to. Firely Server fills it with the canonical url (``url|version`` if the CapabilityStatement has a ``version``) of every CapabilityStatement in the :ref:`administration database <conformance>` that has ``mode`` set to ``server`` and ``status`` set to ``active``, up to ``BundleOptions:MaxCount`` of them.
+To declare that Firely Server instantiates the server CapabilityStatement of an Implementation Guide, load that CapabilityStatement into the administration database, for example as part of the IG package.
 
 .. _restful_notsupported:
 

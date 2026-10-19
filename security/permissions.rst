@@ -126,7 +126,7 @@ In the example below, we will create an ``AccessPolicyDefinition`` that allows u
     
     (**IMPORTANT**) AccessPolicy resources can only be accessed or modified with a system-level scope (e.g., ``system/AccessPolicy.*``). Patient-level scopes (``patient/AccessPolicy.*``) and user-level scopes (``user/AccessPolicy.*``) are not allowed and will be rejected with a 403 Forbidden response, regardless of whether the scope would be required for the request being executed. To manage AccessPolicy resources, administrators must use a client with proper system-level scope (``system/AccessPolicy.*`` or a subset of CRUDS operations).
     
-    The access token used for AccessPolicy management should NOT have a fhirUser claim, to avoid being restricted by the very AccessPolicies that the admin is trying to change. The client used for AccessPolicy management should be:
+    The access token used for AccessPolicy management must NOT have a fhirUser claim. Firely Server rejects a token that has both a fhirUser claim and any AccessPolicy scope, including ``system/AccessPolicy.*``, with a 403 Forbidden response. This applies to every request made with that token, also requests that don't involve AccessPolicy resources. The client used for AccessPolicy management should be:
     
     * Configured in the authorization server to have the proper allowed scopes
     * Only available to Firely Server administrators through proper access controls

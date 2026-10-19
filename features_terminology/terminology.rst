@@ -7,9 +7,124 @@ Terminology services
 
   The features described on this page are available in **all** :ref:`Firely Server editions <vonk_overview>`.
 
-Firely Server provides support for Terminology operations and validation against terminologies. This is done through a local implementation based on the Administration database ('Local Terminology Service') and - if configured - extended with external FHIR Terminology Servers ('Remote Terminology Services'). The configuration allows you to set preferred services for each CodeSystem and ValueSet. Firely Server will then transparently select and query either the Local or one of the Remote Terminology Services.
+Terminologies give the codes in FHIR resources their meaning. A code such as ``44054006`` only tells a receiving system that a patient has type 2 diabetes because both sides use the same CodeSystem, and a profile can only require "a code for a blood pressure measurement" because a ValueSet lists which codes qualify.
+Firely Server supports the FHIR terminology operations and validates resources against the terminology bindings in their profiles. It answers terminology requests with its own **Local Terminology Service**, which uses the CodeSystems, ValueSets and ConceptMaps in the Administration database, and can pass requests on to one or more external FHIR terminology servers, the **Remote Terminology Services**. For each CodeSystem and ValueSet you can set which service is preferred, and Firely Server selects the service transparently (see :ref:`feature_terminologyoptions`).
 
-Of the operations listed below, the Local Terminology Service supports ValueSet $validate-code and ValueSet $expand, and CodeSystem $lookup, CodeSystem $validate-code, CodeSystem $find-matches and CodeSystem $subsumes. $translate and $closure are always passed on to a Remote Terminology Service. Note that it only supports simple ValueSets and CodeSystems like the ones part of the FHIR specification. It cannot support complex terminologies like LOINC or SNOMED-CT.
+The Local Terminology Service works well for CodeSystems and ValueSets of a manageable size, such as the ones in the FHIR specification and in implementation guides. Large terminologies such as SNOMED CT and LOINC cannot be loaded into the Administration database. For those, use :ref:`Advanced Terminology with Conformance Archives (CAR files) <feature_advanced_terminology>`, or a Remote Terminology Service.
+
+----
+
+Terminology Use Cases
+^^^^^^^^^^^^^^^^^^^^^
+
+#. Validating resources against their bindings
+
+	When Firely Server validates a resource, with ``$validate`` or with :ref:`feature_prevalidation`, it checks the codes in the resource against the ValueSets the profile binds them to. Behind the scenes this uses the same terminology services as the operations below, so a code from a large terminology can only be checked if a CAR file or a Remote Terminology Service covers it.
+
+#. Checking codes at the point of entry
+
+	A client can check a single code before it stores a resource, for example whether a code entered in a form is allowed for a field, or whether a code exists at all and what its display is.
+
+#. Filling pick lists
+
+	User interfaces need the list of codes a user may choose from. Expanding a ValueSet gives that list, including the displays to show.
+
+#. Reasoning over hierarchies
+
+	Many questions in clinical logic and analytics are about hierarchies: "is this diagnosis a kind of diabetes?" or "is this procedure a subtype of surgery?". The subsumption test answers such a question for a pair of codes.
+
+#. Mapping between code systems
+
+	Data often arrives coded in a local or national code system while reporting or exchange requires a standard one. Translating codes with a ConceptMap maps them from one system to the other.
+
+----
+
+Terminology Operations in Firely Server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Some terminology operations are supported natively: the Local Terminology Service answers them, and for SNOMED CT, LOINC and ICD-10-CM, Advanced Terminology answers part of them from CAR files. Others are not implemented by Firely Server itself, and only work when a Remote Terminology Service that supports them is configured.
+
+Supported natively
+------------------
+
+* ValueSet/$validate-code
+
+	:Purpose: Checks whether a code is a member of a ValueSet.
+	:Use Case: Checking a code entered in a form or received from another system against the ValueSet bound to that element. Validation of resources relies on the same check.
+	:Input: A ValueSet (canonical url, id or the resource itself) and a code with its system, a Coding or a CodeableConcept.
+	:Output: A Parameters resource with ``result`` (true or false), and a ``message`` and the ``display`` where available.
+
+	See :ref:`terminology_valueset_validate_code` for the supported parameters. With Advanced Terminology, a ValueSet that includes concepts from a CAR-backed CodeSystem can be checked as well.
+
+* ValueSet/$expand
+
+	:Purpose: Lists the codes that a ValueSet contains.
+	:Use Case: Filling pick lists and drop-downs in a user interface, or getting the full list of codes for a query or a report.
+	:Input: A ValueSet (canonical url, id or the resource itself).
+	:Output: The ValueSet with an ``expansion`` listing its codes.
+
+	See :ref:`terminology_valueset_expand`. The Local Terminology Service expands ValueSets up to ``MaxExpansionSize`` concepts and does not support filtering or paging. Advanced Terminology does not expand ValueSets.
+
+* CodeSystem/$lookup
+
+	:Purpose: Returns the details of a single code: its display, its designations and its properties.
+	:Use Case: Showing the display of a code to a user, or reading a property of a concept, such as whether it is inactive.
+	:Input: A code and its system, or a Coding.
+	:Output: A Parameters resource with the name of the CodeSystem, the display of the code, and the requested properties and designations.
+
+	See :ref:`terminology_codesystem_lookup`. Also supported by Advanced Terminology.
+
+* CodeSystem/$validate-code
+
+	:Purpose: Checks whether a code exists in a CodeSystem.
+	:Use Case: Checking that a code is valid at all, independent of a ValueSet, for example when importing data.
+	:Input: A CodeSystem (canonical url, id or the resource itself) and a code, a Coding or a CodeableConcept.
+	:Output: A Parameters resource with ``result`` (true or false), and a ``message`` and the ``display`` where available.
+
+	See :ref:`terminology_codesystem_validate_code`. Also supported by Advanced Terminology.
+
+* CodeSystem/$subsumes
+
+	:Purpose: Tests how two codes of the same CodeSystem are related in its hierarchy.
+	:Use Case: Answering "is code A a kind of code B?" in clinical logic, decision support or analytics, without expanding a whole ValueSet.
+	:Input: Two codes (or Codings) and their system.
+	:Output: A Parameters resource with the outcome: ``equivalent``, ``subsumes``, ``subsumed-by`` or ``not-subsumed``.
+
+	See :ref:`terminology_codesystem_subsumes`. Also supported by Advanced Terminology.
+
+* CodeSystem/$find-matches (named $compose in STU3)
+
+	:Purpose: Finds the codes in a CodeSystem that have a given set of property values.
+	:Use Case: Finding the code for a concept that is described by its properties rather than by its code.
+	:Input: A system, and the properties with the values to match.
+	:Output: A Parameters resource listing the matching codes.
+
+	See :ref:`terminology_codesystem_find_matches`. Not supported by Advanced Terminology.
+
+Only available through a Remote Terminology Service
+---------------------------------------------------
+
+Firely Server accepts the following operations on its endpoint, but does not implement them. It passes them on to a Remote Terminology Service that supports them. Without such a service, these operations are not available.
+
+* ConceptMap/$translate
+
+	:Purpose: Translates a code from one code system to another, using a ConceptMap.
+	:Use Case: Mapping local or national codes to the standard codes required for exchange or reporting.
+	:Input: A ConceptMap (canonical url, id or the resource itself), or a source and target, and the code to translate.
+	:Output: A Parameters resource with ``result``, and the matching target codes with their relationship to the source code.
+
+	See :ref:`terminology_conceptmap_translate`.
+
+* $closure
+
+	:Purpose: Maintains a closure table: the subsumption relationships between a set of codes that a client is interested in.
+	:Use Case: A client that stores coded data in its own database and wants to query it by hierarchy ("all records with a kind of diabetes") without calling the terminology server for every record.
+	:Input: The name of the closure table, and the new concepts to add to it.
+	:Output: A ConceptMap with the new relationships between the concepts in the table.
+
+	See :ref:`terminology_conceptmap_closure`.
+
+All terminology operations are available on the regular FHIR endpoint and on the administration endpoint. See :ref:`feature_terminologyintegration` for the levels, parameters and configuration of each operation.
 
 The terminology operations can be invoked for different FHIR versions as specified in :ref:`feature_multiversion`.
 
@@ -27,6 +142,8 @@ Every operation below is available on the regular FHIR endpoint (``<firely-serve
 
 Firely Server decides per request whether the Local Terminology Service or a Remote Terminology Service handles it (see :ref:`feature_terminologyoptions`). The parameter lists below are those of the Local Terminology Service. It rejects any other parameter with the message "The input parameter(s) ... are currently not supported". A Remote Terminology Service receives the parameters of the request and decides itself which ones it supports. Parameters of a complex type, such as ``coding`` or ``valueSet``, can only be passed with ``POST``.
 
+.. _terminology_valueset_validate_code:
+
 ValueSet $validate-code
 -----------------------
 
@@ -36,6 +153,8 @@ ValueSet $validate-code
    * The Local Terminology Service supports the parameters url, valueSetVersion, valueSet, code, system, display, coding, codeableConcept, abstract, inferSystem and context.
    * Pass the ValueSet either by reference (url, optionally with valueSetVersion, or the id on the instance level) or as a resource (the valueSet parameter or the request body), not both. A request that has both is rejected with ``400 Bad Request`` and "Ambiguous call. ValueSet information present both in url and in the valueSet parameter or request body".
    * Both ``GET`` and ``POST`` interactions are available. 
+
+.. _terminology_valueset_expand:
 
 ValueSet $expand
 ----------------
@@ -48,6 +167,8 @@ ValueSet $expand
    * The size of an expansion by the Local Terminology Service is limited by ``MaxExpansionSize`` (see :ref:`feature_terminologyoptions`).
    * Both ``GET`` and ``POST`` interactions are available. 
 
+.. _terminology_codesystem_lookup:
+
 CodeSystem $lookup
 ------------------
 
@@ -58,6 +179,8 @@ CodeSystem $lookup
    * Pass the concept either as code and system or as coding, not both. A request with both code and ``coding.code``, or with both system and ``coding.system``, is rejected with "Ambiguous call. code/system was provided in both code/system parameters and coding parameter".
    * Both ``GET`` and ``POST`` interactions are available. 
 
+.. _terminology_codesystem_validate_code:
+
 CodeSystem $validate-code
 -------------------------
 
@@ -66,6 +189,8 @@ CodeSystem $validate-code
    * Available on the type level ``CodeSystem/$validate-code`` and the instance level ``CodeSystem/<id>/$validate-code``. On the instance level the CodeSystem with that id is used, unless url is given.
    * The Local Terminology Service supports the parameters url, version, codeSystem, code, display, coding, codeableConcept, abstract and displayLanguage.
    * Both ``GET`` and ``POST`` interactions are available. 
+
+.. _terminology_codesystem_find_matches:
 
 CodeSystem $find-matches / $compose
 -----------------------------------
@@ -77,6 +202,8 @@ CodeSystem $find-matches / $compose
    * property can only be passed with ``POST``. Both ``GET`` and ``POST`` interactions are available. 
    * $find-matches was named $compose in FHIR STU3. The operation is supported with both names. For STU3, the terminology service must list ``Compose`` in its ``SupportedInteractions`` (see :ref:`feature_terminologyoptions`), and ``$compose`` must be enabled in the ``Operations`` section of the endpoint. The default settings of the Local Terminology Service only list ``FindMatches``.
 
+.. _terminology_codesystem_subsumes:
+
 CodeSystem $subsumes
 --------------------
 
@@ -86,6 +213,8 @@ CodeSystem $subsumes
    * The Local Terminology Service supports the parameters codeA, codeB, codingA, codingB, system and version.
    * Both ``GET`` and ``POST`` interactions are available. 
 
+.. _terminology_conceptmap_closure:
+
 ConceptMap $closure
 --------------------
 
@@ -94,6 +223,8 @@ ConceptMap $closure
    * Available on the system level ``$closure``.
    * The Local Terminology Service does not support this operation. It is passed on to a Remote Terminology Service supporting it, and supports any parameters that the remote service supports.
    * Only ``POST`` interactions are available. 
+
+.. _terminology_conceptmap_translate:
 
 ConceptMap $translate
 ---------------------
@@ -290,32 +421,62 @@ Advanced Terminology with Conformance Archives (CAR files)
 
    The features described in this section require the **Advanced Terminology** license token ``http://fire.ly/advanced-terminology``, which is separate from the base terminology license.
 
-The local terminology service built into Firely Server works well for simple ValueSets and CodeSystems such as those shipped with the FHIR specification. However, large and complex terminologies like **SNOMED CT** and **LOINC** cannot be stored as plain FHIR resources in the Administration database — they are too large, have rich hierarchical relationships, and require specialised subsumption logic.
+The local terminology service built into Firely Server works well for simple ValueSets and CodeSystems such as those shipped with the FHIR specification. Large terminologies with rich hierarchies cannot be represented as a FHIR CodeSystem resource in the Administration database: they are too large, and checking whether one concept is a descendant of another needs dedicated logic.
 
-**Conformance Archive (CAR) files** solve this problem. A CAR file is a representation of a CodeSystem produced by the `Firely.Car` library. It stores the full concept inventory together with all required relationship data in a format that can be loaded and queried efficiently at runtime from the local filesystem — without requiring an external terminology server.
+With **Conformance Archive (CAR) files**, Firely Server supports these terminologies locally, without an external terminology server:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 30 70
+
+   * - Terminology
+     - CodeSystem url
+   * - SNOMED CT, US Edition
+     - ``http://snomed.info/sct``
+   * - LOINC
+     - ``http://loinc.org``
+   * - ICD-10-CM
+     - ``http://hl7.org/fhir/sid/icd-10-cm``
+
+SNOMED CT uses the same CodeSystem url for every edition. Use ``http://snomed.info/sct`` as the system; the edition URI ``http://snomed.info/sct/731000124108`` is not a system and is not recognized. The edition is only part of the ``version``.
+
+A CAR file holds the complete set of concepts of one terminology, together with their relationships and properties, in a format that Firely Server reads from the local filesystem. Firely provides pre-built CAR files for these terminologies on request; please :ref:`contact us <vonk-contact>`.
 
 How it works
 ^^^^^^^^^^^^
 
-When ``AdvancedTerminologyConfiguration`` is active and at least one CAR file is configured, Firely Server registers a **CAR Terminology Host** alongside the existing local and remote terminology hosts. In addition, the default terminology implementation is replaced by the **Delegated Terminology**, which contains the following logic:
+The Advanced Terminology plugin (``Vonk.Plugins.Terminology.AdvancedTerminologyConfiguration``) is part of ``Vonk.Plugins.Terminology``, so it is in the default pipeline. It is loaded when your license contains the Advanced Terminology token, and then changes two things:
 
-1. For every incoming terminology request, the proxy first checks whether the CAR Terminology Host can handle the request (i.e. whether the requested CodeSystem URL is present in one of the configured CAR files).
-2. If the CAR host can handle the request, it serves it directly.
-3. For **ValueSet/$validate-code** requests that involve complex filter criteria (e.g. ``is-a`` or ``descendent-of`` filters referencing a CAR-backed CodeSystem), the proxy decomposes the request into a series of lower-level CodeSystem operations (``CodeSystem/$validate-code``, ``CodeSystem/$subsumes``, and ``CodeSystem/$lookup``) and aggregates the results.
-4. If the CAR host cannot handle a request (either because the CodeSystem is not in a CAR file, or because the operation is not supported), the request falls back to the standard terminology proxy and the configured local/remote services.
+#. If ``Terminology:ConformanceArchives`` lists at least one CAR file, it adds a **CAR terminology service** next to the local and remote terminology services.
+#. It replaces the routing of ``ValueSet/$validate-code`` with a **delegating** implementation. This also applies when no CAR files are configured.
 
-Supported operations via CAR files
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-The following FHIR terminology operations are directly supported when the requested CodeSystem is backed by a CAR file:
+The CAR terminology service answers these operations for the code systems in its CAR files:
 
 * ``CodeSystem/$validate-code``
-* ``CodeSystem/$subsumes``
 * ``CodeSystem/$lookup``
+* ``CodeSystem/$subsumes``
 
-Operations that are **not** directly supported by CAR files (such as ``ValueSet/$expand``, ``ConceptMap/$translate``) will be handled by the fallback services (local or remote), just as before.
+For those code systems it is preferred over the local and remote terminology services. Other operations, such as ``ValueSet/$expand`` or ``ConceptMap/$translate``, and code systems that are not in a CAR file are handled by the local and remote terminology services as before.
 
-``ValueSet/$validate-code`` is supported indirectly: if the included CodeSystem concepts are backed by a CAR file, the proxy automatically decomposes the validation into the supported CodeSystem-level operations listed above.
+``ValueSet/$validate-code`` is handled by delegation. This includes the code checks of resource validation, which use ``ValueSet/$validate-code``. Firely Server looks for a terminology service that supports all three CodeSystem operations above for the code system of the code: first the CAR terminology service, then the local and remote services in their configured order. If it finds one, Firely Server reads the ValueSet itself, including filters such as ``is-a`` and ``descendent-of``, and answers the request with ``CodeSystem/$validate-code``, ``CodeSystem/$lookup`` and ``CodeSystem/$subsumes`` calls to that service. So a ValueSet defined on SNOMED CT (US Edition), LOINC or ICD-10-CM can be validated locally, as long as the ValueSet itself is available to Firely Server.
+
+Firely Server uses the regular routing for ``ValueSet/$validate-code`` instead, when:
+
+* no terminology service supports all three CodeSystem operations for the code system;
+* the code system is ``urn:ietf:bcp:47`` (languages) or ``urn:ietf:bcp:13`` (MIME types);
+* the request has ``inferSystem`` set to ``true`` together with a ``code``;
+* the delegation fails. Firely Server then logs the reason at the ``Verbose`` level.
+
+What still needs a remote terminology server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+CAR files cover the checks on single codes. These operations are never answered from a CAR file, so for SNOMED CT, LOINC or ICD-10-CM they need a :ref:`remote terminology service <feature_terminologyoptions>` that supports them:
+
+* ``ValueSet/$expand``, so also expanding a ValueSet that is defined on one of these terminologies
+* ``CodeSystem/$find-matches`` (``$compose`` in STU3)
+* ``ConceptMap/$translate`` and ``$closure``
+
+The CAR files hold the code systems, not the ValueSets that are defined on them. To validate a code against such a ValueSet by its url or id, the ValueSet itself must be in the Administration database. A ValueSet that you send in the request instead, in the ``valueSet`` parameter of a ``POST``, does not need to be stored. Load a ValueSet into the Administration database with the :ref:`conformance resource import <conformance_import>`, for example from the package of the Implementation Guide that defines it, or through the :ref:`Administration API <conformance_administration_api>`.
 
 Configuration
 ^^^^^^^^^^^^^
@@ -323,7 +484,7 @@ Configuration
 ConformanceArchives
 -------------------
 
-Configure one or more CAR files in the ``Terminology:ConformanceArchives`` array in your ``appsettings.json``:
+List the CAR files in the ``Terminology:ConformanceArchives`` array, for example in your ``appsettings.instance.json``:
 
 .. code-block:: JSON
 
@@ -335,31 +496,119 @@ Configure one or more CAR files in the ``Terminology:ConformanceArchives`` array
        },
        {
          "Path": "/data/terminology/LOINC.cs.car"
+       },
+       {
+         "Path": "/data/terminology/ICD10CM.cs.car"
        }
      ],
      "LocalTerminologyService": {
        "Order": 10,
        "PreferredSystems": [ "http://hl7.org/fhir" ],
-       "SupportedInteractions": [ "ValueSetValidateCode", "Expand", "FindMatches", "Lookup" ],
+       "SupportedInteractions": [ "ValueSetValidateCode", "CodeSystemValidateCode", "Subsumes", "Expand", "FindMatches", "Lookup" ],
        "SupportedInformationModels": [ "Fhir3.0", "Fhir4.0", "Fhir5.0" ]
      }
    }
 
-:Path: Absolute or relative path to the ``.car`` file on the local filesystem. All configured paths are validated at startup; Firely Server will refuse to start if a CAR file cannot be opened.
+:Path: Path to the ``.car`` file on the local filesystem. A relative path is resolved against the working directory of Firely Server. The CAR files are used for every FHIR version.
 
 .. note::
 
-   If ``ConformanceArchives`` is empty or not configured, the ``CarTerminologyHost`` is not registered and no CAR-related behaviour is active. The standard local and remote terminology services continue to work normally.
+   If ``ConformanceArchives`` is empty or not configured, the CAR terminology service is not added. ``ValueSet/$validate-code`` is still handled by delegation, with the local and remote terminology services that support all three CodeSystem operations.
+
+Running in Docker
+-----------------
+
+When Firely Server runs in :ref:`Docker <use_docker>`, mount the CAR files into the container and point ``Path`` to the location inside the container. The image runs as a user with uid 1000, so the files must be readable by that user. For example, with Docker Compose:
+
+.. code-block:: yaml
+
+   volumes:
+     - ./terminology:/app/terminology:ro
+   environment:
+     - VONK_Terminology:ConformanceArchives:0:Path=/app/terminology/SCT.cs.car
+     - VONK_Terminology:ConformanceArchives:1:Path=/app/terminology/LOINC.cs.car
 
 Priority and fallback
 ---------------------
 
-The CAR Terminology Host is always consulted **before** other hosts for any CodeSystem that is present in a configured CAR file. If the CAR host cannot serve the request (unsupported operation or unrecognised system), the request is passed to the remaining terminology services in their configured order.
+For a code system in one of the CAR files, the CAR terminology service is preferred over the other terminology services for ``CodeSystem/$validate-code``, ``CodeSystem/$lookup`` and ``CodeSystem/$subsumes``. If more than one CAR file contains the code system, Firely Server uses them together. For other operations and other code systems, the request goes to the remaining terminology services in their configured order.
 
 Startup validation
 ------------------
 
-All configured CAR files are validated when Firely Server starts. A ``VonkConfigurationException`` is raised if any file is missing or cannot be read, preventing the server from starting with an invalid terminology configuration.
+Firely Server opens every configured CAR file at startup. If a file is missing or cannot be read, Firely Server does not start and logs "A configured CodeSystem Conformance Archive file at <path> could not be opened."
+
+Examples
+^^^^^^^^
+
+The examples use SNOMED CT: ``73211009`` is *Diabetes mellitus*, and ``44054006`` is *Diabetes mellitus type 2*, a descendant of it. The operations are available on the regular FHIR endpoint and, as far as enabled in ``Administration:Operations``, on the administration endpoint (see :ref:`feature_terminology`).
+
+Look up a concept:
+
+.. code-block:: http
+
+   GET [base]/CodeSystem/$lookup?system=http://snomed.info/sct&code=44054006 HTTP/1.1
+
+Check that a code exists in the code system:
+
+.. code-block:: http
+
+   GET [base]/CodeSystem/$validate-code?url=http://snomed.info/sct&code=44054006 HTTP/1.1
+
+Check whether one concept subsumes another. Here the result is ``subsumes``, because type 2 diabetes is a kind of diabetes:
+
+.. code-block:: http
+
+   GET [base]/CodeSystem/$subsumes?system=http://snomed.info/sct&codeA=73211009&codeB=44054006 HTTP/1.1
+
+Validate a code against a ValueSet that is defined on SNOMED CT. For a ValueSet that is stored in the Administration database with the url ``http://example.org/fhir/ValueSet/diabetes`` and this definition:
+
+.. code-block:: json
+
+   {
+     "resourceType": "ValueSet",
+     "url": "http://example.org/fhir/ValueSet/diabetes",
+     "status": "active",
+     "compose": {
+       "include": [
+         {
+           "system": "http://snomed.info/sct",
+           "filter": [
+             { "property": "concept", "op": "is-a", "value": "73211009" }
+           ]
+         }
+       ]
+     }
+   }
+
+Firely Server validates the code with delegation, using the CAR file:
+
+.. code-block:: http
+
+   GET [base]/ValueSet/$validate-code?url=http://example.org/fhir/ValueSet/diabetes&system=http://snomed.info/sct&code=44054006 HTTP/1.1
+
+Troubleshooting
+^^^^^^^^^^^^^^^
+
+If delegation of ``ValueSet/$validate-code`` fails, Firely Server does not return an error. It handles the request with the regular routing, which can give a different result or go to a remote terminology service, and logs the reason at the ``Verbose`` level. To see these messages, raise the log level of the terminology plugin in your ``logsettings.instance.json`` (see :ref:`configure_log`). Also lower ``restrictedToMinimumLevel`` of the sink you look at to ``Verbose``:
+
+.. code-block:: JSON
+
+   "Serilog": {
+     "MinimumLevel": {
+       "Override": {
+         "Vonk.Plugins.Terminology": "Verbose"
+       }
+     }
+   }
+
+Add the override before any broader namespaces such as ``Vonk``. Firely Server only picks up a new namespace override after a restart; changing the level of an override that already exists takes effect without one (see :ref:`hot_reload_log_level`).
+
+If the CAR terminology service is not used at all, check that:
+
+* your license contains the token ``http://fire.ly/advanced-terminology``;
+* ``Terminology:ConformanceArchives`` lists the files, and Firely Server started without an error about opening them;
+* the request uses the exact CodeSystem url from the table above, such as ``http://snomed.info/sct``.
 
 License
 ^^^^^^^

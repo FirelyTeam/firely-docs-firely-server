@@ -39,14 +39,12 @@ Requesting a management API token
 
 From Firely Auth 4.8.0, a management API token is issued for Firely Auth itself, not for Firely Server: its ``aud`` claim is ``http://server.fire.ly/auth/api/management`` and nothing else. Name it with the ``resource`` parameter (RFC 8707) when you request the token:
 
-  .. code-block:: bash
+  .. code-block:: HTTP
 
-    curl -X POST https://<your Firely Auth>/connect/token \
-      --data-urlencode "grant_type=client_credentials" \
-      --data-urlencode "client_id=ManagementClient" \
-      --data-urlencode "client_secret=<your secret>" \
-      --data-urlencode "scope=http://server.fire.ly/auth/scope/authmanagement" \
-      --data-urlencode "resource=http://server.fire.ly/auth/api/management"
+    POST <base-url>/connect/token HTTP/1.1
+    Content-Type: application/x-www-form-urlencoded
+
+    grant_type=client_credentials&client_id=ManagementClient&client_secret=<your secret>&scope=http%3A%2F%2Fserver.fire.ly%2Fauth%2Fscope%2Fauthmanagement&resource=http%3A%2F%2Fserver.fire.ly%2Fauth%2Fapi%2Fmanagement
 
 The ``resource`` parameter is optional: a request without it gets the same token. Do not send any other ``resource`` value for a management token.
 

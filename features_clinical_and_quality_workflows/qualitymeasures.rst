@@ -783,7 +783,8 @@ configured in the ``MeasureEvaluateOperation`` section of the appsettings.
   "MeasureEvaluateOperation": {
     "MaxDegreeOfParallelism": 2,
     "MaxSubjectsForSynchronousGroupBasedMeasureEvaluation": <n>,
-    "MaxPrefetchedSubjects": 4
+    "MaxPrefetchedSubjects": 4,
+    "MaxDuration": "00:05:00"
   }
 
 ``MaxDegreeOfParallelism``
@@ -808,6 +809,17 @@ configured in the ``MeasureEvaluateOperation`` section of the appsettings.
 
   Each subject retrieved ahead can use a database connection while its data is
   retrieved, and holds that data in memory until the subject has been evaluated.
+
+``MaxDuration``
+  The longest one ``Measure/$evaluate-measure`` request may evaluate, as a time span
+  in the format ``[d.]hh:mm:ss``, such as ``00:05:00`` for five minutes. Not set by
+  default, so an evaluation may take as long as it needs. When the time passes, the
+  evaluation stops and the request is answered with HTTP 503; see
+  :ref:`feature_cql_cancellation`. A value of zero or less, or longer than about 49
+  days, is rejected at startup.
+
+  Write the value as a time span: a bare number such as ``"30"`` is read as a number
+  of days.
 
 ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation``
   The maximum number of distinct subjects a ``Group``-based evaluation may cover
@@ -2234,6 +2246,42 @@ supplied, without filtering.
    declare is not retrieved, so a retrieve of that type returns an empty result, without
    an error. Declare every resource type the logic retrieves — including those retrieved
    by included libraries — in ``dataRequirement`` of the evaluated ``Library``.
+
+.. _feature_cql_cancellation:
+
+Cancellation and maximum duration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``Measure/$evaluate-measure`` and ``Library/$evaluate`` stop when the client that sent
+the request goes away, for example because it closed the connection or timed out. The
+evaluation stops at the next CQL definition, group, subject or ``Library/$evaluate``
+evaluation of a group, and the retrieval of a subject's data stops too, whether the
+data comes from Firely Server's own database or, page by page, from a
+``dataEndpoint``. Firely Server logs "Cancelled operation $evaluate-measure" (or
+``$evaluate``) at Information level. No ``OperationOutcome`` is sent, as no one is
+left to receive it.
+
+``Measure/$evaluate-measure`` can also be limited to a maximum duration with the
+``MeasureEvaluateOperation:MaxDuration`` setting (see
+:ref:`feature_measure_evaluate_configuration`). When that time passes, the evaluation
+stops in the same way, and the request is answered with HTTP 503 and an
+``OperationOutcome`` with an issue of type ``timeout``:
+
+  Cannot execute operation $evaluate-measure. The evaluation did not finish within
+  the time this server allows for it.
+
+The server log names the setting and its value; the ``OperationOutcome`` does not.
+
+A few points to keep in mind:
+
+- The evaluation stops *between* the CQL definitions it invokes, so a definition that
+  is already running finishes first. A request can therefore take somewhat longer than
+  ``MaxDuration``.
+- The time is measured from the start of the evaluation, after the request's
+  parameters, the ``Measure`` and the members of a ``Group`` subject have been
+  resolved.
+- ``Library/$evaluate`` requests sent to Firely Server directly have no maximum
+  duration. They stop only when their client goes away.
 
 .. _feature_cql_result_mapping:
 

@@ -41,6 +41,7 @@ Features
 #. Value-based and criteria-based stratifiers now work on groups with a non-boolean population basis, such as the episode-based HEDIS measures (for example AAB). Each basis unit, such as an encounter or episode date, is assigned to its own stratum, and per-stratum counts and ``measureScore`` are computed over those basis units. A value-based stratifier component names a CQL function that takes one basis unit. Such a function can also be used on a boolean-basis group, as in the HEDIS measure CRE; it is then invoked once per subject with a ``null`` argument, and a warning is logged.
 #. Stratifiers are now supported on ``ratio``-scored groups.
 #. The ``cqfm-appliesTo`` and ``cqm-appliesTo`` extensions on ``Measure.group.stratifier`` restrict which populations the strata of a stratifier report.
+#. ``Measure/$evaluate-measure`` can be limited to a maximum duration with the new ``MeasureEvaluateOperation:MaxDuration`` setting. A request that takes longer is stopped and answered with HTTP 503. It is not set by default. See :ref:`feature_cql_cancellation`.
 #. The population basis ``string`` is now supported in proportion, ratio and stratified groups, as used by the NCQA HEDIS measures ``HPC-Reporting``, ``AHU-Reporting``, ``DBME-Reporting`` and ``FMAE-Reporting``. See :ref:`feature_measure_evaluate_populationbasis`.
 
 **Other**
@@ -125,6 +126,7 @@ Known behavioral changes
    Defects in a ``Measure``'s population bases are now reported with issue type ``invalid`` instead of ``not-supported``.
 #. **CQL messages were reworded.** Clients and log queries that match on message text need updating. The operation name is no longer quoted (``$evaluate-measure`` instead of ``'$evaluate-measure'``), a missing value reads ``'(null)'`` instead of ``''`` in the ``OperationOutcome``, and log lines of rejections now read the same as the ``OperationOutcome``.
 #. **CQL log categories and OpenTelemetry activity sources were renamed.** If you filter CQL logs by category, or traces by source through ``OpenTelemetryOptions:VonkSourcesInclude`` or ``VonkSourcesExclude``, review these filters. See :ref:`feature_opentelemetry_cql`.
+#. **``Measure/$evaluate-measure`` and ``Library/$evaluate`` stop when the client goes away**, instead of running to their end: the evaluation and the retrieval of subject data stop, and the server logs "Cancelled operation" at Information level. See :ref:`feature_cql_cancellation`.
 
 **Other**
 

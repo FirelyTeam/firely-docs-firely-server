@@ -24,11 +24,11 @@ This release completes stratification support in ``Measure/$evaluate-measure``, 
 Improvements
 ^^^^^^^^^^^^
 
-#. Patient ``$everything`` and Patient/Group Bulk Data ``$export`` on SQL Server are faster and scale better for large requests, thanks to a rewritten resource traversal query.
-#. ``Measure/$evaluate-measure`` assembles its reports faster: about twice as fast for a stratified ``subject-list`` report over 1,000 subjects.
+#. Patient ``$everything`` and Patient/Group Bulk Data ``$export`` on SQL Server are faster and scale better for large requests.
+#. ``Measure/$evaluate-measure`` assembles its reports faster, in particular stratified ``subject-list`` reports.
 #. ``Measure/$evaluate-measure`` retrieves the data of the next subjects while the current subject is evaluated, for up to ``MeasureEvaluateOperation:MaxPrefetchedSubjects`` subjects (default 4, maximum 16, 0 to turn it off). See :ref:`feature_measure_evaluate_configuration`.
-#. FSI: NDJSON lines are read about five times faster and with almost no allocations, and JSON files (not NDJSON) are parsed directly from the file stream. Both lower memory use on large imports. A single long NDJSON line no longer permanently increases the memory an import holds.
-#. Firely Server and Firely Server Ingest now release pooled buffer memory they no longer need, instead of keeping the peak amount reserved for the lifetime of the process. This affected 6.9.0 and later.
+#. FSI: NDJSON and JSON files are imported faster and with lower memory use.
+#. Firely Server and Firely Server Ingest now release memory they no longer need after peak load, instead of keeping it reserved for the lifetime of the process. This affected 6.9.0 and later.
 #. The default configuration check now reports appsettings and logsettings separately in the startup log, comparing the effective configuration including instance files and environment variables. A customization in one no longer affects the other, or the guided setup steps that belong to it.
 #. The startup configuration log now shows the ``path`` of File sinks and every entry of non-secret array settings such as ``AllowedOrigins``, instead of a placeholder.
 
@@ -123,15 +123,8 @@ Known behavioral changes
    - A criteria-based stratifier whose criteria returns a stratum value instead of basis units.
 
    Defects in a ``Measure``'s population bases are now reported with issue type ``invalid`` instead of ``not-supported``.
-#. **CQL messages were reworded.** Clients and log queries that match on message text need updating. The operation name is no longer quoted (``$evaluate-measure`` instead of ``'$evaluate-measure'``), a missing value reads ``'(null)'`` instead of ``''`` in the ``OperationOutcome``, and log lines of rejections now read the same as the ``OperationOutcome``. Structured log values follow the order of the message template, and Serilog stores lists as ``a, b`` instead of ``["a", "b"]``.
-#. **CQL log categories and OpenTelemetry activity sources were renamed**, as log lines are now filed under the class that writes them. If you filter logs by category, or traces by source through ``OpenTelemetryOptions:VonkSourcesInclude`` or ``VonkSourcesExclude``, update these names (see :ref:`feature_opentelemetry_cql`):
-
-   - Activity source and log category ``Vonk.Plugin.Cql.Operations.Library.Evaluate.Internal.LibraryEvaluateOperationContext`` is now ``…Library.Evaluate.Internal.LibraryEvaluationEngine``.
-   - Activity source and log category ``Vonk.Plugin.Cql.Operations.Measure.Evaluate.Internal.MeasureEvaluateOperationContext`` is now ``…Measure.Evaluate.Internal.Context.MeasureEvaluateOperationContext``.
-   - Log category ``…Measure.Evaluate.Internal.MeasureEvaluateOperationContextResolver`` is now ``…Measure.Evaluate.Internal.SubjectResolution.MeasureEvaluateOperationContextResolver``.
-   - New log categories: ``DataBundleValidator``, ``LibraryEvaluationDataProvider``, ``LibraryDefinitionEvaluator`` and ``DroppedCqlValueLogger`` (in ``…Library.Evaluate.Internal``), ``MeasureEvaluateSubjectDataProvider`` and ``ConformanceCacheArtifactResolver`` (in ``…Measure.Evaluate.Internal.Evaluation``), ``Vonk.Plugin.Cql.Infrastructure.Conformance.CqlOperationTargetResolver`` and ``…Measure.DataRequirements.MeasureDataRequirementsOperationConfiguration``.
-
-   Here ``…`` stands for ``Vonk.Plugin.Cql.Operations``.
+#. **CQL messages were reworded.** Clients and log queries that match on message text need updating. The operation name is no longer quoted (``$evaluate-measure`` instead of ``'$evaluate-measure'``), a missing value reads ``'(null)'`` instead of ``''`` in the ``OperationOutcome``, and log lines of rejections now read the same as the ``OperationOutcome``.
+#. **CQL log categories and OpenTelemetry activity sources were renamed.** If you filter CQL logs by category, or traces by source through ``OpenTelemetryOptions:VonkSourcesInclude`` or ``VonkSourcesExclude``, review these filters. See :ref:`feature_opentelemetry_cql`.
 
 **Other**
 
@@ -147,7 +140,6 @@ Programming API changes and plugins
 #. Firely Server was updated to use the Firely .NET SDK v6.8.0, the Firely validator 3.4.0 and the enterprise validator 3.2.0. For those implementing custom plugins or facades, we recommend updating these to use the same SDK version when upgrading to this version of Firely Server.
 #. The CQL engine was upgraded from the Firely CQL SDK (``Hl7.Cql``) 2.15.0 to 2.17.0. If you build plugins against ``Hl7.Cql``, recompile them against the same version.
 #. ``ResultPageExtensions.PagingLinks(this ResultPage, IVonkContext)`` is now marked ``[Obsolete]`` and will be removed in the next major version of Firely Server. Read the paging links from ``Bundle.SelfLink``, ``FirstLink``, ``PreviousLink``, ``NextLink`` and ``LastLink`` instead.
-#. The public ``ILibraryEvaluateOperationService`` interface now declares ``EvaluateOnGet`` next to ``EvaluateOnPost``. If you implement this interface outside Firely Server, add the member and recompile against this version.
 
 .. _vonk_releasenotes_6_10_0:
 

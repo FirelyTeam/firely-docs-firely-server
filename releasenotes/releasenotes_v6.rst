@@ -122,7 +122,7 @@ Known behavioral changes
 
    Defects in a ``Measure``'s population bases are now reported with issue type ``invalid`` instead of ``not-supported``.
 #. **CQL messages were reworded.** Clients and log queries that match on message text need updating. The operation name is no longer quoted (``$evaluate-measure`` instead of ``'$evaluate-measure'``), a missing value reads ``'(null)'`` instead of ``''`` in the ``OperationOutcome``, and log lines of rejections now read the same as the ``OperationOutcome``. Structured log values follow the order of the message template, and Serilog stores lists as ``a, b`` instead of ``["a", "b"]``.
-#. **CQL log categories and OpenTelemetry activity sources were renamed**, as log lines are now filed under the class that writes them. If you filter logs by category, or traces by source through ``Vonk:OpenTelemetryOptions``, update these names (see :ref:`feature_opentelemetry_cql`):
+#. **CQL log categories and OpenTelemetry activity sources were renamed**, as log lines are now filed under the class that writes them. If you filter logs by category, or traces by source through ``OpenTelemetryOptions:VonkSourcesInclude`` or ``VonkSourcesExclude``, update these names (see :ref:`feature_opentelemetry_cql`):
 
    - Activity source and log category ``Vonk.Plugin.Cql.Operations.Library.Evaluate.Internal.LibraryEvaluateOperationContext`` is now ``…Library.Evaluate.Internal.LibraryEvaluationEngine``.
    - Activity source and log category ``Vonk.Plugin.Cql.Operations.Measure.Evaluate.Internal.MeasureEvaluateOperationContext`` is now ``…Measure.Evaluate.Internal.Context.MeasureEvaluateOperationContext``.

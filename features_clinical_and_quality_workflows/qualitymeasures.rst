@@ -975,8 +975,8 @@ from the group's single initial population::
 As for ``proportion``, a denominator of 0 gives a ``measureScore`` of 0.
 
 A ``denominator-exception`` population is not permitted on a ratio-scored group, and
-a ratio-scored group cannot carry stratifiers. Both are rejected before evaluation;
-see :ref:`feature_measure_evaluate_validation`.
+is rejected before evaluation; see :ref:`feature_measure_evaluate_validation`. A
+ratio-scored group may carry stratifiers; see :ref:`feature_measure_evaluate_stratifiers`.
 
 .. note::
 
@@ -1011,38 +1011,79 @@ Population basis
 ~~~~~~~~~~~~~~~~
 
 The population basis of a population declares what its criteria expression returns:
-``boolean`` for a patient-based measure, or a FHIR resource type such as
-``Encounter`` for a measure that counts events rather than subjects.
+``boolean`` for a patient-based measure, or another type for a measure that counts
+something other than subjects — a resource type such as ``Encounter``, or a value
+type such as ``date`` for a measure that counts episodes by their date.
 
-Firely Server reads it from either realm's extension on the population:
+Firely Server reads it from either realm's extension:
 
 - ``http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-populationBasis`` (US realm)
 - ``http://hl7.org/fhir/uv/cqm/StructureDefinition/cqm-populationBasis`` (UV realm)
 
-The declared basis is validated against the return type of the CQL expression the
-population's criteria names. A basis can only be a FHIR type, and FHIR type names
-are case-sensitive — ``Boolean`` is not ``boolean``.
+The extension may be placed on the ``Measure``, on a ``Measure.group`` or on a
+``Measure.group.population``. A population's *effective* basis is the one declared on
+the population itself, or else on its group, or else on the ``Measure``. The basis is
+declared with a ``valueCode`` naming a FHIR type. The ``valueDataRequirement`` form
+that the UV realm extension also allows is not supported.
 
-Consistency within a membership path
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Supported types
+^^^^^^^^^^^^^^^
+
+A population basis must be a FHIR type name, and FHIR type names are case-sensitive:
+``Boolean`` is not ``boolean``, and is rejected as no type at all. It must also be a
+type that a population criteria result can have:
+
+- any resource type, including the abstract ``Resource`` and ``DomainResource``. These
+  two accept results of every resource type that derives from them;
+  ``DomainResource`` does not accept ``Bundle``, ``Binary`` or ``Parameters``.
+- ``boolean``, ``integer``, ``decimal``, ``string``, ``date``, ``dateTime``, ``time``,
+  ``Quantity``, ``Range``, ``Ratio``, ``Period``, ``Identifier``, ``code``, ``Coding``
+  or ``CodeableConcept``.
+
+Groups that relate their populations to each other or stratify them — a group scored
+as ``proportion`` or ``ratio``, and a stratified group of any scoring type — have to
+tell the items they count apart (see :ref:`feature_measure_evaluate_counted_types`).
+Such a group only supports a concrete resource type, such as ``Encounter``, and
+``boolean``, ``integer``, ``decimal``, ``date`` and ``string``. A ``cohort``-scored or
+unscored group without stratifiers counts each population on its own, and supports
+every type in the list above.
+
+The declared basis is validated against the type of the ``Library`` parameter that
+the population's criteria names, where the ``Library`` declares one, and against the
+results the criteria returns. A population whose results are not of its declared basis
+is rejected.
+
+A population criteria returns either a single ``boolean`` — whether the subject is in
+the population — or a list of the items the population counts. A criteria that
+returns a list of ``boolean`` values is neither, and is rejected. A single ``boolean``
+result that is ``null`` counts the subject as not in the population.
+
+Consistency within a group
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Composing population counts and the score means intersecting and subtracting sets of
-cases, which is only meaningful when all populations involved describe the same kind
-of case. All populations within one *membership path* must therefore resolve to a
+items, which is only meaningful when all populations involved describe the same kind
+of item. Populations that are combined with each other must therefore resolve to a
 single, common basis.
 
-Which populations form a path depends on the group's effective scoring type:
+Which populations are combined depends on the group's effective scoring type:
 
-- **proportion** — the whole group is one path. The initial population, the
-  denominator tree and the numerator tree must all share a basis.
+- **proportion** — the whole group is one *membership path*. The initial population,
+  the denominator tree and the numerator tree must all share a basis.
 - **ratio** — the numerator path (``numerator``, ``numerator-exclusion``) and the
-  denominator path (``denominator``, ``denominator-exclusion``) are validated
-  independently and may use different bases. The initial population feeds both, so
-  its basis must be consistent with each.
+  denominator path (``denominator``, ``denominator-exclusion``) each start from the
+  group's single initial population, so all populations of the group share its basis.
+  A ratio group whose numerator and denominator declare different bases is rejected.
+- **cohort** or no scoring type — the populations are not combined, and may use
+  different bases, unless the group has stratifiers.
 
-Mixing bases within one path is rejected with HTTP 422. When no basis is declared,
-it can only be observed from the results, so the same check is applied again during
-scoring, against the types the expressions actually returned.
+The populations of a stratified group are stratified together, so they must share one
+basis whatever the group's scoring type.
+
+When no basis is declared, it can only be observed from the results, so the same
+checks are applied again during evaluation, against the types the expressions
+actually returned. A violation of any of these rules is rejected with HTTP 422; see
+:ref:`feature_measure_evaluate_validation`.
 
 .. _feature_measure_evaluate_counts:
 
@@ -1051,18 +1092,18 @@ Population counts
 
 By default, the population counts in the ``MeasureReport`` follow the **label-based
 membership algorithm** of the FHIR Quality Measure IG, rather than the raw result of
-each population's criteria expression. For ``proportion`` and ``ratio`` scoring, a
-case is only counted for a population when it also belongs to the population that
+each population's criteria expression. For ``proportion`` and ``ratio`` scoring, an
+item is only counted for a population when it also belongs to the population that
 population is derived from:
 
-- the denominator only counts cases in the initial population;
-- the numerator only counts cases in the denominator that are not
-  denominator-excluded (``proportion``), or cases in the initial population
+- the denominator only counts items in the initial population;
+- the numerator only counts items in the denominator that are not
+  denominator-excluded (``proportion``), or items in the initial population
   (``ratio``);
 - exclusion and exception counts are restricted to their parent population;
-- a denominator exception does not count cases that meet the numerator criteria.
+- a denominator exception does not count items that meet the numerator criteria.
 
-Exclusion and exception cases remain *included* in the count of their parent
+Exclusion and exception items remain *included* in the count of their parent
 population — they are only subtracted when the ``measureScore`` is calculated.
 
 A subject whose ``Denominator Exclusion`` expression returns ``true`` but that is not
@@ -1087,49 +1128,61 @@ the same.
 Which results are counted
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Every population count counts *cases*, and what a case is depends on what the
-population's criteria expression returns:
+Every population count counts *items* of the population basis, and what an item is
+depends on what the population's criteria expression returns:
 
 - An expression that returns a single ``boolean`` makes the population patient-based:
-  the case is the subject itself, counted when the value is ``true``.
-- Otherwise every element the expression returns is a case. Composing the
-  label-based counts and the ``measureScore`` means intersecting and subtracting the
-  cases of several populations, so each case needs an identity. Firely Server derives
-  it from the returned type:
+  the item is the subject itself, counted when the value is ``true``.
+- Otherwise every element the expression returns is an item. Composing the
+  label-based counts and the ``measureScore``, and assigning items to strata, means
+  intersecting and subtracting the items of several populations, so each item needs
+  an identity. Firely Server derives it from the returned type:
 
   .. list-table::
      :header-rows: 1
      :widths: 30 70
 
      * - Returned type
-       - Identity of the case
+       - Identity of the item
      * - A resource
-       - ``ResourceType/id``
+       - ``ResourceType/id``. A resource without an id, such as one the CQL
+         constructs rather than retrieves, has no identity.
      * - ``boolean``
        - its value, ``true`` or ``false``
      * - ``integer`` or ``decimal``
        - its value
      * - ``date``
        - its value
+     * - ``string``
+       - its value, compared exactly: case-sensitive, and the empty string is an
+         item of its own
 
-  Two returned elements with the same identity are the same case.
+  Two returned elements with the same identity are the same item, and are counted
+  once.
 
-Which of these rules applies depends on the count:
+Every population counts each distinct item once, in the group and in each of its
+strata: an Encounter that a criteria returns twice counts as 1, and so do two episodes
+on the same date in a ``date``-basis measure. This applies to the label-based counts,
+to the initial population, to every population of a ``cohort``-scored or unscored
+group, and to every population with ``rawPopulationCounts=true``. A returned element
+without a value, such as a primitive that carries only a ``data-absent-reason``
+extension, is no item and is not counted.
 
-- For ``proportion`` and ``ratio`` groups, the label-based counts (every population
-  except the initial population) and the ``measureScore`` identify cases as above. A
-  population whose expression returns any other type — for example a ``string``, a
-  ``dateTime``, a ``Quantity`` or a ``Coding`` — cannot be counted, and the request is
-  rejected with HTTP 422, naming the group, the population and the returned type.
-  This also applies with ``rawPopulationCounts=true``, because the ``measureScore``
-  still follows the label-based rules.
-- The initial population, every population of a ``cohort``-scored or unscored group,
-  and every population with ``rawPopulationCounts=true`` count the returned elements
-  as they are: each returned resource, and each returned primitive value that has a
-  value, is counted, including repeated values. A returned value that is not a
-  primitive, such as a ``Quantity`` or a ``Coding``, is not counted there.
+Which types can be counted depends on the group:
 
-All populations within one membership path must also return the same type; see
+- A ``proportion`` or ``ratio`` group, and a stratified group of any scoring type,
+  needs an identity for every item. A population whose expression returns any other
+  type — for example a ``dateTime``, a ``Quantity`` or a ``Coding``, or a resource
+  without an id — cannot be counted, and the request is rejected with HTTP 422,
+  naming the group, the population and the returned type. For ``proportion`` and
+  ``ratio`` groups this also applies with ``rawPopulationCounts=true``, because the
+  ``measureScore`` still follows the label-based rules.
+- A ``cohort``-scored or unscored group without stratifiers counts every returned
+  element, of any type. An element without an identity, such as a ``dateTime`` or a
+  ``Quantity``, cannot be told apart from another one, and is counted once per
+  returned element.
+
+The populations that are combined with each other must also share one basis; see
 :ref:`feature_measure_evaluate_populationbasis`.
 
 .. _feature_measure_evaluate_stratifiers:
@@ -1137,48 +1190,67 @@ All populations within one membership path must also return the same type; see
 Stratifiers
 ~~~~~~~~~~~
 
-A stratifier partitions the reported populations of a group into strata. Firely
-Server supports **value-based (component) stratifiers**, declared as
-``Measure.group.stratifier.component[]``.
+A stratifier partitions the items of a group into strata, and reports the group's
+populations and score per stratum. Firely Server supports both forms of stratifier,
+on groups of any supported scoring type and any population basis:
 
 +-------------------------------------------+-----------+----------------------------------------------+
 | Stratifier form                           | Supported | Notes                                        |
 +===========================================+===========+==============================================+
-| ``stratifier.component[]``                | ✅        | Only on groups with a ``boolean`` basis.     |
+| ``stratifier.component[]``                | ✅        | Value-based: one stratum per observed        |
+|                                           |           | combination of component values.             |
 +-------------------------------------------+-----------+----------------------------------------------+
-| ``stratifier.criteria``                   | ❌        | Rejected with HTTP 501, not yet implemented. |
+| ``stratifier.criteria``                   | ✅        | Criteria-based: a ``"true"`` and a           |
+|                                           |           | ``"false"`` stratum.                         |
 +-------------------------------------------+-----------+----------------------------------------------+
 
-Each component's ``text/cql-identifier`` expression is evaluated per subject, and the
-subjects are stratified by the **cross-product of their observed component values**.
+What a stratifier assigns to its strata are the items the group counts — its *basis
+units*. On a group with a ``boolean`` basis, the basis unit is the subject. On a group
+of any other basis, such as an episode-based measure, every distinct item the group's
+populations return is a basis unit of its own, identified as described in
+:ref:`feature_measure_evaluate_counted_types`. A stratum's population counts and
+``measureScore`` are computed over the basis units of that stratum, by the same rules
+as the group's own.
+
+Value-based stratifiers
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Each ``component`` of a value-based stratifier has a ``text/cql-identifier`` criteria
+that produces a value per basis unit:
+
+- On a group with a ``boolean`` basis, it names an expression that is evaluated once
+  per subject.
+- On a group of any other basis, it names a CQL function that takes a single argument
+  of the basis type, as the FHIR Clinical Reasoning module prescribes. The function is
+  evaluated once for each distinct basis unit the group's populations returned, with
+  that basis unit as its argument. For example, an episode-based measure whose
+  populations return episode dates can stratify by age with
+  ``define function "Age Stratifier"(episodeDate Date): ...``.
+
+A ``Measure`` may also name such a function on a group whose populations all declare
+the ``boolean`` basis, as the NCQA HEDIS measure CRE does. There the subject is the
+only basis unit and there is no item of the parameter's type to pass, so the function
+is evaluated once per subject with a ``null`` argument. The strata are then only
+correct if the function does not depend on its argument; Firely Server logs a warning
+naming the function, its library and the groups.
+
+The basis units are stratified by the **cross-product of their observed component
+values**. A basis unit for which a component returns no value is placed in the stratum
+whose value for that component carries only the ``data-absent-reason`` extension with
+code ``unknown``, so every basis unit the group counts is stratified.
 
 .. note::
 
-   A subject may produce several values for one component — one product line per
+   A basis unit may produce several values for one component — one product line per
    enrollment, for example. It then appears in one stratum per combination, so the
    per-stratum counts of a group can legitimately sum to more than the group's own
-   population counts.
-
-Each stratum is reported with:
-
-- ``stratum.component[]`` code/value pairs. A coded value is reported as a
-  ``CodeableConcept`` carrying the ``coding`` plus a ``text`` holding the code
-  string; a non-coded primitive is reported as ``text`` only; an absent value is
-  reported as a ``CodeableConcept`` carrying only the ``data-absent-reason``
-  extension with code ``unknown``.
-- population counts, following the same rules as the group's own counts — see
-  :ref:`feature_measure_evaluate_counts`. A stratum never reports a member for a
-  population its group excludes.
-- a ``measureScore``, for proportion-scored groups. It always follows the
-  label-based membership rules, mirroring the group-level score, so a stratum whose
-  denominator is 0 has a ``measureScore`` of 0.
-- ``subjectResults`` ``List`` resources, in ``subject-list`` reports.
+   population counts. This is the only case in which they do.
 
 Stratifier component values
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A component expression must return values, not resources. Firely Server turns each
-returned value into the stratum value as follows:
+A component must return values, not resources. Firely Server turns each returned
+value into the stratum value as follows:
 
 .. list-table::
    :header-rows: 1
@@ -1202,17 +1274,85 @@ returned value into the stratum value as follows:
      - Rejected with HTTP 422, naming the component and the returned type
 
 A value without content — an empty or blank value, or a ``Coding`` or
-``CodeableConcept`` with neither a code nor a text — is ignored, and a value the
-subject returns more than once counts once. When a component returns no value at all
-for a subject, the subject is placed in the stratum whose value carries only the
-``data-absent-reason`` extension with code ``unknown``.
+``CodeableConcept`` with neither a code nor a text — is ignored, and a value returned
+more than once for the same basis unit counts once.
+
+Criteria-based stratifiers
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``text/cql-identifier`` criteria of a criteria-based stratifier is evaluated once
+per subject, together with the population criteria, and divides the group's basis
+units over two strata, ``"true"`` and ``"false"``:
+
+- On a group with a ``boolean`` basis, the criteria returns a single ``boolean``. A
+  subject for which it returns ``true`` is counted in the ``"true"`` stratum; ``false``,
+  ``null`` or no result places the subject in the ``"false"`` stratum.
+- On a group of any other basis, the criteria returns the basis units it holds for, of
+  the basis type — as Conformance Requirement 3.17 (Stratification Criteria) of the
+  `CQM IG (UV realm) 2.0.0 <https://hl7.org/fhir/uv/cqm/STU2/>`_ requires:
+  "Criteria-based stratification: SHALL be on the root. Results SHALL be in the same
+  type as the basis of the measure." A basis unit the group's populations returned is
+  counted in the ``"true"`` stratum when the criteria returned it as well, and in the
+  ``"false"`` stratum otherwise. A criteria that returns an empty list, or no result,
+  places every basis unit in the ``"false"`` stratum.
+
+The two strata partition the group's basis units, so their population counts add up
+to the group's own. Each is reported with a ``stratum.value`` that carries only the
+``text`` ``true`` or ``false``, and no ``component``.
+
+A criteria that returns something else is rejected with HTTP 422: on a ``boolean``
+basis a resource, a value of another type or several values; on any other basis
+anything that is not of the basis type, such as a ``boolean``, a resource of another
+type, a value or a tuple. That includes a criteria that returns the stratum value
+itself, which the Quality Measure IG (US realm) also allows.
+
+Populations reported per stratum
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By default, each stratum reports every population of its group. A stratifier that
+carries one or more ``appliesTo`` extensions reports only the populations they name,
+in the group's population order:
+
+- ``http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-appliesTo`` (US realm)
+- ``http://hl7.org/fhir/uv/cqm/StructureDefinition/cqm-appliesTo`` (UV realm)
+
+Each names a population type with a coding from the ``measure-population``
+CodeSystem. An ``appliesTo`` value without such a coding, or naming a population type
+the group does not define, is rejected with HTTP 422.
+
+The stratifier report
+^^^^^^^^^^^^^^^^^^^^^
+
+Each stratum is reported with:
+
+- its value: ``stratum.component[]`` code/value pairs for a value-based stratifier, a
+  ``stratum.value`` for a criteria-based one. A coded value is reported as a
+  ``CodeableConcept`` carrying the ``coding`` plus a ``text`` holding the code string;
+  a non-coded primitive is reported as ``text`` only; an absent value is reported as a
+  ``CodeableConcept`` carrying only the ``data-absent-reason`` extension with code
+  ``unknown``.
+- population counts, following the same rules as the group's own counts — see
+  :ref:`feature_measure_evaluate_counts`. A stratum never reports a member for a
+  population its group excludes.
+- a ``measureScore``, for ``proportion`` and ``ratio`` groups. It always follows the
+  label-based membership rules, mirroring the group-level score, so a stratum whose
+  denominator is 0 has a ``measureScore`` of 0. In a ``ratio`` group, a stratum's
+  numerator counts the basis units of the stratum that are in the initial population
+  and the numerator, whether or not they are in the denominator.
+- ``subjectResults`` ``List`` resources, in ``subject-list`` reports. A subject is
+  listed in a stratum when at least one of its basis units is in it.
 
 An ``individual`` report keeps strata whose counts are all 0, so the subject's
 observed component values are always visible. ``summary`` and ``subject-list``
-reports omit strata that contain no in-population subject.
+reports omit a value-based stratum when none of its basis units is in any of the
+populations the stratum reports. The ``"true"`` and ``"false"`` strata of a
+criteria-based stratifier are present in every report type, even when one holds no
+basis unit.
 
-A ratio-scored group cannot carry stratifiers: the Quality Measure IG forbids the
-combination.
+A stratifier that would carry nothing but its id — no strata, and no ``code`` on the
+``Measure.group.stratifier`` — is left out of the report, as FHIR invariant ele-1
+requires. This happens, for example, in an ``individual`` report whose subject
+returned no basis unit on a group of a non-``boolean`` basis.
 
 .. _feature_measure_evaluate_supplemental_data:
 
@@ -1231,7 +1371,8 @@ Measure validation
 
 A ``Measure`` is validated before any CQL is evaluated, so an authoring problem is
 reported as a client error naming the group and population concerned, rather than
-surfacing part-way through a long population run.
+surfacing part-way through a long population run. What can only be checked against
+the results is checked as soon as they are read.
 
 Rejected with HTTP 422
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -1248,6 +1389,12 @@ Rejected with HTTP 422
 
 *Group level*
 
+- A group without an id, or several groups sharing one. The group id is what the
+  results, ``MeasureReport.group.id`` and the stratum memberships are filed under.
+- A population without an id, or two populations of one group sharing one. The
+  ``MeasureReport`` reports each population under its id. Populations of different
+  groups may share an id. A population without an id is named by its position in the
+  group, such as ``population[0]``.
 - A population type the group's effective scoring type does not evaluate. Where the
   Quality Measure IG marks it Not Permitted — a ``denominator`` on a cohort-scored
   group, a ``denominator-exception`` on a ratio-scored group, a
@@ -1255,19 +1402,35 @@ Rejected with HTTP 422
   should be corrected. Where the IG's population table does not cover it at all —
   ``measure-observation``, on any ``Measure`` — the issue type is ``not-supported``,
   because no edit to the ``Measure`` resolves it.
-- The same population type defined more than once in one group.
+- The same population type defined more than once in one group. A population's type is
+  its first coding from the ``measure-population`` CodeSystem.
 - A population whose ``code`` the ``measure-population`` CodeSystem does not define,
   or that carries no coding from that CodeSystem. The population is named by its
   element id where it has one, and by its position in the group otherwise.
 - A population whose criteria names no CQL expression: no criteria at all, an empty
   expression, or a criteria in another expression language than ``text/cql-identifier``.
-- Populations within one membership path that do not share a common population basis
-  (see :ref:`feature_measure_evaluate_populationbasis`).
 - A ``Library`` parameter whose declared type is not a FHIR type.
 - A stratifier that declares neither or both of ``criteria`` and ``component[]``,
-  duplicate stratifier or component ids, a stratifier on a ratio-scored group, or a
-  component on a group whose basis is not ``boolean``.
-- A stratifier component expression that returns resources rather than values.
+  duplicate stratifier or component ids, or an ``appliesTo`` extension without a
+  ``measure-population`` coding or naming a population type the group does not
+  define.
+
+*Population basis* (see :ref:`feature_measure_evaluate_populationbasis`)
+
+- A ``populationBasis`` extension without a value, with a ``value[x]`` other than
+  ``valueCode``, or with a ``valueCode`` that is not a FHIR type name (issue type
+  ``invalid``). A ``valueDataRequirement`` on the UV realm extension is reported as not
+  supported (issue type ``not-supported``).
+- A population basis that no population criteria result can have, such as ``uri``, or
+  that the group's scoring type or stratifiers do not support, such as ``dateTime`` on
+  a ``proportion`` group (issue type ``not-supported``).
+- A declared basis that does not match the type of the ``Library`` parameter the
+  population's criteria names (issue type ``invalid``).
+- Populations of a ``proportion`` or ``ratio`` group that are combined with each other
+  but use different bases, including a ``ratio`` group whose numerator and denominator
+  declare different bases (issue type ``invalid``).
+- Populations of a stratified ``cohort``-scored or unscored group that use different
+  bases (issue type ``not-supported``).
 
 *Result level*
 
@@ -1276,10 +1439,20 @@ Rejected with HTTP 422
   cannot be represented in a FHIR ``Parameters`` resource and was therefore dropped.
   The error names the group, the population, the expression and the library expected
   to define it.
-- A population whose criteria returned results of more than one type.
-- A population result of a type the counting cannot identify a case by. A case must
-  be identifiable as a resource, a ``boolean``, a ``decimal``, a ``date`` or an
-  ``integer``; a ``Quantity`` or a ``Coding``, for instance, cannot be counted.
+- A population whose criteria returned results of more than one type, results that are
+  not of its declared basis, or a list of ``boolean`` values (issue type ``invalid``).
+- A population result the group cannot tell apart, in a ``proportion``, ``ratio`` or
+  stratified group. An item must be identifiable as a resource with an id, a
+  ``boolean``, a ``decimal``, a ``date``, an ``integer`` or a ``string``; a
+  ``dateTime``, a ``Quantity`` or a ``Coding``, for instance, cannot be counted there.
+- A stratifier component that returns resources, or a value of a type that cannot be
+  stratified on (see :ref:`feature_measure_evaluate_stratifiers`).
+- A stratifier component function that cannot be evaluated for each basis unit: one
+  the ``Library`` does not define, one that takes another number of arguments than
+  one, one defined as several single-argument overloads, or one whose parameter type
+  matches none of the items the group's populations returned.
+- A criteria-based stratifier whose criteria returns something other than a single
+  ``boolean`` on a ``boolean`` basis, or other than basis units on any other basis.
 
 Rejected with other status codes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1288,13 +1461,9 @@ Rejected with other status codes
   in ``Measure.scoring`` or in a group-level scoring override (issue type
   ``invalid``). A ``Measure.scoring`` that carries no coding from that CodeSystem is
   rejected the same way.
-- **HTTP 412** — a group without an id, or several groups sharing one. The group id
-  is what the results, ``MeasureReport.group.id`` and the stratum memberships are
-  filed under.
 - **HTTP 404** — a ``Measure.library`` canonical that resolves to no resource. This
   is reported before any subject data is retrieved, and names the library url and
   version.
-- **HTTP 501** — a criteria-based stratifier, which is not yet implemented.
 
 Output parameters
 ~~~~~~~~~~~~~~~~~
@@ -1310,11 +1479,8 @@ The report includes:
 - the parameters of the request (see below)
 
 Each ``group`` and each ``population`` of the report carries the ``id`` of the
-``Measure`` element it reports on. A ``Measure.group.population`` therefore needs an
-``id`` to appear in the report: a population without one is still evaluated, and takes
-part in the counts and the score of the other populations, but is left out of the
-``MeasureReport``. Such a ``Measure`` is not rejected; Firely Server only logs a
-warning.
+``Measure`` element it reports on, so every group and every population of the
+``Measure`` needs an ``id`` (see :ref:`feature_measure_evaluate_validation`).
 
 Request parameters in the report
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

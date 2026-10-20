@@ -1170,7 +1170,7 @@ The report shows how Firely Server represents strata:
 
 - ``stratum.population`` carries the ``code`` and ``count`` of each population of the group, or of the populations an ``appliesTo`` extension names, but no ``id``. The counts follow the same rules as the counts of the group, so a stratum never counts a patient that the group does not count.
 - ``stratum.measureScore`` is reported for proportion- and ratio-scored groups and is calculated in the same way as the score of the group.
-- An individual report keeps strata whose counts are all 0, so the patient's component values are always visible. Summary and subject-list reports leave out strata that contain no patient of any reported population.
+- An individual report keeps strata whose counts are all 0, so the patient's component values are always visible. Summary and subject-list reports leave out value strata that contain no patient of any reported population; the ``"true"`` and ``"false"`` strata of a criteria-based stratifier are always reported.
 
 For the full list of rules and the validation of stratifiers, see :ref:`feature_measure_evaluate_stratifiers` and :ref:`feature_measure_evaluate_validation`.
 

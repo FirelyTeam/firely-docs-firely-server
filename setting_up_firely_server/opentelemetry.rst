@@ -208,7 +208,7 @@ The table below lists the spans per source. The source names are abbreviated: ``
    * -
      - ``ExtractAssemblyBinaries``
      -
-   * - ``Library.Evaluate.LibraryEvaluateOperationContext``
+   * - ``Library.Evaluate.LibraryEvaluationEngine``
      - ``ValidateDataBundle``
      -
    * -
@@ -216,13 +216,13 @@ The table below lists the spans per source. The source names are abbreviated: ``
      - ``cql.bundle_entry_count``: the number of entries in the data bundle. ``cql.data_source_reused``: ``true`` when the data source of the subject, built by an earlier group of the same ``Measure/$evaluate-measure`` request, is reused. Both tags are only present when the evaluation has a data bundle.
    * -
      - ``ExecuteCqlLibrary``
-     - ``cql.library.name``, ``cql.library.version``, ``cql.expression_count``: the number of expressions evaluated.
+     - ``cql.library.name``, ``cql.library.version``, ``cql.expression_count``: the number of expressions evaluated. ``cql.function_invocation_count``: the number of times a stratifier component function was invoked; only present on the evaluations of ``Measure/$evaluate-measure`` that invoke such a function.
    * -
      - ``SelectExpressions``
      - ``cql.expression_count``
    * -
      - ``ExecuteCqlExpressions``
-     - ``cql.expression_count``
+     - ``cql.expression_count``, ``cql.function_invocation_count``
    * - ``Library.Evaluate.LibraryEvaluationDataProvider``
      - ``RetrieveDataBundle``
      - ``cql.data_source``: where the data comes from, ``remote`` (a remote data endpoint), ``supplied`` (the ``data`` parameter of the request) or ``server`` (the database of Firely Server). ``fhir.bundle.entry_count``: the number of entries in the retrieved bundle.
@@ -244,7 +244,7 @@ The table below lists the spans per source. The source names are abbreviated: ``
    * -
      - ``PersistMeasureReport``
      -
-   * - ``Measure.Evaluate.MeasureEvaluateOperationContext``
+   * - ``Measure.Evaluate.Context.MeasureEvaluateOperationContext``
      - ``EvaluateMeasure``
      - ``fhir.measure.subject_count``: the number of subjects evaluated. ``fhir.measure.name``, ``fhir.measure.version``, ``fhir.measure.group_count``: the number of groups of the Measure.
    * -
@@ -269,6 +269,7 @@ Note the following:
 
 * ``$cql`` and the CDS Hooks CRD hook evaluate CQL by running ``Library/$evaluate`` within the same request. Their traces therefore contain the ``EvaluateLibrary`` span and the spans nested in it as well.
 * ``Measure/$evaluate-measure`` evaluates every group of the Measure for every subject. For each subject it emits an ``EvaluateSubject`` span, with an ``EvaluateGroup`` span per group, and each ``EvaluateGroup`` span holds an ``EvaluateLibrary`` span with the spans nested in it. An evaluation for a Group of patients, or for a whole population, therefore produces a large number of spans. Use the ``VonkSourcesExclude`` setting described above to leave out the spans you do not need. It matches the start of the span name, so ``"ExecuteCql"`` excludes both ``ExecuteCqlLibrary`` and ``ExecuteCqlExpressions``.
+* ``Measure/$evaluate-measure`` retrieves the data of the next subjects ahead, while the current subject is evaluated (see ``MaxPrefetchedSubjects`` in :ref:`feature_measure_evaluate_configuration`). The ``GetPatientEverything`` span of a subject whose data was retrieved ahead is therefore a child of the ``EvaluateMeasure`` span, rather than of the ``EvaluateSubject`` span of that subject.
 * The CQL spans do not carry patient identifiers. Their tags identify the evaluated Library, Measure and Measure group, and otherwise only carry counts and the kind of data source.
 * The CQL spans do not set an error status. A failed evaluation is reported in the ``OperationOutcome`` of the response and in the log of Firely Server; the top-level span of the request carries the HTTP status code in ``http.response.status_code``.
 

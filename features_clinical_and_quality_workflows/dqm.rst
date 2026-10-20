@@ -289,8 +289,8 @@ The following is a FHIR `Measure` resource defining the populations used in an e
 
 .. attention::
 
-	Firely Server currently requires that each group within a Measure resource includes an "id" element, unique within the Measure, to ensure correct generation of the corresponding MeasureReport. Otherwise, ``Measure/$evaluate-measure`` responds with ``412 Precondition Failed``.
-	Each population needs an "id" element as well. A population without one is still evaluated, but it is left out of the MeasureReport without an error: Firely Server only logs a warning.
+	Firely Server requires that each group within a Measure resource includes an "id" element, unique within the Measure, to ensure correct generation of the corresponding MeasureReport. Otherwise, ``Measure/$evaluate-measure`` responds with ``422 Unprocessable Entity``.
+	Each population needs an "id" element as well, unique within its group. A Measure with a population without an id, or with two populations of one group that share an id, is rejected with ``422 Unprocessable Entity`` before it is evaluated.
 
 Each population criterion corresponds to a named expression defined in the CQL within the referenced Library. To ensure the dQM engine correctly interprets the selection logic, the criteria.language must be set to "text/cql-identifier", indicating that the population is identified by a named CQL expression.
 
@@ -333,7 +333,7 @@ The quoted definitions of the scoring methods are those of the measure-scoring C
 Scoring Methods in Firely Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Firely Server 6.10.0 supports the following scoring methods:
+Firely Server supports the following scoring methods:
 
 #. ``proportion`` - supported.
 #. ``ratio`` - supported, for a group with a single initial population that feeds both the numerator and the denominator. Measures that require a separate initial population for the numerator and for the denominator are not supported.
@@ -403,9 +403,10 @@ Uploading a ``Library`` resource that has a ``url``, ``name`` and ``version`` an
 When an operation such as ``Library/$evaluate`` or ``Measure/$evaluate-measure`` resolves a ``Library`` from the administration database, Firely Server compiles it in memory, using the ELM content if the ``Library`` contains it and the CQL content otherwise.
 The Libraries it depends on (``relatedArtifact`` of type ``depends-on``) are resolved from the administration database and compiled as well, so they must be uploaded too.
 The compiled assembly is only kept in the cache of conformance resources, it is not written back to the administration database. Once the cache entry has expired or has been evicted, the ``Library`` is compiled again on its next use; see ``SlidingExpirationSeconds`` in :ref:`configure_cache`.
-If the compilation fails, the operation responds with ``422 Unprocessable Entity``, reporting that no .NET dll was found in the ``Library``; the cause of a parse, translation or compilation error is written to the Firely Server log. A ``depends-on`` Library that cannot be resolved is reported with ``404 Not Found``, and a ``Library`` without ``url``, ``name`` or ``version`` with ``422 Unprocessable Entity`` naming the missing elements.
+If the compilation fails, the operation responds with ``422 Unprocessable Entity``, reporting that no .NET dll was found in the ``Library``; the cause of a parse, translation or compilation error is written to the Firely Server log. A ``Library`` whose CQL includes a library, such as ``FHIRHelpers``, that none of its ``depends-on`` Libraries provides under the included name and version cannot be compiled either; the operation responds with ``422 Unprocessable Entity`` naming each such include. A ``depends-on`` Library that cannot be resolved is reported with ``404 Not Found``, and a ``Library`` without ``url``, ``name`` or ``version`` with ``422 Unprocessable Entity`` naming the missing elements.
 
-Firely Server only skips its own compilation for a precompiled ``Library``: one of type ``logic-library`` (CodeSystem ``http://terminology.hl7.org/CodeSystem/library-type``) with a ``content`` element whose element id contains ``+dll``, like the ``BloodPressureCheckLogic-1.0.0+dll`` content in the :ref:`feature_qdm_example_library` below. The assembly in that element is then used as-is; it must have contentType ``application/octet-stream``, otherwise it cannot be loaded and the operation responds with ``422 Unprocessable Entity``. A ``Library`` passed inline through the ``library`` parameter of ``Library/$evaluate`` is always compiled.
+Firely Server only skips its own compilation for a precompiled ``Library``: one of type ``logic-library`` (CodeSystem ``http://terminology.hl7.org/CodeSystem/library-type``) with a ``content`` element whose element id contains ``+dll``, like the ``BloodPressureCheckLogic-1.0.0+dll`` content in the :ref:`feature_qdm_example_library` below. The assembly in that element is then used as-is; it must have contentType ``application/octet-stream``, otherwise it cannot be loaded and the operation responds with ``422 Unprocessable Entity``. A ``Library`` passed inline through the ``library`` parameter of ``Library/$evaluate`` is evaluated with the assembly it carries in such an element as well, and compiled when it carries none.
+Before an assembly is loaded, Firely Server checks that it holds a CQL library generated by a version of the CQL code generator that it supports; a ``Library`` whose assembly fails this check is rejected with ``422 Unprocessable Entity``, stating that its compiled content has to be regenerated (see :ref:`feature_library_evaluate_compiled_assemblies`).
 
 Precompiling a ``Library`` with the `.NET CQL SDK <https://github.com/FirelyTeam/firely-cql-sdk>`_ is optional. It is useful to:
 
@@ -465,8 +466,9 @@ This command assumes that the ELM files already exist in the specified ``--elm``
 
 .. attention::
 
-	Firely Server 6.10.0 ships with version v2.15.0 of the .NET CQL SDK (packages ``Hl7.Cql.Fhir``, ``Hl7.Cql.Invocation`` and ``Hl7.Cql.Packaging``), which it also uses for its own compilation.
-	A precompiled ``Library`` must be built with the CQL SDK version of the Firely Server release it runs on, so use v2.15.0 for Firely Server 6.10.0.
+	Firely Server 6.11.0 ships with version v2.17.0 of the .NET CQL SDK (packages ``Hl7.Cql.Fhir``, ``Hl7.Cql.Invocation`` and ``Hl7.Cql.Packaging``), which it also uses for its own compilation.
+	A precompiled ``Library`` must be built with a CQL SDK version that the Firely Server release it runs on supports. Firely Server 6.11.0 evaluates Libraries packaged with v2.16.0 or v2.17.0 of the CQL SDK; a ``Library`` whose ``+dll`` was generated by an older version is rejected with ``422 Unprocessable Entity``. Regenerate such a ``Library`` with v2.17.0, or remove its ``+dll`` and ``+csharp`` content so that Firely Server compiles it from its ELM or CQL.
+	A ``Library`` packaged with v2.17.0 cannot be evaluated by Firely Server releases older than 6.11.0.
 
 .. _feature_qdm_example_library:
 
@@ -853,13 +855,17 @@ In a MeasureReport, each stratifier of a group is reported in ``MeasureReport.gr
 Stratification in Firely Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Firely Server 6.10.0 supports component stratifiers whose expressions return the stratum value:
+Firely Server supports both forms of stratifier, on groups of every supported scoring method:
 
-#. A stratifier defined with ``stratifier.component[]`` is supported on groups with a ``boolean`` population basis, which count subjects such as patients rather than events such as encounters.
-   A component expression must return values, such as codes, codings, strings or numbers, not resources.
-#. A stratifier defined with ``stratifier.criteria`` is not supported. ``Measure/$evaluate-measure`` responds with ``501 Not Implemented``.
-   To break the results down by one characteristic, define a stratifier with a single component instead.
-#. A ratio-scored group cannot carry stratifiers. Conformance Requirement 15 (Stratification Criteria), in section 3.4.8 Stratification of the `Quality Measure IG STU1 <https://hl7.org/fhir/us/cqfmeasures/STU1/measure-conformance.html#stratification>`_, states that "Stratification SHALL NOT be used with ratio measures, since ratio measures may define multiple initial populations." Such a Measure is rejected with ``422 Unprocessable Entity``.
+#. A stratifier defined with ``stratifier.component[]`` groups the members by the values its components return.
+   On a group with a ``boolean`` population basis, which counts subjects such as patients, each component expression is evaluated per subject and returns the stratum value: values such as codes, codings, strings or numbers, not resources.
+   On a group with another population basis, such as ``Encounter``, which counts events rather than subjects, a component names a CQL function that takes one argument of the basis type, as the FHIR Clinical Reasoning module prescribes. The function is evaluated once for each member of the population basis that the group's populations return, and each member is placed in the stratum of the value the function returns for it.
+#. A stratifier defined with ``stratifier.criteria`` selects the members of the stratum, and is reported as two strata, ``"true"`` and ``"false"``, whose counts add up to those of the group.
+   On a group with a ``boolean`` population basis, the criteria returns a single boolean per subject. On a group with another population basis, it returns the members of the population basis it holds for.
+   A criteria that returns the stratum value instead, such as ``Patient.gender``, is not supported and is rejected with ``422 Unprocessable Entity``; to break the results down by such a value, define a stratifier with a single component instead.
+#. The ``cqfm-appliesTo`` and ``cqm-appliesTo`` extensions on a stratifier restrict the populations its strata report to the ones they name.
+
+The populations of a stratified group must share one population basis, and a ratio-scored group with stratifiers must use the same basis for its numerator and its denominator. Such a Measure is otherwise rejected with ``422 Unprocessable Entity``.
 
 A component expression may return more than one value for a patient, for example one product line for each coverage the patient holds.
 The patient then belongs to one stratum for each combination of values, and is counted in each of them.
@@ -1162,8 +1168,8 @@ The report shows how Firely Server represents strata:
        }
      }
 
-- ``stratum.population`` carries the ``code`` and ``count`` of each population of the group, but no ``id``. The counts follow the same rules as the counts of the group, so a stratum never counts a patient that the group does not count.
-- ``stratum.measureScore`` is reported for proportion-scored groups and is calculated in the same way as the score of the group.
+- ``stratum.population`` carries the ``code`` and ``count`` of each population of the group, or of the populations an ``appliesTo`` extension names, but no ``id``. The counts follow the same rules as the counts of the group, so a stratum never counts a patient that the group does not count.
+- ``stratum.measureScore`` is reported for proportion- and ratio-scored groups and is calculated in the same way as the score of the group.
 - An individual report keeps strata whose counts are all 0, so the patient's component values are always visible. Summary and subject-list reports leave out strata that contain no patient of any reported population.
 
 For the full list of rules and the validation of stratifiers, see :ref:`feature_measure_evaluate_stratifiers` and :ref:`feature_measure_evaluate_validation`.

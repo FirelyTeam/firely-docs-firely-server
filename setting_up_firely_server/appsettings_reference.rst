@@ -844,7 +844,8 @@ Quality Measure Operations
   },
   "MeasureEvaluateOperation": {
     "MaxSubjectsForSynchronousGroupBasedMeasureEvaluation": 1000,
-    "MaxDegreeOfParallelism": 2
+    "MaxDegreeOfParallelism": 2,
+    "MaxPrefetchedSubjects": 4
   },
 
 The ``LibraryEvaluateOperation`` section configures the ``Library/$evaluate`` operation, which is also used by ``Measure/$evaluate-measure`` and ``$cql``:
@@ -860,6 +861,7 @@ The ``MeasureEvaluateOperation`` section configures the ``Measure/$evaluate-meas
 
 * ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation``: The maximum number of distinct patients in a Group that is used as the subject of an evaluation. A request for a Group with more distinct patients is rejected with HTTP status code ``422``. Default ``1000``.
 * ``MaxDegreeOfParallelism``: The maximum number of Measure groups evaluated concurrently per subject. Set it to ``1`` to evaluate the groups one after the other; a value below ``1`` is rejected at startup. Default ``2``.
+* ``MaxPrefetchedSubjects``: The maximum number of subjects whose data is retrieved from the database of Firely Server ahead, concurrently, while the current subject is evaluated. Each of them can use a database connection while its data is retrieved, and holds its data in memory until it has been evaluated. Set it to ``0`` to retrieve the data of each subject only when its evaluation starts; a value below ``0`` or above ``16`` is rejected at startup. Default ``4``.
 
 See :ref:`Measure/$evaluate-measure - Configuration <feature_measure_evaluate_configuration>` for details, and :ref:`feature_opentelemetry_cql` for tracing these operations.
 

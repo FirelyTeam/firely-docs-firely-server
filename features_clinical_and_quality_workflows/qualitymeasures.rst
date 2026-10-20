@@ -227,17 +227,20 @@ with the ``client_credentials`` flow and sends it as a bearer token.
    indefinitely — the operation fails with an ``OperationOutcome`` rather than
    evaluating on a partial compartment.
 
-When ``useServerData`` is ``false`` and no ``data`` is supplied, the operation fails
-with HTTP 500 and an ``OperationOutcome`` stating that the library failed to execute and
-to see the log for details, if:
+When ``useServerData`` is ``false`` and no ``data`` is supplied, the operation is
+rejected with an ``OperationOutcome`` that says what failed:
 
-- the ``dataEndpoint`` parameter is missing, or its ``Endpoint`` has no ``address``;
-- the ``address`` matches no configured ``DataEndpoint`` entry;
-- the remote endpoint answers with an error, including HTTP 401 when Firely Server could
-  not authenticate;
-- the remote endpoint repeats a page link, as described above.
+- HTTP 400 when the ``dataEndpoint`` parameter is missing, or its ``Endpoint`` has no
+  ``address``;
+- HTTP 400 when the ``address`` matches no configured ``DataEndpoint`` entry: the
+  outcome says that the endpoint is not an allowed remote data endpoint;
+- HTTP 500 when the data of the subject could not be retrieved from the endpoint, naming
+  the endpoint. This is the case when the endpoint cannot be reached, does not answer in
+  time, answers with an error (including HTTP 401 when Firely Server could not
+  authenticate) or with a resource other than a ``Bundle``, or repeats a page link, as
+  described above.
 
-The server log names the cause.
+The server log names the cause, such as what the endpoint answered.
 
 The ``ForwardedHeaders`` setting can be used to forward custom HTTP headers
 from the incoming request to external data endpoints.
@@ -275,15 +278,22 @@ not listed, is rejected with HTTP 501 (see :ref:`feature_cql_unsupported_paramet
 |                         |           |                         |             | A request that supplies both   |
 |                         |           |                         |             | ``url`` and ``library`` is     |
 |                         |           |                         |             | rejected with HTTP 409.        |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | A canonical that resolves to a |
+|                         |           |                         |             | resource other than a          |
+|                         |           |                         |             | ``Library`` is rejected with   |
+|                         |           |                         |             | HTTP 404.                      |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``library``             | ✅        | ``Library`` resource    | 0..1        | In-line logic library that     |
 |                         |           |                         |             | contains executable CQL logic. |
 |                         |           |                         |             | This Library will not be       |
 |                         |           |                         |             | stored in Firely Server. It is |
-|                         |           |                         |             | validated and compiled on      |
-|                         |           |                         |             | every request. When it carries |
-|                         |           |                         |             | ELM content, the ELM is        |
-|                         |           |                         |             | compiled instead of the CQL.   |
+|                         |           |                         |             | validated on every request,    |
+|                         |           |                         |             | and compiled unless it carries |
+|                         |           |                         |             | a compiled assembly of its     |
+|                         |           |                         |             | own. When it carries ELM       |
+|                         |           |                         |             | content, the ELM is compiled   |
+|                         |           |                         |             | instead of the CQL.            |
 |                         |           |                         |             |                                |
 |                         |           |                         |             | See `Inline library`_.         |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
@@ -423,11 +433,19 @@ A ``Library`` passed in the ``library`` parameter is handled as follows:
   :ref:`feature_prevalidation`). Any issue the validation reports, warnings included,
   rejects the request with HTTP 400 and returns the issues in the ``OperationOutcome``.
   With ``Level`` set to ``Off``, the library is not validated.
-- It is compiled on every request; the result of the compilation is not kept. When the
-  library carries ELM content (``application/elm+json``), the ELM is compiled and the CQL
-  content is not used. Otherwise its CQL (``text/cql``) is translated to ELM first. When
-  compilation fails, the request is rejected with HTTP 422, reporting that the library
-  holds no .NET assembly; the server log holds the compilation errors.
+- When it carries a compiled assembly — a ``content`` attachment of contentType
+  ``application/octet-stream`` whose element id contains ``+dll`` — it is evaluated with
+  that assembly, which is checked as the assembly of a stored library is (see
+  `Compiled assemblies`_). With validation on, an attachment whose data is not valid
+  base64 is rejected with HTTP 400 by the validation; with ``Level`` set to ``Off``, it is
+  rejected with HTTP 422 naming the attachment.
+- Otherwise it is compiled on every request; the result of the compilation is not kept.
+  When the library carries ELM content (``application/elm+json``), the ELM is compiled
+  and the CQL content is not used. Otherwise its CQL (``text/cql``) is translated to ELM
+  first. When compilation fails, the request is rejected with HTTP 422, reporting that
+  the library holds no .NET assembly; the server log holds the compilation errors. A
+  library whose CQL includes a library that no ``depends-on`` provides is rejected with
+  HTTP 422 naming the include; see `Library dependencies`_.
 - Its dependencies are resolved from the administration database, like those of a stored
   library; see `Library dependencies`_.
 
@@ -453,14 +471,26 @@ dependency closure. Only declarations with ``use`` set to ``in`` and one of the 
 - The cardinality of the declaration is enforced. The request is rejected with HTTP 400
   when fewer parameters with that name are supplied than ``min`` — also when a
   declaration has a ``min`` of 1 or more and the request has no ``parameters`` at all —
-  or when more are supplied than ``max``. A declaration with an unusable cardinality
-  (``min`` missing or negative, ``max`` missing, ``0`` or lower than ``min``) is rejected
-  with HTTP 422.
+  or when more are supplied than ``max``. Only supplied parameters that carry a value or
+  ``part`` elements are counted: one that carries neither, or only a ``resource``, supplies
+  nothing. A declaration with an unusable cardinality (``min`` missing or negative,
+  ``max`` missing, ``0`` or lower than ``min``) is rejected with HTTP 422. ``max`` is
+  read as an integer independent of the server culture, so ``+3`` is a ``max`` of 3.
+- When the evaluated ``Library`` and a library in its dependency closure declare the
+  same parameter, the most constraining ``min`` and ``max`` of the declarations apply. When
+  those cannot be met together, such as ``0..1`` and ``2..*``, the library is rejected
+  with HTTP 422, as for a ``max`` lower than ``min``.
 - A declaration with a ``max`` greater than ``1``, or ``*``, binds a CQL ``List`` of all
-  supplied values with that name. Otherwise a single value is bound.
+  supplied values with that name. Otherwise a single value is bound. The repeated values
+  must all convert to the same CQL type; a ``code`` and a ``Coding`` can be mixed, but a
+  ``Period`` and a ``Range`` cannot. Values of different types are rejected with HTTP 400.
 - A supplied parameter with ``part`` elements binds a CQL ``Tuple`` with one element per
   part, named after the part. Every part needs a ``value[x]``, and nested parts are not
-  allowed; both are rejected with HTTP 400.
+  allowed; both are rejected with HTTP 400. Repeated tuples must have the same parts,
+  with values of the same types, in any order; tuples that differ are rejected with
+  HTTP 400.
+- A supplied parameter that carries both a value and ``part`` elements is rejected with
+  HTTP 400, as is a declared parameter that is only supplied without a value or parts.
 - A value is converted according to its own FHIR type. Supported are ``string``,
   ``boolean``, ``integer``, ``decimal``, ``date``, ``dateTime``, ``time``, ``Quantity``,
   ``code`` and ``Coding`` (both bind a CQL ``Code``), ``Period`` and ``Range``. A value of
@@ -489,13 +519,46 @@ evaluated ``Library``, and of every library it depends on, transitively. Other
 - Any other canonical is resolved as a ``Library`` from the administration database. A
   dependency that cannot be resolved, or that resolves to a resource of another type, is
   rejected with HTTP 404, naming the dependency and the library that declares it.
+- A canonical with the url and version of the evaluated ``Library`` itself refers to that
+  ``Library``: it is not resolved from the administration database, so a library whose
+  dependencies refer back to it is evaluated as it is.
 
 A ``depends-on`` entry without a ``resource``, or with a canonical that is not of the form
 ``url`` or ``url|version`` (for example with an empty part or with more than one ``|``),
 is rejected with HTTP 400.
 
+A library can only include the libraries its ``depends-on`` entries provide. When the
+CQL of the evaluated ``Library``, or of a library in its dependency closure, includes a
+library (typically ``FHIRHelpers``) that no ``depends-on`` provides under the included
+name and version, the request is rejected with HTTP 422, naming each such include and the
+library that includes it.
+
+.. _feature_library_evaluate_compiled_assemblies:
+
+Compiled assemblies
+^^^^^^^^^^^^^^^^^^^
+
 Every library in the dependency closure must be compiled: a library that holds no
-compiled .NET assembly is rejected with HTTP 422.
+compiled .NET assembly is rejected with HTTP 422. A library carries its assembly either
+because it was precompiled, in its ``+dll`` content (see :ref:`feature_qdm`), or because
+Firely Server compiled it from its ELM or CQL.
+
+Firely Server checks every assembly before loading it. A library is rejected with HTTP
+422, naming the library, when its assembly:
+
+- has data that is not valid base64;
+- cannot be read, or holds no CQL library;
+- was generated by a version of the CQL code generator that Firely Server does not
+  support. This is the case for an assembly packaged with a CQL SDK older than 2.16.0.
+  The server log names the generator version found and the versions supported.
+
+In the last two cases, the ``OperationOutcome`` states that the compiled content of the
+library has to be regenerated.
+
+Regenerate such a library with the CQL SDK version that Firely Server uses, or remove its
+``+dll`` and ``+csharp`` content so that Firely Server compiles it from its ELM or CQL.
+When the assemblies of a library and its dependencies do not load as one CQL library
+each, the request is rejected with HTTP 422 as well.
 
 .. _feature_library_evaluate_valuesets:
 
@@ -719,18 +782,32 @@ configured in the ``MeasureEvaluateOperation`` section of the appsettings.
 
   "MeasureEvaluateOperation": {
     "MaxDegreeOfParallelism": 2,
-    "MaxSubjectsForSynchronousGroupBasedMeasureEvaluation": <n>
+    "MaxSubjectsForSynchronousGroupBasedMeasureEvaluation": <n>,
+    "MaxPrefetchedSubjects": 4
   }
 
 ``MaxDegreeOfParallelism``
   How many groups of a measure are evaluated concurrently within a single subject
-  (default ``2``). Retrieval of a subject's data is always sequential, and the
-  resulting ``MeasureReport`` is identical in content and ordering regardless of
-  this setting. Set it to ``1`` to evaluate groups strictly one after another. A
-  value below ``1`` is rejected at startup.
+  (default ``2``). The data of a subject is retrieved once, before its groups are
+  evaluated, and the resulting ``MeasureReport`` is identical in content and ordering
+  regardless of this setting. Set it to ``1`` to evaluate groups strictly one after
+  another. A value below ``1`` is rejected at startup.
 
   Raising it increases throughput for measures with many groups, at the cost of
   more memory and more concurrent database and terminology work per request.
+
+``MaxPrefetchedSubjects``
+  How many of the next subjects have their data retrieved ahead, concurrently, while
+  the current subject is evaluated (default ``4``, maximum ``16``). Subjects are still
+  evaluated one after another, in order, and the resulting ``MeasureReport`` does not
+  depend on this setting. It applies when Firely Server retrieves the data of the
+  subjects from its own database (``Patient/$everything``); data supplied in the
+  ``data`` parameter, or retrieved from a remote data endpoint, is not retrieved ahead.
+  Set it to ``0`` to retrieve the data of each subject only when its evaluation starts.
+  A value outside ``0`` to ``16`` is rejected at startup.
+
+  Each subject retrieved ahead can use a database connection while its data is
+  retrieved, and holds that data in memory until the subject has been evaluated.
 
 ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation``
   The maximum number of distinct subjects a ``Group``-based evaluation may cover
@@ -786,11 +863,22 @@ not listed, is rejected with HTTP 501 (see :ref:`feature_cql_unsupported_paramet
 |                          |           |                         |             | otherwise the request is rejected with      |
 |                          |           |                         |             | HTTP 400.                                   |
 |                          |           |                         |             |                                             |
+|                          |           |                         |             | Each value is a FHIR ``date``, which may    |
+|                          |           |                         |             | have year or year-month precision, such as  |
+|                          |           |                         |             | ``2024`` or ``2024-02``. Any other value,   |
+|                          |           |                         |             | such as ``12/31/2024`` or a ``dateTime``,   |
+|                          |           |                         |             | is rejected with HTTP 400, whatever the     |
+|                          |           |                         |             | culture the server runs under.              |
+|                          |           |                         |             |                                             |
 |                          |           |                         |             | The dates are expanded to whole days: the   |
 |                          |           |                         |             | measurement period passed to the CQL runs   |
-|                          |           |                         |             | from 00:00:00.000 on ``periodStart`` to     |
-|                          |           |                         |             | 23:59:59.999 on ``periodEnd``, both with    |
-|                          |           |                         |             | offset ``+00:00``.                          |
+|                          |           |                         |             | from 00:00:00.000 on the first day of       |
+|                          |           |                         |             | ``periodStart`` to 23:59:59.999 on the last |
+|                          |           |                         |             | day of ``periodEnd``, both with offset      |
+|                          |           |                         |             | ``+00:00``. ``periodStart=2024`` and        |
+|                          |           |                         |             | ``periodEnd=2024`` therefore cover the      |
+|                          |           |                         |             | whole of 2024. The ``MeasureReport``        |
+|                          |           |                         |             | reports the period as requested.            |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | ``periodEnd``            | ✅        | ``date``                | 0..1        | End of the measurement period. See          |
 |                          |           |                         |             | ``periodStart``.                            |
@@ -1792,7 +1880,7 @@ generated library has this shape::
 
   library Test version '1.0.0'
   using FHIR version '4.0.1'
-  parameter <name> <type>    // one for every parameter in 'parameters'
+  parameter "<name>" <type>  // one for every parameter in 'parameters'
 
   context Patient            // only when a 'subject' is supplied
 
@@ -1803,23 +1891,35 @@ generated library has this shape::
   ``[Encounter]``. Without a ``subject``, no context is declared.
 - Every parameter in ``parameters`` is declared as a ``parameter`` of the library, so
   the expression can refer to it by name. Its CQL type is inferred from the supplied
-  FHIR value. A parameter supplied more than once is declared as a ``List`` of that
-  type, and a parameter that carries ``part`` elements instead of a value as a
-  ``Tuple`` with an element for every part. For example, ``SomeNumber`` supplied twice
-  with a ``valueInteger`` is declared as a list of integers, so ``Sum(SomeNumber)``
-  returns their sum.
-- Parameter and part names are written into the library unquoted, so they must be
-  valid unquoted CQL identifiers: a name with spaces, such as ``Measurement Period``,
-  cannot be used.
+  FHIR value, and declared as a CQL system type, such as ``System.Integer`` or
+  ``System.Quantity``: a ``Quantity`` parameter is therefore a CQL quantity, so
+  arithmetic such as ``Dose + Dose`` works on it. A ``Period`` is declared as an
+  ``Interval<System.DateTime>`` and a ``Range`` as an ``Interval<System.Quantity>``,
+  the types ``Library/$evaluate`` binds them to when the declaration carries no
+  ``cqf-cqlType`` (see `Input parameter binding`_). A parameter supplied more than once
+  is declared as a ``List`` of that type, and a parameter that carries ``part`` elements
+  instead of a value as a ``Tuple`` with an element for every part. For example,
+  ``SomeNumber`` supplied twice with a ``valueInteger`` is declared as a list of
+  integers, so ``Sum(SomeNumber)`` returns their sum.
+- Parameter and part names are declared as quoted identifiers, so a name with a space
+  can be used as well. The expression refers to such a parameter quoted, as in
+  ``start of "Measurement Period"``.
 - The library declares nothing else — no ``include``, ``codesystem``, ``valueset`` or
   ``code`` — so the expression cannot refer to another library, such as
   ``FHIRHelpers``, or to a code system, value set or code by name.
 
-A parameter whose value cannot be mapped to a CQL type is rejected with HTTP 501. A
-parameter without a value, with both a value and ``part`` elements, with nested parts,
-or with repetitions of different types is rejected with HTTP 400. An
-``OperationOutcome`` about the evaluation itself, such as one for an unknown patient,
-refers to the generated library as ``Test`` version ``1.0.0``.
+An expression that, together with the declared parameters, does not compile as CQL —
+because it does not parse, or does not translate without an error, such as an identifier
+that names nothing — is rejected with HTTP 400, stating that the supplied expression and
+parameters do not compile as CQL. The compiler's messages are written to the server log.
+
+A parameter whose value cannot be converted to a CQL system type, such as a ``Ratio``, a
+``Reference``, a ``url`` or a ``canonical``, is rejected with HTTP 501, naming the
+parameter and its FHIR type. A parameter without a value, with both a value and ``part``
+elements, with nested parts, or with repetitions of different types — including a mix of
+``Period`` and ``Range`` values — is rejected with HTTP 400. An ``OperationOutcome`` about
+the evaluation itself, such as one for an unknown patient, refers to the generated library
+as ``Test`` version ``1.0.0``.
 
 Output parameters
 ~~~~~~~~~~~~~~~~~
@@ -1936,7 +2036,8 @@ takes the ``Library`` with that id instead.
 
 The response is a new ``Library`` of type ``module-definition``
 (``http://terminology.hl7.org/CodeSystem/library-type``) that holds a copy of the
-``dataRequirement`` elements of the target ``Library``. Nothing else is added: the
+``dataRequirement`` elements of the target ``Library``, and the ``status`` of the target
+``Library`` (``unknown`` when the target carries none). Nothing else is added: the
 libraries the target depends on are not included, and when the target declares no
 ``dataRequirement`` the result contains none.
 
@@ -1952,9 +2053,13 @@ Measure/$data-requirements
 
 The ``Measure`` is identified by the ``url`` parameter (a ``valueString`` in a ``POST``,
 optionally versioned) at type level, or by its id at instance level. The ``periodStart``
-and ``periodEnd`` parameters are accepted, but do not affect the result.
+and ``periodEnd`` parameters are accepted, but do not affect the result. As for
+``Measure/$evaluate-measure``, each must be a FHIR ``date``, which may have year or
+year-month precision, such as ``2024`` or ``2024-02``; any other value is rejected with
+HTTP 400.
 
-The ``Measure`` must reference exactly one logic ``Library`` in ``Measure.library``. The
+The ``Measure`` must reference exactly one logic ``Library`` in ``Measure.library``,
+with a value. The
 operation returns the result of ``Library/$data-requirements`` for that ``Library``; the
 data requirements are not aggregated across libraries. The operation requires the
 ``Library/$data-requirements`` plugin to be enabled as well.
@@ -1964,9 +2069,11 @@ Errors
 
 - HTTP 400 — the canonical parameter is missing or empty at type level, or supplied at
   instance level.
-- HTTP 404 — no ``Library`` or ``Measure`` is found for the canonical or id, or the
-  ``Measure``'s ``Library`` cannot be resolved.
-- HTTP 422 — the ``Measure`` references no ``Library``, or more than one.
+- HTTP 404 — no ``Library`` or ``Measure`` is found for the canonical or id, the
+  canonical resolves to a resource of another type, or the ``Measure``'s ``Library``
+  cannot be resolved.
+- HTTP 422 — the ``Measure`` references no ``Library``, more than one, or a ``library``
+  element without a value.
 - HTTP 501 — any other parameter is supplied.
 
 ----
@@ -2025,6 +2132,11 @@ whole request with HTTP 422, issue type ``not-supported``:
 
 - ``Group.actual`` is ``false``: a descriptive group.
 - ``Group.type`` is another type than ``person``.
+- ``Group.actual`` or ``Group.type`` is absent. Both are required in FHIR R4, but a
+  stored ``Group`` can lack them; an element that carries only an extension counts as
+  absent. This is reported with issue type ``required`` instead, naming the missing
+  elements. A ``Group`` with ``actual`` set to ``false`` is rejected as descriptive,
+  whether or not it has a ``type``.
 - The ``Group`` has no member entities.
 - A member entity references another resource type than ``Patient``. Such a member
   is not skipped: the request is rejected.

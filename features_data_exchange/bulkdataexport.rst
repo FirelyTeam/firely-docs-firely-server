@@ -63,7 +63,7 @@ In the example below we have enabled all three levels: Patient, Group and System
           "Vonk.Fhir.R3",
           "Vonk.Fhir.R4",
           //"Vonk.Fhir.R5",
-          "Vonk.Repository.Sql.SqlVonkConfiguration",
+          "Vonk.Repository.Sql.Raw.KSearchConfiguration",
           "Vonk.Repository.Sqlite.SqliteVonkConfiguration",
           "Vonk.Repository.MongoDb.MongoDbVonkConfiguration",
           "Vonk.Subscriptions",
@@ -73,7 +73,7 @@ In the example below we have enabled all three levels: Patient, Group and System
           "Vonk.Plugin.ConvertOperation.ConvertOperationConfiguration",
           "Vonk.Plugin.BinaryWrapper",
           "Vonk.Plugin.Audit",
-          "Vonk.Plugins.TerminologyIntegration",          
+          "Vonk.Plugins.Terminology",
           "Vonk.Plugin.BulkDataExport.SystemBulkDataExportConfiguration",
           "Vonk.Plugin.BulkDataExport.GroupBulkDataExportConfiguration",
           "Vonk.Plugin.BulkDataExport.PatientBulkDataExportConfiguration",
@@ -120,9 +120,9 @@ BDE introduces several new parts to the appsettings:
 
   "TaskFileManagement": {
       "StorageService": {
-          "StorageType": "LocalFile", // LocalFile / AzureBlob / AzureFile
+          "StorageType": "LocalFile", // LocalFile / AzureBlob / AzureFiles
           "StoragePath": "./taskfiles",
-          "ContainerName": "firelyserver" // For AzureBlob / AzureFile only
+          "ContainerName": "firelyserver" // For AzureBlob / AzureFiles only
       }
   },
   "AzureServices": {
@@ -314,7 +314,7 @@ There are six possible status options:
 * If a task is Queued or Active, GET $exportstatus will return the status in the X-Progress header
 * If a task is Complete, GET $exportstatus will return the results with a **$exportfilerequest** url per exported .ndjson file. This url can be used to retrieve the files per resourcetype. If there were any problems with parts of the export, an url for the generated OperationOutcome resources can be found in the error section of the result.
 * If a task is Failed, GET $exportstatus will return HTTP Statuscode 500 with an OperationOutcome.
-* If a task is on status CancellationRequested or Cancelled, GET $exportstatus will return HTTP Statuscode 410 (Gone).
+* If a task is on status CancellationRequested or Cancelled, GET $exportstatus will return HTTP Statuscode 404 (Not Found) with an OperationOutcome stating that the request was cancelled. HTTP Statuscode 410 (Gone) is only returned for a task that is purged according to the ``FileRetentionPeriod``.
 
 .. START-BDE-COMPLETE-BODY
 

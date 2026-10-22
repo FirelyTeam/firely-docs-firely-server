@@ -54,7 +54,46 @@ For each child span corresponding to a middleware span, only a subset of the tag
 
 Metrics
 -------
-Firely Server publishes the standard .Net metrics for the `HTTP Server <https://opentelemetry.io/docs/specs/semconv/dotnet/dotnet-http-metrics/#http-server>`_ and `Kestrel <https://opentelemetry.io/docs/specs/semconv/dotnet/dotnet-kestrel-metrics/>`_. 
+Firely Server publishes the standard .NET metrics for the `HTTP Server <https://opentelemetry.io/docs/specs/semconv/dotnet/dotnet-http-metrics/#http-server>`_ and `Kestrel <https://opentelemetry.io/docs/specs/semconv/dotnet/dotnet-kestrel-metrics/>`_.
+
+In addition, Firely Server publishes these metrics of its own:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 30 10 35
+
+   * - Meter
+     - Instrument
+     - Type
+     - Description
+   * - ``Firely.Server.Interactions``
+     - ``firely.server.interactions.count``
+     - Counter
+     - The number of handled FHIR interactions. Tags: ``interaction`` (for example ``instance_read`` or ``type_search``), ``outcome`` (``success``, ``client_error``, ``server_error`` or ``unknown``), ``clientId`` (the client id from the access token) and ``tenantId`` (with :ref:`virtual tenants <feature_multitenancy>`).
+   * - ``Firely.Server.Interactions``
+     - ``firely.server.interactions.duration``
+     - Histogram
+     - The duration of the handled FHIR interactions, in seconds. Tags: ``interaction``, ``clientId`` and ``tenantId``.
+   * - ``Firely.Server.ProcessPerformance``
+     - ``firely.process.cpu.usage``
+     - Gauge
+     - The CPU usage of the Firely Server process, in percent.
+   * - ``Firely.Server.ProcessPerformance``
+     - ``firely.process.memory.working-set``
+     - Gauge
+     - The working set memory of the Firely Server process, in MB.
+   * - ``Firely.Server.Repository``
+     - ``ingested_resources``
+     - Counter
+     - The number of resources written to the database: creates, updates and (soft) deletes.
+   * - ``Firely.Server.PubSub``
+     - ``pubsub_ingested_resources``
+     - Counter
+     - The number of resources written to the database through :ref:`PubSub <pubsub>`.
+   * - ``Firely.Server.PatientAccessAPI``
+     - ``firely.server.cms0057.patient.count``
+     - Counter
+     - The number of read, search and history requests made by a patient, that is with an access token whose ``fhirUser`` is a Patient, through a client application. Tags: ``idHash`` (a SHA-256 hash of the Patient's id) and ``clientId``. Use it for the Patient Access API metrics that :ref:`CMS-0057-F <cms>` requires.
 
 Configuration
 -------------
@@ -86,6 +125,35 @@ The individual settings are described below:
 * ``SetDbStatementForStoredProcedure``: When set to ``true``, database statements for stored procedures will be included in the trace data.
 * ``VonkSourcesInclude``: A list of ``ActivitySource`` names to include in the telemetry data. Firely Server names its sources after the fully qualified class that emits the spans; a value matches the whole source name, case-insensitively, and may use the wildcards ``*`` and ``?`` (for example ``Vonk.Plugin.Cql.*``). Use ``*`` to include all sources.
 * ``VonkSourcesExclude``: A list of span name prefixes to exclude from the telemetry data. A span is not recorded if its name starts with one of these values (case-sensitive). The values are matched against the span name only, not against a namespace: the span of a middleware is named after its service class without the namespace, like ``DefaultShapesService``, and the spans of the CQL plugin have names like ``EvaluateMeasure`` and ``ExecuteCqlExpressions``. For example, ``"Evaluate"`` excludes ``EvaluateMeasure``, ``EvaluateSubject``, ``EvaluateGroup`` and ``EvaluateLibrary``, but not ``ExecuteCqlExpressions``. Each span is matched on its own name, so the spans nested in an excluded span are still recorded unless their own name matches as well. A non-empty list replaces the default parent-based sampling, so the sampling decision carried by an incoming trace context is no longer taken into account. Leave this empty to exclude no spans.
+
+.. _feature_opentelemetry_resource:
+
+Service name and resource attributes
+------------------------------------
+
+Firely Server identifies itself in the exported traces and metrics with the OpenTelemetry resource attributes ``service.name``, ``service.namespace``, ``service.version`` and ``service.instance.id``. By default, ``service.name`` is ``Firely Server``. This is how Firely Server shows up in your tracing or metrics backend. Change it to tell Firely Server apart from other logical services, for example when you run several Firely Server deployments that serve different purposes.
+All instances of one logical service share the same ``service.name``, also across environments such as test and production. Scaled-out instances are told apart by ``service.instance.id`` (see ``SERVICE_INSTANCE_ID`` below). To tell environments apart, add the ``deployment.environment.name`` attribute in your OpenTelemetry Collector, for example with its resource processor.
+
+These attributes are **not** set through the ``OpenTelemetryOptions`` section of the settings. Setting ``OpenTelemetryOptions:ServiceName`` in the appsettings, or ``VONK_OpenTelemetryOptions__ServiceName`` as an :ref:`environment variable <configure_envvar>`, has no effect. Firely Server reads them from the following plain environment variables, without the ``VONK_`` prefix:
+
+* ``SERVICE_NAME``: The value of ``service.name``. Default: ``Firely Server``.
+* ``SERVICE_NAMESPACE``: The value of ``service.namespace``. Default: ``Firely``.
+* ``SERVICE_VERSION``: The value of ``service.version``. Default: the version of Firely Server.
+* ``SERVICE_INSTANCE_ID``: The value of ``service.instance.id``. If it is not set or empty, a new unique value is generated each time Firely Server starts.
+
+For example, to run Firely Server in Docker under the service name ``my-firely-server``:
+
+.. code-block:: bash
+
+  docker run -e SERVICE_NAME=my-firely-server ... firely/server
+
+The attributes apply to both the traces and the metrics that Firely Server exports. Restart Firely Server after changing them.
+
+.. note::
+
+  The standard OpenTelemetry environment variables ``OTEL_SERVICE_NAME`` and ``OTEL_RESOURCE_ATTRIBUTES`` are not read by Firely Server and are not supported for these attributes. Use the variables above.
+
+The service name is used for OpenTelemetry output only. It does not change the name of Firely Server in its log, the CapabilityStatement or the health checks. Application Insights is configured separately and is not affected.
 
 .. _feature_opentelemetry_cql:
 
@@ -140,7 +208,7 @@ The table below lists the spans per source. The source names are abbreviated: ``
    * -
      - ``ExtractAssemblyBinaries``
      -
-   * - ``Library.Evaluate.LibraryEvaluateOperationContext``
+   * - ``Library.Evaluate.LibraryEvaluationEngine``
      - ``ValidateDataBundle``
      -
    * -
@@ -148,13 +216,13 @@ The table below lists the spans per source. The source names are abbreviated: ``
      - ``cql.bundle_entry_count``: the number of entries in the data bundle. ``cql.data_source_reused``: ``true`` when the data source of the subject, built by an earlier group of the same ``Measure/$evaluate-measure`` request, is reused. Both tags are only present when the evaluation has a data bundle.
    * -
      - ``ExecuteCqlLibrary``
-     - ``cql.library.name``, ``cql.library.version``, ``cql.expression_count``: the number of expressions evaluated.
+     - ``cql.library.name``, ``cql.library.version``, ``cql.expression_count``: the number of expressions evaluated. ``cql.function_invocation_count``: the number of times a stratifier component function was invoked; only present on the evaluations of ``Measure/$evaluate-measure`` that invoke such a function.
    * -
      - ``SelectExpressions``
      - ``cql.expression_count``
    * -
      - ``ExecuteCqlExpressions``
-     - ``cql.expression_count``
+     - ``cql.expression_count``, ``cql.function_invocation_count``
    * - ``Library.Evaluate.LibraryEvaluationDataProvider``
      - ``RetrieveDataBundle``
      - ``cql.data_source``: where the data comes from, ``remote`` (a remote data endpoint), ``supplied`` (the ``data`` parameter of the request) or ``server`` (the database of Firely Server). ``fhir.bundle.entry_count``: the number of entries in the retrieved bundle.
@@ -176,7 +244,7 @@ The table below lists the spans per source. The source names are abbreviated: ``
    * -
      - ``PersistMeasureReport``
      -
-   * - ``Measure.Evaluate.MeasureEvaluateOperationContext``
+   * - ``Measure.Evaluate.Context.MeasureEvaluateOperationContext``
      - ``EvaluateMeasure``
      - ``fhir.measure.subject_count``: the number of subjects evaluated. ``fhir.measure.name``, ``fhir.measure.version``, ``fhir.measure.group_count``: the number of groups of the Measure.
    * -
@@ -201,6 +269,7 @@ Note the following:
 
 * ``$cql`` and the CDS Hooks CRD hook evaluate CQL by running ``Library/$evaluate`` within the same request. Their traces therefore contain the ``EvaluateLibrary`` span and the spans nested in it as well.
 * ``Measure/$evaluate-measure`` evaluates every group of the Measure for every subject. For each subject it emits an ``EvaluateSubject`` span, with an ``EvaluateGroup`` span per group, and each ``EvaluateGroup`` span holds an ``EvaluateLibrary`` span with the spans nested in it. An evaluation for a Group of patients, or for a whole population, therefore produces a large number of spans. Use the ``VonkSourcesExclude`` setting described above to leave out the spans you do not need. It matches the start of the span name, so ``"ExecuteCql"`` excludes both ``ExecuteCqlLibrary`` and ``ExecuteCqlExpressions``.
+* ``Measure/$evaluate-measure`` retrieves the data of the next subjects ahead, while the current subject is evaluated (see ``MaxPrefetchedSubjects`` in :ref:`feature_measure_evaluate_configuration`). The ``GetPatientEverything`` span of a subject whose data was retrieved ahead is therefore a child of the ``EvaluateMeasure`` span, rather than of the ``EvaluateSubject`` span of that subject.
 * The CQL spans do not carry patient identifiers. Their tags identify the evaluated Library, Measure and Measure group, and otherwise only carry counts and the kind of data source.
 * The CQL spans do not set an error status. A failed evaluation is reported in the ``OperationOutcome`` of the response and in the log of Firely Server; the top-level span of the request carries the HTTP status code in ``http.response.status_code``.
 

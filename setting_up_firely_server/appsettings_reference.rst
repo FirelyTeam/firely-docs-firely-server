@@ -46,6 +46,8 @@ License
 
 The :ref:`vonk_getting_started` explains how to obtain a licensefile for Firely Server. Once you have it, put the path to it in the ``LicenseFile`` setting. Note that in json you either use forward slashes (/) or double backward slashes (\\\\) as path separators.
 
+Firely Server answers requests with ``HTTP 402 Payment Required`` when no valid license is loaded, when the license has expired, and, with an evaluation license, when Firely Server has been running for more than 12 hours. In that last case, restart Firely Server to continue your evaluation.
+
 .. note::
 
   It is also possible to supply a license via an environment variable. This functionality is handy when Firely Server is running within a Docker container. See :ref:`license_as_environment_variable` for details.
@@ -86,11 +88,16 @@ SQL
       "ConnectionString": "connectionstring to your Firely Server SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
       "AutoUpdateDatabase": true,
       "MigrationTimeout": 1800, // in seconds
+      "BulkDataExportTimeout": 300, // in seconds
+      "PatientEverythingTimeout": 300, // in seconds, applies to the Patient $everything query (also used by $purge)
       "LogSqlQueryParameterValues": false
       //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
     },
 
 Refer to :ref:`configure_sql` for configuring access to your SQL Server databases.
+
+* ``BulkDataExportTimeout``: the command timeout for the queries of a Bulk Data Export, see :ref:`feature_bulkdataexport`.
+* ``PatientEverythingTimeout``: the command timeout for the query that collects the resources of a Patient for :ref:`$everything <feature_patienteverything>` and for :ref:`$purge <erase>`. ``BulkDataExportTimeout`` does not apply to that query.
 
 SQLite
 ^^^^^^
@@ -119,15 +126,19 @@ http and https
       //"CertificatePassword" : "<cert-pass>", // Relevant when HttpsPort is present
       //"SslProtocols": [ "Tls12", "Tls13" ], // Relevant when HttpsPort is present.
       //"PathBase": "<subpath-to-firely-server>",
+      "SendServerHeader": false, // Set to true to send the Server header (Kestrel) in responses
+      //"IsHttp1AndHttp2": false, // Set to true to accept HTTP/2 next to HTTP/1.1
       "ClientCertificateMode": "NoCertificate" // NoCertificate, AllowCertificate, RequireCertificate,
       "Limits": {
           "MaxRequestBufferSize": 2097152 // Kestrel default: 1048576.
     }
     },
     
-Refer to :ref:`configure_hosting` for enabling https and adjusting port numbers.
+Refer to :ref:`configure_hosting` for enabling https and adjusting port numbers, and to :ref:`configure_hosting_http2` for ``IsHttp1AndHttp2``.
 
 In case Firely Server is hosted behind a reverse proxy using a subpath as part of the base url, use the `PathBase` option to specify the path after the root to enable Firely Server to generate correct links in places where the absolute base url is used (e.g. in the ``Location`` header when returning an HTTP response). See `PathBase middleware <https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.builder.usepathbaseextensions.usepathbase>`_ for more information. Only a single static path is allowed here. For more dynamic options using multiple paths, see support for the :ref:`X-Forwarded-Prefix header<xforwardedheader>`.
+
+By default Firely Server does not send the ``Server`` header, which would reveal the web server (Kestrel) that it runs on. Set ``SendServerHeader`` to ``true`` to send it.
 
 The `ClientCertificateMode` will instruct Firely Server to request or require a TLS client certificate. See `ASP .NET Core - Client Certificates <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/endpoints?#configure-client-certificates-in-appsettingsjson>`_ for more information.
 
@@ -147,7 +158,7 @@ Validation
 
     "Validation": {
       "Parsing": "Permissive", // Permissive / Strict
-      "Level": "Off", // Off / Core / Full
+      "Level": "Core", // Off / Core / Full - default: Core
       "FixInvalidPrimitiveTypes": true, // true / false - If true, invalid primitive types are fixed to the correct type where possible. If set to false, invalid primitive types are always returned as an error.
       "AllowedProfiles": [],
       "AdvisorRules": ""
@@ -200,7 +211,7 @@ Terminology
       //    "ClientSecret": "",
       //    "TokenEndpoint": "",
       //    "Scopes": "",
-      //    "RemoteTerminologyAuthentication": "Basic", // Jwt or Basic
+      //    "RemoteTerminologyAuthentication": "Basic", // Off (default, no credentials sent), Basic or JwtClientCredentials
       //  }
       //]
     },
@@ -235,8 +246,8 @@ Search size
     "BundleOptions": {
         "DefaultTotal": "none", // Allowed values: none, accurate
         "DefaultCount": 10,
-        "MaxCount": 50,
-        "DefaultSort": "-_lastUpdated"
+        "MaxCount": 50
+        //,"DefaultSort": "-_lastUpdated"
     },
 
 
@@ -245,7 +256,7 @@ The Search interactions returns a bundle with results. Users can specify the num
 * ``DefaultCount`` sets the number of results if the user has not specified a ``_count`` parameter.
 * ``MaxCount`` sets the number of results in case the user specifies a ``_count`` value higher than this maximum. This is to protect Firely Server from being overloaded.
 * ``DefaultCount`` should be less than or equal to ``MaxCount``
-* ``DefaultSort`` is what search results are sorted on if no sort order is specified in the request. If a sort order is specified, this is still added as the last sort clause.
+* ``DefaultSort`` is what search results are sorted on if no sort order is specified in the request. If a sort order is specified, this is still added as the last sort clause. It is commented out in the default settings, so by default searches have no implicit sort order.
 * ``DefaultTotal`` sets default total behaviour for search requests if not specified in the request itself.
 
 .. _sizelimits_options:
@@ -257,7 +268,7 @@ Protect against large input
     "SizeLimits": {
         "MaxResourceSize": "1MiB",
         "MaxBatchSize": "5MiB",
-        "MaxBatchEntries": 150
+        "MaxBatchEntries": 200
     },
 
 * ``MaxResourceSize`` sets the maximum size of a resource that is sent in a create or update.
@@ -723,8 +734,11 @@ SearchParameters and other Conformance Resources
             "Password": "Password for the above user name",
             "BatchSize": 20
           }
-        ]
+        ],
+        "MaxInParallel": 1
     }
+
+``MaxInParallel`` sets how many Conformance Resources are imported at the same time at startup. Use ``1`` for an SQLite administration database and ``10`` for SQL Server or MongoDB. See :ref:`parallel import at startup <conformance_import_parallel>`.
 
 See :ref:`conformance` and :ref:`feature_customsp`.
 
@@ -787,9 +801,9 @@ Task File Management and Bulk Data Export
 
   "TaskFileManagement": {
     "StorageService": {
-          "StorageType": "LocalFile", // LocalFile / AzureBlob / AzureFile
+          "StorageType": "LocalFile", // LocalFile / AzureBlob / AzureFiles
           "StoragePath": "./taskfiles",
-          "ContainerName": "firelyserver" // For AzureBlob / AzureFile only
+          "ContainerName": "firelyserver" // For AzureBlob / AzureFiles only
       }
   },
 
@@ -809,7 +823,7 @@ Patient Everything Operation
 ::
 
   "PatientEverythingOperation": {
-    "AdditionalResources": [ "Organization", "Location", "Substance", "Medication", "Device" ] // included referenced resources, additional to the Patient compartment resources
+    "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "Medication", "Practitioner", "PractitionerRole" ] // included referenced resources, additional to the Patient compartment resources
   },
 
 The Patient $everything operation returns all resources linked to a patient that are listed in the Compartment Patient. This section allows you to define additional resources that will be included in the resulting searchset bundle.
@@ -830,7 +844,9 @@ Quality Measure Operations
   },
   "MeasureEvaluateOperation": {
     "MaxSubjectsForSynchronousGroupBasedMeasureEvaluation": 1000,
-    "MaxDegreeOfParallelism": 2
+    "MaxDegreeOfParallelism": 2,
+    "MaxPrefetchedSubjects": 4,
+    //"MaxDuration": "00:05:00"
   },
 
 The ``LibraryEvaluateOperation`` section configures the ``Library/$evaluate`` operation, which is also used by ``Measure/$evaluate-measure`` and ``$cql``:
@@ -846,6 +862,8 @@ The ``MeasureEvaluateOperation`` section configures the ``Measure/$evaluate-meas
 
 * ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation``: The maximum number of distinct patients in a Group that is used as the subject of an evaluation. A request for a Group with more distinct patients is rejected with HTTP status code ``422``. Default ``1000``.
 * ``MaxDegreeOfParallelism``: The maximum number of Measure groups evaluated concurrently per subject. Set it to ``1`` to evaluate the groups one after the other; a value below ``1`` is rejected at startup. Default ``2``.
+* ``MaxPrefetchedSubjects``: The maximum number of subjects whose data is retrieved from the database of Firely Server ahead, concurrently, while the current subject is evaluated. Each of them can use a database connection while its data is retrieved, and holds its data in memory until it has been evaluated. Set it to ``0`` to retrieve the data of each subject only when its evaluation starts; a value below ``0`` or above ``16`` is rejected at startup. Default ``4``.
+* ``MaxDuration``: The longest one ``Measure/$evaluate-measure`` request may evaluate, as a time span (``[d.]hh:mm:ss``, at most about 49 days). When it passes, the request is answered with HTTP status code ``503``. A value of zero or less is rejected at startup. Not set by default, which leaves evaluations unbounded. See :ref:`feature_cql_cancellation`.
 
 See :ref:`Measure/$evaluate-measure - Configuration <feature_measure_evaluate_configuration>` for details, and :ref:`feature_opentelemetry_cql` for tracing these operations.
 

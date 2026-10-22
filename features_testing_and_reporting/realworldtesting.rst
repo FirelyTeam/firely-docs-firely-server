@@ -337,7 +337,7 @@ There are six possible status options:
 * If a task is Queued or Active, GET $realworldtestingstatus will return the status in the X-Progress header
 * If a task is Complete, GET $realworldtestingstatus will return the results with a result bundle (see example below).
 * If a task is Failed, GET $realworldtestingstatus will return HTTP Statuscode 500 with an OperationOutcome.
-* If a task is on status CancellationRequested or Cancelled, GET $realworldtestingstatus will return HTTP Statuscode 410 (Gone).
+* If a task is on status CancellationRequested or Cancelled, GET $realworldtestingstatus will return HTTP Statuscode 404 (Not Found) with an OperationOutcome stating that the request was cancelled.
 
 .. code-block:: json
 

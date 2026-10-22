@@ -7,3 +7,4 @@ sphinx
 sphinx-rtd-theme 
 readthedocs-sphinx-ext<2.3
 myst-parser
+sphinx-design

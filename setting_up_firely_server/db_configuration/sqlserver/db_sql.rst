@@ -34,11 +34,12 @@ In both cases:
 
         "SqlDbOptions": {
             "ConnectionString": "connectionstring to your Firely Server SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
-            "SchemaName": "vonk",
             "AutoUpdateDatabase": true,
             "MigrationTimeout": 1800 // in seconds
             //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
         },
+
+*   Firely Server creates its tables in the database schema ``vonk``, for both the Firely Server database and the Administration database. The schema name cannot be changed.
 
 *   Find the section called ``PipelineOptions``. Make sure it contains the SQL repository in the root path for Firely Server Data. For Firely Server versions older than 4.3.0 use ``Vonk.Repository.Sql.SqlVonkConfiguration``. For Firely Server v4.3.0 and above use ``Vonk.Repository.Sql.Raw.KSearchConfiguration``::
 
@@ -65,7 +66,6 @@ In both cases:
             "Repository": "SQL",
             "SqlDbOptions": {
                 "ConnectionString": "Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=VonkAdmin;Data Source=Server\Instance;MultipleActiveResultSets=true",
-                "SchemaName": "vonk",
                 "AutoUpdateDatabase": true,
                 "MigrationTimeout": 1800 // in seconds
             }
@@ -99,7 +99,6 @@ This option is mainly for experimentation as it effectively requires sysadmin pr
 
         "SqlDbOptions": {
             "ConnectionString": "Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=VonkData;Data Source=Server\Instance;MultipleActiveResultSets=true",
-            "SchemaName": "vonk",
             "AutoUpdateDatabase": true,
             "MigrationTimeout": 1800 // in seconds
         },
@@ -111,7 +110,6 @@ This option is mainly for experimentation as it effectively requires sysadmin pr
             "Repository": "SQL",
             "SqlDbOptions": {
                 "ConnectionString": "Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=VonkAdmin;Data Source=Server\Instance;MultipleActiveResultSets=true",
-                "SchemaName": "vonk",
                 "AutoUpdateDatabase": true,
                 "MigrationTimeout": 1800 // in seconds
             }
@@ -151,7 +149,6 @@ Create a database and users by script, and have Firely Server create the schema
 
         "SqlDbOptions": {
             "ConnectionString": "User Id=<dbUserName>;Password=<dbPassword>;Initial Catalog=<DataDbName>;Data Source=server\\instance;MultipleActiveResultSets=True",
-            "SchemaName": "vonk",
             "AutoUpdateDatabase": "true"
         }
 
@@ -160,7 +157,6 @@ Create a database and users by script, and have Firely Server create the schema
 
         "SqlDbOptions": {
             "ConnectionString": "User Id=<dbUserName>;Password=<dbPassword>;Initial Catalog=<DataDbName>;Data Source=server\\instance;MultipleActiveResultSets=True",
-            "SchemaName": "vonk",
             "AutoUpdateDatabase": "true"
             "AutoUpdateConnectionString": "User Id=<updateUserName>;Password=<updatePassword>;Initial Catalog=<DataDbName>;Data Source=server\\instance;MultipleActiveResultSets=True",
         }
@@ -172,7 +168,6 @@ Create a database and users by script, and have Firely Server create the schema
             "Repository": "SQL",
             "SqlDbOptions": {
                 "ConnectionString": "User Id=<AdminDbUserName>;Password=<AdminDbPassword>;Initial Catalog=<AdminDbName>;Data Source=server\\instance;MultipleActiveResultSets=True",
-                "SchemaName": "vonk",
                 "AutoUpdateDatabase": "true"
             }
         }
@@ -184,7 +179,6 @@ Create a database and users by script, and have Firely Server create the schema
             "Repository": "SQL",
             "SqlDbOptions": {
                 "ConnectionString": "User Id=<AdminDUserName>;Password=<AdminDbPassword>;Initial Catalog=<AdminDbName>;Data Source=server\\instance;MultipleActiveResultSets=True",
-                "SchemaName": "vonk",
                 "AutoUpdateDatabase": "true"
                 "AutoUpdateConnectionString": "User Id=<updateAdminUserName>;Password=<updateAdminPassword>;Initial Catalog=<AdminDbName>;Data Source=server\\instance;MultipleActiveResultSets=True",
             }

@@ -25,6 +25,19 @@ Before you can run Firely Server, you will need to pull the Docker Firely Server
 
 .. warning:: If you use Docker, you may want to run multiple instances of Firely Server (e.g. with Kubernetes). Read :ref:`vonk_conformance_instances` for caveats with the Administration endpoint.
 
+.. _docker_user_permissions:
+
+.. note::
+
+   The ``firely/server`` image runs Firely Server as the non-root user ``firely``, with user id ``1000`` and group id ``2000``. The working directory ``/app`` is owned by that user. This has a few consequences:
+
+   * Files that you mount into the container, such as the license file and the ``*.instance.json`` settings files, must be readable by user id ``1000``.
+   * Folders that Firely Server writes to, such as the folder with the SQLite database files, the log folder and the folder for Bulk Data Export files, must be writable by user id ``1000``. With a bind mount of a host folder, set its owner or permissions accordingly, for example with ``chown -R 1000:2000 ./resourcedata``.
+   * Depending on the container runtime, a non-root user may not be allowed to listen on a port below 1024. Keep ``Hosting:HttpPort`` at its default ``4080`` and map it to another port on the host if needed, for example with ``-p 80:4080``.
+   * The image sets ``COMPlus_EnableDiagnostics=0``, which disables the .NET diagnostics port. Tools like ``dotnet-counters``, ``dotnet-trace`` and ``dotnet-dump`` cannot attach to Firely Server in the container. Use the :ref:`OpenTelemetry <feature_opentelemetry>` metrics and traces instead.
+
+   The Docker image of :ref:`Firely Server Ingest <tool_fsi>` runs as the same user and also disables the diagnostics port.
+
 .. note:: Since Firely Server version 4.7.0, the Docker image name has changed from `simplifier/vonk <https://hub.docker.com/repository/docker/simplifier/vonk>`_ to `firely/server <https://hub.docker.com/r/firely/server>`_. The old image name will be maintained for a few months to allow for a smooth transition. When updating to version 4.7.0, you should start to use the new image name. Versions 4.6.2 and older will stay available (only) on 'simplifier/vonk'.
 
 
@@ -268,12 +281,10 @@ We will use docker-compose to achieve this.
        environment:
          - VONK_Repository=SQL
          - VONK_SqlDbOptions:ConnectionString=Initial Catalog=VonkData;Data Source=vonk-sqlserver-db,1433;User ID=sa;Password=SQLServerStrong(!)Password*
-         - VONK_SqlDbOptions:SchemaName=vonk
          - VONK_SqlDbOptions:AutoUpdateDatabase=true
          - VONK_SqlDbOptions:AutoUpdateConnectionString=Initial Catalog=VonkData;Data Source=vonk-sqlserver-db,1433;User ID=sa;Password=SQLServerStrong(!)Password*
          - VONK_Administration:Repository=SQL
          - VONK_Administration:SqlDbOptions:ConnectionString=Initial Catalog=VonkAdmin;Data Source=vonk-sqlserver-db,1433;User ID=sa;Password=SQLServerStrong(!)Password*
-         - VONK_Administration:SqlDbOptions:SchemaName=vonkadmin
          - VONK_Administration:SqlDbOptions:AutoUpdateDatabase=true
          - VONK_Administration:SqlDbOptions:AutoUpdateConnectionString=Initial Catalog=VonkAdmin;Data Source=vonk-sqlserver-db,1433;User ID=sa;Password=SQLServerStrong(!)Password*
          - VONK_License:LicenseFile=./license/firelyserver-license.json
@@ -330,12 +341,10 @@ To run the Firely Server container we will use the following docker-compose file
        environment:
          - VONK_Repository=SQL
          - VONK_SqlDbOptions:ConnectionString=Database=VonkData;Server=my_host\<myInstanceName>;User ID=<myUser>;Password=<myPassword>
-         - VONK_SqlDbOptions:SchemaName=vonk
          - VONK_SqlDbOptions:AutoUpdateDatabase=true
          - VONK_SqlDbOptions:AutoUpdateConnectionString=Database=VonkData;Server=my_host\<myInstanceName>;User ID=<DLLUser>;Password=<myPassword>
          - VONK_Administration:Repository=SQL
          - VONK_Administration:SqlDbOptions:ConnectionString=Database=VonkAdmin;Server=my_host\<myInstanceName>;User ID=<myUser>;Password=<myPassword>
-         - VONK_Administration:SqlDbOptions:SchemaName=vonkadmin
          - VONK_Administration:SqlDbOptions:AutoUpdateDatabase=true
          - VONK_Administration:SqlDbOptions:AutoUpdateConnectionString=Database=VonkAdmin;Server=my_host\<myInstanceName>;User ID=<DLLUser>;Password=<myPassword>
          - VONK_License:LicenseFile=./license/firelyserver-license.json
@@ -439,6 +448,81 @@ If you use docker-compose, you can specify the variable in you docker-compose fi
          - "8080:4080"
        environment:
          - "VONK_License:LicenseString={ 'LicenseOptions': { 'Kind': 'Production', 'ValidUntil': '2022-10-30', 'Licensee': 'example@fire.ly', 'Plugins': [ ... ] }, 'Signature': '...' }"
+
+.. _docker_envvar:
+
+Starting Firely Server with environment variables
+-------------------------------------------------
+
+The examples above set environment variables one by one, with ``-e`` or in the ``environment`` section of a docker-compose file. If you have all variables in a file, e.g. ``firely-server.env`` exported by the Guided Setup, you can pass the whole file to Docker instead. See :ref:`configure_envvar_file` for the format of the file.
+
+.. tab-set::
+
+   .. tab-item:: With docker run
+
+      Use ``--env-file``:
+
+      .. code-block:: bash
+
+         docker run -d -p 8080:4080 --name firely.server \
+           --env-file ./firely-server.env \
+           -v ${PWD}/firelyserver-license.json:/app/firelyserver-license.json \
+           firely/server
+
+      ``docker run --env-file`` takes each line literally: quotes are not removed and ``$`` is not expanded. So do not put quotes around the values.
+
+      **Restarting after a change to the env file**
+
+      Docker reads the env file only when the container is **created**. ``docker restart`` restarts the existing container with the old variables, so a changed env file is **not** applied that way.
+
+      To apply a changed ``firely-server.env``, remove the container and run it again with the same command:
+
+      .. code-block:: bash
+
+         docker rm -f firely.server
+         docker run -d -p 8080:4080 --name firely.server \
+           --env-file ./firely-server.env \
+           -v ${PWD}/firelyserver-license.json:/app/firelyserver-license.json \
+           firely/server
+
+      To check which variables the new container got, run ``docker exec firely.server printenv``. Be aware that this prints secrets, such as connection strings, to your console.
+
+   .. tab-item:: With docker compose
+
+      Use ``env_file``:
+
+      .. code-block:: yaml
+         :linenos:
+
+         services:
+
+           vonk-web:
+             image: firely/server
+             ports:
+               - "8080:4080"
+             env_file:
+               - ./firely-server.env
+             volumes:
+               - ./firelyserver-license.json:/app/firelyserver-license.json
+
+      You can still add an ``environment`` section next to ``env_file``. If a variable is in both, the value in ``environment`` wins.
+
+      .. note::
+         Docker Compose applies variable interpolation to the values in an ``env_file``. If a value contains a ``$`` (e.g. in a password), write it as ``$$``, or put the value in single quotes. Only Docker Compose removes these escapes: ``docker run --env-file``, Kubernetes and the start scripts on the other deployment pages would keep ``$$`` or the quotes as part of the value. So a file with such escapes can only be used with Docker Compose.
+
+      **Restarting after a change to the env file**
+
+      Docker reads the env file only when the container is **created**. ``docker compose restart`` restarts the existing container with the old variables, so a changed env file is **not** applied that way.
+
+      To apply a changed ``firely-server.env``, recreate the service:
+
+      .. code-block:: bash
+
+         docker compose -f docker-compose.yml up -d --force-recreate vonk-web
+
+      To check which variables the new container got, run ``docker compose -f docker-compose.yml exec vonk-web printenv``. Be aware that this prints secrets, such as connection strings, to your console.
+
+Removing or recreating the container does not remove data that you stored outside of it, such as a mounted ``resourcedata`` folder or a SQL Server or MongoDB database. Data stored only inside the container (e.g. a SQLite database that is not on a mounted volume) is lost when the container is removed.
 
 .. |br| raw:: html
 

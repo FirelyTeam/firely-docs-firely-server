@@ -910,11 +910,6 @@ For Inferno you have to host it on https, with TLS 1.2 minimum. So you also need
     "Authority": "<url where Firely Auth is hosted>",
     "Audience": "<url where you host Firely Server>", 
     "RequireHttpsToProvider": true, 
-    "Protected": {
-      "InstanceLevelInteractions": "read, vread, update, patch, delete, history, conditional_delete, conditional_update, $validate, $meta, $meta-add, $meta-delete, $export, $everything, $erase",
-      "TypeLevelInteractions": "create, search, history, conditional_create, compartment_type_search, $export, $lastn, $docref",
-      "WholeSystemInteractions": "batch, transaction, history, search, compartment_system_search, $export, $exportstatus, $exportfilerequest"
-    },
     "TokenIntrospection": {
         "ClientId": "Firely Server",
         "ClientSecret": "secret"

@@ -13,7 +13,7 @@ We go through all the sections of this file and refer you to detailed pages on e
 
 You can also control :ref:`configure_envvar`.
 
-Changes to the settings require a restart of Firely Server.
+Changes to the settings require a restart of Firely Server. If you provide settings with environment variables, a restart alone may not be enough: see :ref:`configure_envvar_file`.
 
 .. _configure_levels:
 
@@ -91,7 +91,6 @@ JSON formally has no notion of comments. But the configuration system of ASP.Net
         "Repository": "SQLite", //SQL / MongoDb
         "SqlDbOptions": {
             "ConnectionString": "connectionstring to your Firely Server Admin SQL Server database (SQL2012 or newer); Set MultipleActiveResultSets=True",
-            "SchemaName": "vonkadmin",
             "AutoUpdateDatabase": true,
             "MigrationTimeout": 1800 // in seconds
             //"AutoUpdateConnectionString" : "set this to the same database as 'ConnectionString' but with credentials that can alter the database. If not set, defaults to the value of 'ConnectionString'"
@@ -111,7 +110,7 @@ It can be useful or even necessary to provide settings outside of the Firely Ser
 
    1. ``appsettings.instance.json``
    2. ``logsettings.instance.json``
-   3. ``auditlogsettings.instance.json``
+   3. ``audit.logsettings.instance.json``
 
 3. These files will be read with the same :ref:`priority <configure_levels>` as they would have if they were in the Firely Server directory. 
 
@@ -197,6 +196,32 @@ environment variable::
     A colon ``:`` is also valid as a separator in some environments, but not all. For its wider support we recommend to use ``__``.
     See `this article <https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-8.0#non-prefixed-environment-variables>`_ for more information.
 
+.. _configure_envvar_file:
+
+Providing environment variables in a file
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you configure Firely Server with many environment variables, you can keep them together in one file, e.g. ``firely-server.env``. The Guided Setup in the Firely Server UI exports this file for all settings where you selected *Use Environment Variable*. You can also write the file yourself.
+The file contains one variable per line, in the format ``NAME=value``. Lines starting with ``#`` are comments:
+
+::
+
+   # Firely Server environment variables
+   VONK_Repository=SQL
+   VONK_SqlDbOptions__ConnectionString=Server=myserver;Database=VonkData;User Id=fsuser;Password=<secret>
+   VONK_Administration__Repository=SQL
+   VONK_Administration__SqlDbOptions__ConnectionString=Server=myserver;Database=VonkAdmin;User Id=fsuser;Password=<secret>
+
+Keep in mind:
+
+* **Firely Server does not read this file itself.** The variables have to be loaded into the environment of the Firely Server process by whatever starts it: your shell, a service manager, Docker, Kubernetes or Azure. The environment-variable sections on the Binaries, Docker, Azure App Service, Kubernetes/Helm, and Azure Marketplace pages describe the available approaches.
+* **Environment variables are only read at startup.** After changing the file, load the variables again and restart Firely Server. Depending on the deployment, a plain restart is not enough. For example, a Docker container has to be recreated. See the deployment pages for the right sequence.
+* **Watch the settings hierarchy.** Environment variables override ``appsettings.json``, but are overridden by ``appsettings.instance.json`` (see :ref:`configure_levels`). If a setting is in the env file and also in ``appsettings.instance.json``, the value from ``appsettings.instance.json`` wins.
+* Use ``__`` (double underscore) as the level separator, not ``:``. Not every tool accepts a colon in a variable name.
+* Don't put quotes around values, and keep each value on a single line. Tools handle quotes differently. For example, ``docker run --env-file`` passes quotes on as part of the value. The same goes for escapes such as ``$$``, which only Docker Compose understands (see :ref:`docker_envvar`).
+* Save the file with Unix (LF) line endings when it is used on Linux or in a container. Otherwise a trailing carriage return can end up in the values.
+* The file usually contains secrets such as connection strings. Restrict access to the file, and do not commit it to source control.
+
 Arrays in Environment Variables
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -207,7 +232,7 @@ appsettings.json:
 .. code-block:: json
 
    "Validation": {
-      "ValidateIncomingResources": "true",
+      "Level": "Full",
       "AllowedProfiles": 
       [
          "http://hl7.org/fhir/StructureDefinition/daf-patient", 
@@ -217,7 +242,7 @@ appsettings.json:
 
 environment variables::
 
-	VONK_Validation__ValidateIncomingResources=true
+	VONK_Validation__Level=Full
 	VONK_Validation__AllowedProfiles__0=http://hl7.org/fhir/StructureDefinition/daf-patient
 	VONK_Validation__AllowedProfiles__1=http://hl7.org/fhir/StructureDefinition/daf-allergyintolerance
 

@@ -109,7 +109,7 @@ Legend:
    * - PubSub - ResourceChangeNotifications
      - ✅
      - ❌
-     - ❌
+     - ✅
      - ❌
    * - Digital Quality Measures
      - ✅

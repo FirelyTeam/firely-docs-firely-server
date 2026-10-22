@@ -67,12 +67,12 @@ Because DaVinci Data Export reuses the BDE task pipeline, it can reuse the same 
 
 Element redaction
 ^^^^^^^^^^^^^^^^^
-For the DaVinci ATR use case, it is possible to hide a selection of resource elements from the result set. In Firely server, this is called 'Resource redaction'. To configure the redaction used for the ATR export, we use the 'ResourceRedactionOptions' in appsettings. Redaction 'hl7.fhir.us.davinci-atr' contains the redaction definition used for the ATR export. Note that multiple FHIR paths are combined with an OR-relationship.
+For the DaVinci ATR use case, it is possible to hide a selection of resource elements from the result set. In Firely server, this is called 'Resource redaction'. To configure the redaction used for the ATR export, we use the ``ResourceRedaction`` section in appsettings. Redaction 'hl7.fhir.us.davinci-atr' contains the redaction definition used for the ATR export. Note that multiple FHIR paths are combined with an OR-relationship.
 
 .. code-block:: json
 
 	{
-		"ResourceRedactionOptions": {
+		"ResourceRedaction": {
 			"Redactions": {
 				"hl7.fhir.us.davinci-atr": {
 					"FhirVersions": [
@@ -131,7 +131,7 @@ In case of a POST request, a FHIR Parameters resource must be provided as the pa
 		"parameter": [
 			{
 				"name": "exportType",
-				"valueCanonical": "http://hl7.org/fhir/us/davinci-atr"
+				"valueCanonical": "hl7.fhir.us.davinci-atr"
 			},
 			{
 				"name": "_since",
@@ -152,7 +152,10 @@ The DaVinci operation also defines the ``exportType`` parameter to identify the 
 | ``exportType``    | ✅        | ``canonical``      | Indicates the type of export to perform. This parameter is          |
 |                   |           |                    | DaVinci-specific and is not part of the base Bulk Data Export       |
 |                   |           |                    | operation. Firely Server currently only supports the                |
-|                   |           |                    | ``hl7.fhir.us.davinci-atr`` exportType                              |
+|                   |           |                    | ``hl7.fhir.us.davinci-atr`` exportType. The value is                |
+|                   |           |                    | case-sensitive. A request without ``exportType``, or with more      |
+|                   |           |                    | than one, returns ``400 Bad Request``. Any other value returns      |
+|                   |           |                    | ``501 Not Implemented``.                                            |
 +-------------------+-----------+--------------------+---------------------------------------------------------------------+
 | ``patient``       | ✅        | ``reference``      | Same behavior as BDE for POST requests (not allowed in GET)         |
 +-------------------+-----------+--------------------+---------------------------------------------------------------------+
@@ -228,7 +231,7 @@ Security and authorization
 
 When SMART on FHIR is enabled, the same token and scope behavior used by BDE applies to DaVinci Data Export task initiation and retrieval endpoints. There is one additional requirement: as the DaVinci Data Export checks for consent (a Patient can opt-out) the DaVinci Data Export requires read access to Consent resources.
 
-The opt-out Consent must conform to the DaVinci ATR IG's Consent profile (http://hl7.org/fhir/us/davinci-atr/StructureDefinition/atr-consent) and must be associated with the patient through the standard Consent.patient reference. Firely Server treats a ``deny`` Consent as an opt-out in two cases:
+The opt-out Consent must conform to the DaVinci PDex IG's Provider Consent profile (http://hl7.org/fhir/us/davinci-pdex/StructureDefinition/pdex-provider-consent), listed in ``meta.profile``, and must be associated with the patient through the standard Consent.patient reference. Firely Server treats a ``deny`` Consent as an opt-out in two cases:
 
 * The Consent carries the ``DaVinci-pdex-provider-access-use-case`` extension on ``Consent.provision.action`` set to ``true`` (see IG `PDex Provider Consent profile <https://build.fhir.org/ig/HL7/davinci-epdx/StructureDefinition-pdex-provider-consent.html>`_), **or**
 * The Consent has **no** ``DaVinci-pdex-provider-access-use-case`` extension at all — a ``deny`` without the extension is treated as a global opt-out.
@@ -243,9 +246,9 @@ In addition to the standard SMART authorization, ATR clients SHOULD always be re
 
 The operations are:
 
-* /Group/{id}/$davinci-data-export
-* /Group/{id}/$exportstatus
-* /Group/{id}/$exportfilerequest
+* ``/Group/{id}/$davinci-data-export``, to start the export
+* ``/$exportstatus``, to poll for the status of the export and to cancel it (see :ref:`bdeexportstatus`)
+* ``/$exportfilerequest``, to download the exported files
 
 In order to restrict a client to only these operations, the SMART security token must include the following claims:
 

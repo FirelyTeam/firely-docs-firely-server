@@ -12,7 +12,7 @@ You can have Firely Server validate all resources that are sent in for create or
 
   "Validation": {
     "Parsing": "Permissive", // Permissive / Strict
-    "Level": "Off", // Off / Core / Full
+    "Level": "Core", // Off / Core / Full - default: Core
     "FixInvalidPrimitiveTypes": true, // true / false - If true, invalid primitive types are fixed to the correct type where possible. If set to false, invalid primitive types are always returned as an error.
     "AllowedProfiles": 
     [
@@ -48,7 +48,7 @@ Overview all validation rules
 You can choose the level of validation:
 
 * Off: no validation is performed.
-* Core: the resource is validated against the core definition of the resource type.
+* Core (default): the resource is validated against the core definition of the resource type.
 * Full: the resource is validated against the core definition of the resource type and against any profiles in its ``meta.profile`` element.
   
 If validation is set to ``Full`` the following validation rules will be checked:
@@ -177,17 +177,15 @@ You can enable or disable this operation by including or excluding this namespac
 in the Firely Server pipeline options. For more information about configuring available plugins in the pipeline options,
 see :ref:`vonk_available_plugins`.
 
-The validation settings described in :ref:`feature_prevalidation` also apply to
-the ``$validate`` operation. This means you can use the ``Validation`` settings
-to adjust validation behavior for both pre-validation and explicit
-``$validate`` calls.
-
-For example, these settings can be used to:
+Most of the validation settings described in :ref:`feature_prevalidation` also apply to
+the ``$validate`` operation. You can use them to:
 
 - adjust the strictness of parsing by configuring ``Validation:Parsing``
-- control the validation level with ``Validation:Level``
 - suppress, override, or selectively apply validation rules using
   ``Validation:AdvisorRules``
+
+``Validation:Level`` does not apply to ``$validate``: the operation always validates at the ``Full`` level, against the core definition of the resource type and against the profiles in ``meta.profile`` or in the ``profile`` parameter.
+``Validation:Level`` only controls the validation of resources that are sent in for create or update.
 
 Input parameters
 ~~~~~~~~~~~~~~~~
@@ -202,13 +200,17 @@ The following input parameters are supported for the ``$validate`` operation.
 |                         |           |                         |             | ``Parameters`` resource as     |
 |                         |           |                         |             | input.                         |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
-| ``profile``             | ✅        | canonical (uri)         | 0..1        | Canonical URL of the           |
+| ``profile``             | ✅        | uri                     | 0..1        | Canonical URL of the           |
 |                         |           |                         |             | ``StructureDefinition`` to     |
 |                         |           |                         |             | validate against. If omitted,  |
 |                         |           |                         |             | validation is performed        |
 |                         |           |                         |             | against the base profile and   |
 |                         |           |                         |             | any profiles in                |
-|                         |           |                         |             | ``meta.profile``.              |
+|                         |           |                         |             | ``meta.profile``. In a         |
+|                         |           |                         |             | ``Parameters`` body, pass it   |
+|                         |           |                         |             | as ``valueUri``. A             |
+|                         |           |                         |             | ``valueCanonical`` is          |
+|                         |           |                         |             | rejected.                      |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``mode``                | ❌        | code                    | 0..1        | Validation mode as defined by  |
 |                         |           |                         |             | the FHIR specification         |
@@ -297,7 +299,7 @@ Example request with a ``Parameters`` body:
        },
        {
          "name": "profile",
-         "valueCanonical": "https://example.org/fhir/StructureDefinition/MyPatientProfile"
+         "valueUri": "https://example.org/fhir/StructureDefinition/MyPatientProfile"
        }
      ]
    }

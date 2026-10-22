@@ -89,6 +89,6 @@ You can control the period and the batchsize. If an evaluation of a Subscription
 * ``SubscriptionBatchSize`` is expressed in number of Subscriptions that is retrieved and evaluated at once. Default is 1, but you can set it higher if you have a lot of Subscriptions.
 * ``RetryPeriod`` is expressed in milliseconds. In the example above the period is set to 60 seconds, meaning that Firely Server will retry to send the resources after a minimum of 60 seconds. Retry is included in the normal evaluation process, so the RetryPeriod cannot be smaller than RepeatPeriod.
 * ``MaximumRetries`` is the maximum amount of times Firely Server will retry to send the resources.
-* ``SendRestHookAsCreate``: in versions < 3.9.3, Vonk sent RestHook notifications as a create operation using a PUT. This was not compliant with the specification that requires POST. The default value of ``false`` provides the old behaviour and sends a PUT. If set to ``true``, the rest hook call is compliant with the FHIR spec and a POST call is made. 
+* ``SendRestHookAsCreate``: with the default value ``false``, Firely Server sends a rest-hook notification as a ``PUT`` to ``[endpoint]/[type]/[id]`` of the changed resource, as the FHIR specification describes for a rest-hook with a payload. If set to ``true``, Firely Server sends a ``POST`` to the endpoint itself. This is kept for backward compatibility. 
 
 Note that the logs for subscriptions can be turned on by including ``"Vonk.Subscriptions.Evaluation.SubscriptionEvaluatorService": "Verbose"`` in the :ref:`configure_log`. 

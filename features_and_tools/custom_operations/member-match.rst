@@ -40,8 +40,24 @@ Deviations
 
 The following deviations from the specification were made:
 
-#. The ``Consent`` parameter is not required by Firely Server. The IG does not provide any guidance on how to process a Consent parameter, so Firely Server will ignore it.
+#. The ``Consent`` parameter is not required by Firely Server.
     In version 1.1.0 of the IG this parameter is not required in the profile anymore either.
+
+Consent
+-------
+
+If the ``Consent`` parameter is present, Firely Server checks it before it tries to match the member. If one of the checks below fails, the operation returns ``422 Unprocessable Entity`` with an OperationOutcome that names the failed check. Apart from these checks, the Consent does not affect the match, and it is not stored.
+
+The Consent must have:
+
+* ``status`` ``active``;
+* a ``scope`` coding ``http://terminology.hl7.org/CodeSystem/consentscope|patient-privacy``;
+* a ``category`` coding ``http://terminology.hl7.org/CodeSystem/v3-ActCode|IDSCL``;
+* a ``patient`` and a ``performer`` that both reference the ``MemberPatient`` parameter as ``Patient/<id>``, with ``<id>`` the ``id`` of that Patient resource;
+* a ``policy`` with ``uri`` ``http://hl7.org/fhir/us/davinci-hrex/StructureDefinition-hrex-consent.html#sensitive``. A Consent with only the ``#regular`` policy, which excludes sensitive data, is rejected;
+* a ``provision`` with ``type`` ``permit``;
+* ``provision.actor`` roles with the codings ``http://terminology.hl7.org/CodeSystem/provenance-participant-type|performer`` and ``http://terminology.hl7.org/CodeSystem/v3-ParticipationType|IRCP``;
+* a ``provision.action`` coding ``http://terminology.hl7.org/CodeSystem/consentaction|disclose``.
     
 Configuration
 -------------

@@ -845,7 +845,7 @@ Quality Measure Operations
   "MeasureEvaluateOperation": {
     "MaxSubjectsForSynchronousGroupBasedMeasureEvaluation": 1000,
     "MaxDegreeOfParallelism": 2,
-    "MaxPrefetchedSubjects": 4
+    "MaxPrefetchedSubjects": 4,
     //"MaxDuration": "00:05:00"
   },
 

@@ -69,7 +69,7 @@ Fix
 #. ``Measure/$evaluate-measure`` and ``Measure/$data-requirements`` now accept a year-only or year-month measurement period, such as ``periodStart=2024&periodEnd=2024``. Parsing no longer depends on the server culture.
 #. ``Measure/$evaluate-measure`` fixes:
 
-   - Several resources without an id, as constructed in CQL, were counted as one item; this is now rejected with HTTP 422.
+   - In proportion, ratio and stratified groups, a resource without an id, such as one constructed in CQL, is now rejected with HTTP 422 instead of allowing several such resources to be counted as one item.
    - A population result of a complex type, such as a ``Quantity``, was counted as 0 in a cohort-scored group; a null result was rejected with HTTP 422 in stratified, proportion and ratio groups.
    - A population with several ``measure-population`` codings is no longer rejected as a duplicate population type.
    - An empty ``group.stratifier`` element that violated FHIR invariant ele-1 is no longer reported.

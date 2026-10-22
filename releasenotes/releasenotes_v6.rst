@@ -102,7 +102,7 @@ Database
 
 #. **SQL Server:** the data database schema is upgraded to v30, which is required for the faster ``$everything`` and ``$export``. The migration is applied automatically upon startup when ``SqlDbOptions:AutoUpdateDatabase`` is enabled; otherwise, apply the required migration scripts manually before starting Firely Server. The script ``FS_SchemaUpgrade_Data_v29_v30.sql`` is provided for upgrading from v29 to v30. Firely Server Ingest applies this upgrade as well. The administration database schema is unchanged.
 #. **SQLite:** the ``tkn_name_code`` and ``uri_name_hash`` indexes are replaced by ``tkn_name_code_entry`` and ``uri_name_hash_entry``, which keeps conformance resolution fast with SQLite 3.53. The migration runs on startup when ``AutoUpdateDatabase`` is enabled; on a large data database this delays startup and temporarily needs extra disk space.
-#. **MongoDB:** existing resources must be reindexed to get correct composite search results. See :ref:`feature_customsp_reindex`.
+#. **MongoDB:** existing resources must be reindexed to get correct composite search results. Run `POST http(s)://<firely-server-endpoint>/administration/$reindex-all` after upgrading. Note that on large databases this may be a heavy and long running operation that will block all other requests until finished, so please schedule this operation with care. See :ref:`feature_customsp_reindex`.
 
 Known behavioral changes
 ^^^^^^^^^^^^^^^^^^^^^^^^

@@ -123,7 +123,7 @@ Known behavioral changes
    - A stratified group whose population results cannot be told apart, such as ``dateTime`` values; such groups were counted while those values were left out of every stratum.
    - A criteria-based stratifier whose criteria returns a stratum value instead of basis units.
 
-   Defects in a ``Measure``'s population bases are now reported with issue type ``invalid`` instead of ``not-supported``.
+   Malformed population-basis declarations, declared/result type mismatches, and inconsistent bases in proportion or ratio groups use issue type ``invalid``. The unsupported ``valueDataRequirement`` form, unsupported basis types or scoring combinations, and mixed bases in stratified cohort or unscored groups still use ``not-supported``.
 #. **CQL messages were reworded.** Clients and log queries that match on message text need updating. The operation name is no longer quoted (``$evaluate-measure`` instead of ``'$evaluate-measure'``), a missing value reads ``'(null)'`` instead of ``''`` in the ``OperationOutcome``, and log lines of rejections now read the same as the ``OperationOutcome``.
 #. **CQL log categories and OpenTelemetry activity sources were renamed.** If you filter CQL logs by category, or traces by source through ``OpenTelemetryOptions:VonkSourcesInclude`` or ``VonkSourcesExclude``, review these filters. See :ref:`feature_opentelemetry_cql`.
 #. **``Measure/$evaluate-measure`` and ``Library/$evaluate`` stop when the client goes away**, instead of running to their end: the evaluation and the retrieval of subject data stop, and the server logs "Cancelled operation" at Information level. See :ref:`feature_cql_cancellation`.

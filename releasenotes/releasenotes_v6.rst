@@ -47,7 +47,7 @@ Features
 **Other**
 
 #. ``$snapshot`` can now be invoked on a stored StructureDefinition (``[base]/StructureDefinition/[id]/$snapshot``), and supports the ``url`` and ``definition`` parameters at type level. See :ref:`feature_snapshot`.
-#. The demo UI now offers a guided setup for configuring Firely Server. It covers the main and administration databases, core operations, system-health operations, document operations, data-retrieval and export operations, and logging. It generates ``appsettings.instance.json`` and ``logsettings.instance.json`` files, and optionally a ``firely-server.env`` file for sensitive values, containing only the settings that differ from the defaults. An "Advanced Features" step points to the documentation of features that need manual configuration, such as Digital Quality Measures and SMART authorization. The Logging step is only shown while the server still uses the default log settings.
+#. The demo UI now offers a guided setup for configuring Firely Server. It covers the main and administration databases, core operations, system-health operations, document operations, data-retrieval and export operations, and logging. It generates ``appsettings.instance.json`` and ``logsettings.instance.json`` files, and optionally a ``firely-server.env`` file for sensitive values, containing only the settings that differ from the defaults. An "Advanced Features" step points to the documentation of features that need manual configuration, such as Digital Quality Measures and SMART authorization. The Logging step is only shown while the server still uses the default log settings. See :ref:`getting_started_guided_setup`.
 #. FSI now uses the same settings hierarchy as Firely Server: ``appsettings.default.json``, ``appsettings.{environment}.json`` and their ``logsettings`` counterparts, and ``FSI_`` and ``FSILOG_`` environment variables. ``--settings`` and command-line arguments still take the highest precedence. See :ref:`tool_fsi`.
 #. Settings values can now contain ``{TempFolder}``, which is replaced with the temporary directory of the operating system.
 
@@ -88,8 +88,6 @@ Fix
 #. The CapabilityStatement now refers to the official OperationDefinition of ``$snapshot``.
 #. FSI: an NDJSON line that cannot be parsed, is not valid UTF-8 or is too long to read is reported with its line number, and the import continues. Previously such a line could stop the run or exhaust memory.
 #. FSI: a resource with an invalid ``meta.lastUpdated`` is reported as an error for that resource instead of failing the import pipeline.
-#. FSI: cancelling an NDJSON import now also interrupts a read in progress.
-#. FSI: ``logsettings.instance.json`` is now read, as ``appsettings.instance.json`` already was.
 
 Security
 ^^^^^^^^

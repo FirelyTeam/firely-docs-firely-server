@@ -34,6 +34,25 @@ It is recommended to use a specific client for this API access, like:
       "AllowManagementApiAccess": true
     },
 
+Requesting a management API token
+---------------------------------
+
+.. versionchanged:: 4.8.0
+  A management API token is issued for Firely Auth itself, not for Firely Server. The management API only accepts a token whose only ``aud`` is ``http://server.fire.ly/auth/api/management``. Management tokens issued by an earlier version have Firely Server as audience, so they stop working after the upgrade, and clients that cache a management token have to request a new one.
+
+Name the management API with the ``resource`` parameter (RFC 8707) when you request the token:
+
+.. code-block:: HTTP
+
+  POST <base-url>/connect/token HTTP/1.1
+  Content-Type: application/x-www-form-urlencoded
+
+  grant_type=client_credentials&client_id=ManagementClient&client_secret=<your secret>&scope=http%3A%2F%2Fserver.fire.ly%2Fauth%2Fscope%2Fauthmanagement&resource=http%3A%2F%2Fserver.fire.ly%2Fauth%2Fapi%2Fmanagement
+
+The ``resource`` parameter is optional: a request without it gets the same token. ``http://server.fire.ly/auth/api/management`` is the only supported ``resource`` for a management token; other values may be refused.
+
+Earlier versions required management clients to send the FHIR server name in the ``aud`` parameter, for example ``Firely Server``. From 4.8.0, Firely Auth ignores this parameter for management clients and logs a warning when a client still sends it, so remove it from your requests. Firely Server does not accept a management API token either: when it introspects one, Firely Auth reports the token as inactive.
+
 A Postman collection with demo requests of the administration API can be found here:
 
     .. raw:: html

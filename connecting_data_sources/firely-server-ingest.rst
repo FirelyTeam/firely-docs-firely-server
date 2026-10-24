@@ -176,7 +176,21 @@ After ingesting massive amounts of data, it is important to make sure the SQL Se
 Arguments
 ---------
 
-The execution of FSI can be configured using input parameters. These parameters can be supplied either as CLI arguments or specified in the file ``appsettings.instance.json`` which must be created in the same directory as the ``fsi`` executable.
+The execution of FSI can be configured using input parameters. These parameters can be supplied as CLI arguments, in settings files or as environment variables.
+
+.. _tool_fsi_settings_hierarchy:
+
+Since Firely Server 6.11, FSI uses the same settings hierarchy as Firely Server (see :ref:`configure_levels`). It reads its settings from these sources, in this order:
+
+:appsettings.default.json: Installed with FSI, contains the default settings.
+:appsettings.{environment}.json: Optional settings for a specific environment, such as ``appsettings.Development.json``.
+:appsettings.json: You can create this one for your own settings.
+:environment variables: Variables with the prefix ``FSI_``, using ``__`` to separate nested setting levels, for example ``FSI_sqlserver__connectionstring``.
+:appsettings.instance.json: You can create this one to override settings for a specific instance of FSI.
+:``--settings`` file: A settings file passed with the ``--settings`` argument, see :ref:`tool_fsi_examples`.
+:command-line arguments: See :ref:`FSI_supported_arguments`.
+
+Settings lower in the list override the settings higher in the list. Logging is configured in the same way with ``logsettings.default.json``, ``logsettings.{environment}.json``, ``logsettings.json`` and ``logsettings.instance.json``, and environment variables with the prefix ``FSILOG_``.
 
 If you want to specify input parameters in the file, you can use the snippet below as a base for your ``appsettings.instance.json``. In this case, you need to update the values that you want to set yourself and delete all other records.
 
@@ -709,7 +723,7 @@ Specify a custom settings file **/path/to/your/custom/settings/appsettings.insta
   fsi --settings ./path/to/your/custom/settings/appsettings.instance.json 
 
 .. note::
-  If ``--settings`` is omitted, FSI searches the following folders sequentially and tries to find ``appsettings.instance.json``. The first occurrence will be used if FSI finds one, otherwise the default ``appsettings.json`` will be used.  
+  A file passed with ``--settings`` overrides the settings files and environment variables of the :ref:`settings hierarchy <tool_fsi_settings_hierarchy>`; only command-line arguments take precedence over it. If ``--settings`` is omitted, FSI searches the following folders sequentially for ``appsettings.instance.json`` and uses the first one it finds, on top of the other files and environment variables of the hierarchy.
   
   * Current launched folder |br| 
     e.g. ``C:\Users\Bob\Desktop``  

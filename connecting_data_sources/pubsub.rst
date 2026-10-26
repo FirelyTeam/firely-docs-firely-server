@@ -56,7 +56,7 @@ You can enable PubSub by including the plugins in the pipeline options of the Fi
 
 The ``Vonk.Plugin.PubSub.Sub`` plugin allows Firely Server to subscribe to messages published to a message broker by other clients. This is available for all repositories and all supported message brokers.
 
-The ``Vonk.Plugin.PubSub.Pub.Sql`` and ``Vonk.Plugin.PubSub.Pub.MongoDb`` plugins allow Firely Server to publish changes of the respective database. This is available for the SQL Server and MongoDB repositories, in combination with either RabbitMQ or Azure Service Bus.
+The ``Vonk.Plugin.PubSub.Pub.Sql`` and ``Vonk.Plugin.PubSub.Pub.MongoDb`` plugins allow Firely Server to publish changes of the respective database. This is available for the SQL Server and MongoDB repositories, in combination with either RabbitMQ or Azure Service Bus. Publishing changes to Kafka is not supported, see :ref:`kafka`.
 
 You can further adjust PubSub in the PubSub section of the ``appsettings.instance.json`` file. Firely Server supports the following message brokers: RabbitMQ, Azure Service Bus, and Kafka. The configuration for each of them is slightly different.
 
@@ -70,7 +70,7 @@ You can configure the notifications sent by ``Vonk.Plugin.PubSub.Pub``:
             "SendFullEvents": false, // If enabled, FS will send out events on changes. These events will contain the complete resource
             "ExcludeAuditEvents": false, // If enabled, FS will send out events on changes of resources, except Audit Events
             "PollingIntervalSeconds": 5, // How often Firely Server will be polling the DB for changes
-            "MaxPublishBatchSize": 1000 // The maximum amount of resource changes that can be sent in a single message
+            "MaxPublishStorePlanSize": 1000 // The maximum amount of resource changes that can be sent in a single message. If there are more changes, they are split over several messages. Not set by default, meaning no maximum
         }
     },
 
@@ -240,7 +240,7 @@ Kafka Configuration
           "ClientGroupId": "FirelyServer", // Consumer group ID
           "ClientId": "FirelyServer", // Unique client identifier
           "NumberOfConcurrentConsumers": 5, // Number of parallel consumers
-          "AuthenticationMechanism": "SaslScram256", // None, SaslPlain, SaslScram256, SaslScram512
+          "AuthenticationMechanism": "SaslScram256", // NoAuth (default), SaslPlain, SaslScram256, SaslScram512
           "Username": "admin", // Only needed for SASL authentication
           "Password": "******", // Only needed for SASL authentication
           "CaLocation": "/path/to/ca.pem", // Path to CA certificate for SSL
@@ -251,7 +251,7 @@ Kafka Configuration
       }
     }
     
-- Setting AuthenticationMechanism to anything other than ``None`` will enable SASL authentication. The ``Username`` and ``Password`` fields are required for SASL authentication.
+- Setting AuthenticationMechanism to anything other than ``NoAuth`` (the default) will enable SASL authentication. The ``Username`` and ``Password`` fields are required for SASL authentication.
 - Setting a value for ``CaLocation`` enables SSL.
 - Setting a value for ``CaLocation`` *and* ``KeystoreLocation`` enables Mutual SSL. The ``KeystorePassword`` field is required for to read from the Keystore.
 
@@ -727,6 +727,21 @@ Kafka
 
 Kafka is a distributed event streaming platform that is well-suited for high-throughput, scalable message processing. Firely Server supports Kafka as a message broker for PubSub, allowing you to leverage Kafka's strengths in your FHIR infrastructure.
 
+.. important::
+
+   With Kafka, Firely Server only supports storing resources with the ``ExecuteStorePlanCommand``:
+
+   * Firely Server consumes ``ExecuteStorePlanCommand`` messages from the ``<TopicPrefix>.ExecuteStorePlanCommand`` topic, and, with the :ref:`claim check pattern <pubsub_claimcheck>` enabled, from the corresponding claim check topic.
+   * When a command fails, Firely Server publishes an ``ExecuteStorePlanResponse`` with the errors to the topic in ``ExecuteStorePlanCommandErrorTopicName`` (default ``<TopicPrefix>.ExecuteStorePlanCommand.Errors``).
+
+   The following is **not** supported with Kafka:
+
+   * ``RetrievePlanCommand``: it is not consumed from Kafka.
+   * Responses to the ``responseAddress`` of a command: Firely Server does not send an ``ExecuteStorePlanResponse`` for a successful command, and sends the response of a failed command only to the error topic.
+   * Resource change notifications (``ResourcesChangedEvent`` and ``ResourcesChangedLightEvent``): the ``Vonk.Plugin.PubSub.Pub.Sql`` and ``Vonk.Plugin.PubSub.Pub.MongoDb`` plugins do not publish them to Kafka.
+
+   Use RabbitMQ or Azure Service Bus if you need these features.
+
 **Advantages of Kafka**
 
 Kafka offers several advantages over other message brokers for FHIR data processing:
@@ -742,7 +757,7 @@ Kafka offers several advantages over other message brokers for FHIR data process
 
 Kafka in Firely Server supports several authentication mechanisms specified by the ``AuthenticationMechanism`` setting:
 
-* ``None`` - No authentication (only suitable for development environments)
+* ``NoAuth`` - No authentication, the default (only suitable for development environments)
 * ``SaslPlain`` - Basic username and password authentication
 * ``SaslScram256`` - SCRAM-SHA-256 authentication, more secure than SASL/PLAIN
 * ``SaslScram512`` - SCRAM-SHA-512 authentication, the most secure SASL option
@@ -777,9 +792,8 @@ For production environments, we strongly recommend:
 
 Kafka uses topics to organize and categorize messages. In Firely Server, the topic names follow this convention:
 
-* Command topics: ``<TopicPrefix>.<CommandName>``
-* Error topics: ``<TopicPrefix>.<CommandName>.Errors``
-* Event topics: Topic names match the message types (e.g., ``Firely.Server.Contracts.Messages.V1:ResourcesChangedEvent``)
+* Command topic: ``<TopicPrefix>.ExecuteStorePlanCommand``
+* Error topic: ``<TopicPrefix>.ExecuteStorePlanCommand.Errors``, unless you set another topic in ``ExecuteStorePlanCommandErrorTopicName``
 
 The ``TopicPrefix`` is configurable and defaults to "FirelyServerCommands" if not specified.
 
@@ -787,17 +801,9 @@ The ``TopicPrefix`` is configurable and defaults to "FirelyServerCommands" if no
 
 When using Kafka, messages are routed using Kafka's publish-subscribe pattern:
 
-1. **For sending commands to Firely Server**, publish messages to the corresponding topic:
-   * ``<TopicPrefix>.ExecuteStorePlanCommand`` - For storing resources
-   * ``<TopicPrefix>.RetrievePlanCommand`` - For retrieving resources
+1. **For sending commands to Firely Server**, publish ``ExecuteStorePlanCommand`` messages to the ``<TopicPrefix>.ExecuteStorePlanCommand`` topic.
 
-2. **For receiving events from Firely Server**, subscribe to these topics:
-   * For full resource change events: ``Firely.Server.Contracts.Messages.V1:ResourcesChangedEvent`` (format may vary based on MassTransit configuration; in some setups, it might use a dot or slash instead of a colon)
-   * For lightweight resource change events: ``Firely.Server.Contracts.Messages.V1:ResourcesChangedLightEvent``
-
-3. **For handling command results**, Firely Server will publish responses to:
-   * The topic specified in the ``responseAddress`` header of the command message. The response address format for Kafka should be: ``kafka://kafka-broker:9092/response-topic?type=topic``
-   * Error messages to ``<TopicPrefix>.ExecuteStorePlanCommand.Errors`` by default
+2. **For handling failed commands**, subscribe to the error topic, ``<TopicPrefix>.ExecuteStorePlanCommand.Errors`` by default. Firely Server publishes an ``ExecuteStorePlanResponse`` with the errors there.
 
 **Topic Creation**
 
@@ -805,13 +811,10 @@ Unlike RabbitMQ exchanges, Kafka topics need to be created before they can be us
 
 Required topics:
 * ``<TopicPrefix>.ExecuteStorePlanCommand`` - For sending storage commands
-* ``<TopicPrefix>.RetrievePlanCommand`` - For sending retrieval commands
-* ``<TopicPrefix>.ExecuteStorePlanCommand.Errors`` - For error messages 
-* Any custom error topics you've configured
+* ``<TopicPrefix>.ExecuteStorePlanCommand.Errors`` - For error messages, or the custom error topic you've configured in ``ExecuteStorePlanCommandErrorTopicName``
 
 The ``<TopicPrefix>`` is the value set in your configuration (defaults to "FirelyServerCommands" if not specified).
 
-For resource change notifications, you may need to create event topics as well, depending on your MassTransit configuration.
 
 **Delivery Guarantees and Message Ordering**
 

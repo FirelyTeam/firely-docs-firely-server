@@ -227,17 +227,20 @@ with the ``client_credentials`` flow and sends it as a bearer token.
    indefinitely — the operation fails with an ``OperationOutcome`` rather than
    evaluating on a partial compartment.
 
-When ``useServerData`` is ``false`` and no ``data`` is supplied, the operation fails
-with HTTP 500 and an ``OperationOutcome`` stating that the library failed to execute and
-to see the log for details, if:
+When ``useServerData`` is ``false`` and no ``data`` is supplied, the operation is
+rejected with an ``OperationOutcome`` that says what failed:
 
-- the ``dataEndpoint`` parameter is missing, or its ``Endpoint`` has no ``address``;
-- the ``address`` matches no configured ``DataEndpoint`` entry;
-- the remote endpoint answers with an error, including HTTP 401 when Firely Server could
-  not authenticate;
-- the remote endpoint repeats a page link, as described above.
+- HTTP 400 when the ``dataEndpoint`` parameter is missing, or its ``Endpoint`` has no
+  ``address``;
+- HTTP 400 when the ``address`` matches no configured ``DataEndpoint`` entry: the
+  outcome says that the endpoint is not an allowed remote data endpoint;
+- HTTP 500 when the data of the subject could not be retrieved from the endpoint, naming
+  the endpoint. This is the case when the endpoint cannot be reached, does not answer in
+  time, answers with an error (including HTTP 401 when Firely Server could not
+  authenticate) or with a resource other than a ``Bundle``, or repeats a page link, as
+  described above.
 
-The server log names the cause.
+The server log names the cause, such as what the endpoint answered.
 
 The ``ForwardedHeaders`` setting can be used to forward custom HTTP headers
 from the incoming request to external data endpoints.
@@ -250,7 +253,8 @@ or custom authorization headers, to external systems.
 Supported parameters
 ^^^^^^^^^^^^^^^^^^^^
 
-Firely Server supports the following parameters:
+Firely Server supports the following parameters. A request that supplies a parameter marked ❌, or a parameter that is
+not listed, is rejected with HTTP 501 (see :ref:`feature_cql_unsupported_parameters`):
 
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | Parameter               | Supported | Type                    | Cardinality | Additional Notes               |
@@ -274,15 +278,22 @@ Firely Server supports the following parameters:
 |                         |           |                         |             | A request that supplies both   |
 |                         |           |                         |             | ``url`` and ``library`` is     |
 |                         |           |                         |             | rejected with HTTP 409.        |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | A canonical that resolves to a |
+|                         |           |                         |             | resource other than a          |
+|                         |           |                         |             | ``Library`` is rejected with   |
+|                         |           |                         |             | HTTP 404.                      |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``library``             | ✅        | ``Library`` resource    | 0..1        | In-line logic library that     |
 |                         |           |                         |             | contains executable CQL logic. |
 |                         |           |                         |             | This Library will not be       |
 |                         |           |                         |             | stored in Firely Server. It is |
-|                         |           |                         |             | validated and compiled on      |
-|                         |           |                         |             | every request. When it carries |
-|                         |           |                         |             | ELM content, the ELM is        |
-|                         |           |                         |             | compiled instead of the CQL.   |
+|                         |           |                         |             | validated on every request,    |
+|                         |           |                         |             | and compiled unless it carries |
+|                         |           |                         |             | a compiled assembly of its     |
+|                         |           |                         |             | own. When it carries ELM       |
+|                         |           |                         |             | content, the ELM is compiled   |
+|                         |           |                         |             | instead of the CQL.            |
 |                         |           |                         |             |                                |
 |                         |           |                         |             | See `Inline library`_.         |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
@@ -422,11 +433,19 @@ A ``Library`` passed in the ``library`` parameter is handled as follows:
   :ref:`feature_prevalidation`). Any issue the validation reports, warnings included,
   rejects the request with HTTP 400 and returns the issues in the ``OperationOutcome``.
   With ``Level`` set to ``Off``, the library is not validated.
-- It is compiled on every request; the result of the compilation is not kept. When the
-  library carries ELM content (``application/elm+json``), the ELM is compiled and the CQL
-  content is not used. Otherwise its CQL (``text/cql``) is translated to ELM first. When
-  compilation fails, the request is rejected with HTTP 422, reporting that the library
-  holds no .NET assembly; the server log holds the compilation errors.
+- When it carries a compiled assembly — a ``content`` attachment of contentType
+  ``application/octet-stream`` whose element id contains ``+dll`` — it is evaluated with
+  that assembly, which is checked as the assembly of a stored library is (see
+  `Compiled assemblies`_). With validation on, an attachment whose data is not valid
+  base64 is rejected with HTTP 400 by the validation; with ``Level`` set to ``Off``, it is
+  rejected with HTTP 422 naming the attachment.
+- Otherwise it is compiled on every request; the result of the compilation is not kept.
+  When the library carries ELM content (``application/elm+json``), the ELM is compiled
+  and the CQL content is not used. Otherwise its CQL (``text/cql``) is translated to ELM
+  first. When compilation fails, the request is rejected with HTTP 422, reporting that
+  the library holds no .NET assembly; the server log holds the compilation errors. A
+  library whose CQL includes a library that no ``depends-on`` provides is rejected with
+  HTTP 422 naming the include; see `Library dependencies`_.
 - Its dependencies are resolved from the administration database, like those of a stored
   library; see `Library dependencies`_.
 
@@ -452,14 +471,26 @@ dependency closure. Only declarations with ``use`` set to ``in`` and one of the 
 - The cardinality of the declaration is enforced. The request is rejected with HTTP 400
   when fewer parameters with that name are supplied than ``min`` — also when a
   declaration has a ``min`` of 1 or more and the request has no ``parameters`` at all —
-  or when more are supplied than ``max``. A declaration with an unusable cardinality
-  (``min`` missing or negative, ``max`` missing, ``0`` or lower than ``min``) is rejected
-  with HTTP 422.
+  or when more are supplied than ``max``. Only supplied parameters that carry a value or
+  ``part`` elements are counted: one that carries neither, or only a ``resource``, supplies
+  nothing. A declaration with an unusable cardinality (``min`` missing or negative,
+  ``max`` missing, ``0`` or lower than ``min``) is rejected with HTTP 422. ``max`` is
+  read as an integer independent of the server culture, so ``+3`` is a ``max`` of 3.
+- When the evaluated ``Library`` and a library in its dependency closure declare the
+  same parameter, the most constraining ``min`` and ``max`` of the declarations apply. When
+  those cannot be met together, such as ``0..1`` and ``2..*``, the library is rejected
+  with HTTP 422, as for a ``max`` lower than ``min``.
 - A declaration with a ``max`` greater than ``1``, or ``*``, binds a CQL ``List`` of all
-  supplied values with that name. Otherwise a single value is bound.
+  supplied values with that name. Otherwise a single value is bound. The repeated values
+  must all convert to the same CQL type; a ``code`` and a ``Coding`` can be mixed, but a
+  ``Period`` and a ``Range`` cannot. Values of different types are rejected with HTTP 400.
 - A supplied parameter with ``part`` elements binds a CQL ``Tuple`` with one element per
   part, named after the part. Every part needs a ``value[x]``, and nested parts are not
-  allowed; both are rejected with HTTP 400.
+  allowed; both are rejected with HTTP 400. Repeated tuples must have the same parts,
+  with values of the same types, in any order; tuples that differ are rejected with
+  HTTP 400.
+- A supplied parameter that carries both a value and ``part`` elements is rejected with
+  HTTP 400, as is a declared parameter that is only supplied without a value or parts.
 - A value is converted according to its own FHIR type. Supported are ``string``,
   ``boolean``, ``integer``, ``decimal``, ``date``, ``dateTime``, ``time``, ``Quantity``,
   ``code`` and ``Coding`` (both bind a CQL ``Code``), ``Period`` and ``Range``. A value of
@@ -488,13 +519,46 @@ evaluated ``Library``, and of every library it depends on, transitively. Other
 - Any other canonical is resolved as a ``Library`` from the administration database. A
   dependency that cannot be resolved, or that resolves to a resource of another type, is
   rejected with HTTP 404, naming the dependency and the library that declares it.
+- A canonical with the url and version of the evaluated ``Library`` itself refers to that
+  ``Library``: it is not resolved from the administration database, so a library whose
+  dependencies refer back to it is evaluated as it is.
 
 A ``depends-on`` entry without a ``resource``, or with a canonical that is not of the form
 ``url`` or ``url|version`` (for example with an empty part or with more than one ``|``),
 is rejected with HTTP 400.
 
+A library can only include the libraries its ``depends-on`` entries provide. When the
+CQL of the evaluated ``Library``, or of a library in its dependency closure, includes a
+library (typically ``FHIRHelpers``) that no ``depends-on`` provides under the included
+name and version, the request is rejected with HTTP 422, naming each such include and the
+library that includes it.
+
+.. _feature_library_evaluate_compiled_assemblies:
+
+Compiled assemblies
+^^^^^^^^^^^^^^^^^^^
+
 Every library in the dependency closure must be compiled: a library that holds no
-compiled .NET assembly is rejected with HTTP 422.
+compiled .NET assembly is rejected with HTTP 422. A library carries its assembly either
+because it was precompiled, in its ``+dll`` content (see :ref:`feature_qdm`), or because
+Firely Server compiled it from its ELM or CQL.
+
+Firely Server checks every assembly before loading it. A library is rejected with HTTP
+422, naming the library, when its assembly:
+
+- has data that is not valid base64;
+- cannot be read, or holds no CQL library;
+- was generated by a version of the CQL code generator that Firely Server does not
+  support. This is the case for an assembly packaged with a CQL SDK older than 2.16.0.
+  The server log names the generator version found and the versions supported.
+
+In the last two cases, the ``OperationOutcome`` states that the compiled content of the
+library has to be regenerated.
+
+Regenerate such a library with the CQL SDK version that Firely Server uses, or remove its
+``+dll`` and ``+csharp`` content so that Firely Server compiles it from its ELM or CQL.
+When the assemblies of a library and its dependencies do not load as one CQL library
+each, the request is rejected with HTTP 422 as well.
 
 .. _feature_library_evaluate_valuesets:
 
@@ -718,18 +782,44 @@ configured in the ``MeasureEvaluateOperation`` section of the appsettings.
 
   "MeasureEvaluateOperation": {
     "MaxDegreeOfParallelism": 2,
-    "MaxSubjectsForSynchronousGroupBasedMeasureEvaluation": <n>
+    "MaxSubjectsForSynchronousGroupBasedMeasureEvaluation": <n>,
+    "MaxPrefetchedSubjects": 4,
+    "MaxDuration": "00:05:00"
   }
 
 ``MaxDegreeOfParallelism``
   How many groups of a measure are evaluated concurrently within a single subject
-  (default ``2``). Retrieval of a subject's data is always sequential, and the
-  resulting ``MeasureReport`` is identical in content and ordering regardless of
-  this setting. Set it to ``1`` to evaluate groups strictly one after another. A
-  value below ``1`` is rejected at startup.
+  (default ``2``). The data of a subject is retrieved once, before its groups are
+  evaluated, and the resulting ``MeasureReport`` is identical in content and ordering
+  regardless of this setting. Set it to ``1`` to evaluate groups strictly one after
+  another. A value below ``1`` is rejected at startup.
 
   Raising it increases throughput for measures with many groups, at the cost of
   more memory and more concurrent database and terminology work per request.
+
+``MaxPrefetchedSubjects``
+  How many of the next subjects have their data retrieved ahead, concurrently, while
+  the current subject is evaluated (default ``4``, maximum ``16``). Subjects are still
+  evaluated one after another, in order, and the resulting ``MeasureReport`` does not
+  depend on this setting. It applies when Firely Server retrieves the data of the
+  subjects from its own database (``Patient/$everything``); data supplied in the
+  ``data`` parameter, or retrieved from a remote data endpoint, is not retrieved ahead.
+  Set it to ``0`` to retrieve the data of each subject only when its evaluation starts.
+  A value outside ``0`` to ``16`` is rejected at startup.
+
+  Each subject retrieved ahead can use a database connection while its data is
+  retrieved, and holds that data in memory until the subject has been evaluated.
+
+``MaxDuration``
+  The longest one ``Measure/$evaluate-measure`` request may evaluate, as a time span
+  in the format ``[d.]hh:mm:ss``, such as ``00:05:00`` for five minutes. Not set by
+  default, so an evaluation may take as long as it needs. When the time passes, the
+  evaluation stops and the request is answered with HTTP 503; see
+  :ref:`feature_cql_cancellation`. A value of zero or less, or longer than about 49
+  days, is rejected at startup.
+
+  Write the value as a time span: a bare number such as ``"30"`` is read as a number
+  of days.
 
 ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation``
   The maximum number of distinct subjects a ``Group``-based evaluation may cover
@@ -742,7 +832,8 @@ configured in the ``MeasureEvaluateOperation`` section of the appsettings.
 Supported parameters
 ^^^^^^^^^^^^^^^^^^^^
 
-Firely Server supports the following parameters:
+Firely Server supports the following parameters. A request that supplies a parameter marked ❌, or a parameter that is
+not listed, is rejected with HTTP 501 (see :ref:`feature_cql_unsupported_parameters`):
 
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | Parameter                | Supported | Type                    | Cardinality | Additional Notes                            |
@@ -784,11 +875,22 @@ Firely Server supports the following parameters:
 |                          |           |                         |             | otherwise the request is rejected with      |
 |                          |           |                         |             | HTTP 400.                                   |
 |                          |           |                         |             |                                             |
+|                          |           |                         |             | Each value is a FHIR ``date``, which may    |
+|                          |           |                         |             | have year or year-month precision, such as  |
+|                          |           |                         |             | ``2024`` or ``2024-02``. Any other value,   |
+|                          |           |                         |             | such as ``12/31/2024`` or a ``dateTime``,   |
+|                          |           |                         |             | is rejected with HTTP 400, whatever the     |
+|                          |           |                         |             | culture the server runs under.              |
+|                          |           |                         |             |                                             |
 |                          |           |                         |             | The dates are expanded to whole days: the   |
 |                          |           |                         |             | measurement period passed to the CQL runs   |
-|                          |           |                         |             | from 00:00:00.000 on ``periodStart`` to     |
-|                          |           |                         |             | 23:59:59.999 on ``periodEnd``, both with    |
-|                          |           |                         |             | offset ``+00:00``.                          |
+|                          |           |                         |             | from 00:00:00.000 on the first day of       |
+|                          |           |                         |             | ``periodStart`` to 23:59:59.999 on the last |
+|                          |           |                         |             | day of ``periodEnd``, both with offset      |
+|                          |           |                         |             | ``+00:00``. ``periodStart=2024`` and        |
+|                          |           |                         |             | ``periodEnd=2024`` therefore cover the      |
+|                          |           |                         |             | whole of 2024. The ``MeasureReport``        |
+|                          |           |                         |             | reports the period as requested.            |
 +--------------------------+-----------+-------------------------+-------------+---------------------------------------------+
 | ``periodEnd``            | ✅        | ``date``                | 0..1        | End of the measurement period. See          |
 |                          |           |                         |             | ``periodStart``.                            |
@@ -973,8 +1075,8 @@ from the group's single initial population::
 As for ``proportion``, a denominator of 0 gives a ``measureScore`` of 0.
 
 A ``denominator-exception`` population is not permitted on a ratio-scored group, and
-a ratio-scored group cannot carry stratifiers. Both are rejected before evaluation;
-see :ref:`feature_measure_evaluate_validation`.
+is rejected before evaluation; see :ref:`feature_measure_evaluate_validation`. A
+ratio-scored group may carry stratifiers; see :ref:`feature_measure_evaluate_stratifiers`.
 
 .. note::
 
@@ -1009,38 +1111,79 @@ Population basis
 ~~~~~~~~~~~~~~~~
 
 The population basis of a population declares what its criteria expression returns:
-``boolean`` for a patient-based measure, or a FHIR resource type such as
-``Encounter`` for a measure that counts events rather than subjects.
+``boolean`` for a patient-based measure, or another type for a measure that counts
+something other than subjects — a resource type such as ``Encounter``, or a value
+type such as ``date`` for a measure that counts episodes by their date.
 
-Firely Server reads it from either realm's extension on the population:
+Firely Server reads it from either realm's extension:
 
 - ``http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-populationBasis`` (US realm)
 - ``http://hl7.org/fhir/uv/cqm/StructureDefinition/cqm-populationBasis`` (UV realm)
 
-The declared basis is validated against the return type of the CQL expression the
-population's criteria names. A basis can only be a FHIR type, and FHIR type names
-are case-sensitive — ``Boolean`` is not ``boolean``.
+The extension may be placed on the ``Measure``, on a ``Measure.group`` or on a
+``Measure.group.population``. A population's *effective* basis is the one declared on
+the population itself, or else on its group, or else on the ``Measure``. The basis is
+declared with a ``valueCode`` naming a FHIR type. The ``valueDataRequirement`` form
+that the UV realm extension also allows is not supported.
 
-Consistency within a membership path
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Supported types
+^^^^^^^^^^^^^^^
+
+A population basis must be a FHIR type name, and FHIR type names are case-sensitive:
+``Boolean`` is not ``boolean``, and is rejected as no type at all. It must also be a
+type that a population criteria result can have:
+
+- any resource type, including the abstract ``Resource`` and ``DomainResource``. These
+  two accept results of every resource type that derives from them;
+  ``DomainResource`` does not accept ``Bundle``, ``Binary`` or ``Parameters``.
+- ``boolean``, ``integer``, ``decimal``, ``string``, ``date``, ``dateTime``, ``time``,
+  ``Quantity``, ``Range``, ``Ratio``, ``Period``, ``Identifier``, ``code``, ``Coding``
+  or ``CodeableConcept``.
+
+Groups that relate their populations to each other or stratify them — a group scored
+as ``proportion`` or ``ratio``, and a stratified group of any scoring type — have to
+tell the items they count apart (see :ref:`feature_measure_evaluate_counted_types`).
+Such a group only supports a concrete resource type, such as ``Encounter``, and
+``boolean``, ``integer``, ``decimal``, ``date`` and ``string``. A ``cohort``-scored or
+unscored group without stratifiers counts each population on its own, and supports
+every type in the list above.
+
+The declared basis is validated against the type of the ``Library`` parameter that
+the population's criteria names, where the ``Library`` declares one, and against the
+results the criteria returns. A population whose results are not of its declared basis
+is rejected.
+
+A population criteria returns either a single ``boolean`` — whether the subject is in
+the population — or a list of the items the population counts. A criteria that
+returns a list of ``boolean`` values is neither, and is rejected. A single ``boolean``
+result that is ``null`` counts the subject as not in the population.
+
+Consistency within a group
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Composing population counts and the score means intersecting and subtracting sets of
-cases, which is only meaningful when all populations involved describe the same kind
-of case. All populations within one *membership path* must therefore resolve to a
+items, which is only meaningful when all populations involved describe the same kind
+of item. Populations that are combined with each other must therefore resolve to a
 single, common basis.
 
-Which populations form a path depends on the group's effective scoring type:
+Which populations are combined depends on the group's effective scoring type:
 
-- **proportion** — the whole group is one path. The initial population, the
-  denominator tree and the numerator tree must all share a basis.
+- **proportion** — the whole group is one *membership path*. The initial population,
+  the denominator tree and the numerator tree must all share a basis.
 - **ratio** — the numerator path (``numerator``, ``numerator-exclusion``) and the
-  denominator path (``denominator``, ``denominator-exclusion``) are validated
-  independently and may use different bases. The initial population feeds both, so
-  its basis must be consistent with each.
+  denominator path (``denominator``, ``denominator-exclusion``) each start from the
+  group's single initial population, so all populations of the group share its basis.
+  A ratio group whose numerator and denominator declare different bases is rejected.
+- **cohort** or no scoring type — the populations are not combined, and may use
+  different bases, unless the group has stratifiers.
 
-Mixing bases within one path is rejected with HTTP 422. When no basis is declared,
-it can only be observed from the results, so the same check is applied again during
-scoring, against the types the expressions actually returned.
+The populations of a stratified group are stratified together, so they must share one
+basis whatever the group's scoring type.
+
+When no basis is declared, it can only be observed from the results, so the same
+checks are applied again during evaluation, against the types the expressions
+actually returned. A violation of any of these rules is rejected with HTTP 422; see
+:ref:`feature_measure_evaluate_validation`.
 
 .. _feature_measure_evaluate_counts:
 
@@ -1049,18 +1192,18 @@ Population counts
 
 By default, the population counts in the ``MeasureReport`` follow the **label-based
 membership algorithm** of the FHIR Quality Measure IG, rather than the raw result of
-each population's criteria expression. For ``proportion`` and ``ratio`` scoring, a
-case is only counted for a population when it also belongs to the population that
+each population's criteria expression. For ``proportion`` and ``ratio`` scoring, an
+item is only counted for a population when it also belongs to the population that
 population is derived from:
 
-- the denominator only counts cases in the initial population;
-- the numerator only counts cases in the denominator that are not
-  denominator-excluded (``proportion``), or cases in the initial population
+- the denominator only counts items in the initial population;
+- the numerator only counts items in the denominator that are not
+  denominator-excluded (``proportion``), or items in the initial population
   (``ratio``);
 - exclusion and exception counts are restricted to their parent population;
-- a denominator exception does not count cases that meet the numerator criteria.
+- a denominator exception does not count items that meet the numerator criteria.
 
-Exclusion and exception cases remain *included* in the count of their parent
+Exclusion and exception items remain *included* in the count of their parent
 population — they are only subtracted when the ``measureScore`` is calculated.
 
 A subject whose ``Denominator Exclusion`` expression returns ``true`` but that is not
@@ -1085,49 +1228,61 @@ the same.
 Which results are counted
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Every population count counts *cases*, and what a case is depends on what the
-population's criteria expression returns:
+Every population count counts *items* of the population basis, and what an item is
+depends on what the population's criteria expression returns:
 
 - An expression that returns a single ``boolean`` makes the population patient-based:
-  the case is the subject itself, counted when the value is ``true``.
-- Otherwise every element the expression returns is a case. Composing the
-  label-based counts and the ``measureScore`` means intersecting and subtracting the
-  cases of several populations, so each case needs an identity. Firely Server derives
-  it from the returned type:
+  the item is the subject itself, counted when the value is ``true``.
+- Otherwise every element the expression returns is an item. Composing the
+  label-based counts and the ``measureScore``, and assigning items to strata, means
+  intersecting and subtracting the items of several populations, so each item needs
+  an identity. Firely Server derives it from the returned type:
 
   .. list-table::
      :header-rows: 1
      :widths: 30 70
 
      * - Returned type
-       - Identity of the case
+       - Identity of the item
      * - A resource
-       - ``ResourceType/id``
+       - ``ResourceType/id``. A resource without an id, such as one the CQL
+         constructs rather than retrieves, has no identity.
      * - ``boolean``
        - its value, ``true`` or ``false``
      * - ``integer`` or ``decimal``
        - its value
      * - ``date``
        - its value
+     * - ``string``
+       - its value, compared exactly: case-sensitive, and the empty string is an
+         item of its own
 
-  Two returned elements with the same identity are the same case.
+  Two returned elements with the same identity are the same item, and are counted
+  once.
 
-Which of these rules applies depends on the count:
+Every population counts each distinct item once, in the group and in each of its
+strata: an Encounter that a criteria returns twice counts as 1, and so do two episodes
+on the same date in a ``date``-basis measure. This applies to the label-based counts,
+to the initial population, to every population of a ``cohort``-scored or unscored
+group, and to every population with ``rawPopulationCounts=true``. A returned element
+without a value, such as a primitive that carries only a ``data-absent-reason``
+extension, is no item and is not counted.
 
-- For ``proportion`` and ``ratio`` groups, the label-based counts (every population
-  except the initial population) and the ``measureScore`` identify cases as above. A
-  population whose expression returns any other type — for example a ``string``, a
-  ``dateTime``, a ``Quantity`` or a ``Coding`` — cannot be counted, and the request is
-  rejected with HTTP 422, naming the group, the population and the returned type.
-  This also applies with ``rawPopulationCounts=true``, because the ``measureScore``
-  still follows the label-based rules.
-- The initial population, every population of a ``cohort``-scored or unscored group,
-  and every population with ``rawPopulationCounts=true`` count the returned elements
-  as they are: each returned resource, and each returned primitive value that has a
-  value, is counted, including repeated values. A returned value that is not a
-  primitive, such as a ``Quantity`` or a ``Coding``, is not counted there.
+Which types can be counted depends on the group:
 
-All populations within one membership path must also return the same type; see
+- A ``proportion`` or ``ratio`` group, and a stratified group of any scoring type,
+  needs an identity for every item. A population whose expression returns any other
+  type — for example a ``dateTime``, a ``Quantity`` or a ``Coding``, or a resource
+  without an id — cannot be counted, and the request is rejected with HTTP 422,
+  naming the group, the population and the returned type. For ``proportion`` and
+  ``ratio`` groups this also applies with ``rawPopulationCounts=true``, because the
+  ``measureScore`` still follows the label-based rules.
+- A ``cohort``-scored or unscored group without stratifiers counts every returned
+  element, of any type. An element without an identity, such as a ``dateTime`` or a
+  ``Quantity``, cannot be told apart from another one, and is counted once per
+  returned element.
+
+The populations that are combined with each other must also share one basis; see
 :ref:`feature_measure_evaluate_populationbasis`.
 
 .. _feature_measure_evaluate_stratifiers:
@@ -1135,48 +1290,67 @@ All populations within one membership path must also return the same type; see
 Stratifiers
 ~~~~~~~~~~~
 
-A stratifier partitions the reported populations of a group into strata. Firely
-Server supports **value-based (component) stratifiers**, declared as
-``Measure.group.stratifier.component[]``.
+A stratifier partitions the items of a group into strata, and reports the group's
+populations and score per stratum. Firely Server supports both forms of stratifier,
+on groups of any supported scoring type and any population basis:
 
 +-------------------------------------------+-----------+----------------------------------------------+
 | Stratifier form                           | Supported | Notes                                        |
 +===========================================+===========+==============================================+
-| ``stratifier.component[]``                | ✅        | Only on groups with a ``boolean`` basis.     |
+| ``stratifier.component[]``                | ✅        | Value-based: one stratum per observed        |
+|                                           |           | combination of component values.             |
 +-------------------------------------------+-----------+----------------------------------------------+
-| ``stratifier.criteria``                   | ❌        | Rejected with HTTP 501, not yet implemented. |
+| ``stratifier.criteria``                   | ✅        | Criteria-based: a ``"true"`` and a           |
+|                                           |           | ``"false"`` stratum.                         |
 +-------------------------------------------+-----------+----------------------------------------------+
 
-Each component's ``text/cql-identifier`` expression is evaluated per subject, and the
-subjects are stratified by the **cross-product of their observed component values**.
+What a stratifier assigns to its strata are the items the group counts — its *basis
+units*. On a group with a ``boolean`` basis, the basis unit is the subject. On a group
+of any other basis, such as an episode-based measure, every distinct item the group's
+populations return is a basis unit of its own, identified as described in
+:ref:`feature_measure_evaluate_counted_types`. A stratum's population counts and
+``measureScore`` are computed over the basis units of that stratum, by the same rules
+as the group's own.
+
+Value-based stratifiers
+^^^^^^^^^^^^^^^^^^^^^^^
+
+Each ``component`` of a value-based stratifier has a ``text/cql-identifier`` criteria
+that produces a value per basis unit:
+
+- On a group with a ``boolean`` basis, it names an expression that is evaluated once
+  per subject.
+- On a group of any other basis, it names a CQL function that takes a single argument
+  of the basis type, as the FHIR Clinical Reasoning module prescribes. The function is
+  evaluated once for each distinct basis unit the group's populations returned, with
+  that basis unit as its argument. For example, an episode-based measure whose
+  populations return episode dates can stratify by age with
+  ``define function "Age Stratifier"(episodeDate Date): ...``.
+
+A ``Measure`` may also name such a function on a group whose populations all declare
+the ``boolean`` basis, as the NCQA HEDIS measure CRE does. There the subject is the
+only basis unit and there is no item of the parameter's type to pass, so the function
+is evaluated once per subject with a ``null`` argument. The strata are then only
+correct if the function does not depend on its argument; Firely Server logs a warning
+naming the function, its library and the groups.
+
+The basis units are stratified by the **cross-product of their observed component
+values**. A basis unit for which a component returns no value is placed in the stratum
+whose value for that component carries only the ``data-absent-reason`` extension with
+code ``unknown``, so every basis unit the group counts is stratified.
 
 .. note::
 
-   A subject may produce several values for one component — one product line per
+   A basis unit may produce several values for one component — one product line per
    enrollment, for example. It then appears in one stratum per combination, so the
    per-stratum counts of a group can legitimately sum to more than the group's own
-   population counts.
-
-Each stratum is reported with:
-
-- ``stratum.component[]`` code/value pairs. A coded value is reported as a
-  ``CodeableConcept`` carrying the ``coding`` plus a ``text`` holding the code
-  string; a non-coded primitive is reported as ``text`` only; an absent value is
-  reported as a ``CodeableConcept`` carrying only the ``data-absent-reason``
-  extension with code ``unknown``.
-- population counts, following the same rules as the group's own counts — see
-  :ref:`feature_measure_evaluate_counts`. A stratum never reports a member for a
-  population its group excludes.
-- a ``measureScore``, for proportion-scored groups. It always follows the
-  label-based membership rules, mirroring the group-level score, so a stratum whose
-  denominator is 0 has a ``measureScore`` of 0.
-- ``subjectResults`` ``List`` resources, in ``subject-list`` reports.
+   population counts. This is the only case in which they do.
 
 Stratifier component values
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A component expression must return values, not resources. Firely Server turns each
-returned value into the stratum value as follows:
+A component must return values, not resources. Firely Server turns each returned
+value into the stratum value as follows:
 
 .. list-table::
    :header-rows: 1
@@ -1200,17 +1374,95 @@ returned value into the stratum value as follows:
      - Rejected with HTTP 422, naming the component and the returned type
 
 A value without content — an empty or blank value, or a ``Coding`` or
-``CodeableConcept`` with neither a code nor a text — is ignored, and a value the
-subject returns more than once counts once. When a component returns no value at all
-for a subject, the subject is placed in the stratum whose value carries only the
-``data-absent-reason`` extension with code ``unknown``.
+``CodeableConcept`` with neither a code nor a text — is ignored, and a value returned
+more than once for the same basis unit counts once.
+
+Criteria-based stratifiers
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``text/cql-identifier`` criteria of a criteria-based stratifier is evaluated once
+per subject, together with the population criteria, and divides the group's basis
+units over two strata, ``"true"`` and ``"false"``:
+
+- On a group with a ``boolean`` basis, the criteria returns a single ``boolean``. A
+  subject for which it returns ``true`` is counted in the ``"true"`` stratum; ``false``,
+  ``null`` or no result places the subject in the ``"false"`` stratum.
+- On a group of any other basis, the criteria returns the basis units it holds for, of
+  the basis type — as Conformance Requirement 3.17 (Stratification Criteria) of the
+  `CQM IG (UV realm) 2.0.0 <https://hl7.org/fhir/uv/cqm/STU2/>`_ requires:
+  "Criteria-based stratification: SHALL be on the root. Results SHALL be in the same
+  type as the basis of the measure." A basis unit the group's populations returned is
+  counted in the ``"true"`` stratum when the criteria returned it as well, and in the
+  ``"false"`` stratum otherwise. A criteria that returns an empty list, or no result,
+  places every basis unit in the ``"false"`` stratum.
+
+The two strata partition the group's basis units, so their population counts add up
+to the group's own. Each is reported with a ``stratum.value`` that carries only the
+``text`` ``true`` or ``false``, and no ``component``.
+
+A criteria that returns something else is rejected with HTTP 422: on a ``boolean``
+basis a resource, a value of another type or several values; on any other basis
+anything that is not of the basis type, such as a ``boolean``, a resource of another
+type, a value or a tuple. That includes a criteria that returns the stratum value
+itself, which the Quality Measure IG (US realm) also allows.
+
+Populations reported per stratum
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+By default, each stratum reports every population of its group. A stratifier that
+carries one or more ``appliesTo`` extensions reports only the populations they name,
+in the group's population order:
+
+- ``http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/cqfm-appliesTo`` (US realm)
+- ``http://hl7.org/fhir/uv/cqm/StructureDefinition/cqm-appliesTo`` (UV realm)
+
+Each names a population type with a coding from the ``measure-population``
+CodeSystem. An ``appliesTo`` value without such a coding, or naming a population type
+the group does not define, is rejected with HTTP 422.
+
+The stratifier report
+^^^^^^^^^^^^^^^^^^^^^
+
+Each stratum is reported with:
+
+- its value: ``stratum.component[]`` code/value pairs for a value-based stratifier, a
+  ``stratum.value`` for a criteria-based one. A coded value is reported as a
+  ``CodeableConcept`` carrying the ``coding`` plus a ``text`` holding the code string;
+  a non-coded primitive is reported as ``text`` only; an absent value is reported as a
+  ``CodeableConcept`` carrying only the ``data-absent-reason`` extension with code
+  ``unknown``.
+- population counts, following the same rules as the group's own counts — see
+  :ref:`feature_measure_evaluate_counts`. A stratum never reports a member for a
+  population its group excludes.
+- a ``measureScore``, for ``proportion`` and ``ratio`` groups. It always follows the
+  label-based membership rules, mirroring the group-level score, so a stratum whose
+  denominator is 0 has a ``measureScore`` of 0. In a ``ratio`` group, a stratum's
+  numerator counts the basis units of the stratum that are in the initial population
+  and the numerator, whether or not they are in the denominator.
+- ``subjectResults`` ``List`` resources, in ``subject-list`` reports. A subject is
+  listed in a stratum when at least one of its basis units is in it.
 
 An ``individual`` report keeps strata whose counts are all 0, so the subject's
 observed component values are always visible. ``summary`` and ``subject-list``
-reports omit strata that contain no in-population subject.
+reports omit a value-based stratum when none of its basis units is in any of the
+populations the stratum reports. The ``"true"`` and ``"false"`` strata of a
+criteria-based stratifier are present in every report type, even when one holds no
+basis unit.
 
-A ratio-scored group cannot carry stratifiers: the Quality Measure IG forbids the
-combination.
+A stratifier that would carry nothing but its id — no strata, and no ``code`` on the
+``Measure.group.stratifier`` — is left out of the report, as FHIR invariant ele-1
+requires. This happens, for example, in an ``individual`` report whose subject
+returned no basis unit on a group of a non-``boolean`` basis.
+
+.. _feature_measure_evaluate_supplemental_data:
+
+Supplemental data
+~~~~~~~~~~~~~~~~~
+
+``Measure.supplementalData`` is not evaluated. A ``Measure`` that defines supplemental
+data elements is evaluated as if it had none: it is not rejected, and the
+``MeasureReport`` contains no supplemental data, neither as extensions nor as
+``evaluatedResource`` entries.
 
 .. _feature_measure_evaluate_validation:
 
@@ -1219,7 +1471,8 @@ Measure validation
 
 A ``Measure`` is validated before any CQL is evaluated, so an authoring problem is
 reported as a client error naming the group and population concerned, rather than
-surfacing part-way through a long population run.
+surfacing part-way through a long population run. What can only be checked against
+the results is checked as soon as they are read.
 
 Rejected with HTTP 422
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -1236,6 +1489,12 @@ Rejected with HTTP 422
 
 *Group level*
 
+- A group without an id, or several groups sharing one. The group id is what the
+  results, ``MeasureReport.group.id`` and the stratum memberships are filed under.
+- A population without an id, or two populations of one group sharing one. The
+  ``MeasureReport`` reports each population under its id. Populations of different
+  groups may share an id. A population without an id is named by its position in the
+  group, such as ``population[0]``.
 - A population type the group's effective scoring type does not evaluate. Where the
   Quality Measure IG marks it Not Permitted — a ``denominator`` on a cohort-scored
   group, a ``denominator-exception`` on a ratio-scored group, a
@@ -1243,19 +1502,35 @@ Rejected with HTTP 422
   should be corrected. Where the IG's population table does not cover it at all —
   ``measure-observation``, on any ``Measure`` — the issue type is ``not-supported``,
   because no edit to the ``Measure`` resolves it.
-- The same population type defined more than once in one group.
+- The same population type defined more than once in one group. A population's type is
+  its first coding from the ``measure-population`` CodeSystem.
 - A population whose ``code`` the ``measure-population`` CodeSystem does not define,
   or that carries no coding from that CodeSystem. The population is named by its
   element id where it has one, and by its position in the group otherwise.
 - A population whose criteria names no CQL expression: no criteria at all, an empty
   expression, or a criteria in another expression language than ``text/cql-identifier``.
-- Populations within one membership path that do not share a common population basis
-  (see :ref:`feature_measure_evaluate_populationbasis`).
 - A ``Library`` parameter whose declared type is not a FHIR type.
 - A stratifier that declares neither or both of ``criteria`` and ``component[]``,
-  duplicate stratifier or component ids, a stratifier on a ratio-scored group, or a
-  component on a group whose basis is not ``boolean``.
-- A stratifier component expression that returns resources rather than values.
+  duplicate stratifier or component ids, or an ``appliesTo`` extension without a
+  ``measure-population`` coding or naming a population type the group does not
+  define.
+
+*Population basis* (see :ref:`feature_measure_evaluate_populationbasis`)
+
+- A ``populationBasis`` extension without a value, with a ``value[x]`` other than
+  ``valueCode``, or with a ``valueCode`` that is not a FHIR type name (issue type
+  ``invalid``). A ``valueDataRequirement`` on the UV realm extension is reported as not
+  supported (issue type ``not-supported``).
+- A population basis that no population criteria result can have, such as ``uri``, or
+  that the group's scoring type or stratifiers do not support, such as ``dateTime`` on
+  a ``proportion`` group (issue type ``not-supported``).
+- A declared basis that does not match the type of the ``Library`` parameter the
+  population's criteria names (issue type ``invalid``).
+- Populations of a ``proportion`` or ``ratio`` group that are combined with each other
+  but use different bases, including a ``ratio`` group whose numerator and denominator
+  declare different bases (issue type ``invalid``).
+- Populations of a stratified ``cohort``-scored or unscored group that use different
+  bases (issue type ``not-supported``).
 
 *Result level*
 
@@ -1264,10 +1539,20 @@ Rejected with HTTP 422
   cannot be represented in a FHIR ``Parameters`` resource and was therefore dropped.
   The error names the group, the population, the expression and the library expected
   to define it.
-- A population whose criteria returned results of more than one type.
-- A population result of a type the counting cannot identify a case by. A case must
-  be identifiable as a resource, a ``boolean``, a ``decimal``, a ``date`` or an
-  ``integer``; a ``Quantity`` or a ``Coding``, for instance, cannot be counted.
+- A population whose criteria returned results of more than one type, results that are
+  not of its declared basis, or a list of ``boolean`` values (issue type ``invalid``).
+- A population result the group cannot tell apart, in a ``proportion``, ``ratio`` or
+  stratified group. An item must be identifiable as a resource with an id, a
+  ``boolean``, a ``decimal``, a ``date``, an ``integer`` or a ``string``; a
+  ``dateTime``, a ``Quantity`` or a ``Coding``, for instance, cannot be counted there.
+- A stratifier component that returns resources, or a value of a type that cannot be
+  stratified on (see :ref:`feature_measure_evaluate_stratifiers`).
+- A stratifier component function that cannot be evaluated for each basis unit: one
+  the ``Library`` does not define, one that takes another number of arguments than
+  one, one defined as several single-argument overloads, or one whose parameter type
+  matches none of the items the group's populations returned.
+- A criteria-based stratifier whose criteria returns something other than a single
+  ``boolean`` on a ``boolean`` basis, or other than basis units on any other basis.
 
 Rejected with other status codes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1276,13 +1561,9 @@ Rejected with other status codes
   in ``Measure.scoring`` or in a group-level scoring override (issue type
   ``invalid``). A ``Measure.scoring`` that carries no coding from that CodeSystem is
   rejected the same way.
-- **HTTP 412** — a group without an id, or several groups sharing one. The group id
-  is what the results, ``MeasureReport.group.id`` and the stratum memberships are
-  filed under.
 - **HTTP 404** — a ``Measure.library`` canonical that resolves to no resource. This
   is reported before any subject data is retrieved, and names the library url and
   version.
-- **HTTP 501** — a criteria-based stratifier, which is not yet implemented.
 
 Output parameters
 ~~~~~~~~~~~~~~~~~
@@ -1298,11 +1579,8 @@ The report includes:
 - the parameters of the request (see below)
 
 Each ``group`` and each ``population`` of the report carries the ``id`` of the
-``Measure`` element it reports on. A ``Measure.group.population`` therefore needs an
-``id`` to appear in the report: a population without one is still evaluated, and takes
-part in the counts and the score of the other populations, but is left out of the
-``MeasureReport``. Such a ``Measure`` is not rejected; Firely Server only logs a
-warning.
+``Measure`` element it reports on, so every group and every population of the
+``Measure`` needs an ``id`` (see :ref:`feature_measure_evaluate_validation`).
 
 Request parameters in the report
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1534,7 +1812,8 @@ Overview
 Supported parameters
 ^^^^^^^^^^^^^^^^^^^^
 
-Firely Server supports the following parameters:
+Firely Server supports the following parameters. A request that supplies a parameter marked ❌, or a parameter that is
+not listed, is rejected with HTTP 501 (see :ref:`feature_cql_unsupported_parameters`):
 
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | Parameter               | Supported | Type                    | Cardinality | Additional Notes               |
@@ -1613,7 +1892,7 @@ generated library has this shape::
 
   library Test version '1.0.0'
   using FHIR version '4.0.1'
-  parameter <name> <type>    // one for every parameter in 'parameters'
+  parameter "<name>" <type>  // one for every parameter in 'parameters'
 
   context Patient            // only when a 'subject' is supplied
 
@@ -1624,23 +1903,35 @@ generated library has this shape::
   ``[Encounter]``. Without a ``subject``, no context is declared.
 - Every parameter in ``parameters`` is declared as a ``parameter`` of the library, so
   the expression can refer to it by name. Its CQL type is inferred from the supplied
-  FHIR value. A parameter supplied more than once is declared as a ``List`` of that
-  type, and a parameter that carries ``part`` elements instead of a value as a
-  ``Tuple`` with an element for every part. For example, ``SomeNumber`` supplied twice
-  with a ``valueInteger`` is declared as a list of integers, so ``Sum(SomeNumber)``
-  returns their sum.
-- Parameter and part names are written into the library unquoted, so they must be
-  valid unquoted CQL identifiers: a name with spaces, such as ``Measurement Period``,
-  cannot be used.
+  FHIR value, and declared as a CQL system type, such as ``System.Integer`` or
+  ``System.Quantity``: a ``Quantity`` parameter is therefore a CQL quantity, so
+  arithmetic such as ``Dose + Dose`` works on it. A ``Period`` is declared as an
+  ``Interval<System.DateTime>`` and a ``Range`` as an ``Interval<System.Quantity>``,
+  the types ``Library/$evaluate`` binds them to when the declaration carries no
+  ``cqf-cqlType`` (see `Input parameter binding`_). A parameter supplied more than once
+  is declared as a ``List`` of that type, and a parameter that carries ``part`` elements
+  instead of a value as a ``Tuple`` with an element for every part. For example,
+  ``SomeNumber`` supplied twice with a ``valueInteger`` is declared as a list of
+  integers, so ``Sum(SomeNumber)`` returns their sum.
+- Parameter and part names are declared as quoted identifiers, so a name with a space
+  can be used as well. The expression refers to such a parameter quoted, as in
+  ``start of "Measurement Period"``.
 - The library declares nothing else — no ``include``, ``codesystem``, ``valueset`` or
   ``code`` — so the expression cannot refer to another library, such as
   ``FHIRHelpers``, or to a code system, value set or code by name.
 
-A parameter whose value cannot be mapped to a CQL type is rejected with HTTP 501. A
-parameter without a value, with both a value and ``part`` elements, with nested parts,
-or with repetitions of different types is rejected with HTTP 400. An
-``OperationOutcome`` about the evaluation itself, such as one for an unknown patient,
-refers to the generated library as ``Test`` version ``1.0.0``.
+An expression that, together with the declared parameters, does not compile as CQL —
+because it does not parse, or does not translate without an error, such as an identifier
+that names nothing — is rejected with HTTP 400, stating that the supplied expression and
+parameters do not compile as CQL. The compiler's messages are written to the server log.
+
+A parameter whose value cannot be converted to a CQL system type, such as a ``Ratio``, a
+``Reference``, a ``url`` or a ``canonical``, is rejected with HTTP 501, naming the
+parameter and its FHIR type. A parameter without a value, with both a value and ``part``
+elements, with nested parts, or with repetitions of different types — including a mix of
+``Period`` and ``Range`` values — is rejected with HTTP 400. An ``OperationOutcome`` about
+the evaluation itself, such as one for an unknown patient, refers to the generated library
+as ``Test`` version ``1.0.0``.
 
 Output parameters
 ~~~~~~~~~~~~~~~~~
@@ -1757,7 +2048,8 @@ takes the ``Library`` with that id instead.
 
 The response is a new ``Library`` of type ``module-definition``
 (``http://terminology.hl7.org/CodeSystem/library-type``) that holds a copy of the
-``dataRequirement`` elements of the target ``Library``. Nothing else is added: the
+``dataRequirement`` elements of the target ``Library``, and the ``status`` of the target
+``Library`` (``unknown`` when the target carries none). Nothing else is added: the
 libraries the target depends on are not included, and when the target declares no
 ``dataRequirement`` the result contains none.
 
@@ -1773,9 +2065,13 @@ Measure/$data-requirements
 
 The ``Measure`` is identified by the ``url`` parameter (a ``valueString`` in a ``POST``,
 optionally versioned) at type level, or by its id at instance level. The ``periodStart``
-and ``periodEnd`` parameters are accepted, but do not affect the result.
+and ``periodEnd`` parameters are accepted, but do not affect the result. As for
+``Measure/$evaluate-measure``, each must be a FHIR ``date``, which may have year or
+year-month precision, such as ``2024`` or ``2024-02``; any other value is rejected with
+HTTP 400.
 
-The ``Measure`` must reference exactly one logic ``Library`` in ``Measure.library``. The
+The ``Measure`` must reference exactly one logic ``Library`` in ``Measure.library``,
+with a value. The
 operation returns the result of ``Library/$data-requirements`` for that ``Library``; the
 data requirements are not aggregated across libraries. The operation requires the
 ``Library/$data-requirements`` plugin to be enabled as well.
@@ -1785,9 +2081,11 @@ Errors
 
 - HTTP 400 — the canonical parameter is missing or empty at type level, or supplied at
   instance level.
-- HTTP 404 — no ``Library`` or ``Measure`` is found for the canonical or id, or the
-  ``Measure``'s ``Library`` cannot be resolved.
-- HTTP 422 — the ``Measure`` references no ``Library``, or more than one.
+- HTTP 404 — no ``Library`` or ``Measure`` is found for the canonical or id, the
+  canonical resolves to a resource of another type, or the ``Measure``'s ``Library``
+  cannot be resolved.
+- HTTP 422 — the ``Measure`` references no ``Library``, more than one, or a ``library``
+  element without a value.
 - HTTP 501 — any other parameter is supplied.
 
 ----
@@ -1820,9 +2118,12 @@ Any other reference form is rejected with an ``OperationOutcome`` identifying
 - a versioned reference, such as ``Patient/pat1/_history/2``
 - a bare id without a resource type, such as ``pat1``
 
-For ``Library/$evaluate`` and ``$cql``, ``subject`` may be omitted when the library
-declares no Patient context. It is required when the library does declare one; a
+For ``Library/$evaluate``, ``subject`` may be omitted when the library
+declares no :ref:`Patient context <feature_cql_patient_context>`. It is required when the library does declare one; a
 request that omits it is rejected with HTTP 422 naming the library.
+
+For ``$cql``, ``subject`` is always optional. The expression is evaluated in the Patient
+context only when a ``subject`` is supplied.
 
 Group subjects
 ^^^^^^^^^^^^^^
@@ -1843,6 +2144,11 @@ whole request with HTTP 422, issue type ``not-supported``:
 
 - ``Group.actual`` is ``false``: a descriptive group.
 - ``Group.type`` is another type than ``person``.
+- ``Group.actual`` or ``Group.type`` is absent. Both are required in FHIR R4, but a
+  stored ``Group`` can lack them; an element that carries only an extension counts as
+  absent. This is reported with issue type ``required`` instead, naming the missing
+  elements. A ``Group`` with ``actual`` set to ``false`` is rejected as descriptive,
+  whether or not it has a ``type``.
 - The ``Group`` has no member entities.
 - A member entity references another resource type than ``Patient``. Such a member
   is not skipped: the request is rejected.
@@ -1870,6 +2176,54 @@ When the caller supplies the data through the ``data`` parameter, the outcome in
 reports that the provided data does not contain the expected ``Patient`` — the data
 lacks it, while the patient itself may well exist on the server.
 
+.. _feature_cql_patient_context:
+
+Patient context
+~~~~~~~~~~~~~~~
+
+For ``Library/$evaluate``, and for the ``Library`` that ``Measure/$evaluate-measure``
+evaluates, Firely Server decides whether the library is evaluated in the Patient context
+from the ``Library`` resource only. The library declares a Patient context when
+``Library.subjectCodeableConcept`` contains this coding:
+
+.. code-block:: json
+
+   "subjectCodeableConcept": {
+     "coding": [
+       {
+         "system": "http://hl7.org/fhir/resource-types",
+         "code": "Patient"
+       }
+     ]
+   }
+
+A ``context Patient`` statement in the CQL itself is not taken into account.
+
+A library without this coding is evaluated without any patient data:
+
+- no data is retrieved, and a bundle supplied in the ``data`` parameter and a
+  ``dataEndpoint`` are not used, so every retrieve in the CQL returns an empty result;
+- ``subject`` is not required, and a ``subject`` that is supplied is not used. Firely
+  Server logs a warning that the library has no Patient context.
+
+The request is not rejected in that case, so check ``subjectCodeableConcept`` when an
+evaluation unexpectedly returns empty results.
+
+For ``$cql``, the expression is evaluated in the Patient context when a ``subject`` is
+supplied.
+
+.. _feature_cql_unsupported_parameters:
+
+Unsupported parameters
+~~~~~~~~~~~~~~~~~~~~~~
+
+``$cql``, ``Library/$evaluate``, ``Measure/$evaluate-measure`` and both
+``$data-requirements`` operations accept only the parameters listed as supported for
+them. A request that supplies any other parameter — including the parameters that the
+FHIR specification defines but Firely Server does not support, marked ❌ in the
+parameter tables — is rejected as a whole with HTTP 501, and the ``OperationOutcome``
+names the unsupported parameters. The parameter is not ignored.
+
 .. _feature_cql_data_retrieval:
 
 Data retrieval
@@ -1892,6 +2246,42 @@ supplied, without filtering.
    declare is not retrieved, so a retrieve of that type returns an empty result, without
    an error. Declare every resource type the logic retrieves — including those retrieved
    by included libraries — in ``dataRequirement`` of the evaluated ``Library``.
+
+.. _feature_cql_cancellation:
+
+Cancellation and maximum duration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``Measure/$evaluate-measure`` and ``Library/$evaluate`` stop when the client that sent
+the request goes away, for example because it closed the connection or timed out. The
+evaluation stops at the next CQL definition, group, subject or ``Library/$evaluate``
+evaluation of a group, and the retrieval of a subject's data stops too, whether the
+data comes from Firely Server's own database or, page by page, from a
+``dataEndpoint``. Firely Server logs "Cancelled operation $evaluate-measure" (or
+``$evaluate``) at Information level. No ``OperationOutcome`` is sent, as no one is
+left to receive it.
+
+``Measure/$evaluate-measure`` can also be limited to a maximum duration with the
+``MeasureEvaluateOperation:MaxDuration`` setting (see
+:ref:`feature_measure_evaluate_configuration`). When that time passes, the evaluation
+stops in the same way, and the request is answered with HTTP 503 and an
+``OperationOutcome`` with an issue of type ``timeout``:
+
+  Cannot execute operation $evaluate-measure. The evaluation did not finish within
+  the time this server allows for it.
+
+The server log names the setting and its value; the ``OperationOutcome`` does not.
+
+A few points to keep in mind:
+
+- The evaluation stops *between* the CQL definitions it invokes, so a definition that
+  is already running finishes first. A request can therefore take somewhat longer than
+  ``MaxDuration``.
+- The time is measured from the start of the evaluation, after the request's
+  parameters, the ``Measure`` and the members of a ``Group`` subject have been
+  resolved.
+- ``Library/$evaluate`` requests sent to Firely Server directly have no maximum
+  duration. They stop only when their client goes away.
 
 .. _feature_cql_result_mapping:
 

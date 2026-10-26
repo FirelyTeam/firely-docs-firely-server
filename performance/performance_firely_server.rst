@@ -25,7 +25,7 @@ Repository
 Prevalidation
 ~~~~~~~~~~~~~
 
-By default, a resource that is sent to Firely Server is fully validated against its StructureDefinition. This requires extra processing and thus extra time. But you can disable full validation if needed, with the :ref:`ValidateIncomingResources <feature_prevalidation>` setting. We have no tests in place yet to time the difference caused by this setting.
+By default, a resource that is sent to Firely Server is validated against the core definition of its resource type (``Validation:Level`` is ``Core``). Validating against the profiles in ``meta.profile`` as well (``Full``) requires extra processing and thus extra time, and turning validation off (``Off``) saves time. See :ref:`feature_prevalidation` for the ``Validation:Level`` setting. We have no tests in place yet to time the difference caused by this setting.
 
 Search Parameters
 ~~~~~~~~~~~~~~~~~

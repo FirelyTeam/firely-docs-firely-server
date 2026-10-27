@@ -1,0 +1,8 @@
+{
+  "Packages": [
+    {
+      "Name": "^Hl7\\.Fhir\\..*$",
+      "Ignore": true
+    }
+  ]
+}

@@ -28,7 +28,7 @@ This release fixes several security issues, among them a vulnerability in the au
 Feature
 ^^^^^^^
 
-#. Firely Auth can now verify the JWTs of CDS Hooks clients for Firely Server. Register such a client with the new client type *CDS Hooks*, with the issuer of its JWTs and its public key, as a JWK or a JWKS URL. Firely Server sends the JWTs to the new endpoint ``/connect/cdsIntrospect``. See :ref:`firely_auth_settings_cdshooks` and :ref:`firely_auth_endpoints_cdsintrospect`.
+#. Firely Auth can now verify the JWTs of CDS Hooks clients for Firely Server. Register such a client with the new client type *CDS Hooks*, with the issuer of its JWTs and its public keys, as one or more JWKs or a JWKS URL. Firely Server sends the JWTs to the new endpoint ``/connect/cdsIntrospect``. See :ref:`firely_auth_settings_cdshooks` and :ref:`firely_auth_endpoints_cdsintrospect`.
 #. Admin apps are applications that only admins can log in to, such as the Firely Metrics Dashboard. Each admin app has its own audience and scope, so its tokens are not valid for Firely Server or the management API. See :ref:`firely_auth_settings_adminapps`. Admins can now also use the disclaimer, two-factor and grants pages.
 #. The ``profile`` scope now returns the user's ``name``, and optionally ``preferred_username``, from the userinfo endpoint, and in the id_token for clients with ``AlwaysIncludeUserClaimsInIdToken``. This also works for admins. See :ref:`firely_auth_settings_userprofileclaims`.
 #. Admins can reset the two-factor authentication of a user who lost their authenticator, in the UI or through the management API. See :ref:`firely_auth_mfa`.
@@ -42,6 +42,7 @@ Configuration
 
 #. New sections: ``AdminApps``, ``UserProfileClaims``, ``ClientCertificateValidation``, ``RequestOriginLogging``, ``CdsHooks`` and ``Jwks``, and the setting ``Email:SecurityNotificationEmailSubject``. See :ref:`firely_auth_settings`.
 #. ``AllowedAdminScopes`` is removed. Use ``AdminApps`` instead.
+#. A client of any type can now have only one key source: one JWKS URL, or its inline JWKs together. A second JWKS URL, or a JWKS URL next to inline JWKs, is refused when a client is registered or updated, also in ``ClientRegistration``. Existing clients with several key sources keep working and can be reduced to one, but cannot add another. Firely Auth names them in one warning at startup; remove the extra key sources, as a later release may refuse such clients. See :ref:`firely_auth_settings_clients`.
 #. A configured EC signing key (``KeyManagement:EC:JWK_ES*``) is now read by its ``crv``, so ``alg`` is optional. The ES512 curve is ``P-521``; keys configured with ``P-512`` keep working. Algorithms in ``KeyManagement:RSA:SupportedAlgorithms`` or ``KeyManagement:EC:SupportedAlgorithms`` that the key type cannot sign with are now ignored, instead of failing at the first token request.
 #. The name ``http://server.fire.ly/auth/api/management`` is reserved. Firely Auth does not start when an admin app, ``FhirServer:Name`` or ``FhirServer:FHIR_BASE_URL`` uses it.
 

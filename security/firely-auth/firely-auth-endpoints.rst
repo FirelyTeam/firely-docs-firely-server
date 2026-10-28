@@ -56,8 +56,6 @@ Unknown or expired tokens will be marked as inactive:
 
 An invalid request will return a 400, an unauthorized request 401.
 
-Since Firely Auth 4.8.0, Firely Server only gets ``active: true`` for a token that was issued for Firely Server. A reference token for another API, such as a management API token, is reported as inactive.
-
 Additionally, a valid request will contain meta-information about the token, including:
 
 iss: 

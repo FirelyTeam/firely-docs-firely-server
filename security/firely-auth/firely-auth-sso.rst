@@ -36,7 +36,7 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
 
     Using the ``UserClaimsFromIdToken`` it is possible to store additional claims in the local Firely Auth user account in order to expose these claims to clients registered with Firely Auth.
     These claims will be copied from the ID token after a successful login and stored permanently. Each claim is updated automatically after each login with local changes being overwritten.
-    It is possible to assign a new name to a claim using the ``CopyAs`` setting.
+    It is possible to assign a new name to a claim using the ``CopyAs`` setting. Claims of the reserved claim types ``role``, ``sub``, ``scope``, ``client_id``, ``amr``, ``idp``, ``aud``, ``iss`` and ``fineGrainedScope`` are not copied; they are skipped with a warning in the log. So admin rights cannot be granted by mapping an identity provider claim to ``role``: give such users the Admin role in Firely Auth instead.
 
 #. Configure the ``FhirUserLookupClaimsMapping`` if the FhirUser claim cannot be derived from the ID token
 

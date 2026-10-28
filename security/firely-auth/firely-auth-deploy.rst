@@ -11,7 +11,7 @@ The ``http://fire.ly/server/auth/unlimited`` token is also included in the evalu
 
 Configure the path to the license file in the appsettings, section :ref:`firely_auth_settings_license`.
 
-In addition to the Firely license file, you will also need a Duende IdentityServer license key file named ``Duende_License.key``. This file will be provided by Firely and is required for production use. You can place this file adjacent to the ``Firely.Auth.Core.exe`` or provide the license key string via the environment variable ``FIRELY_AUTH_License__DuendeLicenseString`` or in the appsettings.json file under the section ``FirelyAuth.License:DuendeLicenseString``.
+In addition to the Firely license file, you will also need a Duende IdentityServer license key file named ``Duende_License.key``. This file will be provided by Firely and is required for production use. You can place this file adjacent to the ``Firely.Auth.Core.exe`` or provide the license key string via the environment variable ``FIRELY_AUTH_License__DuendeLicenseString`` or in the appsettings.json file under the section ``FirelyAuth.License:DuendeLicenseString``. Without a Duende license key, Firely Auth logs the message "You do not have a valid license key for the Duende software" at ``Error`` level.
 
 Supported browsers
 ------------------

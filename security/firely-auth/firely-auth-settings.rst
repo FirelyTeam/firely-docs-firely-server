@@ -121,7 +121,7 @@ The section only applies to an endpoint under ``Kestrel:Endpoints`` that asks fo
 
 When both lists are set, a client certificate must satisfy both: it chains up to one of the listed CAs and has one of the listed thumbprints. A certificate whose extended key usage does not include client authentication is rejected.
 
-Firely Auth does not start when the section is used but no HTTPS endpoint asks for a client certificate, or when a setting is invalid: a malformed thumbprint, a missing or unreadable CA file, an unknown setting name, a list given as a single value, or an unknown ``RevocationMode``. With environment variables, give each list entry its index, for example ``FIRELY_AUTH_ClientCertificateValidation__TrustedCaCertificates__0``. An HTTPS endpoint that does not ask for a client certificate, and an HTTP endpoint, are logged as a warning at startup, because their clients are not checked.
+Firely Auth does not start when the section is used but none of the HTTPS endpoints under ``Kestrel:Endpoints`` asks for a client certificate, or when a setting is invalid: a malformed thumbprint, a missing or unreadable CA file, an unknown setting name, a list given as a single value, or an unknown ``RevocationMode``. With environment variables, give each list entry its index, for example ``FIRELY_AUTH_ClientCertificateValidation__TrustedCaCertificates__0``. An HTTPS endpoint that does not ask for a client certificate, and an HTTP endpoint, are logged as a warning at startup, because their clients are not checked. When ``Kestrel:Endpoints`` is empty, for example because the endpoints are set with ``ASPNETCORE_URLS`` or ``--urls``, Firely Auth only logs a warning and starts without checking any client certificate.
 
 While the section is used, TLS session resumption is turned off on the endpoints, so each connection does a full TLS handshake. This costs little for a reverse proxy that keeps its connections open. A client certificate that a reverse proxy forwards in a header is not supported, and IIS hosting is not covered.
 
@@ -542,7 +542,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``ConsentLifetime`` : This is an optional setting which can specify a period after which the users consent will be revoked. The value is in days. You can also use HH:mm:ss for lower values. When a user who chose to remember their consent for an app later consents to more scopes, the new decision is merged into the remembered one: scopes that were not asked for keep their earlier decision, and scopes that were asked for take the latest answer. Remembering a new decision renews the lifetime of the whole remembered consent; answering "Prompt me again next time" keeps its earlier expiration.
 - ``AccessTokenType``: ``Jwt`` or ``Reference``. ``Jwt`` means that this client will get self-contained Json Web Tokens. ``Reference`` means that this client will get reference tokens, that refer to the actual token kept in memory by Firely Auth. For more background see :term:`reference token`.
 - ``EnableLegacyFhirContext``: true / false - Whether to use the new syntax of ``fhirContext`` defined in `SMART on FHIR v2.1.0 <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#fhir-context>`_. Default is false, when set to true the old syntax of ``fhirContext`` defined in `SMART on FHIR v2.0.0 <https://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html#fhircontext>`_ is used.
-- ``ClientClaims``: Enable a client to add static custom claims in the client credential flow. The claim types ``role``, ``sub``, ``scope``, ``client_id``, ``amr``, ``idp``, ``aud``, ``iss`` and ``fineGrainedScope`` are reserved: the client API refuses them, and such stored claims are left out of access tokens, with a warning in the log. Client claims of a ``ManagementApi`` client are not added to its tokens.
+- ``ClientClaims``: Enable a client to add static custom claims in the client credential flow. The claim types ``role``, ``sub``, ``scope``, ``client_id``, ``amr``, ``idp``, ``aud``, ``iss`` and ``fineGrainedScope`` are reserved: the client API refuses them, and such stored claims are left out of access tokens, with a warning in the log. For a ``ManagementApi`` client, the reserved claim types are also left out of its tokens.
 
   - ``Name``: name of the claim
   - ``Value``: the value of the claim
@@ -571,6 +571,8 @@ A CDS Hooks client never requests a token from Firely Auth, so it holds no scope
 - ``JwtIssuer``: the ``iss`` claim of the JWTs it presents, an absolute URI. Several clients may share an issuer, for example when a third-party identity provider signs the JWTs for them.
 - Exactly one key source in ``ClientSecrets``: a single inline JWK, or a JWKS URL from which Firely Auth fetches and refreshes the keys. Shared secrets are not allowed. Each key must have a ``kid`` and be usable with ``RS384``, ``ES384``, ``RS512`` or ``ES512``: an RSA key of at least 2048 bits, or an EC key on curve P-384 or P-521. Use a JWKS URL when the client rotates its keys or has more than one.
 - ``AllowedGrantTypes``: only ``cds_client_assertion``, which marks the client type, and ``RequireClientSecret`` set to ``true``.
+
+A CDS Hooks client can only be registered when ``FhirServer:IntrospectionSecret`` is set (see :ref:`firely_auth_settings_server`), because Firely Server authenticates with it when it asks Firely Auth to verify a JWT. Without it, the admin UI and the client API refuse the client, and a ``ClientRegistration`` import that contains one imports no client at all.
 
 Before you register the client, ask its vendor for the ``iss`` value of its JWTs and for its JWKS URL or public JWK.
 
@@ -620,7 +622,7 @@ For a single key, give the JWK as a string in ``secret`` instead of ``secretUrl`
 Registering a CDS Hooks client in the settings
 """"""""""""""""""""""""""""""""""""""""""""""
 
-Like any client, a CDS Hooks client can also be listed in ``ClientRegistration:AllowedClients`` (see :ref:`firely_auth_settings_clients`), which is only read when Firely Auth starts with a new database:
+Like any client, a CDS Hooks client can also be listed in ``ClientRegistration:AllowedClients`` (see :ref:`firely_auth_settings_clients`), which is only read when Firely Auth starts and its database holds no clients:
 
 .. code-block:: json
 
@@ -774,7 +776,7 @@ An admin app is an application that only users with the Admin role can log in to
     }
   },
 
-- ``Scope``: the scope a client of the app requests, an absolute http or https URI. It is also the only scope such a client may request, next to ``openid`` and ``profile``. A scope cannot be shared by two apps, and cannot start with ``http://server.fire.ly/auth/``.
+- ``Scope``: the scope a client of the app requests, an absolute http or https URI. It is also the only scope such a client may request, next to ``openid`` and ``profile``. A scope cannot be shared by two apps, and cannot start with ``http://server.fire.ly/auth/scope``.
 - ``IncludeRoleClaim``: whether access tokens for this app carry the user's ``role`` claim. Only enable it for apps operated by Firely that depend on it, such as the Firely Metrics Dashboard. Other admin tokens do not carry a ``role`` claim.
 
 The name of an app must not be ``http://server.fire.ly/auth/api/management``, and must not be the same as ``FhirServer:Name`` or ``FhirServer:FHIR_BASE_URL``. Firely Auth does not start when it is.
@@ -786,7 +788,7 @@ For each app, create a client of the type ``AdminApp`` in the admin UI or throug
 - not allow offline access, not require consent, and not use reference tokens,
 - not have management API access or any SMART on FHIR scopes.
 
-A client that does not meet these rules is refused tokens until it is updated, and Firely Auth logs a ``Warning`` for it at startup. While the app of an ``AdminApp`` client is not registered under ``AdminApps``, the client is refused tokens, logged at startup, and cannot be saved. With the ``profile`` scope, an admin app gets the admin's ``name`` and ``preferred_username``, whatever :ref:`firely_auth_settings_userprofileclaims` is set to. Each admin app login logs one ``Information`` line with the username, client id and scopes.
+Firely Auth does not save a client that breaks these rules. A stored client that does not require a client secret and PKCE, allows another grant type, allows offline access or requires consent is refused tokens until it is updated, and Firely Auth logs a ``Warning`` for it at startup. While the app of an ``AdminApp`` client is not registered under ``AdminApps``, the client is refused tokens, logged at startup, and cannot be saved. With the ``profile`` scope, an admin app gets the admin's ``name`` and ``preferred_username``, whatever :ref:`firely_auth_settings_userprofileclaims` is set to. Each admin app login logs one ``Information`` line with the username, client id and scopes.
 
 .. _firely_auth_settings_userprofileclaims:
 

@@ -72,20 +72,6 @@ A Postman collection with demo requests of the administration API can be found h
         }(window, document, "_pm", "PostmanRunObject", "https://run.pstmn.io/button.js"));
       </script>
 
-.. _firely_auth_mgmt_reset2fa:
-
-Resetting two-factor authentication
------------------------------------
-
-When a user lost their authenticator and recovery codes, an admin can reset their two-factor authentication in the UI (see :ref:`firely_auth_mfa`), and a management client through the API:
-
-.. code-block:: HTTP
-
-  POST <base-url>/api/external/user/<user-id>/reset-2fa HTTP/1.1
-  Authorization: Bearer <management API token>
-
-This turns 2FA off for the user, replaces their authenticator key and removes their recovery codes. The response is ``200 OK``, ``400 Bad Request`` when the user does not have 2FA enabled, or ``404 Not Found`` for an unknown user. The user endpoints also return ``twoFactorEnabled`` for each user. Each reset logs one ``Information`` line with the ids of the user and of the admin or client that reset it.
-
 In case the admin account is not known anymore, there is a way to create another admin account.
 For this, you can log in with the user ``FA_ADMIN`` and a password that you can configure in several ways.
 
@@ -102,3 +88,18 @@ For this, you can log in with the user ``FA_ADMIN`` and a password that you can 
     .. code-block::
 
       dotnet Firely.Auth.Core.dll --ADMIN_PASSWORD=<admin password>
+
+
+.. _firely_auth_mgmt_reset2fa:
+
+Resetting two-factor authentication
+-----------------------------------
+
+When a user lost their authenticator and recovery codes, an admin can reset their two-factor authentication in the UI (see :ref:`firely_auth_mfa`), and a management client through the API:
+
+.. code-block:: HTTP
+
+  POST <base-url>/api/external/user/<user-id>/reset-2fa HTTP/1.1
+  Authorization: Bearer <management API token>
+
+This turns 2FA off for the user, replaces their authenticator key and removes their recovery codes. The response is ``200 OK``, ``400 Bad Request`` when the user does not have 2FA enabled, or ``404 Not Found`` for an unknown user. The user endpoints also return ``twoFactorEnabled`` for each user. Each reset logs one ``Information`` line with the ids of the user and of the admin or client that reset it.

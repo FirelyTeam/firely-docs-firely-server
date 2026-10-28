@@ -88,9 +88,7 @@ Without a proxy, this would lead to security issues and the authorization flow n
 Client certificate validation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. versionadded:: 4.8.0
-
-When a reverse proxy terminates mutual TLS and connects to Firely Auth with its own client certificate, you can restrict which client certificate a Kestrel HTTPS endpoint accepts. By default nothing changes: with empty lists and ``NoCheck``, Kestrel validates a client certificate against the trust store of the machine or container.
+When a reverse proxy terminates mutual TLS and connects to Firely Auth with its own client certificate, you can restrict which client certificate a Kestrel HTTPS endpoint accepts. By default, with empty lists and ``NoCheck``, Kestrel validates a client certificate against the trust store of the machine or container.
 
 .. code-block:: json
 
@@ -148,22 +146,18 @@ When running Firely Auth behind a reverse proxy, you can enable the use of ``X-F
 
 If ``ReverseProxySupport`` is disabled or if the request originates form an IP Network that is not trusted, Firely Auth will use the connection information from the incoming request and ignore the ``X-Forwarded-*`` headers. 
 
-.. versionadded:: 4.8.0
+Firely Auth logs a ``Warning`` when it ignores the ``X-Forwarded-*`` headers of a request, naming the remote IP address and the setting to change. Behind a load balancer or Azure App Service, ignored headers lead to a wrong scheme or host, for example an ``http://`` redirect URI. If your reverse proxy does not run on localhost, add the address or network of your reverse proxy (not the address of a client) to ``TrustedProxyIPNetworks`` in ``appsettings.instance.json``.
 
-   Firely Auth logs a ``Warning`` when it ignores the ``X-Forwarded-*`` headers of a request, naming the remote IP address and the setting to change. Behind a load balancer or Azure App Service, ignored headers lead to a wrong scheme or host, for example an ``http://`` redirect URI. If your reverse proxy does not run on localhost, add the address or network of your reverse proxy (not the address of a client) to ``TrustedProxyIPNetworks`` in ``appsettings.instance.json``.
+- With ``Enabled`` set to ``true``, the warning is logged for a request that still carries ``X-Forwarded-For``, ``X-Forwarded-Proto``, ``X-Forwarded-Host`` or ``X-Forwarded-Prefix`` because it did not come from a trusted proxy. Nothing is logged when ``TrustedProxyIPNetworks`` is empty, because every caller is then trusted.
+- With ``Enabled`` set to ``false``, the warning is logged for a request with ``X-Forwarded-Proto``, ``X-Forwarded-Host`` or ``X-Forwarded-Prefix``, and points to ``Enabled``. ``X-Forwarded-For`` alone is not reported, and nothing is reported when ``ASPNETCORE_FORWARDEDHEADERS_ENABLED`` makes ASP.NET Core apply the headers.
+- While ``TrustedProxyIPNetworks`` only trusts localhost (the default), one ``Information`` line at startup points to this setting. No action is needed if your reverse proxy runs on localhost.
 
-   - With ``Enabled`` set to ``true``, the warning is logged for a request that still carries ``X-Forwarded-For``, ``X-Forwarded-Proto``, ``X-Forwarded-Host`` or ``X-Forwarded-Prefix`` because it did not come from a trusted proxy. Nothing is logged when ``TrustedProxyIPNetworks`` is empty, because every caller is then trusted.
-   - With ``Enabled`` set to ``false``, the warning is logged for a request with ``X-Forwarded-Proto``, ``X-Forwarded-Host`` or ``X-Forwarded-Prefix``, and points to ``Enabled``. ``X-Forwarded-For`` alone is not reported, and nothing is reported when ``ASPNETCORE_FORWARDEDHEADERS_ENABLED`` makes ASP.NET Core apply the headers.
-   - While ``TrustedProxyIPNetworks`` only trusts localhost (the default), one ``Information`` line at startup points to this setting. No action is needed if your reverse proxy runs on localhost.
-
-   The warning is logged at most once per remote IP address per 10 minutes, for at most 1000 addresses per 10 minutes. Only the remote IP address is logged, no headers or other request data. The warnings have their own log category, ``Firely.Auth.Core.Middleware.UntrustedForwardedHeadersMiddleware``, so you can change their level under ``Serilog:MinimumLevel:Override`` in ``logsettings.instance.json``.
+The warning is logged at most once per remote IP address per 10 minutes, for at most 1000 addresses per 10 minutes. Only the remote IP address is logged, no headers or other request data. The warnings have their own log category, ``Firely.Auth.Core.Middleware.UntrustedForwardedHeadersMiddleware``, so you can change their level under ``Serilog:MinimumLevel:Override`` in ``logsettings.instance.json``.
 
 .. _firely_auth_settings_requestorigin:
 
 Request origin logging
 ^^^^^^^^^^^^^^^^^^^^^^
-
-.. versionadded:: 4.8.0
 
 To show how users arrive at the login, Firely Auth logs one ``Information`` line starting with ``Request origin:`` for each ``GET`` of the login page (``/login``), the authorize endpoint and the discovery document, with the ``Referer`` and ``User-Agent`` of the request. It also logs the scheme of each external login challenge and the user agent of each local login attempt, and whether the login is a front-page login or for which client.
 
@@ -247,7 +241,7 @@ Currently SMTP and SendGrid are the supported email clients.
 - ``EmailTemplateFolder``: The path to email templates that are used. These use the liquid format (https://shopify.github.io/liquid/). You can change these templates and store them in a folder that does not get overwritten when you update Firely Auth. You should not change the name of the template files, and only the variables that are used in the original template are available to use in custom templates.
 - ``ActivateAccountEmailSubject``: The subject that will be put in account activation emails.
 - ``ForgotPasswordEmailSubject``: The subject that will be put in forgot password emails.
-- ``SecurityNotificationEmailSubject``: The subject of the email that tells a user that two-factor authentication was enabled or disabled on their account, or that their password was changed or reset. The body comes from the template ``securitynotification.liquid``, added in Firely Auth 4.8.0. If you use your own ``EmailTemplateFolder``, copy this template into it: until it is there, no notification is sent and a warning is logged. The change itself still goes through.
+- ``SecurityNotificationEmailSubject``: The subject of the email that tells a user that two-factor authentication was enabled or disabled on their account, or that their password was changed or reset. The body comes from the template ``securitynotification.liquid``. If you use your own ``EmailTemplateFolder``, it has to contain this template: without it, no notification is sent and a warning is logged. The change itself still goes through.
 - ``Smtp``: Fill these settings when you use the ``Smtp`` type. If the ``Port`` has a value of ``0``, then the ``SocketOptions`` parameter is used to determine the default port to connect to. The default port used with ``SslOnConnect`` is ``465``. All other values will use a default port of ``25``. If the ``SocketOptions`` has a value of ``null`` or ``Auto``, then the ``Port`` is used to determine the default security options. If the ``Port`` has a value of ``465``, then the default options used will be ``SslOnConnect``. All other values will use ``StartTlsWhenAvailable``.
 - ``SendGrid``: Fill this setting when you use the ``SendGrid`` type.
 
@@ -299,7 +293,7 @@ To make Firely Server known to Firely Auth, fill in the ``FhirServer``:
 
 - ``FHIR_BASE_URL``:
 
-  - If an ``aud`` parameter is provided *in the authorize request*, it has to match this url or ``Name``, compared ignoring case. Since Firely Auth 4.8.0, other API resources registered in Firely Auth, such as an :ref:`admin app <firely_auth_settings_adminapps>`, are no longer accepted as the audience of a SMART login.
+  - If an ``aud`` parameter is provided *in the authorize request*, it has to match this url or ``Name``, compared ignoring case. Other API resources registered in Firely Auth, such as an :ref:`admin app <firely_auth_settings_adminapps>`, are not accepted as the audience of a SMART login.
     E.g. in Postman you can provide this parameter by adding it to the Auth URL, like this: ``{{ids}}/connect/authorize?aud=http://localhost:4080`` 
     See the ``aud`` parameter in `SMART on FHIR authorization request`_
 
@@ -330,7 +324,7 @@ Firely Auth can be configured to allow users to login on behalf of other users f
     "HelpMessageOnFail": "A technical error prevented loading the user profiles of all authorized users. Please try again by reloading or continue as yourself."
   },
 
-- ``LookupOnLogin``: true / false - Whether to look up authorized representatives during login. If set to false, users will not be able to retrieve an access token on behalf of other users. Since Firely Auth 4.8.0, a selection is only accepted while this setting is ``true``, and only for the user's own patient or a patient that Firely Server listed for that user. The list is kept for five minutes after sign-in; a user who chooses someone from it after that is asked to sign in to the app again.
+- ``LookupOnLogin``: true / false - Whether to look up authorized representatives during login. If set to false, users will not be able to retrieve an access token on behalf of other users. A selection is only accepted while this setting is ``true``, and only for the user's own patient or a patient that Firely Server listed for that user. The list is kept for five minutes after sign-in; a user who chooses someone from it after that is asked to sign in to the app again.
 - ``LookupRequestScopes``: The scope to use when looking up authorized representatives in Firely Server. This requires a custom plugin in Firely Server to expose the relationships that utilizes this scope.
 - ``CheckAuthorizedRepresentativeTimeout``: Timeout in milliseconds for the lookup request to Firely Server.
 - ``TitleOnLogin``: Title text to display on the login page when selecting a profile to sign in as.
@@ -386,7 +380,7 @@ Firely Auth can work with multiple signature keys, used to sign access and other
 
 - ``EC``: defines the EC (Elliptic Curve) algorithms that are supported. Inferno tests for Bulk Data Export require support for EC keys.
 
-  - ``JWK_ES*``: allows to provide a pre-generated JSON Web Key. If this is not provided, Firely Auth will generate a key for each of the supported algorithms. Since Firely Auth 4.8.0 the curve is read from the key's ``crv``, and ``alg`` is optional. The curve for ES512 is ``P-521``; keys configured with the name ``P-512`` keep working.
+  - ``JWK_ES*``: allows to provide a pre-generated JSON Web Key. If this is not provided, Firely Auth will generate a key for each of the supported algorithms. The curve is read from the key's ``crv``, and ``alg`` is optional. The curve for ES512 is ``P-521``.
   - ``SupportedAlgorithms``: limit this list to the algorithms that you need in your setup. In the config above all available algorithms are listed.
 
 Note that a single RSA key can be used for all supported algorithms. However, an EC key is tied to a specific algorithm, therefore you can supply a key for each of the algorithms.
@@ -513,7 +507,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
 - ``ClientId``: string: unique identifier for this client. It should be known to the client as well
 - ``ClientName``: string: human readable name for the client, it is shown on the consent page
-- ``ClientType``: string: ``ClientType`` specifies the type of OAuth2 client: ``"BackendService"`` (system-only ``client_credentials``), ``"ManagementApi"`` (``client_credentials`` with ``AllowManagementApiAccess``), ``"StandaloneApp"`` (``authorization_code``), ``"AdminApp"`` (an app only admins can log in to, see :ref:`firely_auth_settings_adminapps`) or ``"CdsHooks"`` (a CDS Hooks client, see :ref:`firely_auth_settings_cdshooks`), and helps optimize UI validation during client registration by enforcing different constraints on the workflow. Since Firely Auth 4.8.0, only a ``ManagementApi`` client gets the management API scope in its tokens. ``AdminApp`` replaces the earlier type ``MetricsDashboard``; existing clients of that type are converted automatically.
+- ``ClientType``: string: ``ClientType`` specifies the type of OAuth2 client: ``"BackendService"`` (system-only ``client_credentials``), ``"ManagementApi"`` (``client_credentials`` with ``AllowManagementApiAccess``), ``"StandaloneApp"`` (``authorization_code``), ``"AdminApp"`` (an app only admins can log in to, see :ref:`firely_auth_settings_adminapps`) or ``"CdsHooks"`` (a CDS Hooks client, see :ref:`firely_auth_settings_cdshooks`), and helps optimize UI validation during client registration by enforcing different constraints on the workflow. Only a ``ManagementApi`` client gets the management API scope in its tokens.
 - ``JwtIssuer``: string, ``CdsHooks`` clients only: the ``iss`` claim of the JWTs the client presents, an absolute URI. See :ref:`firely_auth_settings_cdshooks`.
 - ``Description``: string:  human readable description of the client
 - ``Enabled``: true / false: simple switch to enable or disable a client (instead of removing it from the list)
@@ -527,7 +521,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
     Use one entry for each key in the keyset. Note that the JWK json structure is embedded in a string, so you need to escape the quotes within the JWK.
     The url option above is recommended. 
 
-  Since Firely Auth 4.8.0, the keys fetched from a JWKS URL are stored as one secret holding the whole JWKS document, instead of one secret per key. The admin UI and the client API therefore show one secret for a JWKS URL. Existing secrets are migrated once, at the first start of 4.8.0; see :ref:`firelyauth_releasenotes_4.8.0_database`.
+  The keys fetched from a JWKS URL are stored as one secret holding the whole JWKS document, so the admin UI and the client API show one secret for a JWKS URL.
 
 - ``AllowedGrantTypes``: array of either or both ``"client_credentials"`` and ``"authorization_code"``, referring to :term:`client credentials` and :term:`authorization code flow`. Use ``client credentials`` only for a :term:`confidential client`.
 - ``AllowedSmartLegacyActions``: Firely Auth can also still support SMART on FHIR v1, where the actions are ``read`` and ``write``.
@@ -548,7 +542,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``ConsentLifetime`` : This is an optional setting which can specify a period after which the users consent will be revoked. The value is in days. You can also use HH:mm:ss for lower values.
 - ``AccessTokenType``: ``Jwt`` or ``Reference``. ``Jwt`` means that this client will get self-contained Json Web Tokens. ``Reference`` means that this client will get reference tokens, that refer to the actual token kept in memory by Firely Auth. For more background see :term:`reference token`.
 - ``EnableLegacyFhirContext``: true / false - Whether to use the new syntax of ``fhirContext`` defined in `SMART on FHIR v2.1.0 <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#fhir-context>`_. Default is false, when set to true the old syntax of ``fhirContext`` defined in `SMART on FHIR v2.0.0 <https://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html#fhircontext>`_ is used.
-- ``ClientClaims``: Enable a client to add static custom claims in the client credential flow. Since Firely Auth 4.8.0, the claim types ``role``, ``sub``, ``scope``, ``client_id``, ``amr``, ``idp``, ``aud``, ``iss`` and ``fineGrainedScope`` are reserved: the client API refuses them, and such claims that are already stored are left out of access tokens, with a warning in the log. Client claims of a ``ManagementApi`` client are not added to its tokens.
+- ``ClientClaims``: Enable a client to add static custom claims in the client credential flow. The claim types ``role``, ``sub``, ``scope``, ``client_id``, ``amr``, ``idp``, ``aud``, ``iss`` and ``fineGrainedScope`` are reserved: the client API refuses them, and such stored claims are left out of access tokens, with a warning in the log. Client claims of a ``ManagementApi`` client are not added to its tokens.
 
   - ``Name``: name of the claim
   - ``Value``: the value of the claim
@@ -569,8 +563,6 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
 CDS Hooks clients
 ^^^^^^^^^^^^^^^^^
-
-.. versionadded:: 4.8.0
 
 Firely Server can require the clinical systems that call its CDS Hooks services to authenticate with a JWT they sign themselves, as described in *Trusting CDS Clients* in the `CDS Hooks specification <https://cds-hooks.hl7.org/>`_. Firely Server does not validate such a JWT itself, but sends it to Firely Auth, at ``POST /connect/cdsIntrospect`` (see :ref:`firely_auth_endpoints_cdsintrospect`). Register each such system in Firely Auth as a client of the type ``CdsHooks``, called *CDS Hooks Service Client* in the admin UI. Only admins can register this type; it is not offered to app developers.
 
@@ -720,10 +712,6 @@ Wildcards can be used, for example to allow all ports: ``"https://localhost:*"``
 AdminApps
 ^^^^^^^^^
 
-.. versionadded:: 4.8.0
-
-   ``AdminApps`` replaces ``AllowedAdminScopes``. Firely Auth does not start while ``AllowedAdminScopes`` is still configured; move any extra scopes to ``AdminApps``.
-
 An admin app is an application that only users with the Admin role can log in to, such as the Firely Metrics Dashboard. Each admin app gets its own audience and scope. Its access tokens are only valid for that app, not for Firely Server or the management API, so the scope only proves that the user is an admin. No admin app is registered by default. Register them in ``appsettings.instance.json``, keyed by the name of the app:
 
 .. code-block:: json
@@ -736,7 +724,7 @@ An admin app is an application that only users with the Admin role can log in to
   },
 
 - ``Scope``: the scope a client of the app requests, an absolute http or https URI. It is also the only scope such a client may request, next to ``openid`` and ``profile``. A scope cannot be shared by two apps, and cannot start with ``http://server.fire.ly/auth/``.
-- ``IncludeRoleClaim``: whether access tokens for this app carry the user's ``role`` claim. Only enable it for apps operated by Firely that depend on it, such as the Firely Metrics Dashboard. Other admin tokens no longer carry a ``role`` claim.
+- ``IncludeRoleClaim``: whether access tokens for this app carry the user's ``role`` claim. Only enable it for apps operated by Firely that depend on it, such as the Firely Metrics Dashboard. Other admin tokens do not carry a ``role`` claim.
 
 The name of an app must not be ``http://server.fire.ly/auth/api/management``, and must not be the same as ``FhirServer:Name`` or ``FhirServer:FHIR_BASE_URL``. Firely Auth does not start when it is.
 
@@ -754,8 +742,6 @@ A client that does not meet these rules is refused tokens until it is updated, a
 UserProfileClaims
 ^^^^^^^^^^^^^^^^^
 
-.. versionadded:: 4.8.0
-
 This section lists the OpenID Connect profile claims that Firely Auth builds from the user's own fields:
 
 .. code-block:: json
@@ -771,8 +757,6 @@ This section lists the OpenID Connect profile claims that Firely Auth builds fro
 When a client is granted the ``openid profile`` scopes, the userinfo endpoint (``/connect/userinfo``) returns the enabled claims. The id_token contains them only when the client has ``AlwaysIncludeUserClaimsInIdToken`` enabled. These claims are never added to the access token, and are not issued without the ``profile`` scope or when the user's field is empty. A custom user claim of the same type takes precedence and is not duplicated, and is still issued when the claim is set to ``false`` here. The ``fhirUser`` and ``role`` claims are not affected.
 
 While ``preferred_username`` is ``false``, ``name`` is not issued for a local admin whose full name is just their email address or username, as is the case for admins created through the admin setup. Give those admins a real full name to have it issued. An unsupported claim in this section stops Firely Auth at startup. Changes take effect after a restart.
-
-To keep the behaviour of Firely Auth 4.7.x and earlier, where ``name`` was not issued, set ``"name": false`` in ``appsettings.instance.json``.
 
 .. _firely_auth_settings_appdeveloperportal:
 

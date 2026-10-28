@@ -90,8 +90,6 @@ For more information, see `Duende Documentation - Introspection Endpoint <https:
 CDS Hooks JWT verification endpoint
 -----------------------------------
 
-.. versionadded:: 4.8.0
-
 Firely Server uses this endpoint to verify the JWT that a CDS Hooks client signed itself (see :ref:`firely_auth_settings_cdshooks`). It follows `RFC7662 <https://www.rfc-editor.org/rfc/rfc7662>`_ and is authenticated with the Firely Server credentials configured in ``FhirServer:Name`` and ``FhirServer:IntrospectionSecret`` (see :ref:`firely_auth_settings_server`). No extra client registration is needed.
 
 .. code-block:: HTTP

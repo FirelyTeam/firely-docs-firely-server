@@ -24,8 +24,6 @@ Should the client request an access token when the user has not set up 2FA yet, 
 Enabling and disabling 2FA
 --------------------------
 
-.. versionchanged:: 4.8.0
-
 - To enable 2FA, the user has to enter their current password. Accounts that sign in through an external identity provider have no password in Firely Auth and cannot enroll.
 - Each enrollment issues a new authenticator key. While 2FA is already enabled, enrollment is refused: to register a new authenticator, the user disables 2FA first.
 - Disabling 2FA with a recovery code requires the full code.
@@ -35,9 +33,7 @@ Enabling and disabling 2FA
 Resetting 2FA for a user
 ------------------------
 
-.. versionadded:: 4.8.0
-
-A user who lost their authenticator and has no recovery codes left can no longer sign in. An admin can reset 2FA for such a user: in *User Management*, the user panel shows whether 2FA is enabled and offers *deactivate*. This turns 2FA off, replaces the authenticator key and removes the recovery codes. The user's existing login sessions end at their next security stamp check, by default within 30 minutes. The user can then sign in with their password, enroll again, and gets a security notification email.
+A user who lost their authenticator and has no recovery codes left cannot sign in. An admin can reset 2FA for such a user: in *User Management*, the user panel shows whether 2FA is enabled and offers *deactivate*. This turns 2FA off, replaces the authenticator key and removes the recovery codes. The user's existing login sessions end at their next security stamp check, by default within 30 minutes. The user can then sign in with their password, enroll again, and gets a security notification email.
 
 Verify the identity of the user outside Firely Auth before you reset their 2FA. Admins cannot reset their own 2FA.
 

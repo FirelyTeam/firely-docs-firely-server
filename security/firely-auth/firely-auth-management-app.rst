@@ -38,8 +38,7 @@ It is recommended to use a specific client for this API access, like:
 Requesting a management API token
 ---------------------------------
 
-.. versionchanged:: 4.8.0
-  A management API token is issued for Firely Auth itself, not for Firely Server. The management API only accepts a token whose only ``aud`` is ``http://server.fire.ly/auth/api/management``. Management tokens issued by an earlier version have Firely Server as audience, so they stop working after the upgrade, and clients that cache a management token have to request a new one.
+A management API token is issued for Firely Auth itself, not for Firely Server. The management API only accepts a token whose only ``aud`` is ``http://server.fire.ly/auth/api/management``.
 
 Name the management API with the ``resource`` parameter (RFC 8707) when you request the token:
 
@@ -52,7 +51,7 @@ Name the management API with the ``resource`` parameter (RFC 8707) when you requ
 
 The ``resource`` parameter is optional: a request without it gets the same token. ``http://server.fire.ly/auth/api/management`` is the only supported ``resource`` for a management token; other values may be refused.
 
-Earlier versions required management clients to send the FHIR server name in the ``aud`` parameter, for example ``Firely Server``. From 4.8.0, Firely Auth ignores this parameter for management clients and logs a warning when a client still sends it, so remove it from your requests. Firely Server does not accept a management API token either: when it introspects one, Firely Auth reports the token as inactive.
+Management clients do not send the ``aud`` parameter. Firely Auth ignores it for them and logs a warning when a client sends it. Firely Server does not accept a management API token either: when it introspects one, Firely Auth reports the token as inactive.
 
 A Postman collection with demo requests of the administration API can be found here:
 
@@ -77,8 +76,6 @@ A Postman collection with demo requests of the administration API can be found h
 
 Resetting two-factor authentication
 -----------------------------------
-
-.. versionadded:: 4.8.0
 
 When a user lost their authenticator and recovery codes, an admin can reset their two-factor authentication in the UI (see :ref:`firely_auth_mfa`), and a management client through the API:
 

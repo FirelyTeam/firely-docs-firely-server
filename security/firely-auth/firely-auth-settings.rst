@@ -523,8 +523,6 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
   The keys fetched from a JWKS URL are stored as one secret holding the whole JWKS document, so the admin UI and the client API show one secret for a JWKS URL.
 
-  A client has one key source: either one JWKS URL, or its inline JWKs together. A second JWKS URL, the same JWKS URL twice, or a JWKS URL next to inline JWKs is refused with a validation error, in the admin UI, the client API and the ``ClientRegistration`` import. Shared secrets are not key sources and are not limited. A stored client with more than one key source keeps working and can still be saved or reduced to one key source, but cannot add another one, or change its client type until it has one. Firely Auth names such clients in one warning at startup.
-
 - ``AllowedGrantTypes``: array of either or both ``"client_credentials"`` and ``"authorization_code"``, referring to :term:`client credentials` and :term:`authorization code flow`. Use ``client credentials`` only for a :term:`confidential client`.
 - ``AllowedSmartLegacyActions``: Firely Auth can also still support SMART on FHIR v1, where the actions are ``read`` and ``write``.
 - ``AllowedSmartActions``: Actions on resources that can be granted in SMART on FHIR v2: ``c``, ``r``, ``u``, ``d`` and/or ``s``, see `SMART on FHIR V2 scopes`_
@@ -571,7 +569,7 @@ Firely Server can require the clinical systems that call its CDS Hooks services 
 A CDS Hooks client never requests a token from Firely Auth, so it holds no scopes, redirect URIs, login, consent or token settings. It has:
 
 - ``JwtIssuer``: the ``iss`` claim of the JWTs it presents, an absolute URI. Several clients may share an issuer, for example when a third-party identity provider signs the JWTs for them.
-- One key source in ``ClientSecrets``: one or more inline JWKs, or one JWKS URL from which Firely Auth fetches and refreshes the keys. Shared secrets are not allowed. Each key must have its own ``kid`` and be usable with ``RS384``, ``ES384``, ``RS512`` or ``ES512``: an RSA key of at least 2048 bits, or an EC key on curve P-384 or P-521. A JWK Set pasted as one inline secret is refused. To rotate an inline key, add the new key, and remove the old one once the client signs with the new key. A JWKS URL is easier when the client rotates its keys often.
+- Exactly one key source in ``ClientSecrets``: a single inline JWK, or a JWKS URL from which Firely Auth fetches and refreshes the keys. Shared secrets are not allowed. Each key must have a ``kid`` and be usable with ``RS384``, ``ES384``, ``RS512`` or ``ES512``: an RSA key of at least 2048 bits, or an EC key on curve P-384 or P-521. Use a JWKS URL when the client rotates its keys or has more than one.
 - ``AllowedGrantTypes``: only ``cds_client_assertion``, which marks the client type, and ``RequireClientSecret`` set to ``true``.
 
 A CDS Hooks client can only be registered when ``FhirServer:IntrospectionSecret`` is set (see :ref:`firely_auth_settings_server`), because Firely Server authenticates with it when it asks Firely Auth to verify a JWT. Without it, the admin UI and the client API refuse the client, and a ``ClientRegistration`` import that contains one imports no client at all.
@@ -584,10 +582,10 @@ Registering a CDS Hooks client in the admin UI
 #. Log in to Firely Auth as an admin and open *Client Management*.
 #. Add a client, and fill in the *Client Name*, the *Client Id* and optionally a *Description*.
 #. Choose the client type *CDS Hooks*. The form then hides the settings that do not apply, and sets the grant type to ``cds_client_assertion`` and *Require Client Secret* to on.
-#. In the *Client Secret* section, add the key source:
+#. In the *Client Secret* section, add one secret:
 
-   - for a JWKS URL, add one secret of the type *JWK (JWKS url)* and enter the URL, or
-   - for inline keys, add a secret of the type *JWK* for each key and paste the public JWK as a JSON object.
+   - for a JWKS URL, choose the secret type *JWK (JWKS url)* and enter the URL, or
+   - for a single key, choose *JWK* and paste the public JWK as a JSON object.
 
 #. Enter the *JWT Issuer*.
 #. Save the client.

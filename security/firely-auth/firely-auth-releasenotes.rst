@@ -28,7 +28,7 @@ This release fixes several security issues, among them a vulnerability in the au
 Feature
 ^^^^^^^
 
-#. Firely Auth can now verify the JWTs of CDS Hooks clients for Firely Server. Register such a client with the new client type *CDS Hooks Service Client*, with the issuer of its JWTs and its public key, as a JWK or a JWKS URL. Firely Server sends the JWTs to the new endpoint ``/connect/cdsIntrospect``. See :ref:`firely_auth_settings_cdshooks` and :ref:`firely_auth_endpoints_cdsintrospect`.
+#. Firely Auth can now verify the JWTs of CDS Hooks clients for Firely Server. Register such a client with the new client type *CDS Hooks*, with the issuer of its JWTs and its public key, as a JWK or a JWKS URL. Firely Server sends the JWTs to the new endpoint ``/connect/cdsIntrospect``. See :ref:`firely_auth_settings_cdshooks` and :ref:`firely_auth_endpoints_cdsintrospect`.
 #. Admin apps are applications that only admins can log in to, such as the Firely Metrics Dashboard. Each admin app has its own audience and scope, so its tokens are not valid for Firely Server or the management API. See :ref:`firely_auth_settings_adminapps`. Admins can now also use the disclaimer, two-factor and grants pages.
 #. The ``profile`` scope now returns the user's ``name``, and optionally ``preferred_username``, from the userinfo endpoint, and in the id_token for clients with ``AlwaysIncludeUserClaimsInIdToken``. This also works for admins. See :ref:`firely_auth_settings_userprofileclaims`.
 #. Admins can reset the two-factor authentication of a user who lost their authenticator, in the UI or through the management API. See :ref:`firely_auth_mfa`.

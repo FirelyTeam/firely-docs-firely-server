@@ -564,13 +564,63 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 CDS Hooks clients
 ^^^^^^^^^^^^^^^^^
 
-Firely Server can require the clinical systems that call its CDS Hooks services to authenticate with a JWT they sign themselves, as described in *Trusting CDS Clients* in the `CDS Hooks specification <https://cds-hooks.hl7.org/>`_. Firely Server does not validate such a JWT itself, but sends it to Firely Auth, at ``POST /connect/cdsIntrospect`` (see :ref:`firely_auth_endpoints_cdsintrospect`). Register each such system in Firely Auth as a client of the type ``CdsHooks``, called *CDS Hooks Service Client* in the admin UI. Only admins can register this type; it is not offered to app developers.
+Firely Server can require the clinical systems that call its CDS Hooks services to authenticate with a JWT they sign themselves, as described in *Trusting CDS Clients* in the `CDS Hooks specification <https://cds-hooks.hl7.org/>`_. Firely Server does not validate such a JWT itself, but sends it to Firely Auth, at ``POST /connect/cdsIntrospect`` (see :ref:`firely_auth_endpoints_cdsintrospect`). So every system that calls CDS Hooks services on Firely Server must be registered in Firely Auth as a client of the type ``CdsHooks``. Only admins can register this type; it is not offered to app developers.
 
 A CDS Hooks client never requests a token from Firely Auth, so it holds no scopes, redirect URIs, login, consent or token settings. It has:
 
 - ``JwtIssuer``: the ``iss`` claim of the JWTs it presents, an absolute URI. Several clients may share an issuer, for example when a third-party identity provider signs the JWTs for them.
-- Exactly one key source in ``ClientSecrets``: a single inline JWK, or a JWKS URL from which Firely Auth fetches and refreshes the keys. Shared secrets are not allowed. Each key must have a ``kid`` and be usable with ``RS384``, ``ES384``, ``RS512`` or ``ES512``: an RSA key of at least 2048 bits, or an EC key on curve P-384 or P-521.
-- ``AllowedGrantTypes``: only ``cds_client_assertion``, and ``RequireClientSecret`` set to ``true``. The admin UI sets both for you.
+- Exactly one key source in ``ClientSecrets``: a single inline JWK, or a JWKS URL from which Firely Auth fetches and refreshes the keys. Shared secrets are not allowed. Each key must have a ``kid`` and be usable with ``RS384``, ``ES384``, ``RS512`` or ``ES512``: an RSA key of at least 2048 bits, or an EC key on curve P-384 or P-521. Use a JWKS URL when the client rotates its keys or has more than one.
+- ``AllowedGrantTypes``: only ``cds_client_assertion``, which marks the client type, and ``RequireClientSecret`` set to ``true``.
+
+Before you register the client, ask its vendor for the ``iss`` value of its JWTs and for its JWKS URL or public JWK.
+
+Registering a CDS Hooks client in the admin UI
+""""""""""""""""""""""""""""""""""""""""""""""
+
+#. Log in to Firely Auth as an admin and open *Client Management*.
+#. Add a client, and fill in the *Client Name*, the *Client Id* and optionally a *Description*.
+#. Choose the client type *CDS Hooks*. The form then hides the settings that do not apply, and sets the grant type to ``cds_client_assertion`` and *Require Client Secret* to on.
+#. In the *Client Secret* section, add one secret:
+
+   - for a JWKS URL, choose the secret type *JWK (JWKS url)* and enter the URL, or
+   - for a single key, choose *JWK* and paste the public JWK as a JSON object.
+
+#. Enter the *JWT Issuer*.
+#. Save the client.
+
+Firely Auth checks the keys when you save. When a JWKS URL cannot be fetched or contains no usable key, the client is not saved and the form shows why. Changing an existing client to the type *CDS Hooks* resets the settings that do not apply to their defaults.
+
+Registering a CDS Hooks client through the client API
+"""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+A management client (see :ref:`firely_auth_mgmt`) can register a CDS Hooks client with the client API:
+
+.. code-block:: HTTP
+
+  POST <base-url>/api/external/client HTTP/1.1
+  Authorization: Bearer <management API token>
+  Content-Type: application/json
+
+  {
+    "clientId": "ehr-cds-client",
+    "clientName": "EHR",
+    "description": "CDS Hooks client of the EHR",
+    "clientType": "CdsHooks",
+    "jwtIssuer": "https://ehr.example.org",
+    "enabled": true,
+    "requireClientSecret": true,
+    "allowedGrantTypes": [ "cds_client_assertion" ],
+    "clientSecrets": [
+      { "secretType": "JWK", "secretUrl": "https://ehr.example.org/.well-known/jwks.json" }
+    ]
+  }
+
+For a single key, give the JWK as a string in ``secret`` instead of ``secretUrl``. A request that breaks one of the rules above is answered with ``400 Bad Request`` and the reason.
+
+Registering a CDS Hooks client in the settings
+""""""""""""""""""""""""""""""""""""""""""""""
+
+Like any client, a CDS Hooks client can also be listed in ``ClientRegistration:AllowedClients`` (see :ref:`firely_auth_settings_clients`), which is only read when Firely Auth starts with a new database:
 
 .. code-block:: json
 
@@ -585,7 +635,8 @@ A CDS Hooks client never requests a token from Firely Auth, so it holds no scope
     "ClientSecrets": [ { "SecretType": "JWK", "SecretUrl": "https://ehr.example.org/.well-known/jwks.json" } ]
   }
 
-Changing an existing client to this type resets the settings that do not apply to their defaults.
+Settings for verifying CDS Hooks JWTs
+"""""""""""""""""""""""""""""""""""""
 
 Two configuration sections control how these JWTs and keys are handled. Set them in ``appsettings.instance.json``:
 

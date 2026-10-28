@@ -188,20 +188,6 @@ In the connection string you can use a user that is only allowed to read and wri
 To add users to the store, you can use the UI or through the :ref:`firely_auth_mgmt` once the application has started.
 
 
-.. _firely_auth_deploy_upgrade:
-
-Upgrading to Firely Auth 4.8.0
-------------------------------
-
-Firely Auth applies its database migrations itself at startup. Version 4.8.0 needs some extra care:
-
-- **Take a database backup first.** At its first start, Firely Auth 4.8.0 migrates the JWK secrets of every client to a new format, and stores the keys of a JWKS URL as one secret instead of one secret per key. This migration is one-way and runs in one transaction before requests are served; if it fails, Firely Auth does not start and the database is unchanged. Going back to an earlier version requires restoring the backup, and running an earlier version against a migrated database is not supported.
-- **Upgrade all nodes together.** In a deployment with several Firely Auth instances on one database, do not run 4.8.0 next to an earlier version.
-- **Schema changes.** The release adds the tables of Duende IdentityServer 8 (for SAML support, which Firely Auth does not use yet), widens ``ClientSecrets.Value`` to ``nvarchar(max)`` on SQL Server, and marks every account that is linked to an external identity provider as external (see :ref:`firely_auth_sso`). If the database account of Firely Auth may not change the schema, run the new scripts from the binaries before you start the new version: ``07-ClientSecretValueLength.sql``, ``07-Duende8Upgrade.sql`` and ``07-MarkLinkedUsersAsExternal.sql`` in ``scripts/SqlServer/``, or ``09-ClientSecretValueLength.sql``, ``09-Duende8Upgrade.sql`` and ``09-MarkLinkedUsersAsExternal.sql`` in ``scripts/Sqlite/``.
-- **Users log in again only if they upgrade from 4.7.0 or earlier.** Login sessions are stored on the server since 4.7.1.
-
-Several changes in 4.8.0 are breaking. Read :ref:`firelyauth_releasenotes_4.8.0` before upgrading.
-
 Using Firely Auth behind a proxy or load balancer
 -------------------------------------------------
 

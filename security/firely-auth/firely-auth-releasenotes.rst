@@ -14,7 +14,7 @@ This release fixes several security issues, among them a vulnerability in the au
 
     Please review the following before upgrading:
 
-    - **Take a database backup.** At its first start, Firely Auth migrates the JWK secrets of all clients to a new format. This migration cannot be undone: going back to an earlier version requires restoring the backup. Upgrade all Firely Auth instances that share a database together. See :ref:`firely_auth_deploy_upgrade` for this and the other database changes in this release.
+    - **Take a database backup.** At its first start, Firely Auth migrates the JWK secrets of all clients to a new format. This migration cannot be undone: going back to an earlier version requires restoring the backup. Upgrade all Firely Auth instances that share a database together. See :ref:`firelyauth_releasenotes_4.8.0_database` for this and the other database changes in this release.
     - **Management API tokens have a new audience.** A management API token now has ``http://server.fire.ly/auth/api/management`` as its only audience, and the management API only accepts such tokens. Tokens issued by an earlier version stop working at the upgrade, including a token that Firely Server caches for the external authorized representative API, until the client requests a new one. Clients no longer have to send the ``aud`` parameter; see :ref:`firely_auth_mgmt`.
     - **The SMART audience must be Firely Server.** The ``aud`` parameter of an authorization request must name the base URL or the name of Firely Server. Other API resources registered in Firely Auth are no longer accepted.
     - **No admin apps are registered by default.** This includes the Firely Metrics Dashboard. To keep using it, register it under ``AdminApps``; see :ref:`firely_auth_settings_adminapps`. The setting ``AllowedAdminScopes`` is removed, and Firely Auth does not start while it is configured.
@@ -69,6 +69,17 @@ Security
 #. Disabling two-factor authentication with a recovery code now requires the full code. Before, part of a code was accepted.
 #. The token Firely Auth uses internally to look up users on Firely Server is now valid for 60 seconds instead of about 83 minutes.
 #. A local login attempt on an SSO account is now logged as a warning with the user id, and raised as a ``UserLoginFailureEvent``.
+
+.. _firelyauth_releasenotes_4.8.0_database:
+
+Database
+^^^^^^^^
+
+Firely Auth applies its database migrations itself at startup. This release needs some extra care:
+
+#. **Take a database backup first.** At its first start, Firely Auth migrates the JWK secrets of every client to a new format, and stores the keys of a JWKS URL as one secret instead of one secret per key. This migration is one-way and runs in one transaction before requests are served. If it fails, Firely Auth does not start and the database is unchanged. Going back to an earlier version requires restoring the backup, and running an earlier version against a migrated database is not supported.
+#. **Upgrade all instances together.** In a deployment with several Firely Auth instances on one database, do not run 4.8.0 next to an earlier version.
+#. **Schema changes.** The release adds the tables of Duende IdentityServer 8 (for SAML support, which Firely Auth does not use yet), widens ``ClientSecrets.Value`` to ``nvarchar(max)`` on SQL Server, and marks every account that is linked to an external identity provider as external (see :ref:`firely_auth_sso`). If the database account of Firely Auth may not change the schema, run the new scripts from the binaries before you start the new version: ``07-ClientSecretValueLength.sql``, ``07-Duende8Upgrade.sql`` and ``07-MarkLinkedUsersAsExternal.sql`` in ``scripts/SqlServer/``, or ``09-ClientSecretValueLength.sql``, ``09-Duende8Upgrade.sql`` and ``09-MarkLinkedUsersAsExternal.sql`` in ``scripts/Sqlite/``.
 
 .. _firelyauth_releasenotes_4.7.1:
 

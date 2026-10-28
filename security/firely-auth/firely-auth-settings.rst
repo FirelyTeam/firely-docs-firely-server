@@ -527,7 +527,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
     Use one entry for each key in the keyset. Note that the JWK json structure is embedded in a string, so you need to escape the quotes within the JWK.
     The url option above is recommended. 
 
-  Since Firely Auth 4.8.0, the keys fetched from a JWKS URL are stored as one secret holding the whole JWKS document, instead of one secret per key. The admin UI and the client API therefore show one secret for a JWKS URL. Existing secrets are migrated once, at the first start of 4.8.0; see :ref:`firely_auth_deploy_upgrade`.
+  Since Firely Auth 4.8.0, the keys fetched from a JWKS URL are stored as one secret holding the whole JWKS document, instead of one secret per key. The admin UI and the client API therefore show one secret for a JWKS URL. Existing secrets are migrated once, at the first start of 4.8.0; see :ref:`firelyauth_releasenotes_4.8.0_database`.
 
 - ``AllowedGrantTypes``: array of either or both ``"client_credentials"`` and ``"authorization_code"``, referring to :term:`client credentials` and :term:`authorization code flow`. Use ``client credentials`` only for a :term:`confidential client`.
 - ``AllowedSmartLegacyActions``: Firely Auth can also still support SMART on FHIR v1, where the actions are ``read`` and ``write``.

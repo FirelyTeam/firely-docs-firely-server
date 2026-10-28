@@ -5,7 +5,7 @@ Release notes
 
 .. _firelyauth_releasenotes_4.8.0:
 
-Release 4.8.0, <Month Dayth>, 2026
+Release 4.8.0, October 28th, 2026
 -----------------------------------
 
 This release fixes several security issues, among them a vulnerability in the authorized representative selection that affects Firely Auth 4.5.0 up to and including 4.7.1. We recommend all customers to upgrade.

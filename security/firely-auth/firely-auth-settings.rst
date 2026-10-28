@@ -293,7 +293,7 @@ To make Firely Server known to Firely Auth, fill in the ``FhirServer``:
 
 - ``FHIR_BASE_URL``:
 
-  - If an ``aud`` parameter is provided *in the authorize request*, it has to match this url or ``Name``, compared ignoring case. Other API resources registered in Firely Auth, such as an :ref:`admin app <firely_auth_settings_adminapps>`, are not accepted as the audience of a SMART login.
+  - If an ``aud`` parameter is provided *in the authorize request*, it has to match this url or ``Name``, compared ignoring case. Other API resources registered in Firely Auth are not accepted as the audience of a SMART login.
     E.g. in Postman you can provide this parameter by adding it to the Auth URL, like this: ``{{ids}}/connect/authorize?aud=http://localhost:4080`` 
     See the ``aud`` parameter in `SMART on FHIR authorization request`_
 
@@ -507,7 +507,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
 - ``ClientId``: string: unique identifier for this client. It should be known to the client as well
 - ``ClientName``: string: human readable name for the client, it is shown on the consent page
-- ``ClientType``: string: ``ClientType`` specifies the type of OAuth2 client: ``"BackendService"`` (system-only ``client_credentials``), ``"ManagementApi"`` (``client_credentials`` with ``AllowManagementApiAccess``), ``"StandaloneApp"`` (``authorization_code``), ``"AdminApp"`` (an app only admins can log in to, see :ref:`firely_auth_settings_adminapps`) or ``"CdsHooks"`` (a CDS Hooks client, see :ref:`firely_auth_settings_cdshooks`), and helps optimize UI validation during client registration by enforcing different constraints on the workflow. Only a ``ManagementApi`` client gets the management API scope in its tokens.
+- ``ClientType``: string: ``ClientType`` specifies the type of OAuth2 client: ``"BackendService"`` (system-only ``client_credentials``), ``"ManagementApi"`` (``client_credentials`` with ``AllowManagementApiAccess``), ``"StandaloneApp"`` (``authorization_code``) or ``"CdsHooks"`` (a CDS Hooks client, see :ref:`firely_auth_settings_cdshooks`), and helps optimize UI validation during client registration by enforcing different constraints on the workflow. Only a ``ManagementApi`` client gets the management API scope in its tokens.
 - ``JwtIssuer``: string, ``CdsHooks`` clients only: the ``iss`` claim of the JWTs the client presents, an absolute URI. See :ref:`firely_auth_settings_cdshooks`.
 - ``Description``: string:  human readable description of the client
 - ``Enabled``: true / false: simple switch to enable or disable a client (instead of removing it from the list)
@@ -761,36 +761,6 @@ AllowedOrigins
 
 By default CORS is enabled for all origins communicating over https. To adjust this, change the allowed origins in the ``AllowedOrigins`` setting.
 Wildcards can be used, for example to allow all ports: ``"https://localhost:*"``, or to allow all subdomains ``"https://*.fire.ly"``.
-
-.. _firely_auth_settings_adminapps:
-
-AdminApps
-^^^^^^^^^
-
-An admin app is an application that only users with the Admin role can log in to, such as the Firely Metrics Dashboard. Each admin app gets its own audience and scope. Its access tokens are only valid for that app, not for Firely Server or the management API, so the scope only proves that the user is an admin. No admin app is registered by default. Register them in ``appsettings.instance.json``, keyed by the name of the app:
-
-.. code-block:: json
-
-  "AdminApps": {
-    "FirelyMetricsDashboard": {
-      "Scope": "http://server.fire.ly/metrics/scope/dashboard",
-      "IncludeRoleClaim": true
-    }
-  },
-
-- ``Scope``: the scope a client of the app requests, an absolute http or https URI. It is also the only scope such a client may request, next to ``openid`` and ``profile``. A scope cannot be shared by two apps, and cannot start with ``http://server.fire.ly/auth/scope``.
-- ``IncludeRoleClaim``: whether access tokens for this app carry the user's ``role`` claim. Only enable it for apps operated by Firely that depend on it, such as the Firely Metrics Dashboard. Other admin tokens do not carry a ``role`` claim.
-
-The name of an app must not be ``http://server.fire.ly/auth/api/management``, and must not be the same as ``FhirServer:Name`` or ``FhirServer:FHIR_BASE_URL``. Firely Auth does not start when it is.
-
-For each app, create a client of the type ``AdminApp`` in the admin UI or through the client API (``clientType: "AdminApp"`` with ``adminAppType`` set to the name of the app). Such a client must:
-
-- require a client secret (a shared secret) and PKCE,
-- allow only the ``authorization_code`` grant type,
-- not allow offline access, not require consent, and not use reference tokens,
-- not have management API access or any SMART on FHIR scopes.
-
-Firely Auth does not save a client that breaks these rules. A stored client that does not require a client secret and PKCE, allows another grant type, allows offline access or requires consent is refused tokens until it is updated, and Firely Auth logs a ``Warning`` for it at startup. While the app of an ``AdminApp`` client is not registered under ``AdminApps``, the client is refused tokens, logged at startup, and cannot be saved. With the ``profile`` scope, an admin app gets the admin's ``name`` and ``preferred_username``, whatever :ref:`firely_auth_settings_userprofileclaims` is set to. Each admin app login logs one ``Information`` line with the username, client id and scopes.
 
 .. _firely_auth_settings_userprofileclaims:
 

@@ -3,6 +3,83 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.8.0:
+
+Release 4.8.0, October 28th, 2026
+-----------------------------------
+
+This release fixes several security issues, among them a vulnerability in the authorized representative selection that affects Firely Auth 4.5.0 up to and including 4.7.1. We recommend all customers to upgrade.
+
+.. attention::
+
+    Please review the following before upgrading:
+
+    - **Take a database backup.** At its first start, Firely Auth migrates the JWK secrets of all clients to a new format. This migration cannot be undone: going back to an earlier version requires restoring the backup. Upgrade all Firely Auth instances that share a database together. See :ref:`firelyauth_releasenotes_4.8.0_database` for this and the other database changes in this release.
+    - **Management API tokens have a new audience.** A management API token now has ``http://server.fire.ly/auth/api/management`` as its only audience, and the management API only accepts such tokens. Tokens issued by an earlier version stop working at the upgrade, including a token that Firely Server caches for the external authorized representative API, until the client requests a new one. Clients no longer have to send the ``aud`` parameter; see :ref:`firely_auth_mgmt`.
+    - **The SMART audience must be Firely Server.** The ``aud`` parameter of an authorization request must name the base URL or the name of Firely Server. Other API resources registered in Firely Auth are no longer accepted.
+    - **Reserved claim types.** The claim types ``role``, ``sub``, ``scope``, ``client_id``, ``amr``, ``idp``, ``aud``, ``iss`` and ``fineGrainedScope`` can no longer be stored on users or clients, and are not copied from an external identity provider. A deployment that grants admin rights by mapping an identity provider claim to ``role`` loses those rights: give these users the Admin role in Firely Auth instead. At the first start, Firely Auth removes reserved claims stored on users and logs a warning for each.
+    - **SSO accounts lose their local password.** Accounts that are linked to an external identity provider are marked as external. Users who signed in with both a password and SSO on the same account can only use SSO after the upgrade.
+    - **Management clients.** Only clients of the type ``ManagementApi`` get the management API scope. Firely Auth logs a warning at startup for a client of another type that holds it; change its type to ``ManagementApi`` in the admin UI.
+    - **New default for the** ``profile`` **scope.** Clients that are granted ``openid profile`` now receive the user's ``name`` from the userinfo endpoint. See :ref:`firely_auth_settings_userprofileclaims` to turn this off.
+    - **Security notification emails.** Users get an email when their password or two-factor authentication changes. If you use your own ``EmailTemplateFolder``, copy the new ``securitynotification.liquid`` template into it.
+    - **More log output.** Firely Auth logs one extra ``Information`` line per login page load, authorize request, discovery request, local login attempt and external login challenge. No passwords, tokens or client IP addresses are logged. See :ref:`firely_auth_settings_requestorigin` for how to reduce this.
+
+Feature
+^^^^^^^
+
+#. Firely Auth can now verify the JWTs of CDS Hooks clients for Firely Server. Register such a client with the new client type *CDS Hooks*, with the issuer of its JWTs and its public keys, as one or more JWKs or a JWKS URL. Firely Server sends the JWTs to the new endpoint ``/connect/cdsIntrospect``. See :ref:`firely_auth_settings_cdshooks` and :ref:`firely_auth_endpoints_cdsintrospect`.
+#. Admins can now also use the disclaimer, two-factor and grants pages.
+#. The ``profile`` scope now returns the user's ``name``, and optionally ``preferred_username``, from the userinfo endpoint, and in the id_token for clients with ``AlwaysIncludeUserClaimsInIdToken``. This also works for admins. See :ref:`firely_auth_settings_userprofileclaims`.
+#. Admins can reset the two-factor authentication of a user who lost their authenticator, in the UI or through the management API. See :ref:`firely_auth_mfa`.
+#. You can now restrict which TLS client certificate Firely Auth accepts, by thumbprint, by trusted CA and with a revocation check. This is meant for a reverse proxy that connects to Firely Auth with mutual TLS. See :ref:`firely_auth_settings_clientcertificates`.
+#. Firely Auth now logs how users arrive at the login, with the origin of the ``Referer`` and the ``User-Agent``. See :ref:`firely_auth_settings_requestorigin`.
+#. Firely Auth now logs a warning when it ignores ``X-Forwarded-*`` headers because the request does not come from a trusted proxy, which helps when redirect URIs have the wrong scheme or host behind a load balancer. See :ref:`firely_auth_settings_proxyheaders`.
+#. Firely Auth now uses Duende IdentityServer 8. Without a Duende license key, the message about the missing license is now logged as an ``Error`` instead of a ``Warning``.
+
+Configuration
+^^^^^^^^^^^^^
+
+#. New sections: ``UserProfileClaims``, ``ClientCertificateValidation``, ``RequestOriginLogging``, ``CdsHooks`` and ``Jwks``, and the setting ``Email:SecurityNotificationEmailSubject``. See :ref:`firely_auth_settings`.
+#. A client of any type can now have only one key source: one JWKS URL, or its inline JWKs together. A second JWKS URL, or a JWKS URL next to inline JWKs, is refused when a client is registered or updated, also in ``ClientRegistration``. Existing clients with several key sources keep working and can be reduced to one, but cannot add another. Firely Auth names them in one warning at startup; remove the extra key sources, as a later release may refuse such clients. See :ref:`firely_auth_settings_clients`.
+#. A configured EC signing key (``KeyManagement:EC:JWK_ES*``) is now read by its ``crv``, so ``alg`` is optional. The ES512 curve is ``P-521``; keys configured with ``P-512`` keep working. Algorithms in ``KeyManagement:RSA:SupportedAlgorithms`` or ``KeyManagement:EC:SupportedAlgorithms`` that the key type cannot sign with are now ignored, instead of failing at the first token request.
+#. The name ``http://server.fire.ly/auth/api/management`` is reserved. Firely Auth does not start when ``FhirServer:Name`` or ``FhirServer:FHIR_BASE_URL`` uses it.
+
+Fix
+^^^
+
+#. Consenting to an additional scope for an app no longer removes the scopes the user had already remembered for that app. The new decision is merged into the remembered one.
+#. Firely Auth no longer gets stuck at startup when an operation scope from the CapabilityStatement of Firely Server already exists in the database, for example because another instance added it. The failure is now logged as a ``Warning`` with the message "Initializing the Firely Server settings failed". Update log searches or alerts that match the old message "Retrieving CapabilityStatement failed".
+#. A pending SMART launch no longer affects the user's sign-ins to other apps. A launch context now belongs to the authorization of the app it was requested for.
+#. After a refresh, the ``patient`` field of the token response now always matches the ``patient`` claim of the new access token. Before, it could switch to the user's own patient, for example after the user had signed in on behalf of someone else. A refresh response no longer contains ``encounter``, and its ``fhirContext`` is empty.
+#. Keys fetched from a JWKS URL now expire after the advertised cache lifetime, whatever the time zone of the server. Before, on a server not running in UTC they expired early or late, which could make ``private_key_jwt`` client authentication fail. Keys from a JWKS whose ``Cache-Control: max-age`` is shorter than ``Jwks:RefreshInterval`` now expire after one refresh interval instead of never.
+#. A ``private_key_jwt`` client authentication no longer fails with ``invalid_client`` when several token requests arrive right after the client rotated its keys.
+#. A JWKS URL that returns an unusable document, or a JWKS with a symmetric key, is now reported as a validation error on the client instead of an internal server error.
+#. The clients in ``ClientRegistration`` are now imported all together or not at all. Before, a failing client left the others missing for good. A new client is also no longer stored without its tags when saving the tags fails.
+#. Work for a request whose client disconnected is now stopped, instead of finished.
+#. Updated Duende IdentityServer to version 8.0.10 and the .NET packages to 10.0.14. The Docker image now uses the ``10.0.14-alpine3.24`` ASP.NET base image.
+
+Security
+^^^^^^^^
+
+#. A signed-in user could get a token for another patient by submitting an arbitrary patient id to the authorized representative selection, also when ``AuthorizedRepresentatives:LookupOnLogin`` was off. Firely Auth now only accepts the user's own patient or a patient Firely Server listed for that user, only while ``LookupOnLogin`` is on, and only for the app the selection was made for. This affects Firely Auth 4.5.0 up to and including 4.7.1. Refresh tokens issued by those versions keep the ``patient`` claim they were issued with; if you cannot rule out misuse, revoke them. To revoke all refresh tokens at once, delete the rows with type ``refresh_token`` from the ``PersistedGrants`` table in the Firely Auth database; users then have to sign in again.
+#. Accounts that sign in through an external identity provider could get a local password through the forgot-password or account-activation flow, and the first SSO login linked to an existing local account with the same email address. Both are now refused. See :ref:`firely_auth_sso`.
+#. When Firely Server introspects a token, Firely Auth now only reports it as active when it was issued for Firely Server. Before, a reference token for the management API was also reported as active.
+#. Wrong passwords and 2FA codes entered while signed in, for example when disabling 2FA or changing the password, now count towards account lockout. Enabling 2FA now requires the current password, each enrollment issues a new authenticator key, and enrollment is refused while 2FA is already enabled.
+#. Disabling two-factor authentication with a recovery code now requires the full code. Before, part of a code was accepted.
+#. The token Firely Auth uses internally to look up users on Firely Server is now valid for 60 seconds instead of about 83 minutes.
+#. A local login attempt on an SSO account is now logged as a warning with the user id, and raised as a ``UserLoginFailureEvent``.
+
+.. _firelyauth_releasenotes_4.8.0_database:
+
+Database
+^^^^^^^^
+
+Firely Auth applies its database migrations itself at startup. This release needs some extra care:
+
+#. **Take a database backup first.** At its first start, Firely Auth migrates the JWK secrets of every client to a new format, and stores the keys of a JWKS URL as one secret instead of one secret per key. This migration is one-way and runs in one transaction before requests are served. If it fails, Firely Auth does not start and the database is unchanged. Going back to an earlier version requires restoring the backup, and running an earlier version against a migrated database is not supported.
+#. **Upgrade all instances together.** In a deployment with several Firely Auth instances on one database, do not run 4.8.0 next to an earlier version.
+#. **Schema changes.** The release adds the tables of Duende IdentityServer 8 (for SAML support, which Firely Auth does not use yet), widens ``ClientSecrets.Value`` to ``nvarchar(max)`` on SQL Server, and marks every account that is linked to an external identity provider as external (see :ref:`firely_auth_sso`). If the database account of Firely Auth may not change the schema, run the new scripts from the binaries before you start the new version: ``07-ClientSecretValueLength.sql``, ``07-Duende8Upgrade.sql`` and ``07-MarkLinkedUsersAsExternal.sql`` in ``scripts/SqlServer/``, or ``09-ClientSecretValueLength.sql``, ``09-Duende8Upgrade.sql`` and ``09-MarkLinkedUsersAsExternal.sql`` in ``scripts/Sqlite/``.
+
 .. _firelyauth_releasenotes_4.7.1:
 
 Release 4.7.1, September 30th, 2026

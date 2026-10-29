@@ -20,6 +20,12 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
     For each SSO user Firely Auth keeps a local password-less account which acts as a statement that at some point in time the SSO has logged into Firely Auth.
     This password-less account is auto-provisioned if the ``AllowAutoProvision`` setting is enabled for the SSO provider. Otherwise an admin needs to create the SSO account via the UI or REST API of Firely Auth.
 
+    .. note::
+
+      An SSO login is not linked to an existing local account that has a password. When an external login is not linked yet and the ``email`` or ``oid`` claim matches a local account that is not marked as external, the login is refused. The user is asked to contact their administrator, and a warning naming the account id is logged. Accounts that an admin created as SSO accounts are still linked at their first SSO login, and auto-provisioning is unchanged.
+
+      SSO accounts cannot get a local password: the forgot-password and account-activation flows send them no email, and a username and password login to such an account is refused with the generic "invalid credentials" message. Such an attempt is logged as a warning with the user id, and as a ``UserLoginFailureEvent``.
+
 #. Configure all SSO details in the ``ExternalIdentityProviders`` configuration section
 
     After a successful login accounts details are automatically updated based on the information provided by the SSO system. 
@@ -30,7 +36,7 @@ Multiple configuration parts are necessary to enable SSO in Firely Auth:
 
     Using the ``UserClaimsFromIdToken`` it is possible to store additional claims in the local Firely Auth user account in order to expose these claims to clients registered with Firely Auth.
     These claims will be copied from the ID token after a successful login and stored permanently. Each claim is updated automatically after each login with local changes being overwritten.
-    It is possible to assign a new name to a claim using the ``CopyAs`` setting.
+    It is possible to assign a new name to a claim using the ``CopyAs`` setting. Claims of the reserved claim types ``role``, ``sub``, ``scope``, ``client_id``, ``amr``, ``idp``, ``aud``, ``iss`` and ``fineGrainedScope`` are not copied; they are skipped with a warning in the log. So admin rights cannot be granted by mapping an identity provider claim to ``role``: give such users the Admin role in Firely Auth instead.
 
 #. Configure the ``FhirUserLookupClaimsMapping`` if the FhirUser claim cannot be derived from the ID token
 

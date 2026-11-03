@@ -123,7 +123,11 @@ To enable SMART on FHIR in Firely Server, the following core settings must be co
 
 Additional advanced configuration can be achieved through the following settings:
 
-* EnforceAccessPolicies: Global flag that controls whether ``AccessPolicies`` are enforced for all matching ``fhirUsers``. See :ref:`feature_accesscontrol_permissions` for more details.
+* EnforceAccessPolicies: Global flag that controls whether ``AccessPolicies`` are enforced for all matching ``fhirUsers``. Defaults to ``true``. See :ref:`feature_accesscontrol_permissions` for more details.
+
+  .. note::
+
+     Enforcing access policies requires a license that includes the access-policy feature. If ``EnforceAccessPolicies`` is left out of the configuration and that feature is not licensed, Firely Server logs a warning at startup and does not enforce access policies; set ``EnforceAccessPolicies`` to ``false`` to remove the warning. If ``EnforceAccessPolicies`` is explicitly set to ``true``, Firely Server still fails to start without that license.
 * AllowHistory: When true, history and vread requests are allowed. The default is ``false``. Authorization is then evaluated against the current version of the resources, as historical versions are not indexed. See :ref:`smart_history` for the restrictions that apply.
 * ClockSkew: Allow potential time discrepancies between the authorization server and the FHIR server, allowing for a small tolerance window when checking token expiration and validity times. Defaults to 5 minutes.
 * AdditionalBaseEndpointsInDiscoveryDocument: Optional configuration setting. Add additional base authority endpoints that your identity provider also uses for operations that are listed in the .well-known document. 

@@ -53,7 +53,12 @@ When the Authorized Representatives feature is enabled, user authentication trig
 Onboarding representatives
 --------------------------
 
-An application that registers representatives, such as a DAR app that stores a ``RelatedPerson`` in Firely Server, can create the Firely Auth account of a representative before their first login. The representative then gets an invitation email and signs in through an external identity provider (see :ref:`firely_auth_sso`).
+The Firely Auth account of a representative is created before their first login, in one of two ways:
+
+- by an application, through the representative API, for example the application in which a patient registers the person who may act for them;
+- by an admin, in the admin UI.
+
+The representative then gets an invitation email and signs in through an external identity provider (see :ref:`firely_auth_sso`).
 
 The representative API
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -92,7 +97,16 @@ Calling the API needs a token with the scope ``http://server.fire.ly/auth/scope/
 The Representative user type
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A ``Representative`` signs in only through an external identity provider, and has no password and no ``fhirUser``. The authorized representative selection at login is only shown to users with a ``Patient`` ``fhirUser``, so it is not shown to a Representative. An SSO login does not change a Representative into a Patient or Practitioner. Only the representative API creates Representatives. An admin can turn a Representative into a Patient by changing its user type through the user API. The admin UI does not show the Representative type or the ``AllowRepresentativeApiAccess`` client setting; set both through the API.
+A ``Representative`` signs in only through an external identity provider, and has no password and no ``fhirUser``. The authorized representative selection at login is only shown to users with a ``Patient`` ``fhirUser``, so it is not shown to a Representative. An SSO login does not change a Representative into a Patient or Practitioner. An admin can turn a Representative into a Patient by changing its user type.
+
+Representatives in the admin UI
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- **Add User** offers the user type *Representative* when at least one external identity provider is configured. A Representative gets no password and no claims. Saving the user sends the invitation. An email address that another account uses is refused. When the invitation cannot be sent, the account is kept and the admin UI says so; send it again once the configuration is fixed.
+- The user list shows the type *Representative*, and the user type filter has it.
+- The panel of a Representative shows whether the invitation has been accepted, with **resend invitation** until the first login, and the patients the Representative is linked to, each with **unlink**.
+- **link representee** links a ``RelatedPerson`` in Firely Server to the Representative: enter its reference, **find** it, check the name, patient and relationship that Firely Auth shows, and link it. Firely Auth adds the identifier ``http://server.fire.ly/auth/identifier/sub|<user id>`` to the ``RelatedPerson``.
+- A Backend Service client has the switch *Allow Representative Api Access* in its **Permissions**, the client setting ``AllowRepresentativeApiAccess``.
 
 The invitation
 ^^^^^^^^^^^^^^

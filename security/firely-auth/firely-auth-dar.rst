@@ -87,7 +87,7 @@ The response holds the user's ``id``, ``email`` and ``fullName``, and the same i
     "fullName": "Jane Doe"
   }
 
-Calling the API needs a token with the scope ``http://server.fire.ly/auth/scope/representative``. Only a ``BackendService`` client with ``AllowRepresentativeApiAccess`` enabled (see :ref:`firely_auth_settings_clients`) gets it, with the ``client_credentials`` grant, and only when it requests no other scope. The token's only audience is ``http://server.fire.ly/auth/api/representative``: Firely Server and the management API do not accept it, and this endpoint does not accept a management API token.
+Calling the API needs a token with the scope ``http://server.fire.ly/auth/scope/representative``. Only a ``BackendService`` client with ``AllowRepresentativeApiAccess`` enabled (see :ref:`firely_auth_settings_clients`) gets it, with the ``client_credentials`` grant, and only when it requests no other scope. Name the scope in the token request (``scope=http://server.fire.ly/auth/scope/representative``): a request without a ``scope`` parameter asks for all scopes of the client and is refused when the client has other scopes. The token's only audience is ``http://server.fire.ly/auth/api/representative``: Firely Server and the management API do not accept it, and this endpoint does not accept a management API token.
 
 The Representative user type
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -98,11 +98,11 @@ The Representative user type
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 A ``Representative`` signs in only through an external identity provider, and has no password and no ``fhirUser``.
+ The authorized representative selection at login is only shown to users with a ``Patient`` ``fhirUser``, so it is not shown to a Representative. An SSO login does not change a Representative into a Patient or Practitioner. An admin can turn a Representative into a Patient by changing its user type.
 
 .. note::
 
     Representatives cannot have a local account with a password. This is on purpose. A Representative acts on behalf of a patient, so their identity must have been verified, and that verification is what the identity provider vouches for. With a local account, Firely Auth only knows that someone controls an email address, which is not enough to act for someone else.
- The authorized representative selection at login is only shown to users with a ``Patient`` ``fhirUser``, so it is not shown to a Representative. An SSO login does not change a Representative into a Patient or Practitioner. An admin can turn a Representative into a Patient by changing its user type.
 
 Representatives in the admin UI
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

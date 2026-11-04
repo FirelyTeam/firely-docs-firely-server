@@ -10,7 +10,7 @@ When the Authorized Representatives feature is enabled, user authentication trig
 
 .. warning::
 
-    **Deprecated:** letting a ``Patient`` account act on behalf of other patients, with Firely Server finding the relationships through the user's ``Patient`` ``fhirUser``, is deprecated. A later release moves this to ``Representative`` accounts (see :ref:`firely_auth_dar_onboarding`): Firely Server finds the relationships through the ``sub`` identifier of the representative's Firely Auth account, and the representative's token carries their ``RelatedPerson`` as ``fhirUser``. The current flow keeps working until then.
+    **Deprecated:** letting a ``Patient`` account act on behalf of other patients, with Firely Server finding the relationships through the user's ``Patient`` ``fhirUser``, is deprecated. A later release moves this to ``Representative`` accounts (see :ref:`firely_auth_dar_onboarding`): Firely Server finds the relationships through the ``sub`` identifier of the representative's Firely Auth account, and the representative's token carries their ``RelatedPerson`` as ``fhirUser``. The current flow keeps working until then. While ``LookupOnLogin`` is on, Firely Auth logs a ``Warning`` about this at startup.
 
 .. image:: /images/fa_dar_selection.png
     :align: center

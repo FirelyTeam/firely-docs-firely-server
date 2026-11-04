@@ -519,7 +519,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``AdminAppScope``: string, ``AdminApp`` clients only, required: the scope the app requests, an absolute ``http`` or ``https`` URI of its own, for example ``http://server.fire.ly/metrics/scope/dashboard`` for the Firely Metrics Dashboard. The ``ClientId`` of an admin app is the audience (``aud``) of its tokens and cannot be changed afterwards. An admin app client without a valid scope is refused tokens; the admin UI marks it as *Needs update*, and Firely Auth logs a warning naming it at startup.
 - ``AdminAppIncludeRoleClaim``: true / false, ``AdminApp`` clients only: whether the app's tokens carry the user's roles. The default is ``false``.
 
-  Since Firely Auth 4.9.0, admin apps are registered as clients, in the admin UI, with the admin API or here, and can log in as soon as the client is saved. The ``AdminApps`` setting of earlier versions is ignored; remove it from ``appsettings.instance.json`` and register each admin app as an ``AdminApp`` client.
+  Admin apps are registered as ``AdminApp`` clients, in the admin UI, with the admin API or here, and can log in as soon as the client is saved. An ``AdminApps`` setting is ignored; remove it from ``appsettings.instance.json`` and register each admin app as an ``AdminApp`` client.
 - ``JwtIssuer``: string, ``CdsHooks`` clients only: the ``iss`` claim of the JWTs the client presents, an absolute URI. See :ref:`firely_auth_settings_cdshooks`.
 - ``Description``: string:  human readable description of the client
 - ``Enabled``: true / false: simple switch to enable or disable a client (instead of removing it from the list)

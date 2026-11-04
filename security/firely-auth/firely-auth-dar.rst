@@ -97,8 +97,7 @@ Calling the API needs a token with the scope ``http://server.fire.ly/auth/scope/
 The Representative user type
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A ``Representative`` signs in only through an external identity provider, and has no password and no ``fhirUser``.
- The authorized representative selection at login is only shown to users with a ``Patient`` ``fhirUser``, so it is not shown to a Representative. An SSO login does not change a Representative into a Patient or Practitioner. An admin can turn a Representative into a Patient by changing its user type.
+A ``Representative`` signs in only through an external identity provider, and has no password and no ``fhirUser``. The authorized representative selection at login is only shown to users with a ``Patient`` ``fhirUser``, so it is not shown to a Representative. An SSO login does not change a Representative into a Patient or Practitioner. An admin can turn a Representative into a Patient by changing its user type.
 
 .. note::
 

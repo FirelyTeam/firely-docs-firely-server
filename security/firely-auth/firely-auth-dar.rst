@@ -88,7 +88,7 @@ Calling the API needs a token with the scope ``http://server.fire.ly/auth/scope/
 The Representative user type
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A ``Representative`` signs in only through an external identity provider, has no password and no ``fhirUser``, and acts for others through the representative relationships in Firely Server. An SSO login does not change a Representative into a Patient or Practitioner. Only the representative API creates Representatives. An admin can turn a Representative into a Patient by changing its user type through the user API. The admin UI does not show the Representative type or the ``AllowRepresentativeApiAccess`` client setting; set both through the API.
+A ``Representative`` signs in only through an external identity provider, and has no password and no ``fhirUser``. The authorized representative selection at login is only shown to users with a ``Patient`` ``fhirUser``, so it is not shown to a Representative. An SSO login does not change a Representative into a Patient or Practitioner. Only the representative API creates Representatives. An admin can turn a Representative into a Patient by changing its user type through the user API. The admin UI does not show the Representative type or the ``AllowRepresentativeApiAccess`` client setting; set both through the API.
 
 The invitation
 ^^^^^^^^^^^^^^

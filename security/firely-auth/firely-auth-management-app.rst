@@ -119,7 +119,7 @@ Only one account can be linked to a FHIR record. Two ``fhirUser`` values point t
 Accounts from before the upgrade
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Accounts that were linked to the same FHIR record before the upgrade keep working: they can sign in and can be edited, as long as their ``fhirUser`` is not changed to another record that is taken. The same holds for a local account with a ``fhirUser`` that is not valid, but such an account is linked to no FHIR record: it gets no patient launch context and no authorized representative selection. An SSO account whose identity provider sends a value that is not valid is refused at login.
+Accounts that were linked to the same FHIR record before the upgrade keep working: they can sign in and can be edited, as long as their ``fhirUser`` is not changed to another record that is taken. A local account with a ``fhirUser`` that is not valid can sign in, but is linked to no FHIR record: it gets no patient launch context and no authorized representative selection. Such an account can only be saved again with a valid ``fhirUser``. An SSO account whose identity provider sends a value that is not valid is refused at login.
 
 Firely Auth reports these accounts so that an admin can resolve them:
 

@@ -79,7 +79,7 @@ The representative API
 
 - No user has it: a new user of the type ``Representative`` is created and invited, and the response is ``201 Created``.
 - One user of the type ``Patient`` or ``Representative`` has it: that user is returned as is, with ``200 OK``. A ``Representative`` that has not logged in yet is sent the invitation again.
-- Otherwise the request is refused with ``409 Conflict``: when the email address belongs to more than one user, to a user of another type, or to the patient themselves. The last is checked against the user's ``fhirUser``, and against Firely Server by searching that Patient for the user's sub identifier. When Firely Server cannot be reached for that check, the request fails with ``500``.
+- Otherwise the request is refused with ``409 Conflict``: when the email address belongs to more than one user, to a user of another type, or to the patient themselves. The last is checked against the user's ``fhirUser``, and against Firely Server by searching that Patient for the user's sub identifier. For that search, Firely Auth uses a token that it issues to itself, with the audience ``FhirServer:FHIR_BASE_URL`` and the scope ``system/Patient.rs``. When Firely Server cannot be reached for that check, the request fails with ``500``.
 
 The response holds the user's ``id``, ``email`` and ``fullName``, and the same id as an ``identifier`` for the representative's ``RelatedPerson``:
 

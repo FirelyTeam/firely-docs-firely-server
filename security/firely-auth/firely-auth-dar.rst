@@ -49,7 +49,7 @@ When the Authorized Representatives feature is enabled, user authentication trig
 Onboarding representatives
 --------------------------
 
-Since Firely Auth 4.9.0, an application that registers representatives, such as a DAR app that stores a ``RelatedPerson`` in Firely Server, can create the Firely Auth account of a representative before their first login. The representative then gets an invitation email and signs in through an external identity provider (see :ref:`firely_auth_sso`).
+An application that registers representatives, such as a DAR app that stores a ``RelatedPerson`` in Firely Server, can create the Firely Auth account of a representative before their first login. The representative then gets an invitation email and signs in through an external identity provider (see :ref:`firely_auth_sso`).
 
 The representative API
 ^^^^^^^^^^^^^^^^^^^^^^

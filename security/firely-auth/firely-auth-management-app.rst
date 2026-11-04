@@ -10,7 +10,7 @@ After you have installed, started and created your admin account, you can now ma
 After creation of a local account (not using Single Sign-on), an email will be sent to the address of the account to activate the account. When this link expires, an admin can resend this email through the UI.
 
 When you want to manage the users programmatically, you can use the API's that are specified in the swagger documentation which you can find at: https://localhost:5001/swagger/ (or replace localhost with the url of your Firely Auth installation). The API enables the creation, updating and deletion of users. User claims of the reserved claim types ``role``, ``sub``, ``scope``, ``client_id``, ``amr``, ``idp``, ``aud``, ``iss``, ``auth_time`` and ``fineGrainedScope`` cannot be set and are refused with ``400 Bad Request``.
-Since Firely Auth 4.9.0, a ``POST``, ``PUT``, ``PATCH`` or ``DELETE`` by an admin in the admin UI needs a recent login, see ``AdminReauthenticationWindow`` in :ref:`firely_auth_settings_account`. Management API clients are not affected.
+A ``POST``, ``PUT``, ``PATCH`` or ``DELETE`` by an admin in the admin UI needs a recent login, see ``AdminReauthenticationWindow`` in :ref:`firely_auth_settings_account`. Management API clients are not affected.
 To be able to use the admin management API, you will need a client token (obtained trough the client_credentials flow) for a client who has the ``AllowManagementApiAccess`` property set to true. You will have to request the scope ``http://server.fire.ly/auth/scope/authmanagement`` to get access to the management api's. Note that if you do not set this property to true and try to get a token, Firely Auth will throw an error on the scopes: ``No scopes found in request``. Firely Auth will disable the check for the presence of scopes on the admin APIs if ``AllowManagementApiAccess`` is enabled.
 
 It is recommended to use a specific client for this API access, like:
@@ -110,7 +110,7 @@ This turns 2FA off for the user, replaces their authenticator key and removes th
 One account per FHIR record
 ---------------------------
 
-Since Firely Auth 4.9.0, only one account can be linked to a FHIR record. Two ``fhirUser`` values point to the same record when their resource type and id are the same; the base URL is not compared, so ``Patient/123`` and ``https://fhir.example.org/Patient/123`` are the same record. There is no setting to turn this off.
+Only one account can be linked to a FHIR record. Two ``fhirUser`` values point to the same record when their resource type and id are the same; the base URL is not compared, so ``Patient/123`` and ``https://fhir.example.org/Patient/123`` are the same record. There is no setting to turn this off.
 
 - **Admin UI and management API.** Creating or updating a user (``POST`` and ``PUT`` on ``/api/admin/user`` and ``/api/external/user``) with a ``fhirUser`` that another account is linked to is refused with ``409 Conflict``. The response names the other account, and the admin UI shows it in the user form. A refused request changes nothing.
 - **Single sign-on.** A login whose ``fhirUser``, mapped from the ID token or found through ``FhirUserLookupClaimsMapping``, belongs to another account is refused with the page that asks the user to contact their administrator. See :ref:`firely_auth_sso`.

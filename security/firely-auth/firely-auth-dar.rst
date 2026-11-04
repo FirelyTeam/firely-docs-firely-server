@@ -8,6 +8,10 @@ Firely Auth supports Designated Authorized Representatives (DAR), enabling users
 When the Authorized Representatives feature is enabled, user authentication triggers a call to Firely Server's custom operation to verify existing patient relationships. If relationships are found, users are presented with a selection screen to choose their acting capacity as themselves or on behalf of an authorized patient. The issued access token preserves the original user's ``fhirUser`` identity for audit purposes while setting the ``patient`` claim to the selected patient, ensuring access is restricted to that patient's compartment data.
 
 
+.. warning::
+
+    **Deprecated:** letting a ``Patient`` account act on behalf of other patients, with Firely Server finding the relationships through the user's ``Patient`` ``fhirUser``, is deprecated. A later release moves this to ``Representative`` accounts (see :ref:`firely_auth_dar_onboarding`): Firely Server finds the relationships through the ``sub`` identifier of the representative's Firely Auth account, and the representative's token carries their ``RelatedPerson`` as ``fhirUser``. The current flow keeps working until then.
+
 .. image:: /images/fa_dar_selection.png
     :align: center
     :class: bordered-image

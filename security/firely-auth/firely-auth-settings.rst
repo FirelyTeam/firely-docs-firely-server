@@ -310,6 +310,10 @@ Firely Auth can be configured to allow users to login on behalf of other users f
 
 .. warning::
 
+    **Deprecated:** the lookup of relationships through the user's ``Patient`` ``fhirUser`` is deprecated, in favour of ``Representative`` accounts. See :ref:`firely_auth_dar`.
+
+.. warning::
+
     This is a beta feature and as such it is subject to change in future releases. Currently, this implementation is not yet working correctly together with all of Firely Auths features, mainly :ref:`firely_auth_settings_launchcontext` and :ref:`firely_auth_settings_disclaimers`. On launch context registration, the Authorized Representative feature will be skipped if launch scopes are included in the token request. For disclaimer registration, disclaimers can be accepted once for each representee, but disclaimers that were agreed to in the authorized representative flow will not be visible in the users overview of accepted disclaimers. Due to the experimental nature of this feature, it is recommended to thoroughly test its functionality in a development or staging environment before deploying it to production.
 
 

@@ -108,6 +108,16 @@ Representatives in the admin UI
 - **link representee** links a ``RelatedPerson`` in Firely Server to the Representative: enter its reference, **find** it, check the name, patient and relationship that Firely Auth shows, and link it. Firely Auth adds the identifier ``http://server.fire.ly/auth/identifier/sub|<user id>`` to the ``RelatedPerson``.
 - A Backend Service client has the switch *Allow Representative Api Access* in its **Permissions**, the client setting ``AllowRepresentativeApiAccess``.
 
+Firely Auth reads and changes the ``RelatedPerson`` in Firely Server with a token that it issues to itself, the same kind of token it uses to look up a ``fhirUser``. Its audience is ``FhirServer:FHIR_BASE_URL``, and for **link representee** and **unlink** it holds the scope ``system/RelatedPerson.rsu``. **link representee** and **unlink** read the ``RelatedPerson``, change only its identifier and write it back with a ``PUT`` with ``If-Match`` on the version that was read. When the ``RelatedPerson`` was changed in Firely Server in the meantime, Firely Auth asks the admin to find it again and retry. A ``RelatedPerson`` that is linked to another account is refused.
+
+No client in Firely Auth needs a setting for this, also not the admin UI. Firely Server needs to accept this token for writes:
+
+- Firely Server accepts tokens from Firely Auth with the audience ``FhirServer:FHIR_BASE_URL``, see :ref:`firely_auth_settings`.
+- The ``update`` interaction is enabled for ``RelatedPerson``.
+- No proxy or gateway in front of Firely Server refuses writes with this token.
+
+When Firely Server refuses the ``PUT``, **link representee** shows an error and the list of linked patients stays readable.
+
 The invitation
 ^^^^^^^^^^^^^^
 

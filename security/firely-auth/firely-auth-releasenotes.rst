@@ -3,6 +3,62 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.9.0:
+
+Release 4.9.0, November XXth, 2026
+----------------------------------
+
+This release asks admins to confirm their identity before they make changes, allows only one account per FHIR record, lets you add admin apps such as the Firely Metrics Dashboard in the admin UI, and adds the onboarding of representatives.
+
+.. attention::
+
+    Please review the following before upgrading:
+
+    - **Admin changes need a recent login.** When an admin logged in more than 30 minutes ago, Firely Auth asks them to confirm their identity before it saves a change. Admins who log in through an external identity provider log in there again: make sure the identity provider honours ``prompt=login`` and ``max_age=0`` and returns an ``auth_time`` claim, or these admins cannot make changes after the 30 minutes. See ``AdminReauthenticationWindow`` in :ref:`firely_auth_settings_account`.
+    - **The** ``AdminApps`` **setting is ignored.** An admin app, such as the Firely Metrics Dashboard, is registered as a client of the type ``AdminApp`` that holds its own scope. Firely Auth 4.8.0 read the scope from ``AdminApps``; after the upgrade, an admin app client without a scope is refused tokens, is marked *Needs update* in the admin UI, and is named in a warning at startup. Set the scope of each admin app client in the admin UI or the management API, and remove ``AdminApps`` from ``appsettings.instance.json``. See :ref:`firely_auth_settings_clients`.
+    - **Only one account per FHIR record.** Firely Auth refuses to link a ``fhirUser`` to an account when another account is linked to the same FHIR record, and refuses ``fhirUser`` values that are not a valid reference to a Patient or Practitioner. Accounts that share a record from before the upgrade keep working, but an SSO account whose identity provider sends a value that is not valid can no longer log in. Firely Auth does not start when an external identity provider maps more than one claim to ``fhirUser``. See :ref:`firely_auth_mgmt_fhirrecord`.
+    - **New database migration.** This release adds a column and a unique index to the user store. See :ref:`firelyauth_releasenotes_4.9.0_database`.
+    - **New email template.** If you use your own ``EmailTemplateFolder``, copy the new ``representativeinvitation.liquid`` template into it.
+    - **Log output.** Firely Auth logs a few extra lines at startup: one ``Warning`` per FHIR record that several accounts share, per account with a ``fhirUser`` that is not valid, and per admin app client without a scope. It also logs one ``Information`` line per admin change that is refused for want of a recent login, and per confirmation through an identity provider, and a ``Warning`` per refused confirmation. These lines hold account or user ids only; nothing sensitive is logged.
+
+Feature
+^^^^^^^
+
+#. Admin apps can be added in the admin UI, without a restart. The client type *Admin App Login* has an *Admin App Scope* and an *Include Role Claim* switch, and the app can log in as soon as the client is saved. The Client Id of an admin app is the audience of its tokens. The management API and ``ClientRegistration`` take the same settings as ``AdminAppScope`` and ``AdminAppIncludeRoleClaim``. See :ref:`firely_auth_settings_clients`.
+#. The admin UI marks an admin app client that is refused tokens as *Needs update*, and lists what has to change at the top of its edit form. The management API returns these requirements as ``unmetAdminAppRequirements``.
+#. An application can create the account of a representative with the new endpoint ``POST /api/external/representative``, for example from a DAR app. Such an account has the new user type ``Representative``, signs in through an external identity provider and gets an invitation email. The endpoint needs the new scope ``http://server.fire.ly/auth/scope/representative``, which only a Backend Service client with ``AllowRepresentativeApiAccess`` gets. See :ref:`firely_auth_dar_onboarding`.
+#. The admin UI shows which accounts need attention: accounts that share a FHIR record with another account, and accounts whose ``fhirUser`` is not valid. They get the tag *Needs attention*, the user list has a filter for them, and a user's panel shows the other accounts linked to the same FHIR record. See :ref:`firely_auth_mgmt_fhirrecord`.
+#. A ``fhirUser`` may have a base URL with a path, such as ``https://ehr.example.org/fhir/Patient/123``.
+
+Configuration
+^^^^^^^^^^^^^
+
+#. New settings: ``Account:AdminReauthenticationWindow`` (default ``00:30``), ``Email:RepresentativeInvitationEmailSubject``, ``RepresentativeInvitation:IdentityProviderScheme``, and the client settings ``AdminAppScope``, ``AdminAppIncludeRoleClaim`` and ``AllowRepresentativeApiAccess``. See :ref:`firely_auth_settings`.
+#. The ``AdminApps`` setting is removed and ignored when it is configured. Register each admin app as an ``AdminApp`` client with its own scope instead.
+#. ``UserClaimsFromIdToken`` of an external identity provider may map at most one claim to ``fhirUser``. Firely Auth does not start when it maps more than one.
+
+Fix
+^^^
+
+#. Connecting to SQL Server with an ``Authentication=Active Directory ...`` connection string, such as ``Active Directory Managed Identity``, works again. No configuration change is needed.
+#. For a ``fhirUser`` with a base URL, such as ``https://ehr.example.org/Patient/123``, the ``patient`` launch context and token claim now hold the patient's id. Before, they held the wrong value or nothing.
+#. On Linux, the JWT of a CDS Hooks client whose ``jku`` header is a relative path is now refused, as it already was on Windows. Only an absolute ``http`` or ``https`` URL is accepted.
+
+Security
+^^^^^^^^
+
+#. A ``POST``, ``PUT``, ``PATCH`` or ``DELETE`` on the admin API is refused with ``401`` and the code ``reauthentication_required`` when the admin logged in longer ago than ``Account:AdminReauthenticationWindow``. The window counts from the login, not from the last activity. The admin UI then asks the admin to confirm their identity and saves the change: an admin with a local account enters their password and, with two-factor authentication, a code, and wrong entries count towards the account lockout. An admin who logs in through an external identity provider logs in there again. The confirmation only counts for the browser that made it. Clients that call the management API are not affected. See :ref:`firely_auth_settings_account`.
+#. Only one account can be linked to a FHIR record. The management API answers ``409 Conflict`` and names the other account, and an SSO login whose ``fhirUser`` belongs to another account is refused with the page that asks the user to contact their administrator. ``fhirUser`` values that are not a valid reference to a Patient or Practitioner are refused with ``400 Bad Request``, and at SSO login. See :ref:`firely_auth_mgmt_fhirrecord`.
+#. ``auth_time`` is a reserved claim type. It cannot be set as a user or client claim and is not copied from an external identity provider. Firely Auth removes stored user claims of this type at startup.
+#. Changing your own password no longer counts as a new login. With two-factor authentication on, it no longer clears failed code attempts from the lockout count.
+
+.. _firelyauth_releasenotes_4.9.0_database:
+
+Database
+^^^^^^^^
+
+Firely Auth applies its database migrations itself at startup. This release adds the column ``FhirRecordReference`` to the ``AspNetUserClaims`` table, with a unique index, so that two logins at the same moment cannot link two accounts to one FHIR record. At startup, Firely Auth fills the column for every FHIR record that one account is linked to. Records that several accounts share stay out of the index until one account is left. If the database account of Firely Auth may not change the schema, run the new script from the binaries before you start the new version: ``08-AddFhirRecordReference.sql`` in ``scripts/SqlServer/``, or ``10-AddFhirRecordReference.sql`` in ``scripts/Sqlite/``.
+
 .. _firelyauth_releasenotes_4.8.0:
 
 Release 4.8.0, October 28th, 2026

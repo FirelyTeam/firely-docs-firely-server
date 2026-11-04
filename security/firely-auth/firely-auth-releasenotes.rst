@@ -37,7 +37,7 @@ Configuration
 #. New settings: ``Account:AdminReauthenticationWindow`` (default ``00:30``), ``Email:RepresentativeInvitationEmailSubject``, ``RepresentativeInvitation:IdentityProviderScheme``, and the client settings ``AdminAppScope``, ``AdminAppIncludeRoleClaim`` and ``AllowRepresentativeApiAccess``. See :ref:`firely_auth_settings`.
 #. The ``AdminApps`` setting is removed and ignored when it is configured. Register each admin app as an ``AdminApp`` client with its own scope instead.
 #. ``UserClaimsFromIdToken`` of an external identity provider may map at most one claim to ``fhirUser``. Firely Auth does not start when it maps more than one.
-#. To link a representative to a ``RelatedPerson`` in the admin UI, Firely Auth now also writes to Firely Server: its own token to Firely Server holds the scope ``system/RelatedPerson.rsu`` for **link representee** and **unlink**, which update the ``RelatedPerson`` with a ``PUT`` with ``If-Match``. Firely Server must allow ``update`` on ``RelatedPerson`` for that token. See :ref:`firely_auth_dar_onboarding`.
+#. To link a representative to a ``RelatedPerson`` in the admin UI, Firely Auth now also writes to Firely Server: the token it issues to itself for the representative checks holds the scope ``system/RelatedPerson.rsu`` next to ``system/Patient.rs`` for **link representee** and **unlink**, which update the ``RelatedPerson`` with a ``PUT`` with ``If-Match``. Firely Server must allow ``update`` on ``RelatedPerson`` for that token. See :ref:`firely_auth_dar_onboarding`.
 
 Fix
 ^^^

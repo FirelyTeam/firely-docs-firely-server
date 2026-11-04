@@ -105,7 +105,11 @@ An admin can send the invitation again until the Representative has logged in:
 
   POST <base-url>/api/admin/user/<user-id>/resend-invitation HTTP/1.1
 
-After the first login, this returns ``400 Bad Request``. When an invitation cannot be sent, the representative API returns ``500`` and keeps the Representative, so a retry of the same request sends it again. An error is logged, without patient information.
+After the first login, this returns ``400 Bad Request``.
+
+.. note::
+
+    Every call that returns ``200 OK`` for a Representative that has not logged in sends the invitation again, and Firely Auth does not limit how often. An application that retries a request it already got a response for, or several requests that name the same representative, send the person one email each. Call the API once per registration, and only retry a request that failed. When an invitation cannot be sent, the representative API returns ``500`` and keeps the Representative, so a retry of the same request sends it again. An error is logged, without patient information.
 
 .. warning::
 

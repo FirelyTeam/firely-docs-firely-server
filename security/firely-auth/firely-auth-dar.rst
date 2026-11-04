@@ -44,6 +44,69 @@ When the Authorized Representatives feature is enabled, user authentication trig
 
     Firely Auth only accepts a selection of the user's own patient, or of a patient that Firely Server posted for that user, and only while ``LookupOnLogin`` is ``true``. The relationships are kept for five minutes; a user who chooses someone after that is asked to sign in to the app again, and can still continue as themselves. The selection applies only to the next token of the app it was made for. A refresh of that token keeps its ``patient``. The selection screen is not shown, and a selection is not applied, when a launch context is requested or registered.
 
+.. _firely_auth_dar_onboarding:
+
+Onboarding representatives
+--------------------------
+
+Since Firely Auth 4.9.0, an application that registers representatives, such as a DAR app that stores a ``RelatedPerson`` in Firely Server, can create the Firely Auth account of a representative before their first login. The representative then gets an invitation email and signs in through an external identity provider (see :ref:`firely_auth_sso`).
+
+The representative API
+^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: HTTP
+
+  POST <base-url>/api/external/representative HTTP/1.1
+  Authorization: Bearer <representative API token>
+  Content-Type: application/json
+
+  {
+    "fullName": "Jane Doe",
+    "email": "jane.doe@example.org",
+    "patient": "Patient/123"
+  }
+
+``patient`` is the patient the person acts for, as a relative reference. Firely Auth looks up the users with this email address:
+
+- No user has it: a new user of the type ``Representative`` is created and invited, and the response is ``201 Created``.
+- One user of the type ``Patient`` or ``Representative`` has it: that user is returned as is, with ``200 OK``. A ``Representative`` that has not logged in yet is sent the invitation again.
+- Otherwise the request is refused with ``409 Conflict``: when the email address belongs to more than one user, to a user of another type, or to the patient themselves. The last is checked against the user's ``fhirUser``, and against Firely Server by searching that Patient for the user's sub identifier. When Firely Server cannot be reached for that check, the request fails with ``500``.
+
+The response holds the user's ``id``, ``email`` and ``fullName``, and the same id as an ``identifier`` for the representative's ``RelatedPerson``:
+
+.. code-block:: json
+
+  {
+    "id": "8f0c…",
+    "identifier": { "system": "http://server.fire.ly/auth/identifier/sub", "value": "8f0c…" },
+    "email": "jane.doe@example.org",
+    "fullName": "Jane Doe"
+  }
+
+Calling the API needs a token with the scope ``http://server.fire.ly/auth/scope/representative``. Only a ``BackendService`` client with ``AllowRepresentativeApiAccess`` enabled (see :ref:`firely_auth_settings_clients`) gets it, with the ``client_credentials`` grant, and only when it requests no other scope. The token's only audience is ``http://server.fire.ly/auth/api/representative``: Firely Server and the management API do not accept it, and this endpoint does not accept a management API token.
+
+The Representative user type
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A ``Representative`` signs in only through an external identity provider, has no password and no ``fhirUser``, and acts for others through the representative relationships in Firely Server. An SSO login does not change a Representative into a Patient or Practitioner. Only the representative API creates Representatives. An admin can turn a Representative into a Patient by changing its user type through the user API. The admin UI does not show the Representative type or the ``AllowRepresentativeApiAccess`` client setting; set both through the API.
+
+The invitation
+^^^^^^^^^^^^^^
+
+The invitation email uses the template ``representativeinvitation.liquid`` and the subject ``Email:RepresentativeInvitationEmailSubject`` (see :ref:`firely_auth_settings_email`). Its link signs in at the identity provider selected by ``RepresentativeInvitation:IdentityProviderScheme`` (see :ref:`firely_auth_settings_representativeinvitation`). The link holds no token and does not expire. At the first login, the Representative is linked to the identity provider account by email address, the same as any other SSO user created in advance, also when the person signs in through the login page instead of the link.
+
+An admin can send the invitation again until the Representative has logged in:
+
+.. code-block:: HTTP
+
+  POST <base-url>/api/admin/user/<user-id>/resend-invitation HTTP/1.1
+
+After the first login, this returns ``400 Bad Request``. When an invitation cannot be sent, the representative API returns ``500`` and keeps the Representative, so a retry of the same request sends it again. An error is logged, without patient information.
+
+.. warning::
+
+    The identity provider must verify email addresses, because the email address is what links the Representative to their identity provider account. A person who signs in at the identity provider with another email address is not matched to the Representative. With ``AllowAutoProvision`` off for that identity provider, they see the error page. With it on, they get a separate account, but never access to the patient they were registered for.
+
 Configuration Guide: Enabling Designated Authorized Representatives
 -------------------------------------------------------------------
 

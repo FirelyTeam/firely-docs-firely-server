@@ -62,6 +62,8 @@ The representative then gets an invitation email and signs in through an externa
 
 A ``Representative`` account is for people who only act on behalf of others. Such a person does not need to be a patient: their account has no ``fhirUser`` and needs no ``Patient`` resource of their own in Firely Server. In the deprecated flow, a representative needed a ``Patient`` account, so every representative had to be registered as a patient first. Firely Server finds the patients a Representative may act for through the ``sub`` identifier of their Firely Auth account on the ``RelatedPerson``.
 
+Acting for others is not a user type: it is held in Firely Server, on the ``RelatedPerson``. So a person who is a patient and also acts for someone else, such as a parent, keeps one ``Patient`` account, as long as they sign in through an external identity provider.
+
 The representative API
 ^^^^^^^^^^^^^^^^^^^^^^
 
@@ -110,13 +112,15 @@ Representatives in the admin UI
 
 - **Add User** offers the user type *Representative* when at least one external identity provider is configured. A Representative gets no password and no claims. Saving the user sends the invitation. An email address that another account uses is refused. When the invitation cannot be sent, the account is kept and the admin UI says so; send it again once the configuration is fixed.
 - The user list shows the type *Representative*, and the user type filter has it.
-- The panel of a Representative shows whether the invitation has been accepted, with **resend invitation** until the first login, and the patients the Representative is linked to, each with **unlink**. The list does not show whether a ``Consent`` for that patient is active.
-- **link representee** links a ``RelatedPerson`` in Firely Server to the Representative: enter its reference, **find** it, check the name, patient and relationship that Firely Auth shows, and link it. Firely Auth adds the identifier ``http://server.fire.ly/auth/identifier/sub|<user id>`` to the ``RelatedPerson``. Linking does not create the ``RelatedPerson`` or its ``Consent``; the application that onboards the representative creates those in Firely Server.
+- The panel of a Representative shows whether the invitation has been accepted, with **resend invitation** until the first login.
+- The panel of a Representative, and of a ``Patient`` who signs in through an external identity provider, lists the patients the account is linked to, each with **unlink**. The list does not show whether a ``Consent`` for that patient is active.
+- **link representee** links a ``RelatedPerson`` in Firely Server to the account: enter its reference, **find** it, check the name, patient and relationship that Firely Auth shows, and link it. Firely Auth adds the identifier ``http://server.fire.ly/auth/identifier/sub|<user id>`` to the ``RelatedPerson``. Linking does not create the ``RelatedPerson`` or its ``Consent``; the application that onboards the representative creates those in Firely Server.
+- A ``RelatedPerson`` that is linked to another account, or whose patient is the account's own ``fhirUser`` Patient, is refused with ``409 Conflict``. A ``Patient`` who signs in with a password cannot be linked (``400 Bad Request``), for the same reason that Representatives have no password: the identity provider vouches that the person's identity was verified.
 - A Backend Service client has the switch *Allow Representative Api Access* in its **Permissions**, the client setting ``AllowRepresentativeApiAccess``. Changing the client type to another type turns it off.
 
 The admin UI is the only place to create a Representative by hand and to link or unlink its patients. The management API (``/api/external/user``) refuses to create a Representative with ``400 Bad Request`` and does not offer linking. An application uses the representative API instead.
 
-Firely Auth reads and changes the ``RelatedPerson`` in Firely Server with a token that it issues to itself, with the audience ``FhirServer:FHIR_BASE_URL``. To show the linked patients and to **find** a ``RelatedPerson``, the token holds the scopes ``system/RelatedPerson.rs`` and ``system/Patient.rs``. For **link representee** and **unlink**, it holds ``system/RelatedPerson.rsu`` and ``system/Patient.rs``. **link representee** and **unlink** read the ``RelatedPerson``, change only its identifier and write it back with a ``PUT`` with ``If-Match`` on the version that was read. When the ``RelatedPerson`` was changed in Firely Server in the meantime, Firely Auth asks the admin to find it again and retry. A ``RelatedPerson`` that is linked to another account is refused.
+Firely Auth reads and changes the ``RelatedPerson`` in Firely Server with a token that it issues to itself, with the audience ``FhirServer:FHIR_BASE_URL``. To show the linked patients and to **find** a ``RelatedPerson``, the token holds the scopes ``system/RelatedPerson.rs`` and ``system/Patient.rs``. For **link representee** and **unlink**, it holds ``system/RelatedPerson.rsu`` and ``system/Patient.rs``. **link representee** and **unlink** read the ``RelatedPerson``, change only its identifier and write it back with a ``PUT`` with ``If-Match`` on the version that was read. When the ``RelatedPerson`` was changed in Firely Server in the meantime, Firely Auth asks the admin to find it again and retry.
 
 No client in Firely Auth needs a setting for this, also not the admin UI. Firely Server needs to accept this token for writes:
 

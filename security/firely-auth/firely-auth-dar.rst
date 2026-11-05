@@ -60,6 +60,8 @@ The Firely Auth account of a representative is created before their first login,
 
 The representative then gets an invitation email and signs in through an external identity provider (see :ref:`firely_auth_sso`).
 
+A ``Representative`` account is for people who only act on behalf of others. Such a person does not need to be a patient: their account has no ``fhirUser`` and needs no ``Patient`` resource of their own in Firely Server. In the deprecated flow, a representative needed a ``Patient`` account, so every representative had to be registered as a patient first. Firely Server finds the patients a Representative may act for through the ``sub`` identifier of their Firely Auth account on the ``RelatedPerson``.
+
 The representative API
 ^^^^^^^^^^^^^^^^^^^^^^
 

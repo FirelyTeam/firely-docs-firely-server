@@ -526,7 +526,7 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
 
 You register a :term:`client` in the ``AllowedClients`` array. For each client you can configure these settings:
 
-- ``ClientId``: string: unique identifier for this client. It should be known to the client as well
+- ``ClientId``: string: unique identifier for this client. It should be known to the client as well. ``Firely-Auth-Internal-FhirLookup`` (in any casing) is reserved: Firely Auth uses it for the tokens it issues to itself for its calls to Firely Server, so a client cannot have this client id. A client with this client id fails validation, in the settings as well as in the admin UI and the management API.
 - ``ClientName``: string: human readable name for the client, it is shown on the consent page
 - ``ClientType``: string: ``ClientType`` specifies the type of OAuth2 client: ``"BackendService"`` (system-only ``client_credentials``), ``"ManagementApi"`` (``client_credentials`` with ``AllowManagementApiAccess``), ``"StandaloneApp"`` (``authorization_code``) or ``"CdsHooks"`` (a CDS Hooks client, see :ref:`firely_auth_settings_cdshooks`), and helps optimize UI validation during client registration by enforcing different constraints on the workflow. Only a ``ManagementApi`` client gets the management API scope in its tokens.
 - ``JwtIssuer``: string, ``CdsHooks`` clients only: the ``iss`` claim of the JWTs the client presents, an absolute URI. See :ref:`firely_auth_settings_cdshooks`.

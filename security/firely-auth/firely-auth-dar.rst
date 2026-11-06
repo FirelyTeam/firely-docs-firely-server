@@ -200,7 +200,7 @@ Representatives in the admin UI
 
 The admin UI is the only place to create a Representative by hand and to link or unlink its patients. The management API (``/api/external/user``) refuses to create a Representative with ``400 Bad Request`` and does not offer linking. An application uses the representative API instead.
 
-Firely Auth reads and changes the ``RelatedPerson`` in Firely Server with a token that it issues to itself, with the audience ``FhirServer:FHIR_BASE_URL``. To show the linked patients and to **find** a ``RelatedPerson``, the token holds the scopes ``system/RelatedPerson.rs`` and ``system/Patient.rs``. For **link representee** and **unlink**, it holds ``system/RelatedPerson.rsu`` and ``system/Patient.rs``. **link representee** and **unlink** read the ``RelatedPerson``, change only its identifier and write it back with a ``PUT`` with ``If-Match`` on the version that was read. When the ``RelatedPerson`` was changed in Firely Server in the meantime, Firely Auth asks the admin to find it again and retry.
+Firely Auth reads and changes the ``RelatedPerson`` in Firely Server with a token that it issues to itself, with the audience ``FhirServer:FHIR_BASE_URL``. To show the linked patients and to **find** a ``RelatedPerson``, the token holds the scopes ``system/RelatedPerson.rs`` and ``system/Patient.rs``. For **link representee** and **unlink**, it holds ``system/RelatedPerson.rus`` and ``system/Patient.rs``. **link representee** and **unlink** read the ``RelatedPerson``, change only its identifier and write it back with a ``PUT`` with ``If-Match`` on the version that was read. When the ``RelatedPerson`` was changed in Firely Server in the meantime, Firely Auth asks the admin to find it again and retry.
 
 No client in Firely Auth needs a setting for this, also not the admin UI. Firely Server needs to accept this token for writes:
 
@@ -209,7 +209,7 @@ No client in Firely Auth needs a setting for this, also not the admin UI. Firely
 - Firely Server returns a version for the ``RelatedPerson``, as an ``ETag`` or in ``meta.versionId``. Firely Auth does not update a ``RelatedPerson`` without a version.
 - No proxy or gateway in front of Firely Server refuses writes with this token.
 
-When Firely Server refuses the ``PUT``, **link representee** shows an error that names the scope ``system/RelatedPerson.rsu``, and the list of linked patients stays readable.
+When Firely Server refuses the ``PUT``, **link representee** shows an error that names the scope ``system/RelatedPerson.rus``, and the list of linked patients stays readable.
 
 The invitation
 ^^^^^^^^^^^^^^

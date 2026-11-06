@@ -363,9 +363,14 @@ The example plugin ``Vonk.Plugin.AuthorizedRepresentativeExample`` implements bo
 - carries the identifier ``http://server.fire.ly/auth/identifier/sub|<user id>``. Firely Auth adds it when an admin links the RelatedPerson to the user (see :ref:`firely_auth_dar_onboarding`);
 - refers to the patient in ``RelatedPerson.patient``;
 - is not ``active = false``, and has a ``period`` that covers the current time, if it has one; a date in a period covers that whole day, month or year, and a time without fractions of a second covers that whole second;
-- is the ``actor`` of an active ``Consent`` of that patient, which does not deny, and whose period covers the current time. For FHIR R4 that is ``provision.type`` and ``provision.period``, for FHIR R5 ``decision`` and ``period``.
+- is the ``actor`` of an active ``Consent`` of that patient that is in force now:
 
-To decide the authorization without Consent resources, replace ``DecideAuthorizationAsync`` in ``RepresentativeAuthorizations.cs``, and return a ``RepresentativeAuthorization`` without a Consent. Then ``$check-authorized-representative`` answers ``result`` = ``true`` without ``consent``. The plugin pushes before it answers. When the push fails, ``$representative-relationships`` answers ``500``.
+  - FHIR R4: the RelatedPerson is an actor of the root ``provision``, whose ``type`` is not ``deny`` and whose ``period`` covers the current time.
+  - FHIR R5: ``decision`` is the base rule and each ``provision`` an exception to it. So the Consent has ``decision`` = ``deny``, the RelatedPerson is an actor of one of its ``provision`` elements, and both ``period`` elements cover the current time.
+
+  The example does not evaluate nested provisions: a provision that has them authorizes nobody.
+
+To decide the authorization without Consent resources, replace ``DecideAuthorizationAsync`` in ``RepresentativeAuthorizations.cs``, and return a ``RepresentativeAuthorization`` without a Consent. Then ``$check-authorized-representative`` answers ``result`` = ``true`` without ``consent``. The plugin pushes before it answers. When the push fails, ``$representative-relationships`` answers ``500``. Each search reads at most 50 resources. When there are more, the operation answers ``500`` instead of deciding on part of them.
 
 Configure the plugin in Firely Server:
 
@@ -870,7 +875,10 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
             /// </summary>
             /// <remarks>
             /// This example requires an active Consent of the patient with the RelatedPerson as actor, that is in force now and does not deny.
-            /// It reads both FHIR R4 (<c>provision.period</c>, <c>provision.type</c>) and FHIR R5 (<c>period</c>, <c>decision</c>).
+            /// For FHIR R4, the RelatedPerson is an actor of the root <c>provision</c>, whose <c>type</c> is not <c>deny</c> and whose <c>period</c> covers now.
+            /// For FHIR R5, <c>decision</c> is the base rule and each <c>provision</c> an exception to it. So the RelatedPerson is an actor of a <c>provision</c>
+            /// of a Consent with <c>decision</c> = <c>deny</c>, and both its <c>period</c> and the provision's <c>period</c> cover now.
+            /// This example does not evaluate nested provisions: a provision that has them authorizes nobody.
             /// A Consent is optional for Firely Auth. When you do not create Consent resources, decide the authorization here in another way,
             /// and return a <see cref="RepresentativeAuthorization"/> without a Consent.
             /// </remarks>
@@ -882,13 +890,43 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
                     ("actor", $"RelatedPerson/{relatedPersonId}"),
                     ("status", "active"));
 
+                var isR5 = vonkContext.InformationModel == VonkConstants.Model.FhirR5;
                 var consent = consents
-                    .Where(c => c.ChildString("decision") != "deny" && c.Child("provision")?.ChildString("type") != "deny")
-                    .Where(c => FhirPeriod.Covers(c.Child("period") ?? c.Child("provision")?.Child("period"), now))
+                    .Where(c => isR5 ? PermitsR5(c, relatedPersonId, now) : PermitsR4(c, now))
                     .OrderBy(c => c.Id, StringComparer.Ordinal)
                     .FirstOrDefault();
 
                 return consent is null ? null : new RepresentativeAuthorization($"Consent/{consent.Id}");
+            }
+
+            private bool PermitsR4(IResource consent, DateTimeOffset now)
+            {
+                var provision = consent.Child("provision");
+                if (provision?.Children("provision").Any() == true)
+                {
+                    logger.LogWarning("Consent/{ConsentId} has nested provisions, which this plugin does not evaluate. It does not authorize anyone", consent.Id);
+                    return false;
+                }
+
+                return provision?.ChildString("type") != "deny" && FhirPeriod.Covers(provision?.Child("period"), now);
+            }
+
+            private bool PermitsR5(IResource consent, string relatedPersonId, DateTimeOffset now)
+            {
+                // A provision is an exception to the decision, so only a provision of a Consent that denies by default can permit
+                if (consent.ChildString("decision") != "deny" || !FhirPeriod.Covers(consent.Child("period"), now))
+                    return false;
+
+                var provisions = consent.Children("provision")
+                    .Where(p => p.Children("actor").Any(a => a.Child("reference")?.ChildString("reference") == $"RelatedPerson/{relatedPersonId}"))
+                    .ToList();
+                if (provisions.Any(p => p.Children("provision").Any()))
+                {
+                    logger.LogWarning("Consent/{ConsentId} has nested provisions, which this plugin does not evaluate. It does not authorize anyone", consent.Id);
+                    return false;
+                }
+
+                return provisions.Any(p => FhirPeriod.Covers(p.Child("period"), now));
             }
 
             /// <summary>
@@ -915,7 +953,8 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
                     arguments.AddArgument(new Argument(ArgumentSource.Internal, name, value) { MustHandle = true });
                 }
 
-                arguments.AddCount(MaxResults);
+                // One more than the limit, to tell a complete result from a cut-off one
+                arguments.AddCount(MaxResults + 1);
 
                 // The lookup is on behalf of Firely Auth, which has no access to these resources itself.
                 // It reads from the primary database, so that a Consent that was just created or withdrawn counts.
@@ -928,8 +967,12 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
                     throw new RepresentativeLookupException($"The search for {resourceType} could not be done.");
                 }
 
-                if (result.Count >= MaxResults)
-                    logger.LogWarning("The search for {ResourceType} found {MaxResults} or more resources. Only the first {MaxResults} are used", resourceType, MaxResults, MaxResults);
+                // A cut-off result could leave out a RelatedPerson or the Consent that is in force, so the lookup fails instead
+                if (result.Count > MaxResults)
+                {
+                    logger.LogError("The search for {ResourceType} found more than {MaxResults} resources, which this plugin does not support", resourceType, MaxResults);
+                    throw new RepresentativeLookupException($"The search for {resourceType} found too many resources.");
+                }
 
                 return result;
             }
@@ -1128,9 +1171,9 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
 
     .. code-block:: csharp
 
-        using System.Globalization;
         using Hl7.Fhir.ElementModel;
         using Vonk.Core.ElementModel;
+        using Vonk.Core.Support;
 
         namespace Vonk.Plugin.AuthorizedRepresentativeExample;
 
@@ -1154,37 +1197,14 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
                 var start = period.ChildString("start");
                 var end = period.ChildString("end");
 
-                if (start is not null && (TryParse(start) is not { } startRange || now < startRange.From))
+                if (start is not null && (!DateTimeRangeParser.TryParse(start, out var startRange) || now < startRange.Start))
                     return false;
 
-                if (end is not null && (TryParse(end) is not { } endRange || now >= endRange.Until))
+                // An end is inclusive at its precision: 2026-11-06 covers that whole day, and a dateTime in seconds covers that whole second
+                if (end is not null && (!DateTimeRangeParser.TryParse(end, out var endRange) || now >= endRange.End))
                     return false;
 
                 return true;
-            }
-
-            /// <summary>
-            /// The instants that a FHIR date or dateTime stands for: from <c>From</c>, up to but not including <c>Until</c>.
-            /// </summary>
-            private static (DateTimeOffset From, DateTimeOffset Until)? TryParse(string value)
-            {
-                const DateTimeStyles styles = DateTimeStyles.AssumeUniversal;
-                var culture = CultureInfo.InvariantCulture;
-
-                switch (value.Length)
-                {
-                    case 4 when DateTimeOffset.TryParseExact(value, "yyyy", culture, styles, out var year):
-                        return (year, year.AddYears(1));
-                    case 7 when DateTimeOffset.TryParseExact(value, "yyyy-MM", culture, styles, out var month):
-                        return (month, month.AddMonths(1));
-                    case 10 when DateTimeOffset.TryParseExact(value, "yyyy-MM-dd", culture, styles, out var day):
-                        return (day, day.AddDays(1));
-                    default:
-                        // An end is inclusive at its precision: a dateTime in seconds covers that whole second
-                        return DateTimeOffset.TryParse(value, culture, styles, out var instant)
-                            ? (instant, value.Contains('.') ? instant.AddTicks(1) : instant.AddSeconds(1))
-                            : null;
-                }
             }
         }
 

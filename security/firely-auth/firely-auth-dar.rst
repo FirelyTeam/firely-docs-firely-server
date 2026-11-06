@@ -247,7 +247,7 @@ Firely Auth calls both operations with a token that it issues to itself:
 - ``client_id``: ``Firely-Auth-Internal-FhirLookup``. Firely Auth reserves this client id: no client can be registered with it. A client that already had this id keeps working, and Firely Auth logs a ``Warning`` about it at startup. Give such a client another id before you enable the operations.
 - audience: ``FhirServer:FHIR_BASE_URL``.
 - scopes: ``RepresentativeRelationshipsScopes`` for ``$representative-relationships``, and ``CheckAuthorizedRepresentativeScopes`` for ``$check-authorized-representative``.
-- for ``$representative-relationships`` only, a ``sub`` claim with the user's Firely Auth id. The token has no ``fhirUser`` or ``patient`` claim.
+- a ``sub`` claim with the Firely Auth id of the user who signs in or refreshes. The token has no ``fhirUser`` or ``patient`` claim.
 
 Firely Server must accept tokens from Firely Auth with this audience (see :ref:`firely_auth_settings`), and both operations must be in the ``Operations`` setting of Firely Server, with the scope that Firely Auth requests as ``OperationScope``:
 
@@ -320,10 +320,10 @@ $check-authorized-representative
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - **URL**: ``POST [base]/Patient/$check-authorized-representative``, at type level.
-- **Input**: a ``Parameters`` resource with ``patient`` (``valueReference``, ``Patient/<id>``) and ``representative`` (``valueReference``, ``RelatedPerson/<id>``). The token has no user claims.
+- **Input**: a ``Parameters`` resource with ``patient`` (``valueReference``, ``Patient/<id>``) and ``representative`` (``valueReference``, ``RelatedPerson/<id>``). The user who chose is the ``sub`` claim of the token, also at a refresh.
 - **Output**: a ``Parameters`` resource with ``result`` (boolean): whether the RelatedPerson may act for the patient now. Optionally ``consent`` (``valueReference``), which Firely Auth logs.
 
-The token has no user, so the check cannot see which user made the choice. The example checks that the RelatedPerson still carries a ``sub`` identifier and is still authorized for the patient. That the RelatedPerson belongs to the user who signed in is up to Firely Auth: it offers only the RelatedPersons of the last push for that user.
+Check that the RelatedPerson still carries the ``sub`` identifier of that user, and is still authorized for the patient. An admin can unlink a RelatedPerson from one user and link it to another. The check on the identifier makes the first user's next refresh fail.
 
 .. code-block:: json
 
@@ -353,7 +353,7 @@ Checking the caller
 Both operations must refuse a caller other than Firely Auth itself, because a push replaces what Firely Auth holds for a user:
 
 - Accept only tokens with ``client_id`` = ``Firely-Auth-Internal-FhirLookup``, and answer ``403`` otherwise. This is a check on the name: it relies on no other client in Firely Auth having that client id. Firely Auth refuses to register a client with it, but a client that already had it keeps working until you give it another id.
-- ``$representative-relationships`` takes the user only from the ``sub`` claim, and answers ``403`` for a token without one.
+- Both operations take the user only from the ``sub`` claim, and answer ``403`` for a token without one.
 
 The example plugin
 ^^^^^^^^^^^^^^^^^^
@@ -675,6 +675,7 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
         /// <remarks>
         /// Firely Auth calls it when a user chooses whom to act for, and at every refresh of a token for that choice.
         /// The input parameters are <c>patient</c> (<c>Patient/&lt;id&gt;</c>) and <c>representative</c> (<c>RelatedPerson/&lt;id&gt;</c>).
+        /// The user who chose is the <c>sub</c> claim of the token.
         /// It answers <c>result</c>, and <c>consent</c> with the Consent that authorizes the pair, if the authorization has one.
         /// </remarks>
         internal sealed partial class CheckAuthorizedRepresentativeOperation(
@@ -703,9 +704,9 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
                 var (request, args, response) = vonkContext.Parts();
                 args.ResourceTypeArguments().Handled();
 
-                if (!FirelyAuthCaller.IsFirelyAuth(vonkContext.HttpContext().User))
+                if (!FirelyAuthCaller.TryGetUserId(vonkContext.HttpContext().User, out var userId))
                 {
-                    logger.LogWarning("${Operation} was refused: the token is not one of Firely Auth itself", Name);
+                    logger.LogWarning("${Operation} was refused: the token is not one of Firely Auth itself, or has no single sub claim", Name);
                     response.HttpResult = StatusCodes.Status403Forbidden;
                     response.Outcome.AddIssue(VonkIssue.FORBIDDEN, "Only Firely Auth may call this operation.");
                     return;
@@ -729,7 +730,7 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
                 RepresentativeAuthorization? authorization;
                 try
                 {
-                    authorization = await authorizations.CheckAsync(patientId, relatedPersonId, vonkContext);
+                    authorization = await authorizations.CheckAsync(userId, patientId, relatedPersonId, vonkContext);
                 }
                 catch (RepresentativeLookupException)
                 {
@@ -833,20 +834,21 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
             }
 
             /// <summary>
-            /// Returns whether the RelatedPerson may act for the patient now.
+            /// Returns whether the RelatedPerson may act for the patient now, on behalf of the user.
             /// </summary>
+            /// <param name="userId">The id in Firely Auth of the user who chose.</param>
             /// <param name="patientId">The id of the Patient.</param>
             /// <param name="relatedPersonId">The id of the RelatedPerson.</param>
             /// <param name="vonkContext">The request the check is for.</param>
             /// <returns>The authorization, or <see langword="null"/> when the RelatedPerson may not act for the patient.</returns>
-            public async Task<RepresentativeAuthorization?> CheckAsync(string patientId, string relatedPersonId, IVonkContext vonkContext)
+            public async Task<RepresentativeAuthorization?> CheckAsync(string userId, string patientId, string relatedPersonId, IVonkContext vonkContext)
             {
                 var relatedPerson = (await SearchAsync(vonkContext, "RelatedPerson", (ArgumentNames.resourceId, relatedPersonId))).SingleOrDefault();
                 if (relatedPerson is null)
                     return null;
 
-                // Only a RelatedPerson that is linked to a user in Firely Auth
-                if (!relatedPerson.Children("identifier").Any(i => i.ChildString("system") == SubIdentifierSystem && !string.IsNullOrEmpty(i.ChildString("value"))))
+                // Only a RelatedPerson that is linked to this user in Firely Auth. It may have been linked to another user since the choice.
+                if (!relatedPerson.Children("identifier").Any(i => i.ChildString("system") == SubIdentifierSystem && i.ChildString("value") == userId))
                     return null;
 
                 return await FindAuthorizationAsync(relatedPerson, vonkContext) is (var authorizedPatientId, var authorization) && authorizedPatientId == patientId

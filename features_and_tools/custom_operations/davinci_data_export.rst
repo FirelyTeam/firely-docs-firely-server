@@ -233,7 +233,7 @@ When SMART on FHIR is enabled, the same token and scope behavior used by BDE app
 
 The opt-out Consent must conform to the DaVinci PDex IG's Provider Consent profile (http://hl7.org/fhir/us/davinci-pdex/StructureDefinition/pdex-provider-consent), listed in ``meta.profile``, and must be associated with the patient through the standard Consent.patient reference. Firely Server treats a ``deny`` Consent as an opt-out in two cases:
 
-* The Consent carries the ``DaVinci-pdex-provider-access-use-case`` extension on ``Consent.provision.action`` set to ``true`` (see IG `PDex Provider Consent profile <https://build.fhir.org/ig/HL7/davinci-epdx/StructureDefinition-pdex-provider-consent.html>`_), **or**
+* The Consent carries the ``DaVinci-pdex-provider-access-use-case`` extension on ``Consent.provision.action`` set to ``true`` (see IG `PDex Provider Consent profile <https://hl7.org/fhir/us/davinci-pdex/STU2.2/StructureDefinition-pdex-provider-consent.html>`_), **or**
 * The Consent has **no** ``DaVinci-pdex-provider-access-use-case`` extension at all — a ``deny`` without the extension is treated as a global opt-out.
 
 The export will exclude patients that have an applicable opt-out Consent in place.

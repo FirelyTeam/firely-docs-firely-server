@@ -306,38 +306,45 @@ To make Firely Server known to Firely Auth, fill in the ``FhirServer``:
 Authorized representatives
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Firely Auth can be configured to allow users to login on behalf of other users for whom they are authorized representatives (e.g., caregivers). It needs to be supported by a custom plugin in Firely Server to manage and expose these relationships. See :ref:`firely_auth_dar` for more information on how to set up authorized representative relationships in Firely Server and Firely Auth.
+Firely Auth lets a user sign in to an app on behalf of a patient they represent, such as a parent for a child. Firely Server decides who may act for whom, through two custom operations that a Firely Server plugin implements. See :ref:`firely_auth_dar` for the login, the operations and an example plugin.
 
 .. warning::
 
-    **Deprecated:** the lookup of relationships through the user's ``Patient`` ``fhirUser`` is deprecated, in favour of ``Representative`` accounts. See :ref:`firely_auth_dar`.
+    **Deprecated:** with ``LookupBySub`` set to ``false``, Patients use the deprecated Patient-account flow, which finds the relationships through the user's ``Patient`` ``fhirUser``. See :ref:`firely_auth_dar_deprecated`.
 
 .. warning::
 
-    This is a beta feature and as such it is subject to change in future releases. Currently, this implementation is not yet working correctly together with all of Firely Auths features, mainly :ref:`firely_auth_settings_launchcontext` and :ref:`firely_auth_settings_disclaimers`. On launch context registration, the Authorized Representative feature will be skipped if launch scopes are included in the token request. For disclaimer registration, disclaimers can be accepted once for each representee, but disclaimers that were agreed to in the authorized representative flow will not be visible in the users overview of accepted disclaimers. Due to the experimental nature of this feature, it is recommended to thoroughly test its functionality in a development or staging environment before deploying it to production.
-
+    This is a beta feature and as such it is subject to change in future releases. Test it thoroughly in a development or staging environment before you use it in production.
 
 .. code-block:: json
 
   "AuthorizedRepresentatives": {
     "LookupOnLogin": false,
+    "LookupBySub": true,
     "LookupRequestScopes": "https://fire.ly/fhir/OperationDefinition/has-authorized-representative-relationships",
+    "RepresentativeRelationshipsScopes": "http://server.fire.ly/auth/scope/representative-relationships",
+    "CheckAuthorizedRepresentativeScopes": "http://server.fire.ly/auth/scope/check-authorized-representative system/Patient.rs",
     "CheckAuthorizedRepresentativeTimeout": 5000, // in ms
     "TitleOnLogin": "Who Are You Signing In As?",
     "TitleOwnProfileOnLogin": "Continue as Yourself",
     "TitleAuthorizedProfilesOnLogin": "Continue On Behalf Of ...",
     "HelpMessageTitleOnFail": "Couldn't load authorized profiles",
-    "HelpMessageOnFail": "A technical error prevented loading the user profiles of all authorized users. Please try again by reloading or continue as yourself."
+    "HelpMessageOnFail": "A technical error prevented loading the user profiles of all authorized users. Please try again by reloading or continue as yourself.",
+    "RepresentativeTitleOnFail": "No one to act for",
+    "RepresentativeMessageOnFail": "Your account is not linked to anyone you can act for at the moment. Please contact the organization that invited you."
   },
 
-- ``LookupOnLogin``: true / false - Whether to look up authorized representatives during login. If set to false, users will not be able to retrieve an access token on behalf of other users. A selection is only accepted while this setting is ``true``, and only for the user's own patient or a patient that Firely Server listed for that user. The list is kept for five minutes after sign-in; a user who chooses someone from it after that is asked to sign in to the app again.
-- ``LookupRequestScopes``: The scope to use when looking up authorized representatives in Firely Server. This requires a custom plugin in Firely Server to expose the relationships that utilizes this scope.
-- ``CheckAuthorizedRepresentativeTimeout``: Timeout in milliseconds for the lookup request to Firely Server.
-- ``TitleOnLogin``: Title text to display on the login page when selecting a profile to sign in as.
-- ``TitleOwnProfileOnLogin``: Text for the button to continue as oneself.
-- ``TitleAuthorizedProfilesOnLogin``: Title text to display above the list of authorized profiles.
-- ``HelpMessageTitleOnFail``: Title text for the help message displayed when the lookup of authorized profiles fails.
-- ``HelpMessageOnFail``: Help message text displayed when the lookup of authorized profiles fails.
+- ``LookupOnLogin``: true / false - Whether a ``Patient`` is asked at sign-in whom they act for. With ``LookupBySub`` on, this applies to Patients who sign in through an external identity provider only. It does not affect users of the type ``Representative``: they always choose whom they act for.
+- ``LookupBySub``: true / false - ``true`` (the default) asks Firely Server through ``$representative-relationships``, with the user's ``sub``, whom a Patient can act for. ``false`` keeps the deprecated Patient-account flow (``$check-authorized-representative-relationships``) for all Patients, for a Firely Server plugin that does not implement the new operation yet.
+- ``LookupRequestScopes``: The scopes of the token for ``$check-authorized-representative-relationships``, in the deprecated Patient-account flow.
+- ``RepresentativeRelationshipsScopes``: The scopes of the token for ``$representative-relationships``.
+- ``CheckAuthorizedRepresentativeScopes``: The scopes of the token for ``$check-authorized-representative``, which Firely Auth calls when the user chooses whom to act for and at every refresh of such a token.
+- ``CheckAuthorizedRepresentativeTimeout``: Timeout in milliseconds for each call to Firely Server.
+- ``TitleOnLogin``: Title text to display on the page where the user chooses whom to act for.
+- ``TitleOwnProfileOnLogin``: Text above the card with which a Patient continues as themselves.
+- ``TitleAuthorizedProfilesOnLogin``: Title text to display above the list of patients the user can act for.
+- ``HelpMessageTitleOnFail`` and ``HelpMessageOnFail``: Title and message shown in the deprecated Patient-account flow when the relationships do not arrive in time.
+- ``RepresentativeTitleOnFail`` and ``RepresentativeMessageOnFail``: Title and message shown to a ``Representative`` who has nobody to act for. The app then gets ``access_denied``.
 
 .. _firely_auth_settings_representativeinvitation:
 

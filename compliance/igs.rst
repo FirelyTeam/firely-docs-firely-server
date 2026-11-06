@@ -303,7 +303,7 @@ Known Limitations
 Da Vinci - Da Vinci Payer Data Exchange
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The `"PDex" Implementation Guide <https://hl7.org/fhir/us/davinci-pdex/STU2/>`_ supports payer-to-payer data exchange, enabling payers to retrieve information about newly enrolled members who request data from their previous health plans.
+The `"PDex" Implementation Guide <https://hl7.org/fhir/us/davinci-pdex/STU2.2/>`_ supports payer-to-payer data exchange, enabling payers to retrieve information about newly enrolled members who request data from their previous health plans.
 It also establishes a foundation for making clinical claims data—such as diagnoses, procedures, and drug codes—accessible to members via a Patient Access API.
 
 .. list-table:: Da Vinci - Da Vinci Payer Data Exchange Overview
@@ -315,13 +315,13 @@ It also establishes a foundation for making clinical claims data—such as diagn
      - Realm
      - Specification Link
 
-   * - * ✔️ v2.0.0
+   * - * ✔️ v2.2.0
   
      - * n/A
 
      - * 🇺🇸
 
-     - * `hl7.fhir.us.davinci-pdex|2.0.0 <https://registry.fhir.org/package/hl7.fhir.us.davinci-pdex|2.0.0>`_
+     - * `hl7.fhir.us.davinci-pdex|2.2.0 <https://registry.fhir.org/package/hl7.fhir.us.davinci-pdex|2.2.0>`_
 
 Known Limitations
 -----------------

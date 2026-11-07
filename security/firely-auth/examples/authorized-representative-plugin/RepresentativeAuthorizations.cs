@@ -133,6 +133,7 @@ internal sealed partial class RepresentativeAuthorizations(ISearchRepository sea
     /// For FHIR R5, <c>decision</c> is the base rule and each <c>provision</c> an exception to it. So the RelatedPerson is an actor of a <c>provision</c>
     /// of a Consent with <c>decision</c> = <c>deny</c>, and both its <c>period</c> and the provision's <c>period</c> cover now.
     /// This example does not evaluate nested provisions: a provision that has them authorizes nobody.
+    /// A provision that permits only some actions, purposes or data authorizes nobody either, because the token gives access to the whole record.
     /// A Consent is optional for Firely Auth. When you do not create Consent resources, decide the authorization here in another way,
     /// and return a <see cref="RepresentativeAuthorization"/> without a Consent.
     /// </remarks>
@@ -169,17 +170,18 @@ internal sealed partial class RepresentativeAuthorizations(ISearchRepository sea
         return consent is null ? null : new RepresentativeAuthorization($"Consent/{consent.Id}");
     }
 
+    // The elements of Consent.provision in R4 and R5 that narrow what is permitted
+    private static readonly string[] RestrictingProvisionElements =
+        ["action", "securityLabel", "purpose", "class", "code", "dataPeriod", "data", "documentType", "resourceType", "expression"];
+
     private bool PermitsR4(IResource consent, string relatedPersonId, Uri serverBase, DateTimeOffset now)
     {
         var provision = consent.Child("provision");
         if (provision is null || !IsActor(provision, relatedPersonId, serverBase))
             return false;
 
-        if (provision.Children("provision").Any())
-        {
-            logger.LogWarning("Consent/{ConsentId} has nested provisions, which this plugin does not evaluate. It does not authorize anyone", consent.Id);
+        if (!IsUnrestricted(consent, provision))
             return false;
-        }
 
         return provision.ChildString("type") != "deny" && FhirPeriod.Covers(provision.Child("period"), now);
     }
@@ -193,13 +195,33 @@ internal sealed partial class RepresentativeAuthorizations(ISearchRepository sea
         var provisions = consent.Children("provision")
             .Where(p => IsActor(p, relatedPersonId, serverBase))
             .ToList();
-        if (provisions.Any(p => p.Children("provision").Any()))
+        if (!provisions.All(p => IsUnrestricted(consent, p)))
+            return false;
+
+        return provisions.Any(p => FhirPeriod.Covers(p.Child("period"), now));
+    }
+
+    /// <summary>
+    /// Returns whether the provision permits everything in the patient's record.
+    /// A token for the representative gives access to the whole record, so a provision that permits only some actions, purposes or data authorizes nobody.
+    /// So does a provision with nested provisions, which this example does not evaluate.
+    /// </summary>
+    private bool IsUnrestricted(IResource consent, ISourceNode provision)
+    {
+        if (provision.Children("provision").Any())
         {
             logger.LogWarning("Consent/{ConsentId} has nested provisions, which this plugin does not evaluate. It does not authorize anyone", consent.Id);
             return false;
         }
 
-        return provisions.Any(p => FhirPeriod.Covers(p.Child("period"), now));
+        if (RestrictingProvisionElements.FirstOrDefault(e => provision.Children(e).Any()) is { } restriction)
+        {
+            logger.LogWarning("Consent/{ConsentId} restricts its provision with '{Element}', which a token for the whole record cannot enforce. It does not authorize anyone",
+                consent.Id, restriction);
+            return false;
+        }
+
+        return true;
     }
 
     private static bool IsActor(ISourceNode provision, string relatedPersonId, Uri serverBase) =>
@@ -234,12 +256,22 @@ internal sealed partial class RepresentativeAuthorizations(ISearchRepository sea
             arguments.AddArgument(new Argument(ArgumentSource.Internal, name, value) { MustHandle = true });
         }
 
-        // One more than the limit, to tell a complete result from a cut-off one
-        arguments.AddCount(MaxResults + 1);
+        // One more than the limit, to tell a complete result from a cut-off one. The total number of matches is not needed, so the repository does not count them.
+        arguments.AddCount(MaxResults + 1).AddTotalNone();
 
         // The lookup is on behalf of Firely Auth, which has no access to these resources itself.
         // It reads from the primary database, so that a Consent that was just created or withdrawn counts.
-        var result = (await searchRepository.SearchCurrentWithFullAccess(arguments, vonkContext.ServerBase, vonkContext.InformationModel)).ToList();
+        List<IResource> result;
+        try
+        {
+            result = (await searchRepository.SearchCurrentWithFullAccess(arguments, vonkContext.ServerBase, vonkContext.InformationModel)).ToList();
+        }
+        catch (VonkParameterException ex)
+        {
+            // The plugin builds these searches itself, so a refused parameter is a defect here and not a fault of the caller
+            logger.LogError(ex, "The repository refused the search for {ResourceType}", resourceType);
+            throw new RepresentativeLookupException($"The search for {resourceType} could not be done.");
+        }
 
         if (arguments.Any(a => a.MustHandle && a.Status != ArgumentStatus.Handled))
         {

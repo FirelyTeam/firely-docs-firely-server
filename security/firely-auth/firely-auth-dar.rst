@@ -23,7 +23,7 @@ Two kinds of accounts can act for others:
 
 .. warning::
 
-    This is a beta feature and as such it is subject to change in future releases. Test it thoroughly in a development or staging environment before you use it in production.
+    This is a beta feature and as such it is subject to change in future releases. Disclaimers that a user agrees to while acting for someone else are not shown in the user's overview of agreed disclaimers. Test it thoroughly in a development or staging environment before you use it in production.
 
 .. warning::
 
@@ -90,7 +90,7 @@ The token
      - their own ``Patient``
      - their own patient, as without DAR
 
-The token response has ``patient`` whatever the scopes. The userinfo endpoint returns the same ``fhirUser``, and so does the id_token of a client with ``AlwaysIncludeUserClaimsInIdToken``. Firely Server restricts the token to the chosen patient's compartment, as for any token with a ``patient`` claim.
+The token response has ``patient`` whatever the scopes. The userinfo endpoint returns the same ``fhirUser``, and so does the id_token of a client with ``AlwaysIncludeUserClaimsInIdToken``. Firely Server restricts requests to the chosen patient's compartment only for patient-level scopes (``patient/...``). For user-level and system-level scopes it does not evaluate a compartment, see :ref:`feature_accesscontrol_compartment`. So give apps that a representative uses patient-level scopes only. The ``patient`` claim holds the id of the Patient, as Firely Server pushed it in ``PatientId``. So ``SmartAuthorizationOptions:PatientFilter`` in Firely Server must match on the id: ``_id=#patient#``.
 
 Every refresh of a token for someone else calls ``$check-authorized-representative`` again with the pair in the token. When Firely Server answers ``false``, or cannot be reached, the refresh fails with ``invalid_grant``. So after a revoked authorization, the app gets no new access token. An access token that was already issued stays valid until it expires, so keep the access token lifetime short. A refresh also fails once the user can no longer act for others, for example when an admin changed their user type. Firely Auth logs the ``consent`` reference that Firely Server returns.
 
@@ -894,7 +894,7 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
 
                 var isR5 = vonkContext.InformationModel == VonkConstants.Model.FhirR5;
                 var consent = consents
-                    .Where(c => isR5 ? PermitsR5(c, relatedPersonId, now) : PermitsR4(c, now))
+                    .Where(c => isR5 ? PermitsR5(c, relatedPersonId, vonkContext.ServerBase, now) : PermitsR4(c, now))
                     .OrderBy(c => c.Id, StringComparer.Ordinal)
                     .FirstOrDefault();
 
@@ -913,14 +913,15 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
                 return provision?.ChildString("type") != "deny" && FhirPeriod.Covers(provision?.Child("period"), now);
             }
 
-            private bool PermitsR5(IResource consent, string relatedPersonId, DateTimeOffset now)
+            private bool PermitsR5(IResource consent, string relatedPersonId, Uri serverBase, DateTimeOffset now)
             {
                 // A provision is an exception to the decision, so only a provision of a Consent that denies by default can permit
                 if (consent.ChildString("decision") != "deny" || !FhirPeriod.Covers(consent.Child("period"), now))
                     return false;
 
                 var provisions = consent.Children("provision")
-                    .Where(p => p.Children("actor").Any(a => a.Child("reference")?.ChildString("reference") == $"RelatedPerson/{relatedPersonId}"))
+                    .Where(p => p.Children("actor").Any(a => a.Child("reference")?.ChildString("reference") is { } reference &&
+                        ToRelative(reference, serverBase) == $"RelatedPerson/{relatedPersonId}"))
                     .ToList();
                 if (provisions.Any(p => p.Children("provision").Any()))
                 {

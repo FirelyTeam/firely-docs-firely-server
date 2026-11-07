@@ -54,8 +54,9 @@ internal sealed class RepresentativeRelationshipsOperation(
         {
             await firelyAuth.PushAsync(userId, representees, httpContext.RequestAborted);
         }
-        catch (HttpRequestException ex)
+        catch (Exception ex) when (ex is HttpRequestException || (ex is TaskCanceledException && !httpContext.RequestAborted.IsCancellationRequested))
         {
+            // A TaskCanceledException that the caller did not cause is a timeout of the push
             logger.LogError(ex, "Pushing {Count} representative relationships of user {UserId} to Firely Auth failed", representees.Count, userId);
             response.HttpResult = StatusCodes.Status500InternalServerError;
             response.Outcome.AddIssue(VonkIssue.INTERNAL_ERROR, "The request could not be processed.");

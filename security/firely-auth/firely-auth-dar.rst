@@ -370,7 +370,7 @@ The example plugin ``Vonk.Plugin.AuthorizedRepresentativeExample`` implements bo
 
   The example does not evaluate nested provisions: a provision that has them authorizes nobody. It reads Consents of FHIR R4 and R5 only. For another FHIR version, both operations answer ``500``.
 
-To decide the authorization without Consent resources, replace ``DecideAuthorizationAsync`` in ``RepresentativeAuthorizations.cs``, and return a ``RepresentativeAuthorization`` without a Consent. Then ``$check-authorized-representative`` answers ``result`` = ``true`` without ``consent``. The plugin pushes before it answers. When the push fails, ``$representative-relationships`` answers ``500``. Each search reads at most 50 resources. When there are more, the operation answers ``500`` instead of deciding on part of them.
+To decide the authorization without Consent resources, replace ``DecideAuthorizationAsync`` in ``RepresentativeAuthorizations.cs``, and return a ``RepresentativeAuthorization`` without a Consent. The method gets the RelatedPerson and the id of its patient. The checks on the RelatedPerson in the first three points above stay in place. Then ``$check-authorized-representative`` answers ``result`` = ``true`` without ``consent``. The plugin pushes before it answers. When the push fails, ``$representative-relationships`` answers ``500``. Each search reads at most 50 resources. When there are more, the operation answers ``500`` instead of deciding on part of them.
 
 Configure the plugin in Firely Server:
 
@@ -772,8 +772,8 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
         /// A user may act for a patient through a RelatedPerson of that patient that carries the identifier
         /// <c>http://server.fire.ly/auth/identifier/sub|&lt;user id&gt;</c>. Firely Auth adds that identifier when an admin links the RelatedPerson to the user.
         /// The RelatedPerson must be active, and its period must cover the current time.
-        /// This example also requires an active Consent with the RelatedPerson as actor, see <see cref="FindConsentAsync"/>.
-        /// A Consent is optional: replace that method to decide the authorization in another way.
+        /// This example also requires an active Consent with the RelatedPerson as actor, see <see cref="DecideAuthorizationAsync"/>.
+        /// A Consent is optional: replace that method to decide the authorization in another way. The checks above stay in place.
         /// </remarks>
         internal sealed partial class RepresentativeAuthorizations(ISearchRepository searchRepository, TimeProvider timeProvider, ILogger<RepresentativeAuthorizations> logger)
         {
@@ -875,7 +875,7 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
                     return null;
 
                 var patientId = match.Groups["id"].Value;
-                return await DecideAuthorizationAsync(patientId, relatedPerson.Id, vonkContext, now) is { } authorization
+                return await DecideAuthorizationAsync(patientId, relatedPerson, vonkContext, now) is { } authorization
                     ? (patientId, authorization)
                     : null;
             }
@@ -892,9 +892,15 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
             /// A Consent is optional for Firely Auth. When you do not create Consent resources, decide the authorization here in another way,
             /// and return a <see cref="RepresentativeAuthorization"/> without a Consent.
             /// </remarks>
+            /// <param name="patientId">The id of the Patient that the RelatedPerson refers to.</param>
+            /// <param name="relatedPerson">The RelatedPerson. It is linked to the user, active and in force now.</param>
+            /// <param name="vonkContext">The request the decision is for.</param>
+            /// <param name="now">The current time.</param>
             /// <returns>The authorization, or <see langword="null"/> when the RelatedPerson may not act for the patient.</returns>
-            private async Task<RepresentativeAuthorization?> DecideAuthorizationAsync(string patientId, string relatedPersonId, IVonkContext vonkContext, DateTimeOffset now)
+            private async Task<RepresentativeAuthorization?> DecideAuthorizationAsync(string patientId, IResource relatedPerson, IVonkContext vonkContext, DateTimeOffset now)
             {
+                var relatedPersonId = relatedPerson.Id;
+
                 // The Consent resource differs between FHIR versions, and this example reads only R4 and R5
                 if (vonkContext.InformationModel is not (VonkConstants.Model.FhirR4 or VonkConstants.Model.FhirR5))
                 {

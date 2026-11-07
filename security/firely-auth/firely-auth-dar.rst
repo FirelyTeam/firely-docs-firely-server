@@ -761,6 +761,7 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
         using Vonk.Core.Context;
         using Vonk.Core.ElementModel;
         using Vonk.Core.Repository;
+        using Vonk.Core.Support;
 
         namespace Vonk.Plugin.AuthorizedRepresentativeExample;
 
@@ -902,25 +903,31 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
                     ("actor", $"RelatedPerson/{relatedPersonId}"),
                     ("status", "active"));
 
+                // The search also matches a reference to a contained resource with the same id, so check the references themselves
                 var isR5 = vonkContext.InformationModel == VonkConstants.Model.FhirR5;
+                var serverBase = vonkContext.ServerBase;
                 var consent = consents
-                    .Where(c => isR5 ? PermitsR5(c, relatedPersonId, vonkContext.ServerBase, now) : PermitsR4(c, now))
+                    .Where(c => IsReferenceTo(c.Child(isR5 ? "subject" : "patient"), PatientReference(), patientId, serverBase))
+                    .Where(c => isR5 ? PermitsR5(c, relatedPersonId, serverBase, now) : PermitsR4(c, relatedPersonId, serverBase, now))
                     .OrderBy(c => c.Id, StringComparer.Ordinal)
                     .FirstOrDefault();
 
                 return consent is null ? null : new RepresentativeAuthorization($"Consent/{consent.Id}");
             }
 
-            private bool PermitsR4(IResource consent, DateTimeOffset now)
+            private bool PermitsR4(IResource consent, string relatedPersonId, Uri serverBase, DateTimeOffset now)
             {
                 var provision = consent.Child("provision");
-                if (provision?.Children("provision").Any() == true)
+                if (provision is null || !IsActor(provision, relatedPersonId, serverBase))
+                    return false;
+
+                if (provision.Children("provision").Any())
                 {
                     logger.LogWarning("Consent/{ConsentId} has nested provisions, which this plugin does not evaluate. It does not authorize anyone", consent.Id);
                     return false;
                 }
 
-                return provision?.ChildString("type") != "deny" && FhirPeriod.Covers(provision?.Child("period"), now);
+                return provision.ChildString("type") != "deny" && FhirPeriod.Covers(provision.Child("period"), now);
             }
 
             private bool PermitsR5(IResource consent, string relatedPersonId, Uri serverBase, DateTimeOffset now)
@@ -930,8 +937,7 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
                     return false;
 
                 var provisions = consent.Children("provision")
-                    .Where(p => p.Children("actor").Any(a => a.Child("reference")?.ChildString("reference") is { } reference &&
-                        RelatedPersonReference().Match(ToRelative(reference, serverBase)) is { Success: true } match && match.Groups["id"].Value == relatedPersonId))
+                    .Where(p => IsActor(p, relatedPersonId, serverBase))
                     .ToList();
                 if (provisions.Any(p => p.Children("provision").Any()))
                 {
@@ -942,14 +948,22 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
                 return provisions.Any(p => FhirPeriod.Covers(p.Child("period"), now));
             }
 
+            private static bool IsActor(ISourceNode provision, string relatedPersonId, Uri serverBase) =>
+                provision.Children("actor").Any(a => IsReferenceTo(a.Child("reference"), RelatedPersonReference(), relatedPersonId, serverBase));
+
             /// <summary>
-            /// Returns <paramref name="reference"/> relative to <paramref name="serverBase"/>. A reference to another server stays absolute, and so matches no local Patient.
+            /// Returns whether <paramref name="reference"/> refers to the resource with <paramref name="id"/> on this server, with or without a version.
+            /// A reference to another server, or to a contained resource, does not.
             /// </summary>
-            private static string ToRelative(string reference, Uri serverBase)
-            {
-                var baseUrl = serverBase.ToString().TrimEnd('/') + "/";
-                return reference.StartsWith(baseUrl, StringComparison.OrdinalIgnoreCase) ? reference[baseUrl.Length..] : reference;
-            }
+            private static bool IsReferenceTo(ISourceNode? reference, Regex pattern, string id, Uri serverBase) =>
+                reference?.ChildString("reference") is { } value &&
+                pattern.Match(ToRelative(value, serverBase)) is { Success: true } match &&
+                match.Groups["id"].Value == id;
+
+            /// <summary>
+            /// Returns <paramref name="reference"/> relative to <paramref name="serverBase"/>. A reference to another server stays absolute, and so matches no local resource.
+            /// </summary>
+            private static string ToRelative(string reference, Uri serverBase) => UrlMapping.MakeRelative(reference, serverBase);
 
             /// <summary>
             /// Escapes the characters that have a meaning in a FHIR search value, so that the value is matched as it is.

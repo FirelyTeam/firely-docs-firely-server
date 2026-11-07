@@ -368,7 +368,7 @@ The example plugin ``Vonk.Plugin.AuthorizedRepresentativeExample`` implements bo
   - FHIR R4: the RelatedPerson is an actor of the root ``provision``, whose ``type`` is not ``deny`` and whose ``period`` covers the current time.
   - FHIR R5: ``decision`` is the base rule and each ``provision`` an exception to it. So the Consent has ``decision`` = ``deny``, the RelatedPerson is an actor of one of its ``provision`` elements, and both ``period`` elements cover the current time.
 
-  The example does not evaluate nested provisions: a provision that has them authorizes nobody.
+  The example does not evaluate nested provisions: a provision that has them authorizes nobody. It reads Consents of FHIR R4 and R5 only. For another FHIR version, both operations answer ``500``.
 
 To decide the authorization without Consent resources, replace ``DecideAuthorizationAsync`` in ``RepresentativeAuthorizations.cs``, and return a ``RepresentativeAuthorization`` without a Consent. Then ``$check-authorized-representative`` answers ``result`` = ``true`` without ``consent``. The plugin pushes before it answers. When the push fails, ``$representative-relationships`` answers ``500``. Each search reads at most 50 resources. When there are more, the operation answers ``500`` instead of deciding on part of them.
 
@@ -786,6 +786,9 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
             [GeneratedRegex(@"^Patient/(?<id>[A-Za-z0-9\-\.]{1,64})(?:/_history/[^/]+)?$")]
             private static partial Regex PatientReference();
 
+            [GeneratedRegex(@"^RelatedPerson/(?<id>[A-Za-z0-9\-\.]{1,64})(?:/_history/[^/]+)?$")]
+            private static partial Regex RelatedPersonReference();
+
             /// <summary>
             /// Returns the patients that the user may act for now, each patient once.
             /// </summary>
@@ -887,6 +890,13 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
             /// <returns>The authorization, or <see langword="null"/> when the RelatedPerson may not act for the patient.</returns>
             private async Task<RepresentativeAuthorization?> DecideAuthorizationAsync(string patientId, string relatedPersonId, IVonkContext vonkContext, DateTimeOffset now)
             {
+                // The Consent resource differs between FHIR versions, and this example reads only R4 and R5
+                if (vonkContext.InformationModel is not (VonkConstants.Model.FhirR4 or VonkConstants.Model.FhirR5))
+                {
+                    logger.LogError("This plugin decides authorizations for FHIR R4 and R5 only, not for {InformationModel}", vonkContext.InformationModel);
+                    throw new RepresentativeLookupException($"Consent resources of {vonkContext.InformationModel} are not supported.");
+                }
+
                 var consents = await SearchAsync(vonkContext, "Consent",
                     ("patient", $"Patient/{patientId}"),
                     ("actor", $"RelatedPerson/{relatedPersonId}"),
@@ -921,7 +931,7 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
 
                 var provisions = consent.Children("provision")
                     .Where(p => p.Children("actor").Any(a => a.Child("reference")?.ChildString("reference") is { } reference &&
-                        ToRelative(reference, serverBase) == $"RelatedPerson/{relatedPersonId}"))
+                        RelatedPersonReference().Match(ToRelative(reference, serverBase)) is { Success: true } match && match.Groups["id"].Value == relatedPersonId))
                     .ToList();
                 if (provisions.Any(p => p.Children("provision").Any()))
                 {

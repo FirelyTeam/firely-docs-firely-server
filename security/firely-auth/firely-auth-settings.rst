@@ -338,7 +338,7 @@ Firely Auth lets a user sign in to an app on behalf of a patient they represent,
 - ``LookupBySub``: true / false - ``true`` (the default) asks Firely Server through ``$representative-relationships``, with the user's ``sub``, whom a Patient can act for. ``false`` keeps the deprecated Patient-account flow (``$check-authorized-representative-relationships``) for all Patients, for a Firely Server plugin that does not implement the new operation yet.
 - ``LookupRequestScopes``: The scopes of the token for ``$check-authorized-representative-relationships``, in the deprecated Patient-account flow.
 - ``RepresentativeRelationshipsScopes``: The scopes of the token for ``$representative-relationships``.
-- ``CheckAuthorizedRepresentativeScopes``: The scopes of the token for ``$check-authorized-representative``, which Firely Auth calls when the user chooses whom to act for and at every refresh of such a token.
+- ``CheckAuthorizedRepresentativeScopes``: The scopes of the token for ``$check-authorized-representative``, which Firely Auth calls when the user chooses whom to act for and at every refresh of such a token. The default also holds ``system/Patient.rs``, because Firely Server answers an operation for a backend client only when its token carries at least one ``system/`` scope; the operation itself does not need it.
 - ``CheckAuthorizedRepresentativeTimeout``: Timeout in milliseconds for each call to Firely Server.
 - ``TitleOnLogin``: Title text to display on the page where the user chooses whom to act for.
 - ``TitleOwnProfileOnLogin``: Text above the card with which a Patient continues as themselves.

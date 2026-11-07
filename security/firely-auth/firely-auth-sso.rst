@@ -82,6 +82,10 @@ In Firely Auth, each user profile must contain a fhirUser claim - regardless if 
 This claim may be copied from the ID token of the SSO provider (see ``UserClaimsFromIdToken`` setting above), be set via the UI or account management REST API by an admin manually (see below), or by looking up the patient or practitioner id in the FHIR server (see the ``FhirUserLookupClaimsMapping`` setting above).
 A login with an account not containing the claim will be blocked.
 
+Only one account can be linked to a FHIR record. An SSO login is refused, with the page that asks the user to contact their administrator, when its ``fhirUser`` belongs to another account, or when the value is not a valid reference to a ``Patient`` or ``Practitioner`` resource. No account is created for such a login, and a ``Warning`` with the account ids is logged. Map at most one claim to ``fhirUser`` in ``UserClaimsFromIdToken``; Firely Auth does not start when an identity provider maps more than one. See :ref:`firely_auth_mgmt_fhirrecord`.
+
+A user of the type ``Representative`` (see :ref:`firely_auth_dar_onboarding`) has no ``fhirUser``. Their SSO login does not need one, and does not turn them into a Patient or Practitioner, also when the lookup finds a resource or the identity provider sends a ``fhirUser`` claim.
+
 Using Microsoft Entra ID (formerly Azure Active Directory)
 ----------------------------------------------------------
 

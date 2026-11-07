@@ -9,7 +9,16 @@ Firely Auth User Management
 After you have installed, started and created your admin account, you can now manage users in the UI.
 After creation of a local account (not using Single Sign-on), an email will be sent to the address of the account to activate the account. When this link expires, an admin can resend this email through the UI.
 
-When you want to manage the users programmatically, you can use the API's that are specified in the swagger documentation which you can find at: https://localhost:5001/swagger/ (or replace localhost with the url of your Firely Auth installation). The API enables the creation, updating and deletion of users. User claims of the reserved claim types ``role``, ``sub``, ``scope``, ``client_id``, ``amr``, ``idp``, ``aud``, ``iss`` and ``fineGrainedScope`` cannot be set and are refused with ``400 Bad Request``.
+When you want to manage the users programmatically, you can use the API's that are specified in the swagger documentation which you can find at: https://localhost:5001/swagger/ (or replace localhost with the url of your Firely Auth installation). The API enables the creation, updating and deletion of users. User claims of the reserved claim types ``role``, ``sub``, ``scope``, ``client_id``, ``amr``, ``idp``, ``aud``, ``iss``, ``auth_time`` and ``fineGrainedScope`` cannot be set and are refused with ``400 Bad Request``.
+A ``POST``, ``PUT``, ``PATCH`` or ``DELETE`` by an admin in the admin UI needs a recent login, see ``AdminReauthenticationWindow`` in :ref:`firely_auth_settings_account`. Management API clients are not affected.
+
+Firely Auth refuses a ``POST``, ``PUT``, ``PATCH`` or ``DELETE`` on its API that does not come from Firely Auth itself, with ``403 Forbidden`` and the code ``cross_site_request``. This protects admins against web pages that make their browser submit admin actions. A request passes when the browser sets ``Sec-Fetch-Site: same-origin``. Without that header, the ``Origin`` header must match the scheme, host and port of Firely Auth. Browsers do not send ``Sec-Fetch-Site`` when Firely Auth is served over plain ``http`` on a host other than ``localhost``, so there only the ``Origin`` check applies. A request with neither header is refused, and so is a request from another subdomain of the same site. Firely Auth logs a ``Warning`` per refused request with the method, the path and both headers. There is no setting to turn this off.
+
+- The admin UI is not affected. Neither are the management API (``/api/external``), which only accepts a client token, and the OpenID Connect endpoints under ``/connect``.
+- A script that calls the admin UI's API with a copied login cookie must send ``Sec-Fetch-Site: same-origin``, or use the management API with a client token instead.
+- Behind a reverse proxy that changes the host or scheme, enable ``ReverseProxySupport`` (see :ref:`firely_auth_settings_proxyheaders`), so that Firely Auth compares the ``Origin`` header with its public address.
+- A browser extension or proxy that strips both headers makes admin changes fail with ``403 Forbidden``.
+
 To be able to use the admin management API, you will need a client token (obtained trough the client_credentials flow) for a client who has the ``AllowManagementApiAccess`` property set to true. You will have to request the scope ``http://server.fire.ly/auth/scope/authmanagement`` to get access to the management api's. Note that if you do not set this property to true and try to get a token, Firely Auth will throw an error on the scopes: ``No scopes found in request``. Firely Auth will disable the check for the presence of scopes on the admin APIs if ``AllowManagementApiAccess`` is enabled.
 
 It is recommended to use a specific client for this API access, like:
@@ -103,3 +112,27 @@ When a user lost their authenticator and recovery codes, an admin can reset thei
   Authorization: Bearer <management API token>
 
 This turns 2FA off for the user, replaces their authenticator key and removes their recovery codes. The response is ``200 OK``, ``400 Bad Request`` when the user does not have 2FA enabled, or ``404 Not Found`` for an unknown user. The user endpoints also return ``twoFactorEnabled`` for each user. Each reset logs one ``Information`` line with the ids of the user and of the admin or client that reset it.
+
+.. _firely_auth_mgmt_fhirrecord:
+
+One account per FHIR record
+---------------------------
+
+Only one account can be linked to a FHIR record. Two ``fhirUser`` values point to the same record when their resource type and id are the same; the base URL is not compared, so ``Patient/123`` and ``https://fhir.example.org/Patient/123`` are the same record. There is no setting to turn this off.
+
+- **Admin UI and management API.** Creating or updating a user (``POST`` and ``PUT`` on ``/api/admin/user`` and ``/api/external/user``) with a ``fhirUser`` that another account is linked to is refused with ``409 Conflict``. The response names the other account, and the admin UI shows it in the user form. A refused request changes nothing.
+- **Single sign-on.** A login whose ``fhirUser``, mapped from the ID token or found through ``FhirUserLookupClaimsMapping``, belongs to another account is refused with the page that asks the user to contact their administrator. See :ref:`firely_auth_sso`.
+- **Valid values only.** A ``fhirUser`` must be a reference to a ``Patient`` or ``Practitioner`` resource with a valid FHIR id, such as ``Patient/123``, optionally with a base URL that may have a path, such as ``https://ehr.example.org/fhir/Patient/123``. Other values, such as ``Patient/abc_1`` (a FHIR id has no ``_``), an id longer than 64 characters or a value with whitespace, are refused with ``400 Bad Request`` for every user type, and an SSO login that maps or looks up such a value is refused.
+
+Accounts from before the upgrade
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Accounts that were linked to the same FHIR record before the upgrade keep working: they can sign in and can be edited, as long as their ``fhirUser`` is not changed to another record that is taken. A local account with a ``fhirUser`` that is not valid can sign in, but is linked to no FHIR record: it gets no patient launch context and no authorized representative selection. Such an account can only be saved again with a valid ``fhirUser``. An SSO account whose identity provider sends a value that is not valid is refused at login.
+
+Firely Auth reports these accounts so that an admin can resolve them:
+
+- At startup, Firely Auth logs one ``Warning`` per FHIR record that two or more accounts are linked to, and one per account with a ``fhirUser`` that is not valid. These lines name only the account ids, not the ``fhirUser`` values or email addresses.
+- The user list in the admin UI shows a warning with the number of these accounts, and gives each of them the tag *Needs attention*, with the reason in its tooltip. The *Needs attention* filter lists all of them, and the panel of such a user shows the other accounts linked to the same FHIR record.
+- The user list of the management API (``GET /api/external/user``) returns ``sharesFhirRecord`` and ``hasInvalidFhirUser`` for each account, and accepts the filter ``NeedsAttention``. A single user returns ``hasInvalidFhirUser`` and ``usersLinkedToSameFhirRecord``.
+
+To resolve an account, delete the account that is not used, or change its ``fhirUser``.

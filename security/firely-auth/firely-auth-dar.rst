@@ -41,8 +41,8 @@ Two kinds of accounts can act for others:
 
 .. _firely_auth_dar_interactions:
 
-How the parts work together
----------------------------
+Overview of all interactions
+----------------------------
 
 The diagram shows every interaction between the parts, from onboarding a representative to refreshing their token.
 

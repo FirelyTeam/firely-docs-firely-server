@@ -312,7 +312,7 @@ The push to Firely Auth
 
 .. important::
 
-    Firely Auth trusts the push. It does not check that each ``Representative`` carries the user's ``sub`` identifier, or that the ``RelatedPerson`` belongs to ``PatientId``. Your operation must push only RelatedPersons that do. Firely Auth checks each pair again with ``$check-authorized-representative`` when the user chooses, and at every refresh, before it issues a token.
+    Firely Auth trusts the push. It does not check that each ``Representative`` carries the user's ``sub`` identifier, or that the ``RelatedPerson`` belongs to ``PatientId``. Your operation must push only RelatedPersons that do. A token search can ignore case, depending on the database, so compare the identifier value with the ``sub`` exactly before you push the RelatedPerson. Firely Auth checks each pair again with ``$check-authorized-representative`` when the user chooses, and at every refresh, before it issues a token.
 
 The endpoint ``/api/external/authorized-representative`` is only for the deprecated Patient-account flow, see :ref:`firely_auth_dar_deprecated`.
 
@@ -360,7 +360,7 @@ The example plugin
 
 The example plugin ``Vonk.Plugin.AuthorizedRepresentativeExample`` implements both operations. A user may act for a patient through a ``RelatedPerson`` that:
 
-- carries the identifier ``http://server.fire.ly/auth/identifier/sub|<user id>``. Firely Auth adds it when an admin links the RelatedPerson to the user (see :ref:`firely_auth_dar_onboarding`);
+- carries the identifier ``http://server.fire.ly/auth/identifier/sub|<user id>``, with the user id in exactly the same case. Firely Auth adds it when an admin links the RelatedPerson to the user (see :ref:`firely_auth_dar_onboarding`);
 - refers to the patient in ``RelatedPerson.patient``;
 - is not ``active = false``, and has a ``period`` that covers the current time, if it has one; a date in a period covers that whole day, month or year, and a time without fractions of a second covers that whole second;
 - is the ``actor`` of an active ``Consent`` of that patient that is in force now:
@@ -800,7 +800,8 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
                 var relatedPersons = await SearchAsync(vonkContext, "RelatedPerson", ("identifier", $"{SubIdentifierSystem}|{EscapeSearchValue(userId)}"));
 
                 List<(string PatientId, IResource RelatedPerson, string? Consent)> authorized = [];
-                foreach (var relatedPerson in relatedPersons.OrderBy(r => r.Id, StringComparer.Ordinal))
+                // A token search can ignore case, depending on the database. Keep only the RelatedPersons linked to exactly this user.
+                foreach (var relatedPerson in relatedPersons.Where(r => IsLinkedTo(r, userId)).OrderBy(r => r.Id, StringComparer.Ordinal))
                 {
                     if (await FindAuthorizationAsync(relatedPerson, vonkContext) is not (var patientId, { Consent: var consent }))
                         continue;
@@ -852,13 +853,16 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
                     return null;
 
                 // Only a RelatedPerson that is linked to this user in Firely Auth. It may have been linked to another user since the choice.
-                if (!relatedPerson.Children("identifier").Any(i => i.ChildString("system") == SubIdentifierSystem && i.ChildString("value") == userId))
+                if (!IsLinkedTo(relatedPerson, userId))
                     return null;
 
                 return await FindAuthorizationAsync(relatedPerson, vonkContext) is (var authorizedPatientId, var authorization) && authorizedPatientId == patientId
                     ? authorization
                     : null;
             }
+
+            private static bool IsLinkedTo(IResource relatedPerson, string userId) =>
+                relatedPerson.Children("identifier").Any(i => i.ChildString("system") == SubIdentifierSystem && i.ChildString("value") == userId);
 
             private async Task<(string PatientId, RepresentativeAuthorization Authorization)?> FindAuthorizationAsync(IResource relatedPerson, IVonkContext vonkContext)
             {

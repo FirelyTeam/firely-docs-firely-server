@@ -314,7 +314,7 @@ Firely Auth lets a user sign in to an app on behalf of a patient they represent,
 
 .. warning::
 
-    This is a beta feature and as such it is subject to change in future releases. Test it thoroughly in a development or staging environment before you use it in production.
+    This is a beta feature and as such it is subject to change in future releases. Disclaimers that a user agrees to while acting for someone else are not shown in the user's overview of agreed disclaimers. Test it thoroughly in a development or staging environment before you use it in production.
 
 .. code-block:: json
 

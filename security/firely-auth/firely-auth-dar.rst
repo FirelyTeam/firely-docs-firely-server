@@ -632,7 +632,7 @@ To implement the operation, a plugin:
 3. posts them to Firely Auth, with a management API token;
 4. answers ``result`` = ``true`` when it found at least one patient, and ``false`` otherwise.
 
-Firely Server ships no implementation of this operation, and no example of it is maintained.
+Firely Server ships no implementation of this operation. An example plugin for it, ``CheckAuthorizedRepresentativeRelationshipsExampleService``, is in the `documentation of Firely Server 6.11.0 <https://docs.fire.ly/projects/Firely-Server/en/6.11.0/security/firely-auth/firely-auth-dar.html>`_. That example is not maintained.
 
 .. _firely_auth_dar_migration:
 

@@ -10,7 +10,7 @@ CMS Interoperability and Prior Authorization Final Rule (CMS-0057-F) - 🇺🇸
 .. |PRAUTH| replace:: Prior Authorization API
 .. |CARIN|  replace:: CARIN for Blue Button® IG Version STU 2.0.0
 .. |SMART|  replace:: SMART App Launch IG Release 2.0.0 support Backend Services
-.. |PDXIG|  replace:: Da Vinci Payer Data Exchange (PDex) IG Version STU 2.0.0
+.. |PDXIG|  replace:: Da Vinci Payer Data Exchange (PDex) IG Version STU 2.2.0
 .. |PDRIG|  replace:: Da Vinci PDex US Drug Formulary IG Version STU 2.0.1
 .. |PNTIG|  replace:: Da Vinci PDex Plan-Net IG Version STU 1.1.0
 .. |CRDIG|  replace:: Da Vinci Coverage Requirements Discovery (CRD) IG Version STU 2.0.1

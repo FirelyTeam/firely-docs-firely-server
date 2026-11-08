@@ -306,15 +306,7 @@ To make Firely Server known to Firely Auth, fill in the ``FhirServer``:
 Authorized representatives
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Firely Auth lets a user sign in to an app on behalf of a patient they represent, such as a parent for a child. Firely Server decides who may act for whom, through two custom operations that a Firely Server plugin implements. See :ref:`firely_auth_dar` for the login, the operations and an example plugin.
-
-.. warning::
-
-    **Deprecated:** with ``LookupBySub`` set to ``false``, Patients use the deprecated Patient-account flow, which finds the relationships through the user's ``Patient`` ``fhirUser``. See :ref:`firely_auth_dar_deprecated`.
-
-.. warning::
-
-    This is a beta feature and as such it is subject to change in future releases. Disclaimers that a user agrees to while acting for someone else are not shown in the user's overview of agreed disclaimers. Test it thoroughly in a development or staging environment before you use it in production.
+Firely Auth lets a user sign in to an app on behalf of a patient they represent, such as a parent for a child. Firely Server decides who may act for whom, through two custom operations that a Firely Server plugin implements. See :ref:`firely_auth_dar` for the login, the operations and an example plugin, and for the warnings that apply to this beta feature. ``LookupBySub`` = ``false`` selects the deprecated Patient-account flow, see :ref:`firely_auth_dar_deprecated`.
 
 .. code-block:: json
 

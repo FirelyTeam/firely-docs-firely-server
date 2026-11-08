@@ -181,7 +181,7 @@ The representative API
 
 - No user has it: a new user of the type ``Representative`` is created and invited, and the response is ``201 Created``.
 - One user of the type ``Patient`` or ``Representative`` has it: that user is returned as is, with ``200 OK``. A ``Representative`` that has not logged in yet is sent the invitation again.
-- Otherwise the request is refused with ``409 Conflict``: when the email address belongs to more than one user, to a user of another type, to a ``Patient`` who may not act for others (one who signs in with a password, or any Patient while ``LookupOnLogin`` or ``LookupBySub`` is off), or to the patient themselves. The last is checked against the user's ``fhirUser``, and against Firely Server by searching that Patient for the user's sub identifier. For that search, Firely Auth uses a token that it issues to itself, with the audience ``FhirServer:FHIR_BASE_URL`` and the scope ``system/Patient.rs``. When Firely Server cannot be reached for that check, the request fails with ``500``.
+- Otherwise the request is refused with ``409 Conflict``: when the email address belongs to more than one user, to a user of another type, to a ``Patient`` who may not act for others (one who signs in with a password, or any Patient while ``LookupOnLogin`` or ``LookupBySub`` is off), or to the patient themselves. The last is checked against the user's ``fhirUser``.
 
 The response holds the user's ``id``, ``email`` and ``fullName``, and the same id as an ``identifier`` for the representative's ``RelatedPerson``:
 
@@ -515,11 +515,6 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
     .. literalinclude:: examples/authorized-representative-plugin/FhirPeriod.cs
         :language: csharp
 
-The flow
-^^^^^^^^
-
-For the order of the calls, see the diagram in :ref:`firely_auth_dar_interactions`.
-
 .. _firely_auth_dar_deprecated:
 
 The deprecated Patient-account flow
@@ -540,17 +535,10 @@ Firely Auth uses this flow while ``LookupOnLogin`` is ``true`` and ``LookupBySub
 
   "AuthorizedRepresentatives": {
     "LookupOnLogin": true,
-    "LookupBySub": false,
-    "LookupRequestScopes": "https://fire.ly/fhir/OperationDefinition/has-authorized-representative-relationships",
-    "CheckAuthorizedRepresentativeTimeout": 5000,
-    "TitleOnLogin": "Who Are You Signing In As?",
-    "TitleOwnProfileOnLogin": "Continue as Yourself",
-    "TitleAuthorizedProfilesOnLogin": "Continue On Behalf Of ...",
-    "HelpMessageTitleOnFail": "Couldn't load authorized profiles",
-    "HelpMessageOnFail": "A technical error prevented loading the user profiles of all authorized users. Please try again by reloading or continue as yourself."
+    "LookupBySub": false
   }
 
-See :ref:`firely_auth_settings_representatives` for each setting. A ``Patient`` signs in through this flow whether or not they use an external identity provider.
+``LookupRequestScopes``, ``CheckAuthorizedRepresentativeTimeout``, ``HelpMessageTitleOnFail`` and ``HelpMessageOnFail`` also apply to this flow. See :ref:`firely_auth_settings_representatives` for all settings and their defaults. A ``Patient`` signs in through this flow whether or not they use an external identity provider.
 
 The sign-in
 ^^^^^^^^^^^

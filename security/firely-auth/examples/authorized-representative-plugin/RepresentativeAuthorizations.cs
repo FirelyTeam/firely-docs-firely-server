@@ -43,11 +43,11 @@ internal sealed partial class RepresentativeAuthorizations(ISearchRepository sea
     {
         var relatedPersons = await SearchAsync(vonkContext, "RelatedPerson", ("identifier", $"{SubIdentifierSystem}|{EscapeSearchValue(userId)}"));
 
-        List<(string PatientId, IResource RelatedPerson, string? Consent)> authorized = [];
+        List<(string PatientId, IResource RelatedPerson)> authorized = [];
         // A token search can ignore case, depending on the database. Keep only the RelatedPersons linked to exactly this user.
         foreach (var relatedPerson in relatedPersons.Where(r => IsLinkedTo(r, userId)).OrderBy(r => r.Id, StringComparer.Ordinal))
         {
-            if (await FindAuthorizationAsync(relatedPerson, vonkContext) is not (var patientId, { Consent: var consent }))
+            if (await FindAuthorizationAsync(relatedPerson, vonkContext) is not (var patientId, _))
                 continue;
 
             // Firely Auth refuses a push that names a patient twice, so keep the first RelatedPerson
@@ -58,7 +58,7 @@ internal sealed partial class RepresentativeAuthorizations(ISearchRepository sea
                 continue;
             }
 
-            authorized.Add((patientId, relatedPerson, consent));
+            authorized.Add((patientId, relatedPerson));
         }
 
         if (authorized.Count == 0)
@@ -68,7 +68,7 @@ internal sealed partial class RepresentativeAuthorizations(ISearchRepository sea
             .ToDictionary(p => p.Id, StringComparer.Ordinal);
 
         List<Representee> representees = [];
-        foreach (var (patientId, relatedPerson, consent) in authorized)
+        foreach (var (patientId, relatedPerson) in authorized)
         {
             if (!patients.TryGetValue(patientId, out var patient))
             {
@@ -76,7 +76,7 @@ internal sealed partial class RepresentativeAuthorizations(ISearchRepository sea
                 continue;
             }
 
-            representees.Add(new Representee(patientId, PatientName(patient), RelationshipText(relatedPerson), $"RelatedPerson/{relatedPerson.Id}", consent));
+            representees.Add(new Representee(patientId, PatientName(patient), RelationshipText(relatedPerson), $"RelatedPerson/{relatedPerson.Id}"));
         }
 
         return representees;

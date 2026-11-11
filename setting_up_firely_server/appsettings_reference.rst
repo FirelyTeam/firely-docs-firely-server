@@ -52,6 +52,28 @@ Firely Server answers requests with ``HTTP 402 Payment Required`` when no valid 
 
   It is also possible to supply a license via an environment variable. This functionality is handy when Firely Server is running within a Docker container. See :ref:`license_as_environment_variable` for details.
 
+.. _license_kinds:
+
+License kinds
+^^^^^^^^^^^^^
+
+Each license has a kind. Firely Server writes it to the log at startup, as ``Kind of license``, and shows it on its home page.
+
+.. list-table::
+   :widths: 20 80
+   :header-rows: 1
+
+   * - Kind
+     - Use it for
+   * - Evaluation
+     - Trying out Firely Server. Firely Server limits its uptime to 12 hours, and :ref:`Firely Server Ingest<tool_fsi>` limits the number of resources it loads.
+   * - Production
+     - Your production environments.
+   * - Test
+     - Your development, staging and other non-production environments, in any number of them. Firely Server works the same as with a Production license. Do not use a Test license in production.
+
+To get a Test license for your non-production environments, :ref:`contact<vonk-contact>` Firely.
+
 .. _configure_repository:
 
 Repository

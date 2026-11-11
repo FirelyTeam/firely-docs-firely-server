@@ -30,6 +30,8 @@ If you are interested in Firely Server for commercial use within your organizati
 
 For more information and pricing you can also visit the `product site <https://fire.ly/products/firely-server/>`_.
 
+With a professional license you may also run Firely Server in any number of non-production environments, such as development and staging. Firely provides a Test license for those environments. See :ref:`license_kinds`.
+
 Quick navigation
 ----------------
 

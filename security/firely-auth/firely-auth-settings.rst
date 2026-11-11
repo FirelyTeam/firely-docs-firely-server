@@ -260,7 +260,8 @@ These settings control the white labelling options for Firely Auth:
     "LoginPageText": "Please login to Firely Auth",
     "OrganizationTitle": "Firely Auth",
     "OrganizationLogoPath": "<firely logo>",
-    "OrganizationFavIconPath": "<firely favicon>"
+    "OrganizationFavIconPath": "<firely favicon>",
+    "LocalLoginOnHomepage": "Form"
   },
 
 - ``LoginPageText``: Here you can put a text that will be displayed on the login page.
@@ -270,6 +271,18 @@ These settings control the white labelling options for Firely Auth:
 - ``OrganizationLogoPath``: Here you can point to an image file you want to use as logo in the application.
 
 - ``OrganizationFavIconPath``: Here you can point to an image file you want to use as favicon in the browser. Note that the recommended dimensions for favicons is typically 16x16 pixels. For high-resolution screens this is 32x32 pixels. Also see `favicon.io <https://favicon.io/>`_ or the `Real Favicon Generator <https://realfavicongenerator.net/>`_ for more information.
+
+- ``LocalLoginOnHomepage``: How the login page shows the email and password form when a user opens Firely Auth directly, so not from an app. Logins that an app starts are not affected: there the client settings decide, see :ref:`firely_auth_settings_clients`.
+
+  - ``Form`` (default): the form shows next to the external identity providers.
+  - ``AdminLink``: only the external identity providers show. A line at the bottom of the page, *Firely Auth administrator? Administrator login*, shows the form. With the app developer portal enabled, it reads *Administrator or app developer? Log in with your account*.
+  - ``Hidden``: only the external identity providers show, with no link to the form.
+
+  With every value, ``/login?local=true`` shows the form, so administrators can bookmark that address. Firely Auth uses it itself after an admin registers, after a user activates their account or resets their password, and when an admin who logs in with a password has to log in again. Without an enabled external identity provider, the form shows as with ``Form``. Firely Auth logs a ``Warning`` at startup when the value is not ``Form`` and ``ExternalIdentityProviders`` has no identity provider, and with ``Hidden`` it logs the address ``/login?local=true``.
+
+  .. note::
+
+    ``AdminLink`` and ``Hidden`` only change what the login page shows. They do not turn off login with email and password: it keeps working through ``/login?local=true`` and the login API. Use them when patients and other end users log in through an external identity provider and only administrators, and app developers, have a password. If patients log in with a password, keep ``Form``: otherwise they only find the form behind a link meant for administrators, or not at all.
 
 .. _firely_auth_settings_server:
 

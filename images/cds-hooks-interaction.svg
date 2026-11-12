@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="913" viewBox="0 0 960 913">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#232F3E"/></marker></defs>
+<rect width="960" height="913" fill="#ffffff"/>
+<line x1="95" y1="66" x2="95" y2="893" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="5,4"/>
+<rect x="30.0" y="20" width="130" height="46" rx="6" fill="#ffffff" stroke="#3ab0db" stroke-width="2"/>
+<text x="95" y="48" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#232F3E">Clinician</text>
+<line x1="330" y1="66" x2="330" y2="893" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="5,4"/>
+<rect x="245.0" y="20" width="170" height="46" rx="6" fill="#ffffff" stroke="#3ab0db" stroke-width="2"/>
+<text x="330" y="48" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#232F3E">CDS Client (EHR)</text>
+<line x1="610" y1="66" x2="610" y2="893" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="5,4"/>
+<rect x="525.0" y="20" width="170" height="46" rx="6" fill="#3ab0db" stroke="#3ab0db" stroke-width="2"/>
+<text x="610" y="40" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#ffffff">Firely Server</text>
+<text x="610" y="57" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="normal" fill="#ffffff">/cds-services</text>
+<line x1="860" y1="66" x2="860" y2="893" stroke="#6b7785" stroke-width="1.2" stroke-dasharray="5,4"/>
+<rect x="775.0" y="20" width="170" height="46" rx="6" fill="#ffffff" stroke="#3ab0db" stroke-width="2"/>
+<text x="860" y="48" font-family="Helvetica, Arial, sans-serif" font-size="14" text-anchor="middle" font-weight="bold" fill="#232F3E">Firely Auth</text>
+<rect x="10" y="76" width="940" height="28" rx="4" fill="#eef7fb"/>
+<text x="22" y="95" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="start" font-weight="bold" fill="#232F3E">Discovery: once, or whenever the CDS Client refreshes its list of services</text>
+<rect x="10" y="208" width="940" height="28" rx="4" fill="#eef7fb"/>
+<text x="22" y="227" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="start" font-weight="bold" fill="#232F3E">Every time a hook fires in the clinician's workflow</text>
+<line x1="332" y1="136" x2="608" y2="136" stroke="#232F3E" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="407.35" y="116" width="125.30000000000001" height="15" fill="#ffffff"/>
+<text x="470.0" y="128" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">GET /cds-services</text>
+<circle cx="316" cy="136" r="10" fill="#3ab0db"/>
+<text x="316" y="140.5" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff">1</text>
+<line x1="608" y1="182" x2="332" y2="182" stroke="#232F3E" stroke-width="1.6" stroke-dasharray="7,4" marker-end="url(#arrow)"/>
+<rect x="310.75" y="162" width="318.5" height="15" fill="#ffffff"/>
+<text x="470.0" y="174" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">services: id, hook, title, prefetch templates</text>
+<circle cx="624" cy="182" r="10" fill="#3ab0db"/>
+<text x="624" y="186.5" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff">2</text>
+<line x1="97" y1="283" x2="328" y2="283" stroke="#232F3E" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="122.25" y="263" width="180.5" height="15" fill="#ffffff"/>
+<text x="212.5" y="275" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">selects or signs an order</text>
+<rect x="160.2" y="248" width="104.60000000000001" height="15" fill="#ffffff"/>
+<text x="212.5" y="260" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">opens a chart,</text>
+<circle cx="81" cy="283" r="10" fill="#3ab0db"/>
+<text x="81" y="287.5" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff">3</text>
+<rect x="212.0" y="317" width="236" height="44" rx="5" fill="#ffffff" stroke="#232F3E" stroke-width="1.2"/>
+<text x="330" y="334" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">hook fires; fills the prefetch</text>
+<text x="330" y="349" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">templates from its own record</text>
+<circle cx="198.0" cy="339.0" r="10" fill="#3ab0db"/>
+<text x="198.0" y="343.5" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff">4</text>
+<line x1="332" y1="414" x2="608" y2="414" stroke="#232F3E" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="386.65" y="394" width="166.70000000000002" height="15" fill="#ffffff"/>
+<text x="470.0" y="406" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">hook, context, prefetch</text>
+<rect x="386.65" y="379" width="166.70000000000002" height="15" fill="#ffffff"/>
+<text x="470.0" y="391" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">POST /cds-services/{id}</text>
+<rect x="413.3" y="419" width="113.4" height="15" fill="#ffffff"/>
+<text x="470.0" y="431" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="normal" fill="#6b7785" font-style="italic">with a signed JWT</text>
+<circle cx="316" cy="414" r="10" fill="#3ab0db"/>
+<text x="316" y="418.5" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff">5</text>
+<line x1="612" y1="472" x2="858" y2="472" stroke="#232F3E" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="682.7" y="452" width="104.60000000000001" height="15" fill="#ffffff"/>
+<text x="735.0" y="464" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">verify the JWT</text>
+<rect x="647.3" y="477" width="175.4" height="15" fill="#ffffff"/>
+<text x="735.0" y="489" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="normal" fill="#6b7785" font-style="italic">if authorization is enabled</text>
+<circle cx="596" cy="472" r="10" fill="#3ab0db"/>
+<text x="596" y="476.5" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff">6</text>
+<line x1="858" y1="530" x2="612" y2="530" stroke="#232F3E" stroke-width="1.6" stroke-dasharray="7,4" marker-end="url(#arrow)"/>
+<rect x="672.35" y="510" width="125.30000000000001" height="15" fill="#ffffff"/>
+<text x="735.0" y="522" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">valid / not valid</text>
+<circle cx="874" cy="530" r="10" fill="#3ab0db"/>
+<text x="874" y="534.5" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff">7</text>
+<rect x="492.0" y="564" width="236" height="59" rx="5" fill="#ffffff" stroke="#232F3E" stroke-width="1.2"/>
+<text x="610" y="581" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">your CDS Service runs: reads the</text>
+<text x="610" y="596" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">prefetch, may query FHIR data in</text>
+<text x="610" y="611" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">Firely Server, evaluate CQL, ...</text>
+<circle cx="478.0" cy="593.5" r="10" fill="#3ab0db"/>
+<text x="478.0" y="598.0" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff">8</text>
+<line x1="608" y1="676" x2="332" y2="676" stroke="#232F3E" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="400.45" y="656" width="139.1" height="15" fill="#ffffff"/>
+<text x="470.0" y="668" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">client's fhirServer</text>
+<rect x="386.65" y="641" width="166.70000000000002" height="15" fill="#ffffff"/>
+<text x="470.0" y="653" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">read more data from the</text>
+<rect x="441.2" y="681" width="57.6" height="15" fill="#ffffff"/>
+<text x="470.0" y="693" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="normal" fill="#6b7785" font-style="italic">optional</text>
+<circle cx="624" cy="676" r="10" fill="#3ab0db"/>
+<text x="624" y="680.5" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff">9</text>
+<line x1="608" y1="734" x2="332" y2="734" stroke="#232F3E" stroke-width="1.6" stroke-dasharray="7,4" marker-end="url(#arrow)"/>
+<rect x="376.3" y="714" width="187.4" height="15" fill="#ffffff"/>
+<text x="470.0" y="726" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">cards and/or systemActions</text>
+<circle cx="624" cy="734" r="10" fill="#3ab0db"/>
+<text x="624" y="738.5" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff">10</text>
+<line x1="328" y1="780" x2="97" y2="780" stroke="#232F3E" stroke-width="1.6" stroke-dasharray="7,4" marker-end="url(#arrow)"/>
+<rect x="156.75" y="760" width="111.5" height="15" fill="#ffffff"/>
+<text x="212.5" y="772" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">shows the cards</text>
+<circle cx="344" cy="780" r="10" fill="#3ab0db"/>
+<text x="344" y="784.5" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff">11</text>
+<line x1="97" y1="841" x2="328" y2="841" stroke="#232F3E" stroke-width="1.6" marker-end="url(#arrow)"/>
+<rect x="115.35" y="821" width="194.3" height="15" fill="#ffffff"/>
+<text x="212.5" y="833" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">a link or app, or overrides</text>
+<rect x="115.35" y="806" width="194.3" height="15" fill="#ffffff"/>
+<text x="212.5" y="818" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="middle" font-weight="normal" fill="#232F3E">accepts a suggestion, opens</text>
+<circle cx="81" cy="841" r="10" fill="#3ab0db"/>
+<text x="81" y="845.5" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" font-weight="bold" fill="#ffffff">12</text>
+</svg>

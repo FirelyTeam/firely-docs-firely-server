@@ -14,19 +14,187 @@ CDS Hooks
 
 .. TODO (open question, check with dev): confirm the editions above.
 
-Description
------------
+.. note::
 
-CDS Hooks is a specification that allows healthcare applications to integrate with clinical decision support systems. It enables the execution of decision support logic at the point of care, providing clinicians with relevant information and recommendations based on the context of patient care. For background and the specification, please consult the `official CDS Hooks documentation <https://cds-hooks.hl7.org/>`_.
+  CDS Hooks requires the license token ``http://fire.ly/server/plugins/cds-hooks`` to be present in the license file.
+  If you do not have this license token, please contact `Firely <https://fire.ly/contact>`_.
 
-Firely Server implements CDS Hooks 3.0.0 and can host CDS Services: a CDS Client, such as an EHR, calls a service at a point in its workflow (a *hook*, such as ``patient-view`` or ``order-select``), and the service answers with cards or system actions. This is particularly useful for organizations that must conform to regulations based on Implementation Guides using CDS Hooks. Examples include the Da Vinci Implementation Guides for CRD, DTR and PAS, contributing to the electronic Prior Authorization workflow.
+`CDS Hooks <https://cds-hooks.hl7.org/>`_ is an HL7 standard for bringing clinical decision support (CDS) into the workflow of a clinician, at the moment it is needed. When a clinician does something in an Electronic Health Record (EHR), such as opening a patient's chart or selecting an order, the EHR calls one or more external services. These services look at the patient's data and answer within moments with *cards*: short pieces of information, warnings or suggestions that the EHR shows next to the work the clinician is doing.
 
-Firely Server serves CDS Hooks on two endpoints:
+For example, when a physician orders an MRI of the lumbar spine, the EHR can call a CDS Service of the patient's health plan. Before the order is signed, the physician sees a card saying that the plan requires prior authorization for this MRI, with a button that opens the form to collect the documentation the plan needs. Without CDS Hooks, the practice typically learns this only afterwards, from a denied claim or a phone call.
 
-* ``GET <base-url>/cds-services`` returns the discovery document, which lists the CDS Services that are offered.
-* ``POST <base-url>/cds-services/{id}`` invokes the CDS Service with that id.
+Firely Server can host such CDS Services. It takes care of the CDS Hooks protocol, so that a service consists of nothing more than its decision logic. Because the services run inside Firely Server, they can use the FHIR data and the operations of that same server, such as the coverage rules of a health plan expressed in CQL (see :ref:`feature_qdm`).
 
-Firely Server ships with :ref:`example services <feature_cds_hooks_examples>`. To offer CDS Services of your own, you write them as a plugin; see :ref:`vonk_reference_api_cds_hooks`.
+----
+
+CDS Hooks Use Cases
+-------------------
+
+CDS Hooks is used wherever guidance is most useful while a clinician is still making a decision, rather than in a report afterwards:
+
+#. Coverage requirements and prior authorization
+
+   A health plan (payer) offers a CDS Service that tells the provider, while an order is being entered, whether the item or service is covered, whether prior authorization is needed, and which documentation is required. This is specified by the `Da Vinci Coverage Requirements Discovery (CRD) <https://hl7.org/fhir/us/davinci-crd/>`_ Implementation Guide. Together with Da Vinci DTR (collecting the documentation) and PAS (submitting the prior authorization request), CRD forms the electronic prior authorization workflow that supports the Prior Authorization API required by the :ref:`CMS Interoperability and Prior Authorization Final Rule (CMS-0057-F) <cms>`.
+
+#. Medication safety
+
+   When a medication is selected or an order is about to be signed, a CDS Service can check it against the patient's allergies, other medications, lab results or genomic data, and warn about interactions or doses that need adjusting. A card can carry the corrected order as a suggestion that the clinician accepts with a single click.
+
+#. Care gaps and preventive care
+
+   When a patient's chart is opened, a CDS Service can point out overdue screenings, missing vaccinations or follow-up care for a chronic condition. This is the prospective counterpart of the gaps in care that :ref:`Digital Quality Measures <feature_qdm>` find retrospectively, and both can be based on the same CQL logic.
+
+#. Guideline adherence and appropriate use
+
+   A CDS Service can check an order against clinical guidelines, such as the appropriate use criteria for advanced imaging, and suggest a more suitable test or record that the order was checked.
+
+#. Launching an app when a card is not enough
+
+   Some decisions need more interaction than a card offers, such as completing a questionnaire or using a risk calculator. A card can contain a link that launches a `SMART on FHIR <https://hl7.org/fhir/smart-app-launch/>`_ app, in the context of the current patient. In the prior authorization workflow, this is how the documentation form of Da Vinci DTR is opened.
+
+How CDS Hooks Works
+-------------------
+
+CDS Hooks defines the interaction between two systems:
+
+* The **CDS Client** is the EHR or other clinical information system the clinician is working in. It owns the patient record and the user interface, and decides when to call a CDS Service and how to show its answer.
+* The **CDS Service** provides the decision support. It receives the patient context, applies its logic, and returns cards. Firely Server takes this role.
+
+CDS Hooks is not a FHIR RESTful API. Its requests and responses are JSON documents of their own, but the clinical data inside them, such as the patient, the draft orders or the resources returned in a suggestion, are FHIR resources.
+
+Hooks
+^^^^^
+
+A *hook* is a named point in the clinician's workflow at which the CDS Client calls the CDS Services that registered for it. Each hook defines its *context*: the information that the CDS Client sends along, such as the id of the patient, the user, or the orders being entered. The `CDS Hooks Library <https://cds-hooks.hl7.org/hooks.html>`_ defines the following hooks, among others:
+
+.. list-table::
+   :header-rows: 1
+   :widths: 25 75
+
+   * - Hook
+     - Fires when
+   * - ``patient-view``
+     - The user opens a patient's record.
+   * - ``order-select``
+     - The user selects one or more orders, while still composing them.
+   * - ``order-sign``
+     - The user is about to sign one or more orders.
+   * - ``order-dispatch``
+     - An order is assigned to the organization or practitioner that will perform it.
+   * - ``appointment-book``
+     - The user is scheduling one or more appointments.
+   * - ``encounter-start``
+     - The user starts an encounter, such as an admission.
+   * - ``encounter-discharge``
+     - The user discharges the patient.
+   * - ``medication-refill``
+     - A refill of a medication is being processed.
+
+The Da Vinci CRD Implementation Guide uses ``order-select``, ``order-sign``, ``order-dispatch``, ``appointment-book``, ``encounter-start`` and ``encounter-discharge``. The list is open: implementation guides may define hooks of their own. A CDS Service in Firely Server can answer any hook.
+
+Discovery and prefetch
+^^^^^^^^^^^^^^^^^^^^^^
+
+A CDS Service tells CDS Clients what it offers through its *discovery* endpoint, ``GET <base-url>/cds-services``. For each service, the discovery document lists its ``id``, the ``hook`` it answers, a title and description, and optionally *prefetch templates*.
+
+A prefetch template is a FHIR query with placeholders, such as ``Patient/{{context.patientId}}``. It names the data the service needs on every call. The CDS Client fills in the placeholders from the hook context, runs the queries against its own FHIR data, and sends the results along with the request. This saves the CDS Service a round trip for data it always needs, which matters for an answer that the clinician is waiting for.
+
+When the prefetched data is not enough, the CDS Client may also send the address of its FHIR server, ``fhirServer``, with an access token, ``fhirAuthorization``. The CDS Service can then query the CDS Client's FHIR server for more data, with the permissions of the current user.
+
+Cards and system actions
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+A CDS Service answers with zero or more *cards*. A card has:
+
+* a ``summary`` of one line, and optionally a longer ``detail``;
+* an ``indicator`` of its urgency: ``info``, ``warning`` or ``critical``;
+* a ``source``: who provides the guidance;
+* optionally ``suggestions``: changes the clinician can accept, each a set of actions that create, update or delete FHIR resources in the CDS Client, such as replacing a draft order;
+* optionally ``links``: a web page with more information, or a SMART app to launch;
+* optionally ``overrideReasons`` the clinician can choose from when dismissing the card.
+
+For the MRI example above, the card of the health plan could look like this:
+
+.. code-block:: JavaScript
+
+    {
+      "cards": [
+        {
+          "uuid": "4e0a3a1d-8f2b-4b5e-9c7a-2d1f6b0e9a33",
+          "summary": "Prior authorization required for MRI of the lumbar spine",
+          "indicator": "warning",
+          "source": { "label": "Example Health Plan" },
+          "links": [
+            {
+              "label": "Complete the documentation",
+              "url": "https://dtr.example.org/launch",
+              "type": "smart"
+            }
+          ]
+        }
+      ]
+    }
+
+Next to cards, a response may contain *system actions*. These are changes that the CDS Client applies without showing them to the user, for example storing the coverage information on the draft order, as CRD does. They are only appropriate where the CDS Client and the CDS Service have agreed on them beforehand.
+
+An empty list of cards is a valid answer: the service has no guidance in this situation.
+
+The interaction step by step
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The figure below shows the interaction between a clinician, the CDS Client and a CDS Service hosted in Firely Server.
+
+.. image:: ../images/cds-hooks-interaction.svg
+  :alt: Sequence diagram of the interaction between a clinician, a CDS Client, Firely Server as the CDS Service, and Firely Auth.
+  :align: center
+
+**Discovery**
+
+1. The CDS Client requests the discovery document from ``<base-url>/cds-services``. It does so when the service is set up, and whenever it wants to refresh its list of services.
+2. Firely Server answers with the CDS Services it offers, each with its hook and prefetch templates.
+
+**Every time a hook fires**
+
+3. The clinician does something in the CDS Client, for example opens a patient's chart or selects an order.
+4. The CDS Client recognizes the hook, finds the services registered for it, and fills in their prefetch templates from its own record.
+5. The CDS Client calls each service with ``POST <base-url>/cds-services/{id}``. The request holds the ``hook``, a unique ``hookInstance``, the ``context``, the ``prefetch`` data and, optionally, ``fhirServer`` and ``fhirAuthorization``. To prove who it is, the CDS Client signs a JSON Web Token (JWT) and sends it in the ``Authorization`` header.
+6. When :ref:`authorization <feature_cds_hooks_authorization>` is enabled, Firely Server has Firely Auth verify the JWT.
+7. Firely Auth confirms whether the token is valid and belongs to a registered CDS Client. If not, Firely Server refuses the request.
+8. The CDS Service runs. It reads the context and the prefetched data, and may query FHIR data stored in Firely Server or call operations of Firely Server, such as ``Library/$evaluate`` for logic written in CQL.
+9. If the service needs data that was not prefetched, it may query the CDS Client's FHIR server, if the CDS Client provided one.
+10. Firely Server answers with the cards and system actions of the service. If the service cannot answer, for example because data it needs is missing, it answers with an HTTP error status and an ``OperationOutcome``.
+11. The CDS Client applies the system actions and shows the cards to the clinician.
+12. The clinician acts on the cards: accepts a suggestion, opens a link or app, or dismisses a card, possibly with an override reason.
+
+The specification also defines a *feedback* endpoint, ``POST <base-url>/cds-services/{id}/feedback``, through which the CDS Client can report which cards were accepted or overridden. Firely Server does not support feedback yet; see `Known limitations`_.
+
+A CDS Service may answer several hooks with the same ``id``. A CDS Client can then replace the cards of an earlier call with those of a later one, as the workflow moves on, for example from ``order-select`` to ``order-sign``.
+
+Firely Server as a CDS Service
+------------------------------
+
+Firely Server implements the server side of CDS Hooks, the CDS Service. It is not a CDS Client: it does not call other CDS Services, and it has no user interface to show cards in.
+
+Firely Server takes care of everything that every CDS Service needs:
+
+* the discovery endpoint and the endpoints of the services;
+* reading and writing the CDS Hooks JSON, including the FHIR resources inside it;
+* :ref:`authorizing CDS Clients <feature_cds_hooks_authorization>` with Firely Auth;
+* optionally, :ref:`validating requests and responses <feature_cds_hooks_validation>`;
+* the :ref:`audit trail <feature_auditing>` of the FHIR data a service reads.
+
+What remains is the decision logic itself. Firely Server ships with :ref:`example services <feature_cds_hooks_examples>`, and you write your own as a plugin; see :ref:`vonk_reference_api_cds_hooks`.
+
+A CDS Service in Firely Server can draw on two sources of data:
+
+* **The data of the CDS Client**, sent as prefetch data or available through ``fhirServer``. This is the clinical record of the patient: conditions, medications, the draft orders.
+* **The data in Firely Server itself**, read in-process through the FHIR REST pipeline. For a health plan, this is where the member, coverage and claims data live, together with the coverage rules as CQL ``Library`` resources and the documentation templates as ``Questionnaire`` resources.
+
+Combining the two is what CRD needs, and it is why a payer's FHIR server is a natural place to host CDS Services.
+
+Firely Server implements CDS Hooks 3.0.0. At the time of writing, this is the January 2026 ballot version of the specification; the current official release is 2.0.1.
+
+.. TODO (open question, check with dev): confirm the CDS Hooks version that is implemented, and whether it is 2.0.1-compatible.
 
 The CDS Hooks branch handles all requests in the default FHIR version of Firely Server, set in ``InformationModel:Default`` (see :ref:`feature_multiversion`). CDS Hooks is tested with **FHIR R4**, the FHIR version of Da Vinci CRD, so we recommend R4 as the default FHIR version for a deployment that serves CDS Hooks. Other FHIR versions may work, but are not tested.
 
@@ -35,7 +203,7 @@ Key concepts
 
 **CDS Hooks is served on a branch of its own.** CDS Hooks is not a FHIR RESTful API, so Firely Server serves it on a separate :ref:`pipeline branch <vonk_plugins_config>` at ``/cds-services``. That path is fixed by the specification.
 
-**A CDS Service is identified by its id and its hook together.** The specification allows one id to answer several hooks, so that a service can supersede its own earlier cards as a workflow moves on. Each hook of a service is therefore offered on its own.
+**A CDS Service is identified by its id and its hook together.** Because one id may answer several hooks, as described above, each hook of a service is offered on its own.
 
 **Nothing is offered by default.** A CDS Service receives patient data, so it has to be exposed deliberately. A service is offered only when its id and hook are named in the ``CdsHooks:Services`` section of the appsettings. A service that is installed but not named there is neither listed in the discovery document nor invoked: it answers ``404 Not Found``.
 
@@ -171,6 +339,8 @@ A pair that is not offered is left out of the discovery document and answers ``4
    because it is not enabled in configuration. Add 'CdsHooks:Services:patient-view-test-hook:Hooks:patient-view' to offer it.
 
 Both the id and the hook are case-sensitive.
+
+.. _feature_cds_hooks_validation:
 
 Validating requests and responses
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

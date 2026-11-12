@@ -33,7 +33,7 @@ CDS Hooks is used wherever guidance is most useful while a clinician is still ma
 
 #. Coverage requirements and prior authorization
 
-   A health plan (payer) offers a CDS Service that tells the provider, while an order is being entered, whether the item or service is covered, whether prior authorization is needed, and which documentation is required. This is specified by the `Da Vinci Coverage Requirements Discovery (CRD) <https://hl7.org/fhir/us/davinci-crd/>`_ Implementation Guide. Together with Da Vinci DTR (collecting the documentation) and PAS (submitting the prior authorization request), CRD forms the electronic prior authorization workflow that supports the Prior Authorization API required by the :ref:`CMS Interoperability and Prior Authorization Final Rule (CMS-0057-F) <cms>`.
+   A health plan (payer) offers a CDS Service that tells the provider, while an order is being entered, whether the item or service is covered, whether prior authorization is needed, and which documentation is required. This is the Da Vinci Coverage Requirements Discovery (CRD) use case, the first step of electronic prior authorization; see :ref:`feature_cds_hooks_crd`.
 
 #. Medication safety
 
@@ -89,7 +89,7 @@ A *hook* is a named point in the clinician's workflow at which the CDS Client ca
    * - ``medication-refill``
      - A refill of a medication is being processed.
 
-The Da Vinci CRD Implementation Guide uses ``order-select``, ``order-sign``, ``order-dispatch``, ``appointment-book``, ``encounter-start`` and ``encounter-discharge``. The list is open: implementation guides may define hooks of their own. A CDS Service in Firely Server can answer any hook.
+The list is open: implementation guides may define hooks of their own. A CDS Service in Firely Server can answer any hook.
 
 Discovery and prefetch
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -134,7 +134,7 @@ For the MRI example above, the card of the health plan could look like this:
       ]
     }
 
-Next to cards, a response may contain *system actions*. These are changes that the CDS Client applies without showing them to the user, for example storing the coverage information on the draft order, as CRD does. They are only appropriate where the CDS Client and the CDS Service have agreed on them beforehand.
+Next to cards, a response may contain *system actions*. These are changes that the CDS Client applies without showing them to the user, for example recording the outcome of the service's evaluation on a draft order. They are only appropriate where the CDS Client and the CDS Service have agreed on them beforehand.
 
 An empty list of cards is a valid answer: the service has no guidance in this situation.
 
@@ -187,9 +187,7 @@ What remains is the decision logic itself. Firely Server ships with :ref:`exampl
 A CDS Service in Firely Server can draw on two sources of data:
 
 * **The data of the CDS Client**, sent as prefetch data or available through ``fhirServer``. This is the clinical record of the patient: conditions, medications, the draft orders.
-* **The data in Firely Server itself**, read in-process through the FHIR REST pipeline. For a health plan, this is where the member, coverage and claims data live, together with the coverage rules as CQL ``Library`` resources and the documentation templates as ``Questionnaire`` resources.
-
-Combining the two is what CRD needs, and it is why a payer's FHIR server is a natural place to host CDS Services.
+* **The data in Firely Server itself**, read in-process through the FHIR REST pipeline. This is knowledge the CDS Client does not have, such as the organization's own records about the patient, decision rules stored as CQL ``Library`` resources, or ``Questionnaire`` resources.
 
 Firely Server implements `CDS Hooks 3.0.0 <https://cds-hooks.hl7.org/2026Jan/>`_.
 
@@ -434,6 +432,82 @@ Limitations
 * **The replay check has a capacity.** When more than ``ReplayGuardCapacity`` unexpired tokens are remembered, the least recently used are forgotten, and such a token could be used a second time. Firely Server logs a warning when this happens, at most once every five minutes. Roughly, you need one entry per request per token lifetime: 500 requests per second with tokens valid for five minutes needs 150,000.
 * **A token is used up even if the request fails.** The token is recorded as used before the service is invoked. A request that fails, for example with a ``404`` or a ``400`` from validation, still uses the token, and a CDS Client that retries with the same token gets ``401 Unauthorized``.
 
+.. _feature_cds_hooks_crd:
+
+Coverage Requirements Discovery (CRD)
+-------------------------------------
+
+The `Da Vinci Coverage Requirements Discovery (CRD) <https://hl7.org/fhir/us/davinci-crd/>`_ Implementation Guide is the most prominent use of CDS Hooks in the US. It defines how a health plan (payer) tells a provider, while the provider is ordering or scheduling, whether a service is covered, whether it needs prior authorization, and which documentation the plan needs. In CRD terms, the payer runs a *CRD server*, a CDS Service, and the provider's EHR is the *CRD client*, a CDS Client.
+
+CRD is the first step of the electronic prior authorization workflow of the Da Vinci Burden Reduction guides:
+
+#. **CRD** tells the provider, in the ordering workflow, what the plan requires.
+#. **DTR** (Documentation Templates and Rules) collects the documentation the plan needs, with ``Questionnaire`` resources provided by the payer.
+#. **PAS** (Prior Authorization Support) submits the prior authorization request and returns the decision.
+
+Together they support the Prior Authorization API required by the :ref:`CMS Interoperability and Prior Authorization Final Rule (CMS-0057-F) <cms>`.
+
+Hooks used by CRD
+^^^^^^^^^^^^^^^^^
+
+CRD uses six hooks of the CDS Hooks Library. It divides them into *primary* hooks, for which a CRD server must return coverage information, and *supporting* hooks, for which a response is optional and a CRD client may ignore it.
+
+Primary hooks:
+
+``appointment-book``
+    Coverage of the service being booked, before the patient arrives, for example whether the location is in network.
+
+``order-sign``
+    Coverage and documentation requirements of the completed draft orders. Also used for "what if" calls, which ask about coverage without placing an order.
+
+``order-dispatch``
+    Coverage once the performer of an order is chosen, which can change the answer, for example for an out-of-network performer.
+
+Supporting hooks:
+
+``order-select``
+    Early guidance while an order is being composed, such as a covered alternative.
+
+``encounter-start``
+    Coverage when a patient is admitted or arrives for a visit that was not booked with ``appointment-book``.
+
+``encounter-discharge``
+    Documentation and follow-up requirements at discharge.
+
+The order hooks carry the draft orders as ``ServiceRequest``, ``MedicationRequest``, ``DeviceRequest``, ``CommunicationRequest``, ``NutritionOrder`` or ``VisionPrescription`` resources.
+
+What a CRD server returns
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Coverage information.** The central answer of CRD is not a card but a system action. It updates the order or appointment in the CRD client with a ``coverage-information`` extension that states, per coverage:
+
+* whether the service is covered, not covered, or covered under conditions;
+* whether prior authorization is needed;
+* whether documentation is needed, with the ``Questionnaire`` resources that DTR presents to collect it;
+* a ``coverage-assertion-id`` that links the order to the payer's decision in the later DTR and PAS steps, and in the claim.
+
+When the payer cannot find the member or an active coverage, this is not an error. The answer is coverage information saying ``not-covered``, with a reason such as ``no-member-found``, ``coverage-not-found`` or ``no-active-coverage``.
+
+**Cards.** Next to the coverage information, a CRD server may return cards of the types CRD defines: links to external information, instructions, a proposed alternative order, additional orders, a form to complete, updated coverage records, or a SMART app to launch. Each card states its type, so that a CRD client can tell them apart.
+
+**Configuration options.** A CRD server lists in its discovery document which types of response it can return. A CRD client switches types off per request, for example when it does not show cards for ``order-select``.
+
+A CRD server must answer most hooks within 5 seconds, and some within 10 seconds, in 90% of the cases. Take this into account when designing the logic and the data access of a CRD service.
+
+CRD with Firely Server
+^^^^^^^^^^^^^^^^^^^^^^
+
+A payer can host its CRD server in Firely Server, as one or more CDS Services on the ``/cds-services`` branch. Firely Server does not ship a CRD service for production use: the coverage rules are the payer's own. You write the CRD service as a plugin (see :ref:`vonk_reference_api_cds_hooks`), and offer it for each hook it answers under ``CdsHooks:Services``. Firely Server provides the building blocks:
+
+* **The CDS Hooks protocol**, including :ref:`authorization of CRD clients <feature_cds_hooks_authorization>` and :ref:`validation <feature_cds_hooks_validation>` of requests and responses against the CRD profiles. Load the CRD Implementation Guide into the administration database and set the ``Profile`` of each hook to the matching CRD request or response profile.
+* **Member and coverage data.** The payer's member, ``Coverage`` and claims data can live in the same Firely Server. A CRD service reads it in-process (see :ref:`vonk_reference_api_cds_hooks_fhiraccess`), and can use the :ref:`$member-match operation <vonk_plugins_member_match>` to find the member that the provider's ``Patient`` and ``Coverage`` refer to.
+* **Coverage rules in CQL.** Rules about coverage, prior authorization and documentation can be written in CQL, stored as ``Library`` resources and evaluated with :ref:`Library/$evaluate <feature_library_evaluate>`, so that they can be changed without changing the plugin.
+* **Documentation templates for DTR.** The ``Questionnaire`` resources that a coverage information refers to can be stored in Firely Server, and served to DTR with the :ref:`$questionnaire-package operation <vonk_plugins_questionnaire_package>`.
+
+The example services ``crd-order-select-hook`` and ``crd-order-sign-hook`` show these building blocks working together, for Firely's prior authorization demo; see :ref:`the CRD demo <feature_cds_hooks_examples_crd>`.
+
+For the other APIs that CMS-0057-F requires, and the Implementation Guides they use, see :ref:`CMS-0057-F <cms>`.
+
 .. _feature_cds_hooks_examples:
 
 Example CDS Services
@@ -512,8 +586,10 @@ The service answers with one card:
 
 If ``patientToGreet`` is missing from the prefetch, or its id does not match ``context.patientId``, the service answers ``412 Precondition Failed`` with an ``OperationOutcome``.
 
-Coverage Requirements Discovery
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. _feature_cds_hooks_examples_crd:
+
+Coverage Requirements Discovery demo
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``crd-order-select-hook`` and ``crd-order-sign-hook`` are the same Da Vinci Coverage Requirements Discovery (CRD) service, offered on the ``order-select`` and the ``order-sign`` hook. It reads the draft orders from ``context.draftOrders`` and answers each ``ServiceRequest`` among them: on ``order-sign`` all of them, on ``order-select`` the selected ones. The coverage information is returned as a ``systemActions`` update of the order. For a few procedure codes of the demo data, such as 72148 (MRI of the lumbar spine), it also returns guidance cards.
 

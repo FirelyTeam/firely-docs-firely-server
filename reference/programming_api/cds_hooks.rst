@@ -5,7 +5,7 @@ CDS Hooks services
 
 .. note::
 
-  The features described on this page are available as of Firely Server 6.12.0, in the following :ref:`Firely Server editions <vonk_overview>`:
+  The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
 
   * Firely Scale - 🌍 / 🇺🇸
   * Firely CMS Compliance - 🇺🇸

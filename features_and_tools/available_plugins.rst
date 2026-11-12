@@ -1267,7 +1267,7 @@ The CDS Hooks plugins below are included in a pipeline branch of their own, with
 CDS Hooks (legacy)
 ------------------
 
-These plugins implement CDS Hooks the way earlier versions of Firely Server did, by mapping CDS Hooks requests onto FHIR custom operations in the branch on ``/``. They are superseded by the CDS Hooks plugins above, and will be removed in the next major version. Do not combine them with the ``/cds-services`` branch: both claim the same route. Before Firely Server 6.12.0, these plugins were named ``Vonk.Plugin.CdsHooks``; do not use that name in an ``Include`` anymore. See :ref:`feature_cds_hooks_upgrade` for upgrading and migrating.
+These plugins implement CDS Hooks the way earlier versions of Firely Server did, by mapping CDS Hooks requests onto FHIR custom operations in the branch on ``/``. They are superseded by the CDS Hooks plugins above, and will be removed in the next major version. Do not combine them with the ``/cds-services`` branch: both claim the same route. In earlier versions, these plugins were named ``Vonk.Plugin.CdsHooks``; do not use that name in an ``Include`` anymore. See :ref:`feature_cds_hooks_upgrade` for upgrading and migrating.
 
 .. _vonk_plugins_cds_hooks_legacy:
 

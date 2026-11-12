@@ -11,7 +11,7 @@ CDS Hooks
   * Firely Scale - 🌍 / 🇺🇸
   * Firely CMS Compliance - 🇺🇸
 
-  The CDS Hooks branch described on this page is available as of Firely Server 6.12.0. For the implementation in earlier versions, see :ref:`feature_cds_hooks_upgrade`.
+  For the implementation of CDS Hooks in earlier versions, see :ref:`feature_cds_hooks_upgrade`.
 
 .. note::
 
@@ -540,7 +540,7 @@ Known limitations
 Upgrading from earlier versions
 -------------------------------
 
-Before Firely Server 6.12.0, CDS Hooks was served by mapping each CDS Hooks request onto a FHIR custom operation, in the branch on ``/``. That implementation is still shipped, as the plugin ``Vonk.Plugin.CdsHooks.Legacy``, so that an upgrade does not have to wait for the migration. It will be removed in the next major version. **Treat it as time to migrate, not as a second option to build on.**
+Earlier versions of Firely Server served CDS Hooks by mapping each CDS Hooks request onto a FHIR custom operation, in the branch on ``/``. That implementation is still shipped, as the plugin ``Vonk.Plugin.CdsHooks.Legacy``, so that an upgrade does not have to wait for the migration. It will be removed in the next major version. **Treat it as time to migrate, not as a second option to build on.**
 
 A deployment runs either the CDS Hooks branch or the legacy plugin, never both: they claim the same route.
 

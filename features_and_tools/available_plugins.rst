@@ -1262,12 +1262,12 @@ The CDS Hooks plugins below are included in a pipeline branch of their own, with
 :Configuration: ``Vonk.Plugin.CdsHooks.Examples.CrdOrderSelectCdsServiceConfiguration``
 :License token: http://fire.ly/server/plugins/crd
 :Order: 5510
-:Description: Example CDS Service ``crd-order-select-hook``, implementing the Da Vinci CRD (Coverage Requirements Discovery) ``order-select`` hook. Requires the CQL plugin and the :ref:`Member Match operation <vonk_plugins_member_match>` in the branch on ``/``. See :ref:`CDS Hooks <feature_cds_hooks_examples>`.
+:Description: Example CDS Services ``crd-order-select-hook`` and ``crd-order-sign-hook``, implementing the Da Vinci CRD (Coverage Requirements Discovery) ``order-select`` and ``order-sign`` hooks. They support Firely's prior authorization demo. They are not general-purpose CRD services and are not intended for production use: they evaluate a fixed set of example CQL Libraries. Requires the CQL plugin and the :ref:`Member Match operation <vonk_plugins_member_match>` in the branch on ``/``. See :ref:`CDS Hooks <feature_cds_hooks_examples>`.
 
 CDS Hooks (legacy)
 ------------------
 
-These plugins implement CDS Hooks the way earlier versions of Firely Server did, by mapping CDS Hooks requests onto FHIR custom operations in the branch on ``/``. They are superseded by the CDS Hooks plugins above, and will be removed in the next major version. Do not combine them with the ``/cds-services`` branch: both claim the same route. Before Firely Server 6.11.0, these plugins were named ``Vonk.Plugin.CdsHooks``; do not use that name in an ``Include`` anymore. See :ref:`feature_cds_hooks_upgrade` for upgrading and migrating.
+These plugins implement CDS Hooks the way earlier versions of Firely Server did, by mapping CDS Hooks requests onto FHIR custom operations in the branch on ``/``. They are superseded by the CDS Hooks plugins above, and will be removed in the next major version. Do not combine them with the ``/cds-services`` branch: both claim the same route. Before Firely Server 6.12.0, these plugins were named ``Vonk.Plugin.CdsHooks``; do not use that name in an ``Include`` anymore. See :ref:`feature_cds_hooks_upgrade` for upgrading and migrating.
 
 .. _vonk_plugins_cds_hooks_legacy:
 

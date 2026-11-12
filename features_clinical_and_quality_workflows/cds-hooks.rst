@@ -8,11 +8,10 @@ CDS Hooks
 
   The features described on this page are available in the following :ref:`Firely Server editions <vonk_overview>`:
 
+  * Firely Scale - 🌍 / 🇺🇸
   * Firely CMS Compliance - 🇺🇸
 
-  The CDS Hooks branch described on this page is available as of Firely Server 6.11.0. For the implementation in earlier versions, see :ref:`feature_cds_hooks_upgrade`.
-
-.. TODO (open question, check with dev): confirm the editions above.
+  The CDS Hooks branch described on this page is available as of Firely Server 6.12.0. For the implementation in earlier versions, see :ref:`feature_cds_hooks_upgrade`.
 
 .. note::
 
@@ -440,7 +439,7 @@ Limitations
 Example CDS Services
 --------------------
 
-The plugin ``Vonk.Plugin.CdsHooks.Examples`` contains two example CDS Services. Each has its own configuration class, so you can offer one without the other.
+The plugin ``Vonk.Plugin.CdsHooks.Examples`` contains a patient-view example and a Da Vinci CRD example. Each has its own configuration class, so you can offer one without the other.
 
 .. list-table::
    :header-rows: 1
@@ -455,8 +454,13 @@ The plugin ``Vonk.Plugin.CdsHooks.Examples`` contains two example CDS Services. 
    * - ``crd-order-select-hook``
      - ``order-select``
      - ``Vonk.Plugin.CdsHooks.Examples.CrdOrderSelectCdsServiceConfiguration``
+   * - ``crd-order-sign-hook``
+     - ``order-sign``
+     - ``Vonk.Plugin.CdsHooks.Examples.CrdOrderSelectCdsServiceConfiguration``
 
-Including ``Vonk.Plugin.CdsHooks.Examples`` in the branch includes both. ``appsettings.default.json`` contains the ``CdsHooks:Services`` entries for both services, commented out.
+Including ``Vonk.Plugin.CdsHooks.Examples`` in the branch includes both configuration classes. ``appsettings.default.json`` contains the ``CdsHooks:Services`` entries for all three service ids, commented out.
+
+.. _feature_cds_hooks_examples_patient_view:
 
 Patient view
 ^^^^^^^^^^^^
@@ -511,9 +515,9 @@ If ``patientToGreet`` is missing from the prefetch, or its id does not match ``c
 Coverage Requirements Discovery
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-``crd-order-select-hook`` is a Da Vinci Coverage Requirements Discovery (CRD) service on the ``order-select`` hook. It answers a draft ``ServiceRequest`` with coverage information, returned as a ``systemActions`` update of that order.
+``crd-order-select-hook`` and ``crd-order-sign-hook`` are the same Da Vinci Coverage Requirements Discovery (CRD) service, offered on the ``order-select`` and the ``order-sign`` hook. It reads the draft orders from ``context.draftOrders`` and answers each ``ServiceRequest`` among them: on ``order-sign`` all of them, on ``order-select`` the selected ones. The coverage information is returned as a ``systemActions`` update of the order. For a few procedure codes of the demo data, such as 72148 (MRI of the lumbar spine), it also returns guidance cards.
 
-This service is a demonstration: its coverage logic is specific to Firely's prior authorization demo, and a payer implementing CRD writes coverage rules of its own. To run it, you need:
+This service is a demonstration and not intended for production use: its coverage logic and cards are specific to Firely's prior authorization demo, and a payer implementing CRD writes coverage rules of its own. To run it, you need:
 
 * the license token ``http://fire.ly/server/plugins/crd``, in addition to the CDS Hooks token;
 * the CQL plugin and ``Vonk.Plugin.MemberMatch`` in the branch that serves patient data (the branch on ``/``), because the service calls ``$member-match`` and ``$evaluate`` there;
@@ -536,7 +540,7 @@ Known limitations
 Upgrading from earlier versions
 -------------------------------
 
-Before Firely Server 6.11.0, CDS Hooks was served by mapping each CDS Hooks request onto a FHIR custom operation, in the branch on ``/``. That implementation is still shipped, as the plugin ``Vonk.Plugin.CdsHooks.Legacy``, so that an upgrade does not have to wait for the migration. It will be removed in the next major version. **Treat it as time to migrate, not as a second option to build on.**
+Before Firely Server 6.12.0, CDS Hooks was served by mapping each CDS Hooks request onto a FHIR custom operation, in the branch on ``/``. That implementation is still shipped, as the plugin ``Vonk.Plugin.CdsHooks.Legacy``, so that an upgrade does not have to wait for the migration. It will be removed in the next major version. **Treat it as time to migrate, not as a second option to build on.**
 
 A deployment runs either the CDS Hooks branch or the legacy plugin, never both: they claim the same route.
 

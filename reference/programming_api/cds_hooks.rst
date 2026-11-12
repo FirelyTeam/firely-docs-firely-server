@@ -5,11 +5,10 @@ CDS Hooks services
 
 .. note::
 
-  The features described on this page are available as of Firely Server 6.11.0, in the following :ref:`Firely Server editions <vonk_overview>`:
+  The features described on this page are available as of Firely Server 6.12.0, in the following :ref:`Firely Server editions <vonk_overview>`:
 
+  * Firely Scale - 🌍 / 🇺🇸
   * Firely CMS Compliance - 🇺🇸
-
-.. TODO (open question, check with dev): confirm the editions above.
 
 This page explains how to implement your own CDS Service as a Firely Server plugin. A CDS Service is the server side of the `CDS Hooks specification <https://cds-hooks.hl7.org/>`_: a CDS Client, such as an EHR, calls it at a point in the clinical workflow (a *hook*), and the service answers with cards or system actions.
 
@@ -39,7 +38,7 @@ A request on the CDS Hooks branch passes through a chain of middleware, ordered 
     order 1140  Request typing         gives the request the types its logical model declares
     order 1150  Validation             validates request and response, when enabled for the service and hook
                 ------------------------------------------------------------------------------------------
-    1130-8000   Your CDS Service       your handlers are registered here
+    1151-7999   Your CDS Service       your handlers are registered here
                 ------------------------------------------------------------------------------------------
     order 8000  Not handled            nothing answered: 404
 
@@ -159,7 +158,7 @@ Like the :ref:`FHIR REST pipeline <vonk_reference_api_interactionhandlerfluent>`
 
 A post-handler wraps the rest of the chain: it waits for everything registered at a higher order and then runs. So a post-handler that should see the result of another handler must be registered at a **lower** order than that handler.
 
-Register your configuration class at an order between 1130 and 8000. Your handlers then see a request whose license, method, media types and body have already been checked.
+Register your configuration class at an order above 1150 and below 8000. Your handlers then see a request whose license, method, media types and body have been checked, and that has been typed and, when enabled, validated. Request typing (1140) and validation (1150) are pre-handlers themselves: a service registered at a lower order answers before they run, so its requests are not validated. Validation of the response is a post-handler at 1150, so it only sees the responses of services registered above it.
 
 .. _vonk_reference_api_cds_hooks_context:
 
@@ -581,61 +580,17 @@ The ``Vonk.Plugin.CdsHooks.Examples`` plugin that ships with Firely Server conta
           }
         }
 
-With this configuration, ``GET <base-url>/cds-services`` lists the service, and you can invoke it:
-
-.. code-block:: HTTP
-
-    POST <base-url>/cds-services/patient-view-test-hook HTTP/1.1
-    Accept: application/json
-    Content-Type: application/json
-
-    {
-        "hookInstance": "d1577c69-dfbe-44ad-ba6d-3e05e953b2ea",
-        "hook": "patient-view",
-        "context": {
-            "userId": "Practitioner/example",
-            "patientId": "example"
-        },
-        "prefetch": {
-            "patientToGreet": {
-                "resourceType": "Patient",
-                "id": "example",
-                "name": [ { "family": "Doe", "given": [ "John" ] } ],
-                "gender": "male",
-                "birthDate": "1974-12-25"
-            }
-        }
-    }
-
-The service answers with one card:
-
-.. code-block:: JavaScript
-
-    {
-        "cards": [
-            {
-                "uuid": "0a1b7c3e-4f0e-4d9a-9b0e-3f3c1a2d5e6f",
-                "summary": "Hello World! Firely Server loves FHIR and CDS Hooks!",
-                "detail": "Hello John Doe (male, 1974-12-25)!",
-                "indicator": "info",
-                "source": {
-                    "label": "Firely Server",
-                    "url": "<base-url>/"
-                }
-            }
-        ]
-    }
-
-Without ``patientToGreet`` in the prefetch, the service answers ``412 Precondition Failed`` with an ``OperationOutcome``.
+With this configuration, ``GET <base-url>/cds-services`` lists the service. For a request that invokes it, and the card it answers with, see :ref:`feature_cds_hooks_examples_patient_view`.
 
 A more complex example
 ^^^^^^^^^^^^^^^^^^^^^^
 
-The same plugin contains ``CrdOrderSelectCdsService``, a Da Vinci CRD service on the ``order-select`` hook. It is a demonstration, not a template: its coverage logic is specific to Firely's demo setup, and a payer implementing CRD writes coverage rules of their own. Read it to see what a service doing real work looks like:
+The same plugin contains ``CrdOrderSelectCdsService``, a Da Vinci CRD service on the ``order-select`` and ``order-sign`` hooks, offered as ``crd-order-select-hook`` and ``crd-order-sign-hook``. It is a demonstration, not a template, and not intended for production use: its coverage logic is specific to Firely's demo setup, and a payer implementing CRD writes coverage rules of their own. Read it to see what a service doing real work looks like:
 
-* extracting several resources from the prefetch, including searches that result in a ``Bundle``;
+* one class describing and handling two hooks, with a definition for each;
+* reading the draft orders from ``context.draftOrders``, and the patient and coverage from prefetch searches that result in a ``Bundle``;
 * calling ``$member-match`` and ``$evaluate`` with ``InvokeAsync`` (see :ref:`vonk_reference_api_cds_hooks_fhiraccess`);
-* answering with a ``systemActions`` update of the draft order rather than a card.
+* answering with a ``systemActions`` update of the draft order, next to guidance cards.
 
 It needs the CRD license token, and the CQL and MemberMatch plugins on the branch that serves patient data.
 
@@ -646,17 +601,33 @@ Unit testing a CDS Service
 
 .. code-block:: csharp
 
+    var patient = new Patient
+    {
+        Id = "example",
+        Name = [new HumanName { Family = "Doe", Given = ["John"] }],
+        Gender = AdministrativeGender.Male,
+        BirthDate = "1974-12-25",
+    };
+
     var context = new CdsServiceContext
     {
         ServiceId = "patient-view-test-hook",
         FhirResourceRoot = new Uri("https://example.org/fhir/"),
-        Request = new CdsHooksRequest { Hook = "patient-view" /* , Context, Prefetch */ },
+        Request = new CdsHooksRequest
+        {
+            Hook = "patient-view",
+            Context = new CdsHooksContext { ["patientId"] = "example" },
+            Prefetch = new CdsHooksPrefetch { ["patientToGreet"] = patient },
+        },
     };
 
     await new PatientViewTestCdsService().HandleAsync(context);
 
     Assert.Equal(StatusCodes.Status200OK, context.HttpResult);
-    Assert.Single(context.Response.Cards);
+    var card = Assert.Single(context.Response.Cards);
+    Assert.Equal("Hello John Doe (male, 1974-12-25)!", card.Detail);
+
+``CdsHooksContext`` and ``CdsHooksPrefetch`` take their members through an indexer, so a collection initializer fills them in. The patient in the prefetch has the id given in ``context.patientId``; with a different id, or without the prefetch, the service answers ``412 Precondition Failed`` instead. That case is worth a test of its own.
 
 To start from a JSON fixture instead, read it with ``CdsHooksJsonDeserializer``.
 

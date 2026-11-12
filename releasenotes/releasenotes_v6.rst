@@ -8,6 +8,54 @@ Current Firely Server release notes (v6.x)
         
         docker pull firely/server:latest
 
+.. _vonk_releasenotes_6_12_0:
+
+Release 6.12.0
+--------------
+
+.. TODO: add the release date to the heading, and the other entries of this release. The entries below cover CDS Hooks only.
+
+This release serves CDS Hooks on a pipeline branch of its own, with an API for writing your own CDS Services as plugins.
+
+.. attention::
+    The plugin ``Vonk.Plugin.CdsHooks`` is renamed ``Vonk.Plugin.CdsHooks.Legacy``, and the two ``StructureDefinition`` resources it relies on are renamed. If you use CDS Hooks, update your ``PipelineOptions`` and your administration database before upgrading. Firely Server also reserves fourteen ``CdsHooks*`` type names. See the "Known behavioral changes" section below and :ref:`feature_cds_hooks_upgrade`.
+
+Features
+^^^^^^^^
+
+**CDS Hooks**
+
+#. Firely Server serves CDS Hooks 3.0.0 on a pipeline branch of its own. Add an entry with ``"Path": "/cds-services"`` to ``PipelineOptions:Branches``, listing ``Vonk.Plugin.CdsHooks.Infra`` followed by the CDS Services you offer. ``GET /cds-services`` answers the discovery document and ``POST /cds-services/{id}`` invokes a service. A service is offered only when its id and hook are named under ``CdsHooks:Services``; otherwise it answers HTTP 404, and the log names the setting to add. Requires the license token ``http://fire.ly/server/plugins/cds-hooks``. See :ref:`feature_cds_hooks`.
+#. CDS Hooks requests and responses can be validated per service and hook, with ``RequestValidation`` and ``ResponseValidation`` under ``CdsHooks:Services:<id>:Hooks:<hook>``. A non-conformant request is refused with HTTP 400; issues in a response are logged. Both are off by default. See :ref:`feature_cds_hooks_validation`.
+#. CDS Clients can be required to authenticate with a signed JWT, with ``CdsHooks:Authorization:Enabled``. The token is verified by Firely Auth 4.8.0 or later, and each token can be used only once. Discovery is guarded as well, unless ``CdsHooks:Authorization:GuardDiscovery`` is ``false``. See :ref:`feature_cds_hooks_authorization`.
+#. The plugin ``Vonk.Plugin.CdsHooks.Examples`` offers a ``patient-view`` example service and a Da Vinci CRD example service on the ``order-select`` and ``order-sign`` hooks, each with its own configuration class. The CRD service supports Firely's prior authorization demo and is not intended for production use. See :ref:`feature_cds_hooks_examples`.
+
+Fix
+^^^
+
+#. The CRD ``order-select`` service of ``Vonk.Plugin.CdsHooks.Legacy`` now receives the Patient and Coverage it asks for in prefetch. Its prefetch templates named ``{{%context.patient}}``, which the ``order-select`` context does not have; they now use ``{{%context.patientId}}``.
+
+Known behavioral changes
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+**CDS Hooks**
+
+#. **The CDS Hooks plugin of earlier versions is renamed.** ``Vonk.Plugin.CdsHooks`` is now ``Vonk.Plugin.CdsHooks.Legacy``, and its namespaces with it. Replace the ``Include`` entry ``Vonk.Plugin.CdsHooks`` with ``Vonk.Plugin.CdsHooks.Legacy``, and entries naming one of its namespaces, such as ``Vonk.Plugin.CdsHooks.Configuration``, the same way. The old entry also includes the new CDS Hooks branch plugins, so Firely Server refuses to start with it, and the log names the entry to use instead.
+#. **A deployment running the legacy CDS Hooks plugin must rename two StructureDefinitions in its administration database.** ``CDSHooksRequest`` becomes ``CDSHooksRequestOld`` and ``CDSHooksResponse`` becomes ``CDSHooksResponseOld``. Update the ``type``, ``name``, ``url`` and element paths of both. Until you do, every CDS Hooks request is refused by structural validation. Nothing a CDS Client sends or receives changes.
+#. **Firely Server reserves the type names of its CDS Hooks object model** in every deployment, whether or not it serves CDS Hooks: ``CdsHooksRequest``, ``CdsHooksResponse``, ``CdsHooksCard``, ``CdsHooksAction``, ``CdsHooksSuggestion``, ``CdsHooksLink``, ``CdsHooksSource``, ``CdsHooksContext``, ``CdsHooksPrefetch``, ``CdsHooksPrefetchTemplates``, ``CdsHooksExtensions``, ``CdsHooksFhirAuthorization``, ``CdsHooksDiscoveryResponse`` and ``CdsHooksServiceDefinition``. FHIR type names are matched case-insensitively, so a custom resource type or datatype with one of these names is refused on import, with a warning in the log at startup. Rename such a type before upgrading.
+#. **The legacy CDS Hooks implementation will be removed in the next major version.** It is shipped in this release so that an upgrade does not have to wait for the migration to the CDS Hooks branch. See :ref:`feature_cds_hooks_upgrade`.
+
+**Other**
+
+#. **The branch that serves patient data is now always the branch on the root path, wherever it is listed.** That is the branch with ``"Path": "/"`` in ``PipelineOptions:Branches``. Without a branch on ``/``, it is the first branch that serves neither the administration API nor ``/cds-services``. It used to be the first branch that did not serve the administration API, so in a deployment with several such branches, and ``/`` not listed first, the startup checks now run against a different branch.
+
+Programming API changes and plugins
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+#. A plugin can offer a CDS Service of its own. Implement ``ICdsDiscoveryContributor`` to describe it, and register a handler with ``app.OnCdsService(...)``, using ``PreHandleAsyncWith<T>``, ``HandleAsyncWith<T>`` and ``PostHandleAsyncWith<T>`` on ``CdsServiceContext``, as in the FHIR REST pipeline. ``Vonk.Core.CdsHooks`` holds the object model of the CDS Hooks request, response and discovery document, and ``Vonk.Core.CdsHooks.Serialization`` reads and writes the CDS Hooks JSON without starting the server, for example in unit tests. See :ref:`vonk_reference_api_cds_hooks`.
+#. A CDS Service can read FHIR data from Firely Server through ``IFhirRestPipeline``, with ``ReadAsync``, ``SearchAsync``, ``InvokeAsync`` and ``InvokeSystemAsync``. Each call states what it may access with an ``IAuthorization``; the new ``Authorize`` class provides the common cases. Such a request is restricted by neither SMART on FHIR scopes nor an AccessPolicy, so use the narrowest authorization that works. ``CdsHooks:RoutedRequestHeaders`` lists the headers of the CDS request that are carried along. See :ref:`vonk_reference_api_cds_hooks_fhiraccess`.
+#. ``IApplicationBuilder.OnCdsHooksRequest`` is now marked ``[Obsolete]`` and will be removed in the next major version of Firely Server, together with ``Vonk.Plugin.CdsHooks.Legacy``. Use ``OnCdsService`` on the CDS Hooks branch instead.
+
 .. _vonk_releasenotes_6_11_0:
 
 Release 6.11.0, October 22nd, 2026

@@ -449,7 +449,7 @@ CRD is the first step of the electronic prior authorization workflow of the Da V
 #. **DTR** (Documentation Templates and Rules) collects the documentation the plan needs, with ``Questionnaire`` resources provided by the payer.
 #. **PAS** (Prior Authorization Support) submits the prior authorization request and returns the decision.
 
-Together they support the Prior Authorization API required by the :ref:`CMS Interoperability and Prior Authorization Final Rule (CMS-0057-F) <cms>`.
+Together they support the Prior Authorization API required by the CMS Interoperability and Prior Authorization Final Rule (CMS-0057-F). For how CRD fits in that API, and the steps to implement it with Firely Server, see :ref:`CRD on the CMS-0057-F compliance page <cms_crd>`.
 
 Hooks used by CRD
 ^^^^^^^^^^^^^^^^^
@@ -510,7 +510,7 @@ A payer can host its CRD server in Firely Server, as one or more CDS Services on
 
 The example services ``crd-order-select-hook`` and ``crd-order-sign-hook`` show these building blocks working together, for Firely's prior authorization demo; see :ref:`the CRD demo <feature_cds_hooks_examples_crd>`.
 
-For the other APIs that CMS-0057-F requires, and the Implementation Guides they use, see :ref:`CMS-0057-F <cms>`.
+For the other APIs that CMS-0057-F requires, and the Implementation Guides they use, see :ref:`CMS-0057-F <cms>`. The compliance view of CRD is in :ref:`CRD on the CMS-0057-F compliance page <cms_crd>`.
 
 .. _feature_cds_hooks_examples:
 

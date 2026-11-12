@@ -377,7 +377,7 @@ Firely Server can require CDS Clients to authenticate, as described in the secti
 
 .. warning::
 
-  With authorization off, anyone who can reach ``/cds-services`` can invoke the CDS Services you offer, including services that return information based on patient data. Enable authorization for any deployment that is reachable by more than trusted systems.
+  With authorization off, anyone who can reach ``/cds-services`` can invoke the CDS Services you offer, including services that return information based on patient data. Enable authorization as soon as a system that you do not trust can call your CDS Services, for example when ``/cds-services`` is reachable from outside your own network.
 
 Prerequisite: Firely Auth
 ^^^^^^^^^^^^^^^^^^^^^^^^^

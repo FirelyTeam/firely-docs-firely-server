@@ -32,7 +32,7 @@ Step 1 - Software
 
 Firely Auth is distributed as .NET Core binaries and in a Docker image. For this introduction we will use the binaries.
 
-#. Install .NET Core 8 Runtime
+#. Install the `ASP.NET Core Runtime 10 <https://dotnet.microsoft.com/en-us/download/dotnet/10.0>`_. Firely Auth runs on .NET 10 as of version 4.7.0; releases 4.0.0 up to and including 4.6.x require .NET 8.
 #. Download the zip file with Firely Auth binaries from `the download server <https://downloads.fire.ly/firely-auth>`_
 #. Extract the zip to a location from where you are allowed to execute the program. We will call this the 'bin-directory'
 

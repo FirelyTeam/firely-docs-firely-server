@@ -85,6 +85,23 @@ active:
     
 For more information, see `Duende Documentation - Introspection Endpoint <https://docs.duendesoftware.com/identityserver/v6/reference/endpoints/introspection/>`_.
 
+.. _firely_auth_endpoints_cdsintrospect:
+
+CDS Hooks JWT verification endpoint
+-----------------------------------
+
+Firely Server uses this endpoint to verify the JWT that a CDS Hooks client signed itself (see :ref:`firely_auth_settings_cdshooks`). It follows `RFC7662 <https://www.rfc-editor.org/rfc/rfc7662>`_ and is authenticated with the Firely Server credentials configured in ``FhirServer:Name`` and ``FhirServer:IntrospectionSecret`` (see :ref:`firely_auth_settings_server`). No extra client registration is needed.
+
+.. code-block:: HTTP
+
+    POST /connect/cdsIntrospect HTTP/1.1
+    Authorization: Basic <base64 of name:secret>
+    Content-Type: application/x-www-form-urlencoded
+
+    token=<CDS Hooks client JWT>
+
+Every rejected token gets ``{"active": false}``, without a reason, so the endpoint cannot be used to probe registrations. The reason is only logged. Firely Auth checks the signature, the registration and its enabled state, and the time claims. It does not check ``aud``: Firely Server checks that the audience is the URL of the CDS Service being called.
+
 .. _firely_auth_endpoints_launchcontext:
 
 LaunchContext endpoint

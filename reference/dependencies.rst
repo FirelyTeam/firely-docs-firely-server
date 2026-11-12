@@ -34,6 +34,35 @@ You can retrieve the SBOM for a specific release yourself:
   mean rebuilding and re-pushing it, which changes its digest, so we don't retrofit it onto images that have
   already shipped.
 
+.. _vonk_dependencies_packages:
+
+Third-party packages
+--------------------
+
+The tables below list the NuGet packages that Firely Server and Firely Server Ingest (FSI) ship, with their versions
+and licenses. They include every package, direct or transitive, that puts a file in the build output.
+Packages by Firely that are not published on `NuGet.org <https://www.nuget.org>`_ are not listed, and neither are the
+Hl7.Fhir.* packages, whose license is in :ref:`firely_oss_license` below. For the complete and authoritative list of a
+specific release, use its SBOM as described above.
+
+..
+   These tables are generated with SPDXtoRST (FirelyTeam/SPDXtoRST), using --show-version and
+   --config reference/dependencies.config.json, from the .deps.json files of a Release build of the version these docs
+   describe: src/Vonk.Server/bin/Release/<tfm>/Firely.Server.deps.json and
+   ingest/Vonk.Import.Cli/bin/Release/<tfm>/fsi.deps.json.
+   That config leaves out the Hl7.Fhir.* packages, which the Firely OSS License section covers.
+   Regenerate the .rstinc files rather than editing them by hand.
+
+Firely Server
+^^^^^^^^^^^^^
+
+.. include:: dependencies_firely_server.rstinc
+
+Firely Server Ingest
+^^^^^^^^^^^^^^^^^^^^
+
+.. include:: dependencies_firely_server_ingest.rstinc
+
 .. _firely_oss_license:
 
 Firely OSS License

@@ -320,6 +320,7 @@ All settings for CDS Hooks are in the ``CdsHooks`` section of the appsettings. T
       "Authority": "",
       "ClientId": "",
       "ClientSecret": "",
+      "RequireHttpsToProvider": true,
       "ReplayGuardCapacity": 100000
     }
   }

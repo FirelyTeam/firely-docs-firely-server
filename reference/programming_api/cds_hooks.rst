@@ -439,7 +439,7 @@ Leaving an id and hook out of this section, or setting ``Enabled`` to ``false``,
 Keep in mind:
 
 * Serve CDS Services only on the ``/cds-services`` branch. Firely Server refuses to start when a branch serves both FHIR REST and CDS Hooks.
-* The branch serves ``InformationModel:Default``. The release-prefixed form ``/{release}/cds-services`` is not served.
+* The branch serves ``InformationModel:Default``. A :ref:`version-specific endpoint <feature_multiversion_endpoints>` with path mapping, such as ``<base-url>/R4/cds-services``, is not served.
 
 Example: a patient-view service
 -------------------------------
@@ -663,4 +663,4 @@ Known limitations
 -----------------
 
 * The feedback endpoint, ``POST <base-url>/cds-services/{id}/feedback``, is recognized but answers ``501 Not Implemented``.
-* ``/{release}/cds-services`` is not served; the branch handles requests in ``InformationModel:Default``.
+* Version-specific endpoints with path mapping, such as ``<base-url>/R4/cds-services``, are not served; the branch handles requests in ``InformationModel:Default``.

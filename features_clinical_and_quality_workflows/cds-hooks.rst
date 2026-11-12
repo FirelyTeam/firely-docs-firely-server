@@ -278,7 +278,7 @@ A few things to keep in mind about the branch:
 
 * **Serve CDS Hooks only from its own branch.** Firely Server refuses to start when a branch serves both FHIR REST and CDS Hooks. The easiest way to cause this is to put the entry ``Vonk.Plugin.CdsHooks`` in the branch on ``/``: an ``Include`` entry also takes in every namespace below it, so that entry includes ``Vonk.Plugin.CdsHooks.Infra`` and ``Vonk.Plugin.CdsHooks.Examples`` as well. The log names the entry to use instead.
 * **An** ``Include`` **entry must match a configuration class.** An entry matches a configuration class whose full name equals it, or starts with it followed by a dot. An entry that matches nothing fails startup, so a typo is reported rather than ignored.
-* **The branch handles requests in** ``InformationModel:Default``. The release-prefixed form ``<base-url>/{release}/cds-services`` is not served, because a branch path is matched before the release is taken off the path. To have subdomain mapping of the FHIR version apply on this branch as well, add ``Vonk.Core.Context.Http.InformationModelEndpointConfiguration`` to its ``Include``.
+* **The branch handles requests in** ``InformationModel:Default``. A :ref:`version-specific endpoint <feature_multiversion_endpoints>` with path mapping, such as ``<base-url>/R4/cds-services``, is not served. Firely Server matches the branch path ``/cds-services`` before it takes the version path, such as ``/R4``, off the URL. Subdomain mapping can apply on this branch: to have it apply, add ``Vonk.Core.Context.Http.InformationModelEndpointConfiguration`` to the ``Include`` of the branch.
 * **A service reads patient data from the branch on** ``/``. When a CDS Service reads FHIR data from Firely Server, or calls an operation such as ``$member-match``, it does so through the branch that serves patient data. That is the branch on ``/``; without a branch on ``/``, it is the first branch that serves neither the administration API nor ``/cds-services``. Plugins that a CDS Service calls must be included in *that* branch, not in ``/cds-services``.
 
 Configuring CDS Services
@@ -612,7 +612,7 @@ Known limitations
 -----------------
 
 * The feedback endpoint, ``POST <base-url>/cds-services/{id}/feedback``, is recognized but answers ``501 Not Implemented``.
-* ``<base-url>/{release}/cds-services`` is not served.
+* Version-specific endpoints with path mapping, such as ``<base-url>/R4/cds-services``, are not served. See :ref:`feature_multiversion_endpoints`.
 * See also the :ref:`limitations of authorization <feature_cds_hooks_authorization>`.
 
 .. _feature_cds_hooks_upgrade:

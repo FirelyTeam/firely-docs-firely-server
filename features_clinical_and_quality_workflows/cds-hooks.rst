@@ -18,7 +18,7 @@ CDS Hooks
   CDS Hooks requires the license token ``http://fire.ly/server/plugins/cds-hooks`` to be present in the license file.
   If you do not have this license token, please contact `Firely <https://fire.ly/contact>`_.
 
-`CDS Hooks <https://cds-hooks.hl7.org/>`_ is an HL7 standard for bringing clinical decision support (CDS) into the workflow of a clinician, at the moment it is needed. When a clinician does something in an Electronic Health Record (EHR), such as opening a patient's chart or selecting an order, the EHR calls one or more external services. These services look at the patient's data and answer within moments with *cards*: short pieces of information, warnings or suggestions that the EHR shows next to the work the clinician is doing.
+`CDS Hooks <https://cds-hooks.hl7.org/>`_ is an HL7 standard for bringing clinical decision support (CDS) into the workflow of a clinician, at the moment it is needed. When a clinician does something in an Electronic Health Record (EHR), such as opening a patient's chart or selecting an order, the EHR calls one or more external services. These services look at the patient's data and answer within seconds with *cards*: short pieces of information, warnings or suggestions that the EHR shows next to the work the clinician is doing.
 
 For example, when a physician orders an MRI of the lumbar spine, the EHR can call a CDS Service of the patient's health plan. Before the order is signed, the physician sees a card saying that the plan requires prior authorization for this MRI, with a button that opens the form to collect the documentation the plan needs. Without CDS Hooks, the practice typically learns this only afterwards, from a denied claim or a phone call.
 
@@ -59,12 +59,12 @@ CDS Hooks defines the interaction between two systems:
 * The **CDS Client** is the EHR or other clinical information system the clinician is working in. It owns the patient record and the user interface, and decides when to call a CDS Service and how to show its answer.
 * The **CDS Service** provides the decision support. It receives the patient context, applies its logic, and returns cards. Firely Server takes this role.
 
-CDS Hooks is not a FHIR RESTful API. Its requests and responses are JSON documents of their own, but the clinical data inside them, such as the patient, the draft orders or the resources returned in a suggestion, are FHIR resources.
+CDS Hooks is not a FHIR RESTful API. Its requests and responses are JSON documents defined by the CDS Hooks specification, but the clinical data inside them, such as the patient, the draft orders or the resources returned in a suggestion, are FHIR resources.
 
 Hooks
 ^^^^^
 
-A *hook* is a named point in the clinician's workflow at which the CDS Client calls the CDS Services that registered for it. Each hook defines its *context*: the information that the CDS Client sends along, such as the id of the patient, the user, or the orders being entered. The `CDS Hooks Library <https://cds-hooks.hl7.org/hooks.html>`_ defines the following hooks, among others:
+A *hook* is a named point in the clinician's workflow at which the CDS Client calls the CDS Services that registered for it. Each hook defines its *context*: the information that the CDS Client sends along, such as the id of the patient, the user, or the orders being entered. The `CDS Hooks Library <https://cds-hooks.hl7.org/hooks/>`_ defines the following hooks, among others:
 
 .. list-table::
    :header-rows: 1
@@ -95,6 +95,8 @@ Discovery and prefetch
 ^^^^^^^^^^^^^^^^^^^^^^
 
 A CDS Service tells CDS Clients what it offers through its *discovery* endpoint, ``GET <base-url>/cds-services``. For each service, the discovery document lists its ``id``, the ``hook`` it answers, a title and description, and optionally *prefetch templates*.
+
+The discovery document plays a role similar to the CapabilityStatement of a FHIR server, with one difference: a CDS Service may require a token to read it. Firely Server does so by default when authorization is enabled; see :ref:`the note on discovery <feature_cds_hooks_discovery_token>`.
 
 A prefetch template is a FHIR query with placeholders, such as ``Patient/{{context.patientId}}``. It names the data the service needs on every call. The CDS Client fills in the placeholders from the hook context, runs the queries against its own FHIR data, and sends the results along with the request. This saves the CDS Service a round trip for data it always needs, which matters for an answer that the clinician is waiting for.
 
@@ -149,7 +151,7 @@ The figure below shows the interaction between a clinician, the CDS Client and a
 
 **Discovery**
 
-1. The CDS Client requests the discovery document from ``<base-url>/cds-services``. It does so when the service is set up, and whenever it wants to refresh its list of services.
+1. The CDS Client requests the discovery document from ``<base-url>/cds-services``. It does so when the service is set up, and whenever it wants to refresh its list of services. When :ref:`authorization <feature_cds_hooks_authorization>` is enabled, this request needs a signed JWT as well, unless ``GuardDiscovery`` is ``false``.
 2. Firely Server answers with the CDS Services it offers, each with its hook and prefetch templates.
 
 **Every time a hook fires**
@@ -167,7 +169,7 @@ The figure below shows the interaction between a clinician, the CDS Client and a
 
 The specification also defines a *feedback* endpoint, ``POST <base-url>/cds-services/{id}/feedback``, through which the CDS Client can report which cards were accepted or overridden. Firely Server does not support feedback yet; see `Known limitations`_.
 
-A CDS Service may answer several hooks with the same ``id``. A CDS Client can then replace the cards of an earlier call with those of a later one, as the workflow moves on, for example from ``order-select`` to ``order-sign``.
+A CDS Service may answer several hooks with the same ``id``. A CDS Client can then replace the cards of an earlier call with those of a later one when the workflow reaches a later step, for example from ``order-select`` to ``order-sign``.
 
 Firely Server as a CDS Service
 ------------------------------
@@ -189,7 +191,7 @@ A CDS Service in Firely Server can draw on two sources of data:
 * **The data of the CDS Client**, sent as prefetch data or available through ``fhirServer``. This is the clinical record of the patient: conditions, medications, the draft orders.
 * **The data in Firely Server itself**, read in-process through the FHIR REST pipeline. This is knowledge the CDS Client does not have, such as the organization's own records about the patient, decision rules stored as CQL ``Library`` resources, or ``Questionnaire`` resources.
 
-Firely Server implements `CDS Hooks 3.0.0 <https://cds-hooks.hl7.org/2026Jan/>`_.
+Firely Server implements `CDS Hooks 3.0.0 <https://cds-hooks.hl7.org/2026Jan/en/>`_.
 
 The CDS Hooks branch handles all requests in the default FHIR version of Firely Server, set in ``InformationModel:Default`` (see :ref:`feature_multiversion`). CDS Hooks is tested with **FHIR R4**, the FHIR version of Da Vinci CRD, so we recommend R4 as the default FHIR version for a deployment that serves CDS Hooks. Other FHIR versions may work, but are not tested.
 
@@ -198,7 +200,7 @@ Key concepts
 
 **CDS Hooks is served on a branch of its own.** CDS Hooks is not a FHIR RESTful API, so Firely Server serves it on a separate :ref:`pipeline branch <vonk_plugins_config>` at ``/cds-services``. That path is fixed by the specification.
 
-**A CDS Service is identified by its id and its hook together.** Because one id may answer several hooks, as described above, each hook of a service is offered on its own.
+**A CDS Service is identified by its id and its hook together.** Each hook of a service is offered on its own.
 
 **Nothing is offered by default.** A CDS Service receives patient data, so it has to be exposed deliberately. A service is offered only when its id and hook are named in the ``CdsHooks:Services`` section of the appsettings. A service that is installed but not named there is neither listed in the discovery document nor invoked: it answers ``404 Not Found``.
 
@@ -274,12 +276,16 @@ You can now request the discovery document:
     ]
   }
 
-A few things to keep in mind about the branch:
+.. _feature_cds_hooks_branch_rules:
+
+Rules of the CDS Hooks branch
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
 * **Serve CDS Hooks only from its own branch.** Firely Server refuses to start when a branch serves both FHIR REST and CDS Hooks. The easiest way to cause this is to put the entry ``Vonk.Plugin.CdsHooks`` in the branch on ``/``: an ``Include`` entry also takes in every namespace below it, so that entry includes ``Vonk.Plugin.CdsHooks.Infra`` and ``Vonk.Plugin.CdsHooks.Examples`` as well. The log names the entry to use instead.
 * **An** ``Include`` **entry must match a configuration class.** An entry matches a configuration class whose full name equals it, or starts with it followed by a dot. An entry that matches nothing fails startup, so a typo is reported rather than ignored.
-* **The branch handles requests in** ``InformationModel:Default``. A :ref:`version-specific endpoint <feature_multiversion_endpoints>` with path mapping, such as ``<base-url>/R4/cds-services``, is not served. Firely Server matches the branch path ``/cds-services`` before it takes the version path, such as ``/R4``, off the URL. Subdomain mapping can apply on this branch: to have it apply, add ``Vonk.Core.Context.Http.InformationModelEndpointConfiguration`` to the ``Include`` of the branch.
-* **A service reads patient data from the branch on** ``/``. When a CDS Service reads FHIR data from Firely Server, or calls an operation such as ``$member-match``, it does so through the branch that serves patient data. That is the branch on ``/``; without a branch on ``/``, it is the first branch that serves neither the administration API nor ``/cds-services``. Plugins that a CDS Service calls must be included in *that* branch, not in ``/cds-services``.
+* **Version-specific endpoints.** The branch handles requests in ``InformationModel:Default``. A :ref:`version-specific endpoint <feature_multiversion_endpoints>` with path mapping, such as ``<base-url>/R4/cds-services``, is not served. Firely Server matches the branch path ``/cds-services`` before it takes the version path, such as ``/R4``, off the URL. Subdomain mapping can apply on this branch: to have it apply, add ``Vonk.Core.Context.Http.InformationModelEndpointConfiguration`` to the ``Include`` of the branch.
+* **A service reads patient data from the branch that serves patient data.** When a CDS Service reads FHIR data from Firely Server, or calls an operation such as ``$member-match``, it does so through the branch that serves patient data. That is the branch on ``/``; without a branch on ``/``, it is the first branch that serves neither the administration API nor ``/cds-services``. Plugins that a CDS Service calls must be included in *that* branch, not in ``/cds-services``.
 
 Configuring CDS Services
 ------------------------
@@ -322,19 +328,23 @@ All settings for CDS Hooks are in the ``CdsHooks`` section of the appsettings. T
     }
   }
 
+.. _feature_cds_hooks_offering:
+
 Offering a service
 ^^^^^^^^^^^^^^^^^^
 
 ``CdsHooks:Services:<id>:Hooks:<hook>`` offers the service with that id for that hook. Naming the hook is enough: ``"patient-view": {}`` offers it, because ``Enabled`` is ``true`` by default. Set ``Enabled`` to ``false`` to keep the entry while taking that hook of the service offline.
 
-A pair that is not offered is left out of the discovery document and answers ``404 Not Found`` when invoked. If a service is installed but not offered, Firely Server logs the exact setting to add, for example:
+If a service is installed but not offered, Firely Server logs the setting to add, for example:
 
 .. code-block:: text
 
    The CDS Hooks service 'patient-view-test-hook' has a handler for hook 'patient-view' but is not offered for it,
    because it is not enabled in configuration. Add 'CdsHooks:Services:patient-view-test-hook:Hooks:patient-view' to offer it.
 
-Both the id and the hook are case-sensitive.
+This message is logged at the ``Information`` level, which the default log settings do not show. To see it, add ``"Vonk.Core.CdsHooks": "Information"`` under ``Serilog:MinimumLevel:Override`` in your log settings (see :ref:`configure_log_level`).
+
+A CDS Client must send the id in the URL and the hook in the request exactly as the service defines them, because both are matched case-sensitively. The keys under ``CdsHooks:Services`` are not case-sensitive. Write them the same way as the service defines them all the same, so that the configuration is easy to compare with the discovery document.
 
 .. _feature_cds_hooks_validation:
 
@@ -353,38 +363,55 @@ Each has its own ``Enabled`` switch and an optional ``Profile``. Without a ``Pro
 
 The FHIR resources inside the payload, such as the prefetched resources, are validated in the same pass.
 
-Carrying headers to FHIR requests
+.. _feature_cds_hooks_fhir_access:
+
+FHIR data access by a CDS Service
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-A CDS Service may read FHIR data from Firely Server while it handles a request. That FHIR request runs inside Firely Server, through the same pipeline as a request over HTTP, so the :ref:`audit trail <feature_auditing>` applies to it. When authorization is enabled, the CDS Client is recorded as the agent on the ``AuditEvent``.
+A CDS Service may read FHIR data from Firely Server, or call one of its operations, while it handles a request. That FHIR request runs inside Firely Server, through the same pipeline as a request over HTTP, so the :ref:`audit trail <feature_auditing>` applies to it. When authorization is enabled, the CDS Client is recorded as the agent on the ``AuditEvent``. With authorization off, the ``AuditEvent`` has no agent.
 
-``CdsHooks:RoutedRequestHeaders`` lists the headers of the CDS request that are copied to such a FHIR request. When the setting is absent, only the tenant header is copied, so that :ref:`multi-tenancy <feature_multitenancy>` works. An empty list copies no headers at all. Most headers a CDS Client sends describe the CDS request rather than the FHIR request, and some, like ``Prefer``, would change what the FHIR request returns, so only add a header when you know why it is needed. ``Authorization`` cannot be copied; Firely Server refuses to start if it is listed.
+What a CDS Service may access
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. note::
+Such a FHIR request is not restricted by SMART on FHIR scopes or by an AccessPolicy. A CDS Service is a plugin that runs inside Firely Server, and the code of the service states what each of its FHIR requests may access, with the authorization it passes on the call (see :ref:`vonk_reference_api_cds_hooks_fhiraccess`). Therefore:
 
-  Such a FHIR request is not restricted by SMART on FHIR scopes or by an AccessPolicy. A CDS Service is a plugin that runs inside Firely Server, and the code of the service states what each of its FHIR requests may access, with the authorization it passes on the call (see :ref:`vonk_reference_api_cds_hooks_fhiraccess`). Therefore:
+* Before you install a CDS Service from a third party, review its code if you can, or ask the vendor, to find out which resources it reads and writes, and with which authorization.
+* Review your own CDS Services in the same way. Each call should use the narrowest authorization that works, for example ``Authorize.ReadOnly("Patient", "Coverage")`` rather than ``Authorize.Everything()``.
+* Use the :ref:`audit trail <feature_auditing>` to check afterwards which resources a CDS Service actually accessed.
 
-  * Before you install a CDS Service from a third party, review its code if you can, or ask the vendor, to find out which resources it reads and writes, and with which authorization.
-  * Review your own CDS Services in the same way. Each call should use the narrowest authorization that works, for example ``Authorize.ReadOnly("Patient", "Coverage")`` rather than ``Authorize.Everything()``.
-  * Use the :ref:`audit trail <feature_auditing>` to check afterwards which resources a CDS Service actually accessed.
+Carrying headers to FHIR requests
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``CdsHooks:RoutedRequestHeaders`` lists the headers of the CDS request that are copied to such a FHIR request:
+
+The setting is absent
+    Only the tenant header is copied, so that :ref:`multi-tenancy <feature_multitenancy>` works.
+
+An empty list
+    No headers are copied.
+
+A list of header names
+    These headers are copied. Most headers that a CDS Client sends describe the CDS request, not the FHIR request, and some, like ``Prefer``, change what the FHIR request returns. Add a header only when you know why it is needed. ``Authorization`` cannot be listed: Firely Server refuses to start if it is.
 
 .. _feature_cds_hooks_authorization:
 
 Authorizing CDS Clients
 -----------------------
 
-Firely Server can require CDS Clients to authenticate, as described in the section *Trusting CDS Clients* of the `specification <https://cds-hooks.hl7.org/>`_. The CDS Client signs a JWT and sends it as a bearer token in the ``Authorization`` header. Authorization is off by default.
+Firely Server can require CDS Clients to authenticate, as described in the section *Trusting CDS Clients* of the `CDS Hooks 3.0.0 specification <https://cds-hooks.hl7.org/2026Jan/en/>`_. The CDS Client signs a JWT and sends it as a bearer token in the ``Authorization`` header. Authorization is off by default.
+
+Authorization decides which CDS Clients may call a CDS Service. What the service itself may access in Firely Server is a separate question; see :ref:`feature_cds_hooks_fhir_access`.
 
 .. warning::
 
-  With authorization off, anyone who can reach ``/cds-services`` can invoke the CDS Services you offer, including services that return information based on patient data. Enable authorization as soon as a system that you do not trust can call your CDS Services, for example when ``/cds-services`` is reachable from outside your own network.
+  With authorization off, anyone who can reach ``/cds-services`` can invoke the CDS Services you offer, including services that return information based on patient data. Without authorization, the ``AuditEvent`` of the FHIR data a service reads also has no agent. Enable authorization as soon as a system that you do not trust can call your CDS Services, for example when ``/cds-services`` is reachable from outside your own network.
 
 Prerequisite: Firely Auth
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Firely Server does not validate the token itself. It sends the token to Firely Auth for verification, at the endpoint ``POST {authority}/connect/cdsIntrospect``. The authorization server you configure must therefore be :ref:`Firely Auth <feature_accesscontrol_idprovider>` 4.8.0 or later, which serves that endpoint. With an earlier version, every invocation is refused, and the log says that introspection failed.
 
-Register each CDS Client in Firely Auth as a client of the type **CDS Hooks Service Client**, with the issuer of its JWTs and its public key, either as a single JWK or as a JWKS URL. Firely Auth checks the signature, the registration and the time claims of the token. Firely Server then checks:
+Register each CDS Client in Firely Auth as a client of the type **CDS Hooks**, with the issuer of its JWTs and its public keys, as one or more JWKs or as a JWKS URL (see :ref:`firely_auth_settings_cdshooks`). Firely Auth checks the signature, the registration and the time claims of the token. Firely Server then checks:
 
 * **The audience.** The ``aud`` of the token must be the URL of the endpoint being called: ``<base-url>/cds-services/{id}`` for an invocation, ``<base-url>/cds-services`` for discovery.
 * **Replay.** Each token can be used only once. The ``jti`` of every accepted token is remembered until the token expires. A second request with the same token is refused, and so is a token without a ``jti`` or ``exp``.
@@ -398,7 +425,7 @@ Settings
     ``false`` by default. With ``true``, every invocation of a CDS Service needs a valid token, unless the service is exempted (see below).
 
 ``CdsHooks:Authorization:GuardDiscovery``
-    ``true`` by default: discovery needs a token as well, with ``<base-url>/cds-services`` as its audience. Set it to ``false`` to serve the discovery document to anyone while invocations stay guarded, for example for CDS Clients that need to read the list of services before they can obtain a token for one. The specification permits both. This setting has no effect while ``Enabled`` is ``false``.
+    ``true`` by default: discovery needs a token as well, with ``<base-url>/cds-services`` as its audience. Set it to ``false`` to serve the discovery document to anyone while invocations stay guarded, for example for CDS Clients that need to read the list of services before they can obtain a token for one. The specification permits both. This setting has no effect while ``Enabled`` is ``false``. See also the note below.
 
 ``CdsHooks:Authorization:Authority``, ``ClientId`` and ``ClientSecret``
     The Firely Auth instance, and the credentials Firely Server introspects tokens with. When left empty, they fall back to ``SmartAuthorizationOptions:Authority``, ``SmartAuthorizationOptions:TokenIntrospection:ClientId`` and ``SmartAuthorizationOptions:TokenIntrospection:ClientSecret`` (see :ref:`feature_accesscontrol_config`). Firely Auth needs no separate client registration for this, so usually you leave these empty.
@@ -428,20 +455,26 @@ To serve one service without a token while authorization is enabled, set ``Autho
 
 This switch is per service, not per hook, because the token is checked before the request body that names the hook is read. It has no effect while ``CdsHooks:Authorization:Enabled`` is ``false``. There are no scopes for CDS Services.
 
+.. _feature_cds_hooks_discovery_token:
+
+.. important::
+
+  **The discovery document is not public by default.** This is a difference from the CapabilityStatement of a FHIR server (``GET <base-url>/metadata``), which a client usually reads without a token. With authorization enabled, a CDS Client needs a token, with ``<base-url>/cds-services`` as its audience, to read the discovery document as well. To serve the discovery document without a token, set ``CdsHooks:Authorization:GuardDiscovery`` to ``false``.
+
 Limitations
 ^^^^^^^^^^^
 
-* **Introspection is not cached.** Every invocation makes one call to Firely Auth. This adds the latency of one network round-trip per invocation, and CDS Hooks depends on Firely Auth being available. This is deliberate: every token can be used only once anyway, and caching a positive result would only widen the window in which a revoked token is still accepted.
+* **Introspection is not cached.** Every invocation makes one call to Firely Auth. This adds the latency of one network round-trip per invocation, and CDS Hooks depends on Firely Auth being available. This is deliberate: every token can be used only once anyway, and caching a positive result would only make the time longer in which a revoked token is still accepted.
 * **The replay check is per instance.** The used tokens are remembered in memory. In a load-balanced deployment with several instances of Firely Server, a token replayed against another instance is not detected.
 * **The replay check has a capacity.** When more than ``ReplayGuardCapacity`` unexpired tokens are remembered, the least recently used are forgotten, and such a token could be used a second time. Firely Server logs a warning when this happens, at most once every five minutes. Roughly, you need one entry per request per token lifetime: 500 requests per second with tokens valid for five minutes needs 150,000.
-* **A token is used up even if the request fails.** The token is recorded as used before the service is invoked. A request that fails, for example with a ``404`` or a ``400`` from validation, still uses the token, and a CDS Client that retries with the same token gets ``401 Unauthorized``.
+* **A token counts as used, even if the request fails.** The token is recorded as used before the service is invoked. A request that fails, for example with a ``404`` or a ``400`` from validation, still uses the token, and a CDS Client that retries with the same token gets ``401 Unauthorized``.
 
 .. _feature_cds_hooks_crd:
 
 Coverage Requirements Discovery (CRD)
 -------------------------------------
 
-The `Da Vinci Coverage Requirements Discovery (CRD) <https://hl7.org/fhir/us/davinci-crd/>`_ Implementation Guide is the most prominent use of CDS Hooks in the US. It defines how a health plan (payer) tells a provider, while the provider is ordering or scheduling, whether a service is covered, whether it needs prior authorization, and which documentation the plan needs. In CRD terms, the payer runs a *CRD server*, a CDS Service, and the provider's EHR is the *CRD client*, a CDS Client.
+The `Da Vinci Coverage Requirements Discovery (CRD) <https://hl7.org/fhir/us/davinci-crd/2.2.1/>`_ Implementation Guide is the most prominent use of CDS Hooks in the US. It defines how a health plan (payer) tells a provider, while the provider is ordering or scheduling, whether a service is covered, whether it needs prior authorization, and which documentation the plan needs. In CRD terms, the payer runs a *CRD server*, a CDS Service, and the provider's EHR is the *CRD client*, a CDS Client. This section, and the CRD demo service, follow CRD 2.2.1.
 
 CRD is the first step of the electronic prior authorization workflow of the Da Vinci Burden Reduction guides:
 
@@ -501,16 +534,16 @@ A CRD server must answer most hooks within 5 seconds, and some within 10 seconds
 CRD with Firely Server
 ^^^^^^^^^^^^^^^^^^^^^^
 
-A payer can host its CRD server in Firely Server, as one or more CDS Services on the ``/cds-services`` branch. Firely Server does not ship a CRD service for production use: the coverage rules are the payer's own. You write the CRD service as a plugin (see :ref:`vonk_reference_api_cds_hooks`), and offer it for each hook it answers under ``CdsHooks:Services``. Firely Server provides the building blocks:
+A payer can host its CRD server in Firely Server, as one or more CDS Services on the CDS Hooks branch. Firely Server does not ship a CRD service for production use: the coverage rules are the payer's own. You write the CRD service as a plugin (see :ref:`vonk_reference_api_cds_hooks`), and offer it for each hook it answers under ``CdsHooks:Services``. Firely Server provides the building blocks:
 
-* **The CDS Hooks protocol**, including :ref:`authorization of CRD clients <feature_cds_hooks_authorization>` and :ref:`validation <feature_cds_hooks_validation>` of requests and responses against the CRD profiles. Load the CRD Implementation Guide into the administration database and set the ``Profile`` of each hook to the matching CRD request or response profile.
+* **The CDS Hooks protocol**, including :ref:`authorization of CRD clients <feature_cds_hooks_authorization>` and :ref:`validation <feature_cds_hooks_validation>` of requests and responses against a profile of your choice, per hook.
 * **Member and coverage data.** The payer's member, ``Coverage`` and claims data can live in the same Firely Server. A CRD service reads it in-process (see :ref:`vonk_reference_api_cds_hooks_fhiraccess`), and can use the :ref:`$member-match operation <vonk_plugins_member_match>` to find the member that the provider's ``Patient`` and ``Coverage`` refer to.
 * **Coverage rules in CQL.** Rules about coverage, prior authorization and documentation can be written in CQL, stored as ``Library`` resources and evaluated with :ref:`Library/$evaluate <feature_library_evaluate>`, so that they can be changed without changing the plugin.
 * **Documentation templates for DTR.** The ``Questionnaire`` resources that a coverage information refers to can be stored in Firely Server, and served to DTR with the :ref:`$questionnaire-package operation <vonk_plugins_questionnaire_package>`.
 
 The example services ``crd-order-select-hook`` and ``crd-order-sign-hook`` show these building blocks working together, for Firely's prior authorization demo; see :ref:`the CRD demo <feature_cds_hooks_examples_crd>`.
 
-For the other APIs that CMS-0057-F requires, and the Implementation Guides they use, see :ref:`CMS-0057-F <cms>`. The compliance view of CRD is in :ref:`CRD on the CMS-0057-F compliance page <cms_crd>`.
+For the other APIs that CMS-0057-F requires, and the Implementation Guides they use, see :ref:`CMS-0057-F <cms>`.
 
 .. _feature_cds_hooks_examples:
 
@@ -606,7 +639,9 @@ This service is a demonstration and not intended for production use: its coverag
 Building your own CDS Service
 -----------------------------
 
-You write your own CDS Service as a Firely Server plugin, and offer it in the same way as the examples: include its configuration class in the ``/cds-services`` branch and name it under ``CdsHooks:Services``. See :ref:`vonk_reference_api_cds_hooks` for the programming API, with a complete example.
+You write your own CDS Service as a Firely Server plugin, and offer it in the same way as the examples: include its configuration class in the CDS Hooks branch and name it under ``CdsHooks:Services``. See :ref:`vonk_reference_api_cds_hooks` for the programming API, with a complete example.
+
+.. _feature_cds_hooks_limitations:
 
 Known limitations
 -----------------
@@ -620,20 +655,27 @@ Known limitations
 Upgrading from earlier versions
 -------------------------------
 
-Earlier versions of Firely Server served CDS Hooks by mapping each CDS Hooks request onto a FHIR custom operation, in the branch on ``/``. That implementation is still shipped, as the plugin ``Vonk.Plugin.CdsHooks.Legacy``, so that an upgrade does not have to wait for the migration. It will be removed in the next major version. **Treat it as time to migrate, not as a second option to build on.**
+Earlier versions of Firely Server served CDS Hooks by mapping each CDS Hooks request onto a FHIR custom operation, in the branch on ``/``. That implementation is still shipped, as the plugin ``Vonk.Plugin.CdsHooks.Legacy``, so that an upgrade does not have to wait for the migration. It will be removed in the next major version. **Use this time to migrate. Do not build new services on the legacy plugin.**
 
 A deployment runs either the CDS Hooks branch or the legacy plugin, never both: they claim the same route.
+
+.. _feature_cds_hooks_reserved_names:
+
+Reserved type names
+^^^^^^^^^^^^^^^^^^^
+
+Firely Server uses these names for its CDS Hooks object model, whether or not a deployment serves CDS Hooks: ``CdsHooksRequest``, ``CdsHooksResponse``, ``CdsHooksCard``, ``CdsHooksAction``, ``CdsHooksSuggestion``, ``CdsHooksLink``, ``CdsHooksSource``, ``CdsHooksContext``, ``CdsHooksPrefetch``, ``CdsHooksPrefetchTemplates``, ``CdsHooksExtensions``, ``CdsHooksFhirAuthorization``, ``CdsHooksDiscoveryResponse`` and ``CdsHooksServiceDefinition``. FHIR type names are matched case-insensitively, so a custom resource type or datatype with one of these names is refused on import, with a warning in the log at startup. Rename such a type before upgrading.
 
 Staying on the legacy plugin for now
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you upgrade without migrating yet, two changes are required.
 
-#. **Rename the plugin in the** ``Include`` **of the branch on** ``/``. The plugin ``Vonk.Plugin.CdsHooks`` is renamed to ``Vonk.Plugin.CdsHooks.Legacy``, and its namespaces with it. Replace ``Vonk.Plugin.CdsHooks``, and any entry naming one of its namespaces such as ``Vonk.Plugin.CdsHooks.Configuration``, with the new name, for example ``Vonk.Plugin.CdsHooks.Legacy.Configuration``. The old entry would now also include the new CDS Hooks branch plugins, and Firely Server refuses to start with it.
+#. **Rename the plugin in the** ``Include`` **of the branch on** ``/``. The plugin ``Vonk.Plugin.CdsHooks`` is renamed to ``Vonk.Plugin.CdsHooks.Legacy``, and its namespaces with it. Replace ``Vonk.Plugin.CdsHooks``, and any entry naming one of its namespaces such as ``Vonk.Plugin.CdsHooks.Configuration``, with the new name, for example ``Vonk.Plugin.CdsHooks.Legacy.Configuration``. The old entry would also include the plugins of the CDS Hooks branch, and Firely Server refuses to start with it.
 
 #. **Rename two StructureDefinitions in the administration database.** The legacy plugin wraps a CDS Hooks request in a custom FHIR resource type, defined by a ``StructureDefinition`` in the administration database. Those types are renamed from ``CDSHooksRequest`` to ``CDSHooksRequestOld`` and from ``CDSHooksResponse`` to ``CDSHooksResponseOld``. Update the ``type``, ``name``, ``url`` and element paths of both definitions. Until you do, every CDS Hooks request is refused by structural validation. Nothing a CDS Client sends or receives changes.
 
-Firely Server now uses the names ``CdsHooksRequest``, ``CdsHooksResponse``, ``CdsHooksCard``, ``CdsHooksAction``, ``CdsHooksSuggestion``, ``CdsHooksLink``, ``CdsHooksSource``, ``CdsHooksContext``, ``CdsHooksPrefetch``, ``CdsHooksPrefetchTemplates``, ``CdsHooksExtensions``, ``CdsHooksFhirAuthorization``, ``CdsHooksDiscoveryResponse`` and ``CdsHooksServiceDefinition`` itself. FHIR type names are matched case-insensitively, so a custom resource type or datatype with one of these names is refused on import, with a warning in the log at startup. Rename such a type before upgrading.
+Also check the :ref:`reserved type names <feature_cds_hooks_reserved_names>`: the legacy plugin defines two types whose old names collide with them.
 
 Migrating to the CDS Hooks branch
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -641,7 +683,7 @@ Migrating to the CDS Hooks branch
 To move a deployment to the CDS Hooks branch:
 
 #. Remove ``Vonk.Plugin.CdsHooks.Legacy`` from the branch on ``/``.
-#. Add the ``/cds-services`` branch and the ``CdsHooks:Services`` entries, as described in `Enabling CDS Hooks`_. The example services have the same ids and hooks as the legacy ones, so CDS Clients do not need to change.
+#. Add the CDS Hooks branch and the ``CdsHooks:Services`` entries, as described in `Enabling CDS Hooks`_. The example services have the same ids and hooks as the legacy ones, so CDS Clients do not need to change.
 #. Remove the ``$cds-<id>`` entries from the ``Operations`` section of the appsettings. They are not used by the CDS Hooks branch.
 #. You can remove the ``CDSHooksRequestOld`` and ``CDSHooksResponseOld`` StructureDefinitions from the administration database. The CDS Hooks branch takes the CDS Hooks payloads as they are.
-#. Rewrite custom CDS Services against the new programming API. See the migration table in :ref:`vonk_reference_api_cds_hooks`.
+#. Rewrite custom CDS Services against the programming API of the CDS Hooks branch. See the migration table in :ref:`vonk_reference_api_cds_hooks`.

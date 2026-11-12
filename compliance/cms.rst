@@ -13,7 +13,7 @@ CMS Interoperability and Prior Authorization Final Rule (CMS-0057-F) - 🇺🇸
 .. |PDXIG|  replace:: Da Vinci Payer Data Exchange (PDex) IG Version STU 2.2.0
 .. |PDRIG|  replace:: Da Vinci PDex US Drug Formulary IG Version STU 2.0.1
 .. |PNTIG|  replace:: Da Vinci PDex Plan-Net IG Version STU 1.1.0
-.. |CRDIG|  replace:: Da Vinci Coverage Requirements Discovery (CRD) IG Version STU 2.0.1
+.. |CRDIG|  replace:: Da Vinci Coverage Requirements Discovery (CRD) IG Version STU 2.2.1
 .. |DTRIG|  replace:: Da Vinci Documentation Templates and Rules (DTR) IG Version STU 2.0.0
 .. |PASIG|  replace:: Da Vinci Prior Authorization Support (PAS) IG Version STU 2.0.1
 
@@ -242,7 +242,7 @@ To implement a Prior Authorization API it is necessary to:
 Coverage Requirements Discovery (CRD)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The first two capabilities of the Prior Authorization API, telling a provider whether an item or service is covered and needs prior authorization, and which documentation is needed, are offered at the moment the provider orders or schedules the service. The |CRDIG| specifies how. The payer runs a *CRD server*, which the provider's EHR calls through `CDS Hooks <https://cds-hooks.hl7.org/>`_ while the order is entered. The answer is stored on the order, and carried into the documentation step (DTR) and the prior authorization request (PAS).
+CRD covers the first two capabilities of the Prior Authorization API. It tells a provider whether an item or service is covered, whether it needs prior authorization, and which documentation is needed. The provider gets this answer while ordering or scheduling the service. The |CRDIG| specifies how. The payer runs a *CRD server*, which the EHR of the provider calls through `CDS Hooks <https://cds-hooks.hl7.org/>`_ while the order is entered. The answer is stored on the order, and carried into the documentation step (DTR) and the prior authorization request (PAS).
 
 Firely Server serves CDS Hooks, so a payer can host its CRD server in the same Firely Server that holds its member and coverage data:
 

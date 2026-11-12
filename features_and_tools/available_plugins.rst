@@ -1258,11 +1258,11 @@ The CDS Hooks plugins below are included in a pipeline branch of their own, with
 
 .. _vonk_plugins_cds_hooks_crd_order_select:
 
-:Name: CDS Hooks CRD Order Select example service
+:Name: CDS Hooks CRD example service
 :Configuration: ``Vonk.Plugin.CdsHooks.Examples.CrdOrderSelectCdsServiceConfiguration``
 :License token: http://fire.ly/server/plugins/crd
 :Order: 5510
-:Description: Example CDS Services ``crd-order-select-hook`` and ``crd-order-sign-hook``, implementing the Da Vinci CRD (Coverage Requirements Discovery) ``order-select`` and ``order-sign`` hooks. They support Firely's prior authorization demo. They are not general-purpose CRD services and are not intended for production use: they evaluate a fixed set of example CQL Libraries. Requires the CQL plugin and the :ref:`Member Match operation <vonk_plugins_member_match>` in the branch on ``/``. See :ref:`CDS Hooks <feature_cds_hooks_examples>`.
+:Description: Example CDS Services ``crd-order-select-hook`` and ``crd-order-sign-hook``, implementing the Da Vinci CRD (Coverage Requirements Discovery) ``order-select`` and ``order-sign`` hooks. They support Firely's prior authorization demo. They are not general-purpose CRD services and are not intended for production use: they evaluate a fixed set of example CQL Libraries. Requires the CQL plugin and the :ref:`Member Match operation <vonk_plugins_member_match>` in the branch on ``/``. See :ref:`feature_cds_hooks_examples`.
 
 CDS Hooks (legacy)
 ------------------
@@ -1291,7 +1291,7 @@ These plugins implement CDS Hooks the way earlier versions of Firely Server did,
 :Configuration: ``Vonk.Plugin.CdsHooks.Legacy.CrdOrderSelectHook.CrdOrderSelectHookConfiguration``
 :License token: http://fire.ly/server/plugins/crd
 :Order: 5510
-:Description: Implements the CRD (Coverage Requirements Discovery) ``order-select`` CDS Hook for the legacy implementation.
+:Description: Example CDS Hooks service implementing the CRD (Coverage Requirements Discovery) ``order-select`` hook for the legacy implementation.
 
 .. _vonk_tools_fsi:
 

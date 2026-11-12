@@ -1,7 +1,7 @@
 .. _vonk_reference_api_cds_hooks:
 
-CDS Hooks services
-==================
+Writing a CDS Service
+=====================
 
 .. note::
 
@@ -26,7 +26,7 @@ CDS Hooks is not a FHIR RESTful API, so Firely Server serves it on a :ref:`pipel
 * ``GET <base-url>/cds-services`` returns the discovery document, listing every CDS Service that is offered.
 * ``POST <base-url>/cds-services/{id}`` invokes the CDS Service with that id.
 
-A request on the CDS Hooks branch passes through a chain of middleware, ordered by the ``order`` of the configuration class that registers it. Lower orders sit further out: they run first on the way in and last on the way out.
+A request on the CDS Hooks branch passes through a chain of middleware, ordered by the ``order`` of the configuration class that registers it. Middleware with a lower order runs earlier on the request, and later on the response.
 
 .. code-block:: text
 
@@ -44,17 +44,17 @@ A request on the CDS Hooks branch passes through a chain of middleware, ordered 
 
 Three rules follow from this design and come back throughout this page:
 
-#. **A CDS Service is identified by its id and its hook together.** The specification allows one id to answer several hooks, so that a service can supersede its own earlier cards as a workflow moves on. A service that answers several hooks is registered once per hook.
-#. **A service is offered only when configuration says so.** A service that is registered in code but not named under ``CdsHooks:Services`` in the appsettings is neither advertised nor invoked: it answers 404. A service receiving patient data has to be exposed deliberately.
+#. **A CDS Service is identified by its id and its hook together.** The specification allows one id to answer several hooks, so that a service can replace the cards of an earlier call when the workflow reaches a later step. A service that answers several hooks is registered once per hook.
+#. **A service is offered only when configuration says so.** A service that is registered in code but not named under ``CdsHooks:Services`` in the appsettings is not listed in the discovery document and is not invoked: it answers 404. A service receiving patient data has to be exposed deliberately.
 #. **A handler states its own result.** The pipeline does not assume success. See :ref:`vonk_reference_api_cds_hooks_status`.
 
-The two halves of a CDS Service
--------------------------------
+Describing and handling a CDS Service
+-------------------------------------
 
 A CDS Service does two separate things, and Firely Server registers them separately:
 
 * **Describing** the service to CDS Clients, so it appears in the discovery document. You do this by implementing ``ICdsDiscoveryContributor``.
-* **Handling** an invocation of the service. You do this by registering a handler with ``app.OnCdsService(...)``. No interface is needed for this half.
+* **Handling** an invocation of the service. You do this by registering a handler with ``app.OnCdsService(...)``. No interface is needed for this.
 
 One class may do both, and that is the usual case. Because the registrations are separate, either one can also exist without the other:
 
@@ -91,7 +91,7 @@ Implement ``ICdsDiscoveryContributor`` and add a ``CdsHooksServiceDefinition`` t
 
 ``CdsHooksServiceDefinition`` has the members the specification defines for a service in the discovery document: ``Id``, ``Hook``, ``Title``, ``Description``, ``Version``, ``Prefetch``, ``UsageRequirements`` and ``Extension``. ``Id`` and ``Hook`` are required; a definition without them is left out of the document and logged.
 
-Hold the definition in a single ``public static readonly`` field, as above. You pass the same definition to ``OnCdsService`` when you register the handler, so what is advertised and what is routed cannot drift apart.
+Hold the definition in a single ``public static readonly`` field, as above. You pass the same definition to ``OnCdsService`` when you register the handler, so the discovery document and the handler always use the same id and hook.
 
 Every registered contributor is asked to contribute each time the discovery document is assembled. The order in which contributors are asked is not guaranteed. When two contributions claim the same id for the same hook:
 
@@ -133,14 +133,14 @@ There are four entry points:
     Handles every invocation, whichever service it is for. Use it for cross-cutting concerns such as auditing or extra checks.
 
 ``OnCdsDiscovery()``
-    Handles the discovery request. By the time this handler runs, the document has already been filled from all ``ICdsDiscoveryContributor`` implementations, so a handler here can edit it on its way out.
+    Handles the discovery request. By the time this handler runs, the document has already been filled from all ``ICdsDiscoveryContributor`` implementations, so a handler here can edit it before it is sent.
 
 Each of these returns a ``CdsAppBuilder<TContext>``, which you can narrow further:
 
 * ``And(Func<TContext, bool> filter)`` adds a filter of your own.
 * ``AndInformationModel(string informationModel)`` limits the handler to one FHIR version, for example ``VonkConstants.Model.FhirR4``.
 
-If the id and hook passed to ``OnCdsService`` are not enabled under ``CdsHooks:Services``, the handler is still registered but never invoked. Firely Server logs the exact setting to add, for example ``CdsHooks:Services:my-service:Hooks:patient-view``.
+If the id and hook passed to ``OnCdsService`` are not offered under ``CdsHooks:Services``, the handler is registered but never invoked. Firely Server then logs the setting to add; see :ref:`feature_cds_hooks_offering`.
 
 Pre-, main and post handlers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -212,7 +212,7 @@ A handler that has answered **must** set ``HttpResult``, **including on success*
 
     context.HttpResult = StatusCodes.Status200OK;
 
-The pipeline does not infer success. If a request reaches the response writer without a status, Firely Server answers ``500 Internal Server Error``: it means nothing answered and nothing refused. A handler that forgets to set the status therefore fails on its first test run instead of returning a plausible-looking empty 200.
+The pipeline does not infer success. If a request reaches the response writer without a status, Firely Server answers ``500 Internal Server Error``: no handler answered and no handler refused. So a handler that does not set the status is found in its first test. It does not return an empty response with status 200.
 
 To refuse a request, set an error status and add an issue to ``Outcome``. The issues are built from Firely Server's ``VonkIssue`` catalogue:
 
@@ -224,7 +224,7 @@ To refuse a request, set an error status and add an issue to ``Outcome``. The is
 
 The specification names ``412 Precondition Failed`` for the case where the CDS Client did not send FHIR data the service needs, such as a missing prefetch entry.
 
-For any status of 400 or above, ``Outcome`` is written as the response body. Otherwise the ``Response`` is written, and ``Outcome`` is only logged: a CDS Hooks response has no room for an ``OperationOutcome`` beside it.
+For any status of 400 or above, ``Outcome`` is written as the response body. For any other status, the ``Response`` is written, and ``Outcome`` is only logged, because a CDS Hooks response cannot contain an ``OperationOutcome``.
 
 .. _vonk_reference_api_cds_hooks_model:
 
@@ -265,19 +265,31 @@ The members of ``context``, ``prefetch`` and ``extension`` are not fixed by the 
 
 .. note::
 
-  Firely Server registers these classes with its FHIR model metadata, whether or not the deployment serves CDS Hooks. FHIR type names are matched case-insensitively, so you cannot define a custom resource type or datatype with one of these names: ``CdsHooksRequest``, ``CdsHooksResponse``, ``CdsHooksCard``, ``CdsHooksAction``, ``CdsHooksSuggestion``, ``CdsHooksLink``, ``CdsHooksSource``, ``CdsHooksContext``, ``CdsHooksPrefetch``, ``CdsHooksPrefetchTemplates``, ``CdsHooksExtensions``, ``CdsHooksFhirAuthorization``, ``CdsHooksDiscoveryResponse`` and ``CdsHooksServiceDefinition``.
+  Firely Server registers these classes with its FHIR model metadata, whether or not the deployment serves CDS Hooks. Their names are therefore reserved: you cannot define a custom resource type or datatype with one of them. See :ref:`feature_cds_hooks_reserved_names` for the list.
 
 Serialization
 ^^^^^^^^^^^^^
 
 :namespace: Vonk.Core.CdsHooks.Serialization
 
-You do not need to (de)serialize the request or response yourself; the pipeline does that. For unit tests and tooling, ``CdsHooksJsonDeserializer`` and ``CdsHooksJsonSerializer`` read and write the CDS Hooks JSON without starting the server. Embedded FHIR resources pass through the FHIR parser.
+You do not need to (de)serialize the request or response yourself; the pipeline does that. For unit tests and tooling, ``CdsHooksJsonDeserializer`` and ``CdsHooksJsonSerializer`` read and write the CDS Hooks JSON without starting the server. Embedded FHIR resources pass through the FHIR parser, so create each one with the ``ModelInspector`` of the FHIR version of the payload, for example ``ModelInfo.ModelInspector`` (namespace ``Hl7.Fhir.Model``) for R4:
 
-* ``CdsHooksJsonDeserializer.TryDeserialize<T>(json, out payload, out issues)`` collects all issues instead of failing on the first one. ``Deserialize<T>(json)`` throws instead.
-* ``CdsHooksJsonSerializer.SerializeToString(payload)`` and ``Serialize(payload, stream)`` write a payload.
+.. code-block:: csharp
 
-By default, the deserializer keeps a member that the specification does not define, and reports it, as Da Vinci CRD requires.
+    var deserializer = new CdsHooksJsonDeserializer(ModelInfo.ModelInspector);
+    if (!deserializer.TryDeserialize<CdsHooksRequest>(json, out var request, out var issues))
+    {
+        // request holds what could be read, and issues holds every problem that was found.
+    }
+
+    var serializer = new CdsHooksJsonSerializer(ModelInfo.ModelInspector);
+    var responseJson = serializer.SerializeToString(context.Response);
+
+* ``TryDeserialize<T>`` collects all issues instead of stopping at the first one. It returns ``false`` when the payload could not be read in full. The payload then holds what could be read. ``Deserialize<T>`` returns the payload, or throws a ``DeserializationFailedException``.
+* ``T`` is the payload to read: ``CdsHooksRequest``, ``CdsHooksResponse`` or ``CdsHooksDiscoveryResponse``. The JSON itself does not say which one it is.
+* ``SerializeToString(payload)`` returns the JSON, and ``Serialize(payload, stream)`` writes it to a stream.
+
+A member that the specification does not define is kept and reported as an issue, as Da Vinci CRD requires. ``TryDeserialize`` still returns ``true`` for such a payload. To treat such a member as an error, create the deserializer with ``new CdsHooksDeserializerSettings { RejectUnknownMembers = true }`` as its second argument.
 
 .. _vonk_reference_api_cds_hooks_fhiraccess:
 
@@ -305,15 +317,23 @@ A CDS Service often needs more FHIR data than the CDS Client sent in ``prefetch`
 
 Each returns an ``IFhirRestResponse`` with the ``HttpResult``, the ``Resource`` (as a POCO) and the ``Outcome`` of the FHIR request.
 
+Some arguments need attention:
+
+* ``arguments`` of ``SearchAsync`` is an ``IArgumentCollection``. Create one with ``new ArgumentCollection(new Argument(ArgumentSource.Query, name, value))``, both in namespace ``Vonk.Core.Context``.
+* ``operationName`` may be given with or without its ``$``.
+* ``method`` is the HTTP method, as a constant of ``RequestMethod`` in namespace ``Vonk.Core.ElementModel``. Usually it is ``RequestMethod.POST``.
+* ``body`` is an ``IResource``, the representation of a resource inside Firely Server. Convert a POCO with ``ToTypedElement().ToIResource(context.InformationModel)``. Pass ``null`` for an operation without input.
+* Every method also takes two optional parameters. ``configureRequest`` is an action that can change the request after it is built and before it is sent. ``cancellationToken`` cancels the request; without it, the request is cancelled when the CDS request is.
+
 The request does not go over the network. It runs in-process through the same FHIR REST pipeline that an HTTP request goes through. As a consequence:
 
 * The plugin serving the request has to be on the branch that serves patient data, not on ``/cds-services``. Your CDS Service needs no dependency on that plugin.
-* Tenant handling, URL mapping and the :ref:`audit trail <feature_auditing>` apply. When CDS Hooks authorization is enabled, the CDS Client is recorded as the agent on the ``AuditEvent``.
+* Tenant handling, URL mapping and the :ref:`audit trail <feature_auditing>` apply. When CDS Hooks authorization is enabled, the CDS Client is recorded as the agent on the ``AuditEvent``. With authorization off, the ``AuditEvent`` has no agent.
 * Only the headers listed in ``CdsHooks:RoutedRequestHeaders`` are carried from the CDS request to the FHIR request. If that setting is absent, only the tenant header is carried (see :ref:`feature_multitenancy`).
 
 The optional ``branch`` parameter chooses the database: ``FhirRestBranch.Data`` (the default) for patient data, or ``FhirRestBranch.Administration`` for conformance resources such as a ``Questionnaire``.
 
-This is reading from *this* Firely Server. Reading from the CDS Client's FHIR server, given in ``Request.FhirServer`` with the token in ``Request.FhirAuthorization``, is a different thing and is not what these methods do.
+These methods read from this Firely Server. To read from the FHIR server of the CDS Client, use the address in ``Request.FhirServer`` and the token in ``Request.FhirAuthorization`` with a FHIR client of your own.
 
 Stating what the request may access
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -351,15 +371,52 @@ For example, to read the patient in context:
 
 .. code-block:: csharp
 
-    var result = await _fhirRestPipeline.ReadAsync(
+    if (context.Request.Context.GetString("patientId") is not { } patientId)
+    {
+        // Refuse the request, see "Signalling success and failure".
+        return;
+    }
+
+    var read = await _fhirRestPipeline.ReadAsync(context, "Patient", patientId, Authorize.ReadOnly("Patient"));
+    if (read.HttpResult == StatusCodes.Status200OK && read.Resource is Patient patient)
+    {
+        // Use the patient.
+    }
+
+To search the observations of that patient:
+
+.. code-block:: csharp
+
+    var search = await _fhirRestPipeline.SearchAsync(
+        context,
+        "Observation",
+        new ArgumentCollection(new Argument(ArgumentSource.Query, "subject", $"Patient/{patientId}")),
+        Authorize.ReadOnly("Observation"));
+
+    if (search.Resource is Bundle bundle)
+    {
+        // Use bundle.Entry.
+    }
+
+To invoke an operation, here ``$member-match`` with a ``Parameters`` resource as input:
+
+.. code-block:: csharp
+
+    var parameters = new Parameters();
+    parameters.Add("MemberPatient", memberPatient);
+    parameters.Add("CoverageToMatch", coverage);
+
+    var match = await _fhirRestPipeline.InvokeAsync(
         context,
         "Patient",
-        context.Request.Context.GetString("patientId"),
-        Authorize.ReadOnly("Patient"));
+        "member-match",
+        RequestMethod.POST,
+        parameters.ToTypedElement().ToIResource(context.InformationModel),
+        Authorize.ReadOnly("Patient", "Coverage"));
 
-    if (result.HttpResult == StatusCodes.Status200OK && result.Resource is Patient patient)
+    if (match.HttpResult == StatusCodes.Status200OK && match.Resource is Parameters output)
     {
-        // use patient
+        // Read the MemberIdentifier from the output.
     }
 
 An operation such as ``$member-match`` may write as well as read, so think about what it needs before you choose the authorization. The example ``CrdOrderSelectCdsService`` invokes ``$member-match`` and ``$evaluate`` this way.
@@ -418,7 +475,7 @@ First, name the configuration class in the ``Include`` of the CDS Hooks branch, 
       ]
     }
 
-An ``Include`` entry matches a type whose full name equals it, or starts with it followed by a dot. An entry that matches no configuration class at all fails startup, so a typo is reported rather than ignored.
+For how an ``Include`` entry is matched, see :ref:`feature_cds_hooks_branch_rules`.
 
 Second, offer the service under ``CdsHooks:Services``, with each hook it answers:
 
@@ -434,12 +491,9 @@ Second, offer the service under ``CdsHooks:Services``, with each hook it answers
       }
     }
 
-Leaving an id and hook out of this section, or setting ``Enabled`` to ``false``, turns off both discovery and handling for that pair. The same section configures request and response validation, and whether the service requires authorization; see :ref:`feature_cds_hooks`.
+Leaving an id and hook out of this section, or setting ``Enabled`` to ``false``, removes the pair from the discovery document and turns off its handling. The same section configures request and response validation, and whether the service requires authorization; see :ref:`feature_cds_hooks`.
 
-Keep in mind:
-
-* Serve CDS Services only on the ``/cds-services`` branch. Firely Server refuses to start when a branch serves both FHIR REST and CDS Hooks.
-* The branch serves ``InformationModel:Default``. A :ref:`version-specific endpoint <feature_multiversion_endpoints>` with path mapping, such as ``<base-url>/R4/cds-services``, is not served.
+Serve CDS Services only on the CDS Hooks branch. For this and the other rules of the branch, see :ref:`feature_cds_hooks_branch_rules`.
 
 Example: a patient-view service
 -------------------------------
@@ -550,42 +604,14 @@ The ``Vonk.Plugin.CdsHooks.Examples`` plugin that ships with Firely Server conta
             }
         }
 
-.. container:: toggle
-
-    .. container:: header
-
-      appsettings
-
-    .. code-block:: JavaScript
-
-        "PipelineOptions": {
-          "Branches": [
-            ...
-            {
-              "Path": "/cds-services",
-              "Include": [
-                "Vonk.Plugin.CdsHooks.Infra",
-                "Vonk.Plugin.CdsHooks.Examples.PatientViewTestCdsServiceConfiguration"
-              ]
-            }
-          ]
-        },
-        "CdsHooks": {
-          "Services": {
-            "patient-view-test-hook": {
-              "Hooks": {
-                "patient-view": { "Enabled": true }
-              }
-            }
-          }
-        }
+Configure it as described in :ref:`vonk_reference_api_cds_hooks_configuration`, with ``Vonk.Plugin.CdsHooks.Examples.PatientViewTestCdsServiceConfiguration`` in the ``Include`` and ``patient-view-test-hook`` for the ``patient-view`` hook under ``CdsHooks:Services``.
 
 With this configuration, ``GET <base-url>/cds-services`` lists the service. For a request that invokes it, and the card it answers with, see :ref:`feature_cds_hooks_examples_patient_view`.
 
 A more complex example
 ^^^^^^^^^^^^^^^^^^^^^^
 
-The same plugin contains ``CrdOrderSelectCdsService``, a Da Vinci CRD service on the ``order-select`` and ``order-sign`` hooks, offered as ``crd-order-select-hook`` and ``crd-order-sign-hook``. It is a demonstration, not a template, and not intended for production use: its coverage logic is specific to Firely's demo setup, and a payer implementing CRD writes coverage rules of their own. Read it to see what a service doing real work looks like:
+The same plugin contains ``CrdOrderSelectCdsService``, a Da Vinci CRD service on the ``order-select`` and ``order-sign`` hooks, offered as ``crd-order-select-hook`` and ``crd-order-sign-hook``. It is a demonstration, not a template, and not intended for production use: its coverage logic is specific to Firely's demo setup, and a payer implementing CRD writes coverage rules of their own. Read it as a larger example:
 
 * one class describing and handling two hooks, with a definition for each;
 * reading the draft orders from ``context.draftOrders``, and the patient and coverage from prefetch searches that result in a ``Bundle``;
@@ -631,16 +657,16 @@ Unit testing a CDS Service
 
 To start from a JSON fixture instead, read it with ``CdsHooksJsonDeserializer``.
 
-Migrating from the earlier CDS Hooks API
-----------------------------------------
+Migrating from the legacy CDS Hooks API
+---------------------------------------
 
-Earlier versions of Firely Server served CDS Hooks by mapping each request onto a FHIR custom operation. That implementation is now the plugin ``Vonk.Plugin.CdsHooks.Legacy`` (formerly ``Vonk.Plugin.CdsHooks``). It is still shipped, to give you time to migrate, and will be removed in the next major version. Do not build new services on it.
+The legacy plugin ``Vonk.Plugin.CdsHooks.Legacy`` maps each CDS Hooks request onto a FHIR custom operation. For the plugin itself and how to move a deployment off it, see :ref:`feature_cds_hooks_upgrade`. This table maps its programming API onto the API on this page:
 
 .. list-table::
    :header-rows: 1
    :widths: 50 50
 
-   * - Earlier API
+   * - Legacy API
      - CDS Hooks branch
    * - ``builder.OnCdsHooksRequest("<service-id>")`` (now ``[Obsolete]``)
      - ``builder.OnCdsService(Definition)``, once per hook
@@ -655,12 +681,9 @@ Earlier versions of Firely Server served CDS Hooks by mapping each request onto 
    * - Custom ``StructureDefinition`` for the request and response
      - Not needed
    * - Plugin on the FHIR REST branch on ``/``
-     - Configuration class on the ``/cds-services`` branch
-
-A deployment runs one implementation or the other, never both: they claim the same route.
+     - Configuration class on the CDS Hooks branch
 
 Known limitations
 -----------------
 
-* The feedback endpoint, ``POST <base-url>/cds-services/{id}/feedback``, is recognized but answers ``501 Not Implemented``.
-* Version-specific endpoints with path mapping, such as ``<base-url>/R4/cds-services``, are not served; the branch handles requests in ``InformationModel:Default``.
+See :ref:`feature_cds_hooks_limitations`.

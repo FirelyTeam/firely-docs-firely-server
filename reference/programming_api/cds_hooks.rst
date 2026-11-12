@@ -13,7 +13,7 @@ CDS Hooks services
 
 This page explains how to implement your own CDS Service as a Firely Server plugin. A CDS Service is the server side of the `CDS Hooks specification <https://cds-hooks.hl7.org/>`_: a CDS Client, such as an EHR, calls it at a point in the clinical workflow (a *hook*), and the service answers with cards or system actions.
 
-Firely Server implements CDS Hooks 3.0.0, the January 2026 ballot version of the specification. What you write is the logic of the service itself. Firely Server takes care of the endpoints, the discovery document, parsing and serializing the CDS Hooks JSON, and optionally authorization and validation of the payloads.
+Firely Server implements CDS Hooks 3.0.0. What you write is the logic of the service itself. Firely Server takes care of the endpoints, the discovery document, parsing and serializing the CDS Hooks JSON, and optionally authorization and validation of the payloads.
 
 For enabling CDS Hooks in a deployment, and for configuring authorization and validation, see :ref:`feature_cds_hooks`. If you are new to writing plugins, read :ref:`vonk_plugins` first.
 

@@ -192,9 +192,7 @@ A CDS Service in Firely Server can draw on two sources of data:
 
 Combining the two is what CRD needs, and it is why a payer's FHIR server is a natural place to host CDS Services.
 
-Firely Server implements CDS Hooks 3.0.0. At the time of writing, this is the January 2026 ballot version of the specification; the current official release is 2.0.1.
-
-.. TODO (open question, check with dev): confirm the CDS Hooks version that is implemented, and whether it is 2.0.1-compatible.
+Firely Server implements `CDS Hooks 3.0.0 <https://cds-hooks.hl7.org/2026Jan/>`_.
 
 The CDS Hooks branch handles all requests in the default FHIR version of Firely Server, set in ``InformationModel:Default`` (see :ref:`feature_multiversion`). CDS Hooks is tested with **FHIR R4**, the FHIR version of Da Vinci CRD, so we recommend R4 as the default FHIR version for a deployment that serves CDS Hooks. Other FHIR versions may work, but are not tested.
 

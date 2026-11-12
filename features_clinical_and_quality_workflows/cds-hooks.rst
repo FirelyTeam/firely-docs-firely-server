@@ -406,7 +406,7 @@ Settings
     If any of the three is missing while authorization is enabled, Firely Server refuses to start, and the log names the missing settings.
 
 ``CdsHooks:Authorization:RequireHttpsToProvider``
-    Whether the authority must use ``https``. Falls back to ``SmartAuthorizationOptions:RequireHttpsToProvider``, which is ``true`` by default. With ``true``, a non-https authority prevents Firely Server from starting.
+    Whether the authority must use ``https``. With ``true``, a non-https authority prevents Firely Server from starting. When left out, it falls back to ``SmartAuthorizationOptions:RequireHttpsToProvider`` (see :ref:`feature_accesscontrol_config`). That setting is ``true`` when absent, but ``appsettings.default.json`` sets it to ``false`` for local testing. Set it to ``true`` in production.
 
 ``CdsHooks:Authorization:ReplayGuardCapacity``
     The number of used tokens remembered to detect replay, ``100000`` by default. It must be greater than zero. See the limitations below.

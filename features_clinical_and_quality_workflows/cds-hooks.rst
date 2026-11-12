@@ -362,7 +362,11 @@ A CDS Service may read FHIR data from Firely Server while it handles a request. 
 
 .. note::
 
-  Such a FHIR request is not restricted by SMART on FHIR scopes or by an AccessPolicy. What it may access is stated in the code of the CDS Service. When you deploy a CDS Service from a third party, check what it reads and writes.
+  Such a FHIR request is not restricted by SMART on FHIR scopes or by an AccessPolicy. A CDS Service is a plugin that runs inside Firely Server, and the code of the service states what each of its FHIR requests may access, with the authorization it passes on the call (see :ref:`vonk_reference_api_cds_hooks_fhiraccess`). Therefore:
+
+  * Before you install a CDS Service from a third party, review its code if you can, or ask the vendor, to find out which resources it reads and writes, and with which authorization.
+  * Review your own CDS Services in the same way. Each call should use the narrowest authorization that works, for example ``Authorize.ReadOnly("Patient", "Coverage")`` rather than ``Authorize.Everything()``.
+  * Use the :ref:`audit trail <feature_auditing>` to check afterwards which resources a CDS Service actually accessed.
 
 .. _feature_cds_hooks_authorization:
 

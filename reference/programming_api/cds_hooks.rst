@@ -40,7 +40,7 @@ A request on the CDS Hooks branch passes through a chain of middleware, ordered 
                 ------------------------------------------------------------------------------------------
     1151-7999   Your CDS Service       your handlers are registered here
                 ------------------------------------------------------------------------------------------
-    order 8000  Not handled            nothing answered: 404
+    order 8000  Not handled            no handler accepted the invocation: 404
 
 Three rules follow from this design and come back throughout this page:
 
@@ -212,7 +212,12 @@ A handler that has answered **must** set ``HttpResult``, **including on success*
 
     context.HttpResult = StatusCodes.Status200OK;
 
-The pipeline does not infer success. If a request reaches the response writer without a status, Firely Server answers ``500 Internal Server Error``: no handler answered and no handler refused. So a handler that does not set the status is found in its first test. It does not return an empty response with status 200.
+The pipeline does not infer success. The status decides what the CDS Client gets:
+
+* **No handler accepted the invocation.** The request reaches the last middleware of the branch, at order 8000, which answers ``404 Not Found``. This is the case for a service id that has no handler, and for a service that is not enabled under ``CdsHooks:Services``.
+* **A handler accepted the invocation, but did not set** ``HttpResult``. The request does not reach order 8000, because a handler that accepts a request ends the chain. The response writer then finds no status, answers ``500 Internal Server Error``, and logs an error.
+
+So a handler that does not set the status is found in its first test. It does not return an empty response with status 200.
 
 To refuse a request, set an error status and add an issue to ``Outcome``. The issues are built from Firely Server's ``VonkIssue`` catalogue:
 
@@ -310,12 +315,14 @@ A CDS Service often needs more FHIR data than the CDS Client sent in ``prefetch`
     A type-level operation, for example ``POST Patient/$member-match``.
 
 ``InvokeSystemAsync(context, operationName, method, body, authorization, ...)``
-    A system-level operation, for example ``POST $export``.
+    A system-level operation, for example ``POST $cql``.
 
 ``SendAsync(context, request, ...)``
     A request you built yourself as an ``IVonkContext``, for anything the four above do not cover, such as a create or an instance-level operation.
 
 Each returns an ``IFhirRestResponse`` with the ``HttpResult``, the ``Resource`` (as a POCO) and the ``Outcome`` of the FHIR request.
+
+The CDS Client waits for the answer of your service while the user works in the EHR. So call only requests that answer quickly. An asynchronous operation such as ``$export`` only starts a job, and its result comes long after the CDS Client has stopped waiting.
 
 Some arguments need attention:
 

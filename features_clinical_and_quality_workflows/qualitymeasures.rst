@@ -232,8 +232,12 @@ rejected with an ``OperationOutcome`` that says what failed:
 
 - HTTP 400 when the ``dataEndpoint`` parameter is missing, or its ``Endpoint`` has no
   ``address``;
+- HTTP 400 when the ``address`` is not an absolute ``http`` or ``https`` URL;
 - HTTP 400 when the ``address`` matches no configured ``DataEndpoint`` entry: the
-  outcome says that the endpoint is not an allowed remote data endpoint;
+  outcome says that the endpoint is not an allowed remote data endpoint, and, when the
+  address carries user info, a query or a fragment, adds that it must be sent without
+  them. Neither the outcome nor the server log names the address; the log records its
+  scheme, host and port instead, or ``withheld`` when those cannot be read safely;
 - HTTP 500 when the data of the subject could not be retrieved from the endpoint, naming
   the endpoint. This is the case when the endpoint cannot be reached, does not answer in
   time, answers with an error (including HTTP 401 when Firely Server could not

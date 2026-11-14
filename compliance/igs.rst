@@ -323,33 +323,6 @@ It also establishes a foundation for making clinical claims data—such as diagn
 
      - * `hl7.fhir.us.davinci-pdex|2.2.0 <https://registry.fhir.org/package/hl7.fhir.us.davinci-pdex|2.2.0>`_
 
-.. _davinci_pdex_provenance:
-
-Provenance
-----------
-
-PDex requires the health plan to provide a Provenance resource for each information exchange.
-That Provenance names the health plan as the Transmitter of the data.
-The requirement is in the `Provenance <https://hl7.org/fhir/us/davinci-pdex/STU2.2/overview.html#provenance>`_ section of the PDex STU 2.2.0 Overview page:
-
-  "For each PDex information exchange, the Health Plan SHALL provide at least one Provenance resource naming the Health Plan as the Transmitter of the data" (`pdex-127 <https://hl7.org/fhir/us/davinci-pdex/STU2.2/overview.html#pdex-127>`_)
-
-Firely Server does not create these Provenance resources.
-The health plan creates them and stores them in Firely Server, together with the data they describe.
-Firely Server then returns them like any other resource, for example when a client adds ``_revinclude=Provenance:target`` to a search.
-
-A Transmitter Provenance:
-
-* conforms to the `PDex Provenance <https://hl7.org/fhir/us/davinci-pdex/STU2.2/StructureDefinition-pdex-provenance.html>`_ profile;
-* has an ``agent`` with the ``type`` ``http://hl7.org/fhir/us/core/CodeSystem/us-core-provenance-participant-type|transmitter``, whose ``who`` references the Organization of the health plan;
-* lists the resources it describes in ``target``.
-
-To store the data and its Provenance in one request, send both in a transaction Bundle and use the ``urn:uuid`` references of the data in ``Provenance.target``.
-To add a Provenance to a single create or update, use the :ref:`X-Provenance header <feature_x-provenance>`.
-
-PDex also recommends a Provenance for each resource that names its original author or source (pdex-04 and pdex-05 on the `PDex Provenance <https://hl7.org/fhir/us/davinci-pdex/STU2.2/PDexProvenance.html>`_ page).
-Create and store those in the same way.
-
 Known Limitations
 -----------------
 

@@ -332,7 +332,8 @@ Known Limitations
 * Firely Server includes a Provenance resource in ``$everything`` and in a Patient-level or Group-level ``$export`` only when the Patient is one of its targets.
   A Provenance that only targets other resources, such as an Observation or an ExplanationOfBenefit, is not in the Patient compartment and is left out.
   To have it exported, add the Patient to ``Provenance.target`` as well.
-  The ``includeAssociatedData`` parameter of Bulk Data Export is not supported.
+  The Bulk Data Access IG defines the `includeAssociatedData <https://hl7.org/fhir/uv/bulkdata/STU2/export.html#query-parameters>`_ parameter for adding these Provenance resources to an export.
+  Firely Server does not support that parameter, see the Known Limitations of :ref:`bulk_data_access_ig`.
 
 ------------
 

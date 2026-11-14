@@ -94,7 +94,7 @@ Prerequisites
 There are a few prerequisites specifically for this export.
 
 1. The DaVinci ATR specific conformance resources must be loaded in the administration database. See :ref:`conformance`.
-2. Two Davinci-specific search parameters have been added to Firely Server and are needed for the export. In order to be able to use these parameters, execute the following REST call:
+2. The Consent search parameters that the opt-out filter uses must be loaded and indexed. Firely Server does not load them by default. See :ref:`davinci_data_export_opt_out` for the list, and reindex after loading them:
 
 .. code-block:: http
 
@@ -103,7 +103,7 @@ There are a few prerequisites specifically for this export.
 
 .. code-block:: text
 
-	include=Consent.decision,Consent.DaVinci-pdex-provider-access-use-case
+	include=Consent.provision-type,Consent.provider-access-recipient,Group.atr-intended-recipient
 
 
 $davinci-data-export
@@ -231,14 +231,120 @@ Security and authorization
 
 When SMART on FHIR is enabled, the same token and scope behavior used by BDE applies to DaVinci Data Export task initiation and retrieval endpoints. There is one additional requirement: as the DaVinci Data Export checks for consent (a Patient can opt-out) the DaVinci Data Export requires read access to Consent resources.
 
-The opt-out Consent must conform to the DaVinci PDex IG's Provider Consent profile (http://hl7.org/fhir/us/davinci-pdex/StructureDefinition/pdex-provider-consent), listed in ``meta.profile``, and must be associated with the patient through the standard Consent.patient reference. Firely Server treats a ``deny`` Consent as an opt-out in two cases:
-
-* The Consent carries the ``DaVinci-pdex-provider-access-use-case`` extension on ``Consent.provision.action`` set to ``true`` (see IG `PDex Provider Consent profile <https://hl7.org/fhir/us/davinci-pdex/STU2.2/StructureDefinition-pdex-provider-consent.html>`_), **or**
-* The Consent has **no** ``DaVinci-pdex-provider-access-use-case`` extension at all — a ``deny`` without the extension is treated as a global opt-out.
-
-The export will exclude patients that have an applicable opt-out Consent in place.
+The export excludes patients that have opted out, as described in :ref:`davinci_data_export_opt_out`.
 
 See the section "Filtering export results with SMART scopes" on :ref:`feature_bulkdataexport`.
+
+.. _davinci_data_export_opt_out:
+
+Patient opt-out
+^^^^^^^^^^^^^^^
+
+A patient opts out of Provider Access with a Provider Access Consent (`PDex Provider Consent profile <https://hl7.org/fhir/us/davinci-pdex/STU2.2/StructureDefinition-pdex-provider-consent.html>`_). The Consent refers to the patient in ``Consent.patient``. Firely Server excludes the patient from an export when such a Consent is ``active``, its ``provision.period`` covers the time of the export, and ``provision.type`` is ``deny``.
+
+Firely Server recognises a Provider Access Consent by any of these:
+
+* the category ``http://hl7.org/fhir/us/davinci-pdex/CodeSystem/pdex-consent-api-purpose|provider-access``, as PDex 2.2.0 requires;
+* the profile ``http://hl7.org/fhir/us/davinci-pdex/StructureDefinition/pdex-provider-consent`` in ``meta.profile``, unless the deprecated root extension ``pdex-provider-access-use-case`` is set to ``false``;
+* the deprecated root extension ``pdex-provider-access-use-case`` set to ``true``.
+
+**Opting out of every provider.** A deny Consent that names no provider excludes the patient from the export of every Group.
+
+**Opting out of single providers.** A deny Consent can name the providers it is about in ``provision.actor``. Give each such actor the role ``http://terminology.hl7.org/CodeSystem/v3-ParticipationType|IRCP`` (information recipient) and put the provider's identifier in ``reference.identifier``. The Consent then excludes the patient only from the export of a Group that one of these identifiers identifies. An identifier identifies a Group when its system and value equal:
+
+* an entry of ``Group.identifier``, or
+* the identifier in the ATR extension ``http://hl7.org/fhir/us/davinci-atr/StructureDefinition/atr-intended-recipient-identifier-extension`` of the Group.
+
+An identifier without a system identifies no Group. Other actors, such as the payer as the source of the Consent, are not providers the Consent is about.
+
+.. note::
+	A provider-specific opt-out is enforced on the provider organization, not on single practitioners. Firely Server matches the identifiers of the Group itself, such as the organization-level (Type 2) NPI or the TIN of the provider. It does not match the identifiers of the Organization or Practitioner the Group refers to. A Consent that names the individual (Type 1) NPI of a practitioner excludes the patient from no export, unless a Group carries that NPI itself. To keep their records from one practitioner, a patient opts out of the practitioner's organization, or of every provider.
+
+Example of a Consent that keeps the patient's records from the provider with NPI ``1234567890``:
+
+.. code-block:: json
+
+	{
+	  "resourceType": "Consent",
+	  "status": "active",
+	  "scope": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/consentscope", "code": "patient-privacy" }] },
+	  "category": [
+	    { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IDSCL" }] },
+	    { "coding": [{ "system": "http://hl7.org/fhir/us/davinci-pdex/CodeSystem/pdex-consent-api-purpose", "code": "provider-access" }] }
+	  ],
+	  "patient": { "reference": "Patient/example" },
+	  "provision": {
+	    "type": "deny",
+	    "period": { "start": "2026-01-01" },
+	    "actor": [
+	      {
+	        "role": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/provenance-participant-type", "code": "performer" }] },
+	        "reference": { "identifier": { "system": "http://hl7.org/fhir/sid/us-npi", "value": "9876543210" }, "display": "Example Health Plan" }
+	      },
+	      {
+	        "role": { "coding": [{ "system": "http://terminology.hl7.org/CodeSystem/v3-ParticipationType", "code": "IRCP" }] },
+	        "reference": { "identifier": { "system": "http://hl7.org/fhir/sid/us-npi", "value": "1234567890" } }
+	      }
+	    ]
+	  }
+	}
+
+Search parameters
+"""""""""""""""""
+
+The opt-out filter reads the Consents and Groups through these search parameters. Load each one as a ``SearchParameter`` resource in the administration database (see :ref:`feature_customsp`) and reindex the resources it is on.
+
+.. list-table::
+	:header-rows: 1
+
+	* - Code
+	  - Canonical URL
+	  - Needed for
+	* - ``category`` (Consent)
+	  - FHIR core
+	  - Recognising a Provider Access Consent. Without it, the export answers ``501``.
+	* - ``provision-type`` (Consent)
+	  - ``http://hl7.org/fhir/us/davinci-pdex/SearchParameter/pdex-consent-provision-type``
+	  - Recognising a deny. The deprecated ``decision`` search parameter still works.
+	* - ``provider-access-recipient`` (Consent)
+	  - ``http://fire.ly/fhir/SearchParameter/Consent-provider-access-recipient``
+	  - Opting out of single providers. Without it, every deny Consent excludes the patient from every export.
+	* - ``atr-intended-recipient`` (Group)
+	  - ``http://fire.ly/fhir/SearchParameter/Group-atr-intended-recipient``
+	  - Matching a provider by the intended-recipient extension of a Group.
+
+The export answers ``501`` when Provider Access Consents exist and none of them is indexed for ``provision.type``. It also answers ``501`` when a Consent names a provider and the exported Group has an intended-recipient extension that is not indexed, because an opt-out naming that identifier would then not be applied. The server log names the search parameter to load.
+
+The two Firely search parameters:
+
+.. code-block:: json
+
+	{
+	  "resourceType": "SearchParameter",
+	  "url": "http://fire.ly/fhir/SearchParameter/Consent-provider-access-recipient",
+	  "name": "ProviderAccessRecipient",
+	  "status": "active",
+	  "description": "The providers a Provider Access Consent names as information recipients (role IRCP), by their identifier.",
+	  "code": "provider-access-recipient",
+	  "base": ["Consent"],
+	  "type": "token",
+	  "expression": "Consent.provision.actor.where(role.coding.where(system = 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType' and code = 'IRCP').exists()).reference.identifier"
+	}
+
+.. code-block:: json
+
+	{
+	  "resourceType": "SearchParameter",
+	  "url": "http://fire.ly/fhir/SearchParameter/Group-atr-intended-recipient",
+	  "name": "AtrIntendedRecipient",
+	  "status": "active",
+	  "description": "The provider an ATR Group is meant for, by the identifier in its intended-recipient extension.",
+	  "code": "atr-intended-recipient",
+	  "base": ["Group"],
+	  "type": "token",
+	  "expression": "Group.extension('http://hl7.org/fhir/us/davinci-atr/StructureDefinition/atr-intended-recipient-identifier-extension').value.ofType(Identifier)"
+	}
+
 
 Restrict clients to DaVinci Data Export only
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

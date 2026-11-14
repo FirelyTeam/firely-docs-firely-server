@@ -257,6 +257,8 @@ Firely Server recognises a Provider Access Consent by any of these:
 
 An identifier without a system identifies no Group. Other actors, such as the payer as the source of the Consent, are not providers the Consent is about.
 
+Firely Server reads the providers from the root ``Consent.provision`` only, not from nested provisions. A provider given only as a literal ``reference``, or with a role coding that differs from the one above, is not read as a provider. A deny Consent with no provider that Firely Server reads excludes the patient from the export of every Group.
+
 .. note::
 	A provider-specific opt-out is enforced on the provider organization, not on single practitioners. Firely Server matches the identifiers of the Group itself, such as the organization-level (Type 2) NPI or the TIN of the provider. It does not match the identifiers of the Organization or Practitioner the Group refers to. A Consent that names the individual (Type 1) NPI of a practitioner excludes the patient from no export, unless a Group carries that NPI itself. To keep their records from one practitioner, a patient opts out of the practitioner's organization, or of every provider.
 
@@ -313,7 +315,9 @@ The opt-out filter reads the Consents and Groups through these search parameters
 	  - ``http://fire.ly/fhir/SearchParameter/Group-atr-intended-recipient``
 	  - Matching a provider by the intended-recipient extension of a Group.
 
-The export answers ``501`` when Provider Access Consents exist and none of them is indexed for ``provision.type``. It also answers ``501`` when a Consent names a provider and the exported Group has an intended-recipient extension that is not indexed, because an opt-out naming that identifier would then not be applied. The server log names the search parameter to load.
+The export answers ``501`` when Provider Access Consents exist and none of them is indexed for ``provision.type``. It also answers ``501`` when a Consent is indexed for a provider and the exported Group has an identifier or an intended-recipient extension that is not indexed, because an opt-out naming that identifier would then not be applied. The server log names the search parameter to load.
+
+To stop using provider-specific opt-outs, erase the index data with a reindex using ``exclude=Consent.provider-access-recipient`` (see :ref:`feature_customsp_reindex`). Removing the search parameter alone leaves that data in place, and the providers indexed before then still limit each deny Consent to the Groups they identify.
 
 The two Firely search parameters:
 

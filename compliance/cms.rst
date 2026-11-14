@@ -14,6 +14,7 @@ CMS Interoperability and Prior Authorization Final Rule (CMS-0057-F) - 🇺🇸
 .. |PDRIG|  replace:: Da Vinci PDex US Drug Formulary IG Version STU 2.0.1
 .. |PNTIG|  replace:: Da Vinci PDex Plan-Net IG Version STU 1.1.0
 .. |CRDIG|  replace:: Da Vinci Coverage Requirements Discovery (CRD) IG Version STU 2.0.1
+.. |CRDIG221|  replace:: Da Vinci Coverage Requirements Discovery (CRD) IG Version STU 2.2.1
 .. |DTRIG|  replace:: Da Vinci Documentation Templates and Rules (DTR) IG Version STU 2.0.0
 .. |PASIG|  replace:: Da Vinci Prior Authorization Support (PAS) IG Version STU 2.0.1
 
@@ -236,3 +237,19 @@ To implement a Prior Authorization API it is necessary to:
   #. Collect a computable representation of the details regarding which medical items and services are covered by a plan and whether prior authorization is required for them. Firely is recommending to store this information via `Clinical Quality Language (CQL) <https://fire.ly/cql/>`_.
   #. For any covered medical item or service requiring Prior Authorization, additionally create a computable overview of all documentation requirements necessary to support the decision.. Information that can not be derived from the Patients EHR/EMR record may be collected via `FHIR Structured Data Capture <https://hl7.org/fhir/uv/sdc/>`_. Note that the CMS final rule does not specify any requirements around the representation of the documentation requirements.
   #. Allow providers to securely submit all required documentation alongside a `Claim <https://www.hl7.org/fhir/r4/claim.html>`_ resource and make prior authorization decisions accessible via the `ClaimResponse <https://www.hl7.org/fhir/r4/claimresponse.html>`_ resource. It is likely necessary to translate the incoming FHIR-based prior authorization request into an X12-based format for forwarding to existing decision backend systems.
+
+.. _cms_crd:
+
+Coverage Requirements Discovery (CRD)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+CRD covers the first two capabilities of the Prior Authorization API. It tells a provider whether an item or service is covered, whether it needs prior authorization, and which documentation is needed. The provider gets this answer while ordering or scheduling the service. The |CRDIG| specifies how. The CRD demo service of Firely Server follows the newer |CRDIG221|. The payer runs a *CRD server*, which the EHR of the provider calls through `CDS Hooks <https://cds-hooks.hl7.org/>`_ while the order is entered. The answer is stored on the order, and carried into the documentation step (DTR) and the prior authorization request (PAS).
+
+Firely Server serves CDS Hooks, so a payer can host its CRD server in the same Firely Server that holds its member and coverage data:
+
+#. Enable the CDS Hooks branch, and require CRD clients to authenticate. See :ref:`feature_cds_hooks` and :ref:`feature_cds_hooks_authorization`.
+#. Write the CRD service as a plugin that applies the payer's own coverage rules. Firely Server does not ship a CRD service for production use. See :ref:`vonk_reference_api_cds_hooks`.
+#. Store the coverage and prior authorization rules as CQL ``Library`` resources, as recommended above, and evaluate them from the CRD service with :ref:`Library/$evaluate <feature_library_evaluate>`.
+#. Resolve the provider's patient to a member with the :ref:`$member-match operation <vonk_plugins_member_match>`, and serve the documentation templates to DTR with the :ref:`$questionnaire-package operation <vonk_plugins_questionnaire_package>`.
+
+For the hooks that CRD uses, what a CRD server returns, and the building blocks Firely Server provides, see :ref:`CRD on the CDS Hooks page <feature_cds_hooks_crd>`. Firely Server ships a CRD demo service that shows these steps working together; see :ref:`the CRD demo <feature_cds_hooks_examples_crd>`.

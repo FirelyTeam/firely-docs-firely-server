@@ -70,7 +70,7 @@ Each license has a kind. Firely Server writes it to the log at startup, as ``Kin
    * - Production
      - Your production environments.
    * - Test
-     - Your development, staging and other non-production environments, in any number of them. Firely Server works the same as with a Production license. Do not use a Test license in production.
+     - Your development, staging and other non-production environments. Your license agreement with Firely sets how many of them you may run, and with a professional license that is any number. Firely Server works the same as with a Production license, and the plugins in the license still determine which features are available. A Test license has an expiry date like any other license; contact Firely to renew it. Do not use a Test license in production.
 
 To get a Test license for your non-production environments, :ref:`contact<vonk-contact>` Firely.
 

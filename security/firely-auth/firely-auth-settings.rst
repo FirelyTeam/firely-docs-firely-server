@@ -276,7 +276,7 @@ These settings control the white labelling options for Firely Auth:
 
   - ``Show`` (default): the form shows next to the external identity providers.
   - ``Hint``: only the external identity providers show. A line at the bottom of the page, *Firely Auth administrator? Administrator login*, shows the form. With the app developer portal enabled, it reads *Administrator or app developer? Log in with your account*.
-  - ``Hidden``: only the external identity providers show, with no link to the form.
+  - ``Hidden``: only the external identity providers show, with no link to the form. With the app developer portal enabled, the link to create an app developer account is hidden as well: share ``/register/app-developer`` with app developers. When they request an account, Firely Auth tells them to log in at ``/login?local=true``.
 
   With every value, ``/login?local=true`` shows the form, so administrators can bookmark that address. Firely Auth uses it itself after an admin registers, after a user activates their account or resets their password, and when an admin who logs in with a password has to log in again. Without an enabled external identity provider, the form shows as with ``Show``. Firely Auth logs a ``Warning`` at startup when the value is not ``Show`` and ``ExternalIdentityProviders`` has no identity provider, and with ``Hidden`` it logs the address ``/login?local=true``.
 

@@ -2180,6 +2180,27 @@ When the caller supplies the data through the ``data`` parameter, the outcome in
 reports that the provided data does not contain the expected ``Patient`` — the data
 lacks it, while the patient itself may well exist on the server.
 
+Patient consistency
+~~~~~~~~~~~~~~~~~~~~
+
+The data a request evaluates must be consistent with its subject. This applies to
+``Library/$evaluate``, to ``$cql`` with a ``subject``, and to ``Measure/$evaluate-measure``
+— for supplied data, data from a ``dataEndpoint``, and data Firely Server retrieves itself.
+
+Only the Patient entries of the Bundle itself count as Patients of the data. A Patient
+contained in another resource — as a master patient index keeps each record it matched
+as a contained Patient of the Patient it builds from them — belongs to that resource,
+and a Patient in a nested Bundle belongs to that Bundle; neither counts as a Patient of
+the data.
+
+Each of the following rejects the request with HTTP 422, issue type ``processing``:
+
+- A Patient entry of the Bundle without an id.
+- A Patient entry of the Bundle that is not the subject's Patient.
+- More than one distinct Patient among the Bundle's Patient entries.
+
+``Measure/$evaluate-measure`` applies this check once for every subject it evaluates.
+
 .. _feature_cql_patient_context:
 
 Patient context

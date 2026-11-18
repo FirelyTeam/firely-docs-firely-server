@@ -223,6 +223,7 @@ Currently SMTP and SendGrid are the supported email clients.
     "ForgotPasswordEmailSubject":  "Firely Server forgot password.",
     "SecurityNotificationEmailSubject": "Firely Auth account security change",
     "RepresentativeInvitationEmailSubject": "Your account invitation",
+    "RepresentativeRegisteredEmailSubject": "You have been registered as a representative",
     //,"Smtp": {
     //	"Server": "",
     //	"Port": 0,
@@ -230,7 +231,17 @@ Currently SMTP and SendGrid are the supported email clients.
     //	"User": "",
     //	"Password": "",
     //	"UseSsl": true,
-    //	"SocketOptions" : null // one of: null, "None", "Auto", "SslOnConnect", "StartTls", "StartTlsWhenAvailable"
+    //	"SocketOptions" : null, // one of: null, "None", "Auto", "SslOnConnect", "StartTls", "StartTlsWhenAvailable"
+    //	"AuthenticationMode": "Password", // or "OAuth2ClientCredentials"
+    //	"OAuth2": { // only used when AuthenticationMode is "OAuth2ClientCredentials"
+    //		"TenantId": "",
+    //		"ClientId": "",
+    //		"ClientSecret": "", // set either ClientSecret or ClientCertificatePath
+    //		"ClientCertificatePath": "",
+    //		"ClientCertificatePassword": "",
+    //		"Scope": "https://outlook.office365.com/.default",
+    //		"AuthorityHost": "https://login.microsoftonline.com/"
+    //	}
     //}
     //,"SendGrid": {
     //    "ApiKey": ""
@@ -244,8 +255,84 @@ Currently SMTP and SendGrid are the supported email clients.
 - ``ForgotPasswordEmailSubject``: The subject that will be put in forgot password emails.
 - ``SecurityNotificationEmailSubject``: The subject of the email that tells a user that two-factor authentication was enabled or disabled on their account, or that their password was changed or reset. The body comes from the template ``securitynotification.liquid``. If you use your own ``EmailTemplateFolder``, it has to contain this template: without it, no notification is sent and a warning is logged. The change itself still goes through.
 - ``RepresentativeInvitationEmailSubject``: The subject of the email that invites a representative to sign in, see :ref:`firely_auth_dar_onboarding`. The default is ``Your account invitation``. The body comes from the template ``representativeinvitation.liquid``. It contains no patient information: the template only receives the person's name (``Name``), their email address (``Email``) and the sign-in link (``Link``). If you use your own ``EmailTemplateFolder``, it has to contain this template: without it, the invitation is not sent and an error is logged. Escape the values in a custom copy with ``| escape``, as the shipped template does.
+- ``RepresentativeRegisteredEmailSubject``: The subject of the email that tells an existing ``Patient`` that their account was registered as a representative, when the representative API returns that account, see :ref:`firely_auth_dar_onboarding`. The default is ``You have been registered as a representative``. The body comes from the template ``representativeregistered.liquid``. It contains no patient information: the template only receives the person's name (``Name``) and their email address (``Email``). If you use your own ``EmailTemplateFolder``, it has to contain this template: without it, this email is not sent and a warning is logged. The representative API still answers ``200 OK``.
 - ``Smtp``: Fill these settings when you use the ``Smtp`` type. If the ``Port`` has a value of ``0``, then the ``SocketOptions`` parameter is used to determine the default port to connect to. The default port used with ``SslOnConnect`` is ``465``. All other values will use a default port of ``25``. If the ``SocketOptions`` has a value of ``null`` or ``Auto``, then the ``Port`` is used to determine the default security options. If the ``Port`` has a value of ``465``, then the default options used will be ``SslOnConnect``. All other values will use ``StartTlsWhenAvailable``.
+- ``Smtp:AuthenticationMode``: how Firely Auth authenticates to the SMTP server.
+
+  - ``Password`` (the default): with ``User`` and ``Password``, when ``RequiresAuthentication`` is ``true``. Use it for SMTP servers that accept a password, and for SendGrid's SMTP relay.
+  - ``OAuth2ClientCredentials``: as the mailbox in ``User``, with an OAuth2 access token that Firely Auth gets for an Entra application registration with the client credentials grant (SASL XOAUTH2). Use it for Exchange Online, see :ref:`firely_auth_settings_email_exchange`. ``RequiresAuthentication`` and ``Password`` are ignored in this mode, and ``User`` is required.
+
+- ``Smtp:OAuth2``: the application registration, only used with ``OAuth2ClientCredentials``.
+
+  - ``TenantId``: the directory (tenant) id of the application registration. Required.
+  - ``ClientId``: the application (client) id. Required.
+  - ``ClientSecret``: a client secret of the application. Set either this or ``ClientCertificatePath``. Supply it through the environment variable ``FIRELY_AUTH_Email__Smtp__OAuth2__ClientSecret`` or a key vault, not in a settings file.
+  - ``ClientCertificatePath``: the path to a PFX file with a client certificate of the application and its private key. A relative path is relative to the content root, as for the certificate of a Kestrel endpoint.
+  - ``ClientCertificatePassword``: the password of the PFX file, if it has one.
+  - ``Scope``: the scope of the access token. The default is ``https://outlook.office365.com/.default``.
+  - ``AuthorityHost``: the Entra endpoint that issues the token. The default is ``https://login.microsoftonline.com/``.
+
+  Firely Auth does not start when a required value is missing, when both or neither of ``ClientSecret`` and ``ClientCertificatePath`` are set, or when the certificate file does not exist. It requests no token at startup, so a wrong tenant, application id or secret shows as an error in the log at the first email. It logs one ``Information`` line at startup with the SMTP server, the mailbox, the application id and the tenant. The secret, the certificate password and the token are never logged. A new secret or certificate takes effect after a restart.
 - ``SendGrid``: Fill this setting when you use the ``SendGrid`` type.
+
+.. _firely_auth_settings_email_exchange:
+
+Sending email through Exchange Online
+"""""""""""""""""""""""""""""""""""""
+
+Microsoft turns off SMTP AUTH with a password (Basic authentication) for existing Exchange Online tenants by default at the end of December 2026. Firely Auth then has to sign in to Exchange Online with OAuth2. Set it up as follows:
+
+#. In Entra ID, register an application.
+#. Under **API permissions**, add **APIs my organization uses** > **Office 365 Exchange Online** > **Application permissions** > ``SMTP.SendAsApp``, and grant admin consent.
+#. Give the application a client secret or a certificate.
+#. Register the application's service principal in Exchange Online, in Exchange Online PowerShell. Take the Object ID from **Enterprise applications**, not from **App registrations**:
+
+   .. code-block:: powershell
+
+      New-ServicePrincipal -AppId <application id> -ObjectId <object id>
+
+#. Give the service principal access to the mailbox Firely Auth sends from. Use a dedicated mailbox, such as a no-reply address:
+
+   .. code-block:: powershell
+
+      Add-MailboxPermission -Identity "no-reply@contoso.com" -User <service principal id> -AccessRights FullAccess
+
+   If ``Email:FromEmailAddress`` is another address than this mailbox, also give it the right to send as that address with ``Add-RecipientPermission``.
+#. Make sure SMTP AUTH is enabled for the mailbox. Microsoft recommends turning it off for the organization and on only for the mailboxes that need it, so it is often off. A tenant with *security defaults* has SMTP AUTH turned off.
+
+   .. code-block:: powershell
+
+      Get-CASMailbox -Identity "no-reply@contoso.com" | Format-List SmtpClientAuthenticationDisabled
+      Set-CASMailbox -Identity "no-reply@contoso.com" -SmtpClientAuthenticationDisabled $false
+
+#. Configure Firely Auth, and supply the secret through the environment variable ``FIRELY_AUTH_Email__Smtp__OAuth2__ClientSecret``:
+
+   .. code-block:: json
+
+      "Email": {
+        "Type": "Smtp",
+        "FromEmailAddress": "no-reply@contoso.com",
+        "Smtp": {
+          "Server": "smtp.office365.com",
+          "Port": 587,
+          "SocketOptions": "StartTls",
+          "User": "no-reply@contoso.com",
+          "AuthenticationMode": "OAuth2ClientCredentials",
+          "OAuth2": {
+            "TenantId": "<tenant id>",
+            "ClientId": "<application id>"
+          }
+        }
+      }
+
+   ``SocketOptions`` must be ``StartTls`` for port 587: without it, ``UseSsl`` selects TLS on connect, which fails on that port. Firely Auth never sends the token over an unencrypted connection, and reports an error instead.
+
+When an email cannot be sent, Firely Auth logs the error, and the user gets an error where the email was part of their request, such as forgot password. Errors you may see:
+
+- ``535 5.7.3 Authentication unsuccessful``: the service principal is not registered in Exchange or has another id, it has no ``FullAccess`` on the mailbox, or SMTP AUTH is off for the mailbox.
+- ``550 5.7.30``: Firely Auth still uses ``Password`` against a tenant that no longer accepts a password. Switch to ``OAuth2ClientCredentials``.
+- A ``SendAs`` permission error: ``Email:FromEmailAddress`` is another address than the mailbox, and the service principal may not send as it.
+- ``AADSTS7000215``: the client secret is wrong or has expired. ``AADSTS700027``: the certificate is not valid, for example expired.
 
 .. _firely_auth_settings_ui:
 
@@ -319,37 +406,32 @@ To make Firely Server known to Firely Auth, fill in the ``FhirServer``:
 Authorized representatives
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Firely Auth lets a user sign in to an app on behalf of a patient they represent, such as a parent for a child. Firely Server decides who may act for whom, through two custom operations that a Firely Server plugin implements. See :ref:`firely_auth_dar` for the login, the operations and an example plugin, and for the warnings that apply to this beta feature. ``LookupBySub`` = ``false`` selects the deprecated Patient-account flow, see :ref:`firely_auth_dar_deprecated`.
+Firely Auth lets a user sign in to an app on behalf of a patient they represent, such as a parent for a child. Firely Server decides who may act for whom, through two custom operations that a Firely Server plugin implements. See :ref:`firely_auth_dar` for the login, the operations and an example plugin, and for the warnings that apply to this beta feature.
 
 .. code-block:: json
 
   "AuthorizedRepresentatives": {
     "LookupOnLogin": false,
-    "LookupBySub": true,
-    "LookupRequestScopes": "https://fire.ly/fhir/OperationDefinition/has-authorized-representative-relationships",
     "RepresentativeRelationshipsScopes": "http://server.fire.ly/auth/scope/representative-relationships",
     "CheckAuthorizedRepresentativeScopes": "http://server.fire.ly/auth/scope/check-authorized-representative system/Patient.rs",
     "CheckAuthorizedRepresentativeTimeout": 5000, // in ms
     "TitleOnLogin": "Who Are You Signing In As?",
     "TitleOwnProfileOnLogin": "Continue as Yourself",
     "TitleAuthorizedProfilesOnLogin": "Continue On Behalf Of ...",
-    "HelpMessageTitleOnFail": "Couldn't load authorized profiles",
-    "HelpMessageOnFail": "A technical error prevented loading the user profiles of all authorized users. Please try again by reloading or continue as yourself.",
     "RepresentativeTitleOnFail": "No one to act for",
     "RepresentativeMessageOnFail": "Your account is not linked to anyone you can act for at the moment. Please contact the organization that invited you."
   },
 
-- ``LookupOnLogin``: true / false - Whether a ``Patient`` is asked at sign-in whom they act for. With ``LookupBySub`` on, this applies to Patients who sign in through an external identity provider only. It does not affect users of the type ``Representative``: they always choose whom they act for.
-- ``LookupBySub``: true / false - ``true`` (the default) asks Firely Server through ``$representative-relationships``, with the user's ``sub``, whom a Patient can act for. ``false`` keeps the deprecated Patient-account flow (``$check-authorized-representative-relationships``) for all Patients, for a Firely Server plugin that does not implement the new operation yet.
-- ``LookupRequestScopes``: The scopes of the token for ``$check-authorized-representative-relationships``, in the deprecated Patient-account flow.
+- ``LookupOnLogin``: true / false (default ``false``) - Whether a ``Patient`` who signs in through an external identity provider is asked, through ``$representative-relationships`` with the user's ``sub``, whom they act for. A ``Patient`` with a password always signs in as themselves. It does not affect users of the type ``Representative``: they always choose whom they act for. With ``LookupOnLogin`` on, Firely Auth logs an ``Error`` at startup when the CapabilityStatement of Firely Server lacks ``$representative-relationships`` or ``$check-authorized-representative``.
 - ``RepresentativeRelationshipsScopes``: The scopes of the token for ``$representative-relationships``.
 - ``CheckAuthorizedRepresentativeScopes``: The scopes of the token for ``$check-authorized-representative``, which Firely Auth calls when the user chooses whom to act for and at every refresh of such a token. The default also holds ``system/Patient.rs``, because Firely Server answers an operation for a backend client only when its token carries at least one ``system/`` scope; the operation itself does not need it.
 - ``CheckAuthorizedRepresentativeTimeout``: Timeout in milliseconds for each call to Firely Server.
 - ``TitleOnLogin``: Title text to display on the page where the user chooses whom to act for.
 - ``TitleOwnProfileOnLogin``: Text above the card with which a Patient continues as themselves.
 - ``TitleAuthorizedProfilesOnLogin``: Title text to display above the list of patients the user can act for.
-- ``HelpMessageTitleOnFail`` and ``HelpMessageOnFail``: Title and message shown in the deprecated Patient-account flow when the relationships do not arrive in time.
 - ``RepresentativeTitleOnFail`` and ``RepresentativeMessageOnFail``: Title and message shown to a ``Representative`` who has nobody to act for. The app then gets ``access_denied``.
+
+The settings ``LookupRequestScopes``, ``HelpMessageTitleOnFail`` and ``HelpMessageOnFail`` of the removed Patient-account flow have no effect. While one of them is configured, Firely Auth logs one ``Warning`` at startup naming them. Remove them, see :ref:`firely_auth_dar_migration`.
 
 .. _firely_auth_settings_representativeinvitation:
 

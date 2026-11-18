@@ -148,11 +148,19 @@ Alternatively, you can configure Firely Server to use only external data
 sources by enabling the ``RemoteDataEndpointsOnly`` setting. In that case,
 no local data retrieval (and thus no SQL Server or MongoDB data store) is required.
 
-With ``RemoteDataEndpointsOnly`` enabled, every request must set ``useServerData`` to
-``false``. A request that sets it to ``true``, or omits it, is rejected with HTTP 400 —
-also when it supplies the data in the ``data`` parameter. With ``useServerData`` set to
-``false``, the data comes from the ``data`` parameter when it is supplied, and otherwise
-from the ``dataEndpoint``; see :ref:`feature_external_data_endpoints`.
+With ``RemoteDataEndpointsOnly`` enabled, every request to ``Library/$evaluate`` or
+``Measure/$evaluate-measure`` must set ``useServerData`` to ``false``. A request that
+sets it to ``true``, or omits it, is rejected with HTTP 400 before any data of the
+server is read — also when it supplies the data in the ``data`` parameter. The
+``OperationOutcome`` names the operation that was invoked, for example:
+
+  Cannot execute operation $evaluate-measure. The server is configured to use remote
+  data endpoints only, but 'useServerData' is set to 'true'. Set 'useServerData' to
+  'false' and provide a 'dataEndpoint' parameter.
+
+With ``useServerData`` set to ``false``, the data comes from the ``data`` parameter
+when it is supplied, and otherwise from the ``dataEndpoint``; see
+:ref:`feature_external_data_endpoints`.
 
 .. _feature_external_data_endpoints:
 

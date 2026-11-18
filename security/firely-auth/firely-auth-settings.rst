@@ -184,6 +184,7 @@ These settings control the account specific options:
 
   "Account": {
     "AuthenticationCookieExpiration": "01:30", // [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws] (provide days or timespan)
+    "AdminReauthenticationWindow": "00:30", // [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws] (provide days or timespan)
     "Password": {
       "RequireDigit": true,
       "RequiredLength": 12,
@@ -198,6 +199,13 @@ These settings control the account specific options:
   },
 
 - ``AuthenticationCookieExpiration``: Specifies how long the authentication cookie is valid. You can specify just a number that specifies the days the token is valid, or you can provide a timespan. The expiration is sliding. The login session is stored on the server, in the ``ServerSideSessions`` table of the user store, and the cookie only holds a key to it. Logging out deletes the session, so a copy of the cookie cannot be used afterwards. Expired sessions are removed every 10 minutes.
+
+- ``AdminReauthenticationWindow``: Specifies how long after logging in an admin can make changes in the admin UI or the admin API before having to confirm their identity again. The default is ``00:30`` (30 minutes). It must be greater than zero, or Firely Auth does not start. The window counts from the login, not from the last activity, so it also applies to a session the admin keeps active. Reading data is not affected: after the window, a ``POST``, ``PUT``, ``PATCH`` or ``DELETE`` on the admin API is refused with ``401`` and the code ``reauthentication_required``. The admin UI then asks the admin to confirm their identity:
+
+  - An admin with a local account enters their password and, with two-factor authentication, an authentication or recovery code, and the admin UI then saves the change. Wrong entries count towards the account lockout.
+  - An admin who logs in through an external identity provider logs in there again. This leaves the page, so changes that were not saved are not kept: the admin copies them before continuing, and enters and saves them again after returning. Firely Auth requests this with ``prompt=login`` and ``max_age=0``, and refuses the confirmation when the identity provider returns no ``auth_time`` claim, or one from before the confirmation started. Make sure the identity provider honours these parameters and returns ``auth_time``, or its admins cannot make changes after the window.
+
+  A confirmation only counts for the browser that made it and for the current login session; it is stored in a cookie of its own, ``FA.IdentityConfirmation``, which is deleted on logout. Clients that call the management API with the ``client_credentials`` grant are not affected.
 
 - ``Password``: Here you can specify where the user passwords must comply to.
 
@@ -507,7 +515,11 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 
 - ``ClientId``: string: unique identifier for this client. It should be known to the client as well
 - ``ClientName``: string: human readable name for the client, it is shown on the consent page
-- ``ClientType``: string: ``ClientType`` specifies the type of OAuth2 client: ``"BackendService"`` (system-only ``client_credentials``), ``"ManagementApi"`` (``client_credentials`` with ``AllowManagementApiAccess``), ``"StandaloneApp"`` (``authorization_code``) or ``"CdsHooks"`` (a CDS Hooks client, see :ref:`firely_auth_settings_cdshooks`), and helps optimize UI validation during client registration by enforcing different constraints on the workflow. Only a ``ManagementApi`` client gets the management API scope in its tokens.
+- ``ClientType``: string: ``ClientType`` specifies the type of OAuth2 client: ``"BackendService"`` (system-only ``client_credentials``), ``"ManagementApi"`` (``client_credentials`` with ``AllowManagementApiAccess``), ``"StandaloneApp"`` (``authorization_code``), ``"AdminApp"`` (an app that only users in the Admin role can log in to, such as the Firely Metrics Dashboard) or ``"CdsHooks"`` (a CDS Hooks client, see :ref:`firely_auth_settings_cdshooks`), and helps optimize UI validation during client registration by enforcing different constraints on the workflow. Only a ``ManagementApi`` client gets the management API scope in its tokens.
+- ``AdminAppScope``: string, ``AdminApp`` clients only, required: the scope the app requests, an absolute ``http`` or ``https`` URI of its own, for example ``http://server.fire.ly/metrics/scope/dashboard`` for the Firely Metrics Dashboard. The ``ClientId`` of an admin app is the audience (``aud``) of its tokens and cannot be changed afterwards. An admin app client without a valid scope is refused tokens; the admin UI marks it as *Needs update*, and Firely Auth logs a warning naming it at startup.
+- ``AdminAppIncludeRoleClaim``: true / false, ``AdminApp`` clients only: whether the app's tokens carry the user's roles. The default is ``false``.
+
+  Admin apps are registered as ``AdminApp`` clients, in the admin UI, with the admin API or here, and can log in as soon as the client is saved. An ``AdminApps`` setting is ignored; remove it from ``appsettings.instance.json`` and register each admin app as an ``AdminApp`` client.
 - ``JwtIssuer``: string, ``CdsHooks`` clients only: the ``iss`` claim of the JWTs the client presents, an absolute URI. See :ref:`firely_auth_settings_cdshooks`.
 - ``Description``: string:  human readable description of the client
 - ``Enabled``: true / false: simple switch to enable or disable a client (instead of removing it from the list)

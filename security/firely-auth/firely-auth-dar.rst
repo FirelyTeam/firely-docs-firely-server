@@ -40,6 +40,10 @@ When the Authorized Representatives feature is enabled, user authentication trig
 
     If you use DAR, run a single Firely Auth instance.
 
+.. note::
+
+    Firely Auth only accepts a selection of the user's own patient, or of a patient that Firely Server posted for that user, and only while ``LookupOnLogin`` is ``true``. The relationships are kept for five minutes; a user who chooses someone after that is asked to sign in to the app again, and can still continue as themselves. The selection applies only to the next token of the app it was made for. A refresh of that token keeps its ``patient``. The selection screen is not shown, and a selection is not applied, when a launch context is requested or registered.
+
 Configuration Guide: Enabling Designated Authorized Representatives
 -------------------------------------------------------------------
 
@@ -349,9 +353,7 @@ Designated Authorized Representative Example Implementation
                     client.ClientSecret = "firely-server-dar-plugin";
                     client.Scope = "http://server.fire.ly/auth/scope/authmanagement";
                     client.TokenEndpoint = "http://localhost:5100/connect/token";
-                    client.Parameters = new Parameters([
-                        new KeyValuePair<string, string>("aud", "Firely Server")
-                    ]);
+                    client.Resource = "http://server.fire.ly/auth/api/management";
                 });
 
                 services.AddClientCredentialsHttpClient(firelyAuthEndpoint, firelyAuthEndpoint, client =>

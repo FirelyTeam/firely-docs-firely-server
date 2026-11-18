@@ -223,6 +223,7 @@ Currently SMTP and SendGrid are the supported email clients.
     "ForgotPasswordEmailSubject":  "Firely Server forgot password.",
     "SecurityNotificationEmailSubject": "Firely Auth account security change",
     "RepresentativeInvitationEmailSubject": "Your account invitation",
+    "RepresentativeRegisteredEmailSubject": "You have been registered as a representative",
     //,"Smtp": {
     //	"Server": "",
     //	"Port": 0,
@@ -254,6 +255,7 @@ Currently SMTP and SendGrid are the supported email clients.
 - ``ForgotPasswordEmailSubject``: The subject that will be put in forgot password emails.
 - ``SecurityNotificationEmailSubject``: The subject of the email that tells a user that two-factor authentication was enabled or disabled on their account, or that their password was changed or reset. The body comes from the template ``securitynotification.liquid``. If you use your own ``EmailTemplateFolder``, it has to contain this template: without it, no notification is sent and a warning is logged. The change itself still goes through.
 - ``RepresentativeInvitationEmailSubject``: The subject of the email that invites a representative to sign in, see :ref:`firely_auth_dar_onboarding`. The default is ``Your account invitation``. The body comes from the template ``representativeinvitation.liquid``. It contains no patient information: the template only receives the person's name (``Name``), their email address (``Email``) and the sign-in link (``Link``). If you use your own ``EmailTemplateFolder``, it has to contain this template: without it, the invitation is not sent and an error is logged. Escape the values in a custom copy with ``| escape``, as the shipped template does.
+- ``RepresentativeRegisteredEmailSubject``: The subject of the email that tells an existing ``Patient`` that their account was registered as a representative, when the representative API returns that account, see :ref:`firely_auth_dar_onboarding`. The default is ``You have been registered as a representative``. The body comes from the template ``representativeregistered.liquid``. It contains no patient information: the template only receives the person's name (``Name``) and their email address (``Email``). If you use your own ``EmailTemplateFolder``, it has to contain this template: without it, this email is not sent and a warning is logged. The representative API still answers ``200 OK``.
 - ``Smtp``: Fill these settings when you use the ``Smtp`` type. If the ``Port`` has a value of ``0``, then the ``SocketOptions`` parameter is used to determine the default port to connect to. The default port used with ``SslOnConnect`` is ``465``. All other values will use a default port of ``25``. If the ``SocketOptions`` has a value of ``null`` or ``Auto``, then the ``Port`` is used to determine the default security options. If the ``Port`` has a value of ``465``, then the default options used will be ``SslOnConnect``. All other values will use ``StartTlsWhenAvailable``.
 - ``Smtp:AuthenticationMode``: how Firely Auth authenticates to the SMTP server.
 
@@ -404,37 +406,32 @@ To make Firely Server known to Firely Auth, fill in the ``FhirServer``:
 Authorized representatives
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Firely Auth lets a user sign in to an app on behalf of a patient they represent, such as a parent for a child. Firely Server decides who may act for whom, through two custom operations that a Firely Server plugin implements. See :ref:`firely_auth_dar` for the login, the operations and an example plugin, and for the warnings that apply to this beta feature. ``LookupBySub`` = ``false`` selects the deprecated Patient-account flow, see :ref:`firely_auth_dar_deprecated`.
+Firely Auth lets a user sign in to an app on behalf of a patient they represent, such as a parent for a child. Firely Server decides who may act for whom, through two custom operations that a Firely Server plugin implements. See :ref:`firely_auth_dar` for the login, the operations and an example plugin, and for the warnings that apply to this beta feature.
 
 .. code-block:: json
 
   "AuthorizedRepresentatives": {
     "LookupOnLogin": false,
-    "LookupBySub": true,
-    "LookupRequestScopes": "https://fire.ly/fhir/OperationDefinition/has-authorized-representative-relationships",
     "RepresentativeRelationshipsScopes": "http://server.fire.ly/auth/scope/representative-relationships",
     "CheckAuthorizedRepresentativeScopes": "http://server.fire.ly/auth/scope/check-authorized-representative system/Patient.rs",
     "CheckAuthorizedRepresentativeTimeout": 5000, // in ms
     "TitleOnLogin": "Who Are You Signing In As?",
     "TitleOwnProfileOnLogin": "Continue as Yourself",
     "TitleAuthorizedProfilesOnLogin": "Continue On Behalf Of ...",
-    "HelpMessageTitleOnFail": "Couldn't load authorized profiles",
-    "HelpMessageOnFail": "A technical error prevented loading the user profiles of all authorized users. Please try again by reloading or continue as yourself.",
     "RepresentativeTitleOnFail": "No one to act for",
     "RepresentativeMessageOnFail": "Your account is not linked to anyone you can act for at the moment. Please contact the organization that invited you."
   },
 
-- ``LookupOnLogin``: true / false - Whether a ``Patient`` is asked at sign-in whom they act for. With ``LookupBySub`` on, this applies to Patients who sign in through an external identity provider only. It does not affect users of the type ``Representative``: they always choose whom they act for.
-- ``LookupBySub``: true / false - ``true`` (the default) asks Firely Server through ``$representative-relationships``, with the user's ``sub``, whom a Patient can act for. ``false`` keeps the deprecated Patient-account flow (``$check-authorized-representative-relationships``) for all Patients, for a Firely Server plugin that does not implement the new operation yet.
-- ``LookupRequestScopes``: The scopes of the token for ``$check-authorized-representative-relationships``, in the deprecated Patient-account flow.
+- ``LookupOnLogin``: true / false (default ``false``) - Whether a ``Patient`` who signs in through an external identity provider is asked, through ``$representative-relationships`` with the user's ``sub``, whom they act for. A ``Patient`` with a password always signs in as themselves. It does not affect users of the type ``Representative``: they always choose whom they act for. With ``LookupOnLogin`` on, Firely Auth logs an ``Error`` at startup when the CapabilityStatement of Firely Server lacks ``$representative-relationships`` or ``$check-authorized-representative``.
 - ``RepresentativeRelationshipsScopes``: The scopes of the token for ``$representative-relationships``.
 - ``CheckAuthorizedRepresentativeScopes``: The scopes of the token for ``$check-authorized-representative``, which Firely Auth calls when the user chooses whom to act for and at every refresh of such a token. The default also holds ``system/Patient.rs``, because Firely Server answers an operation for a backend client only when its token carries at least one ``system/`` scope; the operation itself does not need it.
 - ``CheckAuthorizedRepresentativeTimeout``: Timeout in milliseconds for each call to Firely Server.
 - ``TitleOnLogin``: Title text to display on the page where the user chooses whom to act for.
 - ``TitleOwnProfileOnLogin``: Text above the card with which a Patient continues as themselves.
 - ``TitleAuthorizedProfilesOnLogin``: Title text to display above the list of patients the user can act for.
-- ``HelpMessageTitleOnFail`` and ``HelpMessageOnFail``: Title and message shown in the deprecated Patient-account flow when the relationships do not arrive in time.
 - ``RepresentativeTitleOnFail`` and ``RepresentativeMessageOnFail``: Title and message shown to a ``Representative`` who has nobody to act for. The app then gets ``access_denied``.
+
+The settings ``LookupRequestScopes``, ``HelpMessageTitleOnFail`` and ``HelpMessageOnFail`` of the removed Patient-account flow have no effect. While one of them is configured, Firely Auth logs one ``Warning`` at startup naming them. Remove them, see :ref:`firely_auth_dar_migration`.
 
 .. _firely_auth_settings_representativeinvitation:
 

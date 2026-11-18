@@ -5,6 +5,9 @@ Zero-downtime Migration
 
 Firely Server v6 introduces an enhanced MongoDB database migration process. In contrast to the previous migration method that required system downtime, this new approach enables zero-downtime migration. This allows for continuous operation of your existing Firely Server instance while the data migration to the new schema proceeds.
 
+.. attention::
+   Zero-downtime migration is supported for **MongoDB only**. It is not supported for SQL Server: the SQL Server source of the FSI tool migrates only the current version of each resource, so historical (non-current) versions are not migrated. Do not rely on the SQL Server path for a zero-downtime migration.
+
 .. warning::
    Please note that any snapshot produced by the bulk data export functionality will not be available after the migration. Bulk data export data is excluded from the migration process.
 

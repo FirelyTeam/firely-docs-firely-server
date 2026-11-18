@@ -2164,10 +2164,14 @@ whole request with HTTP 422, issue type ``not-supported``:
 - The ``Group`` has no member entities.
 - A member entity references another resource type than ``Patient``. Such a member
   is not skipped: the request is rejected.
+- A member entity has no ``reference`` at all, such as one identified by an identifier
+  alone. Such a member is not skipped: the ``OperationOutcome`` names the member by its
+  position, as ``Group.member[<index>]``, counted from 0 as in FHIRPath.
 - A member entry whose reference does not identify a resource by type and id at all —
   an empty reference, or an absolute uri that is not a resource url such as
   ``urn:uuid:…``, as produced by ingesting a ``Group`` from a transaction Bundle. The
-  ``OperationOutcome`` names that reference.
+  ``OperationOutcome`` names that reference and the member's position, as
+  ``Group.member[<index>]``.
 - More distinct patients than ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation``
   allows.
 

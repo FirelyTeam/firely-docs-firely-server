@@ -3,6 +3,22 @@
 Release notes
 =============
 
+.. Release notes for sending email through Exchange Online with OAuth2 (Firely.Auth#2134, VONK-8123).
+   Move these into the section of the Firely Auth release that ships it, and remove this comment.
+
+   Attention:
+
+   - **Email through Exchange Online.** Microsoft turns off SMTP AUTH with a password for existing Exchange Online tenants at the end of December 2026. If Firely Auth sends email through Exchange Online with a password or app password, switch to ``Email:Smtp:AuthenticationMode`` ``OAuth2ClientCredentials`` before then. This needs an Entra application registration and setup in Exchange Online. See :ref:`firely_auth_settings_email_exchange`.
+   - **Log output.** With ``Email:Smtp:AuthenticationMode`` ``OAuth2ClientCredentials``, Firely Auth logs one ``Information`` line at startup with the SMTP server, the mailbox, the application id and the tenant. No secrets or tokens are logged.
+
+   Feature:
+
+   #. Firely Auth can send email through Exchange Online with OAuth2 instead of a password. With ``Email:Smtp:AuthenticationMode`` set to ``OAuth2ClientCredentials``, it signs in to the SMTP server as the mailbox in ``Email:Smtp:User`` with an access token for an Entra application registration, with a client secret or a certificate. The default stays ``Password``, so existing configurations, including SendGrid, keep working unchanged. See :ref:`firely_auth_settings_email_exchange`.
+
+   Configuration:
+
+   #. New settings: ``Email:Smtp:AuthenticationMode`` (default ``Password``) and ``Email:Smtp:OAuth2`` (``TenantId``, ``ClientId``, ``ClientSecret`` or ``ClientCertificatePath`` with ``ClientCertificatePassword``, ``Scope``, ``AuthorityHost``). See :ref:`firely_auth_settings_email`.
+
 .. _firelyauth_releasenotes_4.9.0:
 
 Release 4.9.0, November XXth, 2026

@@ -1956,8 +1956,8 @@ A parameter whose value cannot be converted to a CQL system type, such as a ``Ra
 parameter and its FHIR type. A parameter without a value, with both a value and ``part``
 elements, with nested parts, or with repetitions of different types — including a mix of
 ``Period`` and ``Range`` values — is rejected with HTTP 400. An ``OperationOutcome`` about
-the evaluation itself, such as one for an unknown patient, refers to the generated library
-as ``Test`` version ``1.0.0``, and names the operation ``$evaluate``; see
+the evaluation itself, such as one for an unknown patient, refers to "the expression", not to
+the generated library, and names the operation ``$evaluate``; see
 :ref:`feature_cql_outcome_operation`.
 
 Output parameters
@@ -2290,11 +2290,11 @@ its ``OperationOutcome`` names ``$evaluate``, also when the request was sent to
 ``Measure/$evaluate-measure`` or ``$cql``. For example, ``$cql`` for a patient that does not
 exist answers::
 
-  Cannot execute operation $evaluate. Patient 'pat1' could not be found, so library 'Test'
-  with version '1.0.0' cannot be evaluated.
+  Cannot execute operation $evaluate. Patient 'Patient/pat1' could not be found, so the
+  expression cannot be evaluated.
 
-The status code and the rest of the text are the same as for a request to
-``Library/$evaluate``.
+The status code is the same as for a request to ``Library/$evaluate``. For ``$cql``, the text
+names the expression where it names the ``Library`` for ``Library/$evaluate``.
 
 .. _feature_cql_data_retrieval:
 

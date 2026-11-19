@@ -159,7 +159,7 @@ With ``CleanupCheckInterval`` you can configure how often the cleanup process ch
 
 .. note::
 
-  Currently, if MongoDB is used as a repository, the only supported value for ``AdditionalResourcesMaxRecursionDepth`` is 1.
+  If MongoDB is used as a repository, ``AdditionalResourcesMaxRecursionDepth`` can be at most 10. Firely Server refuses to start with a higher value configured.
 
 Exporting a large number of resources from a SQL Server database can cause a timeout exception. You can adjust the timeout period in ``BulkDataExportTimeout``. There is no timeout limitation when exporting data from MongoDB.
 

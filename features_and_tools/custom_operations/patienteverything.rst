@@ -41,8 +41,10 @@ So if you would want to fetch only Patient 1 and their Observations, changed sin
 Paged responses
 ^^^^^^^^^^^^^^^
 
-The response is a FHIR Bundle of type ``searchset``. When the result set is large, the response is paged. Each page contains a ``relation: next`` link in the Bundle that can be followed to retrieve the next page of results. Continue following the ``next`` link until no further ``next`` link is present, which indicates you have reached the last page.
-   
+The response is a FHIR Bundle of type ``searchset``. When the result set is large, the response is paged. Each page contains a ``relation: next`` link in the Bundle that can be followed to retrieve the next page of results. Continue following the ``next`` link until no further ``next`` link is present, which indicates you have reached the last page. A ``next`` link whose page size is larger than ``BundleOptions:MaxCount`` returns ``400 Bad Request``.
+
+On MongoDB, the first request selects all the resources of the Patient once and stores their ids; every later page is read from there, so the pages form one snapshot of the first request. A resource created after the first request is not returned, and a resource updated or deleted after it is returned in the version it had at the first request. The pages of a result can be read for 30 minutes by default; after that, MongoDB removes them and a ``next`` link returns ``410 Gone``. ``PatientEverythingOperation:SnapshotLifetime`` sets another lifetime, from 10 minutes to 10 years (see :ref:`patient_everything_operation`). A ``next`` link is followed only with an access token that has the same subject, ``patient``, ``fhirUser`` and scopes as the token of the first request, and returns ``403 Forbidden`` otherwise; a ``next`` link sent for another patient, FHIR version or tenant returns ``400 Bad Request``. On SQL Server, every page runs the selection again and returns the current version of the resources.
+
 Configuration
 -------------
 Many resources in the Patient compartment reference resources outside the compartment. For example: An Observation might have a performer which is a Practitioner. As Practitioner itself is not in the Patient compartment, the resource would normally not be returned. But using a setting you can control which additional resource types are returned if they are referenced by any of the resources you requested.

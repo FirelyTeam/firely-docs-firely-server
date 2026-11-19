@@ -148,12 +148,13 @@ Alternatively, you can configure Firely Server to use only external data
 sources by enabling the ``RemoteDataEndpointsOnly`` setting. In that case,
 no local data retrieval (and thus no SQL Server or MongoDB data store) is required.
 
-With ``RemoteDataEndpointsOnly`` enabled, every request to ``Library/$evaluate``,
-``Measure/$evaluate-measure`` or ``$cql`` must set ``useServerData`` to ``false``. A
-request that sets it to ``true``, or omits it, is rejected with HTTP 400 before any data
-of the server is read — also when it supplies the data in the ``data`` parameter. The
-``OperationOutcome`` names the operation that was invoked (for ``$cql``, ``$evaluate``; see
-:ref:`feature_cql_outcome_operation`), for example:
+With ``RemoteDataEndpointsOnly`` enabled, every request to ``Measure/$evaluate-measure``,
+and every request to ``Library/$evaluate`` or ``$cql`` that is evaluated in the Patient
+context, must set ``useServerData`` to ``false``. A request that sets it to ``true``, or
+omits it, is rejected with HTTP 400 before any data of the server is read — also when it
+supplies the data in the ``data`` parameter. The ``OperationOutcome`` names
+``$evaluate-measure`` or ``$evaluate``. For ``$cql`` it names ``$evaluate``; see
+:ref:`feature_cql_outcome_operation`. For example:
 
   Cannot execute operation $evaluate-measure. The server is configured to use remote
   data endpoints only, but 'useServerData' is set to 'true'. Set 'useServerData' to
@@ -1957,7 +1958,7 @@ parameter and its FHIR type. A parameter without a value, with both a value and 
 elements, with nested parts, or with repetitions of different types — including a mix of
 ``Period`` and ``Range`` values — is rejected with HTTP 400. An ``OperationOutcome`` about
 the evaluation itself, such as one for an unknown patient, refers to "the expression", not to
-the generated library, and names the operation ``$evaluate``; see
+the generated library, and, where it names an operation, names ``$evaluate``; see
 :ref:`feature_cql_outcome_operation`.
 
 Output parameters

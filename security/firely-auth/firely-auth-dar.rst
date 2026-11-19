@@ -5,7 +5,7 @@ Designated Authorized Representative
 
 Firely Auth supports Designated Authorized Representatives (DAR), enabling users to access and manage patient data on behalf of others through delegated access tokens.
 
-When the Authorized Representatives feature is enabled, user authentication triggers a call to Firely Server's custom operation to verify existing patient relationships. If relationships are found, users are presented with a selection screen to choose their acting capacity as themselves or on behalf of an authorized patient. The issued access token preserves the original user's ``fhirUser`` identity for audit purposes while setting the ``patient`` claim to the selected patient, ensuring access is restricted to that patient's compartment data.
+When the Authorized Representatives feature is enabled, user authentication triggers a call to Firely Server's custom operations to look up and verify existing patient relationships. If relationships are found, users are presented with a selection screen to choose their acting capacity as themselves or on behalf of an authorized patient. The issued access token preserves the original user's ``fhirUser`` identity for audit purposes while setting the ``patient`` claim to the selected patient, ensuring access is restricted to that patient's compartment data.
 
 
 .. image:: /images/fa_dar_selection.png
@@ -21,10 +21,11 @@ When the Authorized Representatives feature is enabled, user authentication trig
 
 .. note::
 
-    The custom operation ``$check-authorized-representative-relationships`` must be implemented on your Firely Server instance to enable Authorized Representative functionality.
-    This operation must return a Parameters resource with a ``result`` parameter set to ``true`` if authorized representative relationships exist, which directs the user to a selection screen.
-    
-    The DAR Selection Screen is only shown if the operation returns ``true`` during the authorized code flow. The operation can post relationship details to the Firely Auth Administrative API either synchronously (before returning the response) or asynchronously (after returning the response). The relationship(s) will live in memory for 5 minutes.
+    Two custom operations must be implemented on your Firely Server instance to enable Authorized Representative functionality: ``$representative-relationships`` and ``Patient/$check-authorized-representative``.
+
+    Firely Auth calls ``$representative-relationships`` once per sign-in of a user. The operation posts the patients the user may act for to the Firely Auth Administrative API, and returns a Parameters resource with a ``result`` parameter set to ``true`` if there is at least one, which directs the user to a selection screen. The relationship(s) live in memory for 5 minutes.
+
+    Firely Auth calls ``Patient/$check-authorized-representative`` when the user chooses whom to act for, when the application exchanges the authorization code, and at every refresh of the issued token, to confirm that the choice is still authorized.
 
 .. warning::
 
@@ -32,7 +33,7 @@ When the Authorized Representatives feature is enabled, user authentication trig
 
     With more than one instance, these requests can each land on a different instance:
 
-    - Firely Server posting the relationships to ``/api/external/authorized-representative``,
+    - Firely Server posting the relationships to ``/api/external/representative-relationships``,
     - the user's browser loading the DAR Selection Screen and submitting the selection,
     - the client application requesting the access token from the token endpoint.
 
@@ -72,44 +73,52 @@ Additionally, the screen for selecting authorized representatives can be customi
   The screen is divided into two sections — one for the user's own profile and one for authorized profiles.  
   Separate titles can be defined for each section.
 - HelpMessageTitleOnFail and HelpMessageOnFail:
-  These messages are shown when Firely Auth does not retrieve data in a timely manner, despite the FHIR server returning `true` for the ``$check-authorized-representative-relationships`` operation (see below).
+  These messages are shown when Firely Auth does not retrieve data in a timely manner, despite the FHIR server returning `true` for the ``$representative-relationships`` operation (see below).
 
-Step 2 - Register Firely Server DAR Plugin Client in Firely Auth
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Step 2 - Register Firely Server's Management API Client in Firely Auth
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 1. Log in as an Administrator to the Firely Auth
-   
-2. Navigate to the Clients section and create a new Client for the Firely Server DAR Plugin with the following settings to update the relationships:
 
-   - Client ID: firely-server-dar-plugin
-   - Client Secret: (a strong secret of your choice)
+2. Navigate to the Clients section and create a new Client that Firely Server uses to push relationships, with the following settings:
+
+   - Client ID: a value of your choice
+   - Client Secret: a strong secret of your choice
    - Client Type: Management API
    - Allowed Grant Types: Client Credentials
-   
 
-Step 3 - Building the $check-authorized-representative-relationships operation on Firely Server
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+3. Set the same Client ID and Client Secret on Firely Server, in the ``AuthorizedRepresentativeExample:ClientId`` and ``AuthorizedRepresentativeExample:ClientSecret`` configuration keys (see below).
 
-The custom operation ``$check-authorized-representative-relationships`` must be implemented as a plugin on your Firely Server instance. This operation receives the patient parameter from Firely Auth and returns a Parameters resource indicating whether authorized representative relationships exist.
+Step 3 - Configuring the example plugin on Firely Server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**Operation Signature:**
+Firely Server ships an example plugin, ``Vonk.Plugin.AuthorizedRepresentativeExample``, that implements both operations. Add ``Vonk.Plugin.AuthorizedRepresentativeExample`` to ``PipelineOptions``, and add ``representative-relationships`` and ``check-authorized-representative`` to ``Operations``. Configure the management API client in the ``AuthorizedRepresentativeExample`` section:
 
-- **URL**: ``POST [base]/Patient/$check-authorized-representative-relationships``
-- **Input**: Parameters resource containing a ``patient`` parameter with the fhirUser reference
-- **Output**: Parameters resource with a ``result`` parameter (boolean) indicating if relationships exist
+.. code-block:: json
 
-**Implementation Approach:**
+    "AuthorizedRepresentativeExample": {
+        "FirelyAuthUrl": "https://localhost:5100",
+        "ClientId": "the client id from step 2",
+        "ClientSecret": "the client secret from step 2",
+        "PushTimeoutSeconds": 3
+    }
 
-The operation should:
+- ``FirelyAuthUrl``: the base url of Firely Auth. Leave it empty to use ``SmartAuthorizationOptions:Authority``. It must use https, except for a loopback address, or when ``SmartAuthorizationOptions:RequireHttpsToProvider`` is ``false``.
+- ``ClientId`` / ``ClientSecret``: the management API client registered in step 2.
+- ``PushTimeoutSeconds``: the number of seconds the push to Firely Auth may take, including the request for the management API token. Keep it below ``AuthorizedRepresentatives:CheckAuthorizedRepresentativeTimeout`` of Firely Auth, which is 5 seconds by default. Defaults to 3.
 
-1. Receive and validate the ``patient`` parameter from the input Parameters resource
-2. Query your data store to check for authorized representative relationships
-3. Return a Parameters resource with ``result`` set to ``true`` if relationships exist, ``false`` otherwise
-4. Optionally post relationship details to Firely Auth's Administrative API (either synchronously or asynchronously)
+**Operation signatures:**
+
+- ``POST [base]/$representative-relationships`` has no input parameters: the user is the ``sub`` claim of the token. It pushes the patients the user may act for to Firely Auth, and answers a ``result`` parameter (boolean), ``true`` when there is at least one.
+- ``POST [base]/Patient/$check-authorized-representative`` takes ``patient`` (a reference ``Patient/<id>``) and ``representative`` (a reference ``RelatedPerson/<id>``); the user who chose is the ``sub`` claim of the token. It answers a ``result`` parameter (boolean), and a ``consent`` parameter with the Consent that authorizes the pair, if the authorization has one.
+
+**Example authorization model:**
+
+The example plugin links a user to the patients they may act for through a ``RelatedPerson`` that carries the identifier ``http://server.fire.ly/auth/identifier/sub|<user id>``. An administrator adds that identifier when linking the RelatedPerson to the user in Firely Auth. The RelatedPerson must be active, its period must cover the current time, and its Patient must exist. The example additionally requires an active privacy Consent (``Consent.scope`` in FHIR R4, ``Consent.category`` in FHIR R5, with the code ``patient-privacy`` of ``http://terminology.hl7.org/CodeSystem/consentscope``) that permits the RelatedPerson as an actor. A Consent is optional: replace this logic to decide the authorization in another way.
 
 Posting Result of operation Example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-This code block demonstrates an example of a parameter resource response for the ``$check-authorized-representative-relationships`` operation.
+This code block demonstrates the response of the ``$representative-relationships`` operation.
 
 .. code-block:: json
 
@@ -118,7 +127,27 @@ This code block demonstrates an example of a parameter resource response for the
         "parameter": [
             {
                 "name": "result",
-                "valueBoolean": true // In case there are additional relationships to be returned
+                "valueBoolean": true
+            }
+        ]
+    }
+
+The ``$check-authorized-representative`` operation adds a ``consent`` parameter when the authorization has a Consent:
+
+.. code-block:: json
+
+    {
+        "resourceType": "Parameters",
+        "parameter": [
+            {
+                "name": "result",
+                "valueBoolean": true
+            },
+            {
+                "name": "consent",
+                "valueReference": {
+                    "reference": "Consent/1"
+                }
             }
         ]
     }
@@ -126,20 +155,20 @@ This code block demonstrates an example of a parameter resource response for the
 Posting Relationship Details to Firely Auth Administrative API
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Posts relationship details to Firely Auth. Note that for this to work, a designated management API client must be configured in Firely Auth that can be used by Firely Server to post the relationship details. In the ``AuthorizedRepresentativeExampleConfiguration.cs`` example below, the name and secret for this client are configured statically as ``firely-server-dar-plugin``.
+The ``$representative-relationships`` operation posts relationship details to Firely Auth, replacing the patients it holds for the user. Note that for this to work, a designated management API client must be configured in Firely Auth that Firely Server uses to post the relationship details, as configured in step 2 above.
 
-**Request:** POST to ``/api/external/authorized-representative``
+**Request:** POST to ``/api/external/representative-relationships``
 
 .. code-block:: json
 
     {
-        "PatientFullName": "string",
-        "PatientId": "string", 
+        "UserId": "string",
         "Relationships": [
             {
-                "Id": "string",
+                "PatientId": "string",
                 "FullName": "string",
-                "Relationship": "string"
+                "Relationship": "string",
+                "Representative": "string"
             }
         ]
     }
@@ -147,237 +176,226 @@ Posts relationship details to Firely Auth. Note that for this to work, a designa
 
 Designated Authorized Representative Example Implementation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. container:: toggle
 
     .. container:: header
 
-      CheckAuthorizedRepresentativeRelationshipsExampleService.cs
-      
-    The service is responsible for returning a parameter resource based on the authorized representative relationships.
+      RepresentativeRelationshipsOperation.cs
+
+    Implements ``POST [base]/$representative-relationships``. Firely Auth calls it once per sign-in of a user who may act for others.
 
     .. code-block:: csharp
-        
-        using System.Net.Http.Headers;
-        using System.Text.Json;
-        using Duende.AccessTokenManagement;
-        using Duende.IdentityModel.Client;
-        using Hl7.Fhir.ElementModel;
-        using Hl7.Fhir.Model;
-        using Hl7.Fhir.Utility;
+
+        using Microsoft.AspNetCore.Http;
         using Microsoft.Extensions.Logging;
-        using Vonk.Core.Common;
         using Vonk.Core.Context;
-        using Vonk.Core.Support;
-        using Parameters = Hl7.Fhir.Model.Parameters;
-        using ST = System.Threading.Tasks;
 
-        namespace Firely.Server.Plugin.CheckAuthorizedRepresentativeRelationships
+        namespace Vonk.Plugin.AuthorizedRepresentativeExample;
+
+        internal sealed class RepresentativeRelationshipsOperation(
+            RepresentativeAuthorizations authorizations,
+            FirelyAuthRelationshipsClient firelyAuth,
+            ILogger<RepresentativeRelationshipsOperation> logger)
         {
-            public class CheckAuthorizedRepresentativeRelationshipsExampleService
+            public const string Name = "representative-relationships";
+
+            public async Task HandleAsync(IVonkContext vonkContext)
             {
-                private readonly ILogger<CheckAuthorizedRepresentativeRelationshipsExampleService> _logger;
-                private readonly IHttpClientFactory _httpClientFactory;
-                private readonly IClientCredentialsTokenManagementService _clientCredentialsTokenManagementService;
+                var (_, _, response) = vonkContext.Parts();
+                var httpContext = vonkContext.HttpContext();
 
-
-                public CheckAuthorizedRepresentativeRelationshipsExampleService(ILogger<CheckAuthorizedRepresentativeRelationshipsExampleService> logger,
-                    IHttpClientFactory httpClientFactory,
-                    IClientCredentialsTokenManagementService clientCredentialsTokenManagementService
-                    )
+                if (!FirelyAuthCaller.TryGetUserId(httpContext.User, out var userId))
                 {
-                    Check.NotNull(logger, nameof(logger));
-                    Check.NotNull(httpClientFactory, nameof(httpClientFactory));
-                    Check.NotNull(clientCredentialsTokenManagementService, nameof(clientCredentialsTokenManagementService));
-
-                    _logger = logger;
-                    _httpClientFactory = httpClientFactory;
-                    _clientCredentialsTokenManagementService = clientCredentialsTokenManagementService;
+                    response.HttpResult = StatusCodes.Status403Forbidden;
+                    response.Outcome.AddIssue(VonkIssue.FORBIDDEN, "You are not allowed to call this operation.");
+                    return;
                 }
 
-                public async ST.Task CheckAuthorizedRepresentativeRelationshipsOnPost(IVonkContext vonkContext)
+                IReadOnlyList<Representee> representees;
+                try
                 {
-                    _logger.LogInformation("Processing Custom $check-authorized-representative-relationships example.");
-
-                    try
-                    {
-                        var requestResource = vonkContext.Request.Payload.Resource;
-                        if (TryGetParameters(vonkContext, out var checkAuthorizedRepresentativeRelationshipsParameters))
-                        {
-                            _logger.LogDebug("CheckAuthorizedRepresentativeRelationshipsExampleService - Successfully extracted parameters for $check-authorized-representative-relationships");
-                            vonkContext.Arguments.ResourceTypeArguments().Handled();
-                            await CheckAuthorizedRepresentativeRelationshipsInternal(vonkContext, checkAuthorizedRepresentativeRelationshipsParameters!);          
-                        }
-                        else
-                        {
-                            _logger.LogDebug("CheckAuthorizedRepresentativeRelationshipsExampleService - Failed to extract parameters for $check-authorized-representative-relationships");
-                            vonkContext.Arguments.ResourceTypeArguments().Handled();
-                        }
-
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogDebug("CheckAuthorizedRepresentativeRelationshipsExampleService - Failed to extract parameters for $check-authorized-representative-relationships. Error: {0}", ex.Message);
-                        vonkContext.Arguments.ResourceTypeArguments().Handled();
-                    }
+                    representees = await authorizations.FindRepresenteesAsync(userId, vonkContext);
+                }
+                catch (RepresentativeLookupException)
+                {
+                    response.HttpResult = StatusCodes.Status500InternalServerError;
+                    response.Outcome.AddIssue(VonkIssue.INTERNAL_ERROR, "The request could not be processed.");
+                    return;
                 }
 
-                private async ST.Task CheckAuthorizedRepresentativeRelationshipsInternal(IVonkContext vonkContext,
-                Parameters checkAuthorizedRepresentativeRelationshipsParameters)
+                try
                 {
-                    var fhirUser = checkAuthorizedRepresentativeRelationshipsParameters.GetSingleValue<FhirString>("patient");
-                    if (fhirUser.IsNullOrEmpty())
-                    {
-                        vonkContext.Response.HttpResult = 400;
-                        vonkContext.Response.Outcome.AddIssue(VonkOutcome.IssueSeverity.Error, VonkOutcome.IssueType.Invalid,
-                            "Missing 'patient' parameter. Cannot proceed check of authorized representative relationships.");
-                        return;
-                    }
-
-                    if (!fhirUser!.Value?.StartsWith("Patient/") ?? false)
-                    {
-                        vonkContext.Response.HttpResult = 400;
-                        vonkContext.Response.Outcome.AddIssue(VonkOutcome.IssueSeverity.Error, VonkOutcome.IssueType.Invalid,
-                            "Invalid 'patient' parameter value. The 'patient' parameter must point to a fhirUser of type 'Patient'. Cannot proceed check of authorized representative relationships.");
-                        return;
-                    }
-
-                    // Do something with the patient id here
-                    // Fake for "test" patient
-                    var response = new Parameters();
-
-                    var patientId = fhirUser.Value!.Substring(8);
-
-                    if (patientId == "test")
-                    {
-                        response.Add("result", new FhirBoolean(true));
-                        
-                        _logger.LogDebug("CheckAuthorizedRepresentativeRelationshipsExampleService - Sending relationships to FA");
-
-                        var json = JsonSerializer.Serialize(new
-                        {
-                            PatientFullName = "My Test Patient",
-                            PatientId = "test",
-                            Relationships = new[]
-                            {
-                            new { Id = "1234", FullName = "Son Test", Relationship = "Son" },
-                            new { Id = "0987", FullName = "Daughter Test", Relationship = "Daughter" }
-                            }
-                        }, new JsonSerializerOptions { WriteIndented = true });
-
-                        var firelyAuthEndpoint = "http://localhost:5100/api/external/authorized-representative";
-                        var httpClient = _httpClientFactory.CreateClient(firelyAuthEndpoint);
-                        var token = await _clientCredentialsTokenManagementService.GetAccessTokenAsync(firelyAuthEndpoint);
-                        if (!token.IsError)
-                            httpClient.SetBearerToken(token.AccessToken!);
-
-                        HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, firelyAuthEndpoint)
-                        {
-                            Content = new StringContent(json)
-                        };
-                        request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                        var res = await httpClient.SendAsync(request);
-
-                        _logger.LogDebug($"Relationships Sent to FA Mgmt API. Response {res.StatusCode} received.");
-
-                    }
-                    else
-                    {
-                        response.Add("result", new FhirBoolean(false));
-                    }
-
-                    vonkContext.Response.HttpResult = 200;
-                    vonkContext.Response.Payload = response.ToTypedElement().ToIResource(vonkContext.InformationModel);
-
-                    await ST.Task.CompletedTask;
+                    await firelyAuth.PushAsync(userId, representees, httpContext.RequestAborted);
+                }
+                catch (Exception ex) when (ex is not OperationCanceledException || !httpContext.RequestAborted.IsCancellationRequested)
+                {
+                    response.HttpResult = StatusCodes.Status500InternalServerError;
+                    response.Outcome.AddIssue(VonkIssue.INTERNAL_ERROR, "The request could not be processed.");
+                    return;
                 }
 
-                private bool TryGetParameters(IVonkContext vonkContext, out Parameters? checkAuthorizedRepresentativeRelationshipsParameters)
-                {
-                    checkAuthorizedRepresentativeRelationshipsParameters = null;
-
-                    var (request, _, response) = vonkContext.Parts();
-                    if (!request.GetRequiredPayload(response, out var resource))
-                    {
-                        return false;
-                    }
-
-                    try
-                    {
-                        checkAuthorizedRepresentativeRelationshipsParameters = resource.ToPoco<Parameters>();
-                    }
-                    catch (Exception e)
-                    {
-                        vonkContext.Response.HttpResult = 400;
-                        vonkContext.Response.Outcome.AddIssue(VonkOutcome.IssueSeverity.Error, VonkOutcome.IssueType.Invalid, details: e.Message);
-                        return false;
-                    }
-
-                    return true;
-                }
+                response.HttpResult = StatusCodes.Status200OK;
+                response.Payload = OperationParameters.Create(representees.Count > 0, consent: null, vonkContext.InformationModel);
             }
         }
 
+.. container:: toggle
 
-    
-       
+    .. container:: header
+
+      CheckAuthorizedRepresentativeOperation.cs
+
+    Implements ``POST [base]/Patient/$check-authorized-representative``. Firely Auth calls it when a user chooses whom to act for, when the app exchanges the authorization code, and at every refresh of a token for that choice.
+
+    .. code-block:: csharp
+
+        using System.Text.RegularExpressions;
+        using Microsoft.AspNetCore.Http;
+        using Microsoft.Extensions.Logging;
+        using Vonk.Core.Context;
+
+        namespace Vonk.Plugin.AuthorizedRepresentativeExample;
+
+        internal sealed partial class CheckAuthorizedRepresentativeOperation(
+            RepresentativeAuthorizations authorizations,
+            ILogger<CheckAuthorizedRepresentativeOperation> logger)
+        {
+            public const string Name = "check-authorized-representative";
+
+            private const string PatientParameter = "patient";
+            private const string RepresentativeParameter = "representative";
+
+            [GeneratedRegex(@"^Patient/(?<id>[A-Za-z0-9\-\.]{1,64})$")]
+            private static partial Regex PatientReference();
+
+            [GeneratedRegex(@"^RelatedPerson/(?<id>[A-Za-z0-9\-\.]{1,64})$")]
+            private static partial Regex RelatedPersonReference();
+
+            public async Task HandleAsync(IVonkContext vonkContext)
+            {
+                var (request, args, response) = vonkContext.Parts();
+                args.ResourceTypeArguments().Handled();
+
+                if (!FirelyAuthCaller.TryGetUserId(vonkContext.HttpContext().User, out var userId))
+                {
+                    response.HttpResult = StatusCodes.Status403Forbidden;
+                    response.Outcome.AddIssue(VonkIssue.FORBIDDEN, "You are not allowed to call this operation.");
+                    return;
+                }
+
+                if (!request.GetRequiredPayload(response, out var parameters))
+                    return;
+
+                var patientMatch = PatientReference().Match(OperationParameters.GetReference(parameters, PatientParameter) ?? string.Empty);
+                var representativeMatch = RelatedPersonReference().Match(OperationParameters.GetReference(parameters, RepresentativeParameter) ?? string.Empty);
+                if (!patientMatch.Success || !representativeMatch.Success)
+                {
+                    response.HttpResult = StatusCodes.Status400BadRequest;
+                    response.Outcome.AddIssue(VonkIssue.PARAMETER_MISSING,
+                        $"Provide '{PatientParameter}' as a reference Patient/<id> and '{RepresentativeParameter}' as a reference RelatedPerson/<id>, each once.");
+                    return;
+                }
+
+                var patientId = patientMatch.Groups["id"].Value;
+                var relatedPersonId = representativeMatch.Groups["id"].Value;
+                RepresentativeAuthorization? authorization;
+                try
+                {
+                    authorization = await authorizations.CheckAsync(userId, patientId, relatedPersonId, vonkContext);
+                }
+                catch (RepresentativeLookupException)
+                {
+                    response.HttpResult = StatusCodes.Status500InternalServerError;
+                    response.Outcome.AddIssue(VonkIssue.INTERNAL_ERROR, "The request could not be processed.");
+                    return;
+                }
+
+                response.HttpResult = StatusCodes.Status200OK;
+                response.Payload = OperationParameters.Create(authorization is not null, authorization?.Consent, vonkContext.InformationModel);
+            }
+        }
+
 .. container:: toggle
 
     .. container:: header
 
       AuthorizedRepresentativeExampleConfiguration.cs
-      
+
     Configuration works the same way as for any other Vonk plugin.
 
     .. code-block:: csharp
 
-        using Duende.IdentityModel.Client;
+        using Duende.AccessTokenManagement;
         using Microsoft.AspNetCore.Builder;
+        using Microsoft.AspNetCore.Http;
+        using Microsoft.Extensions.Configuration;
         using Microsoft.Extensions.DependencyInjection;
         using Microsoft.Extensions.DependencyInjection.Extensions;
+        using Vonk.Core.Common;
         using Vonk.Core.Context;
+        using Vonk.Core.Metadata;
         using Vonk.Core.Pluggability;
+        using Vonk.Core.Pluggability.ContextAware;
 
-        namespace Firely.Server.Plugin.CheckAuthorizedRepresentativeRelationships;
+        namespace Vonk.Plugin.AuthorizedRepresentativeExample;
 
         [VonkConfiguration(order: 5600)]
         public static class AuthorizedRepresentativeExampleConfiguration
         {
-            public static IServiceCollection ConfigureServices(this IServiceCollection services)
+            private static readonly ClientCredentialsClientName FirelyAuthClient = ClientCredentialsClientName.Parse("firely-auth-representative-relationships");
+
+            private const string ManagementApiScope = "http://server.fire.ly/auth/scope/authmanagement";
+            private const string ManagementApiResource = "http://server.fire.ly/auth/api/management";
+
+            public static IServiceCollection ConfigureServices(IServiceCollection services, IConfiguration configuration)
             {
-                var clientCredentialsTokenManagementBuilder = services.AddClientCredentialsTokenManagement();
+                var options = configuration.GetSection(AuthorizedRepresentativeExampleOptions.Section).Get<AuthorizedRepresentativeExampleOptions>() ?? new();
+                var firelyAuthUrl = string.IsNullOrEmpty(options.FirelyAuthUrl) ? configuration["SmartAuthorizationOptions:Authority"] : options.FirelyAuthUrl;
+                var firelyAuthBase = new Uri(firelyAuthUrl!.TrimEnd('/') + "/", UriKind.Absolute);
 
-                var firelyAuthEndpoint = "http://localhost:5100/api/external/authorized-representative";
-                clientCredentialsTokenManagementBuilder.AddClient(firelyAuthEndpoint, client =>
-                {
-                    client.ClientId = "firely-server-dar-plugin";
-                    client.ClientSecret = "firely-server-dar-plugin";
-                    client.Scope = "http://server.fire.ly/auth/scope/authmanagement";
-                    client.TokenEndpoint = "http://localhost:5100/connect/token";
-                    client.Resource = "http://server.fire.ly/auth/api/management";
-                });
+                services.AddDistributedMemoryCache();
+                services.AddClientCredentialsTokenManagement()
+                    .AddClient(FirelyAuthClient, client =>
+                    {
+                        client.TokenEndpoint = new Uri(firelyAuthBase, "connect/token");
+                        client.ClientId = ClientId.Parse(options.ClientId!);
+                        client.ClientSecret = ClientSecret.Parse(options.ClientSecret!);
+                        client.Scope = Scope.Parse(ManagementApiScope);
+                        client.Resource = Resource.Parse(ManagementApiResource);
+                    });
 
-                services.AddClientCredentialsHttpClient(firelyAuthEndpoint, firelyAuthEndpoint, client =>
-                {
-                    client.BaseAddress = new Uri(firelyAuthEndpoint);
-                });
+                services.AddHttpClient<FirelyAuthRelationshipsClient>(client =>
+                    {
+                        client.BaseAddress = firelyAuthBase;
+                        client.Timeout = TimeSpan.FromSeconds(options.PushTimeoutSeconds);
+                    })
+                    .AddClientCredentialsTokenHandler(FirelyAuthClient);
 
-                Console.WriteLine("Setting up Auth Rep Plugin Services");
-                services.TryAddScoped<CheckAuthorizedRepresentativeRelationshipsExampleService>();
+                services.TryAddSingleton(TimeProvider.System);
+                services.TryAddScoped<RepresentativeAuthorizations>();
+                services.TryAddScoped<RepresentativeRelationshipsOperation>();
+                services.TryAddScoped<CheckAuthorizedRepresentativeOperation>();
+                services.TryAddContextAwareTransient<ICapabilityStatementContributor, RepresentativeOperationsCapabilityStatementContributor>();
                 return services;
             }
 
-            public static IApplicationBuilder ConfigureHandlers(this IApplicationBuilder app)
+            public static IApplicationBuilder Configure(IApplicationBuilder builder)
             {
-                return app
-                    .OnCustomInteraction(VonkInteraction.type_custom, "check-authorized-representative-relationships")
-                    .AndMethod("POST").AndResourceTypes(new[] { "Patient" })            
-                    .HandleAsyncWith<CheckAuthorizedRepresentativeRelationshipsExampleService>((svc, context) => 
-                        svc.CheckAuthorizedRepresentativeRelationshipsOnPost(context));
+                builder.OnCustomInteraction(VonkInteraction.system_custom, RepresentativeRelationshipsOperation.Name)
+                    .AndMethod(HttpMethods.Post)
+                    .HandleAsyncWith<RepresentativeRelationshipsOperation>((operation, context) => operation.HandleAsync(context));
+
+                builder.OnCustomInteraction(VonkInteraction.type_custom, CheckAuthorizedRepresentativeOperation.Name)
+                    .AndMethod(HttpMethods.Post)
+                    .AndResourceTypes("Patient")
+                    .HandleAsyncWith<CheckAuthorizedRepresentativeOperation>((operation, context) => operation.HandleAsync(context));
+
+                return builder;
             }
         }
 
-
-
+The authorization decision itself, which looks up the ``RelatedPerson`` and the privacy ``Consent`` described in step 3 above, lives in ``RepresentativeAuthorizations``, part of the full example plugin source in the Firely Server repository. Replace it to decide authorization in another way.
 
 Designated Authorized Representative Workflow and Diagram
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -385,10 +403,10 @@ Designated Authorized Representative Workflow and Diagram
 The DAR authentication flow works as follows:
 
 1. **User initiates login** - Standard OAuth2/OIDC flow begins
-2. **Firely Auth checks for relationships** - Calls custom operation with user's fhirUser claim
-3. **Firely Server validates relationships** - Plugin queries your relationship data store  
-4. **Conditional selection screen** - Only shown if relationships exist
-5. **Token issuance** - Contains both original user identity and selected patient context
+2. **Firely Auth pushes the relationships** - Calls ``$representative-relationships`` once with the user's token; Firely Server looks up the patients the user may act for and posts them to the Administrative API
+3. **Conditional selection screen** - Only shown if the push said ``result`` is ``true``
+4. **Firely Auth confirms the choice** - Calls ``Patient/$check-authorized-representative`` with the chosen patient and representative, when the user chooses, when the app exchanges the authorization code, and at every refresh of that token
+5. **Token issuance** - Contains both the original user identity and the selected patient context
 
 The following diagram illustrates the flow of the Designated Authorized Representative lookup process:
 
@@ -403,40 +421,51 @@ The following diagram illustrates the flow of the Designated Authorized Represen
          │  1. Login                    │                                │
          │─────────────────────────────>│                                │
          │                              │                                │
-         │                              │  2. POST $check-authorized-    │
-         │                              │     representative-            │
+         │                              │  2. POST                       │
+         │                              │     $representative-           │
          │                              │     relationships              │
-         │                              │     (patient: fhirUser)        │
+         │                              │     (token: sub = user)        │
          │                              │───────────────────────────────>│
          │                              │                                │
-         │                              │                                │  3. Query relationships
-         │                              │                                │     in data store
+         │                              │                                │  3. Look up patients
+         │                              │                                │     the user may act for
          │                              │                                │──┐
          │                              │                                │  │
          │                              │                                │<─┘
          │                              │                                │
-         │                              │  4. Response with result       │
+         │                              │                                │  4. POST relationships to
+         │                              │                                │     /api/external/
+         │                              │                                │     representative-
+         │                              │                                │     relationships
+         │                              │<───────────────────────────────│
+         │                              │                                │
+         │                              │  5. Response with result       │
          │                              │     (true/false)               │
          │                              │<───────────────────────────────│
          │                              │                                │
-         │                              │                                │  5. (Optional) Async POST
-         │                              │  6. POST /api/external/        │     relationship details
-         │                              │     authorized-representative  │     to Firely Auth Admin API
-         │                              │     (relationships details)    │──┐
-         │                              │<───────────────────────────────│  │
-         │                              │                                │<─┘
-         │  7. Selection screen         │                                │
+         │  6. Selection screen         │                                │
          │     (if result = true)       │                                │
          │<─────────────────────────────│                                │
          │                              │                                │
-         │  8. Select capacity          │                                │
+         │  7. Select capacity          │                                │
          │     (self or representative) │                                │
          │─────────────────────────────>│                                │
          │                              │                                │
-         │  9. Access token issued      │                                │
+         │                              │  8. POST Patient/$check-       │
+         │                              │     authorized-representative  │
+         │                              │     (patient, representative)  │
+         │                              │───────────────────────────────>│
+         │                              │                                │
+         │                              │  9. Response with result       │
+         │                              │     (true/false), consent      │
+         │                              │<───────────────────────────────│
+         │                              │                                │
+         │ 10. Access token issued      │                                │
          │     (fhirUser + patient)     │                                │
          │<─────────────────────────────│                                │
          │                              │                                │
+
+    Steps 7-9 repeat at every exchange of the authorization code, and at every refresh of the issued token.
 
 
 

@@ -33,8 +33,8 @@ Old Firely Server release notes (v5.x)
 
 .. _vonk_releasenotes_5_11_7:
 
-Release 5.11.7, November 2026
------------------------------
+Release 5.11.7, November 13th, 2026
+-----------------------------------
 
 This is the final release of Firely Server 5.x. Firely Server 5.x runs on .NET 8, which Microsoft stops supporting on November 10th, 2026. From that date Firely Server 5.x is out of support as well. Please upgrade to Firely Server 6.x; see :ref:`upgrade` for guidance.
 

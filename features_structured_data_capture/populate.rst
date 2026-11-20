@@ -225,15 +225,23 @@ Firely Server supports these parts of expression-based population:
    * - ``sdc-questionnaire-launchContext``
      - ✅
      - Bound from the ``context`` parameter. The ``patient`` launch context falls back on ``subject``.
+
+       Other launch contexts, such as ``encounter``, ``user`` or ``location``, are not taken from the SMART on FHIR token: send them in ``context``. A launch context that is not given is reported as a warning, and holds nothing.
    * - ``variable``
      - ✅
      - On the Questionnaire and on items, in FHIRPath or as an ``x-fhir-query``. The variables of an item are bound after its ``itemPopulationContext`` is evaluated, so they can use its name, but cannot be used in it.
+
+       The variables on one element are evaluated in the order they are declared. A variable can only use the variables declared before it; using a later one is an error.
    * - ``sdc-questionnaire-itemPopulationContext``
      - ✅
-     - Sets the context for a group. An expression with several results repeats the group.
+     - Sets the context for a group. An expression with several results repeats a repeating group. On a group that does not repeat, the first result is used, with a warning.
+
+       On the Questionnaire itself it is not used.
    * - ``sdc-questionnaire-initialExpression``
      - ✅
-     - Gives the answer of an item. Its name is available to the child items.
+     - Gives the answer of a question. Its name is available to the child items.
+
+       The expression must be FHIRPath; an ``x-fhir-query`` is not run, with a warning. On a question that does not repeat, the first result is used, with a warning. On a group it is not used. When a question has both ``initial`` and ``initialExpression``, ``initial`` is not used, also when the expression returns nothing.
    * - ``Questionnaire.item.initial``
      - ✅
      - Static initial values.
@@ -243,12 +251,25 @@ Firely Server supports these parts of expression-based population:
    * - ``sdc-questionnaire-candidateExpression``
      - ❌
      - The candidates are not calculated, because the user picks one. Its name is available to the child items, but holds nothing.
+   * - ``sdc-questionnaire-calculatedExpression``, ``sdc-questionnaire-answerExpression``
+     - ❌
+     - Not evaluated. A question that only has a ``calculatedExpression`` gets no answer.
+   * - ``enableWhen``, ``sdc-questionnaire-enableWhenExpression``
+     - ❌
+     - Not evaluated. Items are populated whether they are enabled or not.
+   * - Modular Questionnaires (``sdc-questionnaire-subQuestionnaire``)
+     - ❌
+     - Not assembled. The items of a sub-questionnaire are not populated.
 
 The expressions can be FHIRPath (``text/fhirpath``), and a ``variable`` can also be an ``x-fhir-query`` (``application/x-fhir-query``). CQL expressions are not evaluated, and are reported as a warning in ``issues``.
 
 The expressions can use ``%resource``, ``%rootResource``, ``%context``, ``%questionnaire``, ``%qitem``, and the names of the launch contexts, variables and initial expressions. In the expressions of an item, ``%context`` is the response item of that Questionnaire item. A Questionnaire cannot declare a variable named ``context``, ``resource``, ``rootResource``, ``questionnaire`` or ``qitem``; such a declaration is reported and ignored.
 
 During population, ``%resource`` holds no items yet, and a response item is not yet attached to its parent. So expressions such as ``%resource.item.where(linkId = 'x')`` or ``%context.parent()`` return nothing.
+
+The expressions of an item are evaluated before its child items are populated. So an expression cannot use the answers of the child items, for example with ``%context.descendants()``: it returns nothing, without a warning.
+
+The SDC additions to FHIRPath are not available. ``sum()``, ``min()``, ``max()``, ``avg()`` and ``weight()`` are reported as an error, and ``memberOf()`` cannot be evaluated, because population has no terminology service.
 
 Queries
 """""""
@@ -269,7 +290,10 @@ Answers
 * An answer that matches no answer option is handled according to the item: ``choice`` or ``open-choice`` in R4, and ``answerConstraint`` in R5.
 * Some values are converted to fit the item, with a warning in ``issues``: a Coding or CodeableConcept answers a ``string`` item with its text, and a ``dateTime`` answers a ``time`` item with its time of day.
 * Some values are converted without a warning: a string answers a ``reference`` item as its reference, a FHIRPath quantity literal answers a ``quantity`` item, and a CodeableConcept with only a ``text`` is a free-text answer where the item allows free text.
-* Answers are only checked against ``answerOption``. They are not checked against the ValueSet of an ``answerValueSet``.
+* Answers are only checked against ``answerOption``. They are not checked against the ValueSet of an ``answerValueSet``. A code is matched against the answer options by its code; when several options have that code, the first one is used.
+* A ``Quantity`` cannot answer an ``integer`` or ``decimal`` item, also not when the item has a unit. For a ``quantity`` item, ``unitOption`` and ``unitValueSet`` are not checked.
+* An ``attachment`` item can only be answered with an ``Attachment``, not with a ``Binary`` or ``DocumentReference``.
+* The child items of a question without an answer are left out, with a warning.
 * FHIRPath ``resolve()`` only finds contained resources and Bundle entries. Any other reference returns nothing, with a warning in ``issues``.
 * A contained resource, a reference to one, a ``urn:`` reference, or the resource of a Bundle entry with a ``urn:`` fullUrl is not used as the answer of a ``reference`` item, with a warning in ``issues``.
 

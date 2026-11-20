@@ -189,15 +189,31 @@ Firely Server supports these extensions:
    * - ``sdc-questionnaire-templateExtract``
      - ✅
      - On the Questionnaire or on an item. A repeating item without an answer produces no resource.
+
+       On a repeating group, it creates one resource for each repetition. On a repeating question, it creates one resource for the item, not one for each answer: the expressions see all answers. To create one resource for each answer, put an ``sdc-questionnaire-templateExtractContext`` with the expression ``answer`` on the root of the template.
    * - ``sdc-questionnaire-templateExtractBundle``
      - ✅
-     - On the Questionnaire only. The Bundle it produces is checked against the rules for a transaction Bundle.
+     - On the Questionnaire only. On an item it is ignored. The Bundle it produces is checked against the rules for a transaction Bundle.
+
+       It cannot be combined with ``sdc-questionnaire-templateExtract``, also not on an item, and it can only be used once. Otherwise the request is rejected with HTTP 400.
+
+       The Bundle template is processed differently from ``sdc-questionnaire-templateExtract``:
+
+       * Every entry needs a ``request`` in the template. Firely Server does not add one.
+       * An entry only has a ``fullUrl`` if the template gives it one. No ``urn:uuid:`` is added.
+       * The ids of the resources in the entries are kept.
+       * Only the root of the Questionnaire is processed. So ``%context`` is the QuestionnaireResponse, ``%qitem`` is not available, and ``sdc-questionnaire-extractAllocateId`` on items is not used.
+       * When an expression on the root of the template returns several Bundles, the first one is used, with a warning.
    * - ``sdc-questionnaire-templateExtractContext``
      - ✅
-     - In a template. Its expression sets the context for the elements below it. An expression that returns several results repeats the element, and one that returns nothing removes it. On the root of a template it creates one resource per result.
+     - In a template. Its expression sets the context for the elements below it. An expression that returns nothing removes the element. One that returns several results repeats the element if it can repeat. On an element that holds one value, the first result is used, with a warning. On the root of a template it creates one resource per result.
+
+       ``%context`` stays the QuestionnaireResponse item. To refer to the new context in the expressions below it, give the Expression a ``name`` and use that variable.
    * - ``sdc-questionnaire-templateExtractValue``
      - ✅
-     - In a template. Its expression gives the value of the element it is on. An expression that returns nothing removes the element, and one that returns several results repeats it.
+     - In a template. Its expression gives the value of the element it is on. An expression that returns nothing removes the element. One that returns several results repeats the element if it can repeat. On an element that holds one value, the first result is used, with a warning.
+
+       The value must be a FHIRPath expression as a string. Only one ``sdc-questionnaire-templateExtractValue`` or ``sdc-questionnaire-templateExtractContext`` is applied on an element; any others are removed. An extraction extension on the ``id`` of the template's root is removed, with a warning: use the ``resourceId`` sub-extension to set the id.
    * - ``sdc-questionnaire-extractAllocateId``
      - ✅
      - Allocates a ``urn:uuid:`` in a variable, so that extracted resources can refer to each other.
@@ -205,7 +221,9 @@ Firely Server supports these extensions:
      - ✅
      - Sub-extensions of ``sdc-questionnaire-templateExtract``. Each sets that property of the Bundle entry. A resource that gets an id is sent as a ``PUT``, and one without an id as a ``POST``.
 
-The expressions must be FHIRPath (``text/fhirpath``). An expression in another language is reported as an error. The expressions can use the variables that `SDC defines for extraction <https://hl7.org/fhir/uv/sdc/expressions.html>`_: ``%resource`` (the QuestionnaireResponse), ``%context``, ``%questionnaire``, ``%qitem``, and the variables named by ``sdc-questionnaire-extractAllocateId``. Variables from the ``variable`` and ``sdc-questionnaire-launchContext`` extensions are not available during extraction.
+The expressions must be FHIRPath (``text/fhirpath``). An expression in another language is reported as an error. The expressions can use the variables that `SDC defines for extraction <https://hl7.org/fhir/uv/sdc/expressions.html>`_: ``%resource`` (the QuestionnaireResponse), ``%context``, ``%questionnaire``, ``%qitem``, and the variables named by ``sdc-questionnaire-extractAllocateId``. Variables from the ``variable`` and ``sdc-questionnaire-launchContext`` extensions are not available during extraction. An expression that uses a variable that is not available at that point, such as ``%qitem`` in a template on the root of the Questionnaire, is reported as an error.
+
+Extraction uses the answers as they are in the QuestionnaireResponse. ``enableWhen`` is not evaluated, so the answers to an item that ``enableWhen`` would disable are extracted as well. Modular Questionnaires are not assembled, so a ``sdc-questionnaire-templateExtract`` in a sub-questionnaire is not used. The ``meta`` and the ``text`` of a template are copied as they are, so the narrative does not show the answers.
 
 Every entry gets a ``urn:uuid:`` as its ``fullUrl``, unless the ``fullUrl`` sub-extension gives it another one. So the references between the extracted resources are resolved when the Bundle is processed as a transaction.
 
@@ -223,7 +241,10 @@ Firely Server checks what extraction produces, so that ``$extract`` does not ret
 
 These are reported as warnings, and the extraction continues:
 
-* An answer that does not fit the element as written, but of which exactly one part fits. For example, the code of a coded answer for a ``string`` element, or the value of a ``Quantity`` answer for a ``decimal`` element. On a choice element such as ``Observation.value[x]``, the answer keeps its own type instead, so a ``Quantity`` answer becomes ``valueQuantity``.
+* An answer that does not fit the element as written, but of which exactly one part fits. For example, the code of a coded answer for a ``string`` element, or the value of a ``Quantity`` answer for a ``decimal`` element.
+* Several results for an element that holds one value. The first result is used.
+
+On a choice element such as ``Observation.value[x]``, a ``Coding``, ``Quantity`` or other complex answer keeps its own type, so a ``Quantity`` answer becomes ``valueQuantity``. A primitive answer keeps the type the template was written with: an ``integer`` answer for a ``valueString`` becomes a string, and a ``decimal`` answer for a ``valueQuantity`` is an error. Write the template with the type of the answer, such as ``valueInteger``.
 * A conditional sub-extension on an entry whose method does not use it, such as ``ifMatch`` on a ``POST``.
 * A ``template`` reference to a contained resource id that the Questionnaire uses more than once. The first resource with that id is used.
 

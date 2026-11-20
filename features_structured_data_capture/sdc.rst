@@ -70,10 +70,7 @@ For the full background, see the `SDC implementation guide <https://hl7.org/fhir
 SDC Operations in Firely Server
 -------------------------------
 
-SDC defines several operations. The list below shows which ones Firely Server supports, and when to use each.
-
-Supported
-^^^^^^^^^
+SDC defines several operations. Firely Server supports the ones below. The list shows when to use each.
 
 * Questionnaire/$populate
 
@@ -101,9 +98,6 @@ Supported
    :Output: For each Questionnaire, a Bundle with the Questionnaire, the CQL Libraries it depends on and the ValueSets of its answers.
 
    This operation is defined by Da Vinci DTR rather than by SDC. See :ref:`questionnaire-package`.
-
-Not supported
-^^^^^^^^^^^^^
 
 The other SDC operations are not supported. These include ``Questionnaire/$assemble`` for modular forms, ``$next-question`` for adaptive forms, and ``$populatehtml`` and ``$populatelink``.
 

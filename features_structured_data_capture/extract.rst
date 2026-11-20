@@ -41,6 +41,8 @@ Invoking $extract
 
   The same as the instance-level ``POST`` without a body. Both input parameters are resources, so they cannot be sent over ``GET``. A ``GET`` with a query parameter other than ``_format`` is rejected with HTTP 400.
 
+``GET`` is not supported on type level, because there the QuestionnaireResponse has to be sent in the body.
+
 ``$extract`` is available on FHIR R4 and R5 endpoints. It is not available on STU3, because SDC does not define it for STU3. To use it on R5, ``Vonk.Fhir.R5`` must be included in the pipeline (see :ref:`feature_multiversion`).
 
 On instance level, the caller must be allowed to read the QuestionnaireResponse, in the same way as for a read of that resource. With SMART on FHIR, for example, a token without a read scope for ``QuestionnaireResponse`` gets HTTP 403.
@@ -60,7 +62,7 @@ Before it extracts anything, Firely Server validates the QuestionnaireResponse a
 Supported parameters
 --------------------
 
-The `OperationDefinition <https://hl7.org/fhir/uv/sdc/OperationDefinition-QuestionnaireResponse-extract.html>`_ defines two input and two output parameters. Firely Server supports all four, with the limits given in the notes below and under `Not supported`_. A parameter that the OperationDefinition does not define is ignored.
+The `OperationDefinition <https://hl7.org/fhir/uv/sdc/OperationDefinition-QuestionnaireResponse-extract.html>`_ defines two input and two output parameters. Firely Server supports all four, with the limits given in the notes below. A parameter that the OperationDefinition does not define is ignored.
 
 Input parameters:
 
@@ -137,37 +139,6 @@ What the response looks like
      - 400 Bad Request
      - An OperationOutcome with all the errors and warnings. No Bundle is returned.
 
-Not supported
-^^^^^^^^^^^^^
-
-These parts of ``$extract`` and of SDC data extraction are not supported:
-
-.. list-table::
-   :header-rows: 1
-   :widths: 35 10 55
-
-   * - Feature
-     - Supported
-     - Additional Notes
-   * - A single resource in ``return``
-     - ❌
-     - ``return`` is always a transaction Bundle.
-   * - ``GET [base]/QuestionnaireResponse/$extract``
-     - ❌
-     - On type level, the QuestionnaireResponse has to be sent in the body, so only ``POST`` is supported. ``GET`` is only supported on instance level.
-   * - FHIR STU3
-     - ❌
-     - SDC does not define ``$extract`` for STU3.
-   * - Observation-based, definition-based and StructureMap-based extraction
-     - ❌
-     - Only template-based extraction is supported. See `Supported extraction mechanisms`_.
-   * - Expression languages other than FHIRPath
-     - ❌
-     - An ``sdc-questionnaire-templateExtractContext`` with another language, such as CQL or ``application/x-fhir-query``, is reported as an error.
-   * - Variables from the ``variable`` and ``sdc-questionnaire-launchContext`` extensions
-     - ❌
-     - Extraction expressions can only use the variables listed under `Template-based extraction`_.
-
 ----
 
 Supported extraction mechanisms
@@ -234,7 +205,7 @@ Firely Server supports these extensions:
      - ✅
      - Sub-extensions of ``sdc-questionnaire-templateExtract``. Each sets that property of the Bundle entry. A resource that gets an id is sent as a ``PUT``, and one without an id as a ``POST``.
 
-The expressions must be FHIRPath (``text/fhirpath``). An expression in another language is reported as an error. The expressions can use the variables that `SDC defines for extraction <https://hl7.org/fhir/uv/sdc/expressions.html>`_: ``%resource`` (the QuestionnaireResponse), ``%context``, ``%questionnaire``, ``%qitem``, and the variables named by ``sdc-questionnaire-extractAllocateId``.
+The expressions must be FHIRPath (``text/fhirpath``). An expression in another language is reported as an error. The expressions can use the variables that `SDC defines for extraction <https://hl7.org/fhir/uv/sdc/expressions.html>`_: ``%resource`` (the QuestionnaireResponse), ``%context``, ``%questionnaire``, ``%qitem``, and the variables named by ``sdc-questionnaire-extractAllocateId``. Variables from the ``variable`` and ``sdc-questionnaire-launchContext`` extensions are not available during extraction.
 
 Every entry gets a ``urn:uuid:`` as its ``fullUrl``, unless the ``fullUrl`` sub-extension gives it another one. So the references between the extracted resources are resolved when the Bundle is processed as a transaction.
 

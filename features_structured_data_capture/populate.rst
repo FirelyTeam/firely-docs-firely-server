@@ -41,6 +41,8 @@ Invoking $populate
 
   The same as the instance-level ``POST`` without a body, so without a subject or context. The only query parameters allowed are ``local`` and ``_format``. Any other query parameter is rejected with HTTP 400.
 
+``GET`` is not supported on type level, because there the Questionnaire is named in the body.
+
 ``$populate`` is available on FHIR R4 and R5 endpoints. On STU3 it is answered with HTTP 501. To use it on R5, ``Vonk.Fhir.R5`` must be included in the pipeline (see :ref:`feature_multiversion`).
 
 Which Questionnaire is used
@@ -267,46 +269,9 @@ Answers
 * An answer that matches no answer option is handled according to the item: ``choice`` or ``open-choice`` in R4, and ``answerConstraint`` in R5.
 * Some values are converted to fit the item, with a warning in ``issues``: a Coding or CodeableConcept answers a ``string`` item with its text, and a ``dateTime`` answers a ``time`` item with its time of day.
 * Some values are converted without a warning: a string answers a ``reference`` item as its reference, a FHIRPath quantity literal answers a ``quantity`` item, and a CodeableConcept with only a ``text`` is a free-text answer where the item allows free text.
+* Answers are only checked against ``answerOption``. They are not checked against the ValueSet of an ``answerValueSet``.
 * FHIRPath ``resolve()`` only finds contained resources and Bundle entries. Any other reference returns nothing, with a warning in ``issues``.
 * A contained resource, a reference to one, a ``urn:`` reference, or the resource of a Bundle entry with a ``urn:`` fullUrl is not used as the answer of a ``reference`` item, with a warning in ``issues``.
-
-Not supported
-^^^^^^^^^^^^^
-
-.. list-table::
-   :header-rows: 1
-   :widths: 35 10 55
-
-   * - Feature
-     - Supported
-     - Additional Notes
-   * - ``dataEndpoint`` and ``data`` parameters
-     - ❌
-     - Rejected with HTTP 501. Firely Server only reads data from itself.
-   * - Observation-based and StructureMap-based population
-     - ❌
-     - Rejected with HTTP 400. See `Supported population mechanisms`_.
-   * - CQL expressions
-     - ❌
-     - Not evaluated, and reported as a warning in ``issues``.
-   * - ``sdc-questionnaire-candidateExpression``
-     - ❌
-     - The candidates are not calculated.
-   * - Checking answers against ``answerValueSet``
-     - ❌
-     - Answers are only checked against ``answerOption``.
-   * - ``x-fhir-query`` with ``_include``, ``_revinclude``, ``_elements``, ``_summary`` or ``_contained``, or on a path other than a resource type
-     - ❌
-     - The query is not run, and this is reported in ``issues``.
-   * - ``resolve()`` of a reference to a resource on a server
-     - ❌
-     - Only contained resources and Bundle entries are found.
-   * - ``GET [base]/Questionnaire/$populate``
-     - ❌
-     - On type level, the Questionnaire is named in the body, so only ``POST`` is supported.
-   * - FHIR STU3
-     - ❌
-     - Answered with HTTP 501.
 
 Limits
 """"""

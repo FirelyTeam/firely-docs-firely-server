@@ -355,7 +355,10 @@ $check-authorized-representative
 
 - **URL**: ``POST [base]/Patient/$check-authorized-representative``, at type level.
 - **Input**: a ``Parameters`` resource with ``patient`` (``valueReference``, ``Patient/<id>``) and ``representative`` (``valueReference``, ``RelatedPerson/<id>``). The user who chose is the ``sub`` claim of the token, also at a refresh.
-- **Output**: a ``Parameters`` resource with ``result`` (boolean): whether the RelatedPerson may act for the patient now. Optionally ``consent`` (``valueReference``), which Firely Auth logs.
+- **Output**: a ``Parameters`` resource with:
+
+  - ``result`` (``valueBoolean``): ``true`` when the RelatedPerson may act for the patient now, ``false`` otherwise;
+  - ``consent`` (``valueReference``, ``Consent/<id>``): optional, and only when ``result`` is ``true``. It names the ``Consent`` resource on which the operation based its decision, for example the Consent in which the patient permits the RelatedPerson to act for them. Leave it out when the decision is not based on a ``Consent`` resource. Firely Auth does not read the Consent: it only logs this reference, and shows it in the admin UI.
 
 Check that the RelatedPerson still carries the ``sub`` identifier of that user, and is still authorized for the patient. An admin can unlink a RelatedPerson from one user and link it to another. The check on the identifier makes the first user's next refresh fail.
 
@@ -392,33 +395,51 @@ Both operations must refuse a caller other than Firely Auth itself, because a pu
 The example plugin
 ^^^^^^^^^^^^^^^^^^
 
-The example plugin ``Vonk.Plugin.AuthorizedRepresentativeExample`` implements both operations. A user may act for a patient through a ``RelatedPerson`` that:
+The example plugin ``Vonk.Plugin.AuthorizedRepresentativeExample`` implements both operations. It is not part of the Firely Server distribution: build it from the source code below (see :ref:`vonk_plugins`), and put the resulting assembly in the ``PluginDirectory`` of Firely Server (see :ref:`vonk_plugins_config`). Its settings, below, are those of this example only. A plugin built for a specific deployment can use other settings: follow the documentation of that plugin.
 
-- carries the identifier ``http://server.fire.ly/auth/identifier/sub|<user id>``, with the user id in exactly the same case. Firely Auth adds it when an admin links the RelatedPerson to the user (see :ref:`firely_auth_dar_onboarding`);
-- refers to the patient in ``RelatedPerson.patient``;
+A user may act for a patient through a ``RelatedPerson`` that:
+
+- carries the identifier ``http://server.fire.ly/auth/identifier/sub|<user id>``, with the user id in exactly the same case, and no such identifier of another user. Firely Auth adds it when an admin links the RelatedPerson to the user (see :ref:`firely_auth_dar_onboarding`);
+- refers to the patient in ``RelatedPerson.patient``, and that Patient exists;
 - is not ``active = false``, and has a ``period`` that covers the current time, if it has one; a date in a period covers that whole day, month or year, and a time without fractions of a second covers that whole second;
-- is the ``actor`` of an active ``Consent`` of that patient that is in force now:
+- is permitted by an active privacy ``Consent`` of that patient that is in force now:
 
-  - FHIR R4: the RelatedPerson is an actor of the root ``provision``, whose ``type`` is not ``deny`` and whose ``period`` covers the current time.
-  - FHIR R5: ``decision`` is the base rule and each ``provision`` an exception to it. So the Consent has ``decision`` = ``deny``, the RelatedPerson is an actor of one of its ``provision`` elements, and both ``period`` elements cover the current time.
+  - the Consent has the code ``patient-privacy`` of ``http://terminology.hl7.org/CodeSystem/consentscope``, in ``scope`` for FHIR R4 and in ``category`` for FHIR R5. A Consent for research, treatment or an advance directive authorizes nobody;
+  - FHIR R4: the RelatedPerson is an actor of the root ``provision``, whose ``type`` is ``permit`` and whose ``period`` covers the current time. A root provision without a ``type`` authorizes nobody: the example does not read ``policyRule``, so it cannot tell whether such a provision adds or removes access;
+  - FHIR R5: ``decision`` is the base rule and each ``provision`` an exception to it. So the Consent has ``decision`` = ``deny``, the RelatedPerson is an actor of one of its ``provision`` elements, and both ``period`` elements cover the current time;
 
-  The example does not look at the ``role`` of an actor: the RelatedPerson counts as an actor whatever its role, also for example as a witness. Name the RelatedPerson as an actor only in a Consent that authorizes it to act for the patient. The example does not evaluate nested provisions: a provision that has them authorizes nobody. A token for the representative gives access to the patient's whole record, so a provision that permits only part of it also authorizes nobody: one with ``action``, ``securityLabel``, ``purpose``, ``class``, ``code``, ``dataPeriod``, ``data``, ``documentType``, ``resourceType`` or ``expression``. It reads Consents of FHIR R4 and R5 only. For another FHIR version, both operations answer ``500``.
+- is not denied by another active privacy ``Consent`` of that patient that is in force now. A Consent that denies overrules every Consent that permits, so a patient can withdraw an authorization with a second Consent:
 
-To decide the authorization without Consent resources, replace ``DecideAuthorizationAsync`` in ``RepresentativeAuthorizations.cs``, and return a ``RepresentativeAuthorization`` without a Consent. The method gets the RelatedPerson and the id of its patient. The checks on the RelatedPerson in the first three points above stay in place. Then ``$check-authorized-representative`` answers ``result`` = ``true`` without ``consent``. The plugin pushes before it answers. When the push fails, ``$representative-relationships`` answers ``500``. Each search reads at most 50 resources. When there are more, the operation answers ``500`` instead of deciding on part of them.
+  - FHIR R4: the root ``provision`` names the RelatedPerson as actor and has ``type`` = ``deny``, also when it denies only part of the record;
+  - FHIR R5: the Consent has ``decision`` = ``permit`` and a ``provision`` that names the RelatedPerson as actor.
 
-Configure the plugin in Firely Server:
+The example does not look at the ``role`` of an actor: the RelatedPerson counts as an actor whatever its role, also for example as a witness. Name the RelatedPerson as an actor only in a Consent that authorizes it to act for the patient. The example does not evaluate nested provisions: a provision that has them authorizes nobody. A token for the representative gives access to the patient's whole record, so a provision that permits only part of it also authorizes nobody: one with ``action``, ``securityLabel``, ``purpose``, ``class``, ``code``, ``dataPeriod``, ``data``, ``documentType``, ``resourceType`` or ``expression``. It reads Consents of FHIR R4 and R5 only. For another FHIR version, both operations answer ``500``.
+
+To decide the authorization without Consent resources, replace ``DecideAuthorizationAsync`` in ``RepresentativeAuthorizations.cs``, and return a ``RepresentativeAuthorization`` without a Consent. The method gets the RelatedPerson and the id of its patient. The checks on the RelatedPerson in the first three points above stay in place. Then ``$check-authorized-representative`` answers ``result`` = ``true`` without ``consent``.
+
+The plugin pushes before it answers. When the push fails, ``$representative-relationships`` answers ``500``. The push lists each patient once: when one user has two authorized RelatedPersons for one patient, the plugin keeps the first by id and logs a warning. Each search reads at most 50 resources. When there are more, the operation answers ``500`` instead of deciding on part of them.
+
+.. important::
+
+    With this example, ``RelatedPerson`` and ``Consent`` resources decide who gets access. Whoever can create or change them can give a user access to a patient's record: with a Consent that permits, or with a RelatedPerson that carries the ``sub`` identifier of a user. Give write access to them only to the application that registers representatives, and not to apps that representatives or patients sign in to. The plugin searches with full access and for every tenant: on a Firely Server with virtual tenants, a RelatedPerson or Consent in one tenant counts for a patient with the same id in another tenant.
+
+The plugin reads its settings from the ``AuthorizedRepresentativeExample`` section of the Firely Server settings. Set them like any other Firely Server setting, in ``appsettings.instance.json`` or as environment variables such as ``VONK_AuthorizedRepresentativeExample__ClientId`` (see :ref:`configure_appsettings`):
 
 .. code-block:: json
 
   "AuthorizedRepresentativeExample": {
     "FirelyAuthUrl": "https://auth.example.org", // optional, defaults to SmartAuthorizationOptions:Authority
     "ClientId": "firely-server-representatives",
-    "ClientSecret": "<secret>"
+    "ClientSecret": "<secret>",
+    "PushTimeoutSeconds": 3 // optional
   }
 
-- ``ClientId`` and ``ClientSecret``: a client in Firely Auth of the type *Management API*, with ``AllowManagementApiAccess`` on. The plugin requests the scope ``http://server.fire.ly/auth/scope/authmanagement``.
-- Add ``Vonk.Plugin.AuthorizedRepresentativeExample`` to the ``Include`` of the ``/`` branch in ``PipelineOptions``, and both operations to ``Operations`` (see above).
-- SMART on FHIR authorization must be enabled in Firely Server. Without a token, both operations answer ``403``.
+- ``FirelyAuthUrl``: the url of Firely Auth. It must use https, because the client secret and the management API token travel to it. Plain http is accepted for a loopback address, or when ``SmartAuthorizationOptions:RequireHttpsToProvider`` is ``false``.
+- ``ClientId`` and ``ClientSecret``: a client in Firely Auth of the type *Management API*, with ``AllowManagementApiAccess`` on. The plugin requests the scope ``http://server.fire.ly/auth/scope/authmanagement``. Firely Server does not start when they are missing.
+- ``PushTimeoutSeconds``: the number of seconds the push may take, including the request for the management API token. Keep it below ``AuthorizedRepresentatives:CheckAuthorizedRepresentativeTimeout`` of Firely Auth (5 seconds by default), or Firely Auth has given up before the push arrives. Defaults to 3.
+- Add ``Vonk.Plugin.AuthorizedRepresentativeExample`` to the ``Include`` of the ``/`` branch in ``PipelineOptions``, and both operations to ``Operations`` (see above). Set ``SmartAuthorizationOptions:Audience`` as well, so that Firely Server accepts only tokens that were issued for it.
+- SMART on FHIR authorization must be enabled in Firely Server. Without a token, Firely Server answers ``401``. With SMART on FHIR authorization off, both operations answer ``403``.
+- The plugin lists each enabled operation in the CapabilityStatement, with its scope as definition. Firely Auth reads the CapabilityStatement at startup: when it does not find both operations, it logs an error and a Representative cannot sign in to apps.
 
 The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
 
@@ -528,6 +549,15 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
       FhirPeriod.cs
 
     .. literalinclude:: examples/authorized-representative-plugin/FhirPeriod.cs
+        :language: csharp
+
+.. container:: toggle
+
+    .. container:: header
+
+      RepresentativeOperationsCapabilityStatementContributor.cs
+
+    .. literalinclude:: examples/authorized-representative-plugin/RepresentativeOperationsCapabilityStatementContributor.cs
         :language: csharp
 
 .. _firely_auth_dar_migration:

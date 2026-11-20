@@ -32,6 +32,7 @@ or support contract.
    Features - Data Exchange <features_data_exchange/features_data_exchange>
    Features - Terminology <features_terminology/features_terminology>
    Features - Clinical & Quality Workflows <features_clinical_and_quality_workflows/features_clinical_quality>
+   Features - Structured Data Capture <features_structured_data_capture/features_structured_data_capture>
    Features - Testing & Reporting <features_testing_and_reporting/features_testing_reporting>
    Security & Provenance <security/security>
    Performance <performance/performance_firely_server>

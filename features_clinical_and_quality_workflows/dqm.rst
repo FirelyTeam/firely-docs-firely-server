@@ -46,7 +46,7 @@ Based on the foundation of dQMs, several key use cases can be effectively suppor
 
 #. Structured Data Capture via FHIR Questionnaires
 
-  Using structured data capture tools, digital forms (Questionnaires) can be automatically filled with information already available in the patient’s record—such as age, past diagnoses, or lab results. This saves time for clinicians, reduces errors from manual entry, and ensures that the quality measures are based on up-to-date and complete information.
+  Using structured data capture tools, digital forms (Questionnaires) can be automatically filled with information already available in the patient’s record—such as age, past diagnoses, or lab results. This saves time for clinicians, reduces errors from manual entry, and ensures that the quality measures are based on up-to-date and complete information. See :ref:`feature_sdc`.
 
 How dQMs Are Represented in FHIR
 --------------------------------

@@ -36,16 +36,18 @@ Old Firely Server release notes (v5.x)
 Release 5.11.7, November 13th, 2026
 -----------------------------------
 
-Security
-^^^^^^^^
-
-#. The SQLite repository has been updated to a version of the native SQLite engine that includes the fix for ``CVE-2025-6965``. Firely Server now uses ``SQLitePCLRaw`` 3.0.3 with a separately versioned native SQLite engine (``SourceGear.sqlite3`` 3.50.4.5).
-#. Vulnerable transitive dependencies have been pinned to patched versions: ``Azure.Identity`` is now 1.11.4 in the SQL Server repository and the PubSub plugin, and ``System.Private.Uri`` is now 4.3.2 in Firely Server Ingest (FSI).
+This is the final release of Firely Server 5.x. Firely Server 5.x runs on .NET 8, which Microsoft stops supporting on November 10th, 2026. From that date Firely Server 5.x is out of support as well. Please upgrade to Firely Server 6.x; see :ref:`upgrade` for guidance.
 
 Fix
 ^^^
 
-#. Firely Server and FSI have been updated to .NET 8.0.34. The Docker images of both now use the base image ``mcr.microsoft.com/dotnet/aspnet:8.0.34-alpine3.24``, and the ASP.NET Core, Entity Framework Core and ``Microsoft.Extensions.*`` packages have been updated to their latest 8.0.x patch releases.
+#. Several packages as well as the base docker image have been updated to address security vulnerabilities in some of the base layers. The updated base image is now ``mcr.microsoft.com/dotnet/aspnet:8.0.33-alpine3.24``. This addresses:
+
+   - the ASP.NET Core and .NET runtime vulnerabilities fixed between 8.0.27 and 8.0.33, including those reported against ``Microsoft.AspNetCore.SignalR.Common`` and ``Microsoft.AspNetCore.Server.IISIntegration``;
+   - the OpenSSL, zlib and BusyBox vulnerabilities in the Alpine base layer;
+   - CVE-2025-6965 in SQLite, by moving to the decoupled SQLitePCLRaw 3.x packages.
+
+#. The Firely Server Ingest (FSI) docker image has been updated to the same base image.
 
 .. _vonk_releasenotes_5_11_6:
 

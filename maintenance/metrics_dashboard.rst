@@ -74,14 +74,14 @@ Docker
 ^^^^^^
 
 1. Open your favorite command line tool and execute this command:
-   ``> docker pull firely/server-dashboard``
+   ``> docker pull firely/metrics-dashboard``
 
 2. Start the container (where FirelyServerUrl is the URL Firely Server runs on):
-   - in cmd.exe: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl="http://host.docker.internal:4080" --name firely-server-dashboard firely/server-dashboard``
-   - in Powershell / Bash on macOS: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl='http://host.docker.internal:4080' --name firely-server-dashboard firely/server-dashboard``
+   - in cmd.exe: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl="http://host.docker.internal:4080" --name firely-metrics-dashboard firely/metrics-dashboard``
+   - in Powershell / Bash on macOS: ``docker run -d -p 7174:7174 -p 4317:4317 -e FirelyServerUrl='http://host.docker.internal:4080' --name firely-metrics-dashboard firely/metrics-dashboard``
 
 
-3. Open a browser and use the address ``http://localhost:7174/``. This will show the landing page of Firely Server Dashboard. It does not show any data yet.
+3. Open a browser and use the address ``http://localhost:7174/``. This will show the landing page of Firely Metrics Dashboard. It does not show any data yet.
 
 Binaries
 ^^^^^^^^
@@ -93,7 +93,7 @@ Binaries
 3. Start the dashboard by navigating to your working folder and executing
    ``> dotnet .\FirelyServerDashboard.dll``
 
-4. Open a browser and use the address ``http://localhost:7174/``. This will show the landing page of Firely Server Dashboard. It does not show any data yet.
+4. Open a browser and use the address ``http://localhost:7174/``. This will show the landing page of Firely Metrics Dashboard. It does not show any data yet.
 
 Connecting Firely Server
 ^^^^^^^^^^^^^^^^^^^^^^^^

@@ -376,6 +376,9 @@ will result in a ``403 Forbidden`` http error code, as it is not allowed to retr
 .. warning::
   BDE currently only works in combination with SMART v1, the extended functionality that is offered by SMART v2 is not supported. This means that even though you could use v2 like scopes such as ``system/*.rs``, extended scopes including search modifiers and filters will not work.
 
+.. warning::
+  ``$export`` (system, Patient and Group level) refuses the export kick-off with ``501 Not Implemented`` when a system-level read scope for one of the exported resource types is restricted with search parameters (for example ``system/Patient.rs?gender=female``), whether that restriction comes from the access token itself or from the client's AccessPolicy. Grant export clients system-level read scopes without search parameters for the exported types.
+
 .. _feature_bulkdataexport_facade:
 
 Facade

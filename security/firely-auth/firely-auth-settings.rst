@@ -184,6 +184,7 @@ These settings control the account specific options:
 
   "Account": {
     "AuthenticationCookieExpiration": "01:30", // [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws] (provide days or timespan)
+    "AdminReauthenticationWindow": "00:30", // [ws][-]{ d | [d.]hh:mm[:ss[.ff]] }[ws] (provide days or timespan)
     "Password": {
       "RequireDigit": true,
       "RequiredLength": 12,
@@ -198,6 +199,13 @@ These settings control the account specific options:
   },
 
 - ``AuthenticationCookieExpiration``: Specifies how long the authentication cookie is valid. You can specify just a number that specifies the days the token is valid, or you can provide a timespan. The expiration is sliding. The login session is stored on the server, in the ``ServerSideSessions`` table of the user store, and the cookie only holds a key to it. Logging out deletes the session, so a copy of the cookie cannot be used afterwards. Expired sessions are removed every 10 minutes.
+
+- ``AdminReauthenticationWindow``: Specifies how long after logging in an admin can make changes in the admin UI or the admin API before having to confirm their identity again. The default is ``00:30`` (30 minutes). It must be greater than zero, or Firely Auth does not start. The window counts from the login, not from the last activity, so it also applies to a session the admin keeps active. Reading data is not affected: after the window, a ``POST``, ``PUT``, ``PATCH`` or ``DELETE`` on the admin API is refused with ``401`` and the code ``reauthentication_required``. The admin UI then asks the admin to confirm their identity:
+
+  - An admin with a local account enters their password and, with two-factor authentication, an authentication or recovery code, and the admin UI then saves the change. Wrong entries count towards the account lockout.
+  - An admin who logs in through an external identity provider logs in there again. This leaves the page, so changes that were not saved are not kept: the admin copies them before continuing, and enters and saves them again after returning. Firely Auth requests this with ``prompt=login`` and ``max_age=0``, and refuses the confirmation when the identity provider returns no ``auth_time`` claim, or one from before the confirmation started. Make sure the identity provider honours these parameters and returns ``auth_time``, or its admins cannot make changes after the window.
+
+  A confirmation only counts for the browser that made it and for the current login session; it is stored in a cookie of its own, ``FA.IdentityConfirmation``, which is deleted on logout. Clients that call the management API with the ``client_credentials`` grant are not affected.
 
 - ``Password``: Here you can specify where the user passwords must comply to.
 
@@ -222,6 +230,8 @@ Currently SMTP and SendGrid are the supported email clients.
     "ActivateAccountEmailSubject": "Firely Server account activation.",
     "ForgotPasswordEmailSubject":  "Firely Server forgot password.",
     "SecurityNotificationEmailSubject": "Firely Auth account security change",
+    "RepresentativeInvitationEmailSubject": "Your account invitation",
+    "RepresentativeRegisteredEmailSubject": "You have been registered as a representative",
     //,"Smtp": {
     //	"Server": "",
     //	"Port": 0,
@@ -242,6 +252,8 @@ Currently SMTP and SendGrid are the supported email clients.
 - ``ActivateAccountEmailSubject``: The subject that will be put in account activation emails.
 - ``ForgotPasswordEmailSubject``: The subject that will be put in forgot password emails.
 - ``SecurityNotificationEmailSubject``: The subject of the email that tells a user that two-factor authentication was enabled or disabled on their account, or that their password was changed or reset. The body comes from the template ``securitynotification.liquid``. If you use your own ``EmailTemplateFolder``, it has to contain this template: without it, no notification is sent and a warning is logged. The change itself still goes through.
+- ``RepresentativeInvitationEmailSubject``: The subject of the email that invites a representative to sign in, see :ref:`firely_auth_dar_onboarding`. The default is ``Your account invitation``. The body comes from the template ``representativeinvitation.liquid``. It contains no patient information: the template only receives the person's name (``Name``), their email address (``Email``) and the sign-in link (``Link``). If you use your own ``EmailTemplateFolder``, it has to contain this template: without it, the invitation is not sent and an error is logged. Escape the values in a custom copy with ``| escape``, as the shipped template does.
+- ``RepresentativeRegisteredEmailSubject``: The subject of the email that tells an existing ``Patient`` that their account was registered as a representative, when the representative API returns that account, see :ref:`firely_auth_dar_onboarding`. The default is ``You have been registered as a representative``. The body comes from the template ``representativeregistered.liquid``. It contains no patient information: the template only receives the person's name (``Name``) and their email address (``Email``). If you use your own ``EmailTemplateFolder``, it has to contain this template: without it, this email is not sent and a warning is logged. The representative API still answers ``200 OK``.
 - ``Smtp``: Fill these settings when you use the ``Smtp`` type. If the ``Port`` has a value of ``0``, then the ``SocketOptions`` parameter is used to determine the default port to connect to. The default port used with ``SslOnConnect`` is ``465``. All other values will use a default port of ``25``. If the ``SocketOptions`` has a value of ``null`` or ``Auto``, then the ``Port`` is used to determine the default security options. If the ``Port`` has a value of ``465``, then the default options used will be ``SslOnConnect``. All other values will use ``StartTlsWhenAvailable``.
 - ``SendGrid``: Fill this setting when you use the ``SendGrid`` type.
 
@@ -258,7 +270,8 @@ These settings control the white labelling options for Firely Auth:
     "LoginPageText": "Please login to Firely Auth",
     "OrganizationTitle": "Firely Auth",
     "OrganizationLogoPath": "<firely logo>",
-    "OrganizationFavIconPath": "<firely favicon>"
+    "OrganizationFavIconPath": "<firely favicon>",
+    "LocalLoginOnHomepage": "Show"
   },
 
 - ``LoginPageText``: Here you can put a text that will be displayed on the login page.
@@ -268,6 +281,18 @@ These settings control the white labelling options for Firely Auth:
 - ``OrganizationLogoPath``: Here you can point to an image file you want to use as logo in the application.
 
 - ``OrganizationFavIconPath``: Here you can point to an image file you want to use as favicon in the browser. Note that the recommended dimensions for favicons is typically 16x16 pixels. For high-resolution screens this is 32x32 pixels. Also see `favicon.io <https://favicon.io/>`_ or the `Real Favicon Generator <https://realfavicongenerator.net/>`_ for more information.
+
+- ``LocalLoginOnHomepage``: How the login page shows the email and password form when a user opens Firely Auth directly, so not from an app. Logins that an app starts are not affected: there the client settings decide, see :ref:`firely_auth_settings_clients`.
+
+  - ``Show`` (default): the form shows next to the external identity providers.
+  - ``Hint``: only the external identity providers show. A line at the bottom of the page, *Firely Auth administrator? Administrator login*, shows the form. With the app developer portal enabled, it reads *Administrator or app developer? Log in with your account*.
+  - ``Hidden``: only the external identity providers show, with no link to the form. With the app developer portal enabled, the link to create an app developer account is hidden as well: share ``/register/app-developer`` with app developers. When they request an account, Firely Auth tells them to log in at ``/login?local=true``.
+
+  With every value, ``/login?local=true`` shows the form, so administrators can bookmark that address. Without an enabled external identity provider, the form shows as with ``Show``. Firely Auth logs a ``Warning`` at startup when the value is not ``Show`` and ``ExternalIdentityProviders`` has no identity provider, and with ``Hidden`` it logs the address ``/login?local=true``.
+
+  .. note::
+
+    ``Hint`` and ``Hidden`` only change what the login page shows. They do not turn off login with email and password: it keeps working through ``/login?local=true`` and the login API. Use them when patients and other end users log in through an external identity provider and only administrators, and app developers, have a password. If patients log in with a password, keep ``Show``: otherwise they only find the form behind a link meant for administrators, or not at all.
 
 .. _firely_auth_settings_server:
 
@@ -304,34 +329,47 @@ To make Firely Server known to Firely Auth, fill in the ``FhirServer``:
 Authorized representatives
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Firely Auth can be configured to allow users to login on behalf of other users for whom they are authorized representatives (e.g., caregivers). It needs to be supported by a custom plugin in Firely Server to manage and expose these relationships. See :ref:`firely_auth_dar` for more information on how to set up authorized representative relationships in Firely Server and Firely Auth.
-
-.. warning::
-
-    This is a beta feature and as such it is subject to change in future releases. Currently, this implementation is not yet working correctly together with all of Firely Auths features, mainly :ref:`firely_auth_settings_launchcontext` and :ref:`firely_auth_settings_disclaimers`. On launch context registration, the Authorized Representative feature will be skipped if launch scopes are included in the token request. For disclaimer registration, disclaimers can be accepted once for each representee, but disclaimers that were agreed to in the authorized representative flow will not be visible in the users overview of accepted disclaimers. Due to the experimental nature of this feature, it is recommended to thoroughly test its functionality in a development or staging environment before deploying it to production.
-
+Firely Auth lets a user sign in to an app on behalf of a patient they represent, such as a parent for a child. Firely Server decides who may act for whom, through two custom operations that a Firely Server plugin implements. See :ref:`firely_auth_dar` for the login, the operations and an example plugin, and for the warnings that apply to this beta feature.
 
 .. code-block:: json
 
   "AuthorizedRepresentatives": {
     "LookupOnLogin": false,
-    "LookupRequestScopes": "https://fire.ly/fhir/OperationDefinition/has-authorized-representative-relationships",
+    "RepresentativeRelationshipsScopes": "http://server.fire.ly/auth/scope/representative-relationships",
+    "CheckAuthorizedRepresentativeScopes": "http://server.fire.ly/auth/scope/check-authorized-representative system/Patient.rs",
     "CheckAuthorizedRepresentativeTimeout": 5000, // in ms
     "TitleOnLogin": "Who Are You Signing In As?",
     "TitleOwnProfileOnLogin": "Continue as Yourself",
     "TitleAuthorizedProfilesOnLogin": "Continue On Behalf Of ...",
-    "HelpMessageTitleOnFail": "Couldn't load authorized profiles",
-    "HelpMessageOnFail": "A technical error prevented loading the user profiles of all authorized users. Please try again by reloading or continue as yourself."
+    "RepresentativeTitleOnFail": "No one to act for",
+    "RepresentativeMessageOnFail": "Your account is not linked to anyone you can act for at the moment. Please contact the organization that invited you."
   },
 
-- ``LookupOnLogin``: true / false - Whether to look up authorized representatives during login. If set to false, users will not be able to retrieve an access token on behalf of other users. A selection is only accepted while this setting is ``true``, and only for the user's own patient or a patient that Firely Server listed for that user. The list is kept for five minutes after sign-in; a user who chooses someone from it after that is asked to sign in to the app again.
-- ``LookupRequestScopes``: The scope to use when looking up authorized representatives in Firely Server. This requires a custom plugin in Firely Server to expose the relationships that utilizes this scope.
-- ``CheckAuthorizedRepresentativeTimeout``: Timeout in milliseconds for the lookup request to Firely Server.
-- ``TitleOnLogin``: Title text to display on the login page when selecting a profile to sign in as.
-- ``TitleOwnProfileOnLogin``: Text for the button to continue as oneself.
-- ``TitleAuthorizedProfilesOnLogin``: Title text to display above the list of authorized profiles.
-- ``HelpMessageTitleOnFail``: Title text for the help message displayed when the lookup of authorized profiles fails.
-- ``HelpMessageOnFail``: Help message text displayed when the lookup of authorized profiles fails.
+- ``LookupOnLogin``: true / false (default ``false``) - Whether a ``Patient`` who signs in through an external identity provider is asked, through ``$representative-relationships`` with the user's ``sub``, whom they act for. A ``Patient`` with a password always signs in as themselves. It does not affect users of the type ``Representative``: they always choose whom they act for. With ``LookupOnLogin`` on, Firely Auth logs an ``Error`` at startup when the CapabilityStatement of Firely Server lacks ``$representative-relationships`` or ``$check-authorized-representative``.
+- ``RepresentativeRelationshipsScopes``: The scopes of the token for ``$representative-relationships``.
+- ``CheckAuthorizedRepresentativeScopes``: The scopes of the token for ``$check-authorized-representative``, which Firely Auth calls when the user chooses whom to act for and at every refresh of such a token. The default also holds ``system/Patient.rs``, because Firely Server answers an operation for a backend client only when its token carries at least one ``system/`` scope; the operation itself does not need it.
+- ``CheckAuthorizedRepresentativeTimeout``: Timeout in milliseconds for each call to Firely Server.
+- ``TitleOnLogin``: Title text to display on the page where the user chooses whom to act for.
+- ``TitleOwnProfileOnLogin``: Text above the card with which a Patient continues as themselves.
+- ``TitleAuthorizedProfilesOnLogin``: Title text to display above the list of patients the user can act for.
+- ``RepresentativeTitleOnFail`` and ``RepresentativeMessageOnFail``: Title and message shown to a ``Representative`` who has nobody to act for. The app then gets ``access_denied``.
+
+The settings ``LookupRequestScopes``, ``HelpMessageTitleOnFail`` and ``HelpMessageOnFail`` of the removed Patient-account flow have no effect. While one of them is configured, Firely Auth logs one ``Warning`` at startup naming them. Remove them, see :ref:`firely_auth_dar_migration`.
+
+.. _firely_auth_settings_representativeinvitation:
+
+Representative invitation
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A representative that is created through the representative API gets an invitation email with a link that signs in at an external identity provider (see :ref:`firely_auth_dar_onboarding`). This section selects that identity provider:
+
+.. code-block:: json
+
+  "RepresentativeInvitation": {
+    "IdentityProviderScheme": ""
+  },
+
+- ``IdentityProviderScheme``: The ``Scheme`` of the entry in ``ExternalIdentityProviders`` (see :ref:`firely_auth_settings_externalidp`) that the invitation link signs in with. Leave it empty when exactly one external identity provider is configured; that one is used. With several identity providers and no value, or a value that names none of them, no invitation is sent and an error is logged. Firely Auth still starts.
 
 .. _firely_auth_settings_tokentypes:
 
@@ -505,9 +543,13 @@ The ``ClientRegistration`` is used to register the :term:`clients <client>` that
 
 You register a :term:`client` in the ``AllowedClients`` array. For each client you can configure these settings:
 
-- ``ClientId``: string: unique identifier for this client. It should be known to the client as well
+- ``ClientId``: string: unique identifier for this client. It should be known to the client as well. ``Firely-Auth-Internal-FhirLookup`` (in any casing) is reserved: Firely Auth uses it for the tokens it issues to itself for its calls to Firely Server, so a client cannot have this client id. A client with this client id fails validation, in the settings as well as in the admin UI and the management API.
 - ``ClientName``: string: human readable name for the client, it is shown on the consent page
-- ``ClientType``: string: ``ClientType`` specifies the type of OAuth2 client: ``"BackendService"`` (system-only ``client_credentials``), ``"ManagementApi"`` (``client_credentials`` with ``AllowManagementApiAccess``), ``"StandaloneApp"`` (``authorization_code``) or ``"CdsHooks"`` (a CDS Hooks client, see :ref:`firely_auth_settings_cdshooks`), and helps optimize UI validation during client registration by enforcing different constraints on the workflow. Only a ``ManagementApi`` client gets the management API scope in its tokens.
+- ``ClientType``: string: ``ClientType`` specifies the type of OAuth2 client: ``"BackendService"`` (system-only ``client_credentials``), ``"ManagementApi"`` (``client_credentials`` with ``AllowManagementApiAccess``), ``"StandaloneApp"`` (``authorization_code``), ``"AdminApp"`` (an app that only users in the Admin role can log in to, such as the Firely Metrics Dashboard) or ``"CdsHooks"`` (a CDS Hooks client, see :ref:`firely_auth_settings_cdshooks`), and helps optimize UI validation during client registration by enforcing different constraints on the workflow. Only a ``ManagementApi`` client gets the management API scope in its tokens.
+- ``AdminAppScope``: string, ``AdminApp`` clients only, required: the scope the app requests, an absolute ``http`` or ``https`` URI of its own, for example ``http://server.fire.ly/metrics/scope/dashboard`` for the Firely Metrics Dashboard. The ``ClientId`` of an admin app is the audience (``aud``) of its tokens and cannot be changed afterwards. An admin app client without a valid scope is refused tokens; the admin UI marks it as *Needs update*, and Firely Auth logs a warning naming it at startup.
+- ``AdminAppIncludeRoleClaim``: true / false, ``AdminApp`` clients only: whether the app's tokens carry the user's roles. The default is ``false``.
+
+  Admin apps are registered as ``AdminApp`` clients, in the admin UI, with the admin API or here, and can log in as soon as the client is saved. An ``AdminApps`` setting is ignored; remove it from ``appsettings.instance.json`` and register each admin app as an ``AdminApp`` client.
 - ``JwtIssuer``: string, ``CdsHooks`` clients only: the ``iss`` claim of the JWTs the client presents, an absolute URI. See :ref:`firely_auth_settings_cdshooks`.
 - ``Description``: string:  human readable description of the client
 - ``Enabled``: true / false: simple switch to enable or disable a client (instead of removing it from the list)
@@ -544,7 +586,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``ConsentLifetime`` : This is an optional setting which can specify a period after which the users consent will be revoked. The value is in days. You can also use HH:mm:ss for lower values. When a user who chose to remember their consent for an app later consents to more scopes, the new decision is merged into the remembered one: scopes that were not asked for keep their earlier decision, and scopes that were asked for take the latest answer. Remembering a new decision renews the lifetime of the whole remembered consent; answering "Prompt me again next time" keeps its earlier expiration.
 - ``AccessTokenType``: ``Jwt`` or ``Reference``. ``Jwt`` means that this client will get self-contained Json Web Tokens. ``Reference`` means that this client will get reference tokens, that refer to the actual token kept in memory by Firely Auth. For more background see :term:`reference token`.
 - ``EnableLegacyFhirContext``: true / false - Whether to use the new syntax of ``fhirContext`` defined in `SMART on FHIR v2.1.0 <https://hl7.org/fhir/smart-app-launch/scopes-and-launch-context.html#fhir-context>`_. Default is false, when set to true the old syntax of ``fhirContext`` defined in `SMART on FHIR v2.0.0 <https://hl7.org/fhir/smart-app-launch/STU2/scopes-and-launch-context.html#fhircontext>`_ is used.
-- ``ClientClaims``: Enable a client to add static custom claims in the client credential flow. The claim types ``role``, ``sub``, ``scope``, ``client_id``, ``amr``, ``idp``, ``aud``, ``iss`` and ``fineGrainedScope`` are reserved: the client API refuses them, and such stored claims are left out of access tokens, with a warning in the log. For a ``ManagementApi`` client, the reserved claim types are also left out of its tokens.
+- ``ClientClaims``: Enable a client to add static custom claims in the client credential flow. The claim types ``role``, ``sub``, ``scope``, ``client_id``, ``amr``, ``idp``, ``aud``, ``iss``, ``auth_time`` and ``fineGrainedScope`` are reserved: the client API refuses them, and such stored claims are left out of access tokens, with a warning in the log. For a ``ManagementApi`` client, the reserved claim types are also left out of its tokens.
 
   - ``Name``: name of the claim
   - ``Value``: the value of the claim
@@ -553,6 +595,7 @@ You register a :term:`client` in the ``AllowedClients`` array. For each client y
 - ``AlwaysSendClientClaims``: Add the claims defined in ``ClientClaims`` regardless of the OAuth 2.0 flow used by a client (e.g. even if a authorization_code flow is used)
 - ``Require2fa``: true / false - Whether users are obliged to set up Multi Factor Authentication before they can use their account to get a token.
 - ``AllowManagementApiAccess``: Allows this client to use the :ref:`firely_auth_mgmt`
+- ``AllowRepresentativeApiAccess``: true / false, ``BackendService`` clients only: allows this client to request the scope ``http://server.fire.ly/auth/scope/representative`` for the representative API, see :ref:`firely_auth_dar_onboarding`. The default is ``false``.
 - ``EnableLocalLogin``: true / false - Enables/disables the possibility to use the builtin login mechanism. If disabled the user can only use an external identity provider to log in.
 - ``EnableExternalLogin``: true / false - Enables/disables the possibility to use external identity providers to log in with.
 - ``IdentityProviderRestrictions``: Optional, a list of ``Schemes`` of configured external identity providers which this client can use to login with. If not provided, all configured external identity providers will be available.
@@ -748,7 +791,7 @@ External identity providers
 - ``IdTokenDecryptionKey``: "<JWK>" - The key for decrypting the the ID token, assessed when ``IdTokenRequiresDecryption`` is set to true.
 -	``AllowAutoProvision``: true / false - If true, Firely Auth will automatically create a user in its own database if the user logs in with an external identity provider for the first time. The user will be created with the claims that are provided by the external identity provider. Note that either the ``UserClaimsFromIdToken`` or ``FhirUserLookupClaimsMapping`` setting may be necessary to map a custom user claim from the identity provider to the required ``fhirUser`` claim. A request to Firely Server will attempt to match the user to a ``Patient`` or ``Practitioner`` resource and, if found, the respective resource ID will be used as the ``fhirUser`` claim. 
 - ``AutoProvisionFromSecurityGroup``: When ``AllowAutoProvision`` is true, this setting allows you to specify a security group that the user must be a member of in order to be automatically provisioned. If the user is not a member of this group, the user will not be automatically provisioned.
-- ``UserClaimsFromIdToken``: This setting allows you to map the claims from the token that is received from the external identity provider to the claims that are stored in the Firely Auth database. The key is the claim that is received from the external identity provider. This key can be copied as a value that is recognized by Firely Auth. For intance, Azure is able to provide ``fhirUser`` claim to the token, but will prefix this claim with ``extn.``. The CopyAs field can be used to remove this prefix, so that Firely Auth is able to recognize the ``fhirUser`` claim.
+- ``UserClaimsFromIdToken``: This setting allows you to map the claims from the token that is received from the external identity provider to the claims that are stored in the Firely Auth database. The key is the claim that is received from the external identity provider. This key can be copied as a value that is recognized by Firely Auth. For intance, Azure is able to provide ``fhirUser`` claim to the token, but will prefix this claim with ``extn.``. The CopyAs field can be used to remove this prefix, so that Firely Auth is able to recognize the ``fhirUser`` claim. Map at most one claim to ``fhirUser`` (by its ``CopyAs``, or by its ``Key`` when it has no ``CopyAs``): Firely Auth does not start when an identity provider maps more than one. The claim types ``role``, ``sub``, ``scope``, ``client_id``, ``amr``, ``idp``, ``aud``, ``iss``, ``auth_time`` and ``fineGrainedScope`` are reserved and are not copied from the identity provider.
 - ``FhirUserLookupClaimsMapping``: As an alternative for retrieving the ``fhirUser`` Claim from the ``UserClaimsFromIdToken`` setting, ``FhirUserLookupClaimsMapping`` allows you to use the claims from the ID token to search for a users respective resource in Firely Server. This can either be a Patient resource or a Practitioner recource. Firely Auth will then use the id of this resource to derive the ``fhirUser`` claim of the user upon SSO auto-provisioning. Multiple mappings can be provided. Each search parameter will be combined using a logical  AND while searching for the ``fhirUser`` resource. The ``fhirUser`` is only derived if there is an unambiguous match in Firely Server.
 - ``SearchParameterName``: The search parameter that will be used to search for the user in Firely Server. This can be any search parameter that can be used to query ``Patient`` or ``Practitioner`` resources. This search parameter will be used on a system-level search against Firely Server.
 - ``SearchParameterValueTemplate``: The template that will be used to construct the value that will be used to search for the user in Firely Server. The template can contain placeholders that will be replaced by the values of the claims from the ID token. The placeholders should be in the format ``{NumericalIndexForClaim}``. The numerical index is the index of the claim in the array of claims that are provided by the external identity provider. The index starts at 0.

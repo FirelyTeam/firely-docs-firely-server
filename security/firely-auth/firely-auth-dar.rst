@@ -19,7 +19,7 @@ Two kinds of accounts can act for others:
 
 .. warning::
 
-    **Removed in Firely Auth 4.9.0:** the Patient-account flow, in which Firely Server found the relationships of a ``Patient`` account through the user's ``Patient`` ``fhirUser`` (``$check-authorized-representative-relationships``), is removed. A Firely Server plugin that only implements that operation must be changed to the operations in :ref:`firely_auth_dar_contract`, see :ref:`firely_auth_dar_migration`.
+    **Removed:** the Patient-account flow, in which Firely Server found the relationships of a ``Patient`` account through the user's ``Patient`` ``fhirUser`` (``$check-authorized-representative-relationships``), is removed. A Firely Server plugin that only implements that operation must be changed to the operations in :ref:`firely_auth_dar_contract`, see :ref:`firely_auth_dar_migration`.
 
 .. warning::
 
@@ -27,17 +27,7 @@ Two kinds of accounts can act for others:
 
 .. warning::
 
-    The DAR feature does not support running more than one Firely Auth instance behind a load balancer. The relationships that Firely Server pushes to Firely Auth, and the choice the user then makes, are kept only in the memory of the Firely Auth instance that received them. They are not shared with other instances or stored in the database.
-
-    With more than one instance, these requests can each land on a different instance:
-
-    - Firely Server pushing the relationships to ``/api/external/representative-relationships``,
-    - the user's browser loading the selection page and submitting the choice,
-    - the client application requesting the access token from the token endpoint.
-
-    If the push lands on another instance than the one serving the user, the selection page does not find the relationships and reports a technical problem. If the token request lands on another instance than the one that received the choice, the app gets no token for the patient that was chosen. Sticky sessions on the load balancer do not prevent this, because Firely Server and the client application call Firely Auth directly rather than through the user's browser.
-
-    If you use DAR, run a single Firely Auth instance.
+    The DAR feature is not supported with more than one Firely Auth instance behind a load balancer. The relationships that Firely Server pushes to Firely Auth, and the choice the user then makes, are kept only in the memory of one instance. Sticky sessions do not help, because Firely Server and the client application call Firely Auth directly rather than through the user's browser. If you use DAR, run a single Firely Auth instance.
 
 .. _firely_auth_dar_interactions:
 
@@ -102,7 +92,6 @@ A Patient who acts for others
 - With nobody to act for, the page is skipped and the user continues as themselves.
 - When Firely Server fails, or the list does not arrive in time, the page says that the people the user can act for could not be loaded, and offers **continue as yourself**. So a user who meant to act for someone is not silently given their own record. Firely Auth logs a ``Warning`` when Firely Server fails.
 - Once a Patient has chosen someone in a sign-in, or tried to, only **continue as yourself** gives them a token for their own record.
-- Firely Auth writes nothing to Firely Server during the sign-in.
 
 The selection page
 ^^^^^^^^^^^^^^^^^^
@@ -110,7 +99,7 @@ The selection page
 - The page waits up to 20 seconds for the push. After that, it reports a technical problem. A Patient can then continue as themselves.
 - The page shows the name and the relationship that Firely Server pushed. It never shows the ``RelatedPerson``.
 - When the user chooses someone, Firely Auth calls ``Patient/$check-authorized-representative`` with the chosen pair before it accepts the choice. Unless Firely Server answers ``result = true``, the page says that the user cannot act for that person. A Representative can then go back to the app, and a Patient can continue as themselves.
-- A choice belongs to one sign-in of the app and serves one authorization code. Firely Auth tells sign-ins apart by ``state``, ``nonce`` or the PKCE ``code_challenge``, so a new sign-in asks again. An app that sends none of these cannot be told apart: a Representative gets ``access_denied``, and a Patient signs in as themselves, with a ``Warning`` in the log.
+- Apps that representatives use must send ``state`` or ``nonce``, or use PKCE, when they start a sign-in. Without any of these, a Representative gets ``access_denied``, and a Patient signs in as themselves, with a ``Warning`` in the log. A choice applies to one sign-in of the app, so a new sign-in asks again.
 - A sign-in may take up to 30 minutes from the first authorization request to the authorization code, including disclaimers, consent and the launch context picker. After that, or once the code was issued, the page says that the sign-in has ended and offers to go back to the app, which starts a new sign-in. The code exchange checks the choice with Firely Server again.
 - Disclaimers are agreed once for each person the user acts for.
 - A request with ``prompt=none`` cannot show the page. Keep a representative signed in with refresh tokens, not with silent renewal.
@@ -234,29 +223,23 @@ Representatives in the admin UI
 
 The admin UI is the only place to create a Representative by hand and to link or unlink its patients. The management API (``/api/external/user``) refuses to create a Representative with ``400 Bad Request`` and does not offer linking. An application uses the representative API instead.
 
-Firely Auth reads and changes the ``RelatedPerson`` in Firely Server with a token that it issues to itself, with the audience ``FhirServer:FHIR_BASE_URL``. To show the linked patients and to **find** a ``RelatedPerson``, the token holds the scopes ``system/RelatedPerson.rs`` and ``system/Patient.rs``. For **link representee** and **unlink**, it holds ``system/RelatedPerson.rus`` and ``system/Patient.rs``. **link representee** and **unlink** read the ``RelatedPerson``, change only its identifier and write it back with a ``PUT`` with ``If-Match`` on the version that was read. When the ``RelatedPerson`` was changed in Firely Server in the meantime, Firely Auth asks the admin to find it again and retry.
+**link representee** and **unlink** change only the identifier of the ``RelatedPerson`` in Firely Server. When the ``RelatedPerson`` was changed in Firely Server in the meantime, Firely Auth asks the admin to find it again and retry.
 
-No client in Firely Auth needs a setting for this, also not the admin UI. Firely Server needs to accept this token for writes:
+For this, Firely Server must accept these writes from Firely Auth:
 
-- Firely Server accepts tokens from Firely Auth with the audience ``FhirServer:FHIR_BASE_URL``, see :ref:`firely_auth_settings`.
+- Firely Server accepts tokens from Firely Auth with the audience ``FhirServer:FHIR_BASE_URL``, see :ref:`firely_auth_settings`, with the scopes ``system/RelatedPerson.rus`` and ``system/Patient.rs``.
 - The ``update`` interaction is enabled for ``RelatedPerson``.
 - Firely Server returns a version for the ``RelatedPerson``, as an ``ETag`` or in ``meta.versionId``. Firely Auth does not update a ``RelatedPerson`` without a version.
 - No proxy or gateway in front of Firely Server refuses writes with this token.
 
-When Firely Server refuses the ``PUT``, **link representee** shows an error that names the scope ``system/RelatedPerson.rus``, and the list of linked patients stays readable.
+When Firely Server refuses the change, **link representee** shows an error that names the scope ``system/RelatedPerson.rus``, and the list of linked patients stays readable.
 
 The invitation
 ^^^^^^^^^^^^^^
 
 The invitation email uses the template ``representativeinvitation.liquid`` and the subject ``Email:RepresentativeInvitationEmailSubject`` (see :ref:`firely_auth_settings_email`). Its link signs in at the identity provider selected by ``RepresentativeInvitation:IdentityProviderScheme`` (see :ref:`firely_auth_settings_representativeinvitation`). The link holds no token and does not expire. At the first login, the Representative is linked to the identity provider account by email address, the same as any other SSO user created in advance, also when the person signs in through the login page instead of the link. That first login is only accepted through the identity provider that the last invitation was sent for, and is refused when the identity provider reports ``email_verified`` as ``false``. A refused login leaves the Representative waiting for their first login, so the invitation can still be accepted.
 
-An admin can send the invitation again until the Representative has logged in:
-
-.. code-block:: HTTP
-
-  POST <base-url>/api/admin/user/<user-id>/resend-invitation HTTP/1.1
-
-After the first login, this returns ``400 Bad Request``.
+Until the Representative has logged in for the first time, an admin can send the invitation again with **resend invitation** in the user's panel in the admin UI.
 
 .. note::
 
@@ -308,7 +291,7 @@ $representative-relationships
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - **URL**: ``POST [base]/$representative-relationships``, at system level.
-- **Input**: none. The user is the ``sub`` claim of the token. Because the operation has no parameter that names a user, a token can only lead to a push for its own user.
+- **Input**: none. The user is the ``sub`` claim of the token.
 - **What it does**: it finds the patients the user may act for now, and pushes them to Firely Auth (see below). It may push before it answers, or after.
 - **Output**: a ``Parameters`` resource with ``result`` = ``true`` when the user may act for at least one patient.
 
@@ -401,23 +384,17 @@ A user may act for a patient through a ``RelatedPerson`` that:
 
 - carries the identifier ``http://server.fire.ly/auth/identifier/sub|<user id>``, with the user id in exactly the same case, and no such identifier of another user. Firely Auth adds it when an admin links the RelatedPerson to the user (see :ref:`firely_auth_dar_onboarding`);
 - refers to the patient in ``RelatedPerson.patient``, and that Patient exists;
-- is not ``active = false``, and has a ``period`` that covers the current time, if it has one; a date in a period covers that whole day, month or year, and a time without fractions of a second covers that whole second;
-- is permitted by an active privacy ``Consent`` of that patient that is in force now:
+- is not ``active = false``, and has a ``period`` that covers the current time, if it has one;
+- is permitted by an active privacy ``Consent`` of that patient that is in force now. That is a Consent with the code ``patient-privacy`` of ``http://terminology.hl7.org/CodeSystem/consentscope`` (in ``scope`` for FHIR R4, in ``category`` for FHIR R5), and:
 
-  - the Consent has the code ``patient-privacy`` of ``http://terminology.hl7.org/CodeSystem/consentscope``, in ``scope`` for FHIR R4 and in ``category`` for FHIR R5. A Consent for research, treatment or an advance directive authorizes nobody;
-  - FHIR R4: the RelatedPerson is an actor of the root ``provision``, whose ``type`` is ``permit`` and whose ``period`` covers the current time. A root provision without a ``type`` authorizes nobody: the example does not read ``policyRule``, so it cannot tell whether such a provision adds or removes access;
-  - FHIR R5: ``decision`` is the base rule and each ``provision`` an exception to it. So the Consent has ``decision`` = ``deny``, the RelatedPerson is an actor of one of its ``provision`` elements, and both ``period`` elements cover the current time;
+  - FHIR R4: the RelatedPerson is an actor of the root ``provision``, whose ``type`` is ``permit`` and whose ``period`` covers the current time. A root provision without a ``type`` authorizes nobody.
+  - FHIR R5: ``decision`` is the base rule and each ``provision`` an exception to it. So the Consent has ``decision`` = ``deny``, the RelatedPerson is an actor of one of its ``provision`` elements, and both ``period`` elements cover the current time.
 
-- is not denied by another active privacy ``Consent`` of that patient that is in force now. A Consent that denies overrules every Consent that permits, so a patient can withdraw an authorization with a second Consent:
+- is not denied by another such Consent: one that names the RelatedPerson as actor in a root ``provision`` with ``type`` = ``deny`` (FHIR R4), or in a ``provision`` of a Consent with ``decision`` = ``permit`` (FHIR R5). A Consent that denies overrules every Consent that permits, so a patient can withdraw an authorization with a second Consent.
 
-  - FHIR R4: the root ``provision`` names the RelatedPerson as actor and has ``type`` = ``deny``, also when it denies only part of the record;
-  - FHIR R5: the Consent has ``decision`` = ``permit`` and a ``provision`` that names the RelatedPerson as actor.
+The example only accepts a provision that authorizes the RelatedPerson for the patient's whole record, because a token for the representative gives access to all of it. A provision with nested provisions, or one that limits the access, for example by ``action``, ``resourceType`` or ``dataPeriod``, authorizes nobody. The example does not look at the ``role`` of an actor, so name the RelatedPerson as an actor only in a Consent that authorizes it to act for the patient. It reads Consents of FHIR R4 and R5 only. See ``RepresentativeAuthorizations.cs`` for the exact rules.
 
-The example does not look at the ``role`` of an actor: the RelatedPerson counts as an actor whatever its role, also for example as a witness. Name the RelatedPerson as an actor only in a Consent that authorizes it to act for the patient. The example does not evaluate nested provisions: a provision that has them authorizes nobody. A token for the representative gives access to the patient's whole record, so a provision that permits only part of it also authorizes nobody: one with ``action``, ``securityLabel``, ``purpose``, ``class``, ``code``, ``dataPeriod``, ``data``, ``documentType``, ``resourceType`` or ``expression``. It reads Consents of FHIR R4 and R5 only. For another FHIR version, both operations answer ``500``.
-
-To decide the authorization without Consent resources, replace ``DecideAuthorizationAsync`` in ``RepresentativeAuthorizations.cs``, and return a ``RepresentativeAuthorization`` without a Consent. The method gets the RelatedPerson and the id of its patient. The checks on the RelatedPerson in the first three points above stay in place. Then ``$check-authorized-representative`` answers ``result`` = ``true`` without ``consent``.
-
-The plugin pushes before it answers. When the push fails, ``$representative-relationships`` answers ``500``. The push lists each patient once: when one user has two authorized RelatedPersons for one patient, the plugin keeps the first by id and logs a warning. Each search reads at most 50 resources. When there are more, the operation answers ``500`` instead of deciding on part of them.
+To decide the authorization without Consent resources, replace ``DecideAuthorizationAsync`` in ``RepresentativeAuthorizations.cs``, and return a ``RepresentativeAuthorization`` without a Consent. The method gets the RelatedPerson and the id of its patient. The checks on the RelatedPerson in the first three points above stay in place. Then ``$check-authorized-representative`` answers ``result`` = ``true`` without ``consent``. The plugin pushes before it answers. When the push fails, ``$representative-relationships`` answers ``500``.
 
 .. important::
 
@@ -565,9 +542,9 @@ The plugin references ``Vonk.Core`` and ``Duende.AccessTokenManagement`` only.
 Upgrading from the Patient-account flow
 ---------------------------------------
 
-Up to Firely Auth 4.8, a ``Patient`` account could act for other patients through relationships that Firely Server found by the user's own ``Patient`` ``fhirUser``: Firely Auth called ``Patient/$check-authorized-representative-relationships``, the plugin posted the relationships to ``/api/external/authorized-representative``, and the user chose on the page ``/user/authorized-representatives``. Firely Auth 4.9.0 removes this flow:
+In the Patient-account flow, a ``Patient`` account could act for other patients through relationships that Firely Server found by the user's own ``Patient`` ``fhirUser``: Firely Auth called ``Patient/$check-authorized-representative-relationships``, the plugin posted the relationships to ``/api/external/authorized-representative``, and the user chose on the page ``/user/authorized-representatives``. This flow is removed:
 
-- A post to ``/api/external/authorized-representative`` is answered with ``405``, and requests to ``/api/authorized-representative`` with ``404``.
+- A post to ``/api/external/authorized-representative`` is answered with ``405``.
 - The settings ``AuthorizedRepresentatives:LookupRequestScopes``, ``HelpMessageTitleOnFail`` and ``HelpMessageOnFail`` have no effect. While one of them is configured, Firely Auth logs one ``Warning`` at startup naming them. Remove them from ``appsettings.instance.json``.
 - With ``LookupOnLogin`` on, Firely Auth logs an ``Error`` at startup when the CapabilityStatement of Firely Server lacks ``$representative-relationships`` or ``$check-authorized-representative``. Without the removed settings configured, that ``Error`` is the only sign of an old plugin: Patients then sign in as themselves only.
 - Disclaimers that a Patient agreed to as themselves in the removed flow still count, and are still listed and revoked on the grants page.
@@ -582,7 +559,7 @@ The differences
    :widths: 24 38 38
 
    * -
-     - Patient-account flow (up to 4.8)
+     - Patient-account flow (removed)
      - Representative flow
    * - Who can act for others
      - Every ``Patient`` account, with a password or through an external identity provider
@@ -624,7 +601,7 @@ The differences
 The steps
 ^^^^^^^^^
 
-1. **Implement the two operations** in your Firely Server plugin, see :ref:`firely_auth_dar_contract`. Start from the example plugin. Firely Auth 4.9.0 no longer calls ``$check-authorized-representative-relationships``, so deploy the new operations before or together with the upgrade.
+1. **Implement the two operations** in your Firely Server plugin, see :ref:`firely_auth_dar_contract`. Start from the example plugin. Firely Auth no longer calls ``$check-authorized-representative-relationships``, so deploy the new operations before or together with the upgrade.
 2. **Configure Firely Server**: add both operations to the ``Operations`` setting, accept tokens from Firely Auth with the audience ``FhirServer:FHIR_BASE_URL``, and set ``SmartAuthorizationOptions:PatientFilter`` to ``_id=#patient#``.
 3. **Register the push client**: the management API client of the old flow can also push to ``/api/external/representative-relationships``. Make sure that no client in Firely Auth has the client id ``Firely-Auth-Internal-FhirLookup``.
 4. **Give every representative an account that can act for others**:

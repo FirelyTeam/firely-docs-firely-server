@@ -125,7 +125,7 @@ First, add the Structured Data Capture plugin to the pipeline. It ships with Fir
 
 The plugin validates Questionnaires and QuestionnaireResponses with the validation plugin, so validation must be in the same branch. Validation is in the default pipeline. If the validation plugin is missing, or enterprise validation is not licensed, Firely Server does not start, and the log says which one is missing.
 
-Second, make sure the operations are enabled in the ``Operations`` section. ``$populate`` and ``$extract`` are enabled there by default, on type and instance level. See :ref:`feature_sdc_populate_configuration` and :ref:`feature_sdc_extract_configuration`.
+Second, make sure the operations are enabled in the ``Operations`` section. ``$populate`` and ``$extract`` are enabled there by default, on type and instance level. See the configuration of :ref:`$populate <feature_sdc_populate_configuration>` and of :ref:`$extract <feature_sdc_extract_configuration>`.
 
 Third, load the definitions that your Questionnaires use into the :ref:`Administration database <conformance>`:
 

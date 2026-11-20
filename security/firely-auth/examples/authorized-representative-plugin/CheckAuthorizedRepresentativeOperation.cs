@@ -9,7 +9,7 @@ namespace Vonk.Plugin.AuthorizedRepresentativeExample;
 /// Implements <c>POST [base]/Patient/$check-authorized-representative</c>.
 /// </summary>
 /// <remarks>
-/// Firely Auth calls it when a user chooses whom to act for, when the app exchanges the authorization code, and at every refresh of a token for that choice.
+/// Firely Auth calls it when a user chooses whom to act for, and at every refresh of a token for that choice.
 /// The input parameters are <c>patient</c> (<c>Patient/&lt;id&gt;</c>) and <c>representative</c> (<c>RelatedPerson/&lt;id&gt;</c>).
 /// The user who chose is the <c>sub</c> claim of the token.
 /// It answers <c>result</c>, and <c>consent</c> with the Consent that authorizes the pair, if the authorization has one.
@@ -44,7 +44,7 @@ internal sealed partial class CheckAuthorizedRepresentativeOperation(
         {
             logger.LogWarning("${Operation} was refused: the token is not one of Firely Auth itself, or has no single sub claim", Name);
             response.HttpResult = StatusCodes.Status403Forbidden;
-            response.Outcome.AddIssue(VonkIssue.FORBIDDEN, "You are not allowed to call this operation.");
+            response.Outcome.AddIssue(VonkIssue.FORBIDDEN, "Only Firely Auth may call this operation.");
             return;
         }
 

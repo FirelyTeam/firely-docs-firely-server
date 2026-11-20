@@ -5,7 +5,7 @@ Release notes
 
 .. _firelyauth_releasenotes_4.9.0:
 
-Release 4.9.0, November XXth, 2026
+Release 4.9.0, November 20th, 2026
 ----------------------------------
 
 This release asks admins to confirm their identity before they make changes, allows only one account per FHIR record, lets you add admin apps such as the Firely Metrics Dashboard in the admin UI, and lets representatives sign in to apps for the patients they represent. It removes the authorized representative selection for Patient accounts.

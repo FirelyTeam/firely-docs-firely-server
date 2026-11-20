@@ -52,7 +52,7 @@ Which Questionnaire is used
 
 Firely Server needs the Questionnaire that the QuestionnaireResponse answers:
 
-* When the request contains a ``questionnaire`` parameter, Firely Server uses that Questionnaire. It must be the Questionnaire the QuestionnaireResponse refers to: its ``url``, and its ``version`` if the reference contains one, must match ``QuestionnaireResponse.questionnaire``. A QuestionnaireResponse without a ``questionnaire`` element is also accepted, and is then taken to answer the supplied Questionnaire. The supplied Questionnaire is not stored.
+* When the request contains a ``questionnaire`` parameter, Firely Server uses that Questionnaire. It must have a ``url``, and must be the Questionnaire the QuestionnaireResponse refers to: its ``url``, and its ``version`` if the reference contains one, must match ``QuestionnaireResponse.questionnaire``. A QuestionnaireResponse without a ``questionnaire`` element is also accepted, and is then taken to answer the supplied Questionnaire. The supplied Questionnaire is not stored.
 * Otherwise, Firely Server resolves the canonical url in ``QuestionnaireResponse.questionnaire`` in the :ref:`Administration database <conformance>`. A versioned reference, such as ``http://example.org/Questionnaire/intake|1.0.0``, resolves that version.
 
 Before it extracts anything, Firely Server validates the QuestionnaireResponse against that Questionnaire, at the ``Full`` validation level, whatever ``Validation:Level`` is set to. A supplied Questionnaire is validated at the ``Full`` level as well. Errors in the resources contained in a supplied Questionnaire, such as its extraction templates, are reported as warnings, because a template may leave a required element for extraction to fill in. At the ``Full`` level, an extension that Firely Server cannot find a definition for is an error, so the definitions of the SDC extensions must be loaded (see :ref:`feature_sdc`).
@@ -135,9 +135,12 @@ What the response looks like
    * - Nothing to extract
      - 200 OK
      - An OperationOutcome with an informational issue, instead of an empty Bundle.
-   * - The extraction found errors
+   * - The request, the QuestionnaireResponse or the Questionnaire is not valid, the Questionnaire cannot be found, or the extraction found errors
      - 400 Bad Request
      - An OperationOutcome with all the errors and warnings. No Bundle is returned.
+   * - The addressed QuestionnaireResponse does not exist (instance level)
+     - 404 Not Found
+     - An OperationOutcome.
 
 ----
 
@@ -188,7 +191,7 @@ Firely Server supports these extensions:
      - Additional Notes
    * - ``sdc-questionnaire-templateExtract``
      - ✅
-     - On the Questionnaire or on an item. A repeating item without an answer produces no resource.
+     - On the Questionnaire or on an item. An item that is not in the QuestionnaireResponse, or a question without an answer, produces no resource. On the Questionnaire itself, the resource is created even when there are no answers.
 
        On a repeating group, it creates one resource for each repetition. On a repeating question, it creates one resource for the item, not one for each answer: the expressions see all answers. To create one resource for each answer, put an ``sdc-questionnaire-templateExtractContext`` with the expression ``answer`` on the root of the template.
    * - ``sdc-questionnaire-templateExtractBundle``
@@ -213,7 +216,7 @@ Firely Server supports these extensions:
      - ✅
      - In a template. Its expression gives the value of the element it is on. An expression that returns nothing removes the element. One that returns several results repeats the element if it can repeat. On an element that holds one value, the first result is used, with a warning.
 
-       The value must be a FHIRPath expression as a string. Only one ``sdc-questionnaire-templateExtractValue`` or ``sdc-questionnaire-templateExtractContext`` is applied on an element; any others are removed. An extraction extension on the ``id`` of the template's root is removed, with a warning: use the ``resourceId`` sub-extension to set the id.
+       The value must be a FHIRPath expression as a string. On an element, the first ``sdc-questionnaire-templateExtractContext`` and the first ``sdc-questionnaire-templateExtractValue`` are applied; further ones of the same kind are removed without a warning. An extraction extension on the ``id`` of the template's root is removed, with a warning: use the ``resourceId`` sub-extension to set the id.
    * - ``sdc-questionnaire-extractAllocateId``
      - ✅
      - Allocates a ``urn:uuid:`` in a variable, so that extracted resources can refer to each other.
@@ -225,14 +228,14 @@ The expressions must be FHIRPath (``text/fhirpath``). An expression in another l
 
 Extraction uses the answers as they are in the QuestionnaireResponse. ``enableWhen`` is not evaluated, so the answers to an item that ``enableWhen`` would disable are extracted as well. Modular Questionnaires are not assembled, so a ``sdc-questionnaire-templateExtract`` in a sub-questionnaire is not used. The ``meta`` and the ``text`` of a template are copied as they are, so the narrative does not show the answers.
 
-Every entry gets a ``urn:uuid:`` as its ``fullUrl``, unless the ``fullUrl`` sub-extension gives it another one. So the references between the extracted resources are resolved when the Bundle is processed as a transaction.
+With ``sdc-questionnaire-templateExtract``, every entry gets a ``urn:uuid:`` as its ``fullUrl``, unless the ``fullUrl`` sub-extension gives it another one. So the references between the extracted resources are resolved when the Bundle is processed as a transaction.
 
 Checks on the extracted resources
 """""""""""""""""""""""""""""""""
 
 Firely Server checks what extraction produces, so that ``$extract`` does not return a resource that is not valid FHIR. These are reported as errors:
 
-* A value that the element cannot hold, such as an answer that is not a date for a ``date`` element, a code that is not in the ValueSet the element is bound to, or a decimal answer for an ``integer`` element.
+* A value that the element cannot hold, such as an answer that is not a date for a ``date`` element, a code that is not in the ValueSet the element is bound to, or a decimal answer with a fraction, such as ``3.5``, for an ``integer`` element. A decimal without a fraction, such as ``3.0``, is accepted.
 * A ``resourceId`` expression that does not return an id.
 * A sub-extension of ``sdc-questionnaire-templateExtract`` whose value is not a string.
 * Two entries for the same resource, with the same ``[type]/[id]`` or the same ``ifNoneExist``.
@@ -241,12 +244,13 @@ Firely Server checks what extraction produces, so that ``$extract`` does not ret
 
 These are reported as warnings, and the extraction continues:
 
-* An answer that does not fit the element as written, but of which exactly one part fits. For example, the code of a coded answer for a ``string`` element, or the value of a ``Quantity`` answer for a ``decimal`` element.
+* An answer that does not fit the element as written, but of which exactly one part fits. For example, the code of a coded answer for a ``string`` element, the value of a ``Quantity`` answer for a ``decimal`` element, or the date of a ``dateTime`` answer for a ``date`` element.
 * Several results for an element that holds one value. The first result is used.
-
-On a choice element such as ``Observation.value[x]``, a ``Coding``, ``Quantity`` or other complex answer keeps its own type, so a ``Quantity`` answer becomes ``valueQuantity``. A primitive answer keeps the type the template was written with: an ``integer`` answer for a ``valueString`` becomes a string, and a ``decimal`` answer for a ``valueQuantity`` is an error. Write the template with the type of the answer, such as ``valueInteger``.
 * A conditional sub-extension on an entry whose method does not use it, such as ``ifMatch`` on a ``POST``.
 * A ``template`` reference to a contained resource id that the Questionnaire uses more than once. The first resource with that id is used.
+
+On a choice element such as ``Observation.value[x]``, a complex answer keeps its own type if the element allows that type. So a ``Quantity`` answer for a template written as ``valueString`` becomes ``valueQuantity``. A primitive answer keeps the type the template was written with: an ``integer`` answer for a ``valueString`` becomes a string, and a ``decimal`` answer for a ``valueQuantity`` is an error. Write the template with the type of the answer, such as ``valueInteger``.
+
 
 Limits
 """"""

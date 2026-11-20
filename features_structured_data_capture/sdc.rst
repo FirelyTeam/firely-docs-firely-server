@@ -53,7 +53,7 @@ How forms are represented in FHIR
 
 #. Questionnaire
 
-   A ``Questionnaire`` defines a form: its items (questions and groups), the type of answer each item takes, the allowed answers, and when an item is shown. SDC adds extensions to a Questionnaire for pre-population, calculated answers, and data extraction. In Firely Server, a Questionnaire is a conformance resource, stored in the :ref:`Administration database <conformance>`.
+   A ``Questionnaire`` defines a form: its items (questions and groups), the type of answer each item takes, the allowed answers, and when an item is shown. SDC adds extensions to a Questionnaire for pre-population, calculated answers, and data extraction. In Firely Server, a Questionnaire is a conformance resource, stored in the :ref:`Administration database <conformance>`. Instance-level ``$populate`` is the exception; see :ref:`feature_sdc_populate`.
 
 #. QuestionnaireResponse
 
@@ -129,5 +129,5 @@ Second, make sure the operations are enabled in the ``Operations`` section. ``$p
 
 Third, load the definitions that your Questionnaires use into the :ref:`Administration database <conformance>`:
 
-* The Questionnaires themselves, unless the client sends the Questionnaire with every request.
+* The Questionnaires themselves, unless the client sends the Questionnaire with every request. ``Questionnaire/[id]/$populate`` is the exception: it reads the Questionnaire from the database with the FHIR data, so a Questionnaire used that way must be stored there as well.
 * The StructureDefinitions of the SDC extensions that the Questionnaires use. The SDC implementation guide does not ship with Firely Server. Firely Server validates the Questionnaire and the QuestionnaireResponse at the ``Full`` level, and at that level an extension whose definition the server cannot find is an error. The easiest way is to import the ``hl7.fhir.uv.sdc`` package (see :ref:`conformance_import`).

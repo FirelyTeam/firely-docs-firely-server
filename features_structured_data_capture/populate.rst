@@ -48,9 +48,9 @@ Invoking $populate
 Which Questionnaire is used
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* On instance level, Firely Server reads the addressed Questionnaire like any other read of a resource, with the access rights of the caller.
-* On type level, a Questionnaire named by a canonical url, a reference or an ``identifier`` is resolved in the :ref:`Administration database <conformance>`, as for ``$extract``. The caller must be allowed to read Questionnaires, otherwise the request is answered with HTTP 403.
-* On type level, a Questionnaire can also be sent as a resource in the ``questionnaire`` parameter. Firely Server validates it at the ``Full`` level, as for ``$extract``, and rejects it with HTTP 400 when it is not valid. A supplied Questionnaire is not stored.
+* On instance level, Firely Server reads the addressed Questionnaire like any other read of a resource, with the access rights of the caller. So it reads it from the database with the FHIR data, not from the Administration database. A Questionnaire that is only in the Administration database gives HTTP 404 on instance level; name it by its canonical url on type level instead.
+* On type level, a Questionnaire named by a canonical url, a reference or an ``identifier`` is resolved in the :ref:`Administration database <conformance>`, as for ``$extract``. A reference must be a relative reference ``Questionnaire/[id]``, without a version, to a Questionnaire that has a ``url``. The caller must be allowed to read Questionnaires, otherwise the request is answered with HTTP 403.
+* On type level, a Questionnaire can also be sent as a resource in the ``questionnaire`` parameter. Firely Server validates it at the ``Full`` level, as for ``$extract``, and rejects it with HTTP 400 when it is not valid or has no ``url``. A supplied Questionnaire is not stored.
 
 So the instance-level and the type-level form can find a Questionnaire in different places.
 
@@ -59,8 +59,8 @@ Where the answers come from
 
 The expressions in the Questionnaire read the data they need from:
 
-* the resources in the ``context`` parameter, under the name of a ``launchContext`` or a root-level ``variable`` of the Questionnaire;
-* the ``subject``, which is also used as the ``patient`` launch context when no ``context`` gives one;
+* the resources in the ``context`` parameter, under the name of a ``launchContext``, or of a ``variable`` that is an ``x-fhir-query``. For such a variable, the content is used instead of running the query;
+* the ``subject``, which is also used as the ``patient`` launch context when no ``context`` gives one. This needs a ``subject`` with a ``reference``; one with only an ``identifier`` leaves ``%patient`` empty, with a warning;
 * ``x-fhir-query`` searches, which run against this Firely Server, with the access rights of the caller.
 
 Firely Server does not read data from other servers. A ``context`` content given as a reference is read from this Firely Server as well.
@@ -92,31 +92,31 @@ Input parameters:
        Type level only. Give either ``identifier`` or ``questionnaire``, not both.
    * - ``questionnaire``
      - ✅
-     - ``canonical``, ``Reference`` or ``Questionnaire`` resource
+     - ``uri``, ``Reference`` or ``Questionnaire`` resource
      - 0..1
-     - The Questionnaire to populate: its canonical url (also accepted as ``valueUri`` or ``valueString``), a reference to it, or the Questionnaire itself. See `Which Questionnaire is used`_.
+     - The Questionnaire to populate: its canonical url (Firely Server also accepts it as ``valueCanonical`` or ``valueString``), a reference to it, or the Questionnaire itself. See `Which Questionnaire is used`_.
 
        Type level only. Give either ``questionnaire`` or ``identifier``, not both. A request with neither is rejected with HTTP 400.
    * - ``subject``
      - ✅
      - ``Reference``
      - 0..1
-     - The subject of the QuestionnaireResponse, usually the patient. The whole reference is copied into ``QuestionnaireResponse.subject``, so a reference with only an ``identifier`` is kept as it is.
+     - The subject of the QuestionnaireResponse, usually the patient. Its ``reference``, ``type``, ``display`` and ``identifier`` are copied into ``QuestionnaireResponse.subject``, so a reference with only an ``identifier`` is kept as it is.
 
-       It is also used as the ``patient`` launch context when no ``context`` parameter gives one.
+       It is also used as the ``patient`` launch context when no ``context`` parameter gives one, if it has a ``reference``.
    * - ``context``
      - ✅
      - (parts)
      - 0..*
      - A resource to use during population. Each ``context`` has these parts:
 
-       * ``name`` (``string``, 1..1): the name of a ``launchContext`` or of a root-level ``variable`` of the Questionnaire.
+       * ``name`` (``string``, 1..1): the name of a ``launchContext``, or of a ``variable`` that is an ``x-fhir-query``. A context with the name of a FHIRPath ``variable`` is not used.
        * ``content`` (``Reference`` or resource, 1..*): the resource itself, or a reference to it on this Firely Server.
 
        A name that the Questionnaire does not declare is reported in ``issues``.
    * - ``dataEndpoint``
      - ❌
-     - ``Endpoint``
+     - ``uri``, ``Reference`` or ``Endpoint``
      - 0..1
      - Firely Server only reads data from itself. A request with this parameter is rejected with HTTP 501.
    * - ``data``
@@ -261,7 +261,7 @@ Firely Server supports these parts of expression-based population:
      - ❌
      - Not assembled. The items of a sub-questionnaire are not populated.
 
-The expressions can be FHIRPath (``text/fhirpath``), and a ``variable`` can also be an ``x-fhir-query`` (``application/x-fhir-query``). CQL expressions are not evaluated, and are reported as a warning in ``issues``.
+The expressions can be FHIRPath (``text/fhirpath``). A ``variable`` and an ``sdc-questionnaire-itemPopulationContext`` can also be an ``x-fhir-query`` (``application/x-fhir-query``); for an ``itemPopulationContext``, each resource the query finds is one repetition of the group. CQL expressions are not evaluated, and are reported as a warning in ``issues``.
 
 The expressions can use ``%resource``, ``%rootResource``, ``%context``, ``%questionnaire``, ``%qitem``, and the names of the launch contexts, variables and initial expressions. In the expressions of an item, ``%context`` is the response item of that Questionnaire item. A Questionnaire cannot declare a variable named ``context``, ``resource``, ``rootResource``, ``questionnaire`` or ``qitem``; such a declaration is reported and ignored.
 

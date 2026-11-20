@@ -16,7 +16,7 @@ Data extraction - QuestionnaireResponse/$extract
   See :ref:`feature_sdc` for how to enable Structured Data Capture.
 
 The ``$extract`` operation turns the answers in a ``QuestionnaireResponse`` into the FHIR resources that its ``Questionnaire`` describes. For example, the answer to a question about the patient's weight becomes an ``Observation`` with that weight as its value.
-The Questionnaire says which resources to create and how, with the data extraction extensions of the `SDC implementation guide <https://hl7.org/fhir/uv/sdc/extraction.html>`_.
+The Questionnaire defines which resources to create and how, with the data extraction extensions of the `SDC implementation guide <https://hl7.org/fhir/uv/sdc/extraction.html>`_.
 
 ``$extract`` does not store anything. It returns a transaction Bundle with the extracted resources. To store them, send that Bundle to Firely Server, or to another FHIR server, as a :ref:`transaction <restful_transaction>`. This lets the client check the resources, or show them to the user for confirmation, before they are stored.
 
@@ -35,34 +35,34 @@ Invoking $extract
 
 * ``POST [base]/QuestionnaireResponse/[id]/$extract``
 
-  Extracts from the QuestionnaireResponse stored under ``[id]``. The body is optional. When there is one, it must be a ``Parameters`` resource, and it can only contain the ``questionnaire`` parameter.
+  Extracts from the QuestionnaireResponse stored under ``[id]``. The body is optional. When there is one, it must be a ``Parameters`` resource, and it must not contain the ``questionnaire-response`` parameter.
 
 * ``GET [base]/QuestionnaireResponse/[id]/$extract``
 
-  The same as the instance-level ``POST`` without a body. Both input parameters are resources, so they cannot be sent over ``GET``. A ``GET`` with a query parameter other than ``_format`` is rejected with HTTP 400.
+  The same as the instance-level ``POST`` without a body. Both input parameters are resources, so they cannot be sent in a ``GET``. A ``GET`` with a query parameter other than ``_format`` is rejected with HTTP 400.
 
 ``GET`` is not supported on type level, because there the QuestionnaireResponse has to be sent in the body.
 
 ``$extract`` is available on FHIR R4 and R5 endpoints. It is not supported on STU3. To use it on R5, ``Vonk.Fhir.R5`` must be included in the pipeline (see :ref:`feature_multiversion`).
 
-On instance level, the caller must be allowed to read the QuestionnaireResponse, in the same way as for a read of that resource. With SMART on FHIR, for example, a token without a read scope for ``QuestionnaireResponse`` gets HTTP 403.
+On instance level, the caller must be allowed to read the QuestionnaireResponse, in the same way as for a read of that resource. For example, with SMART on FHIR, a request with a token without a read scope for ``QuestionnaireResponse`` is rejected with HTTP 403.
 
 Which Questionnaire is used
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Firely Server needs the Questionnaire that the QuestionnaireResponse answers:
 
-* When the request contains a ``questionnaire`` parameter, Firely Server uses that Questionnaire. It must have a ``url``, and must be the Questionnaire the QuestionnaireResponse refers to: its ``url``, and its ``version`` if the reference contains one, must match ``QuestionnaireResponse.questionnaire``. A QuestionnaireResponse without a ``questionnaire`` element is also accepted, and is then taken to answer the supplied Questionnaire. The supplied Questionnaire is not stored.
+* When the request contains a ``questionnaire`` parameter, Firely Server uses that Questionnaire. It must have a ``url``, and must be the Questionnaire the QuestionnaireResponse refers to: its ``url``, and its ``version`` if the reference contains one, must match ``QuestionnaireResponse.questionnaire``. A QuestionnaireResponse without a ``questionnaire`` element is also accepted. Firely Server then treats it as an answer to the supplied Questionnaire. The supplied Questionnaire is not stored.
 * Otherwise, Firely Server resolves the canonical url in ``QuestionnaireResponse.questionnaire`` in the :ref:`Administration database <conformance>`. A versioned reference, such as ``http://example.org/Questionnaire/intake|1.0.0``, resolves that version.
 
-Before it extracts anything, Firely Server validates the QuestionnaireResponse against that Questionnaire, at the ``Full`` validation level, whatever ``Validation:Level`` is set to. A supplied Questionnaire is validated at the ``Full`` level as well. Errors in the resources contained in a supplied Questionnaire, such as its extraction templates, are reported as warnings, because a template may leave a required element for extraction to fill in. At the ``Full`` level, an extension that Firely Server cannot find a definition for is an error, so the definitions of the SDC extensions must be loaded (see :ref:`feature_sdc`).
+Before it extracts anything, Firely Server validates the QuestionnaireResponse against that Questionnaire, at the ``Full`` level, regardless of the ``Validation:Level`` setting. A supplied Questionnaire is validated at the ``Full`` level as well. Errors in the resources contained in a supplied Questionnaire, such as its extraction templates, are reported as warnings, because a template may leave a required element for extraction to fill in. At the ``Full`` level, an extension whose definition Firely Server cannot find is an error. So the definitions of the SDC extensions must be loaded (see :ref:`feature_sdc`).
 
 ----
 
 Supported parameters
 --------------------
 
-The `OperationDefinition <https://hl7.org/fhir/uv/sdc/OperationDefinition-QuestionnaireResponse-extract.html>`_ defines two input and two output parameters. Firely Server supports all four, with the limits given in the notes below. A parameter that the OperationDefinition does not define is ignored.
+The `OperationDefinition <https://hl7.org/fhir/uv/sdc/OperationDefinition-QuestionnaireResponse-extract.html>`_ defines two input and two output parameters. Firely Server supports all four, with the limits given in the notes below. In a ``Parameters`` body, a parameter that the OperationDefinition does not define is ignored.
 
 Input parameters:
 
@@ -88,7 +88,7 @@ Input parameters:
      - 0..1
      - The Questionnaire to extract with, instead of the one Firely Server resolves. See `Which Questionnaire is used`_.
 
-       It must be a ``Questionnaire`` and must match ``QuestionnaireResponse.questionnaire``. Otherwise, the request is rejected with HTTP 400. So is a supplied Questionnaire that is not valid.
+       It must be a ``Questionnaire`` and must match ``QuestionnaireResponse.questionnaire``. Otherwise, the request is rejected with HTTP 400. A request with a supplied Questionnaire that is not valid is rejected with HTTP 400 as well.
 
 Each input parameter may occur only once, and must carry a resource. A parameter that occurs more than once, or that carries a value instead of a resource, is rejected with HTTP 400.
 
@@ -107,9 +107,9 @@ Each input parameter may occur only once, and must carry a resource. A parameter
      - ✅
      - ``Bundle`` resource
      - 0..1
-     - A transaction Bundle with the extracted resources. Firely Server returns it as the Questionnaire's extraction rules built it, including the ``fullUrl`` and the ``request`` of each entry.
+     - A transaction Bundle with the extracted resources. Firely Server returns the Bundle as the extraction rules of the Questionnaire produced it, including the ``fullUrl`` and the ``request`` of each entry.
 
-       The OperationDefinition also allows a single resource instead of a Bundle. Firely Server always returns a transaction Bundle, also when only one resource is extracted.
+       The OperationDefinition also allows a single resource instead of a Bundle. Firely Server always returns a transaction Bundle, even when only one resource is extracted.
    * - ``issues``
      - ✅
      - ``OperationOutcome`` resource
@@ -135,7 +135,7 @@ What the response looks like
    * - Nothing to extract
      - 200 OK
      - An OperationOutcome with an informational issue, instead of an empty Bundle.
-   * - The request, the QuestionnaireResponse or the Questionnaire is not valid, the Questionnaire cannot be found, or the extraction found errors
+   * - The request, the QuestionnaireResponse or the Questionnaire is not valid, the Questionnaire cannot be found, the extraction found errors, or the extraction reached a `limit <Limits_>`_
      - 400 Bad Request
      - An OperationOutcome with all the errors and warnings. No Bundle is returned.
    * - The addressed QuestionnaireResponse does not exist (instance level)
@@ -173,12 +173,12 @@ A request is rejected with HTTP 400 when the Questionnaire:
 
 * uses a mechanism that is not supported;
 * combines several mechanisms;
-* has none of these extensions, so there is no way to know what to extract.
+* has none of these extensions, so Firely Server cannot determine what to extract.
 
 Template-based extraction
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-With template-based extraction, the Questionnaire contains the resources to create as contained resources, the *templates*. An ``sdc-questionnaire-templateExtract`` extension on the Questionnaire or on an item refers to a template, and says that a resource is created from it at that point. Extensions inside the template say which answers go where. ``sdc-questionnaire-templateExtractBundle`` refers to a contained transaction Bundle instead, which is used as a template for the whole result.
+With template-based extraction, the Questionnaire contains the resources to create as contained resources, the *templates*. An ``sdc-questionnaire-templateExtract`` extension on the Questionnaire or on an item refers to a template. A resource is created from that template at that point. Extensions inside the template define which answers go where. ``sdc-questionnaire-templateExtractBundle`` refers to a contained transaction Bundle instead, which is used as a template for the whole result.
 
 Firely Server supports these extensions:
 
@@ -193,12 +193,12 @@ Firely Server supports these extensions:
      - ✅
      - On the Questionnaire or on an item. An item that is not in the QuestionnaireResponse, or a question without an answer, produces no resource. On the Questionnaire itself, the resource is created even when there are no answers.
 
-       On a repeating group, it creates one resource for each repetition. On a repeating question, it creates one resource for the item, not one for each answer: the expressions see all answers. To create one resource for each answer, put an ``sdc-questionnaire-templateExtractContext`` with the expression ``answer`` on the root of the template.
+       On a repeating group, it creates one resource for each repetition. On a repeating question, it creates one resource for the item, not one for each answer: the expressions can use all answers. To create one resource for each answer, put an ``sdc-questionnaire-templateExtractContext`` with the expression ``answer`` on the root of the template.
    * - ``sdc-questionnaire-templateExtractBundle``
      - ✅
      - On the Questionnaire only. On an item it is ignored. The Bundle it produces is checked against the rules for a transaction Bundle.
 
-       It cannot be combined with ``sdc-questionnaire-templateExtract``, also not on an item, and it can only be used once. Otherwise the request is rejected with HTTP 400.
+       It cannot be combined with ``sdc-questionnaire-templateExtract``, on the Questionnaire or on an item, and it can only be used once. Otherwise the request is rejected with HTTP 400.
 
        The Bundle template is processed differently from ``sdc-questionnaire-templateExtract``:
 
@@ -216,7 +216,7 @@ Firely Server supports these extensions:
      - ✅
      - In a template. Its expression gives the value of the element it is on. An expression that returns nothing removes the element. One that returns several results repeats the element if it can repeat. On an element that holds one value, the first result is used, with a warning.
 
-       The value must be a FHIRPath expression as a string. On an element, the first ``sdc-questionnaire-templateExtractContext`` and the first ``sdc-questionnaire-templateExtractValue`` are applied; further ones of the same kind are removed without a warning. An extraction extension on the ``id`` of the template's root is removed, with a warning: use the ``resourceId`` sub-extension to set the id.
+       The value must be a FHIRPath expression as a string. On an element, the first ``sdc-questionnaire-templateExtractContext`` and the first ``sdc-questionnaire-templateExtractValue`` are applied. Further ones of the same kind are removed without a warning. An extraction extension on the ``id`` of the template's root is removed, with a warning: use the ``resourceId`` sub-extension to set the id.
    * - ``sdc-questionnaire-extractAllocateId``
      - ✅
      - Allocates a ``urn:uuid:`` in a variable, so that extracted resources can refer to each other.
@@ -233,14 +233,14 @@ With ``sdc-questionnaire-templateExtract``, every entry gets a ``urn:uuid:`` as 
 Checks on the extracted resources
 """""""""""""""""""""""""""""""""
 
-Firely Server checks what extraction produces, so that ``$extract`` does not return a resource that is not valid FHIR. These are reported as errors:
+Firely Server checks what extraction produces, so that every resource that ``$extract`` returns is valid FHIR. These are reported as errors:
 
 * A value that the element cannot hold, such as an answer that is not a date for a ``date`` element, a code that is not in the ValueSet the element is bound to, or a decimal answer with a fraction, such as ``3.5``, for an ``integer`` element. A decimal without a fraction, such as ``3.0``, is accepted.
 * A ``resourceId`` expression that does not return an id.
 * A sub-extension of ``sdc-questionnaire-templateExtract`` whose value is not a string.
 * Two entries for the same resource, with the same ``[type]/[id]`` or the same ``ifNoneExist``.
 * A ``urn:uuid:`` reference that no entry has as its ``fullUrl``.
-* For ``sdc-questionnaire-templateExtractBundle``: a Bundle that breaks the rules for a transaction, such as an entry without a ``request``, or a ``fullUrl`` that is used twice or contains a version.
+* For ``sdc-questionnaire-templateExtractBundle``: a Bundle that violates the rules for a transaction, such as an entry without a ``request``, or a ``fullUrl`` that is used twice or contains a version.
 
 These are reported as warnings, and the extraction continues:
 
@@ -251,11 +251,10 @@ These are reported as warnings, and the extraction continues:
 
 On a choice element such as ``Observation.value[x]``, a complex answer keeps its own type if the element allows that type. So a ``Quantity`` answer for a template written as ``valueString`` becomes ``valueQuantity``. A primitive answer keeps the type the template was written with: an ``integer`` answer for a ``valueString`` becomes a string, and a ``decimal`` answer for a ``valueQuantity`` is an error. Write the template with the type of the answer, such as ``valueInteger``.
 
-
 Limits
 """"""
 
-Templates with nested ``sdc-questionnaire-templateExtractContext`` expressions can produce a very large number of results. Firely Server stops the extraction after 100,000 expression evaluations, and answers with HTTP 400 and an OperationOutcome with issue type ``too-costly``. The extraction also stops when the client stops waiting for the response.
+Templates with nested ``sdc-questionnaire-templateExtractContext`` expressions can produce a very large number of results. Firely Server stops the extraction after 100,000 expression evaluations, and rejects the request with HTTP 400 and an OperationOutcome with issue type ``too-costly``. The extraction also stops when the client stops waiting for the response.
 
 ----
 
@@ -264,7 +263,7 @@ Templates with nested ``sdc-questionnaire-templateExtractContext`` expressions c
 Configuration
 -------------
 
-``$extract`` is enabled in the ``Operations`` section of ``appsettings.default.json``, on type and instance level. It is only available once the Structured Data Capture plugin is in the pipeline (see :ref:`feature_sdc`).
+``$extract`` is enabled in the ``Operations`` section of ``appsettings.default.json``, on type and instance level. It is only available when the Structured Data Capture plugin is in the pipeline (see :ref:`feature_sdc`).
 
 .. code-block:: json
 

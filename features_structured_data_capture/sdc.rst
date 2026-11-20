@@ -21,7 +21,7 @@ In FHIR, the definition of a form is a ``Questionnaire``, and a filled-in form i
 The answers in a ``QuestionnaireResponse`` are useful to the person who reads the form, but other systems cannot use them directly. A decision support rule, a quality measure or a search for all patients with a high blood pressure looks for an ``Observation`` or a ``Condition``, not for answer 3 of question 7.
 
 The `HL7 Structured Data Capture (SDC) implementation guide <https://hl7.org/fhir/uv/sdc/>`_ closes that gap. It extends ``Questionnaire`` with the information a system needs to work with a form: how to fill in answers from the data that is already known, how to calculate and check answers while the form is filled in, and how to turn the answers into the FHIR resources they describe.
-Firely Server implements the SDC operations on the server side, so a form application does not have to implement this logic itself, and the Questionnaires are kept and versioned in one place.
+Firely Server implements the SDC operations for pre-population and data extraction on the server side, so a form application does not have to implement this logic itself, and the Questionnaires are kept and versioned in one place.
 
 ----
 
@@ -75,6 +75,15 @@ SDC defines several operations. The list below shows which ones Firely Server su
 Supported
 ^^^^^^^^^
 
+* Questionnaire/$populate
+
+   :Purpose: Fills in a QuestionnaireResponse with the answers that are already known, before the form is shown to the user.
+   :Use Case: Pre-populating a form from the patient's record, so the user only checks and completes it.
+   :Input: The Questionnaire, the patient (or other subject) the form is about, and optionally other resources to use, such as the encounter.
+   :Output: A partly filled in QuestionnaireResponse, and the problems found during population.
+
+   See `SDC - OperationDefinition Questionnaire/$populate <https://hl7.org/fhir/uv/sdc/OperationDefinition-Questionnaire-populate.html>`_ for the HL7 specification, and :ref:`feature_sdc_populate` for details on how to execute this operation in Firely Server, including which parameters and population mechanisms are supported.
+
 * QuestionnaireResponse/$extract
 
    :Purpose: Turns the answers in a QuestionnaireResponse into the FHIR resources that its Questionnaire describes.
@@ -93,19 +102,10 @@ Supported
 
    This operation is defined by Da Vinci DTR rather than by SDC. See :ref:`questionnaire-package`.
 
-Planned
-^^^^^^^
+Not supported
+^^^^^^^^^^^^^
 
-* Questionnaire/$populate
-
-   :Purpose: Fills in a QuestionnaireResponse with the answers that are already known, before the form is shown to the user.
-   :Use Case: Pre-populating a form from the patient's record.
-   :Input: A Questionnaire, and the patient (or other subject) the form is about.
-   :Output: A partly filled in QuestionnaireResponse.
-
-   ``$populate`` is planned for a later release of Firely Server. See `SDC - OperationDefinition Questionnaire/$populate <https://hl7.org/fhir/uv/sdc/OperationDefinition-Questionnaire-populate.html>`_ for the HL7 specification.
-
-Other SDC operations, such as ``Questionnaire/$assemble`` for modular forms and ``$next-question`` for adaptive forms, are not supported.
+The other SDC operations are not supported. These include ``Questionnaire/$assemble`` for modular forms, ``$next-question`` for adaptive forms, and ``$populatehtml`` and ``$populatelink``.
 
 Enabling Structured Data Capture in Firely Server
 --------------------------------------------------
@@ -129,9 +129,9 @@ First, add the Structured Data Capture plugin to the pipeline. It ships with Fir
      ]
    }
 
-The plugin checks the answers against the Questionnaire with the validation plugin, so validation must be in the same branch. Validation is in the default pipeline. If the validation plugin is missing, or enterprise validation is not licensed, Firely Server does not start, and the log says which one is missing.
+The plugin validates Questionnaires and QuestionnaireResponses with the validation plugin, so validation must be in the same branch. Validation is in the default pipeline. If the validation plugin is missing, or enterprise validation is not licensed, Firely Server does not start, and the log says which one is missing.
 
-Second, make sure the operations are enabled in the ``Operations`` section. ``$extract`` is enabled there by default, on type and instance level. See :ref:`feature_sdc_extract_configuration`.
+Second, make sure the operations are enabled in the ``Operations`` section. ``$populate`` and ``$extract`` are enabled there by default, on type and instance level. See :ref:`feature_sdc_populate_configuration` and :ref:`feature_sdc_extract_configuration`.
 
 Third, load the definitions that your Questionnaires use into the :ref:`Administration database <conformance>`:
 

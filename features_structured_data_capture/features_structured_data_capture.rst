@@ -11,4 +11,5 @@ A form is a FHIR ``Questionnaire``, and the answers to it are a ``QuestionnaireR
    :titlesonly:
 
    sdc
+   populate
    extract

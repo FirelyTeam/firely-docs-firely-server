@@ -43,7 +43,7 @@ Invoking $extract
 
 ``GET`` is not supported on type level, because there the QuestionnaireResponse has to be sent in the body.
 
-``$extract`` is available on FHIR R4 and R5 endpoints. It is not available on STU3, because SDC does not define it for STU3. To use it on R5, ``Vonk.Fhir.R5`` must be included in the pipeline (see :ref:`feature_multiversion`).
+``$extract`` is available on FHIR R4 and R5 endpoints. It is not supported on STU3. To use it on R5, ``Vonk.Fhir.R5`` must be included in the pipeline (see :ref:`feature_multiversion`).
 
 On instance level, the caller must be allowed to read the QuestionnaireResponse, in the same way as for a read of that resource. With SMART on FHIR, for example, a token without a read scope for ``QuestionnaireResponse`` gets HTTP 403.
 

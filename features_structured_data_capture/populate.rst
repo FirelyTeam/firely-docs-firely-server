@@ -43,7 +43,7 @@ Invoking $populate
 
 ``GET`` is not supported on type level, because there the Questionnaire is named in the body.
 
-``$populate`` is available on FHIR R4 and R5 endpoints. On STU3 it is answered with HTTP 501. To use it on R5, ``Vonk.Fhir.R5`` must be included in the pipeline (see :ref:`feature_multiversion`).
+``$populate`` is available on FHIR R4 and R5 endpoints. It is not supported on STU3. To use it on R5, ``Vonk.Fhir.R5`` must be included in the pipeline (see :ref:`feature_multiversion`).
 
 Which Questionnaire is used
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -176,7 +176,7 @@ What the response looks like
    * - The caller may not read Questionnaires
      - 403 Forbidden
      - An OperationOutcome.
-   * - ``dataEndpoint`` or ``data`` was sent, or the endpoint is STU3
+   * - ``dataEndpoint`` or ``data`` was sent
      - 501 Not Implemented
      - An OperationOutcome.
 

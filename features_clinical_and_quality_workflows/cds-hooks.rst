@@ -306,11 +306,11 @@ All settings for CDS Hooks are in the ``CdsHooks`` section of the appsettings. T
             "Enabled": true,
             "RequestValidation": {
               "Enabled": false,
-              "Profile": "http://fire.ly/fhir/StructureDefinition/CdsHooksRequest"
+              "Profile": "http://hl7.org/fhir/tools/StructureDefinition/CDSHooksRequest"
             },
             "ResponseValidation": {
               "Enabled": false,
-              "Profile": "http://fire.ly/fhir/StructureDefinition/CdsHooksResponse"
+              "Profile": "http://hl7.org/fhir/tools/StructureDefinition/CDSHooksResponse"
             }
           }
         }
@@ -359,7 +359,12 @@ Firely Server can validate the CDS Hooks payloads of a service, per hook. This i
 ``ResponseValidation``
     The response of the service is validated before it is sent. Issues are reported in the log, but the response is sent as the service decided.
 
-Each has its own ``Enabled`` switch and an optional ``Profile``. Without a ``Profile``, the payload is validated against the base CDS Hooks logical model for a request or response. Set ``Profile`` to the canonical URL of a constrained model, such as the request model of a CRD hook, to hold that hook's payloads to it. Profiles other than the base models are not shipped with Firely Server; load them into the administration database yourself.
+Each has its own ``Enabled`` switch and a ``Profile``: the canonical URL of the model to validate against. Always set ``Profile`` when you enable validation. Without it, every request is refused with ``400 Bad Request``, and the log reports every response as not conforming.
+
+* For the base CDS Hooks logical models, set ``Profile`` to ``http://hl7.org/fhir/tools/StructureDefinition/CDSHooksRequest`` or ``http://hl7.org/fhir/tools/StructureDefinition/CDSHooksResponse``.
+* To hold a hook's payloads to a constrained model, such as the request model of a CRD hook, set ``Profile`` to the canonical URL of that model.
+
+Profiles other than the base models are not shipped with Firely Server; load them into the administration database yourself.
 
 The FHIR resources inside the payload, such as the prefetched resources, are validated in the same pass.
 
@@ -683,7 +688,31 @@ Migrating to the CDS Hooks branch
 To move a deployment to the CDS Hooks branch:
 
 #. Remove ``Vonk.Plugin.CdsHooks.Legacy`` from the branch on ``/``.
-#. Add the CDS Hooks branch and the ``CdsHooks:Services`` entries, as described in `Enabling CDS Hooks`_. The example services have the same ids and hooks as the legacy ones, so CDS Clients do not need to change.
+#. Add the CDS Hooks branch and the ``CdsHooks:Services`` entries, as described in `Enabling CDS Hooks`_. The example services have the same ids and hooks as the legacy ones.
+#. Set up :ref:`authorization of CDS Clients <feature_cds_hooks_authorization>`. The CDS Hooks branch has an authorization of its own, and SMART on FHIR does not apply to it.
 #. Remove the ``$cds-<id>`` entries from the ``Operations`` section of the appsettings. They are not used by the CDS Hooks branch.
 #. You can remove the ``CDSHooksRequestOld`` and ``CDSHooksResponseOld`` StructureDefinitions from the administration database. The CDS Hooks branch takes the CDS Hooks payloads as they are.
 #. Rewrite custom CDS Services against the programming API of the CDS Hooks branch. See the migration table in :ref:`vonk_reference_api_cds_hooks`.
+#. Update your CDS Clients where needed, as described in `Updating CDS Clients`_.
+
+Updating CDS Clients
+~~~~~~~~~~~~~~~~~~~~
+
+A CDS Client of the legacy plugin calls the same service ids on the CDS Hooks branch, but needs to change in the following cases.
+
+**The CDS Client sends a SMART on FHIR access token.** The legacy plugin served CDS Hooks as FHIR operations in the branch on ``/``. With SMART on FHIR enabled, a CDS Client therefore called a service with a SMART on FHIR access token, for example one from SMART Backend Services, and read the discovery document without a token. The CDS Hooks branch authenticates CDS Clients the way the CDS Hooks specification describes: with a JWT that the CDS Client signs itself. It refuses a SMART on FHIR access token with ``401 Unauthorized``. To update such a CDS Client:
+
+#. Give the CDS Client a key pair, and register it in Firely Auth as a client of the type *CDS Hooks*, with the issuer of its JWTs and its public key, as a JWK or a JWKS URL. See :ref:`firely_auth_settings_cdshooks` for the keys that Firely Auth accepts.
+#. Stop requesting an access token from Firely Auth. Instead, have the CDS Client sign a new JWT for every request, and send it as a bearer token in the ``Authorization`` header:
+
+   * in the JWT header: ``alg`` (``RS384``, ``ES384``, ``RS512`` or ``ES512``), ``kid`` (the id of the signing key) and ``typ`` (``JWT``);
+   * in the JWT payload: ``iss`` (the issuer registered in Firely Auth), ``aud`` (the URL being called, ``<base-url>/cds-services/{id}``), ``iat``, ``exp`` (at most five minutes after ``iat``, unless ``CdsHooks:MaxTokenLifetime`` of Firely Auth allows more) and ``jti`` (a unique value for each JWT).
+
+#. Sign a JWT for the discovery request as well, with ``<base-url>/cds-services`` as its ``aud``, unless ``CdsHooks:Authorization:GuardDiscovery`` is ``false``.
+#. Never send a JWT twice, not even to retry a failed request: Firely Server accepts each JWT only once.
+
+**The CDS Client sends no token.** This works with the legacy plugin while SMART on FHIR is off, the default. On the CDS Hooks branch, it keeps working while ``CdsHooks:Authorization:Enabled`` is ``false``. Once you enable authorization, update the CDS Client as described above.
+
+**The CDS Client calls a version-specific endpoint.** With path mapping on for :ref:`version-specific endpoints <feature_multiversion_endpoints>`, the legacy plugin also served CDS Hooks at ``<base-url>/R4/cds-services``. The CDS Hooks branch serves only ``<base-url>/cds-services``, so change the address in the CDS Client.
+
+**The CDS Client calls the CRD example service** ``crd-order-select-hook``. The legacy service read the order from the ``serviceRequest`` prefetch. The example service of the CDS Hooks branch reads the draft orders from ``context.draftOrders``, refuses a request without them with ``400 Bad Request``, and answers only the orders listed in ``context.selections``. The ``order-select`` hook requires both in the context, so make sure the CDS Client sends them. The ``serviceRequest`` prefetch is no longer used.

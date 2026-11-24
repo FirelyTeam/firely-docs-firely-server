@@ -23,7 +23,7 @@ Create, read, update, patch, delete
 These five operations to manage the contents of the Firely Server, commonly referenced by the acronym CRUD, are implemented as per the specification. Patch is implemented as `FHIR Patch <http://hl7.org/fhir/fhirpatch.html>`_, as this is the most versatile one.
 A few limitations apply.
 
-Firely Server enables create-on-update: If you request an update and no resource exists for the given id, the provided resource will be created under the provided id. It is possible to disable this feature by setting ``AllowCreateOnUpdate`` to false in the ``FhirCapabilities`` configuration.
+Firely Server enables create-on-update: If you request an update and no resource exists for the given id, including an id that belonged to a resource that was deleted, the provided resource will be created under the provided id. It is possible to disable this feature by setting ``AllowCreateOnUpdate`` to false in the ``FhirCapabilities`` configuration; Firely Server then returns ``HTTP 404 Not Found`` for such an update instead, also when it is an entry of a batch or transaction.
 
 Firely Server can reject a resource based on :ref:`feature_prevalidation`.
 

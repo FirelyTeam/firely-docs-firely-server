@@ -36,8 +36,15 @@ So if you would want to fetch only Patient 1 and their Observations, changed sin
    GET <base-url>/Patient/1/$everything?_type=Patient,Observation&_since=2021-01-01
    Accept: application/fhir+json
 
+.. _patienteverything_smart:
+
+SMART on FHIR
+^^^^^^^^^^^^^
+
+With :ref:`feature_accesscontrol` enabled, ``$everything`` returns only the resource types that the client may read. Without ``_type``, the other types are left out. A ``_type`` that names a type the client may not read is refused with ``403 Forbidden``.
+
 .. warning::
-  ``$everything`` refuses the request with ``501 Not Implemented`` when a read scope for one of the returned resource types is restricted with search parameters (for example ``patient/Observation.r?category=vital-signs``), at patient, user or system level, whether that restriction comes from the access token itself or from the client's AccessPolicy. Use a ``_type`` parameter that leaves out the restricted types to avoid the refusal.
+  ``$everything`` refuses the request with ``501 Not Implemented`` when a read scope for one of the returned resource types is restricted with search parameters, for example ``patient/Observation.rs?category=vital-signs``. This applies to patient, user and system scopes, and to a restriction in the access token as well as in an AccessPolicy. The restricted scope counts even when another scope grants read access to the same type without search parameters. A scope that restricts only search, such as ``patient/Observation.s?category=vital-signs``, does not lead to the refusal. Use ``_type`` to leave out the restricted resource types, or grant read scopes without search parameters for them.
 
 .. _patienteverything_pagination:
 

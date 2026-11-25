@@ -6,7 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Vonk.Core.Common;
 using Vonk.Core.Context;
+using Vonk.Core.Metadata;
 using Vonk.Core.Pluggability;
+using Vonk.Core.Pluggability.ContextAware;
 
 namespace Vonk.Plugin.AuthorizedRepresentativeExample;
 
@@ -38,11 +40,23 @@ public static class AuthorizedRepresentativeExampleConfiguration
             throw new VonkConfigurationException(
                 $"Set '{AuthorizedRepresentativeExampleOptions.Section}:{nameof(AuthorizedRepresentativeExampleOptions.FirelyAuthUrl)}' or 'SmartAuthorizationOptions:Authority' to the url of Firely Auth.");
 
+        // The client secret and the management API token travel to this url
+        var requireHttps = configuration.GetValue("SmartAuthorizationOptions:RequireHttpsToProvider", true);
+        if (firelyAuthBase.Scheme != Uri.UriSchemeHttps && !(firelyAuthBase.Scheme == Uri.UriSchemeHttp && (firelyAuthBase.IsLoopback || !requireHttps)))
+            throw new VonkConfigurationException(
+                $"The url of Firely Auth '{firelyAuthUrl}' must use https. Plain http is accepted for a loopback address, or when 'SmartAuthorizationOptions:RequireHttpsToProvider' is false.");
+
+        if (options.PushTimeoutSeconds <= 0)
+            throw new VonkConfigurationException(
+                $"Set '{AuthorizedRepresentativeExampleOptions.Section}:{nameof(AuthorizedRepresentativeExampleOptions.PushTimeoutSeconds)}' to a number of seconds above 0.");
+
         if (string.IsNullOrEmpty(options.ClientId) || string.IsNullOrEmpty(options.ClientSecret))
             throw new VonkConfigurationException(
                 $"Set '{AuthorizedRepresentativeExampleOptions.Section}:{nameof(AuthorizedRepresentativeExampleOptions.ClientId)}' and " +
                 $"'{AuthorizedRepresentativeExampleOptions.Section}:{nameof(AuthorizedRepresentativeExampleOptions.ClientSecret)}' to a management API client of Firely Auth.");
 
+        // The token management keeps the management API token in the distributed cache
+        services.AddDistributedMemoryCache();
         services.AddClientCredentialsTokenManagement()
             .AddClient(FirelyAuthClient, client =>
             {
@@ -53,13 +67,19 @@ public static class AuthorizedRepresentativeExampleConfiguration
                 client.Resource = Resource.Parse(ManagementApiResource);
             });
 
-        services.AddHttpClient<FirelyAuthRelationshipsClient>(client => client.BaseAddress = firelyAuthBase)
+        services.AddHttpClient<FirelyAuthRelationshipsClient>(client =>
+            {
+                client.BaseAddress = firelyAuthBase;
+                // Firely Auth waits a few seconds for the answer of $representative-relationships, so a push that takes longer is of no use to it
+                client.Timeout = TimeSpan.FromSeconds(options.PushTimeoutSeconds);
+            })
             .AddClientCredentialsTokenHandler(FirelyAuthClient);
 
         services.TryAddSingleton(TimeProvider.System);
         services.TryAddScoped<RepresentativeAuthorizations>();
         services.TryAddScoped<RepresentativeRelationshipsOperation>();
         services.TryAddScoped<CheckAuthorizedRepresentativeOperation>();
+        services.TryAddContextAwareTransient<ICapabilityStatementContributor, RepresentativeOperationsCapabilityStatementContributor>();
         return services;
     }
 

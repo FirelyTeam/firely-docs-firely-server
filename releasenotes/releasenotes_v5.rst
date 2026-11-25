@@ -31,6 +31,24 @@ Old Firely Server release notes (v5.x)
 
     For more detailed information on the .NET lifecycle and support policies, you can refer to the official `Microsoft .NET and .NET Core lifecycle page <https://learn.microsoft.com/en-us/lifecycle/products/microsoft-net-and-net-core>`_.
 
+.. _vonk_releasenotes_5_11_7:
+
+Release 5.11.7, November 2026
+-----------------------------
+
+This is the final release of Firely Server 5.x. Firely Server 5.x runs on .NET 8, which Microsoft stops supporting on November 10th, 2026. From that date Firely Server 5.x is out of support as well. Please upgrade to Firely Server 6.x; see :ref:`upgrade` for guidance.
+
+Fix
+^^^
+
+#. Several packages as well as the base docker image have been updated to address security vulnerabilities in some of the base layers. The updated base image is now ``mcr.microsoft.com/dotnet/aspnet:8.0.33-alpine3.24``. This addresses:
+
+   - the ASP.NET Core and .NET runtime vulnerabilities fixed between 8.0.27 and 8.0.33, including those reported against ``Microsoft.AspNetCore.SignalR.Common`` and ``Microsoft.AspNetCore.Server.IISIntegration``;
+   - the OpenSSL, zlib and BusyBox vulnerabilities in the Alpine base layer;
+   - CVE-2025-6965 in SQLite, by moving to the decoupled SQLitePCLRaw 3.x packages.
+
+#. The Firely Server Ingest (FSI) docker image has been updated to the same base image.
+
 .. _vonk_releasenotes_5_11_6:
 
 Release 5.11.6, June 15th, 2026

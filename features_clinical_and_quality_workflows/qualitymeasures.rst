@@ -148,11 +148,19 @@ Alternatively, you can configure Firely Server to use only external data
 sources by enabling the ``RemoteDataEndpointsOnly`` setting. In that case,
 no local data retrieval (and thus no SQL Server or MongoDB data store) is required.
 
-With ``RemoteDataEndpointsOnly`` enabled, every request must set ``useServerData`` to
-``false``. A request that sets it to ``true``, or omits it, is rejected with HTTP 400 —
-also when it supplies the data in the ``data`` parameter. With ``useServerData`` set to
-``false``, the data comes from the ``data`` parameter when it is supplied, and otherwise
-from the ``dataEndpoint``; see :ref:`feature_external_data_endpoints`.
+With ``RemoteDataEndpointsOnly`` enabled, every request to ``Library/$evaluate`` or
+``Measure/$evaluate-measure`` must set ``useServerData`` to ``false``. A request that
+sets it to ``true``, or omits it, is rejected with HTTP 400 before any data of the
+server is read — also when it supplies the data in the ``data`` parameter. The
+``OperationOutcome`` names the operation that was invoked, for example:
+
+  Cannot execute operation $evaluate-measure. The server is configured to use remote
+  data endpoints only, but 'useServerData' is set to 'true'. Set 'useServerData' to
+  'false' and provide a 'dataEndpoint' parameter.
+
+With ``useServerData`` set to ``false``, the data comes from the ``data`` parameter
+when it is supplied, and otherwise from the ``dataEndpoint``; see
+:ref:`feature_external_data_endpoints`.
 
 .. _feature_external_data_endpoints:
 
@@ -232,8 +240,12 @@ rejected with an ``OperationOutcome`` that says what failed:
 
 - HTTP 400 when the ``dataEndpoint`` parameter is missing, or its ``Endpoint`` has no
   ``address``;
+- HTTP 400 when the ``address`` is not an absolute ``http`` or ``https`` URL;
 - HTTP 400 when the ``address`` matches no configured ``DataEndpoint`` entry: the
-  outcome says that the endpoint is not an allowed remote data endpoint;
+  outcome says that the endpoint is not an allowed remote data endpoint, and, when the
+  address carries user info, a query or a fragment, adds that it must be sent without
+  them. Neither the outcome nor the server log names the address; the log records its
+  scheme, host and port instead, or ``withheld`` when those cannot be read safely;
 - HTTP 500 when the data of the subject could not be retrieved from the endpoint, naming
   the endpoint. This is the case when the endpoint cannot be reached, does not answer in
   time, answers with an error (including HTTP 401 when Firely Server could not
@@ -442,10 +454,14 @@ A ``Library`` passed in the ``library`` parameter is handled as follows:
 - Otherwise it is compiled on every request; the result of the compilation is not kept.
   When the library carries ELM content (``application/elm+json``), the ELM is compiled
   and the CQL content is not used. Otherwise its CQL (``text/cql``) is translated to ELM
-  first. When compilation fails, the request is rejected with HTTP 422, reporting that
-  the library holds no .NET assembly; the server log holds the compilation errors. A
-  library whose CQL includes a library that no ``depends-on`` provides is rejected with
-  HTTP 422 naming the include; see `Library dependencies`_.
+  first. A compile that fails for a reason the client can fix — an error the CQL compiler
+  reports about the CQL or ELM, a library or a dependency that holds no CQL or ELM, or a
+  ``name`` or ``version`` that differs from the one its CQL or ELM declares — is rejected
+  with HTTP 422, naming the reason; the server log holds the compiler's own messages. A
+  compile that fails because of an error on the server is rejected with HTTP 500; the
+  response carries no detail, and the server log holds the exception. A library whose CQL
+  includes a library that no ``depends-on`` provides is rejected with HTTP 422 naming the
+  include; see `Library dependencies`_.
 - Its dependencies are resolved from the administration database, like those of a stored
   library; see `Library dependencies`_.
 
@@ -2152,10 +2168,14 @@ whole request with HTTP 422, issue type ``not-supported``:
 - The ``Group`` has no member entities.
 - A member entity references another resource type than ``Patient``. Such a member
   is not skipped: the request is rejected.
+- A member entity has no ``reference`` at all, such as one identified by an identifier
+  alone. Such a member is not skipped: the ``OperationOutcome`` names the member by its
+  position, as ``Group.member[<index>]``, counted from 0 as in FHIRPath.
 - A member entry whose reference does not identify a resource by type and id at all —
   an empty reference, or an absolute uri that is not a resource url such as
   ``urn:uuid:…``, as produced by ingesting a ``Group`` from a transaction Bundle. The
-  ``OperationOutcome`` names that reference.
+  ``OperationOutcome`` names that reference and the member's position, as
+  ``Group.member[<index>]``.
 - More distinct patients than ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation``
   allows.
 
@@ -2175,6 +2195,27 @@ single group of the measure.
 When the caller supplies the data through the ``data`` parameter, the outcome instead
 reports that the provided data does not contain the expected ``Patient`` — the data
 lacks it, while the patient itself may well exist on the server.
+
+Patient consistency
+~~~~~~~~~~~~~~~~~~~~
+
+The data a request evaluates must be consistent with its subject. This applies to
+``Library/$evaluate``, to ``$cql`` with a ``subject``, and to ``Measure/$evaluate-measure``
+— for supplied data, data from a ``dataEndpoint``, and data Firely Server retrieves itself.
+
+Only the Patient entries of the Bundle itself count as Patients of the data. A Patient
+contained in another resource — as a master patient index keeps each record it matched
+as a contained Patient of the Patient it builds from them — belongs to that resource,
+and a Patient in a nested Bundle belongs to that Bundle; neither counts as a Patient of
+the data.
+
+Each of the following rejects the request with HTTP 422, issue type ``processing``:
+
+- A Patient entry of the Bundle without an id.
+- A Patient entry of the Bundle that is not the subject's Patient.
+- More than one distinct Patient among the Bundle's Patient entries.
+
+``Measure/$evaluate-measure`` applies this check once for every subject it evaluates.
 
 .. _feature_cql_patient_context:
 

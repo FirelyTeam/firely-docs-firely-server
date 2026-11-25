@@ -173,6 +173,7 @@ Terminology
 
       "Terminology": {
       "MaxExpansionSize": 650,
+      "AlwaysExpandFlat": false, // true / false - If true, the expansions Firely Server makes itself are always flat (no nested codes), whatever excludeNested the request sends.
       // Optional: configure one or more CAR files for advanced terminology support (requires http://fire.ly/advanced-terminology license)
       //"ConformanceArchives": [
       //  {

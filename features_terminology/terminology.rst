@@ -162,9 +162,10 @@ ValueSet $expand
 :definition: https://hl7.org/fhir/valueset-operation-expand.html
 :notes:
    * Available on the type level ``ValueSet/$expand`` and the instance level ``ValueSet/<id>/$expand``.
-   * The Local Terminology Service supports the parameters url, valueSet and includeDesignations. It does not support valueSetVersion or any of the other expansion parameters, such as filter, count or offset. A Remote Terminology Service may support them.
-   * Pass the ValueSet either by reference (url, or the id on the instance level) or as a resource (the valueSet parameter or the request body), not both. A request that has both is rejected with ``400 Bad Request`` and "Ambiguous call. ValueSet information present both in url and in the valueSet parameter or request body".
-   * The size of an expansion by the Local Terminology Service is limited by ``MaxExpansionSize`` (see :ref:`feature_terminologyoptions`).
+   * The Local Terminology Service supports the parameters url, valueSetVersion, valueSet, includeDesignations, excludeNested and excludeNotForUI. It does not support any of the other expansion parameters, such as filter, count or offset. A Remote Terminology Service may support them.
+   * With ``excludeNested=true`` the expansion is flat, without nested codes. With ``excludeNotForUI=true`` codes that the code system marks as not selectable are left out. Both parameters, and includeDesignations, are echoed in ``expansion.parameter`` when the request sends them.
+   * Pass the ValueSet either by reference (url, optionally with valueSetVersion, or the id on the instance level) or as a resource (the valueSet parameter or the request body), not both. A request that has both is rejected with ``400 Bad Request`` and "Ambiguous call. ValueSet information present both in url and in the valueSet parameter or request body".
+   * The size of an expansion by the Local Terminology Service is limited by ``MaxExpansionSize`` (see :ref:`feature_terminologyoptions`). Set ``AlwaysExpandFlat`` to make every expansion made by the Local Terminology Service flat, whatever ``excludeNested`` the request sends (see :ref:`feature_terminologyoptions`).
    * Both ``GET`` and ``POST`` interactions are available. 
 
 .. _terminology_codesystem_lookup:
@@ -404,6 +405,8 @@ A sample Terminology section in the appsettings can look like this:
 This means if you execute a terminology operation request, Firely Server will check whether the request is correct, redirect it to the preferred terminology service and finally return the result.
 
 Additionally to the remote and local terminology services, you can configure the maximum number of concepts that are allowed to be included in a local ValueSet expansion (MaxExpansionSize). ValueSets stored in the local administration database larger than the configured setting will not be expanded, hence they cannot be used for $validate-code, $validate or $expand.
+
+You can also configure whether the expansions that Firely Server makes itself are always flat, without nested codes (AlwaysExpandFlat, default ``false``). When set to ``true``, every expansion made by the Local Terminology Service is flat, whatever ``excludeNested`` the request sends. The ``excludeNested`` parameter of the request is still echoed in the expansion as it was sent. Expansions made by a conformance archive or a remote terminology service are returned as they are.
 
 License
 -------

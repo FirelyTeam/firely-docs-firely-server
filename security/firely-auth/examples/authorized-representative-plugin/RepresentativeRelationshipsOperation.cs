@@ -8,7 +8,8 @@ namespace Vonk.Plugin.AuthorizedRepresentativeExample;
 /// Implements <c>POST [base]/$representative-relationships</c>.
 /// </summary>
 /// <remarks>
-/// Firely Auth calls it once per sign-in of a user who may act for others. The operation has no input parameters: the user is the <c>sub</c> of the token.
+/// Firely Auth calls it once per sign-in of a user who may act for others, and waits a few seconds for the answer.
+/// The operation has no input parameters: the user is the <c>sub</c> of the token.
 /// It pushes the patients the user may act for to Firely Auth, and then answers <c>result</c>: <see langword="true"/> when there is at least one.
 /// This example pushes before it answers. A push may also come after the answer, or at any other time.
 /// </remarks>
@@ -34,7 +35,7 @@ internal sealed class RepresentativeRelationshipsOperation(
         {
             logger.LogWarning("${Operation} was refused: the token is not one of Firely Auth itself, or has no sub claim", Name);
             response.HttpResult = StatusCodes.Status403Forbidden;
-            response.Outcome.AddIssue(VonkIssue.FORBIDDEN, "Only Firely Auth may call this operation, with a token for a user.");
+            response.Outcome.AddIssue(VonkIssue.FORBIDDEN, "You are not allowed to call this operation.");
             return;
         }
 
@@ -54,9 +55,10 @@ internal sealed class RepresentativeRelationshipsOperation(
         {
             await firelyAuth.PushAsync(userId, representees, httpContext.RequestAborted);
         }
-        catch (Exception ex) when (ex is HttpRequestException || (ex is TaskCanceledException && !httpContext.RequestAborted.IsCancellationRequested))
+        catch (Exception ex) when (ex is not OperationCanceledException || !httpContext.RequestAborted.IsCancellationRequested)
         {
-            // A TaskCanceledException that the caller did not cause is a timeout of the push
+            // Firely Auth refused the push, could not be reached, or gave no management API token.
+            // An OperationCanceledException that the caller did not cause is a timeout of the push.
             logger.LogError(ex, "Pushing {Count} representative relationships of user {UserId} to Firely Auth failed", representees.Count, userId);
             response.HttpResult = StatusCodes.Status500InternalServerError;
             response.Outcome.AddIssue(VonkIssue.INTERNAL_ERROR, "The request could not be processed.");

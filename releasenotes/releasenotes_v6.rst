@@ -13,12 +13,31 @@ Current Firely Server release notes (v6.x)
 Release 6.12.0
 --------------
 
-.. TODO: add the release date to the heading, and the other entries of this release. The entries below cover CDS Hooks only.
+.. TODO: add the release date to the heading.
 
-This release serves CDS Hooks on a pipeline branch of its own, with an API for writing your own CDS Services as plugins.
+This release serves CDS Hooks 3.0.0 on a pipeline branch of its own, with an API for writing your own CDS Services as plugins. It also lets you restrict which TLS client certificates Firely Server accepts, extends ``$expand`` and the other terminology operations, accepts an inline ``Group`` as the subject of ``Measure/$evaluate-measure``, makes indexing faster and leaner, and fixes a number of issues in batches, transactions and updates.
 
 .. attention::
-    The plugin ``Vonk.Plugin.CdsHooks`` is renamed ``Vonk.Plugin.CdsHooks.Legacy``, and the two ``StructureDefinition`` resources it relies on are renamed. If you use CDS Hooks, update your ``PipelineOptions`` and your administration database before upgrading. Firely Server also reserves fourteen ``CdsHooks*`` type names. See the "Known behavioral changes" section below and :ref:`feature_cds_hooks_upgrade`.
+    **MongoDB 5.0 or later is required.** Firely Server checks the version of the MongoDB server at startup. See :ref:`configure_mongodb`.
+
+.. attention::
+    The plugin ``Vonk.Plugin.CdsHooks`` is renamed ``Vonk.Plugin.CdsHooks.Legacy``, and the two ``StructureDefinition`` resources it relies on are renamed. If you use CDS Hooks, update your ``PipelineOptions`` and your administration database before upgrading, and plan your move to the new CDS Hooks branch. Firely Server also reserves fourteen ``CdsHooks*`` type names. See the "Known behavioral changes" section below and :ref:`feature_cds_hooks_upgrade`.
+
+.. attention::
+    Firely Server now uses the Firely CQL SDK 2.19.0. A ``Library`` precompiled with CQL SDK 2.16.0, 2.17.0 or 2.18.0 is rejected; recompile it with CQL SDK 2.19.0. ``Measure/$evaluate-measure`` now requires exactly one of ``subject`` and ``subjectGroup``. See the "Known behavioral changes" section below.
+
+.. attention::
+    If you upgrade from Firely Server 5.x with SMART on FHIR enabled, read the entry on ``EnforceAccessPolicies`` under "Known behavioral changes" below.
+
+Improvements
+^^^^^^^^^^^^
+
+#. Indexing is faster and uses less memory, especially for composite search parameters and for Bundles. Reindexing specific search parameters is cheaper.
+#. On MongoDB, Patient ``$everything`` and Bulk Data ``$export`` select their data inside the database.
+#. CQL evaluation fetches the data of the next subjects while the current subject is evaluated.
+#. ``$cql``, ``Library/$evaluate`` and ``Measure/$evaluate-measure`` give clearer HTTP 400 and 422 answers, with the reason given by the CQL compiler. A failure on the server side is answered with HTTP 500.
+#. Data requirements are now derived for a ``Library`` that is supplied as CQL.
+#. The libraries for plugin and facade developers now ship their XML documentation, so their API documentation shows in your IDE.
 
 Features
 ^^^^^^^^
@@ -28,12 +47,81 @@ Features
 #. Firely Server serves CDS Hooks 3.0.0 on a pipeline branch of its own. Add an entry with ``"Path": "/cds-services"`` to ``PipelineOptions:Branches``, listing ``Vonk.Plugin.CdsHooks.Infra`` followed by the CDS Services you offer. ``GET /cds-services`` answers the discovery document and ``POST /cds-services/{id}`` invokes a service. A service is offered only when its id and hook are named under ``CdsHooks:Services``; otherwise it answers HTTP 404, and Firely Server logs the setting to add at the ``Information`` level. Requests are handled in ``InformationModel:Default``, and version-specific endpoints with path mapping, such as ``/R4/cds-services``, are not served. Requires the license token ``http://fire.ly/server/plugins/cds-hooks``. See :ref:`feature_cds_hooks`.
 #. CDS Hooks requests and responses can be validated per service and hook, with ``RequestValidation`` and ``ResponseValidation`` under ``CdsHooks:Services:<id>:Hooks:<hook>``. A non-conformant request is refused with HTTP 400; issues in a response are logged. Both are off by default. See :ref:`feature_cds_hooks_validation`.
 #. CDS Clients can be required to authenticate with a signed JWT, with ``CdsHooks:Authorization:Enabled``. The token is verified by Firely Auth 4.8.0 or later, and each token can be used only once. Discovery is guarded as well, unless ``CdsHooks:Authorization:GuardDiscovery`` is ``false``. See :ref:`feature_cds_hooks_authorization`.
-#. The plugin ``Vonk.Plugin.CdsHooks.Examples`` offers a ``patient-view`` example service and a Da Vinci CRD example service on the ``order-select`` and ``order-sign`` hooks, each with its own configuration class. The CRD service supports Firely's prior authorization demo and is not intended for production use. See :ref:`feature_cds_hooks_examples`.
+#. The plugin ``Vonk.Plugin.CdsHooks.Examples`` offers a ``patient-view`` example service and a Da Vinci CRD example service on the ``order-select`` and ``order-sign`` hooks, each with its own configuration class. The CRD service supports Firely's prior authorization demo, returning guidance cards for the CPT codes in the PARDD demo data, and is not intended for production use. See :ref:`feature_cds_hooks_examples`.
+
+**Security**
+
+#. You can restrict which TLS client certificates the HTTPS listener accepts. These settings are checked at startup, and the outcome of each certificate check is logged.
+
+**Terminology**
+
+#. The terminology operations accept the ``tx-resource`` parameter.
+#. ``$expand`` supports the ``excludeNested`` and ``excludeNotForUI`` parameters, and echoes ``includeDesignations`` in the expansion. See :ref:`terminology_valueset_expand`.
+#. The new setting ``Terminology:AlwaysExpandFlat`` makes every expansion by the Local Terminology Service flat, whatever ``excludeNested`` the request sends. See :ref:`feature_terminologyoptions`.
+
+**Quality measures and CQL**
+
+#. ``Measure/$evaluate-measure`` accepts the ``subjectGroup`` parameter, a ``Group`` given inline. Every member of the ``Group`` is evaluated, and the ``MeasureReport`` contains the ``Group``.
+#. The new setting ``LibraryEvaluateOperation:MaxCachedCompiledClosures`` bounds how many compiled libraries Firely Server keeps in memory.
+
+**Bulk Data Export**
+
+#. Patient and Group ``$export`` on MongoDB now support ``BulkDataExport:AdditionalResourcesMaxRecursionDepth``. See :ref:`feature_bulkdataexport_configuration`.
 
 Fix
 ^^^
 
+**FHIR RESTful API**
+
+#. An update of a deleted resource now always brings the resource back.
+#. With ``FhirCapabilities:AllowCreateOnUpdate`` set to ``false``:
+
+   - batches and transactions create resources again;
+   - the administration database is filled at startup;
+   - a ``PUT`` to the id of a deleted resource is refused.
+
+#. In a batch or transaction:
+
+   - a ``POST`` entry is authorized as a create;
+   - a ``POST`` entry that invokes an operation runs that operation;
+   - a transaction with a write entry that is answered with HTTP 404 now fails as a whole.
+
+#. A local ``#id`` reference now links to the resource contained in its own container.
+#. A ``Binary`` can be created from a non-FHIR body when validation is on.
+#. An invalid ``base64Binary`` value in the ``Parameters`` of an operation is reported by validation.
+
+**Indexing and Firely Server Ingest**
+
+#. Firely Server and Firely Server Ingest now index ``resolve()`` and the ``start`` and ``end`` of a ``Period`` the same way.
+#. Firely Server Ingest indexes search parameter expressions that start with ``Resource`` or ``DomainResource``.
+
+**Bulk Data Export and Patient $everything**
+
+#. An export whose ``_since`` and ``_until`` window matches no resources completes with an empty output.
+#. Patient ``$everything`` handles a page size larger than ``BundleOptions:MaxCount``.
+
+**Quality measures and CQL**
+
+#. Several fixes in compiling and evaluating CQL, among others in the order of dependencies, a ``Library`` reached twice in its dependency closure, a ``relatedArtifact`` given as a single object, ``$cql`` on coded types, and a ``Patient`` that contains another ``Patient``.
+
+**CDS Hooks and Da Vinci**
+
 #. The CRD ``order-select`` service of ``Vonk.Plugin.CdsHooks.Legacy`` now receives the Patient and Coverage it asks for in prefetch. Its prefetch templates named ``{{%context.patient}}``, which the ``order-select`` context does not have; they now use ``{{%context.patientId}}``.
+#. Several fixes to the CRD example CDS Service and to ``$member-match``.
+
+Security
+^^^^^^^^
+
+#. Bulk Data Export and Patient ``$everything`` refuse a client whose read access is restricted with search parameters, as in fine-grained SMART scopes such as ``system/Patient.rs?gender=female``. See :ref:`feature_bulkdataexport`.
+#. Group-level ``$export`` and ``$davinci-data-export`` export only a ``Group`` that the client may read.
+#. ``Measure/$evaluate-measure`` handles ``dataEndpoint`` addresses more safely in the ``MeasureReport`` and in the logs.
+#. The product images now ship the .NET 10.0.15 runtime, which fixes several CVEs in ASP.NET Core and .NET.
+
+Database
+^^^^^^^^
+
+#. **MongoDB:** MongoDB 5.0 or later is required, and Firely Server checks the version at startup. See :ref:`configure_mongodb`.
+#. **MongoDB:** a TTL index ``ix_export_expires_at`` is added to the collection that holds Bulk Data exports.
 
 Known behavioral changes
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -45,6 +133,37 @@ Known behavioral changes
 #. **Firely Server reserves the type names of its CDS Hooks object model** in every deployment, whether or not it serves CDS Hooks: ``CdsHooksRequest``, ``CdsHooksResponse``, ``CdsHooksCard``, ``CdsHooksAction``, ``CdsHooksSuggestion``, ``CdsHooksLink``, ``CdsHooksSource``, ``CdsHooksContext``, ``CdsHooksPrefetch``, ``CdsHooksPrefetchTemplates``, ``CdsHooksExtensions``, ``CdsHooksFhirAuthorization``, ``CdsHooksDiscoveryResponse`` and ``CdsHooksServiceDefinition``. FHIR type names are matched case-insensitively, so a custom resource type or datatype with one of these names is refused on import, with a warning in the log at startup. Rename such a type before upgrading.
 #. **The legacy CDS Hooks implementation will be removed in the next major version.** It is shipped in this release so that an upgrade does not have to wait for the migration to the CDS Hooks branch. Use this time to migrate, and do not build new services on it. See :ref:`feature_cds_hooks_upgrade`.
 
+**Quality measures and CQL**
+
+#. **A ``Library`` precompiled with CQL SDK 2.16.0, 2.17.0 or 2.18.0 is rejected.** Recompile it with CQL SDK 2.19.0. A ``Library`` whose own assembly was built against another major or minor version of the CQL SDK is rejected as well. See :ref:`feature_library_evaluate_compiled_assemblies`.
+#. **CQL evaluation results follow CQL SDK 2.19.0.** Quantities are now handled by Firely.Ucum.
+#. **``Measure/$evaluate-measure`` requires exactly one of ``subject`` and ``subjectGroup``.**
+#. **``Measure/$evaluate-measure`` with a ``Group`` subject and no ``reportType`` returns a summary report.**
+#. **``LibraryEvaluateOperation:RemoteDataEndpointsOnly`` also applies to ``Measure/$evaluate-measure``.** See :ref:`feature_external_data_endpoints`.
+#. **CQL is evaluated at one instant**, so every reference to the current date and time within one request yields the same value.
+#. **CQL requests stop when the client disconnects.** See :ref:`feature_cql_cancellation`.
+
+**Bulk Data Export**
+
+#. **An export without output is answered with HTTP 200 and ``"output": []``**, instead of HTTP 404.
+#. **On MongoDB, Group ``$export`` treats the exported ``Group`` the same way as on SQL Server.**
+
+**Search and validation**
+
+#. **A ``dateTime`` without a time zone is indexed at the local offset of the server**, taking daylight saving time into account. Date search ranges now use ``DateTimeRange`` of the Firely .NET SDK.
+#. **Validating a ``QuestionnaireResponse`` against its ``Questionnaire`` rejects more responses.**
+#. **A few edge cases in JSON parsing, and values followed by a line break, are now invalid.**
+
+**Terminology**
+
+#. **``$expand`` counts nested codes towards ``Terminology:MaxExpansionSize``.** An expansion that was just within the limit can now exceed it. See :ref:`feature_terminologyoptions`.
+#. **Conformance archives (CAR files) in storage format 3.1 are supported.**
+
+**Licensing and SMART on FHIR**
+
+#. **``EnforceAccessPolicies`` and the license.** Enforcing access policies requires a license that includes the access-policy feature. If ``SmartAuthorizationOptions:EnforceAccessPolicies`` is left out of your configuration, as in many deployments upgraded from Firely Server 5.x, and your license does not include that feature, Firely Server logs a warning at startup and does not enforce access policies. Set ``EnforceAccessPolicies`` to ``false`` to remove the warning. If it is explicitly set to ``true``, Firely Server does not start without that license. See :ref:`feature_accesscontrol_permissions`.
+#. **A Test license is stated to be for non-production environments only.**
+
 **Other**
 
 #. **The branch that serves patient data is now always the branch on the root path, wherever it is listed.** That is the branch with ``"Path": "/"`` in ``PipelineOptions:Branches``. Without a branch on ``/``, it is the first branch that serves neither the administration API nor ``/cds-services``. It used to be the first branch that did not serve the administration API, so in a deployment with several such branches, and ``/`` not listed first, the startup checks now run against a different branch. This matters only for a deployment with more than one FHIR REST branch.
@@ -55,6 +174,12 @@ Programming API changes and plugins
 #. A plugin can offer a CDS Service of its own. Implement ``ICdsDiscoveryContributor`` to describe it, and register a handler with ``app.OnCdsService(...)``, using ``PreHandleAsyncWith<T>``, ``HandleAsyncWith<T>`` and ``PostHandleAsyncWith<T>`` on ``CdsServiceContext``, as in the FHIR REST pipeline. ``Vonk.Core.CdsHooks`` holds the object model of the CDS Hooks request, response and discovery document, and ``Vonk.Core.CdsHooks.Serialization`` reads and writes the CDS Hooks JSON without starting the server, for example in unit tests. See :ref:`vonk_reference_api_cds_hooks`.
 #. A CDS Service can read FHIR data from Firely Server through ``IFhirRestPipeline``, with ``ReadAsync``, ``SearchAsync``, ``InvokeAsync`` and ``InvokeSystemAsync``, or with ``SendAsync`` for a request you build yourself. Each call states what it may access with an ``IAuthorization``; the new ``Authorize`` class provides the common cases. Such a request is restricted by neither SMART on FHIR scopes nor an AccessPolicy, so use the narrowest authorization that works. ``CdsHooks:RoutedRequestHeaders`` lists the headers of the CDS request that are carried along. See :ref:`vonk_reference_api_cds_hooks_fhiraccess`.
 #. ``IApplicationBuilder.OnCdsHooksRequest`` is now marked ``[Obsolete]`` and will be removed in the next major version of Firely Server, together with ``Vonk.Plugin.CdsHooks.Legacy``. Use ``OnCdsService`` on the CDS Hooks branch instead.
+#. ``VonkPeriod`` and ``FhirDateTimePrecision`` in ``Vonk.Core`` are now marked ``[Obsolete]``. Use ``DateTimeRange`` of the Firely .NET SDK instead.
+#. Configuration classes are now also discovered in ``Firely.Server.*.dll`` assemblies. Check that your ``PipelineOptions`` ``Include`` and ``Exclude`` entries still select the plugins you intend.
+#. The libraries for plugin and facade developers now ship their XML documentation.
+#. Firely Server was updated to use the Firely .NET SDK v6.9.0, the Firely validator 3.7.0 and the enterprise validator 3.3.0. For those implementing custom plugins or facades, we recommend updating these to use the same SDK version when upgrading to this version of Firely Server.
+#. The CQL engine was upgraded from the Firely CQL SDK (``Hl7.Cql``) 2.17.0 to 2.19.0. If you build plugins against ``Hl7.Cql``, recompile them against the same version.
+#. Other updated dependencies: Firely.Car 3.3.1, Firely.Licensing 2.4.0 and Firely.Ucum 0.2.1. The product images run on .NET 10.0.15.
 
 .. _vonk_releasenotes_6_11_0:
 

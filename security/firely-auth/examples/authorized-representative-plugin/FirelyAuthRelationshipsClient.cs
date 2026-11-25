@@ -17,6 +17,8 @@ internal sealed class FirelyAuthRelationshipsClient(HttpClient httpClient)
     /// </summary>
     public const string Path = "api/external/representative-relationships";
 
+    private const int MaxLoggedAnswerLength = 500;
+
     private static readonly JsonSerializerOptions SerializerOptions = new() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull };
 
     /// <summary>
@@ -32,6 +34,9 @@ internal sealed class FirelyAuthRelationshipsClient(HttpClient httpClient)
         if (!response.IsSuccessStatusCode)
         {
             var answer = await response.Content.ReadAsStringAsync(cancellationToken);
+            // The message ends up in the log, so keep only the start of a long answer
+            if (answer.Length > MaxLoggedAnswerLength)
+                answer = $"{answer[..MaxLoggedAnswerLength]}...";
             throw new HttpRequestException($"Firely Auth answered {(int)response.StatusCode} to the push: {answer}", null, response.StatusCode);
         }
     }

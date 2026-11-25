@@ -36,6 +36,9 @@ So if you would want to fetch only Patient 1 and their Observations, changed sin
    GET <base-url>/Patient/1/$everything?_type=Patient,Observation&_since=2021-01-01
    Accept: application/fhir+json
 
+.. warning::
+  ``$everything`` refuses the request with ``501 Not Implemented`` when a read scope for one of the returned resource types is restricted with search parameters (for example ``patient/Observation.r?category=vital-signs``), at patient, user or system level, whether that restriction comes from the access token itself or from the client's AccessPolicy. Use a ``_type`` parameter that leaves out the restricted types to avoid the refusal.
+
 .. _patienteverything_pagination:
 
 Paged responses

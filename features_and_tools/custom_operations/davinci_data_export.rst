@@ -94,7 +94,9 @@ Prerequisites
 There are a few prerequisites specifically for this export.
 
 1. The DaVinci ATR specific conformance resources must be loaded in the administration database. See :ref:`conformance`.
-2. Two Davinci-specific search parameters have been added to Firely Server and are needed for the export. In order to be able to use these parameters, execute the following REST call:
+2. The base FHIR ``category`` search parameter on ``Consent`` must be supported, and the PDex 2.2.0 search parameter
+   ``http://hl7.org/fhir/us/davinci-pdex/SearchParameter/pdex-consent-provision-type`` (code ``provision-type``) must be loaded.
+   In order to be able to use ``provision-type``, execute the following REST call:
 
 .. code-block:: http
 
@@ -103,7 +105,10 @@ There are a few prerequisites specifically for this export.
 
 .. code-block:: text
 
-	include=Consent.decision,Consent.DaVinci-pdex-provider-access-use-case
+	include=Consent.category,Consent.provision-type
+
+The deprecated ``decision`` and ``DaVinci-pdex-provider-access-use-case`` search parameters still work when loaded, but
+``$davinci-data-export`` logs a warning for each. See "Security and authorization" below.
 
 
 $davinci-data-export
@@ -231,12 +236,21 @@ Security and authorization
 
 When SMART on FHIR is enabled, the same token and scope behavior used by BDE applies to DaVinci Data Export task initiation and retrieval endpoints. There is one additional requirement: as the DaVinci Data Export checks for consent (a Patient can opt-out) the DaVinci Data Export requires read access to Consent resources.
 
-The opt-out Consent must conform to the DaVinci PDex IG's Provider Consent profile (http://hl7.org/fhir/us/davinci-pdex/StructureDefinition/pdex-provider-consent), listed in ``meta.profile``, and must be associated with the patient through the standard Consent.patient reference. Firely Server treats a ``deny`` Consent as an opt-out in two cases:
+The opt-out Consent must be associated with the patient through the standard Consent.patient reference. Firely Server treats a Consent as a **Provider Access Consent** — and checks it for a ``deny`` opt-out — when:
 
-* The Consent carries the ``DaVinci-pdex-provider-access-use-case`` extension on ``Consent.provision.action`` set to ``true`` (see IG `PDex Provider Consent profile <https://hl7.org/fhir/us/davinci-pdex/STU2.2/StructureDefinition-pdex-provider-consent.html>`_), **or**
-* The Consent has **no** ``DaVinci-pdex-provider-access-use-case`` extension at all — a ``deny`` without the extension is treated as a global opt-out.
+* it has the category ``http://hl7.org/fhir/us/davinci-pdex/CodeSystem/pdex-consent-api-purpose|provider-access``, as PDex 2.2.0 requires, **or**
+* it carries the deprecated root extension ``pdex-provider-access-use-case`` set to ``true``, **or**
+* it conforms to the DaVinci PDex IG's Provider Consent profile (http://hl7.org/fhir/us/davinci-pdex/StructureDefinition/pdex-provider-consent), listed in ``meta.profile``, without that deprecated extension (see IG `PDex Provider Consent profile <https://hl7.org/fhir/us/davinci-pdex/STU2.2/StructureDefinition-pdex-provider-consent.html>`_).
+
+Firely Server treats ``Consent.provision.type = deny`` as an opt-out when it is indexed by the PDex ``provision-type`` search parameter (canonical ``http://hl7.org/fhir/us/davinci-pdex/SearchParameter/pdex-consent-provision-type``), or by the deprecated ``decision`` search parameter.
 
 The export will exclude patients that have an applicable opt-out Consent in place.
+
+.. note::
+
+	The ``decision`` and ``DaVinci-pdex-provider-access-use-case`` search parameters are deprecated and will be removed in a future version. Both keep working when loaded, and the export logs a warning for each. Use the PDex ``provision-type`` search parameter instead of ``decision``, and the ``provider-access`` category instead of the root extension.
+
+	``$davinci-data-export`` answers ``501 Not Implemented`` when the ``category`` search parameter of Consent is not supported, or when Provider Access Consents exist but none of them is indexed for ``Consent.provision.type``.
 
 See the section "Filtering export results with SMART scopes" on :ref:`feature_bulkdataexport`.
 

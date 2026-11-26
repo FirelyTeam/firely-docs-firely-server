@@ -24,7 +24,10 @@ This release serves CDS Hooks 3.0.0 on a pipeline branch of its own, with an API
     The plugin ``Vonk.Plugin.CdsHooks`` is renamed ``Vonk.Plugin.CdsHooks.Legacy``, and the two ``StructureDefinition`` resources it relies on are renamed. If you use CDS Hooks, update your ``PipelineOptions`` and your administration database before upgrading, and plan your move to the new CDS Hooks branch. Firely Server also reserves fourteen ``CdsHooks*`` type names. See the "Known behavioral changes" section below and :ref:`feature_cds_hooks_upgrade`.
 
 .. attention::
-    Firely Server now uses the Firely CQL SDK 2.19.0. A ``Library`` precompiled with CQL SDK 2.16.0, 2.17.0 or 2.18.0 is rejected; recompile it with CQL SDK 2.19.0. ``Measure/$evaluate-measure`` now requires exactly one of ``subject`` and ``subjectGroup``. See the "Known behavioral changes" section below.
+    Firely Server now uses the Firely CQL SDK 2.19.0. A ``Library`` precompiled with CQL SDK 2.16.0, 2.17.0 or 2.18.0 is rejected; recompile it with CQL SDK 2.19.0. ``Measure/$evaluate-measure`` now requires exactly one of ``subject`` and ``subjectGroup``. Some ``Library`` and ``Measure`` resources and evaluation data that were evaluated before are now rejected with HTTP 422. See the "Known behavioral changes" section below.
+
+.. attention::
+    A client that exports a ``Group`` with ``$export`` or ``$davinci-data-export`` now needs a read scope on ``Group``, such as ``system/Group.rs``. Without one, the kick-off is refused with HTTP 403. See the "Known behavioral changes" section below.
 
 .. attention::
     If you upgrade from Firely Server 5.x with SMART on FHIR enabled, read the entry on ``EnforceAccessPolicies`` under "Known behavioral changes" below.
@@ -33,8 +36,8 @@ Improvements
 ^^^^^^^^^^^^
 
 #. Indexing is faster and uses less memory, especially for composite search parameters and for Bundles. Reindexing specific search parameters is cheaper.
-#. On MongoDB, Patient ``$everything`` and Bulk Data ``$export`` select their data inside the database.
-#. CQL evaluation fetches the data of the next subjects while the current subject is evaluated.
+#. On MongoDB, Patient ``$everything`` and Bulk Data ``$export`` select their data inside the database. Patient ``$everything`` selects its result once and pages through it, instead of loading every resource of the patient for each page. See :ref:`feature_patienteverything`.
+#. ``Measure/$evaluate-measure`` retrieves the data of the next subjects while the current subject is evaluated, for up to ``MeasureEvaluateOperation:MaxPrefetchedSubjects`` subjects (default 4, maximum 16, 0 to turn it off). See :ref:`feature_measure_evaluate_configuration`.
 #. ``$cql``, ``Library/$evaluate`` and ``Measure/$evaluate-measure`` give clearer HTTP 400 and 422 answers, with the reason given by the CQL compiler. A failure on the server side is answered with HTTP 500.
 #. Data requirements are now derived for a ``Library`` that is supplied as CQL.
 #. The libraries for plugin and facade developers now ship their XML documentation, so their API documentation shows in your IDE.
@@ -46,7 +49,7 @@ Features
 
 #. Firely Server serves CDS Hooks 3.0.0 on a pipeline branch of its own. Add an entry with ``"Path": "/cds-services"`` to ``PipelineOptions:Branches``, listing ``Vonk.Plugin.CdsHooks.Infra`` followed by the CDS Services you offer. ``GET /cds-services`` answers the discovery document and ``POST /cds-services/{id}`` invokes a service. A service is offered only when its id and hook are named under ``CdsHooks:Services``; otherwise it answers HTTP 404, and Firely Server logs the setting to add at the ``Information`` level. Requests are handled in ``InformationModel:Default``, and version-specific endpoints with path mapping, such as ``/R4/cds-services``, are not served. Requires the license token ``http://fire.ly/server/plugins/cds-hooks``. See :ref:`feature_cds_hooks`.
 #. CDS Hooks requests and responses can be validated per service and hook, with ``RequestValidation`` and ``ResponseValidation`` under ``CdsHooks:Services:<id>:Hooks:<hook>``. A non-conformant request is refused with HTTP 400; issues in a response are logged. Both are off by default. See :ref:`feature_cds_hooks_validation`.
-#. CDS Clients can be required to authenticate with a signed JWT, with ``CdsHooks:Authorization:Enabled``. The token is verified by Firely Auth 4.8.0 or later, and each token can be used only once. Discovery is guarded as well, unless ``CdsHooks:Authorization:GuardDiscovery`` is ``false``. See :ref:`feature_cds_hooks_authorization`.
+#. CDS Clients can be required to authenticate with a signed JWT, with ``CdsHooks:Authorization:Enabled``. The token is verified by Firely Auth 4.8.0 or later, and each token can be used only once. Discovery is guarded as well, unless ``CdsHooks:Authorization:GuardDiscovery`` is ``false``. A single service can be served without a token by setting ``CdsHooks:Services:<id>:Authorization:Enabled`` to ``false``. See :ref:`feature_cds_hooks_authorization`.
 #. The plugin ``Vonk.Plugin.CdsHooks.Examples`` offers a ``patient-view`` example service and a Da Vinci CRD example service on the ``order-select`` and ``order-sign`` hooks, each with its own configuration class. The CRD service supports Firely's prior authorization demo, returning guidance cards for the CPT codes in the PARDD demo data, and is not intended for production use. See :ref:`feature_cds_hooks_examples`.
 
 **Security**
@@ -56,17 +59,19 @@ Features
 **Terminology**
 
 #. The terminology operations accept the ``tx-resource`` parameter.
-#. ``$expand`` supports the ``excludeNested`` and ``excludeNotForUI`` parameters, and echoes ``includeDesignations`` in the expansion. See :ref:`terminology_valueset_expand`.
+#. ``$expand`` supports the ``excludeNested``, ``excludeNotForUI`` and ``valueSetVersion`` parameters, and echoes ``includeDesignations`` in the expansion. See :ref:`terminology_valueset_expand`.
 #. The new setting ``Terminology:AlwaysExpandFlat`` makes every expansion by the Local Terminology Service flat, whatever ``excludeNested`` the request sends. See :ref:`feature_terminologyoptions`.
 
 **Quality measures and CQL**
 
 #. ``Measure/$evaluate-measure`` accepts the ``subjectGroup`` parameter, a ``Group`` given inline. Every member of the ``Group`` is evaluated, and the ``MeasureReport`` contains the ``Group``.
 #. The new setting ``LibraryEvaluateOperation:MaxCachedCompiledClosures`` bounds how many compiled libraries Firely Server keeps in memory.
+#. ``Measure/$evaluate-measure`` can be limited to a maximum duration with the new ``MeasureEvaluateOperation:MaxDuration`` setting. A request that takes longer is stopped and answered with HTTP 503. It is not set by default. See :ref:`feature_cql_cancellation`.
 
-**Bulk Data Export**
+**Bulk Data Export and Patient $everything**
 
 #. Patient and Group ``$export`` on MongoDB now support ``BulkDataExport:AdditionalResourcesMaxRecursionDepth``. See :ref:`feature_bulkdataexport_configuration`.
+#. The new setting ``PatientEverythingOperation:SnapshotLifetime`` sets how long the pages of a Patient ``$everything`` result on MongoDB can be read, 30 minutes by default. See :ref:`patient_everything_operation`.
 
 Fix
 ^^^
@@ -86,19 +91,20 @@ Fix
    - a ``POST`` entry that invokes an operation runs that operation;
    - a transaction with a write entry that is answered with HTTP 404 now fails as a whole.
 
-#. A local ``#id`` reference now links to the resource contained in its own container.
+#. A local ``#id`` reference now links to the resource contained in its own container, instead of the first resource with that id anywhere in the resource. Reindex to correct the links of resources stored earlier. See :ref:`feature_customsp_reindex`.
 #. A ``Binary`` can be created from a non-FHIR body when validation is on.
 #. An invalid ``base64Binary`` value in the ``Parameters`` of an operation is reported by validation.
 
 **Indexing and Firely Server Ingest**
 
-#. Firely Server and Firely Server Ingest now index ``resolve()`` and the ``start`` and ``end`` of a ``Period`` the same way.
-#. Firely Server Ingest indexes search parameter expressions that start with ``Resource`` or ``DomainResource``.
+#. Firely Server and Firely Server Ingest now index ``resolve()`` the same way. An absolute reference whose base has a path, such as ``http://example.org/fhir/Patient/1``, is now found by a search parameter like ``Observation.patient``. If you search that way, reindex the reference search parameters. See :ref:`feature_customsp_reindex`.
+#. The ``start`` and ``end`` of a ``Period`` without a time zone, or with a time to the minute, are now indexed, so a search finds such a ``Period``. Reindex to index the ones already stored.
+#. Firely Server Ingest indexes search parameter expressions that start with ``Resource`` or ``DomainResource``, such as the per-type ``_id`` and ``_lastUpdated`` parameters of US Core 6.1.0 and 7.0.0. Data imported with an earlier version of Ingest needs a reindex of such parameters.
 
 **Bulk Data Export and Patient $everything**
 
 #. An export whose ``_since`` and ``_until`` window matches no resources completes with an empty output.
-#. Patient ``$everything`` handles a page size larger than ``BundleOptions:MaxCount``.
+#. On MongoDB, Patient ``$everything`` and Patient and Group ``$export`` follow the references of contained resources when tenants are in use. The resources they referenced were missing from the result.
 
 **Quality measures and CQL**
 
@@ -113,8 +119,10 @@ Security
 ^^^^^^^^
 
 #. Bulk Data Export and Patient ``$everything`` refuse a client whose read access is restricted with search parameters, as in fine-grained SMART scopes such as ``system/Patient.rs?gender=female``. See :ref:`feature_bulkdataexport`.
-#. Group-level ``$export`` and ``$davinci-data-export`` export only a ``Group`` that the client may read.
-#. ``Measure/$evaluate-measure`` handles ``dataEndpoint`` addresses more safely in the ``MeasureReport`` and in the logs.
+#. Group-level ``$export`` and ``$davinci-data-export`` export only a ``Group`` that the client may read. The kick-off reads the ``Group`` with the client's access token and AccessPolicy: a ``Group`` that does not exist, or that the client may not read, is answered with HTTP 404, where a PDex ``Group`` was refused with HTTP 402.
+#. Bulk Data Export narrows the patients it exports to those the client may read: the members of the exported ``Group``, and the references given in ``_patient``.
+#. A Patient ``$everything`` continuation link whose page size is larger than ``BundleOptions:MaxCount`` is refused with HTTP 400. A client could change the page size in the link and read every resource of the patient in one response.
+#. ``Library/$evaluate`` and ``Measure/$evaluate-measure`` no longer echo a ``dataEndpoint`` address with its user info, query or headers in the ``MeasureReport``, the ``OperationOutcome`` or the logs, as these can hold credentials. The upgrade does not change stored ``MeasureReport`` resources: delete the ones whose contained ``Parameters`` hold a ``dataEndpoint`` with ``header`` elements.
 #. The product images now ship the .NET 10.0.15 runtime, which fixes several CVEs in ASP.NET Core and .NET.
 
 Database
@@ -142,15 +150,24 @@ Known behavioral changes
 #. **``LibraryEvaluateOperation:RemoteDataEndpointsOnly`` also applies to ``Measure/$evaluate-measure``.** See :ref:`feature_external_data_endpoints`.
 #. **CQL is evaluated at one instant**, so every reference to the current date and time within one request yields the same value.
 #. **CQL requests stop when the client disconnects.** See :ref:`feature_cql_cancellation`.
+#. **A ``Library`` whose ELM retrieves data, but that declares no data requirements, is rejected with HTTP 422.** This concerns ELM packaged by tooling other than the Firely CQL SDK. Package such a ``Library`` with the Firely CQL SDK, add its ``dataRequirement`` elements, or supply its CQL without ELM.
+#. **More ``Library`` resources that cannot be compiled are rejected with HTTP 422, with the reason.** This includes a ``Library`` whose CQL records an error in its translation, such as an identifier that names nothing; such a ``Library`` used to be evaluated with ``null`` for the definition in error. It also includes a ``Library`` whose ``name`` or ``version`` differs from the library its CQL or ELM declares, and a ``Library`` that holds no CQL or ELM. Error codes and log levels of these rejections changed; the outcome now names the ``CouldNotCompileLibraryWithCqlErrors`` event and lists the errors in its ``diagnostics``.
+#. **Only the ``Patient`` entries of the evaluation data ``Bundle`` count as the patients of the data.** This applies to ``Library/$evaluate``, ``$cql`` with a subject, and ``Measure/$evaluate-measure``. Data whose only ``Patient`` is contained in another resource or sits in a nested ``Bundle``, and data with a ``Patient`` entry without an id, are now refused with HTTP 422. The rejections of data that belongs to the wrong patient now have the issue type ``processing`` instead of ``not-supported``, and their messages changed. Update clients and log queries that match on them.
+#. **``Measure/$evaluate-measure`` reads the measurement period with ``DateTimeRange`` of the Firely .NET SDK.** A ``dateTime`` bound of a ``Measure``'s ``effectivePeriod`` now ends at the last millisecond of its precision. An ``effectivePeriod`` with a ``dateTime`` without a time zone, one that ends before it starts, or one with only a start or only an end, is rejected with HTTP 422. A ``periodStart`` after the ``periodEnd`` is rejected with HTTP 400.
+#. **A ``dataEndpoint`` address that is not an absolute ``http`` or ``https`` URL is refused with HTTP 400.** This applies to ``Library/$evaluate`` and ``Measure/$evaluate-measure``. Such an address is logged under the new event ``DidNotSupplyAbsoluteHttpDataEndpointUrl`` instead of ``CouldNotFindRegisteredDataEndpoint``, and a refused address is logged with its scheme, host and port only. Update log queries and alerts on these events.
 
-**Bulk Data Export**
+**Bulk Data Export and Patient $everything**
 
 #. **An export without output is answered with HTTP 200 and ``"output": []``**, instead of HTTP 404.
 #. **On MongoDB, Group ``$export`` treats the exported ``Group`` the same way as on SQL Server.**
+#. **A Group-level ``$export`` or ``$davinci-data-export`` needs a read scope on ``Group``.** A client without one is refused with HTTP 403. Give export clients that export Groups a read scope on ``Group``, such as ``system/Group.rs``. A read scope on ``Group`` with search parameters, such as ``system/Group.rs?_id=...``, is accepted: the client can export the Groups it selects, and the ``Group`` output holds only the requested ``Group``. See :ref:`feature_bulkdataexport`.
+#. **On MongoDB, the pages of a Patient ``$everything`` result are one snapshot of the first request.** A resource created after the first request is not returned, and one updated or deleted after it is returned in the version it had then. After ``PatientEverythingOperation:SnapshotLifetime`` (30 minutes by default) a ``next`` link returns HTTP 410. A ``next`` link is followed only with an access token with the same subject, ``patient``, ``fhirUser`` and scopes as the first request, and returns HTTP 403 otherwise. See :ref:`feature_patienteverything`.
 
 **Search and validation**
 
-#. **A ``dateTime`` without a time zone is indexed at the local offset of the server**, taking daylight saving time into account. Date search ranges now use ``DateTimeRange`` of the Firely .NET SDK.
+#. **A ``dateTime`` without a time zone is indexed at the local offset of the server**, taking daylight saving time into account. If your server runs in a time zone with daylight saving time and accepts such values, reindex to correct the ones already stored. See :ref:`feature_customsp_reindex`.
+#. **Date search arguments are read with ``DateTimeRange`` of the Firely .NET SDK.** A value with a time zone offset or in ``Z``, such as ``2026-01-01T00:00:00Z``, now covers the whole of its second, and a fraction of a second covers the digits written. This also applies to ``_since``, to ``$lastn`` and to the membership periods of a ``Group`` in Bulk Data Export.
+#. **Firely Server now evaluates ``|`` in a search parameter expression as ``combine()``, as Firely Server Ingest already did.** Equal values in different positions, such as the same code in several ``Observation.component`` elements, are all indexed, and references without a resource type (``urn:uuid:``, ``#id``) now match ``where(resolve() is X)``. Some searches can find more resources than before.
 #. **Validating a ``QuestionnaireResponse`` against its ``Questionnaire`` rejects more responses.**
 #. **A few edge cases in JSON parsing, and values followed by a line break, are now invalid.**
 
@@ -175,6 +192,7 @@ Programming API changes and plugins
 #. A CDS Service can read FHIR data from Firely Server through ``IFhirRestPipeline``, with ``ReadAsync``, ``SearchAsync``, ``InvokeAsync`` and ``InvokeSystemAsync``, or with ``SendAsync`` for a request you build yourself. Each call states what it may access with an ``IAuthorization``; the new ``Authorize`` class provides the common cases. Such a request is restricted by neither SMART on FHIR scopes nor an AccessPolicy, so use the narrowest authorization that works. ``CdsHooks:RoutedRequestHeaders`` lists the headers of the CDS request that are carried along. See :ref:`vonk_reference_api_cds_hooks_fhiraccess`.
 #. ``IApplicationBuilder.OnCdsHooksRequest`` is now marked ``[Obsolete]`` and will be removed in the next major version of Firely Server, together with ``Vonk.Plugin.CdsHooks.Legacy``. Use ``OnCdsService`` on the CDS Hooks branch instead.
 #. ``VonkPeriod`` and ``FhirDateTimePrecision`` in ``Vonk.Core`` are now marked ``[Obsolete]``. Use ``DateTimeRange`` of the Firely .NET SDK instead.
+#. A ``Library`` resolved through ``IConformanceCache`` or ``IModelConformanceResolver`` is returned as it is stored, without ``+dll`` and ``+csharp`` attachments or derived data requirements. To evaluate a ``Library``, call ``Library/$evaluate``, which compiles it.
 #. Configuration classes are now also discovered in ``Firely.Server.*.dll`` assemblies. Check that your ``PipelineOptions`` ``Include`` and ``Exclude`` entries still select the plugins you intend.
 #. The libraries for plugin and facade developers now ship their XML documentation.
 #. Firely Server was updated to use the Firely .NET SDK v6.9.0, the Firely validator 3.7.0 and the enterprise validator 3.3.0. For those implementing custom plugins or facades, we recommend updating these to use the same SDK version when upgrading to this version of Firely Server.
@@ -199,7 +217,6 @@ Improvements
 
 #. Patient ``$everything`` and Patient/Group Bulk Data ``$export`` on SQL Server are faster and scale better for large requests.
 #. ``Measure/$evaluate-measure`` assembles its reports faster, in particular stratified ``subject-list`` reports.
-#. ``Measure/$evaluate-measure`` retrieves the data of the next subjects while the current subject is evaluated, for up to ``MeasureEvaluateOperation:MaxPrefetchedSubjects`` subjects (default 4, maximum 16, 0 to turn it off). See :ref:`feature_measure_evaluate_configuration`.
 #. FSI: NDJSON and JSON files are imported faster and with lower memory use.
 #. Firely Server and Firely Server Ingest now release memory they no longer need after peak load, instead of keeping it reserved for the lifetime of the process. This affected 6.9.0 and later.
 #. The default configuration check now reports appsettings and logsettings separately in the startup log, comparing the effective configuration including instance files and environment variables. A customization in one no longer affects the other, or the guided setup steps that belong to it.
@@ -214,7 +231,6 @@ Features
 #. Value-based and criteria-based stratifiers now work on groups with a non-boolean population basis, such as the episode-based HEDIS measures (for example AAB). Each basis unit, such as an encounter or episode date, is assigned to its own stratum, and per-stratum counts and ``measureScore`` are computed over those basis units. A value-based stratifier component names a CQL function that takes one basis unit. Such a function can also be used on a boolean-basis group, as in the HEDIS measure CRE; it is then invoked once per subject with a ``null`` argument, and a warning is logged.
 #. Stratifiers are now supported on ``ratio``-scored groups.
 #. The ``cqfm-appliesTo`` and ``cqm-appliesTo`` extensions on ``Measure.group.stratifier`` restrict which populations the strata of a stratifier report.
-#. ``Measure/$evaluate-measure`` can be limited to a maximum duration with the new ``MeasureEvaluateOperation:MaxDuration`` setting. A request that takes longer is stopped and answered with HTTP 503. It is not set by default. See :ref:`feature_cql_cancellation`.
 #. The population basis ``string`` is now supported in proportion, ratio and stratified groups, as used by the NCQA HEDIS measures ``HPC-Reporting``, ``AHU-Reporting``, ``DBME-Reporting`` and ``FMAE-Reporting``. See :ref:`feature_measure_evaluate_populationbasis`.
 
 **Other**
@@ -297,7 +313,6 @@ Known behavioral changes
    Malformed population-basis declarations, declared/result type mismatches, and inconsistent bases in proportion or ratio groups use issue type ``invalid``. The unsupported ``valueDataRequirement`` form, unsupported basis types or scoring combinations, and mixed bases in stratified cohort or unscored groups still use ``not-supported``.
 #. **CQL messages were reworded.** Clients and log queries that match on message text need updating. The operation name is no longer quoted (``$evaluate-measure`` instead of ``'$evaluate-measure'``), a missing value reads ``'(null)'`` instead of ``''`` in the ``OperationOutcome``, and log lines of rejections now read the same as the ``OperationOutcome``.
 #. **CQL log categories and OpenTelemetry activity sources were renamed.** If you filter CQL logs by category, or traces by source through ``OpenTelemetryOptions:VonkSourcesInclude`` or ``VonkSourcesExclude``, review these filters. See :ref:`feature_opentelemetry_cql`.
-#. **``Measure/$evaluate-measure`` and ``Library/$evaluate`` stop when the client goes away**, instead of running to their end: the evaluation and the retrieval of subject data stop, and the server logs "Cancelled operation" at Information level. See :ref:`feature_cql_cancellation`.
 
 **Other**
 

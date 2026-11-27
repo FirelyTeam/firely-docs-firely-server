@@ -403,7 +403,7 @@ A list of header names
 Authorizing CDS Clients
 -----------------------
 
-Firely Server can require CDS Clients to authenticate, as described in the section *Trusting CDS Clients* of the `CDS Hooks 3.0.0 specification <https://cds-hooks.hl7.org/2026Jan/en/>`_. The CDS Client signs a JWT and sends it as a bearer token in the ``Authorization`` header. Authorization is off by default.
+Firely Server can require CDS Clients to authenticate, as described in the section `Trusting CDS Clients <https://cds-hooks.hl7.org/2026Jan/en/#trusting-cds-clients>`_ of the CDS Hooks 3.0.0 specification. The CDS Client signs a JWT and sends it as a bearer token in the ``Authorization`` header. Authorization is off by default.
 
 Authorization decides which CDS Clients may call a CDS Service. What the service itself may access in Firely Server is a separate question; see :ref:`feature_cds_hooks_fhir_access`.
 
@@ -662,7 +662,7 @@ Upgrading from earlier versions
 
 Earlier versions of Firely Server served CDS Hooks by mapping each CDS Hooks request onto a FHIR custom operation, in the branch on ``/``. That implementation is still shipped, as the plugin ``Vonk.Plugin.CdsHooks.Legacy``, so that an upgrade does not have to wait for the migration. It will be removed in the next major version. **Use this time to migrate. Do not build new services on the legacy plugin.**
 
-The CDS Hooks branch also offers a higher-level programming API. A service of the legacy plugin read and built its payloads as ``ISourceNode`` trees. A CDS Service on the CDS Hooks branch works with custom resources that Firely Server provides, based on the CDS Hooks 3.0.0 model: typed classes such as ``CdsHooksRequest`` and ``CdsHooksCard``. See :ref:`vonk_reference_api_cds_hooks_model`.
+The CDS Hooks branch also offers a higher-level programming API, which makes an incoming request easier to handle, and it :ref:`authorizes CDS Clients <feature_cds_hooks_authorization>` the way the CDS Hooks specification describes, where the legacy plugin relied on SMART on FHIR access tokens. A service of the legacy plugin read and built its payloads as ``ISourceNode`` trees. A CDS Service on the CDS Hooks branch works with custom resources that Firely Server provides, based on the CDS Hooks 3.0.0 model: typed classes such as ``CdsHooksRequest`` and ``CdsHooksCard``. See :ref:`vonk_reference_api_cds_hooks_model`.
 
 A deployment runs either the CDS Hooks branch or the legacy plugin, never both: they claim the same route.
 

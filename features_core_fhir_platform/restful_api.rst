@@ -23,7 +23,7 @@ Create, read, update, patch, delete
 These five operations to manage the contents of the Firely Server, commonly referenced by the acronym CRUD, are implemented as per the specification. Patch is implemented as `FHIR Patch <http://hl7.org/fhir/fhirpatch.html>`_, as this is the most versatile one.
 A few limitations apply.
 
-Firely Server enables create-on-update: If you request an update and no resource exists for the given id, the provided resource will be created under the provided id. It is possible to disable this feature by setting ``AllowCreateOnUpdate`` to false in the ``FhirCapabilities`` configuration.
+Firely Server enables create-on-update: If you request an update and no resource exists for the given id, including an id that belonged to a resource that was deleted, the provided resource will be created under the provided id. It is possible to disable this feature by setting ``AllowCreateOnUpdate`` to false in the ``FhirCapabilities`` configuration; Firely Server then returns ``HTTP 404 Not Found`` for such an update instead, also when it is an entry of a batch or transaction.
 
 Firely Server can reject a resource based on :ref:`feature_prevalidation`.
 
@@ -39,8 +39,9 @@ Configuration
 ^^^^^^^^^^^^^
 
 A conditional delete interaction may match multiple resources. You can configure the server to delete all matches, or reject the operation (effectively only allowing single matches to be deleted).
-Allowing multiple deletes requires support for transactions on the database (MongoDb, SQL Server or SQLite). 
+Allowing multiple deletes requires support for transactions on the database (MongoDb, SQL Server or SQLite).
 If you allow for multiple deletes, you have to specify a maximum number of resources that can be deleted at once, to save you from accidentally deleting too many resources.
+A conditional delete that also carries an ``If-Match`` header is always rejected when it matches more than one resource, even when ``ConditionalDeleteType`` is ``Multiple``, see :ref:`restful_crud_versioned_delete`.
 
 ::
 
@@ -69,6 +70,19 @@ In a batch or transaction, use ``entry.request.ifMatch`` for the same purpose, s
 * If no resource exists with the given id, Firely Server also returns ``409 Conflict``, and does not create the resource, even when create-on-update is enabled.
 * A value that is not in the weak ETag format ``W/"<versionId>"`` never matches, so the request is rejected with ``409 Conflict``.
 
+.. _restful_crud_versioned_delete:
+
+Versioned delete with If-Match
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A delete or a conditional delete can be made conditional on the current version of the resource in the same way.
+Send the version that you expect to be current in the ``If-Match`` header, in the weak ETag format that Firely Server returns in the ``ETag`` header, or in ``entry.request.ifMatch`` of a batch or transaction entry, see :ref:`restful_crud_conditional_headers`.
+
+* If the version in ``If-Match`` is the current version of the resource, the resource is deleted.
+* If it is not, Firely Server rejects the request with ``HTTP 412 Precondition Failed`` and deletes nothing. This is also the case when no resource exists with the given id, or when the search criteria of a conditional delete match no resource.
+* A conditional delete whose search criteria match more than one resource is rejected with ``HTTP 412 Precondition Failed``, also when ``ConditionalDeleteType`` is ``Multiple``.
+* An ``If-Match`` value that does not hold one or more ETags of the form ``W/"<versionId>"``, or ``*``, is rejected with ``HTTP 400 Bad Request``.
+
 .. _restful_crud_conditional_headers:
 
 Conditional headers
@@ -88,7 +102,7 @@ Firely Server supports these conditional request headers. In a batch or transact
      - Makes a create conditional. The value is a search query without the resource type, for example ``identifier=http://example.org|123``. If no resource matches, the resource is created (``201 Created``). If one resource matches, nothing is created and Firely Server returns ``200 OK`` with the ``Location`` of the existing resource. If more than one resource matches, the create is rejected with ``412 Precondition Failed``. In a bundle entry it only applies to a ``POST`` (create).
    * - ``If-Match``
      - ``ifMatch``
-     - Makes an update, a conditional update or a patch conditional on the current version of the resource, see :ref:`restful_crud_versioned_update`.
+     - Makes an update, a conditional update or a patch conditional on the current version of the resource, see :ref:`restful_crud_versioned_update`. Makes a delete or a conditional delete conditional on the current version of the resource, see :ref:`restful_crud_versioned_delete`.
    * - ``If-None-Match``
      - ``ifNoneMatch``
      - Makes a read conditional. The value is one or more ETags, separated by commas, such as ``W/"3"``. If the current version of the resource is one of them, Firely Server returns ``304 Not Modified`` without the resource. A value that is not a correctly formed ETag is rejected with ``400 Bad Request``.
@@ -103,7 +117,7 @@ Response headers
 
 When a response contains a single resource, for example the response to a read, create, update or patch, Firely Server includes these headers:
 
-* ``ETag``: the version of the resource, as a weak ETag: ``W/"<versionId>"``. Use this value in the ``If-Match`` header of a versioned update.
+* ``ETag``: the version of the resource, as a weak ETag: ``W/"<versionId>"``. Use this value in the ``If-Match`` header of a versioned update or delete.
 * ``Last-Modified``: the ``meta.lastUpdated`` of the resource, as an HTTP date.
 
 These headers are also sent when the resource is not returned in the body because the request has a ``Prefer: return=minimal`` or ``Prefer: return=OperationOutcome`` header.

@@ -3,6 +3,78 @@
 Release notes
 =============
 
+.. _firelyauth_releasenotes_4.9.0:
+
+Release 4.9.0, November XXth, 2026
+----------------------------------
+
+This release asks admins to confirm their identity before they make changes, allows only one account per FHIR record, lets you add admin apps such as the Firely Metrics Dashboard in the admin UI, and lets representatives sign in to apps for the patients they represent. It removes the authorized representative selection for Patient accounts.
+
+.. attention::
+
+    Please review the following before upgrading:
+
+    - **Admin changes need a recent login.** When an admin logged in more than 30 minutes ago, Firely Auth asks them to confirm their identity before it saves a change. Admins who log in through an external identity provider log in there again: make sure the identity provider honours ``prompt=login`` and ``max_age=0`` and returns an ``auth_time`` claim, or these admins cannot make changes after the 30 minutes. See ``AdminReauthenticationWindow`` in :ref:`firely_auth_settings_account`.
+    - **The** ``AdminApps`` **setting is removed.** Firely Auth 4.8.0 read the scope of an admin app, such as the Firely Metrics Dashboard, from ``AdminApps``. After the upgrade, an ``AdminApp`` client without a scope of its own is refused tokens and marked *Needs update* in the admin UI. Set the scope of each admin app client in the admin UI or the management API, and remove ``AdminApps`` from ``appsettings.instance.json``. See :ref:`firely_auth_settings_clients`.
+    - **Only one account per FHIR record.** Accounts that share a record from before the upgrade keep working. An SSO account whose identity provider sends a ``fhirUser`` that is not a valid reference to a Patient or Practitioner can no longer log in, and Firely Auth does not start when an external identity provider maps more than one claim to ``fhirUser``. See :ref:`firely_auth_mgmt_fhirrecord`.
+    - **New database migration.** See :ref:`firelyauth_releasenotes_4.9.0_database`.
+    - **Authorized representatives need two new operations.** Your Firely Server plugin has to implement ``$representative-relationships`` and ``Patient/$check-authorized-representative``, and both have to be in the ``Operations`` setting of Firely Server. Without them, Representatives cannot sign in to apps, and Patients sign in as themselves only. See :ref:`firely_auth_dar_contract`, which also has an example plugin.
+    - **Removed: the authorized representative selection for Patient accounts.** Firely Auth no longer calls ``$check-authorized-representative-relationships``, and ``/api/external/authorized-representative`` answers ``405``. If your plugin only implements that operation, implement the new operations before you upgrade. Remove ``LookupRequestScopes``, ``HelpMessageTitleOnFail`` and ``HelpMessageOnFail`` from ``AuthorizedRepresentatives``. See :ref:`firely_auth_dar_migration`.
+    - **Apps that representatives use may only request patient-level, identity and launch scopes.** Any other scope, also ``email``, is refused: a Representative gets ``access_denied``, and a Patient who signs in through an external identity provider signs in as themselves. See :ref:`firely_auth_dar_login`.
+    - **New email templates.** If you use your own ``EmailTemplateFolder``, copy ``representativeinvitation.liquid`` and ``representativeregistered.liquid`` into it.
+    - **Log output.** No secrets or tokens are logged. New log lines about representatives link a user to a patient, so protect these logs as you protect other logs that name patients. Check the startup log after the upgrade: Firely Auth logs a ``Warning`` for accounts that share a FHIR record or have a ``fhirUser`` that is not valid, for admin app clients without a scope, for a client with the reserved client id ``Firely-Auth-Internal-FhirLookup`` and for removed ``AuthorizedRepresentatives`` settings, and an ``Error`` when ``LookupOnLogin`` is on and Firely Server lacks the two new operations.
+
+Feature
+^^^^^^^
+
+#. Admin apps can be added in the admin UI, without a restart. The client type *Admin App Login* has an *Admin App Scope* and an *Include Role Claim* switch, and the app can log in as soon as the client is saved. The Client Id of an admin app is the audience of its tokens. The management API and ``ClientRegistration`` take the same settings as ``AdminAppScope`` and ``AdminAppIncludeRoleClaim``. The admin UI marks an admin app client that is refused tokens as *Needs update*, and lists what has to change at the top of its edit form; the management API returns this as ``unmetAdminAppRequirements``. See :ref:`firely_auth_settings_clients`.
+#. Accounts for representatives, people who may act on behalf of a patient, can be created by an application with the new endpoint ``POST /api/external/representative``, or by an admin in the admin UI. Such an account has the new user type ``Representative``, so a representative no longer has to be a patient with a ``Patient`` account. It signs in through an external identity provider and gets an invitation email. In the admin UI, an admin can link it, or a ``Patient`` account that signs in through an external identity provider, to a patient's ``RelatedPerson`` in Firely Server. The endpoint needs the new scope ``http://server.fire.ly/auth/scope/representative``, which only a Backend Service client with ``AllowRepresentativeApiAccess`` gets. See :ref:`firely_auth_dar_onboarding`.
+#. Representatives sign in to apps for the patients they represent. Firely Auth asks Firely Server through ``$representative-relationships`` whom the user may act for, and the user chooses on the new page ``/user/representees``. The token has the ``RelatedPerson`` of that relationship as ``fhirUser`` and the chosen patient as ``patient``. Firely Auth checks the choice with ``$check-authorized-representative`` when it is made and at every refresh, so after a revoked authorization the app gets no new access token. A Representative with nobody to act for sees ``RepresentativeTitleOnFail`` and ``RepresentativeMessageOnFail``, and the app gets ``access_denied``. In a standalone launch, the chosen patient is the launch patient. See :ref:`firely_auth_dar_login`.
+#. A Patient who signs in through an external identity provider can act for someone else the same way, or continue as themselves. When Firely Server fails, the page says so and offers **continue as yourself**, so the user is not silently given their own record.
+#. Apps that representatives use must send ``state`` or ``nonce``, or use PKCE, when they start a sign-in. Without any of these, a Representative cannot sign in to act for someone, and a Patient signs in as themselves. A choice of whom to act for applies to one sign-in, which may take up to 30 minutes, and Firely Server checks it again when the app gets its token.
+#. The representees of a user in the admin UI show whether Firely Server authorizes the account to act for each of them now, as ``$check-authorized-representative`` answers.
+#. ``GET /api/external/user/{id}`` returns ``canActForOthers``: whether the account may act for someone else. That is a Representative, or a Patient who signs in through an external identity provider while ``AuthorizedRepresentatives:LookupOnLogin`` is on. For a Representative, ``representative.invitationAccepted`` replaces ``invitationAccepted``.
+#. The admin UI shows which accounts need attention: accounts that share a FHIR record with another account, and accounts whose ``fhirUser`` is not valid. They get the tag *Needs attention*, the user list has a filter for them, and a user's panel shows the other accounts linked to the same FHIR record. See :ref:`firely_auth_mgmt_fhirrecord`.
+#. A ``fhirUser`` may have a base URL with a path, such as ``https://ehr.example.org/fhir/Patient/123``.
+#. When the representative API returns an existing ``Patient``, Firely Auth emails them that their account was registered as a representative. The email contains no patient information.
+#. The client form warns when a ``fhirUser`` claim that points to a ``Device`` cannot be found in Firely Server (read with a token Firely Auth issues to itself, with ``system/Device.r``), and when a Backend Service client gets a shared secret instead of a public key (JWK) or a JWKS URL. Both stay allowed. The link ``/admin/client-management?new&type=BackendService&fhirUser=Device/<id>`` opens the new-client form with these filled in.
+#. The login page can show only the external identity providers when a user opens Firely Auth directly, so not from an app. With the new setting ``UISettings:LocalLoginOnHomepage`` set to ``Hint``, a link at the bottom of the page shows the email and password form; with ``Hidden``, there is no link, and the link to create an app developer account is hidden as well. ``/login?local=true`` always shows the form. The setting only changes what the page shows: login with email and password keeps working. See :ref:`firely_auth_settings_ui`.
+
+Configuration
+^^^^^^^^^^^^^
+
+#. New settings: ``Account:AdminReauthenticationWindow`` (default ``00:30``), ``Email:RepresentativeInvitationEmailSubject``, ``Email:RepresentativeRegisteredEmailSubject``, ``RepresentativeInvitation:IdentityProviderScheme``, ``AuthorizedRepresentatives:RepresentativeRelationshipsScopes``, ``AuthorizedRepresentatives:CheckAuthorizedRepresentativeScopes``, ``AuthorizedRepresentatives:RepresentativeTitleOnFail``, ``AuthorizedRepresentatives:RepresentativeMessageOnFail``, ``UISettings:LocalLoginOnHomepage`` (default ``Show``), and the client settings ``AdminAppScope``, ``AdminAppIncludeRoleClaim`` and ``AllowRepresentativeApiAccess``. See :ref:`firely_auth_settings`.
+#. Removed settings, which have no effect: ``AdminApps``, and ``AuthorizedRepresentatives:LookupRequestScopes``, ``HelpMessageTitleOnFail`` and ``HelpMessageOnFail``.
+#. ``UserClaimsFromIdToken`` of an external identity provider may map at most one claim to ``fhirUser``.
+#. The client id ``Firely-Auth-Internal-FhirLookup`` is reserved, in any casing: Firely Auth uses it for the tokens it issues to itself for its calls to Firely Server. The admin UI and the management API refuse it with ``400 Bad Request``, an app developer's client request with it is refused, and a client with it in ``ClientRegistration:AllowedClients`` fails validation, so none of the configured clients are imported. A client stored with this id keeps working. Give it another client id: it can no longer be saved under its current one. An admin app client cannot get another client id, so add a new client for the admin app and delete the old one. See :ref:`firely_auth_settings`.
+#. To link a representative to a ``RelatedPerson`` in the admin UI, Firely Auth now also writes to Firely Server: the token it issues to itself holds the scopes ``system/RelatedPerson.rus`` and ``system/Patient.rs`` for **link representee** and **unlink**, which update the ``RelatedPerson`` with a ``PUT`` with ``If-Match``. Firely Server must allow ``update`` on ``RelatedPerson`` for that token. See :ref:`firely_auth_dar_onboarding`.
+
+Fix
+^^^
+
+#. Connecting to SQL Server with an ``Authentication=Active Directory ...`` connection string, such as ``Active Directory Managed Identity``, works again. No configuration change is needed.
+#. For a ``fhirUser`` with a base URL, such as ``https://ehr.example.org/Patient/123``, the ``patient`` launch context and token claim now hold the patient's id. Before, they held the wrong value or nothing.
+#. On Linux, the JWT of a CDS Hooks client whose ``jku`` header is a relative path is now refused, as it already was on Windows. Only an absolute ``http`` or ``https`` URL is accepted.
+
+Security
+^^^^^^^^
+
+#. A ``POST``, ``PUT``, ``PATCH`` or ``DELETE`` on the admin API is refused with ``401`` and the code ``reauthentication_required`` when the admin logged in longer ago than ``Account:AdminReauthenticationWindow``. The window counts from the login, not from the last activity. The admin UI then asks the admin to confirm their identity. An admin with a local account enters their password and, with two-factor authentication, a code, and the admin UI then saves the change; wrong entries count towards the account lockout. An admin who logs in through an external identity provider logs in there again, which leaves the page: changes that were not saved are not kept, and have to be entered and saved again after returning. The confirmation only counts for the browser that made it. Clients that call the management API are not affected. See :ref:`firely_auth_settings_account`.
+#. Only one account can be linked to a FHIR record. The management API answers ``409 Conflict`` and names the other account, and an SSO login whose ``fhirUser`` belongs to another account is refused with the page that asks the user to contact their administrator. ``fhirUser`` values that are not a valid reference to a Patient or Practitioner are refused with ``400 Bad Request``, and at SSO login. See :ref:`firely_auth_mgmt_fhirrecord`.
+#. Firely Auth protects admins against cross-site request forgery: it only accepts a ``POST``, ``PUT``, ``PATCH`` or ``DELETE`` on its admin API from Firely Auth's own pages, and refuses other requests with ``403 Forbidden`` and the code ``cross_site_request``. The admin UI, the management API, the representative API and the OpenID Connect endpoints are not affected. Behind a reverse proxy that changes the host, port or scheme, enable ``ReverseProxySupport``. Scripts that called the admin UI's API with an admin's login session must use the management API instead. See :ref:`firely_auth_mgmt`.
+#. ``auth_time`` is a reserved claim type. It cannot be set as a user or client claim and is not copied from an external identity provider. Firely Auth removes stored user claims of this type at startup.
+#. Changing your own password no longer counts as a new login. With two-factor authentication on, it no longer clears failed code attempts from the lockout count.
+#. Fixed an open redirect and a cross-site scripting issue in the Firely Auth UI that a crafted link could trigger. Firely Auth now ignores a ``returnUrl`` that does not point to Firely Auth itself. When a user declines on the consent page, the app now gets ``access_denied`` at its registered ``redirect_uri``.
+#. The Content-Security-Policy of the Firely Auth UI no longer allows inline scripts or ``eval``: ``script-src`` is now ``'self'``, so a script injected into a page does not run. ``style-src`` is unchanged.
+#. Someone acting for another person only gets patient-level, identity and launch scopes, because Firely Server confines a token to its ``patient`` only through patient-level scopes.
+
+.. _firelyauth_releasenotes_4.9.0_database:
+
+Database
+^^^^^^^^
+
+Firely Auth applies its database migrations itself at startup. This release adds the column ``FhirRecordReference`` to the ``AspNetUserClaims`` table, with a unique index, so that two logins at the same moment cannot link two accounts to one FHIR record. At startup, Firely Auth fills the column for every FHIR record that one account is linked to. Records that several accounts share stay out of the index until one account is left. If the database account of Firely Auth may not change the schema, run the new script from the binaries before you start the new version: ``08-AddFhirRecordReference.sql`` in ``scripts/SqlServer/``, or ``10-AddFhirRecordReference.sql`` in ``scripts/Sqlite/``.
+
 .. _firelyauth_releasenotes_4.8.0:
 
 Release 4.8.0, October 28th, 2026

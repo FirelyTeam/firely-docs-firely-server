@@ -195,6 +195,7 @@ Terminology
 
       "Terminology": {
       "MaxExpansionSize": 650,
+      "AlwaysExpandFlat": false, // true / false - If true, the expansions Firely Server makes itself are always flat (no nested codes), whatever excludeNested the request sends.
       // Optional: configure one or more CAR files for advanced terminology support (requires http://fire.ly/advanced-terminology license)
       //"ConformanceArchives": [
       //  {
@@ -845,10 +846,13 @@ Patient Everything Operation
 ::
 
   "PatientEverythingOperation": {
-    "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "Medication", "Practitioner", "PractitionerRole" ] // included referenced resources, additional to the Patient compartment resources
+    "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "Medication", "Practitioner", "PractitionerRole" ], // included referenced resources, additional to the Patient compartment resources
+    "SnapshotLifetime": "00:30:00" // MongoDB only: how long the pages of a $everything result can be read before a continuation link returns 410 Gone. From 10 minutes to 10 years.
   },
 
 The Patient $everything operation returns all resources linked to a patient that are listed in the Compartment Patient. This section allows you to define additional resources that will be included in the resulting searchset bundle.
+
+On MongoDB, ``SnapshotLifetime`` sets how long the pages of a result are kept before they expire; it has no effect on SQL Server, where every page is selected anew.
 
 See :ref:`feature_patienteverything`.
 

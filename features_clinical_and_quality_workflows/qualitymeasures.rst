@@ -454,10 +454,14 @@ A ``Library`` passed in the ``library`` parameter is handled as follows:
 - Otherwise it is compiled on every request; the result of the compilation is not kept.
   When the library carries ELM content (``application/elm+json``), the ELM is compiled
   and the CQL content is not used. Otherwise its CQL (``text/cql``) is translated to ELM
-  first. When compilation fails, the request is rejected with HTTP 422, reporting that
-  the library holds no .NET assembly; the server log holds the compilation errors. A
-  library whose CQL includes a library that no ``depends-on`` provides is rejected with
-  HTTP 422 naming the include; see `Library dependencies`_.
+  first. A compile that fails for a reason the client can fix — an error the CQL compiler
+  reports about the CQL or ELM, a library or a dependency that holds no CQL or ELM, or a
+  ``name`` or ``version`` that differs from the one its CQL or ELM declares — is rejected
+  with HTTP 422, naming the reason; the server log holds the compiler's own messages. A
+  compile that fails because of an error on the server is rejected with HTTP 500; the
+  response carries no detail, and the server log holds the exception. A library whose CQL
+  includes a library that no ``depends-on`` provides is rejected with HTTP 422 naming the
+  include; see `Library dependencies`_.
 - Its dependencies are resolved from the administration database, like those of a stored
   library; see `Library dependencies`_.
 

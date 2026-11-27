@@ -52,6 +52,28 @@ Firely Server answers requests with ``HTTP 402 Payment Required`` when no valid 
 
   It is also possible to supply a license via an environment variable. This functionality is handy when Firely Server is running within a Docker container. See :ref:`license_as_environment_variable` for details.
 
+.. _license_kinds:
+
+License kinds
+^^^^^^^^^^^^^
+
+Each license has a kind. Firely Server writes it to the log at startup, as ``Kind of license``, and shows it on its home page.
+
+.. list-table::
+   :widths: 20 80
+   :header-rows: 1
+
+   * - Kind
+     - Use it for
+   * - Evaluation
+     - Trying out Firely Server. Firely Server limits its uptime to 12 hours, and :ref:`Firely Server Ingest<tool_fsi>` limits the number of resources it loads.
+   * - Production
+     - Your production environments.
+   * - Test
+     - Your development, staging and other non-production environments. Your license agreement with Firely sets how many of them you may run, and with a professional license that is any number. Firely Server works the same as with a Production license, and the plugins in the license still determine which features are available. A Test license has an expiry date like any other license; contact Firely to renew it. Do not use a Test license in production.
+
+To get a Test license for your non-production environments, :ref:`contact<vonk-contact>` Firely.
+
 .. _configure_repository:
 
 Repository
@@ -173,6 +195,7 @@ Terminology
 
       "Terminology": {
       "MaxExpansionSize": 650,
+      "AlwaysExpandFlat": false, // true / false - If true, the expansions Firely Server makes itself are always flat (no nested codes), whatever excludeNested the request sends.
       // Optional: configure one or more CAR files for advanced terminology support (requires http://fire.ly/advanced-terminology license)
       //"ConformanceArchives": [
       //  {
@@ -823,10 +846,13 @@ Patient Everything Operation
 ::
 
   "PatientEverythingOperation": {
-    "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "Medication", "Practitioner", "PractitionerRole" ] // included referenced resources, additional to the Patient compartment resources
+    "AdditionalResources": [ "Organization", "Location", "Substance", "Device", "Medication", "Practitioner", "PractitionerRole" ], // included referenced resources, additional to the Patient compartment resources
+    "SnapshotLifetime": "00:30:00" // MongoDB only: how long the pages of a $everything result can be read before a continuation link returns 410 Gone. From 10 minutes to 10 years.
   },
 
 The Patient $everything operation returns all resources linked to a patient that are listed in the Compartment Patient. This section allows you to define additional resources that will be included in the resulting searchset bundle.
+
+On MongoDB, ``SnapshotLifetime`` sets how long the pages of a result are kept before they expire; it has no effect on SQL Server, where every page is selected anew.
 
 See :ref:`feature_patienteverything`.
 

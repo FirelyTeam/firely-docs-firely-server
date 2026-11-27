@@ -238,6 +238,7 @@ Tips and hints for using MongoDb for Firely Server
     #. If you are on a Firely Server (Vonk) version < v3.6, you can keep using MongoDB v4.0 or higher.
     #. If you are on Firely Server (Vonk) v3.6 or higher and are unable to migrate to MongoDB 4.4.
     #. For Firely Server v6.0 and higher, MongoDB 6.0 is required.
+#. Firely Server checks the MongoDB server version at startup. Patient ``$everything``, ``$purge``, Patient and Group ``$export``, Da Vinci data export, and the CQL operations Library/``$evaluate`` and Measure/``$evaluate-measure`` (unless ``RemoteDataEndpointsOnly`` is set) require MongoDB 5.0 or later, with its feature compatibility version set to 5.0 or later. Firely Server refuses to start when one of these features is in the pipeline and the MongoDB server does not meet this requirement, and logs a warning otherwise.
 
 .. _mongodb_diskspace:
 

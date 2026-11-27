@@ -453,7 +453,11 @@ See more information on how to run migrations in :ref:`this article <zero_downti
 Source (for SQL Server)
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-This source is intended to be used in zero-downtime migration scenarios from a Firely Server SQL Server instance to either a SQL Server or MongoDB target database.
+This source reads resources from a Firely Server SQL Server database. It can be combined with a SQL Server or MongoDB target database.
+
+.. note::
+
+  The SQL Server source is not supported for :ref:`zero-downtime migrations <zero_downtime_migration>`, which are supported for MongoDB only.
 
 .. attention::
 

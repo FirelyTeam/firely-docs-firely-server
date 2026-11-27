@@ -148,11 +148,19 @@ Alternatively, you can configure Firely Server to use only external data
 sources by enabling the ``RemoteDataEndpointsOnly`` setting. In that case,
 no local data retrieval (and thus no SQL Server or MongoDB data store) is required.
 
-With ``RemoteDataEndpointsOnly`` enabled, every request must set ``useServerData`` to
-``false``. A request that sets it to ``true``, or omits it, is rejected with HTTP 400 —
-also when it supplies the data in the ``data`` parameter. With ``useServerData`` set to
-``false``, the data comes from the ``data`` parameter when it is supplied, and otherwise
-from the ``dataEndpoint``; see :ref:`feature_external_data_endpoints`.
+With ``RemoteDataEndpointsOnly`` enabled, every request to ``Library/$evaluate`` or
+``Measure/$evaluate-measure`` must set ``useServerData`` to ``false``. A request that
+sets it to ``true``, or omits it, is rejected with HTTP 400 before any data of the
+server is read — also when it supplies the data in the ``data`` parameter. The
+``OperationOutcome`` names the operation that was invoked, for example:
+
+  Cannot execute operation $evaluate-measure. The server is configured to use remote
+  data endpoints only, but 'useServerData' is set to 'true'. Set 'useServerData' to
+  'false' and provide a 'dataEndpoint' parameter.
+
+With ``useServerData`` set to ``false``, the data comes from the ``data`` parameter
+when it is supplied, and otherwise from the ``dataEndpoint``; see
+:ref:`feature_external_data_endpoints`.
 
 .. _feature_external_data_endpoints:
 
@@ -242,7 +250,9 @@ rejected with an ``OperationOutcome`` that says what failed:
   the endpoint. This is the case when the endpoint cannot be reached, does not answer in
   time, answers with an error (including HTTP 401 when Firely Server could not
   authenticate) or with a resource other than a ``Bundle``, or repeats a page link, as
-  described above.
+  described above. A ``GET [endpoint]/Patient/[id]/$everything`` answered with HTTP 404
+  is not one of these cases: it is treated as the subject's Patient not being found; see
+  `Unknown patients`_.
 
 The server log names the cause, such as what the endpoint answered.
 
@@ -281,7 +291,7 @@ not listed, is rejected with HTTP 501 (see :ref:`feature_cql_unsupported_paramet
 |                         |           |                         |             |                                |
 |                         |           |                         |             | A request that supplies both   |
 |                         |           |                         |             | ``url`` and ``library`` is     |
-|                         |           |                         |             | rejected with HTTP 409.        |
+|                         |           |                         |             | rejected with HTTP 400.        |
 |                         |           |                         |             |                                |
 |                         |           |                         |             | A canonical that resolves to a |
 |                         |           |                         |             | resource other than a          |
@@ -429,14 +439,16 @@ Inline library
 A ``Library`` passed in the ``library`` parameter is handled as follows:
 
 - It cannot be combined with ``url``: a request that supplies both is rejected with
-  HTTP 409.
+  HTTP 400.
 - It must have a ``url``, a ``name`` and a ``version``. FHIR declares all three as
   optional on ``Library``, but the CQL engine identifies a library by them. A library
   that lacks any of them is rejected with HTTP 422.
 - It is validated with the server's validation settings (``Validation:Level``, see
   :ref:`feature_prevalidation`). Any issue the validation reports, warnings included,
-  rejects the request with HTTP 400 and returns the issues in the ``OperationOutcome``.
-  With ``Level`` set to ``Off``, the library is not validated.
+  rejects the request with HTTP 400. Each issue keeps its severity, code and
+  expression, and its text starts with "Cannot execute operation $evaluate. The
+  Library supplied as 'library' is not valid." With ``Level`` set to ``Off``, the
+  library is not validated.
 - When it carries a compiled assembly — a ``content`` attachment of contentType
   ``application/octet-stream`` whose element id contains ``+dll`` — it is evaluated with
   that assembly, which is checked as the assembly of a stored library is (see
@@ -446,10 +458,14 @@ A ``Library`` passed in the ``library`` parameter is handled as follows:
 - Otherwise it is compiled on every request; the result of the compilation is not kept.
   When the library carries ELM content (``application/elm+json``), the ELM is compiled
   and the CQL content is not used. Otherwise its CQL (``text/cql``) is translated to ELM
-  first. When compilation fails, the request is rejected with HTTP 422, reporting that
-  the library holds no .NET assembly; the server log holds the compilation errors. A
-  library whose CQL includes a library that no ``depends-on`` provides is rejected with
-  HTTP 422 naming the include; see `Library dependencies`_.
+  first. A compile that fails for a reason the client can fix — an error the CQL compiler
+  reports about the CQL or ELM, a library or a dependency that holds no CQL or ELM, or a
+  ``name`` or ``version`` that differs from the one its CQL or ELM declares — is rejected
+  with HTTP 422, naming the reason; the server log holds the compiler's own messages. A
+  compile that fails because of an error on the server is rejected with HTTP 500; the
+  response carries no detail, and the server log holds the exception. A library whose CQL
+  includes a library that no ``depends-on`` provides is rejected with HTTP 422 naming the
+  include; see `Library dependencies`_.
 - Its dependencies are resolved from the administration database, like those of a stored
   library; see `Library dependencies`_.
 
@@ -529,7 +545,7 @@ evaluated ``Library``, and of every library it depends on, transitively. Other
 
 A ``depends-on`` entry without a ``resource``, or with a canonical that is not of the form
 ``url`` or ``url|version`` (for example with an empty part or with more than one ``|``),
-is rejected with HTTP 400.
+is rejected with HTTP 422.
 
 A library can only include the libraries its ``depends-on`` entries provide. When the
 CQL of the evaluated ``Library``, or of a library in its dependency closure, includes a
@@ -1483,22 +1499,29 @@ Rejected with HTTP 422
 
 *Measure level*
 
-- No ``url``. The canonical URL identifies the measure in ``MeasureReport.measure``.
-- No single resolvable logic library: a missing ``Measure.library``, more than one
-  reference, or an empty canonical.
+- No ``url`` (issue type ``required``). The canonical URL identifies the measure in
+  ``MeasureReport.measure``.
+- No single resolvable logic library: a missing ``Measure.library`` or an empty
+  canonical (issue type ``required``), or more than one reference (issue type
+  ``not-supported``).
 - A ``Measure.library`` canonical that resolves to a resource of another type —
   canonicals are unique per resource type, but not across types.
 - The ``continuous-variable`` scoring type, in ``Measure.scoring`` or in a group-level
   scoring override (issue type ``not-supported``).
+- A scoring code the ``measure-scoring`` CodeSystem does not define, in
+  ``Measure.scoring`` or in a group-level scoring override, or a ``Measure.scoring``
+  that carries no coding from that CodeSystem (issue type ``invalid``).
 
 *Group level*
 
-- A group without an id, or several groups sharing one. The group id is what the
-  results, ``MeasureReport.group.id`` and the stratum memberships are filed under.
-- A population without an id, or two populations of one group sharing one. The
-  ``MeasureReport`` reports each population under its id. Populations of different
-  groups may share an id. A population without an id is named by its position in the
-  group, such as ``population[0]``.
+- A group without an id (issue type ``required``), or several groups sharing one
+  (issue type ``duplicate``). The group id is what the results,
+  ``MeasureReport.group.id`` and the stratum memberships are filed under.
+- A population without an id (issue type ``required``), or two populations of one
+  group sharing one (issue type ``duplicate``). The ``MeasureReport`` reports each
+  population under its id. Populations of different groups may share an id. A
+  population without an id is named by its position in the group, such as
+  ``population[0]``.
 - A population type the group's effective scoring type does not evaluate. Where the
   Quality Measure IG marks it Not Permitted — a ``denominator`` on a cohort-scored
   group, a ``denominator-exception`` on a ratio-scored group, a
@@ -1506,13 +1529,16 @@ Rejected with HTTP 422
   should be corrected. Where the IG's population table does not cover it at all —
   ``measure-observation``, on any ``Measure`` — the issue type is ``not-supported``,
   because no edit to the ``Measure`` resolves it.
-- The same population type defined more than once in one group. A population's type is
-  its first coding from the ``measure-population`` CodeSystem.
-- A population whose ``code`` the ``measure-population`` CodeSystem does not define,
-  or that carries no coding from that CodeSystem. The population is named by its
-  element id where it has one, and by its position in the group otherwise.
+- The same population type defined more than once in one group (issue type
+  ``invalid``). A population's type is its first coding from the
+  ``measure-population`` CodeSystem.
+- A population whose ``code`` the ``measure-population`` CodeSystem does not define
+  (issue type ``invalid``), or that carries no coding from that CodeSystem (issue type
+  ``required``). The population is named by its element id where it has one, and by
+  its position in the group otherwise.
 - A population whose criteria names no CQL expression: no criteria at all, an empty
-  expression, or a criteria in another expression language than ``text/cql-identifier``.
+  expression, or a criteria in another expression language than
+  ``text/cql-identifier`` (issue type ``required``).
 - A ``Library`` parameter whose declared type is not a FHIR type.
 - A stratifier that declares neither or both of ``criteria`` and ``component[]``,
   duplicate stratifier or component ids, or an ``appliesTo`` extension without a
@@ -1534,7 +1560,7 @@ Rejected with HTTP 422
   but use different bases, including a ``ratio`` group whose numerator and denominator
   declare different bases (issue type ``invalid``).
 - Populations of a stratified ``cohort``-scored or unscored group that use different
-  bases (issue type ``not-supported``).
+  bases (issue type ``invalid``).
 
 *Result level*
 
@@ -1549,22 +1575,22 @@ Rejected with HTTP 422
   stratified group. An item must be identifiable as a resource with an id, a
   ``boolean``, a ``decimal``, a ``date``, an ``integer`` or a ``string``; a
   ``dateTime``, a ``Quantity`` or a ``Coding``, for instance, cannot be counted there.
-- A stratifier component that returns resources, or a value of a type that cannot be
-  stratified on (see :ref:`feature_measure_evaluate_stratifiers`).
+- A stratifier component that returns resources (issue type ``invalid``), or a value
+  of a type that cannot be stratified on (issue type ``not-supported``; see
+  :ref:`feature_measure_evaluate_stratifiers`).
 - A stratifier component function that cannot be evaluated for each basis unit: one
-  the ``Library`` does not define, one that takes another number of arguments than
-  one, one defined as several single-argument overloads, or one whose parameter type
-  matches none of the items the group's populations returned.
+  the ``Library`` does not define (issue type ``not-found``), one that takes another
+  number of arguments than one (issue type ``invalid``), one defined as several
+  single-argument overloads (issue type ``not-supported``), or one whose parameter
+  type matches none of the items the group's populations returned (issue type
+  ``invalid``).
 - A criteria-based stratifier whose criteria returns something other than a single
-  ``boolean`` on a ``boolean`` basis, or other than basis units on any other basis.
+  ``boolean`` on a ``boolean`` basis (issue type ``invalid``), or other than basis
+  units on any other basis (issue type ``not-supported``).
 
 Rejected with other status codes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-- **HTTP 400** — a scoring code the ``measure-scoring`` CodeSystem does not define,
-  in ``Measure.scoring`` or in a group-level scoring override (issue type
-  ``invalid``). A ``Measure.scoring`` that carries no coding from that CodeSystem is
-  rejected the same way.
 - **HTTP 404** — a ``Measure.library`` canonical that resolves to no resource. This
   is reported before any subject data is retrieved, and names the library url and
   version.
@@ -1878,7 +1904,11 @@ not listed, is rejected with HTTP 501 (see :ref:`feature_cql_unsupported_paramet
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``prefetchData``        | ❌        | Complex                 | 0..*        |                                |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
-| ``dataEndpoint``        | ❌        | ``Endpoint``            | 0..1        |                                |
+| ``dataEndpoint``        | ✅        | ``Endpoint``            | 0..1        | Used only when                 |
+|                         |           |                         |             | ``useServerData`` is ``false``.|
+|                         |           |                         |             |                                |
+|                         |           |                         |             | See ``Library/$evaluate``      |
+|                         |           |                         |             | for details.                   |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``contentEndpoint``     | ❌        | ``Endpoint``            | 0..1        |                                |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
@@ -2144,24 +2174,29 @@ comes from the ``data`` parameter or a ``dataEndpoint``. A ``Group`` that is not
 there is rejected with HTTP 404.
 
 Only an actual group of patients can be evaluated. Each of the following rejects the
-whole request with HTTP 422, issue type ``not-supported``:
+whole request with HTTP 422:
 
-- ``Group.actual`` is ``false``: a descriptive group.
-- ``Group.type`` is another type than ``person``.
+- ``Group.actual`` is ``false``: a descriptive group (issue type ``not-supported``).
+- ``Group.type`` is another type than ``person`` (issue type ``not-supported``).
 - ``Group.actual`` or ``Group.type`` is absent. Both are required in FHIR R4, but a
   stored ``Group`` can lack them; an element that carries only an extension counts as
-  absent. This is reported with issue type ``required`` instead, naming the missing
+  absent. This is reported with issue type ``required``, naming the missing
   elements. A ``Group`` with ``actual`` set to ``false`` is rejected as descriptive,
   whether or not it has a ``type``.
-- The ``Group`` has no member entities.
-- A member entity references another resource type than ``Patient``. Such a member
-  is not skipped: the request is rejected.
+- The ``Group`` has no member entities (issue type ``required``).
+- A member entity references another resource type than ``Patient`` (issue type
+  ``not-supported``). Such a member is not skipped: the request is rejected.
+- A member entity has no ``reference`` at all, such as one identified by an identifier
+  alone (issue type ``required``). Such a member is not skipped: the
+  ``OperationOutcome`` names the member by its position, as ``Group.member[<index>]``,
+  counted from 0 as in FHIRPath.
 - A member entry whose reference does not identify a resource by type and id at all —
   an empty reference, or an absolute uri that is not a resource url such as
-  ``urn:uuid:…``, as produced by ingesting a ``Group`` from a transaction Bundle. The
-  ``OperationOutcome`` names that reference.
+  ``urn:uuid:…``, as produced by ingesting a ``Group`` from a transaction Bundle
+  (issue type ``invalid``). The ``OperationOutcome`` names that reference and the
+  member's position, as ``Group.member[<index>]``.
 - More distinct patients than ``MaxSubjectsForSynchronousGroupBasedMeasureEvaluation``
-  allows.
+  allows (issue type ``too-costly``).
 
 ``member.inactive`` and ``member.period`` are not taken into account: an inactive
 member, or a member whose period has ended, is evaluated like any other member.
@@ -2174,11 +2209,34 @@ When Firely Server resolves the evaluation data itself — from its own data or 
 without a ``Patient`` resource therefore means the requested patient does not exist,
 and the ``OperationOutcome`` reports that the patient could not be found, with issue
 code ``not-found``. ``Measure/$evaluate-measure`` reports this without evaluating a
-single group of the measure.
+single group of the measure. A ``dataEndpoint`` that answers HTTP 404 for the
+subject's own ``$everything`` call is treated the same way, as an empty retrieval
+rather than a failure of the endpoint.
 
 When the caller supplies the data through the ``data`` parameter, the outcome instead
 reports that the provided data does not contain the expected ``Patient`` — the data
 lacks it, while the patient itself may well exist on the server.
+
+Patient consistency
+~~~~~~~~~~~~~~~~~~~~
+
+The data a request evaluates must be consistent with its subject. This applies to
+``Library/$evaluate``, to ``$cql`` with a ``subject``, and to ``Measure/$evaluate-measure``
+— for supplied data, data from a ``dataEndpoint``, and data Firely Server retrieves itself.
+
+Only the Patient entries of the Bundle itself count as Patients of the data. A Patient
+contained in another resource — as a master patient index keeps each record it matched
+as a contained Patient of the Patient it builds from them — belongs to that resource,
+and a Patient in a nested Bundle belongs to that Bundle; neither counts as a Patient of
+the data.
+
+Each of the following rejects the request with HTTP 422, issue type ``processing``:
+
+- A Patient entry of the Bundle without an id.
+- A Patient entry of the Bundle that is not the subject's Patient.
+- More than one distinct Patient among the Bundle's Patient entries.
+
+``Measure/$evaluate-measure`` applies this check once for every subject it evaluates.
 
 .. _feature_cql_patient_context:
 

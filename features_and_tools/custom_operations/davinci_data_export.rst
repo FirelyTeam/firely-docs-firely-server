@@ -255,7 +255,6 @@ In order to restrict a client to only these operations, the SMART security token
 * http://server.fire.ly/auth/claims/critical/IsAtrClient = true
 * The client uses the ``client_credentials`` flow.
 * fhirUser = { a reference to a Device resource representing the client }
-* groupId = { the groupId of the ATR Group that the client is allowed to export. This groupId is used in the AccessPolicyDefinition }
 
 Since all other access is denied, the client will also have to be granted read access to the resources, used in these operations. This can be done using an AccessPolicy, referencing an AccessPolicyDefinition (see :ref:`feature_accesscontrol_permissions`)
 
@@ -273,11 +272,13 @@ Since all other access is denied, the client will also have to be granted read a
   		"status": "active",
   		"policy": [{
     		"type": { "coding": [{ "code": "smart-v2" }] },
-    		"restriction": ["system/Group.rs?_identifier=https://example.com/fhir/sid/atr-groupid|#groupId#", "system/Consent.rs", "system/Coverage.rs", "system/Patient.rs"]
+    		"restriction": ["system/Group.rs", "system/Consent.rs", "system/Coverage.rs", "system/Patient.rs"]
   		}]
 	}
 
-Note that in the AccessPolicyDefinition above, an identifier with system 'atr' is expected (e.g. https://example.com/fhir/sid/atr-groupid). This is just an example and will likely be a different system in your database, so make sure to use that in order to restrict the client to the correct Group. 
+.. note::
+
+  ``$davinci-data-export`` refuses the export with ``501 Not Implemented`` when a read scope for one of the exported resource types (``Group``, ``Patient``, ``Coverage`` and the other ATR types, and ``Consent``) is restricted with search parameters, whether that restriction comes from the access token itself or from the client's AccessPolicy, such as this AccessPolicyDefinition. Grant these types with plain ``system/<Type>.rs`` scopes, without search parameters.
 
 As you can see, only the most necessary resource types are allowed here. If you would like to allow the client to receive additional resource types (as used in the _type parameter for the export), add them to the 'restriction' array.
 

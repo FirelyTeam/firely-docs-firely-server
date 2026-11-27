@@ -148,11 +148,13 @@ Alternatively, you can configure Firely Server to use only external data
 sources by enabling the ``RemoteDataEndpointsOnly`` setting. In that case,
 no local data retrieval (and thus no SQL Server or MongoDB data store) is required.
 
-With ``RemoteDataEndpointsOnly`` enabled, every request to ``Library/$evaluate`` or
-``Measure/$evaluate-measure`` must set ``useServerData`` to ``false``. A request that
-sets it to ``true``, or omits it, is rejected with HTTP 400 before any data of the
-server is read — also when it supplies the data in the ``data`` parameter. The
-``OperationOutcome`` names the operation that was invoked, for example:
+With ``RemoteDataEndpointsOnly`` enabled, every request to ``Measure/$evaluate-measure``,
+and every request to ``Library/$evaluate`` or ``$cql`` that is evaluated in the Patient
+context, must set ``useServerData`` to ``false``. A request that sets it to ``true``, or
+omits it, is rejected with HTTP 400 before any data of the server is read — also when it
+supplies the data in the ``data`` parameter. The ``OperationOutcome`` names
+``$evaluate-measure`` or ``$evaluate``. For ``$cql`` it names ``$evaluate``; see
+:ref:`feature_cql_outcome_operation`. For example:
 
   Cannot execute operation $evaluate-measure. The server is configured to use remote
   data endpoints only, but 'useServerData' is set to 'true'. Set 'useServerData' to
@@ -168,7 +170,7 @@ External data endpoints
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 Firely Server can retrieve clinical and claims data from external FHIR endpoints
-during execution of ``Library/$evaluate``.
+during execution of ``Library/$evaluate``, ``Measure/$evaluate-measure`` and ``$cql``.
 
 This is used when the ``useServerData`` parameter is set to ``false`` in a request.
 In that case, data is not retrieved from the local Firely Server database, but from
@@ -1904,7 +1906,20 @@ not listed, is rejected with HTTP 501 (see :ref:`feature_cql_unsupported_paramet
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``prefetchData``        | ❌        | Complex                 | 0..*        |                                |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
-| ``dataEndpoint``        | ❌        | ``Endpoint``            | 0..1        |                                |
+| ``dataEndpoint``        | ✅        | ``Endpoint``            | 0..1        | Used only when                 |
+|                         |           |                         |             | ``useServerData`` is ``false`` |
+|                         |           |                         |             | and no ``data`` is supplied:   |
+|                         |           |                         |             | the data of the ``subject`` is |
+|                         |           |                         |             | read from this endpoint.       |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | The endpoint must be           |
+|                         |           |                         |             | pre-registered in              |
+|                         |           |                         |             | ``LibraryEvaluateOperation``   |
+|                         |           |                         |             | via the ``DataEndpoint``       |
+|                         |           |                         |             | option.                        |
+|                         |           |                         |             |                                |
+|                         |           |                         |             | See ``Library/$evaluate``      |
+|                         |           |                         |             | for details.                   |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
 | ``contentEndpoint``     | ❌        | ``Endpoint``            | 0..1        |                                |
 +-------------------------+-----------+-------------------------+-------------+--------------------------------+
@@ -1960,8 +1975,9 @@ A parameter whose value cannot be converted to a CQL system type, such as a ``Ra
 parameter and its FHIR type. A parameter without a value, with both a value and ``part``
 elements, with nested parts, or with repetitions of different types — including a mix of
 ``Period`` and ``Range`` values — is rejected with HTTP 400. An ``OperationOutcome`` about
-the evaluation itself, such as one for an unknown patient, refers to the generated library
-as ``Test`` version ``1.0.0``.
+the evaluation itself, such as one for an unknown patient, refers to "the expression", not to
+the generated library, and, where it names an operation, names ``$evaluate``; see
+:ref:`feature_cql_outcome_operation`.
 
 Output parameters
 ~~~~~~~~~~~~~~~~~
@@ -2281,6 +2297,26 @@ them. A request that supplies any other parameter — including the parameters t
 FHIR specification defines but Firely Server does not support, marked ❌ in the
 parameter tables — is rejected as a whole with HTTP 501, and the ``OperationOutcome``
 names the unsupported parameters. The parameter is not ignored.
+
+.. _feature_cql_outcome_operation:
+
+The operation an OperationOutcome names
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Most ``OperationOutcome`` texts open with "Cannot execute operation", followed by the name
+of an operation. This is usually the operation the request was sent to.
+
+``Measure/$evaluate-measure`` and ``$cql`` evaluate their CQL through ``Library/$evaluate``.
+A problem found during that evaluation is reported as ``Library/$evaluate`` reports it, so
+its ``OperationOutcome`` names ``$evaluate``, also when the request was sent to
+``Measure/$evaluate-measure`` or ``$cql``. For example, ``$cql`` for a patient that does not
+exist answers::
+
+  Cannot execute operation $evaluate. Patient 'Patient/pat1' could not be found, so the
+  expression cannot be evaluated.
+
+The status code is the same as for a request to ``Library/$evaluate``. For ``$cql``, the text
+names the expression where it names the ``Library`` for ``Library/$evaluate``.
 
 .. _feature_cql_data_retrieval:
 

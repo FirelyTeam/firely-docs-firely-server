@@ -13,8 +13,6 @@ Current Firely Server release notes (v6.x)
 Release 6.12.0, November 26th, 2026
 -----------------------------------
 
-.. TODO: add the release date to the heading.
-
 This release adds full support for CDS Hooks 3.0.0, so that an EHR or other CDS Client can call decision support services hosted by Firely Server, including services you write yourself as plugins. It also lets you restrict which TLS client certificates Firely Server accepts, extends ``$expand`` and the other terminology operations, accepts an inline ``Group`` as the subject of ``Measure/$evaluate-measure``, makes indexing faster and leaner, and fixes a number of issues in batches, transactions and updates.
 
 .. attention::

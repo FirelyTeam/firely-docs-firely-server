@@ -2,7 +2,7 @@
   "openapi": "3.0.1",
   "info": {
     "title": "Firely Server - Subscription",
-    "version": "6.10.0+85497ec0fbbebba6d026fcb7f8ca70efc9955b69"
+    "version": "6.12.0-build-20261125.26+fe193a835a6309a2653d1e6e3e98ec3baaaddb58"
   },
   "servers": [
     {
@@ -1794,7 +1794,7 @@
       "status": {
         "name": "status",
         "in": "query",
-        "description": "Immunization evaluation status",
+        "description": "preliminary | final | amended | entered-in-error",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1803,7 +1803,7 @@
       "type": {
         "name": "type",
         "in": "query",
-        "description": "Type of Invoice",
+        "description": "Multiple Resources: \r\n\r\n* [AllergyIntolerance](allergyintolerance.html): allergy | intolerance - Underlying mechanism (if known)\r\n* [Composition](composition.html): Kind of composition (LOINC if possible)\r\n* [DocumentManifest](documentmanifest.html): Kind of document set\r\n* [DocumentReference](documentreference.html): Kind of document (LOINC if possible)\r\n* [Encounter](encounter.html): Specific type of encounter\r\n* [EpisodeOfCare](episodeofcare.html): Type/class  - e.g. specialist referral, disease management\r\n",
         "style": "form",
         "schema": {
           "type": "string"
@@ -1812,7 +1812,7 @@
       "url": {
         "name": "url",
         "in": "query",
-        "description": "Multiple Resources: \r\n\r\n* [CapabilityStatement](capabilitystatement.html): The uri that identifies the capability statement\r\n* [CodeSystem](codesystem.html): The uri that identifies the code system\r\n* [CompartmentDefinition](compartmentdefinition.html): The uri that identifies the compartment definition\r\n* [ConceptMap](conceptmap.html): The uri that identifies the concept map\r\n* [GraphDefinition](graphdefinition.html): The uri that identifies the graph definition\r\n* [ImplementationGuide](implementationguide.html): The uri that identifies the implementation guide\r\n* [MessageDefinition](messagedefinition.html): The uri that identifies the message definition\r\n* [OperationDefinition](operationdefinition.html): The uri that identifies the operation definition\r\n* [SearchParameter](searchparameter.html): The uri that identifies the search parameter\r\n* [StructureDefinition](structuredefinition.html): The uri that identifies the structure definition\r\n* [StructureMap](structuremap.html): The uri that identifies the structure map\r\n* [TerminologyCapabilities](terminologycapabilities.html): The uri that identifies the terminology capabilities\r\n* [ValueSet](valueset.html): The uri that identifies the value set\r\n",
+        "description": "The uri that identifies the charge item definition",
         "style": "form",
         "schema": {
           "type": "string"

@@ -22,7 +22,7 @@ CDS Hooks
 
 For example, when a physician orders an MRI of the lumbar spine, the EHR can call a CDS Service of the patient's health plan. Before the order is signed, the physician sees a card saying that the plan requires prior authorization for this MRI, with a button that opens the form to collect the documentation the plan needs. Without CDS Hooks, the practice typically learns this only afterwards, from a denied claim or a phone call.
 
-Firely Server can host such CDS Services. It takes care of the CDS Hooks protocol, so that a service consists of nothing more than its decision logic. Because the services run inside Firely Server, they can use the FHIR data and the operations of that same server, such as the coverage rules of a health plan expressed in CQL (see :ref:`feature_qdm`).
+Firely Server can host such CDS Services. We implemented CDS Hooks first of all to enable support for :ref:`Da Vinci Coverage Requirements Discovery (CRD) <feature_cds_hooks_crd>`, but the implementation is not limited to CRD: any CDS Service can be offered. Firely Server takes care of the CDS Hooks protocol, so that a service consists of nothing more than its decision logic. Because the services run inside Firely Server, they can use the FHIR data and the operations of that same server, such as the coverage rules of a health plan expressed in CQL (see :ref:`feature_qdm`).
 
 ----
 
@@ -661,6 +661,8 @@ Upgrading from earlier versions
 -------------------------------
 
 Earlier versions of Firely Server served CDS Hooks by mapping each CDS Hooks request onto a FHIR custom operation, in the branch on ``/``. That implementation is still shipped, as the plugin ``Vonk.Plugin.CdsHooks.Legacy``, so that an upgrade does not have to wait for the migration. It will be removed in the next major version. **Use this time to migrate. Do not build new services on the legacy plugin.**
+
+The CDS Hooks branch also offers a higher-level programming API. A service of the legacy plugin read and built its payloads as ``ISourceNode`` trees. A CDS Service on the CDS Hooks branch works with custom resources that Firely Server provides, based on the CDS Hooks 3.0.0 model: typed classes such as ``CdsHooksRequest`` and ``CdsHooksCard``. See :ref:`vonk_reference_api_cds_hooks_model`.
 
 A deployment runs either the CDS Hooks branch or the legacy plugin, never both: they claim the same route.
 

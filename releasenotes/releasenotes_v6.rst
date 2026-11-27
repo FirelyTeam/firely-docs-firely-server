@@ -13,7 +13,7 @@ Current Firely Server release notes (v6.x)
 Release 6.12.0, November 26th, 2026
 -----------------------------------
 
-This release adds full support for CDS Hooks 3.0.0, so that an EHR or other CDS Client can call decision support services hosted by Firely Server, including services you write yourself as plugins. It also lets you restrict which TLS client certificates Firely Server accepts, extends ``$expand`` and the other terminology operations, accepts an inline ``Group`` as the subject of ``Measure/$evaluate-measure``, makes indexing faster and leaner, and fixes a number of issues in batches, transactions and updates.
+This release adds a new implementation of CDS Hooks 3.0.0, built to enable support for Da Vinci Coverage Requirements Discovery (CRD). An EHR or other CDS Client can call decision support services hosted by Firely Server, including services you write yourself as plugins. Firely Server offered CDS Hooks before, in what is now the legacy plugin; the new implementation replaces it with a higher-level programming API. It also lets you restrict which TLS client certificates Firely Server accepts, extends ``$expand`` and the other terminology operations, accepts an inline ``Group`` as the subject of ``Measure/$evaluate-measure``, makes indexing faster and leaner, and fixes a number of issues in batches, transactions and updates.
 
 .. attention::
     **MongoDB 5.0 or later is required.** Firely Server checks the version of the MongoDB server at startup. See :ref:`configure_mongodb`.
@@ -45,7 +45,7 @@ Features
 
 **CDS Hooks**
 
-#. Firely Server supports CDS Hooks 3.0.0. CDS Services are offered on their own endpoint, ``/cds-services``, next to the FHIR API. A CDS Client such as an EHR reads which services you offer from there, and calls a service when one of its hooks fires, for example when a clinician opens a patient's chart (``patient-view``) or selects or signs an order (``order-select``, ``order-sign``). The service answers with cards that the clinician sees, such as guidance or a suggested change. You choose in the settings which services and hooks are offered. This feature requires a license that includes CDS Hooks. See :ref:`feature_cds_hooks`.
+#. Firely Server supports CDS Hooks 3.0.0. We implemented it to enable support for Da Vinci Coverage Requirements Discovery (CRD), the first step of electronic prior authorization, in which a health plan tells a provider during ordering whether an item or service is covered and what it requires; see :ref:`feature_cds_hooks_crd`. CDS Services are offered on their own endpoint, ``/cds-services``, next to the FHIR API. A CDS Client such as an EHR reads which services you offer from there, and calls a service when one of its hooks fires, for example when a clinician opens a patient's chart (``patient-view``) or selects or signs an order (``order-select``, ``order-sign``). The service answers with cards that the clinician sees, such as guidance or a suggested change. You choose in the settings which services and hooks are offered. This feature requires a license that includes CDS Hooks. See :ref:`feature_cds_hooks`.
 #. CDS Clients can be required to authenticate, as the CDS Hooks specification describes. Firely Auth verifies their tokens. Individual services can be left open. See :ref:`feature_cds_hooks_authorization`.
 #. Requests and responses can be checked against the CDS Hooks specification, per service and hook. See :ref:`feature_cds_hooks_validation`.
 #. You can write your own CDS Services as Firely Server plugins. A service can read the FHIR data it needs from Firely Server. See "Programming API changes and plugins" below.
@@ -187,7 +187,8 @@ Known behavioral changes
 Programming API changes and plugins
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. A plugin can offer a CDS Service of its own: describe it with ``ICdsDiscoveryContributor`` and handle its calls with ``app.OnCdsService(...)``, in the same way as a FHIR operation. ``Vonk.Core.CdsHooks`` holds the CDS Hooks request, response and card types. See :ref:`vonk_reference_api_cds_hooks`.
+#. A plugin can offer a CDS Service of its own: describe it with ``ICdsDiscoveryContributor`` and handle its calls with ``app.OnCdsService(...)``, in the same way as a FHIR operation. See :ref:`vonk_reference_api_cds_hooks`.
+#. The new CDS Hooks API works at a higher level than the legacy plugin. A service of the legacy plugin read and built its payloads as ``ISourceNode`` trees. A CDS Service now works with custom resources that Firely Server provides, based on the CDS Hooks 3.0.0 model: typed classes such as ``CdsHooksRequest``, ``CdsHooksResponse`` and ``CdsHooksCard`` in ``Vonk.Core.CdsHooks``, with prefetched FHIR resources available as POCOs. See :ref:`vonk_reference_api_cds_hooks_model`.
 #. A CDS Service reads FHIR data from Firely Server through ``IFhirRestPipeline``. These requests are not limited by SMART on FHIR scopes or an AccessPolicy, so grant each one only the access it needs. See :ref:`vonk_reference_api_cds_hooks_fhiraccess`.
 #. ``IApplicationBuilder.OnCdsHooksRequest`` of the legacy plugin is now ``[Obsolete]`` and will be removed in the next major version. Use ``OnCdsService`` instead.
 #. ``VonkPeriod`` and ``FhirDateTimePrecision`` in ``Vonk.Core`` are now marked ``[Obsolete]``. Use ``DateTimeRange`` of the Firely .NET SDK instead.
